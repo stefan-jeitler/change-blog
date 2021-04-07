@@ -1,0 +1,23 @@
+{
+  "runtimeTarget": {
+    "name": ".NETCoreApp,Version=v5.0",
+    "signature": ""
+  },
+  "compilationOptions": {},
+  "targets": {
+    ".NETCoreApp,Version=v5.0": {
+      "ChangeTracker.Domain/0.0.0": {
+        "runtime": {
+          "ChangeTracker.Domain.dll": {}
+        }
+      }
+    }
+  },
+  "libraries": {
+    "ChangeTracker.Domain/0.0.0": {
+      "type": "project",
+      "serviceable": false,
+      "sha512": ""
+    }
+  }
+}

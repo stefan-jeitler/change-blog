@@ -1,0 +1,99 @@
+
+trigger:
+  branches:
+   include:
+   - '*'
+  tags:
+    include:
+    - '*'
+
+name: $(SourceBranchName)
+
+variables:
+  BuildConfiguration: Release
+  ${{ if startsWith(variables['Build.SourceBranch'], 'refs/tags/') }}: 
+    Version: $(Build.SourceBranchName)
+  ${{ if not(startsWith(variables['Build.SourceBranch'], 'refs/tags/')) }}: 
+    Version: 0.0.0
+
+pool:
+  vmImage: 'ubuntu-latest'
+
+stages:
+- stage: continuous_integration
+  displayName: Continuous Integration
+
+  jobs:
+    - job: build_n_test
+      displayName: Build & Test
+      steps:
+
+      - pwsh: ./build.ps1 -Version $(Version) -Configuration $(BuildConfiguration) 
+        displayName: Build
+
+      - task: DotNetCoreCLI@2
+        displayName: Test
+        inputs:
+          command: test
+          projects: 'test/*Tests/*.csproj'
+          arguments: >-
+            --configuration $(buildConfiguration)
+            -p:CollectCoverage=true 
+            -p:CoverletOutput=$(Agent.TempDirectory)/TestResults/
+            -p:CoverletOutputFormat="json%2cCobertura" 
+            -p:MergeWith=$(Agent.TempDirectory)/TestResults/coverage.json
+            --logger trx --no-build -nologo
+          publishTestResults: true
+
+      - task: PublishCodeCoverageResults@1
+        displayName: 'Publish code coverage'
+        inputs:
+          codeCoverageTool: 'Cobertura'
+          summaryFileLocation: '$(Agent.TempDirectory)/TestResults/coverage.cobertura.xml'
+  
+- stage: continuous_delivery
+  displayName: Continuous Delivery
+  dependsOn: continuous_integration
+  condition: and(succeeded(), startsWith(variables['Build.SourceBranch'], 'refs/tags/'))
+
+  variables:
+    ImageName: ChangeTracker.api
+
+  jobs:
+    - job: publish_image
+      displayName: Publish Image
+      steps:
+      - task: PowerShell@2
+        displayName: Publish Image
+        inputs:
+          targetType: filePath
+          filePath: ./publish-image.ps1
+          arguments: >-
+            -Dockerfile $(System.DefaultWorkingDirectory)/src/ChangeTracker.Api/Dockerfile 
+            -ImageName $(ImageName) 
+            -Version $(Version) 
+            -Tag $(Version) 
+            -PushToRegistry
+            -RegistryUrl $(AZ_ContainerRegistry_Url) 
+            -RegistryUsername $(AZ_SP_Deploy_Username) 
+            -RegistryPwd $(AZ_SP_Deploy_Password)
+          pwsh: true
+
+    - job: publish_dbUpdater
+      displayName: Publish DbUpdater
+      steps:
+      - task: DotNetCoreCLI@2
+        displayName: Build
+        inputs:
+          command: 'build'
+          projects: './src/ChangeTracker.DataAccess.Postgres.DbUpdater/ChangeTracker.DataAccess.Postgres.DbUpdater.csproj'
+          arguments: >-
+            --configuration Release 
+            -p:Version=$(Version) 
+            --output $(Build.SourcesDirectory)/dbUpdater
+      - task: PublishPipelineArtifact@1
+        displayName: Publish Artifact
+        inputs:
+          targetPath: '$(Build.SourcesDirectory)/dbUpdater'
+          artifact: 'DbUpdater'
+          publishLocation: 'pipeline'

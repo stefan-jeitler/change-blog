@@ -15,18 +15,21 @@ namespace ChangeTracker.Domain.Tests.ProjectTests
         [Fact]
         public void Create_WithValidArguments_Successful()
         {
+            var deletedAt = DateTime.Parse("2021-04-08");
             var project = new Project(TestId,
                 TestAccount.Id,
                 TestName,
                 TestAccount.CustomVersioningScheme,
                 TestCreationDate,
-                null);
+                deletedAt);
 
             project.Id.Should().Be(TestId);
             project.AccountId.Should().Be(TestAccount.Id);
             project.Name.Should().Be(TestName);
             project.VersioningScheme.Should().Be(TestAccount.CustomVersioningScheme);
             project.CreatedAt.Should().Be(TestCreationDate);
+            project.DeletedAt.HasValue.Should().BeTrue();
+            project.DeletedAt.Value.Should().Be(deletedAt);
         }
 
         [Fact]

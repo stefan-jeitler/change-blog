@@ -1,7 +1,8 @@
 ﻿using System;
 using ChangeTracker.Domain;
-using ChangeTracker.Domain.ChangeLogVersion;
 using ChangeTracker.Domain.Common;
+using ChangeTracker.Domain.Version;
+// ReSharper disable InconsistentNaming
 
 namespace ChangeTracker.Application.Tests.TestDoubles
 {
@@ -21,7 +22,8 @@ namespace ChangeTracker.Application.Tests.TestDoubles
             Text.Parse(@"^(\d+\.)?(\d+\.)?(\*|\d+)$"),
             Id,
             Text.Parse("a custom scheme for my project"),
-            DateTime.Parse("2021-04-05T15:00:00"));
+            DateTime.Parse("2021-04-05T15:00:00"), 
+            null);
 
         public static readonly Project Project = new(Id,
             Name.Parse("Test Project"),

@@ -4,7 +4,7 @@ using ChangeTracker.Application.DataAccess;
 using ChangeTracker.Application.DataAccess.Projects;
 using ChangeTracker.Application.DataAccess.Versions;
 using ChangeTracker.Domain;
-using ChangeTracker.Domain.ChangeLogVersion;
+using ChangeTracker.Domain.Version;
 
 namespace ChangeTracker.Application.UseCases.CreateVersion
 {

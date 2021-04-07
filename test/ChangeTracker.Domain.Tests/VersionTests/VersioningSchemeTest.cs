@@ -1,10 +1,10 @@
 ﻿using System;
-using ChangeTracker.Domain.ChangeLogVersion;
 using ChangeTracker.Domain.Common;
+using ChangeTracker.Domain.Version;
 using FluentAssertions;
 using Xunit;
 
-namespace ChangeTracker.Domain.Tests.ChangeLogVersionTests
+namespace ChangeTracker.Domain.Tests.VersionTests
 {
     public class VersioningSchemeTest
     {
@@ -23,7 +23,8 @@ namespace ChangeTracker.Domain.Tests.ChangeLogVersionTests
                 TestRegexPatter,
                 TestAccountId,
                 TestDescription,
-                TestCreationDate);
+                TestCreationDate,
+                null);
 
             vs.Id.Should().Be(TestId);
             vs.Name.Should().Be(TestName);
@@ -32,6 +33,7 @@ namespace ChangeTracker.Domain.Tests.ChangeLogVersionTests
             vs.AccountId.Value.Should().Be(TestAccountId);
             vs.Description.Should().Be(TestDescription);
             vs.CreatedAt.Should().Be(TestCreationDate);
+            vs.DeletedAt.Should().BeNull();
         }
 
         [Fact]
@@ -42,7 +44,8 @@ namespace ChangeTracker.Domain.Tests.ChangeLogVersionTests
                 TestRegexPatter,
                 TestAccountId,
                 TestDescription,
-                TestCreationDate);
+                TestCreationDate,
+                null);
 
             act.Should().ThrowExactly<ArgumentException>();
         }
@@ -55,7 +58,8 @@ namespace ChangeTracker.Domain.Tests.ChangeLogVersionTests
                 TestRegexPatter,
                 TestAccountId,
                 TestDescription,
-                TestCreationDate);
+                TestCreationDate,
+                null);
 
             act.Should().ThrowExactly<ArgumentNullException>();
         }
@@ -68,7 +72,8 @@ namespace ChangeTracker.Domain.Tests.ChangeLogVersionTests
                 null,
                 TestAccountId,
                 TestDescription,
-                TestCreationDate);
+                TestCreationDate,
+                null);
 
             act.Should().ThrowExactly<ArgumentNullException>();
         }
@@ -81,7 +86,8 @@ namespace ChangeTracker.Domain.Tests.ChangeLogVersionTests
                 TestRegexPatter,
                 Guid.Empty,
                 TestDescription,
-                TestCreationDate);
+                TestCreationDate,
+                null);
 
             act.Should().ThrowExactly<ArgumentException>();
         }
@@ -94,7 +100,8 @@ namespace ChangeTracker.Domain.Tests.ChangeLogVersionTests
                 TestRegexPatter,
                 TestAccountId,
                 null,
-                TestCreationDate);
+                TestCreationDate,
+                null);
 
             act.Should().ThrowExactly<ArgumentNullException>();
         }
@@ -102,14 +109,31 @@ namespace ChangeTracker.Domain.Tests.ChangeLogVersionTests
         [Theory]
         [InlineData("0001-01-01T00:00:00.0000000")]
         [InlineData("9999-12-31T23:59:59.9999999")]
-        public void Create_WithInvalidCreationDate_ArgumentException(string creationDate)
+        public void Create_WithInvalidCreationDate_ArgumentException(string invalidDate)
         {
             Func<VersioningScheme> act = () => new VersioningScheme(TestId,
                 TestName,
                 TestRegexPatter,
                 TestAccountId,
                 TestDescription,
-                DateTime.Parse(creationDate));
+                DateTime.Parse(invalidDate),
+                null);
+
+            act.Should().ThrowExactly<ArgumentException>();
+        }
+
+        [Theory]
+        [InlineData("0001-01-01T00:00:00.0000000")]
+        [InlineData("9999-12-31T23:59:59.9999999")]
+        public void Create_WithInvalidDeletionDate_ArgumentException(string invalidDate)
+        {
+            Func<VersioningScheme> act = () => new VersioningScheme(TestId,
+                TestName,
+                TestRegexPatter,
+                TestAccountId,
+                TestDescription,
+                TestCreationDate,
+                DateTime.Parse(invalidDate));
 
             act.Should().ThrowExactly<ArgumentException>();
         }

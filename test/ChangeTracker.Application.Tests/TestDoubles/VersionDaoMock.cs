@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Threading.Tasks;
 using ChangeTracker.Application.DataAccess;
 using ChangeTracker.Application.DataAccess.Versions;
-using ChangeTracker.Domain.ChangeLogVersion;
+using ChangeTracker.Domain.Version;
 using CSharpFunctionalExtensions;
 using OneOf;
 

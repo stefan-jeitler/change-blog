@@ -1,7 +1,7 @@
 ﻿using System;
 using ChangeTracker.Domain.ChangeLog.Services;
-using ChangeTracker.Domain.ChangeLogVersion;
 using ChangeTracker.Domain.Tests.TestDoubles;
+using ChangeTracker.Domain.Version;
 using FluentAssertions;
 using Xunit;
 

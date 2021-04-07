@@ -6,7 +6,7 @@ using Xunit;
 
 namespace ChangeTracker.Domain.Tests.ChangeLogTests.ServicesTests
 {
-    public class ChangeLogVersionServiceTests
+    public class VersionChangeLogServiceTests
     {
         private static readonly Guid TestProjectId = Guid.Parse("992b6432-b792-4f0d-87c2-786f24a5a564");
         private static readonly Guid TestVersionId = Guid.Parse("4eaa1f8e-46d4-4cdd-92d4-6a2fe6f5ac10");
@@ -15,7 +15,7 @@ namespace ChangeTracker.Domain.Tests.ChangeLogTests.ServicesTests
         public void RemainingPositionsToAdd_FiveNotesExists_NinetyFiveAvailablePositions()
         {
             var changeLogInfo = new ChangeLogInfo(TestProjectId, TestVersionId, 5, 4);
-            var service = new ChangeLogLinesVersionService(changeLogInfo);
+            var service = new VersionChangeLogService(changeLogInfo);
 
             service.RemainingPositionsToAdd.Should().Be(95);
         }
@@ -24,7 +24,7 @@ namespace ChangeTracker.Domain.Tests.ChangeLogTests.ServicesTests
         public void NextFreePosition_LastPositionIsTen_Eleven()
         {
             var changeLogInfo = new ChangeLogInfo(TestProjectId, TestVersionId, 5, 10);
-            var service = new ChangeLogLinesVersionService(changeLogInfo);
+            var service = new VersionChangeLogService(changeLogInfo);
 
             service.NextFreePosition.Should().Be(11);
         }
@@ -33,7 +33,7 @@ namespace ChangeTracker.Domain.Tests.ChangeLogTests.ServicesTests
         public void AvailablePositions_MaxPositionsReached_ReturnsFalse()
         {
             var changeLogInfo = new ChangeLogInfo(TestProjectId, TestVersionId, 100, 112);
-            var service = new ChangeLogLinesVersionService(changeLogInfo);
+            var service = new VersionChangeLogService(changeLogInfo);
 
             service.IsPositionAvailable.Should().BeFalse();
         }
@@ -42,7 +42,7 @@ namespace ChangeTracker.Domain.Tests.ChangeLogTests.ServicesTests
         public void AvailablePositions_ThereAreFreePositions_ReturnsTrue()
         {
             var changeLogInfo = new ChangeLogInfo(TestProjectId, TestVersionId, 50, 112);
-            var service = new ChangeLogLinesVersionService(changeLogInfo);
+            var service = new VersionChangeLogService(changeLogInfo);
 
             service.IsPositionAvailable.Should().BeTrue();
         }

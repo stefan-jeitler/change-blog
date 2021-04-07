@@ -4,10 +4,11 @@ using System.Linq;
 using ChangeTracker.Domain.ChangeLog;
 using FluentAssertions;
 using Xunit;
+// ReSharper disable InconsistentNaming
 
 namespace ChangeTracker.Domain.Tests.ChangeLogTests
 {
-    public class ChangeLogLabelsTests
+    public class ChangeLogLineLabelsTests
     {
         private const uint TestPosition = 5;
         private static readonly Guid TestId = Guid.Parse("51d89265-52c2-4a38-a0fe-b99bdc5523d0");
@@ -31,7 +32,7 @@ namespace ChangeTracker.Domain.Tests.ChangeLogTests
             // act
             var line = new ChangeLogLine(TestId, TestVersionId,
                 TestProjectId, TestText, TestPosition,
-                TestCreationDate, labels);
+                TestCreationDate, labels, Array.Empty<Issue>());
 
             // assert
             line.Labels.Count.Should().Be(2);
@@ -60,13 +61,11 @@ namespace ChangeTracker.Domain.Tests.ChangeLogTests
                 Label.Parse("Fixed"), Label.Parse("Security")
             };
 
-            var line = new ChangeLogLine(TestId, TestVersionId,
+            Func<ChangeLogLine> act = () => new ChangeLogLine(TestId, TestVersionId,
                 TestProjectId, TestText, TestPosition,
-                TestCreationDate, labels);
+                TestCreationDate, labels, Array.Empty<Issue>());
 
-            // assert
-            line.Labels.Count.Should().Be(5);
-            line.Labels.Should().NotContain(Label.Parse("Security"));
+            act.Should().ThrowExactly<ArgumentException>();
         }
 
         [Fact]
@@ -80,35 +79,33 @@ namespace ChangeTracker.Domain.Tests.ChangeLogTests
         }
 
         [Fact]
-        public void TryAdd_LabelToPendingNote_LabelAdded()
+        public void AddLabel_ToPendingNote_LabelAdded()
         {
             var featureLabel = Label.Parse("Feature");
             var line = new ChangeLogLine(TestId, null,
                 TestProjectId, TestText, TestPosition,
                 TestCreationDate);
 
-            var isAdded = line.TryAddLabel(featureLabel);
+            line.AddLabel(featureLabel);
 
-            line.Labels.Count.Should().Be(1);
-            isAdded.Should().Be(true);
+            line.Labels.Should().Contain(featureLabel);
         }
 
         [Fact]
-        public void TryAdd_LabelToNotPendingNote_NotAdded()
+        public void AddLabel_ToNotPendingNote_InvalidOperationException()
         {
             var featureLabel = Label.Parse("Feature");
             var line = new ChangeLogLine(TestId, TestVersionId,
                 TestProjectId, TestText, TestPosition,
                 TestCreationDate);
 
-            var isAdded = line.TryAddLabel(featureLabel);
+            Action act = () => line.AddLabel(featureLabel);
 
-            line.Labels.Should().BeEmpty();
-            isAdded.Should().BeFalse();
+            act.Should().ThrowExactly<InvalidOperationException>();
         }
 
         [Fact]
-        public void TryAdd_LabelWhenMaxCountIsReached_NotAdded()
+        public void AddLabel_WhenMaxCountIsReached_()
         {
             // arrange
             var labels = new List<Label>
@@ -120,21 +117,19 @@ namespace ChangeTracker.Domain.Tests.ChangeLogTests
 
             var line = new ChangeLogLine(TestId, null,
                 TestProjectId, TestText, TestPosition,
-                TestCreationDate, labels);
+                TestCreationDate, labels, Array.Empty<Issue>());
 
             var newLabel = Label.Parse("Security");
 
             // act
-            var isAdded = line.TryAddLabel(newLabel);
+            Action act = () => line.AddLabel(newLabel);
 
             // assert
-            isAdded.Should().BeFalse();
-            line.Labels.Count.Should().Be(5);
-            line.Labels.Should().NotContain(newLabel);
+            act.Should().ThrowExactly<ArgumentException>();
         }
 
         [Fact]
-        public void TryAdd_ToExistingLabels_NewLabelAdded()
+        public void AddLabel_ToExistingLabels_NewLabelAdded()
         {
             // arrange
             var featureLabel = Label.Parse("Feature");
@@ -144,13 +139,12 @@ namespace ChangeTracker.Domain.Tests.ChangeLogTests
 
             var line = new ChangeLogLine(TestId, null,
                 TestProjectId, TestText, TestPosition,
-                TestCreationDate, existingLabels);
+                TestCreationDate, existingLabels, Array.Empty<Issue>());
 
             // act
-            var isAdded = line.TryAddLabel(deprecatedLabel);
+            line.AddLabel(deprecatedLabel);
 
             // assert
-            isAdded.Should().Be(true);
             line.Labels.Count.Should().Be(3);
             line.Labels.Should().Contain(featureLabel);
             line.Labels.Should().Contain(bugLabel);
@@ -158,7 +152,7 @@ namespace ChangeTracker.Domain.Tests.ChangeLogTests
         }
 
         [Fact]
-        public void Create_WithSameLabels_DuplicatesRemoved()
+        public void Create_WithSameLabels_NoDuplicates()
         {
             // arrange
             var featureLabel = Label.Parse("Feature");
@@ -167,7 +161,7 @@ namespace ChangeTracker.Domain.Tests.ChangeLogTests
             // act
             var line = new ChangeLogLine(TestId, TestVersionId,
                 TestProjectId, TestText, TestPosition,
-                TestCreationDate, existingLabels);
+                TestCreationDate, existingLabels, Array.Empty<Issue>());
 
             // assert
             line.Labels.Count.Should().Be(1);
@@ -175,27 +169,7 @@ namespace ChangeTracker.Domain.Tests.ChangeLogTests
         }
 
         [Fact]
-        public void TryAdd_SameLabel_NoDuplicates()
-        {
-            // arrange
-            var featureLabel = Label.Parse("Feature");
-            var existingLabels = new List<Label> {featureLabel};
-
-            var line = new ChangeLogLine(TestId, TestVersionId,
-                TestProjectId, TestText, TestPosition,
-                TestCreationDate, existingLabels);
-
-            // act
-            var isAdded = line.TryAddLabel(featureLabel);
-
-            // assert
-            isAdded.Should().BeFalse();
-            line.Labels.Count.Should().Be(1);
-            line.Labels.First().Should().Be(featureLabel);
-        }
-
-        [Fact]
-        public void TryRemove_ExistingLabel_LabelRemoved()
+        public void AddLabel_SameLabel_NoDuplicates()
         {
             // arrange
             var featureLabel = Label.Parse("Feature");
@@ -203,35 +177,52 @@ namespace ChangeTracker.Domain.Tests.ChangeLogTests
 
             var line = new ChangeLogLine(TestId, null,
                 TestProjectId, TestText, TestPosition,
-                TestCreationDate, existingLabels);
+                TestCreationDate, existingLabels, Array.Empty<Issue>());
 
             // act
-            var isRemoved = line.TryRemoveLabel(featureLabel);
+            line.AddLabel(featureLabel);
 
             // assert
-            isRemoved.Should().BeTrue();
+            line.Labels.Count.Should().Be(1);
+            line.Labels.First().Should().Be(featureLabel);
+        }
+
+        [Fact]
+        public void RemoveLabel_ThatExists_LabelRemoved()
+        {
+            // arrange
+            var featureLabel = Label.Parse("Feature");
+            var existingLabels = new List<Label> {featureLabel};
+
+            var line = new ChangeLogLine(TestId, null,
+                TestProjectId, TestText, TestPosition,
+                TestCreationDate, existingLabels, Array.Empty<Issue>());
+
+            // act
+            line.RemoveLabel(featureLabel);
+
+            // assert
             line.Labels.Should().BeEmpty();
         }
 
         [Fact]
-        public void TryRemove_NoLabelExists_ReturnsFalse()
+        public void RemoveLabel_NoLabelExists_NothingChanged()
         {
             // arrange
-            var line = new ChangeLogLine(TestId, TestVersionId,
+            var line = new ChangeLogLine(TestId, null, 
                 TestProjectId, TestText, TestPosition,
                 TestCreationDate);
 
             // act
-            var isRemoved = line.TryRemoveLabel(Label.Parse("Feature"));
+            line.RemoveLabel(Label.Parse("Feature"));
 
             // assert
-            isRemoved.Should().BeFalse();
             line.Labels.Should().BeEmpty();
         }
 
 
         [Fact]
-        public void TryRemove_NotPendingChangeLogLine_LabelNotRemoved()
+        public void RemoveLabel_FromNotPendingChangeLogLine_InvalidOperationException()
         {
             // arrange
             var featureLabel = Label.Parse("Feature");
@@ -239,14 +230,13 @@ namespace ChangeTracker.Domain.Tests.ChangeLogTests
 
             var line = new ChangeLogLine(TestId, TestVersionId,
                 TestProjectId, TestText, TestPosition,
-                TestCreationDate, existingLabels);
+                TestCreationDate, existingLabels, Array.Empty<Issue>());
 
             // act
-            var isRemoved = line.TryRemoveLabel(featureLabel);
+            Action act = () => line.RemoveLabel(featureLabel);
 
             // assert
-            isRemoved.Should().BeFalse();
-            line.Labels.Should().Contain(featureLabel);
+            act.Should().ThrowExactly<InvalidOperationException>();
         }
     }
 }

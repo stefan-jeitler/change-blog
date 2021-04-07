@@ -1,11 +1,11 @@
 ﻿using System;
-using ChangeTracker.Domain.ChangeLogVersion;
+using ChangeTracker.Domain.Version;
 using FluentAssertions;
 using Xunit;
 
 // ReSharper disable InconsistentNaming
 
-namespace ChangeTracker.Domain.Tests.ChangeLogVersionTests
+namespace ChangeTracker.Domain.Tests.VersionTests
 {
     public class ClVersionTests
     {

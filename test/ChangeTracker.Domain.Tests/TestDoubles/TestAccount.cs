@@ -1,6 +1,6 @@
 ﻿using System;
-using ChangeTracker.Domain.ChangeLogVersion;
 using ChangeTracker.Domain.Common;
+using ChangeTracker.Domain.Version;
 
 namespace ChangeTracker.Domain.Tests.TestDoubles
 {
@@ -20,6 +20,7 @@ namespace ChangeTracker.Domain.Tests.TestDoubles
             Text.Parse(@"^(\d+\.)?(\d+\.)?(\*|\d+)$"),
             Id,
             Text.Parse("a custom scheme for my project"),
-            DateTime.Parse("2021-04-05T15:00:00"));
+            DateTime.Parse("2021-04-05T15:00:00"),
+            null);
     }
 }

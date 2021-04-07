@@ -5,8 +5,8 @@ using ChangeTracker.Application.DataAccess.Accounts;
 using ChangeTracker.Application.DataAccess.Projects;
 using ChangeTracker.Domain;
 using ChangeTracker.Domain.ChangeLog.Services;
-using ChangeTracker.Domain.ChangeLogVersion;
 using ChangeTracker.Domain.Common;
+using ChangeTracker.Domain.Version;
 using CSharpFunctionalExtensions;
 
 // ReSharper disable InvertIf

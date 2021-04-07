@@ -15,6 +15,7 @@ namespace ChangeTracker.Domain.Tests.ChangeLogTests
         private static readonly Guid TestProjectId = Guid.Parse("ef5656e5-15f0-418d-b3a4-b69f1c3abac5");
         private static readonly ChangeLogText TestText = ChangeLogText.Parse("New feature added");
         private static readonly DateTime TestCreationDate = DateTime.Parse("2021-04.02T18:28");
+        private static readonly DateTime TestDeletionDate = DateTime.Parse("2021-04.02T18:28");
 
         [Fact]
         public void Create_WithValidArguments_Successful()
@@ -24,7 +25,10 @@ namespace ChangeTracker.Domain.Tests.ChangeLogTests
                 TestProjectId,
                 TestText,
                 TestPosition,
-                TestCreationDate);
+                TestCreationDate,
+                null, 
+                null,
+                null);
 
             line.Id.Should().Be(TestId);
             line.VersionId.Should().Be(TestVersionId);
@@ -32,6 +36,8 @@ namespace ChangeTracker.Domain.Tests.ChangeLogTests
             line.Text.Should().Be(TestText);
             line.Position.Should().Be(TestPosition);
             line.CreatedAt.Should().Be(TestCreationDate);
+            line.Labels.Should().BeEmpty();
+            line.DeletedAt.Should().BeNull();
         }
 
         [Fact]
@@ -40,6 +46,23 @@ namespace ChangeTracker.Domain.Tests.ChangeLogTests
             var line = new ChangeLogLine(TestVersionId, TestProjectId, TestText, TestPosition);
 
             line.Id.Should().NotBe(Guid.Empty);
+        }
+
+        [Fact]
+        public void Create_WithDeletionDate_DateIsProperlySet()
+        {
+            var line = new ChangeLogLine(TestId,
+                null,
+                TestProjectId,
+                TestText,
+                TestPosition,
+                TestCreationDate,
+                null,
+                null,
+                TestDeletionDate);
+
+            line.DeletedAt.HasValue.Should().BeTrue();
+            line.DeletedAt.Value.Should().Be(TestDeletionDate);
         }
 
         [Fact]
@@ -92,6 +115,20 @@ namespace ChangeTracker.Domain.Tests.ChangeLogTests
         }
 
         [Fact]
+        public void Create_WithVersionIdAndDeletionDate_InvalidOperationException()
+        {
+            Func<ChangeLogLine> act = () => new ChangeLogLine(TestId,
+                TestVersionId,
+                TestProjectId,
+                TestText,
+                TestPosition,
+                TestCreationDate,
+                TestDeletionDate);
+
+            act.Should().ThrowExactly<InvalidOperationException>("Released changeLog lines cannot be deleted.");
+        }
+
+        [Fact]
         public void Create_WithEmptyProjectId_ArgumentException()
         {
             Func<ChangeLogLine> act = () => new ChangeLogLine(TestId,
@@ -126,6 +163,20 @@ namespace ChangeTracker.Domain.Tests.ChangeLogTests
 
             Func<ChangeLogLine> act = () =>
                 new ChangeLogLine(TestId, TestVersionId, TestProjectId, TestText, TestPosition, createdAt);
+
+            act.Should().ThrowExactly<ArgumentException>();
+        }
+
+
+        [Theory]
+        [InlineData("0001-01-01T00:00:00.0000000")]
+        [InlineData("9999-12-31T23:59:59.9999999")]
+        public void Create_WithInvalidDeletedAtDate_ArgumentNullException(string invalidDate)
+        {
+            var deletedAt = DateTime.Parse(invalidDate);
+
+            Func<ChangeLogLine> act = () =>
+                new ChangeLogLine(TestId, TestVersionId, TestProjectId, TestText, TestPosition, TestCreationDate, deletedAt);
 
             act.Should().ThrowExactly<ArgumentException>();
         }

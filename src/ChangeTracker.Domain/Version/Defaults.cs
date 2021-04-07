@@ -1,7 +1,7 @@
 ﻿using System;
 using ChangeTracker.Domain.Common;
 
-namespace ChangeTracker.Domain.ChangeLogVersion
+namespace ChangeTracker.Domain.Version
 {
     public static class Defaults
     {
@@ -12,6 +12,7 @@ namespace ChangeTracker.Domain.ChangeLogVersion
                 @"^(0|[1-9]\d*)\.(0|[1-9]\d*)\.(0|[1-9]\d*)(?:-((?:0|[1-9]\d*|\d*[a-zA-Z-][0-9a-zA-Z-]*)(?:\.(?:0|[1-9]\d*|\d*[a-zA-Z-][0-9a-zA-Z-]*))*))?(?:\+([0-9a-zA-Z-]+(?:\.[0-9a-zA-Z-]+)*))?$"),
             null,
             Text.Parse("Semantic Versioning 2.0.0 - see https://semver.org/ for more info"),
-            DateTime.Parse("2021-04-05T15:00:00"));
+            DateTime.Parse("2021-04-05T15:00:00"),
+            null);
     }
 }

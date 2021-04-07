@@ -1,5 +1,5 @@
 ﻿using System;
-using ChangeTracker.Domain.ChangeLogVersion;
+using ChangeTracker.Domain.Version;
 
 namespace ChangeTracker.Domain.ChangeLog.Services
 {

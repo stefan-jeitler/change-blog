@@ -1,9 +1,9 @@
 ﻿using System;
-using ChangeTracker.Domain.ChangeLogVersion;
+using ChangeTracker.Domain.Version;
 using FluentAssertions;
 using Xunit;
 
-namespace ChangeTracker.Domain.Tests.ChangeLogVersionTests
+namespace ChangeTracker.Domain.Tests.VersionTests
 {
     public class ClVersionInfoTests
     {
@@ -12,6 +12,7 @@ namespace ChangeTracker.Domain.Tests.ChangeLogVersionTests
         private static readonly Guid TestProjectId = Guid.Parse("d816fb67-f2c3-4d2a-8713-f93a432fbf41");
         private static readonly DateTime TestReleaseDate = DateTime.Parse("2021-04-02T18:30");
         private static readonly DateTime TestCreationDate = DateTime.Parse("2021-04-02T17:30");
+        private static readonly DateTime TestDeletionDate = DateTime.Parse("2021-04-02T17:31");
 
         [Fact]
         public void Create_WithValidArguments_Successful()
@@ -24,6 +25,7 @@ namespace ChangeTracker.Domain.Tests.ChangeLogVersionTests
             version.Value.Should().Be(TestVersion);
             version.ReleasedAt.Should().Be(TestReleaseDate);
             version.CreatedAt.Should().Be(TestCreationDate);
+            version.DeletedAt.Should().BeNull();
         }
 
         [Fact]
@@ -82,7 +84,7 @@ namespace ChangeTracker.Domain.Tests.ChangeLogVersionTests
         }
 
         [Fact]
-        public void WasAlreadyReleased_WithNullReleaseAtDateTime_ReturnsFalse()
+        public void IsReleased_WithNullReleaseAtDateTime_ReturnsFalse()
         {
             var version = new ClVersionInfo(TestId,
                 TestProjectId, TestVersion,
@@ -90,11 +92,11 @@ namespace ChangeTracker.Domain.Tests.ChangeLogVersionTests
                 TestCreationDate,
                 null);
 
-            version.WasAlreadyReleased.Should().BeFalse("Version is not yet released.");
+            version.IsReleased.Should().BeFalse("Versions can be released later.");
         }
 
         [Fact]
-        public void WasAlreadyReleased_WithValidReleaseAtDateTime_ReturnsFalse()
+        public void IsReleased_WithReleaseAtDateTime_ReturnsTrue()
         {
             var version = new ClVersionInfo(TestId,
                 TestProjectId, TestVersion,
@@ -102,7 +104,44 @@ namespace ChangeTracker.Domain.Tests.ChangeLogVersionTests
                 TestCreationDate,
                 null);
 
-            version.WasAlreadyReleased.Should().BeTrue();
+            version.IsReleased.Should().BeTrue();
+        }
+
+        [Fact]
+        public void IsDeleted_WithNullDeletedAtDateTime_ReturnsFalse()
+        {
+            var version = new ClVersionInfo(TestId,
+                TestProjectId, TestVersion,
+                DateTime.Parse("2021-04-06"),
+                TestCreationDate,
+                null);
+
+            version.IsDeleted.Should().BeFalse();
+        }
+
+        [Fact]
+        public void IsDeleted_WithReleaseAtDateTime_ReturnsTrue()
+        {
+            var version = new ClVersionInfo(TestId,
+                TestProjectId, TestVersion,
+                null,
+                TestCreationDate,
+                DateTime.Parse("2021-04-06"));
+
+            version.IsDeleted.Should().BeTrue();
+        }
+
+        [Fact]
+        public void Create_WithReleaseAtAndDeletedAtDateTime_InvalidOperationException()
+        {
+            Func<ClVersionInfo> act = () => new ClVersionInfo(TestId,
+                TestProjectId,
+                TestVersion,
+                TestReleaseDate,
+                TestCreationDate,
+                TestDeletionDate);
+
+            act.Should().ThrowExactly<InvalidOperationException>();
         }
 
         [Theory]
@@ -110,12 +149,10 @@ namespace ChangeTracker.Domain.Tests.ChangeLogVersionTests
         [InlineData("9999-12-31T23:59:59.9999999")]
         public void Create_WithReleaseAtDateTimeMinValueAndMaxValue_ArgumentException(string invalidDate)
         {
-            var changeLogdAt = DateTime.Parse(invalidDate);
-
             Func<ClVersionInfo> act = () => new ClVersionInfo(TestId,
                 TestProjectId,
                 TestVersion,
-                changeLogdAt,
+                DateTime.Parse(invalidDate),
                 TestCreationDate,
                 null);
 

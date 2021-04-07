@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Text.RegularExpressions;
 
-namespace ChangeTracker.Domain.ChangeLogVersion
+namespace ChangeTracker.Domain.Version
 {
     public record ClVersion
     {

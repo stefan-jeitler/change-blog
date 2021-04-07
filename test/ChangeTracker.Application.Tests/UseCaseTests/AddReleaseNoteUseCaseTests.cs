@@ -4,7 +4,7 @@ using System.Threading.Tasks;
 using ChangeTracker.Application.Tests.TestDoubles;
 using ChangeTracker.Application.UseCases.AddChangeLogLine;
 using ChangeTracker.Domain;
-using ChangeTracker.Domain.ChangeLogVersion;
+using ChangeTracker.Domain.Version;
 using Moq;
 using Xunit;
 

@@ -1,6 +1,6 @@
 ﻿using System;
 using System.Threading.Tasks;
-using ChangeTracker.Domain.ChangeLogVersion;
+using ChangeTracker.Domain.Version;
 using CSharpFunctionalExtensions;
 using OneOf;
 

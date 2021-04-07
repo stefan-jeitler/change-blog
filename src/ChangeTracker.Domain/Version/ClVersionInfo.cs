@@ -2,7 +2,7 @@
 
 // ReSharper disable ConvertIfStatementToSwitchStatement
 
-namespace ChangeTracker.Domain.ChangeLogVersion
+namespace ChangeTracker.Domain.Version
 {
     public class ClVersionInfo : IEquatable<ClVersionInfo>
     {
@@ -23,7 +23,6 @@ namespace ChangeTracker.Domain.ChangeLogVersion
                 throw new ArgumentException("ProjectId must not be empty.");
 
             ProjectId = projectId;
-
             Value = version ?? throw new ArgumentNullException(nameof(version));
 
             if (releasedAt.HasValue &&
@@ -39,10 +38,7 @@ namespace ChangeTracker.Domain.ChangeLogVersion
 
             CreatedAt = createdAt;
 
-            if (deletedAt.HasValue &&
-                (deletedAt.Value == DateTime.MinValue || deletedAt.Value == DateTime.MaxValue))
-                throw new ArgumentException("Invalid deletion date.");
-
+            VerifyDeletedDate(releasedAt, deletedAt);
             DeletedAt = deletedAt;
         }
 
@@ -53,7 +49,9 @@ namespace ChangeTracker.Domain.ChangeLogVersion
         public DateTime CreatedAt { get; }
         public DateTime? DeletedAt { get; }
 
-        public bool WasAlreadyReleased => ReleasedAt.HasValue;
+        public bool IsReleased => ReleasedAt.HasValue;
+
+        public bool IsDeleted => DeletedAt.HasValue;
 
         public bool Equals(ClVersionInfo other)
         {
@@ -66,6 +64,16 @@ namespace ChangeTracker.Domain.ChangeLogVersion
             return Id.Equals(other.Id) &&
                    ProjectId.Equals(other.ProjectId) &&
                    Equals(Value, other.Value);
+        }
+
+        private static void VerifyDeletedDate(DateTime? releasedAt, DateTime? deletedAt)
+        {
+            if (deletedAt.HasValue &&
+                (deletedAt.Value == DateTime.MinValue || deletedAt.Value == DateTime.MaxValue))
+                throw new ArgumentException("Invalid deletion date.");
+
+            if (deletedAt.HasValue && releasedAt.HasValue)
+                throw new InvalidOperationException("An already released version cannot be deleted.");
         }
 
         public override bool Equals(object obj)

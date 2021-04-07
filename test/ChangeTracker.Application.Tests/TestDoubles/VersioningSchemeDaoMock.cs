@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Threading.Tasks;
 using ChangeTracker.Application.DataAccess.Projects;
-using ChangeTracker.Domain.ChangeLogVersion;
+using ChangeTracker.Domain.Version;
 using CSharpFunctionalExtensions;
 
 namespace ChangeTracker.Application.Tests.TestDoubles

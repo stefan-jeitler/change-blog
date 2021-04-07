@@ -1,12 +1,12 @@
 ﻿using System;
 using ChangeTracker.Domain.Common;
 
-namespace ChangeTracker.Domain.ChangeLogVersion
+namespace ChangeTracker.Domain.Version
 {
     public record VersioningScheme
     {
         public VersioningScheme(Guid id, Name name, Text regexPattern, Guid? accountId, Text description,
-            DateTime createdAt)
+            DateTime createdAt, DateTime? deletedAt)
         {
             if (id == Guid.Empty)
                 throw new ArgumentException("Id cannot be empty.");
@@ -26,6 +26,12 @@ namespace ChangeTracker.Domain.ChangeLogVersion
                 throw new ArgumentException("Invalid creation date.");
 
             CreatedAt = createdAt;
+
+            if (deletedAt.HasValue &&
+                (deletedAt.Value == DateTime.MinValue || deletedAt.Value == DateTime.MaxValue))
+                throw new ArgumentException("Invalid deletion date");
+
+            DeletedAt = deletedAt;
         }
 
         public Guid Id { get; }
@@ -34,5 +40,6 @@ namespace ChangeTracker.Domain.ChangeLogVersion
         public Guid? AccountId { get; }
         public Text Description { get; }
         public DateTime CreatedAt { get; }
+        public DateTime? DeletedAt { get; }
     }
 }

@@ -1,11 +1,11 @@
 ﻿namespace ChangeTracker.Domain.ChangeLog.Services
 {
-    public class ChangeLogLinesVersionService
+    public class VersionChangeLogService
     {
         public const int MaxChangeLog = 100;
         private readonly ChangeLogInfo _changeLogInfo;
 
-        public ChangeLogLinesVersionService(ChangeLogInfo changeLogInfo)
+        public VersionChangeLogService(ChangeLogInfo changeLogInfo)
         {
             _changeLogInfo = changeLogInfo;
         }

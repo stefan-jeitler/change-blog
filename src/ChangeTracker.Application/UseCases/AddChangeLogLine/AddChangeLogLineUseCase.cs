@@ -7,7 +7,7 @@ using ChangeTracker.Application.DataAccess.Projects;
 using ChangeTracker.Application.DataAccess.Versions;
 using ChangeTracker.Domain.ChangeLog;
 using ChangeTracker.Domain.ChangeLog.Services;
-using ChangeTracker.Domain.ChangeLogVersion;
+using ChangeTracker.Domain.Version;
 using CSharpFunctionalExtensions;
 
 // ReSharper disable InvertIf
@@ -82,11 +82,11 @@ namespace ChangeTracker.Application.UseCases.AddChangeLogLine
             }
 
             var changeLogInfo = await _changeLogDao.GetChangeLogInfoAsync(project.Value.Id, versionInfo.Value.Id);
-            var changeLogLineVersionService = new ChangeLogLinesVersionService(changeLogInfo);
+            var changeLogLineVersionService = new VersionChangeLogService(changeLogInfo);
 
             if (!changeLogLineVersionService.IsPositionAvailable)
             {
-                output.MaxChangeLogReached(ChangeLogLinesVersionService.MaxChangeLog);
+                output.MaxChangeLogReached(VersionChangeLogService.MaxChangeLog);
                 return Maybe<ChangeLogLine>.None;
             }
 
@@ -96,7 +96,8 @@ namespace ChangeTracker.Application.UseCases.AddChangeLogLine
                 changeLogLineText,
                 changeLogLineVersionService.NextFreePosition,
                 DateTime.UtcNow,
-                labels);
+                labels, 
+                Array.Empty<Issue>());
 
             return Maybe<ChangeLogLine>.From(changeLogLine);
         }

@@ -4,7 +4,7 @@ using ChangeTracker.Application.DataAccess;
 using ChangeTracker.Application.Tests.TestDoubles;
 using ChangeTracker.Application.UseCases.CreateProject;
 using ChangeTracker.Domain;
-using ChangeTracker.Domain.ChangeLogVersion;
+using ChangeTracker.Domain.Version;
 using Moq;
 using Xunit;
 

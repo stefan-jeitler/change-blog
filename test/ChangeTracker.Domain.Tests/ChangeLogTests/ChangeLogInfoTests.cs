@@ -45,5 +45,38 @@ namespace ChangeTracker.Domain.Tests.ChangeLogTests
             changeLogInfo.VersionId.Should()
                 .BeNull("Pending changeLog lines allowed, that are not assigned to a version yet.");
         }
+
+
+        [Fact]
+        public void RemainingPositionsToAdd_FiveNotesExists_NinetyFiveAvailablePositions()
+        {
+            var changeLogInfo = new ChangeLogInfo(TestProjectId, TestVersionId, 5, 4);
+
+            changeLogInfo.RemainingPositionsToAdd.Should().Be(95);
+        }
+
+        [Fact]
+        public void NextFreePosition_LastPositionIsTen_Eleven()
+        {
+            var changeLogInfo = new ChangeLogInfo(TestProjectId, TestVersionId, 5, 10);
+
+            changeLogInfo.NextFreePosition.Should().Be(11);
+        }
+
+        [Fact]
+        public void AvailablePositions_MaxPositionsReached_ReturnsFalse()
+        {
+            var changeLogInfo = new ChangeLogInfo(TestProjectId, TestVersionId, 100, 112);
+
+            changeLogInfo.IsPositionAvailable.Should().BeFalse();
+        }
+
+        [Fact]
+        public void AvailablePositions_ThereAreFreePositions_ReturnsTrue()
+        {
+            var changeLogInfo = new ChangeLogInfo(TestProjectId, TestVersionId, 50, 112);
+
+            changeLogInfo.IsPositionAvailable.Should().BeTrue();
+        }
     }
 }

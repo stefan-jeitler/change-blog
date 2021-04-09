@@ -39,6 +39,14 @@ namespace ChangeTracker.Domain.Tests.ChangeLogTests
             act.Should().ThrowExactly<ArgumentException>();
         }
 
+        [Fact]
+        public void Parse_WithWhitespaceInTheMiddle_ArgumentException()
+        {
+            Func<Issue> act = () => Issue.Parse("# 1234");
+
+            act.Should().ThrowExactly<ArgumentException>();
+        }
+
         [Theory]
         [InlineData(" #1234")]
         [InlineData(" #1234 ")]

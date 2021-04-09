@@ -6,7 +6,7 @@ namespace ChangeTracker.Domain.Version
 {
     public class ClVersionInfo : IEquatable<ClVersionInfo>
     {
-        public ClVersionInfo(Guid projectId, ClVersion version, DateTime? releasedAt)
+        public ClVersionInfo(Guid projectId, ClVersion version, DateTime? releasedAt = null)
             : this(Guid.NewGuid(), projectId, version, releasedAt, DateTime.UtcNow, null)
         {
         }

@@ -4,6 +4,8 @@ namespace ChangeTracker.Domain.ChangeLog
 {
     public record ChangeLogInfo
     {
+        public const int MaxChangeLogLines = 100;
+
         public ChangeLogInfo(Guid projectId, Guid? versionId, uint count, uint lastPosition)
         {
             if (projectId == Guid.Empty)
@@ -23,5 +25,9 @@ namespace ChangeTracker.Domain.ChangeLog
         public Guid? VersionId { get; }
         public uint Count { get; }
         public uint LastPosition { get; }
+
+        public uint RemainingPositionsToAdd => MaxChangeLogLines - Count;
+        public uint NextFreePosition => LastPosition + 1;
+        public bool IsPositionAvailable => RemainingPositionsToAdd > 0;
     }
 }

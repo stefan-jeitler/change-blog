@@ -8,7 +8,7 @@ namespace ChangeTracker.Domain.ChangeLog
 {
     public record ChangeLogLine
     {
-        private const int MaxIssues = 10;
+        public const int MaxIssues = 10;
         public const int MaxLabels = 5;
 
         public ChangeLogLine(Guid id, Guid? versionId, Guid projectId, ChangeLogText text, uint position,

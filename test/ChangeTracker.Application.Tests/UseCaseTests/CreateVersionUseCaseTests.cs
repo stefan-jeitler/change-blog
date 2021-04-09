@@ -21,7 +21,7 @@ namespace ChangeTracker.Application.Tests.UseCaseTests
             _projectDaoMock = new ProjectDaoMock();
             _versionDaoMock = new VersionDaoMock();
             _unitOfWorkMock = new Mock<IUnitOfWork>();
-            _outputPortMock = new Mock<ICreateVersionOutputPort>();
+            _outputPortMock = new Mock<ICreateVersionOutputPort>(MockBehavior.Strict);
         }
 
         [Fact]
@@ -32,6 +32,8 @@ namespace ChangeTracker.Application.Tests.UseCaseTests
             var createVersionDto = new CreateVersionDto(TestAccount.Project.Id, "1.2.3");
             var createVersionUseCase =
                 new CreateVersionUseCase(_versionDaoMock, _projectDaoMock, _unitOfWorkMock.Object);
+
+            _outputPortMock.Setup(m => m.Created(It.IsAny<Guid>()));
 
             // act
             await createVersionUseCase.ExecuteAsync(_outputPortMock.Object, createVersionDto);
@@ -49,6 +51,8 @@ namespace ChangeTracker.Application.Tests.UseCaseTests
             var createVersionUseCase =
                 new CreateVersionUseCase(_versionDaoMock, _projectDaoMock, _unitOfWorkMock.Object);
 
+            _outputPortMock.Setup(m => m.InvalidVersionFormat(It.IsAny<string>()));
+
             // act
             await createVersionUseCase.ExecuteAsync(_outputPortMock.Object, createVersionDto);
 
@@ -63,6 +67,8 @@ namespace ChangeTracker.Application.Tests.UseCaseTests
             var createVersionDto = new CreateVersionDto(TestAccount.Project.Id, "1.2.3");
             var createVersionUseCase =
                 new CreateVersionUseCase(_versionDaoMock, _projectDaoMock, _unitOfWorkMock.Object);
+
+            _outputPortMock.Setup(m => m.ProjectDoesNotExist());
 
             // act
             await createVersionUseCase.ExecuteAsync(_outputPortMock.Object, createVersionDto);
@@ -81,6 +87,8 @@ namespace ChangeTracker.Application.Tests.UseCaseTests
             var createVersionDto = new CreateVersionDto(TestAccount.Project.Id, "12*");
             var createVersionUseCase =
                 new CreateVersionUseCase(_versionDaoMock, _projectDaoMock, _unitOfWorkMock.Object);
+
+            _outputPortMock.Setup(m => m.VersionDoesNotMatchScheme(It.IsAny<string>()));
 
             // act
             await createVersionUseCase.ExecuteAsync(_outputPortMock.Object, createVersionDto);

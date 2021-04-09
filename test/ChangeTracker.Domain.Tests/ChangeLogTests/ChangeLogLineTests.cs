@@ -26,7 +26,6 @@ namespace ChangeTracker.Domain.Tests.ChangeLogTests
                 TestText,
                 TestPosition,
                 TestCreationDate,
-                null, 
                 null,
                 null);
 
@@ -153,7 +152,7 @@ namespace ChangeTracker.Domain.Tests.ChangeLogTests
 
             act.Should().ThrowExactly<ArgumentNullException>();
         }
-
+        
         [Theory]
         [InlineData("0001-01-01T00:00:00.0000000")]
         [InlineData("9999-12-31T23:59:59.9999999")]
@@ -176,7 +175,8 @@ namespace ChangeTracker.Domain.Tests.ChangeLogTests
             var deletedAt = DateTime.Parse(invalidDate);
 
             Func<ChangeLogLine> act = () =>
-                new ChangeLogLine(TestId, TestVersionId, TestProjectId, TestText, TestPosition, TestCreationDate, deletedAt);
+                new ChangeLogLine(TestId, TestVersionId, TestProjectId, TestText, TestPosition, TestCreationDate,
+                    deletedAt);
 
             act.Should().ThrowExactly<ArgumentException>();
         }

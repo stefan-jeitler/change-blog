@@ -47,14 +47,13 @@ namespace ChangeTracker.Domain.Tests.ChangeLogTests
                 TestProjectId, TestText, TestPosition,
                 TestCreationDate);
 
-            // assert
             line.Labels.Should().BeEmpty();
         }
 
         [Fact]
-        public void Create_With6Labels_OnlyFirst5Taken()
+        public void Create_With6Labels_ArgumentException()
         {
-            var labels = new List<Label>
+            var labels = new []
             {
                 Label.Parse("Added"), Label.Parse("Changed"),
                 Label.Parse("Deprecated"), Label.Parse("Removed"),
@@ -166,6 +165,63 @@ namespace ChangeTracker.Domain.Tests.ChangeLogTests
             // assert
             line.Labels.Count.Should().Be(1);
             line.Labels.First().Should().Be(featureLabel);
+        }
+
+        [Fact]
+        public void AvailableLabelPlaces_EmptyLabels_ReturnsFive()
+        {
+            // arrange
+            var line = new ChangeLogLine(TestId, TestVersionId,
+                TestProjectId, TestText, TestPosition,
+                TestCreationDate, Enumerable.Empty<Label>(), Enumerable.Empty<Issue>());
+
+            // act
+            var remainingLabelPlaces = line.AvailableLabelPlaces;
+
+            // assert
+            remainingLabelPlaces.Should().Be(5);
+        }
+
+        [Fact]
+        public void AvailableLabelPlaces_OneLabelExists_ReturnsFour()
+        {
+            // arrange
+            var featureLabel = Label.Parse("Feature");
+            var existingLabels = new List<Label> {featureLabel};
+
+            var line = new ChangeLogLine(TestId, TestVersionId,
+                TestProjectId, TestText, TestPosition,
+                TestCreationDate, existingLabels, Array.Empty<Issue>());
+
+            // act
+            var remainingLabelPlaces = line.AvailableLabelPlaces;
+
+            // assert
+            remainingLabelPlaces.Should().Be(4);
+        }
+
+        [Fact]
+        public void AvailableLabelPlaces_Full_ReturnsZero()
+        {
+            // arrange
+            var existingLabels = new Label[]
+            {
+                Label.Parse("Feature"),
+                Label.Parse("Security"),
+                Label.Parse("Bug"),
+                Label.Parse("Deprecated"),
+                Label.Parse("ProxyStrikesBack")
+            };
+
+            var line = new ChangeLogLine(TestId, TestVersionId,
+                TestProjectId, TestText, TestPosition,
+                TestCreationDate, existingLabels, Array.Empty<Issue>());
+
+            // act
+            var remainingLabelPlaces = line.AvailableLabelPlaces;
+
+            // assert
+            remainingLabelPlaces.Should().Be(0);
         }
 
         [Fact]

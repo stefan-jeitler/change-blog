@@ -33,5 +33,238 @@ namespace ChangeTracker.Domain.Tests.ChangeLogTests
             line.Issues.Count.Should().Be(1);
             line.Issues.First().Should().Be(TestIssue);
         }
+
+        [Fact]
+        public void Create_WithoutIssues_Empty()
+        {
+            var line = new ChangeLogLine(TestId,
+                TestVersionId,
+                TestProjectId,
+                TestText,
+                TestPosition,
+                TestCreationDate,
+                Enumerable.Empty<Label>(),
+                Enumerable.Empty<Issue>());
+
+            line.Issues.Should().BeEmpty();
+        }
+
+
+        [Fact]
+        public void Create_WithNullIssues_Empty()
+        {
+            var line = new ChangeLogLine(TestId,
+                TestVersionId,
+                TestProjectId,
+                TestText,
+                TestPosition,
+                TestCreationDate,
+                Enumerable.Empty<Label>(),
+                null);
+
+            line.Issues.Should().BeEmpty();
+        }
+
+        [Fact]
+        public void Create_WithTooManyIssues_ArgumentException()
+        {
+            var issues = new[]
+            {
+                Issue.Parse("#1231"), Issue.Parse("#1232"), Issue.Parse("#1233"),
+                Issue.Parse("#1234"), Issue.Parse("#1235"), Issue.Parse("#1236"),
+                Issue.Parse("#1237"), Issue.Parse("#1238"), Issue.Parse("#1239"),
+                Issue.Parse("#12310"), Issue.Parse("#12311"),
+            };
+
+            Func<ChangeLogLine> act = () => new ChangeLogLine(TestId,
+                TestVersionId,
+                TestProjectId,
+                TestText,
+                TestPosition,
+                TestCreationDate,
+                Enumerable.Empty<Label>(),
+                issues);
+
+            act.Should().ThrowExactly<ArgumentException>();
+        }
+
+        [Fact]
+        public void Create_WithMaxIssues_ArgumentException()
+        {
+            var issues = new[]
+            {
+                Issue.Parse("#1231"), Issue.Parse("#1232"), Issue.Parse("#1233"),
+                Issue.Parse("#1234"), Issue.Parse("#1235"), Issue.Parse("#1236"),
+                Issue.Parse("#1237"), Issue.Parse("#1238"), Issue.Parse("#1239"),
+                Issue.Parse("#12310")
+            };
+
+            var line = new ChangeLogLine(TestId,
+                TestVersionId,
+                TestProjectId,
+                TestText,
+                TestPosition,
+                TestCreationDate,
+                Enumerable.Empty<Label>(),
+                issues);
+
+            line.Issues.Count.Should().Be(10);
+        }
+
+        [Fact]
+        public void AddIssue_ToPendingChangeLogLine_SuccessfullyAdded()
+        {
+            // arrange
+            var issue = Issue.Parse("#1234");
+            var line = new ChangeLogLine(TestId,
+                null, TestProjectId, TestText, 
+                TestPosition, TestCreationDate,
+                Enumerable.Empty<Label>(),
+                Enumerable.Empty<Issue>());
+
+            // act
+            line.AddIssue(issue);
+
+            // assert
+            line.Issues.Should().Contain(issue);
+        }
+
+        [Fact]
+        public void AddIssue_ToNotPendingChangeLogLine_InvalidOperationException()
+        {
+            // arrange
+            var issue = Issue.Parse("#1234");
+            var line = new ChangeLogLine(TestId,
+                TestVersionId, TestProjectId, TestText, 
+                TestPosition, TestCreationDate,
+                Enumerable.Empty<Label>(),
+                Enumerable.Empty<Issue>());
+
+            // act
+            Action act = () => line.AddIssue(issue);
+
+            // assert
+            act.Should().ThrowExactly<InvalidOperationException>();
+        }
+
+        [Fact]
+        public void AddIssue_MaxIssuesReached_ArgumentException()
+        {
+            // arrange
+            var issues = new []
+            {
+                Issue.Parse("#12341"), Issue.Parse("#12342"), Issue.Parse("#12343"),
+                Issue.Parse("#12344"), Issue.Parse("#12345"), Issue.Parse("#12346"),
+                Issue.Parse("#12347"), Issue.Parse("#12348"), Issue.Parse("#12349"),
+                Issue.Parse("#123410")
+            };
+
+            var line = new ChangeLogLine(TestId,
+                null, TestProjectId, TestText, 
+                TestPosition, TestCreationDate,
+                Enumerable.Empty<Label>(), issues);
+
+            // act
+            Action act = () => line.AddIssue(Issue.Parse("#123411"));
+
+            // assert
+            act.Should().ThrowExactly<ArgumentException>();
+        }
+
+        [Fact]
+        public void RemoveIssue_NoIssuesExists_NothingChanged()
+        {
+            var line = new ChangeLogLine(TestId,
+                null, TestProjectId, TestText,
+                TestPosition, TestCreationDate,
+                Enumerable.Empty<Label>(),
+                Enumerable.Empty<Issue>());
+
+            line.RemoveIssue(Issue.Parse("#123411"));
+
+            line.Issues.Should().BeEmpty();
+        }
+
+        [Fact]
+        public void RemoveIssue_ThatExists_IssueRemoved()
+        {
+            var issue = Issue.Parse("#123411");
+            var line = new ChangeLogLine(TestId,
+                null, TestProjectId, TestText,
+                TestPosition, TestCreationDate,
+                Enumerable.Empty<Label>(),
+                new List<Issue>(1){issue});
+
+            line.RemoveIssue(issue);
+
+            line.Issues.Should().BeEmpty();
+        }
+
+        [Fact]
+        public void RemoveIssue_TwoExists_OneGetsRemoved()
+        {
+            var issue1 = Issue.Parse("#123411");
+            var issue2 = Issue.Parse("#123412");
+            var line = new ChangeLogLine(TestId,
+                null, TestProjectId, TestText,
+                TestPosition, TestCreationDate,
+                Enumerable.Empty<Label>(),
+                new List<Issue>(1){issue1, issue2});
+
+            line.RemoveIssue(issue2);
+
+            line.Issues.Should().Contain(issue1);
+            line.Issues.Count.Should().Be(1);
+        }
+
+        [Fact]
+        public void RemoveIssue_NotPendingChangeLogLine_InvalidOperationException()
+        {
+            var line = new ChangeLogLine(TestId,
+                TestVersionId, TestProjectId, TestText,
+                TestPosition, TestCreationDate,
+                Enumerable.Empty<Label>(), Enumerable.Empty<Issue>());
+
+            Action act = () => line.RemoveIssue(Issue.Parse("#123411"));
+
+            act.Should().ThrowExactly<InvalidOperationException>();
+        }
+
+        [Fact]
+        public void AvailableIssuePlaces_NoIssueExists_ReturnsTen()
+        {
+            var line = new ChangeLogLine(TestId,
+                TestVersionId, TestProjectId, TestText,
+                TestPosition, TestCreationDate,
+                Enumerable.Empty<Label>(), Enumerable.Empty<Issue>());
+
+            var remainingIssuePlaces = line.AvailableIssuePlaces;
+
+            remainingIssuePlaces.Should().Be(10);
+        }
+
+        [Fact]
+        public void AvailableIssuePlaces_TenIssueExists_ReturnsZero()
+        {
+            // arrange
+            var issues = new[]
+            {
+                Issue.Parse("#12341"), Issue.Parse("#12342"), Issue.Parse("#12343"),
+                Issue.Parse("#12344"), Issue.Parse("#12345"), Issue.Parse("#12346"),
+                Issue.Parse("#12347"), Issue.Parse("#12348"), Issue.Parse("#12349"),
+                Issue.Parse("#123410")
+            };
+
+            var line = new ChangeLogLine(TestId,
+                null, TestProjectId, TestText,
+                TestPosition, TestCreationDate,
+                Enumerable.Empty<Label>(), issues);
+
+            // act
+            var remainingIssuePlaces = line.AvailableIssuePlaces;
+
+            // assert
+            remainingIssuePlaces.Should().Be(0);
+        }
     }
 }

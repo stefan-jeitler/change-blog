@@ -6,5 +6,5 @@ using System.Threading.Tasks;
 
 namespace ChangeTracker.Application.UseCases.AddPendingChangeLogLine
 {
-    public record AddPendingChangeLogLineDto(Guid ProjectId, string Text, List<string> Labels, List<string> Issues);
+    public record PendingChangeLogLineDto(Guid ProjectId, string Text, List<string> Labels, List<string> Issues);
 }

@@ -3,9 +3,9 @@ using System.Collections.Generic;
 using System.Threading.Tasks;
 using ChangeTracker.Application.DataAccess;
 using ChangeTracker.Application.DataAccess.Versions;
+using ChangeTracker.Domain.ChangeLog;
 using ChangeTracker.Domain.Version;
 using CSharpFunctionalExtensions;
-using OneOf;
 
 namespace ChangeTracker.Application.Tests.TestDoubles
 {
@@ -21,16 +21,16 @@ namespace ChangeTracker.Application.Tests.TestDoubles
             return Task.FromResult(v);
         }
 
-        public Task<OneOf<ClVersionInfo, Conflict>> AddAsync(ClVersionInfo clVersion)
+        public Task<Result<ClVersionInfo, Conflict>> AddAsync(ClVersionInfo clVersion)
         {
             if (ProduceConflict)
             {
-                var conflict = OneOf<ClVersionInfo, Conflict>.FromT1(new Conflict("some conflict"));
+                var conflict = Result.Failure<ClVersionInfo, Conflict> (new Conflict("some conflict"));
                 return Task.FromResult(conflict);
             }
 
             VersionInfo.Add(clVersion);
-            return Task.FromResult(OneOf<ClVersionInfo, Conflict>.FromT0(clVersion));
+            return Task.FromResult(Result.Success<ClVersionInfo, Conflict>(clVersion));
         }
     }
 }

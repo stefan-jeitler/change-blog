@@ -4,6 +4,6 @@ namespace ChangeTracker.Application.UseCases.AddChangeLogLine
 {
     public interface IAddChangeLogLineUseCase
     {
-        Task ExecuteAsync(IAddChangeLogLineOutputPort output, AddChangeLogLineDto changeLogLineDto);
+        Task ExecuteAsync(IAddChangeLogLineOutputPort output, ChangeLogLineDto changeLogLineDto);
     }
 }

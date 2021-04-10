@@ -2,7 +2,7 @@
 
 namespace ChangeTracker.Application.UseCases.CreateProject
 {
-    public record CreateProjectDto(Guid AccountId,
+    public record ProjectDto(Guid AccountId,
         string Name,
         Guid? VersioningSchemeId);
 }

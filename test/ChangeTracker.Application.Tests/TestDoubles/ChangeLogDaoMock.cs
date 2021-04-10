@@ -5,7 +5,7 @@ using System.Threading.Tasks;
 using ChangeTracker.Application.DataAccess;
 using ChangeTracker.Application.DataAccess.Versions;
 using ChangeTracker.Domain.ChangeLog;
-using OneOf;
+using CSharpFunctionalExtensions;
 
 namespace ChangeTracker.Application.Tests.TestDoubles
 {
@@ -14,7 +14,7 @@ namespace ChangeTracker.Application.Tests.TestDoubles
         public List<ChangeLogLine> ChangeLogs { get; set; } = new();
         public bool ProduceConflict { get; set; }
 
-        public async Task<OneOf<ChangeLogLine, Conflict>> AddChangeLogLineAsync(ChangeLogLine changeLogLine)
+        public async Task<Result<ChangeLogLine, Conflict>> AddLineAsync(ChangeLogLine changeLogLine)
         {
             await Task.Yield();
 
@@ -25,6 +25,15 @@ namespace ChangeTracker.Application.Tests.TestDoubles
 
             ChangeLogs.Add(changeLogLine);
             return changeLogLine;
+        }
+
+        public async Task<Result<int, Conflict>> AddLinesAsync(IEnumerable<ChangeLogLine> changeLogLines)
+        {
+            await Task.Yield();
+            var lines = changeLogLines.ToList();
+
+            ChangeLogs.AddRange(lines);
+            return Result.Success<int, Conflict>(lines.Count);
         }
 
         public async Task<ChangeLogInfo> GetChangeLogInfoAsync(Guid projectId, Guid versionId)

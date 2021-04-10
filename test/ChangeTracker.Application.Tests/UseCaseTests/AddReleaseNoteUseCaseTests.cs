@@ -40,7 +40,7 @@ namespace ChangeTracker.Application.Tests.UseCaseTests
             var labels = new List<string> { "Bugfix", "ProxyIssue" };
             var issues = new List<string> { "#1234", "#12345" };
             var changeLogLineDto =
-                new AddChangeLogLineDto(TestAccount.Project.Id, "1. .3", changeLogLine, labels, issues);
+                new ChangeLogLineDto(TestAccount.Project.Id, "1. .3", changeLogLine, labels, issues);
 
             _projectDaoMock.Projects.Add(new Project(TestAccount.Project.Id, TestAccount.Id, TestAccount.Project.Name,
                 TestAccount.CustomVersioningScheme, TestAccount.CreationDate, null));
@@ -67,7 +67,7 @@ namespace ChangeTracker.Application.Tests.UseCaseTests
             var labels = new List<string> {"Bugfix", "ProxyIssue"};
             var issues = new List<string> {"#1234", "#12345"};
             var changeLogLineDto =
-                new AddChangeLogLineDto(TestAccount.Project.Id, "1.2", changeLogLine, labels, issues);
+                new ChangeLogLineDto(TestAccount.Project.Id, "1.2", changeLogLine, labels, issues);
 
             _projectDaoMock.Projects.Add(new Project(TestAccount.Project.Id, TestAccount.Id, TestAccount.Project.Name,
                 TestAccount.CustomVersioningScheme, TestAccount.CreationDate, null));
@@ -95,7 +95,7 @@ namespace ChangeTracker.Application.Tests.UseCaseTests
             var labels = new List<string> {"Bugfix", "ProxyIssue"};
             var issues = new List<string> {"#1234", "#12345"};
             var changeLogLineDto =
-                new AddChangeLogLineDto(TestAccount.Project.Id, "1.2", changeLogLine, labels, issues);
+                new ChangeLogLineDto(TestAccount.Project.Id, "1.2", changeLogLine, labels, issues);
 
             _projectDaoMock.Projects.Add(new Project(TestAccount.Project.Id, TestAccount.Id, TestAccount.Project.Name,
                 TestAccount.CustomVersioningScheme, TestAccount.CreationDate, null));
@@ -134,7 +134,7 @@ namespace ChangeTracker.Application.Tests.UseCaseTests
             var labels = new List<string> {"Bugfix", "ProxyIssue"};
             var issues = new List<string> {"#1234", "#12345"};
             var changeLogLineDto =
-                new AddChangeLogLineDto(TestAccount.Project.Id, "1.2", changeLogLine, labels, issues);
+                new ChangeLogLineDto(TestAccount.Project.Id, "1.2", changeLogLine, labels, issues);
 
             _projectDaoMock.Projects.Add(new Project(TestAccount.Project.Id, TestAccount.Id, TestAccount.Project.Name,
                 TestAccount.CustomVersioningScheme, TestAccount.CreationDate, null));
@@ -167,7 +167,7 @@ namespace ChangeTracker.Application.Tests.UseCaseTests
             var labels = new List<string> {"Bugfix", "ProxyIssue"};
             var issues = new List<string> {"#1234", "#12345"};
             var changeLogLineDto =
-                new AddChangeLogLineDto(TestAccount.Project.Id, "1.2", changeLogLine, labels, issues);
+                new ChangeLogLineDto(TestAccount.Project.Id, "1.2", changeLogLine, labels, issues);
 
             _projectDaoMock.Projects.Add(new Project(TestAccount.Project.Id, TestAccount.Id, TestAccount.Project.Name,
                 TestAccount.CustomVersioningScheme, TestAccount.CreationDate, null));
@@ -206,7 +206,7 @@ namespace ChangeTracker.Application.Tests.UseCaseTests
             var labels = new List<string> {"Bugfix"};
             var issues = new List<string> {"#1234", "#12345"};
             var changeLogLineDto =
-                new AddChangeLogLineDto(TestAccount.Project.Id, "1.2", changeLogLine, labels, issues);
+                new ChangeLogLineDto(TestAccount.Project.Id, "1.2", changeLogLine, labels, issues);
 
             _projectDaoMock.Projects.Add(new Project(TestAccount.Project.Id, TestAccount.Id, TestAccount.Project.Name,
                 TestAccount.CustomVersioningScheme, TestAccount.CreationDate, null));

@@ -38,7 +38,7 @@ namespace ChangeTracker.Application.Tests.UseCaseTests
                 _versioningSchemeDaoMock,
                 _projectDaoMock,
                 _unitOfWorkMock.Object);
-            var createProjectDto = new CreateProjectDto(TestAccount.Id, TestAccount.Name.Value,
+            var createProjectDto = new ProjectDto(TestAccount.Id, TestAccount.Name.Value,
                 TestAccount.CustomVersioningScheme.Id);
 
             _outputPortMock.Setup(m => m.Created(It.IsAny<Guid>(), It.IsAny<Guid>()));
@@ -64,7 +64,7 @@ namespace ChangeTracker.Application.Tests.UseCaseTests
                 _versioningSchemeDaoMock,
                 _projectDaoMock,
                 _unitOfWorkMock.Object);
-            var createProjectDto = new CreateProjectDto(TestAccount.Id, TestAccount.Name.Value, null);
+            var createProjectDto = new ProjectDto(TestAccount.Id, TestAccount.Name.Value, null);
             _outputPortMock.Setup(m => m.AccountDoesNotExist());
 
             // act
@@ -86,7 +86,7 @@ namespace ChangeTracker.Application.Tests.UseCaseTests
                 _projectDaoMock,
                 _unitOfWorkMock.Object);
 
-            var createProjectDto = new CreateProjectDto(TestAccount.Id, TestAccount.Name.Value, null);
+            var createProjectDto = new ProjectDto(TestAccount.Id, TestAccount.Name.Value, null);
             _outputPortMock.Setup(m => m.AccountDeleted(It.IsAny<Guid>()));
 
             // act
@@ -108,7 +108,7 @@ namespace ChangeTracker.Application.Tests.UseCaseTests
                 _projectDaoMock,
                 _unitOfWorkMock.Object);
 
-            var createProjectDto = new CreateProjectDto(TestAccount.Id, null, null);
+            var createProjectDto = new ProjectDto(TestAccount.Id, null, null);
             _outputPortMock.Setup(m => m.InvalidName(It.IsAny<string>()));
 
             // act
@@ -131,7 +131,7 @@ namespace ChangeTracker.Application.Tests.UseCaseTests
                 _projectDaoMock,
                 _unitOfWorkMock.Object);
 
-            var createProjectDto = new CreateProjectDto(TestAccount.Id, TestAccount.Name.Value, null);
+            var createProjectDto = new ProjectDto(TestAccount.Id, TestAccount.Name.Value, null);
             _outputPortMock.Setup(m => m.ProjectAlreadyExists());
 
             // act
@@ -154,7 +154,7 @@ namespace ChangeTracker.Application.Tests.UseCaseTests
 
             var notExistingVersioningSchemeId = Guid.Parse("3984bcf2-9930-4d41-984e-b72ccc6d6c87");
             var createProjectDto =
-                new CreateProjectDto(TestAccount.Id, TestAccount.Name.Value, notExistingVersioningSchemeId);
+                new ProjectDto(TestAccount.Id, TestAccount.Name.Value, notExistingVersioningSchemeId);
             _outputPortMock.Setup(m => m.VersioningSchemeDoesNotExist());
 
             // act
@@ -177,16 +177,16 @@ namespace ChangeTracker.Application.Tests.UseCaseTests
             var createProjectUseCase = new CreateProjectUseCase(_accountDaoMock, _versioningSchemeDaoMock,
                 _projectDaoMock, _unitOfWorkMock.Object);
 
-            var createProjectDto = new CreateProjectDto(TestAccount.Id, TestAccount.Name.Value,
+            var createProjectDto = new ProjectDto(TestAccount.Id, TestAccount.Name.Value,
                 TestAccount.CustomVersioningScheme.Id);
 
-            _outputPortMock.Setup(m => m.Conflict(It.IsAny<Conflict>()));
+            _outputPortMock.Setup(m => m.Conflict(It.IsAny<string>()));
 
             // act
             await createProjectUseCase.ExecuteAsync(_outputPortMock.Object, createProjectDto);
 
             // assert
-            _outputPortMock.Verify(m => m.Conflict(It.IsAny<Conflict>()), Times.Once);
+            _outputPortMock.Verify(m => m.Conflict(It.IsAny<string>()), Times.Once);
         }
     }
 }

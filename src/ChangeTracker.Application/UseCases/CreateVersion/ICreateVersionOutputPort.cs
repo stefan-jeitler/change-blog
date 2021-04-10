@@ -9,6 +9,6 @@ namespace ChangeTracker.Application.UseCases.CreateVersion
         void InvalidVersionFormat(string version);
         void VersionDoesNotMatchScheme(string version);
         void ProjectDoesNotExist();
-        void Conflict(Conflict conflict);
+        void Conflict(string reason);
     }
 }

@@ -40,7 +40,7 @@ namespace ChangeTracker.Application.Tests.UseCaseTests
             const string changeLogLine = "a";
             var labels = new List<string> { "Bugfix", "ProxyIssue" };
             var issues = new List<string> { "#1234", "#12345" };
-            var changeLogLineDto = new AddPendingChangeLogLineDto(TestAccount.Project.Id, changeLogLine, labels, issues);
+            var changeLogLineDto = new PendingChangeLogLineDto(TestAccount.Project.Id, changeLogLine, labels, issues);
 
             var addPendingChangeLogLineUseCase =
                 new AddPendingChangeLogLineUseCase(_projectDaoMock, _changeLogDaoMock, _unitOfWorkMock.Object);
@@ -64,7 +64,7 @@ namespace ChangeTracker.Application.Tests.UseCaseTests
             var labels = new List<string> { "Bugfix", "ProxyIssue" };
             var issues = new List<string> { "#1234", "#12345" };
             var changeLogLineDto =
-                new AddPendingChangeLogLineDto(TestAccount.Project.Id, changeLogLine, labels, issues);
+                new PendingChangeLogLineDto(TestAccount.Project.Id, changeLogLine, labels, issues);
 
             _projectDaoMock.Projects.Add(new Project(TestAccount.Project.Id, TestAccount.Id, TestAccount.Project.Name,
                 TestAccount.CustomVersioningScheme, TestAccount.CreationDate, null));
@@ -99,7 +99,7 @@ namespace ChangeTracker.Application.Tests.UseCaseTests
             var labels = new List<string> { "Bugfix", "ProxyIssue" };
             var issues = new List<string> { "#1234", "#12345" };
             var changeLogLineDto =
-                new AddPendingChangeLogLineDto(TestAccount.Project.Id, changeLogLine, labels, issues);
+                new PendingChangeLogLineDto(TestAccount.Project.Id, changeLogLine, labels, issues);
 
             _projectDaoMock.Projects.Add(new Project(TestAccount.Project.Id, TestAccount.Id, TestAccount.Project.Name,
                 TestAccount.CustomVersioningScheme, TestAccount.CreationDate, null));
@@ -134,7 +134,7 @@ namespace ChangeTracker.Application.Tests.UseCaseTests
             var labels = new List<string> { "Bugfix", "ProxyIssue" };
             var issues = new List<string> { "#1234", "#12345" };
             var changeLogLineDto =
-                new AddPendingChangeLogLineDto(TestAccount.Project.Id, changeLogLine, labels, issues);
+                new PendingChangeLogLineDto(TestAccount.Project.Id, changeLogLine, labels, issues);
 
             _projectDaoMock.Projects.Add(new Project(TestAccount.Project.Id, TestAccount.Id, TestAccount.Project.Name,
                 TestAccount.CustomVersioningScheme, TestAccount.CreationDate, null));

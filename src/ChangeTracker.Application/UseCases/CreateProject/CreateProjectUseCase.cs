@@ -29,7 +29,7 @@ namespace ChangeTracker.Application.UseCases.CreateProject
             _unitOfWork = unitOfWork ?? throw new ArgumentNullException(nameof(unitOfWork));
         }
 
-        public async Task ExecuteAsync(ICreateProjectOutputPort output, CreateProjectDto projectDto)
+        public async Task ExecuteAsync(ICreateProjectOutputPort output, ProjectDto projectDto)
         {
             _unitOfWork.Start();
 
@@ -80,10 +80,10 @@ namespace ChangeTracker.Application.UseCases.CreateProject
         }
 
         private async Task<Maybe<VersioningScheme>> GetVersioningSchemeId(ICreateProjectOutputPort output,
-            CreateProjectDto createProjectDto, Account account)
+            ProjectDto projectDto, Account account)
         {
             var versioningSchemeService = new VersioningSchemeService(account);
-            var customSchemeId = createProjectDto.VersioningSchemeId;
+            var customSchemeId = projectDto.VersioningSchemeId;
             var versioningSchemeId = versioningSchemeService.FindSchemeIdForProject(customSchemeId);
 
             return await _versioningSchemeDao.FindAsync(versioningSchemeId);
@@ -91,13 +91,15 @@ namespace ChangeTracker.Application.UseCases.CreateProject
 
         private async Task SaveProjectAsync(ICreateProjectOutputPort output, Project newProject)
         {
-            var result = await _projectDao.AddAsync(newProject);
+            await _projectDao
+                .AddAsync(newProject)
+                .Match(Finish, c => output.Conflict(c));
 
-            result.Switch(x =>
+            void Finish(Project x)
             {
                 output.Created(x.AccountId, x.Id);
                 _unitOfWork.Commit();
-            }, output.Conflict);
+            }
         }
     }
 }

@@ -10,7 +10,7 @@ namespace ChangeTracker.Application.UseCases.CreateProject
         void InvalidName(string name);
         void ProjectAlreadyExists();
         void VersioningSchemeDoesNotExist();
-        void Conflict(Conflict conflict);
+        void Conflict(string reason);
         void Created(Guid accountId, Guid projectId);
     }
 }

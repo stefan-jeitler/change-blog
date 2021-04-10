@@ -9,28 +9,21 @@ using CSharpFunctionalExtensions;
 
 namespace ChangeTracker.Application.Services.Labels
 {
-    public class ExtractLabelsService
+    public static class ExtractLabelsService
     {
-        private readonly IExtractLabelsOutputPort _output;
-
-        public ExtractLabelsService(IExtractLabelsOutputPort output)
-        {
-            _output = output;
-        }
-
-        public Maybe<List<Label>> Extract(IEnumerable<string> labels)
+        public static Maybe<List<Label>> Extract(IExtractLabelsOutputPort output, IEnumerable<string> labels)
         {
             var (parsedLabels, invalidLabels) = ParseLabels(labels);
 
             if (invalidLabels.Any())
             {
-                _output.InvalidLabels(invalidLabels);
+                output.InvalidLabels(invalidLabels);
                 return Maybe<List<Label>>.None;
             }
 
             if (parsedLabels.Count > ChangeLogLine.MaxLabels)
             {
-                _output.TooManyLabels(ChangeLogLine.MaxLabels);
+                output.TooManyLabels(ChangeLogLine.MaxLabels);
                 return Maybe<List<Label>>.None;
             }
 

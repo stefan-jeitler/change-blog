@@ -7,28 +7,21 @@ using CSharpFunctionalExtensions;
 
 namespace ChangeTracker.Application.Services.Issues
 {
-    public class ExtractIssuesService
+    public static class ExtractIssuesService
     {
-        private readonly IExtractIssuesOutputPort _output;
-
-        public ExtractIssuesService(IExtractIssuesOutputPort output)
-        {
-            _output = output;
-        }
-
-        public Maybe<List<Issue>> Extract(IEnumerable<string> issues)
+        public static Maybe<List<Issue>> Extract(IExtractIssuesOutputPort output, IEnumerable<string> issues)
         {
             var (parsedIssues, invalidIssues) = ParseIssues(issues);
 
             if (invalidIssues.Any())
             {
-                _output.InvalidIssues(invalidIssues);
+                output.InvalidIssues(invalidIssues);
                 return Maybe<List<Issue>>.None;
             }
 
             if (parsedIssues.Count > ChangeLogLine.MaxIssues)
             {
-                _output.TooManyIssues(ChangeLogLine.MaxIssues);
+                output.TooManyIssues(ChangeLogLine.MaxIssues);
                 return Maybe<List<Issue>>.None;
             }
 

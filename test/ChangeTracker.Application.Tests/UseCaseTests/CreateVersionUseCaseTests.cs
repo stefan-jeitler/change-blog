@@ -29,7 +29,7 @@ namespace ChangeTracker.Application.Tests.UseCaseTests
         {
             // arrange
             _projectDaoMock.Projects.Add(TestAccount.Project);
-            var createVersionDto = new CreateVersionDto(TestAccount.Project.Id, "1.2.3");
+            var createVersionDto = new VersionDto(TestAccount.Project.Id, "1.2.3");
             var createVersionUseCase =
                 new CreateVersionUseCase(_versionDaoMock, _projectDaoMock, _unitOfWorkMock.Object);
 
@@ -47,7 +47,7 @@ namespace ChangeTracker.Application.Tests.UseCaseTests
         {
             // arrange
             _projectDaoMock.Projects.Add(TestAccount.Project);
-            var createVersionDto = new CreateVersionDto(TestAccount.Project.Id, "1. .3");
+            var createVersionDto = new VersionDto(TestAccount.Project.Id, "1. .3");
             var createVersionUseCase =
                 new CreateVersionUseCase(_versionDaoMock, _projectDaoMock, _unitOfWorkMock.Object);
 
@@ -64,7 +64,7 @@ namespace ChangeTracker.Application.Tests.UseCaseTests
         public async Task CreateVersion_NoProjectExists_ProjectDoesNotExistOutput()
         {
             // arrange
-            var createVersionDto = new CreateVersionDto(TestAccount.Project.Id, "1.2.3");
+            var createVersionDto = new VersionDto(TestAccount.Project.Id, "1.2.3");
             var createVersionUseCase =
                 new CreateVersionUseCase(_versionDaoMock, _projectDaoMock, _unitOfWorkMock.Object);
 
@@ -84,7 +84,7 @@ namespace ChangeTracker.Application.Tests.UseCaseTests
             _projectDaoMock.Projects.Add(new Project(TestAccount.Project.Id, TestAccount.Id, TestAccount.Project.Name,
                 TestAccount.CustomVersioningScheme, DateTime.Parse("2021-04-04"), DateTime.Parse("2021-04-05")));
 
-            var createVersionDto = new CreateVersionDto(TestAccount.Project.Id, "12*");
+            var createVersionDto = new VersionDto(TestAccount.Project.Id, "12*");
             var createVersionUseCase =
                 new CreateVersionUseCase(_versionDaoMock, _projectDaoMock, _unitOfWorkMock.Object);
 

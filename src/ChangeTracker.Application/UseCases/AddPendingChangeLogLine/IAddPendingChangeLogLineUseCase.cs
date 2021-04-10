@@ -8,6 +8,6 @@ namespace ChangeTracker.Application.UseCases.AddPendingChangeLogLine
 {
     public interface IAddPendingChangeLogLineUseCase
     {
-        Task ExecuteAsync(IAddPendingChangeLogLineOutputPort outputPort, AddPendingChangeLogLineDto changeLogLineDto);
+        Task ExecuteAsync(IAddPendingChangeLogLineOutputPort outputPort, PendingChangeLogLineDto changeLogLineDto);
     }
 }

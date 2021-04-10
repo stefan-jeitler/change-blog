@@ -20,13 +20,13 @@ namespace ChangeTracker.Application.UseCases.AddPendingChangeLogLine
         public AddPendingChangeLogLineUseCase(IProjectDao projectDao, IChangeLogDao changeLogDao,
             IUnitOfWork unitOfWork)
         {
-            _projectDao = projectDao;
-            _changeLogDao = changeLogDao;
-            _unitOfWork = unitOfWork;
+            _projectDao = projectDao ?? throw new ArgumentNullException(nameof(projectDao));
+            _changeLogDao = changeLogDao ?? throw new ArgumentNullException(nameof(changeLogDao));
+            _unitOfWork = unitOfWork ?? throw new ArgumentNullException(nameof(unitOfWork));
         }
 
         public async Task ExecuteAsync(IAddPendingChangeLogLineOutputPort outputPort,
-            AddPendingChangeLogLineDto changeLogLineDto)
+            PendingChangeLogLineDto changeLogLineDto)
         {
             if (!ChangeLogText.TryParse(changeLogLineDto.Text, out var text))
             {
@@ -34,13 +34,11 @@ namespace ChangeTracker.Application.UseCases.AddPendingChangeLogLine
                 return;
             }
 
-            var extractLabelsService = new ExtractLabelsService(outputPort);
-            var labels = extractLabelsService.Extract(changeLogLineDto.Labels);
+            var labels = ExtractLabelsService.Extract(outputPort, changeLogLineDto.Labels);
             if (labels.HasNoValue)
                 return;
 
-            var extractIssuesService = new ExtractIssuesService(outputPort);
-            var issues = extractIssuesService.Extract(changeLogLineDto.Issues);
+            var issues = ExtractIssuesService.Extract(outputPort, changeLogLineDto.Issues);
             if (issues.HasNoValue)
                 return;
 
@@ -55,7 +53,7 @@ namespace ChangeTracker.Application.UseCases.AddPendingChangeLogLine
 
 
         private async Task<Maybe<ChangeLogLine>> CreateChangeLogLineAsync(IAddPendingChangeLogLineOutputPort outputPort,
-            AddPendingChangeLogLineDto changeLogLineDto, ChangeLogText text, IEnumerable<Label> labels,
+            PendingChangeLogLineDto changeLogLineDto, ChangeLogText text, IEnumerable<Label> labels,
             IEnumerable<Issue> issues)
         {
             var project = await _projectDao.FindAsync(changeLogLineDto.ProjectId);
@@ -85,13 +83,15 @@ namespace ChangeTracker.Application.UseCases.AddPendingChangeLogLine
 
         private async Task SaveChangeLogLineAsync(IAddPendingChangeLogLineOutputPort outputPort, ChangeLogLine line)
         {
-            var result = await _changeLogDao.AddChangeLogLineAsync(line);
+            await _changeLogDao
+                .AddLineAsync(line)
+                .Match(Finish, c => outputPort.Conflict(c));
 
-            result.Switch(l =>
+            void Finish(ChangeLogLine l)
             {
                 outputPort.Created(l.Id);
                 _unitOfWork.Commit();
-            }, c => outputPort.Conflict(c.Reason));
+            }
         }
     }
 }

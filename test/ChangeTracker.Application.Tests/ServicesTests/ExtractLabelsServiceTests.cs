@@ -22,10 +22,9 @@ namespace ChangeTracker.Application.Tests.ServicesTests
         {
             // arrange
             var labels = new List<string> {"Bugfix", "ProxyIssue"};
-            var extractLabelsService = new ExtractLabelsService(_outputPortMock.Object);
             
             // act
-            var extractedLabels = extractLabelsService.Extract(labels);
+            var extractedLabels = ExtractLabelsService.Extract(_outputPortMock.Object, labels);
 
             // assert
             extractedLabels.HasValue.Should().BeTrue();
@@ -39,12 +38,11 @@ namespace ChangeTracker.Application.Tests.ServicesTests
         {
             // arrange
             var labels = new List<string> {"Bugfix", "ProxyIssue", "invalid label"};
-            var extractLabelsService = new ExtractLabelsService(_outputPortMock.Object);
 
             _outputPortMock.Setup(m => m.InvalidLabels(It.IsAny<List<string>>()));
 
             // act
-            var extractedLabels = extractLabelsService.Extract(labels);
+            var extractedLabels = ExtractLabelsService.Extract(_outputPortMock.Object, labels);
 
             // assert
             _outputPortMock.Verify(m
@@ -63,10 +61,8 @@ namespace ChangeTracker.Application.Tests.ServicesTests
                 {"Bugfix", "ProxyIssue", "Security", "ProxyStrikesBack", "Deprecated", "Feature"};
             _outputPortMock.Setup(m => m.TooManyLabels(It.IsAny<int>()));
 
-            var extractLabelsService = new ExtractLabelsService(_outputPortMock.Object);
-
             // act
-            var extracted = extractLabelsService.Extract(labels);
+            var extracted = ExtractLabelsService.Extract(_outputPortMock.Object, labels);
 
             // assert
             _outputPortMock.Verify(m

@@ -6,7 +6,6 @@ using ChangeTracker.Application.DataAccess.Projects;
 using ChangeTracker.Domain;
 using ChangeTracker.Domain.Common;
 using CSharpFunctionalExtensions;
-using OneOf;
 
 namespace ChangeTracker.Application.Tests.TestDoubles
 {
@@ -26,16 +25,16 @@ namespace ChangeTracker.Application.Tests.TestDoubles
         public Task<Maybe<Project>> FindAsync(Guid projectId) =>
             Task.FromResult(Projects.TryFirst(x => x.Id == projectId));
 
-        public Task<OneOf<Project, Conflict>> AddAsync(Project newProject)
+        public Task<Result<Project, Conflict>> AddAsync(Project newProject)
         {
             if (ProduceConflict)
             {
                 var conflict = new Conflict("some conflict");
-                return Task.FromResult(OneOf<Project, Conflict>.FromT1(conflict));
+                return Task.FromResult(Result.Failure<Project, Conflict>(conflict));
             }
 
             Projects.Add(newProject);
-            return Task.FromResult(OneOf<Project, Conflict>.FromT0(newProject));
+            return Task.FromResult(Result.Success<Project, Conflict>(newProject));
         }
     }
 }

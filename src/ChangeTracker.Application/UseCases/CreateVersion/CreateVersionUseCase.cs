@@ -5,6 +5,7 @@ using ChangeTracker.Application.DataAccess.Projects;
 using ChangeTracker.Application.DataAccess.Versions;
 using ChangeTracker.Domain;
 using ChangeTracker.Domain.Version;
+using CSharpFunctionalExtensions;
 
 namespace ChangeTracker.Application.UseCases.CreateVersion
 {
@@ -21,7 +22,7 @@ namespace ChangeTracker.Application.UseCases.CreateVersion
             _unitOfWork = unitOfWork ?? throw new ArgumentNullException(nameof(unitOfWork));
         }
 
-        public async Task ExecuteAsync(ICreateVersionOutputPort output, CreateVersionDto versionDto)
+        public async Task ExecuteAsync(ICreateVersionOutputPort output, VersionDto versionDto)
         {
             var (projectId, v) = versionDto;
             if (!ClVersion.TryParse(v, out var version))
@@ -45,7 +46,6 @@ namespace ChangeTracker.Application.UseCases.CreateVersion
             }
 
             await SaveVersionAsync(output, project.Value, version);
-            _unitOfWork.Commit();
         }
 
         private async Task SaveVersionAsync(ICreateVersionOutputPort output, Project project, ClVersion version)
@@ -53,8 +53,15 @@ namespace ChangeTracker.Application.UseCases.CreateVersion
             var versionInfo = new ClVersionInfo(Guid.NewGuid(), project.Id, version, null,
                 DateTime.UtcNow, null);
 
-            var result = await _versionDao.AddAsync(versionInfo);
-            result.Switch(x => output.Created(x.Id), output.Conflict);
+            await _versionDao
+                .AddAsync(versionInfo)
+                .Match(Finish, c => output.Conflict(c));
+
+            void Finish(ClVersionInfo vInfo)
+            {
+                output.Created(vInfo.Id);
+                _unitOfWork.Commit();
+            }
         }
     }
 }

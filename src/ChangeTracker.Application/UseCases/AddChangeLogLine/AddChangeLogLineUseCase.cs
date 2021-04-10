@@ -31,7 +31,7 @@ namespace ChangeTracker.Application.UseCases.AddChangeLogLine
         }
 
         public async Task ExecuteAsync(IAddChangeLogLineOutputPort output,
-            AddChangeLogLineDto changeLogLineDto)
+            ChangeLogLineDto changeLogLineDto)
         {
             if (!ClVersion.TryParse(changeLogLineDto.Version, out var version))
             {
@@ -45,13 +45,11 @@ namespace ChangeTracker.Application.UseCases.AddChangeLogLine
                 return;
             }
 
-            var extractLabelsService = new ExtractLabelsService(output);
-            var labels = extractLabelsService.Extract(changeLogLineDto.Labels);
+            var labels = ExtractLabelsService.Extract(output, changeLogLineDto.Labels);
             if (labels.HasNoValue)
                 return;
 
-            var extractIssuesService = new ExtractIssuesService(output);
-            var issues = extractIssuesService.Extract(changeLogLineDto.Issues);
+            var issues = ExtractIssuesService.Extract(output, changeLogLineDto.Issues);
             if (issues.HasNoValue)
                 return;
 
@@ -91,15 +89,15 @@ namespace ChangeTracker.Application.UseCases.AddChangeLogLine
 
         private async Task SaveChangeLogLineAsync(IAddChangeLogLineOutputPort output, ChangeLogLine changeLogLine)
         {
-            var result = await _changeLogDao.AddChangeLogLineAsync(changeLogLine);
+            await _changeLogDao
+                .AddLineAsync(changeLogLine)
+                .Match(Finish, c => output.Conflict(c));
 
-            result.Switch(
-                r =>
-                {
-                    output.Created(r.Id);
-                    _unitOfWork.Commit();
-                },
-                c => output.Conflict(c.Reason));
+            void Finish(ChangeLogLine l)
+            {
+                output.Created(l.Id);
+                _unitOfWork.Commit();
+            }
         }
     }
 }

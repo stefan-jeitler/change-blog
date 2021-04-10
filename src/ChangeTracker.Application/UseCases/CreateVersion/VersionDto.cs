@@ -2,5 +2,5 @@
 
 namespace ChangeTracker.Application.UseCases.CreateVersion
 {
-    public record CreateVersionDto(Guid ProjectId, string Version);
+    public record VersionDto(Guid ProjectId, string Version);
 }

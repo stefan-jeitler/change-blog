@@ -3,7 +3,6 @@ using System.Threading.Tasks;
 using ChangeTracker.Domain;
 using ChangeTracker.Domain.Common;
 using CSharpFunctionalExtensions;
-using OneOf;
 
 namespace ChangeTracker.Application.DataAccess.Projects
 {
@@ -11,6 +10,6 @@ namespace ChangeTracker.Application.DataAccess.Projects
     {
         Task<Maybe<Project>> FindAsync(Guid accountId, Name name);
         Task<Maybe<Project>> FindAsync(Guid projectId);
-        Task<OneOf<Project, Conflict>> AddAsync(Project newProject);
+        Task<Result<Project, Conflict>> AddAsync(Project newProject);
     }
 }

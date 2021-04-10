@@ -78,5 +78,21 @@ namespace ChangeTracker.Domain.Tests.ChangeLogTests
 
             changeLogInfo.IsPositionAvailable.Should().BeTrue();
         }
+
+        [Fact]
+        public void LastPosition_CountIsZero_ReturnsMinusOne()
+        {
+            var changeLogInfo = new ChangeLogInfo(TestProjectId, TestVersionId, 0, 5);
+
+            changeLogInfo.LastPosition.Should().Be(-1);
+        }
+        
+        [Fact]
+        public void LastPosition_CountIsNotZero_ReturnsPositionPassedToConstructor()
+        {
+            var changeLogInfo = new ChangeLogInfo(TestProjectId, TestVersionId, 2, 5);
+
+            changeLogInfo.LastPosition.Should().Be(5);
+        }
     }
 }

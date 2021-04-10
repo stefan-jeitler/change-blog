@@ -8,6 +8,7 @@ namespace ChangeTracker.Application.DataAccess.Versions
     public interface IChangeLogDao
     {
         Task<OneOf<ChangeLogLine, Conflict>> AddChangeLogLineAsync(ChangeLogLine changeLogLine);
-        Task<ChangeLogInfo> GetChangeLogInfoAsync(Guid projectId, Guid? versionId);
+        Task<ChangeLogInfo> GetChangeLogInfoAsync(Guid projectId, Guid versionId);
+        Task<ChangeLogInfo> GetPendingChangeLogInfoAsync(Guid projectId);
     }
 }

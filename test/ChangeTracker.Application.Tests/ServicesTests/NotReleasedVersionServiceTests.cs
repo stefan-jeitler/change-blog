@@ -80,7 +80,7 @@ namespace ChangeTracker.Application.Tests.ServicesTests
             var versionInfo = new ClVersionInfo(projectId, ClVersion.Parse("1.2"), releasedAt);
             _versionDaoMock.VersionInfo.Add(versionInfo);
 
-            _changeLogDaoMock.ChangeLog.Add(new ChangeLogLine(Guid.NewGuid(),
+            _changeLogDaoMock.ChangeLogs.Add(new ChangeLogLine(Guid.NewGuid(),
                 versionInfo.Id,
                 projectId,
                 ChangeLogText.Parse("some-release"),
@@ -116,7 +116,7 @@ namespace ChangeTracker.Application.Tests.ServicesTests
                 deletedAt);
             _versionDaoMock.VersionInfo.Add(versionInfo);
 
-            _changeLogDaoMock.ChangeLog.Add(new ChangeLogLine(Guid.NewGuid(),
+            _changeLogDaoMock.ChangeLogs.Add(new ChangeLogLine(Guid.NewGuid(),
                 versionInfo.Id,
                 projectId,
                 ChangeLogText.Parse("some-release"),
@@ -153,7 +153,7 @@ namespace ChangeTracker.Application.Tests.ServicesTests
                 null);
             _versionDaoMock.VersionInfo.Add(versionInfo);
 
-            _changeLogDaoMock.ChangeLog.Add(new ChangeLogLine(Guid.NewGuid(),
+            _changeLogDaoMock.ChangeLogs.Add(new ChangeLogLine(Guid.NewGuid(),
                 versionInfo.Id,
                 projectId,
                 ChangeLogText.Parse("some-release"),

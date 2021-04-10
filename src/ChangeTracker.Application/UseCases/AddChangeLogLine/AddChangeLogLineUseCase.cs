@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Threading.Tasks;
 using ChangeTracker.Application.DataAccess;
 using ChangeTracker.Application.DataAccess.Versions;
@@ -27,7 +26,8 @@ namespace ChangeTracker.Application.UseCases.AddChangeLogLine
         {
             _changeLogDao = changeLogDao ?? throw new ArgumentNullException(nameof(changeLogDao));
             _unitOfWork = unitOfWork ?? throw new ArgumentNullException(nameof(unitOfWork));
-            _notReleasedVersion = notReleasedVersionService ?? throw new ArgumentNullException(nameof(notReleasedVersionService));
+            _notReleasedVersion = notReleasedVersionService ??
+                                  throw new ArgumentNullException(nameof(notReleasedVersionService));
         }
 
         public async Task ExecuteAsync(IAddChangeLogLineOutputPort output,
@@ -41,7 +41,7 @@ namespace ChangeTracker.Application.UseCases.AddChangeLogLine
 
             if (!ChangeLogText.TryParse(changeLogLineDto.Text, out var text))
             {
-                output.InvalidChangeLogLine(changeLogLineDto.Text);
+                output.InvalidChangeLogLineText(changeLogLineDto.Text);
                 return;
             }
 
@@ -81,7 +81,7 @@ namespace ChangeTracker.Application.UseCases.AddChangeLogLine
                 versionInfo.Id,
                 versionInfo.ProjectId,
                 text,
-                changeLogInfo.NextFreePosition,
+                (uint)changeLogInfo.NextFreePosition,
                 DateTime.UtcNow,
                 labels,
                 issues);

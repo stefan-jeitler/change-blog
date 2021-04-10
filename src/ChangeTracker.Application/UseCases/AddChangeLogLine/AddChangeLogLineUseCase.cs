@@ -3,11 +3,11 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using ChangeTracker.Application.DataAccess;
-using ChangeTracker.Application.DataAccess.Projects;
 using ChangeTracker.Application.DataAccess.Versions;
-using ChangeTracker.Domain;
+using ChangeTracker.Application.Services.Issues;
+using ChangeTracker.Application.Services.Labels;
+using ChangeTracker.Application.Services.NotReleasedVersion;
 using ChangeTracker.Domain.ChangeLog;
-using ChangeTracker.Domain.ChangeLog.Services;
 using ChangeTracker.Domain.Version;
 using CSharpFunctionalExtensions;
 
@@ -17,139 +17,60 @@ namespace ChangeTracker.Application.UseCases.AddChangeLogLine
 {
     public class AddChangeLogLineUseCase : IAddChangeLogLineUseCase
     {
-        private readonly IProjectDao _projectDao;
-        private readonly IVersionDao _versionDao;
         private readonly IChangeLogDao _changeLogDao;
         private readonly IUnitOfWork _unitOfWork;
 
-        public AddChangeLogLineUseCase(IProjectDao projectDao, IVersionDao versionDao, IChangeLogDao changeLogDao, IUnitOfWork unitOfWork)
+        private readonly NotReleasedVersionService _notReleasedVersion;
+
+        public AddChangeLogLineUseCase(IChangeLogDao changeLogDao,
+            IUnitOfWork unitOfWork, NotReleasedVersionService notReleasedVersionService)
         {
-            _projectDao = projectDao ?? throw new ArgumentNullException(nameof(projectDao));
-            _versionDao = versionDao ?? throw new ArgumentNullException(nameof(versionDao));
             _changeLogDao = changeLogDao ?? throw new ArgumentNullException(nameof(changeLogDao));
             _unitOfWork = unitOfWork ?? throw new ArgumentNullException(nameof(unitOfWork));
+            _notReleasedVersion = notReleasedVersionService ?? throw new ArgumentNullException(nameof(notReleasedVersionService));
         }
 
         public async Task ExecuteAsync(IAddChangeLogLineOutputPort output,
-            AddChangeLogLineDto addChangeLogLineDto)
+            AddChangeLogLineDto changeLogLineDto)
         {
-            var labels = ExtractLabels(output, addChangeLogLineDto.Labels);
+            if (!ClVersion.TryParse(changeLogLineDto.Version, out var version))
+            {
+                output.InvalidVersionFormat();
+                return;
+            }
+
+            if (!ChangeLogText.TryParse(changeLogLineDto.Text, out var text))
+            {
+                output.InvalidChangeLogLine(changeLogLineDto.Text);
+                return;
+            }
+
+            var extractLabelsService = new ExtractLabelsService(output);
+            var labels = extractLabelsService.Extract(changeLogLineDto.Labels);
             if (labels.HasNoValue)
                 return;
 
-            var issues = ExtractIssues(output, addChangeLogLineDto.Issues);
+            var extractIssuesService = new ExtractIssuesService(output);
+            var issues = extractIssuesService.Extract(changeLogLineDto.Issues);
             if (issues.HasNoValue)
                 return;
 
             _unitOfWork.Start();
 
-            var changeLogLine = await CreateChangeLogLineAsync(output, addChangeLogLineDto, labels.Value, issues.Value);
-            if (changeLogLine.HasNoValue)
+            var versionInfo = await _notReleasedVersion.FindAsync(output, changeLogLineDto.ProjectId, version);
+            var newChangeLogLine = await versionInfo
+                .Bind(x => CreateChangeLogLineAsync(output, x, text, labels.Value, issues.Value));
+
+            if (newChangeLogLine.HasNoValue)
                 return;
 
-            await SaveChangeLogLine(output, changeLogLine.Value);
-        }
-
-        private static Maybe<List<Label>> ExtractLabels(IAddChangeLogLineOutputPort output, IEnumerable<string> labels)
-        {
-            var (parsedLabels, invalidLabels) = ParseLabels(labels);
-
-            if (invalidLabels.Any())
-            {
-                output.InvalidLabels(invalidLabels);
-                return Maybe<List<Label>>.None;
-            }
-
-            if (parsedLabels.Count > ChangeLogLine.MaxLabels)
-            {
-                output.TooManyLabels(ChangeLogLine.MaxLabels);
-                return Maybe<List<Label>>.None;
-            }
-
-            return Maybe<List<Label>>.From(parsedLabels);
-        }
-
-        private static (List<Label> parsedLabels, List<string> invalidLabels) ParseLabels(IEnumerable<string> labels)
-        {
-            var parsedLabels = new List<Label>();
-            var invalidLabels = new List<string>();
-            foreach (var l in labels)
-            {
-                if (Label.TryParse(l, out var label))
-                {
-                    parsedLabels.Add(label);
-                }
-                else
-                {
-                    invalidLabels.Add(l);
-                }
-            }
-
-            return (parsedLabels, invalidLabels);
-        }
-
-        private static Maybe<List<Issue>> ExtractIssues(IAddChangeLogLineOutputPort output, IEnumerable<string> issues)
-        {
-            var (parsedIssues, invalidIssues) = ParseIssues(issues);
-
-            if (invalidIssues.Any())
-            {
-                output.InvalidIssues(invalidIssues);
-                return Maybe<List<Issue>>.None;
-            }
-
-            if (parsedIssues.Count > ChangeLogLine.MaxIssues)
-            {
-                output.TooManyIssues(ChangeLogLine.MaxIssues);
-                return Maybe<List<Issue>>.None;
-            }
-
-            return Maybe<List<Issue>>.From(parsedIssues);
-        }
-
-        private static (List<Issue> parsedIssues, List<string> invalidIssues) ParseIssues(IEnumerable<string> issues)
-        {
-            var parsedIssues = new List<Issue>();
-            var invalidIssues = new List<string>();
-
-            foreach (var i in issues)
-            {
-                if (Issue.TryParse(i, out var issue))
-                {
-                    parsedIssues.Add(issue);
-                }
-                else
-                {
-                    invalidIssues.Add(i);
-                }
-            }
-
-            return (parsedIssues, invalidIssues);
+            await SaveChangeLogLineAsync(output, newChangeLogLine.Value);
         }
 
         private async Task<Maybe<ChangeLogLine>> CreateChangeLogLineAsync(IAddChangeLogLineOutputPort output,
-            AddChangeLogLineDto addChangeLogLineDto, IEnumerable<Label> labels,
-            IEnumerable<Issue> issues)
+            ClVersionInfo versionInfo, ChangeLogText text, IEnumerable<Label> labels, IEnumerable<Issue> issues)
         {
-            var project = await _projectDao.FindAsync(addChangeLogLineDto.ProjectId);
-            if (project.HasNoValue)
-            {
-                output.ProjectDoesNotExist();
-                return Maybe<ChangeLogLine>.None;
-            }
-
-            var versionInfo = await GetVersionInfoAsync(output, addChangeLogLineDto, project.Value);
-            if (versionInfo.HasNoValue)
-                return Maybe<ChangeLogLine>.None;
-
-            if (!ChangeLogText.TryParse(addChangeLogLineDto.Text, out var changeLogLineText))
-            {
-                output.InvalidChangeLogLine(addChangeLogLineDto.Text);
-                return Maybe<ChangeLogLine>.None;
-            }
-
-            var changeLogInfo = await _changeLogDao.GetChangeLogInfoAsync(project.Value.Id, versionInfo.Value.Id);
-
+            var changeLogInfo = await _changeLogDao.GetChangeLogInfoAsync(versionInfo.ProjectId, versionInfo.Id);
             if (!changeLogInfo.IsPositionAvailable)
             {
                 output.MaxChangeLogLinesReached(ChangeLogInfo.MaxChangeLogLines);
@@ -157,9 +78,9 @@ namespace ChangeTracker.Application.UseCases.AddChangeLogLine
             }
 
             var changeLogLine = new ChangeLogLine(Guid.NewGuid(),
-                versionInfo.Value.Id,
-                project.Value.Id,
-                changeLogLineText,
+                versionInfo.Id,
+                versionInfo.ProjectId,
+                text,
                 changeLogInfo.NextFreePosition,
                 DateTime.UtcNow,
                 labels,
@@ -168,40 +89,7 @@ namespace ChangeTracker.Application.UseCases.AddChangeLogLine
             return Maybe<ChangeLogLine>.From(changeLogLine);
         }
 
-        private async Task<Maybe<ClVersionInfo>> GetVersionInfoAsync(IAddChangeLogLineOutputPort output,
-            AddChangeLogLineDto addChangeLogLineDto, Project project)
-        {
-            var noVersionInfo = Maybe<ClVersionInfo>.None;
-
-            if (!ClVersion.TryParse(addChangeLogLineDto.Version, out var version))
-            {
-                output.InvalidVersionFormat();
-                return noVersionInfo;
-            }
-
-            var versionInfo = await _versionDao.FindAsync(project.Id, version);
-            if (versionInfo.HasNoValue)
-            {
-                output.VersionDoesNotExist();
-                return noVersionInfo;
-            }
-
-            if (versionInfo.Value.IsReleased)
-            {
-                output.VersionAlreadyReleased(versionInfo.Value.ReleasedAt!.Value);
-                return noVersionInfo;
-            }
-
-            if (versionInfo.Value.IsDeleted)
-            {
-                output.VersionDeleted(versionInfo.Value.DeletedAt!.Value);
-                return noVersionInfo;
-            }
-
-            return versionInfo;
-        }
-
-        private async Task SaveChangeLogLine(IAddChangeLogLineOutputPort output, ChangeLogLine changeLogLine)
+        private async Task SaveChangeLogLineAsync(IAddChangeLogLineOutputPort output, ChangeLogLine changeLogLine)
         {
             var result = await _changeLogDao.AddChangeLogLineAsync(changeLogLine);
 

@@ -4,6 +4,6 @@ namespace ChangeTracker.Application.UseCases.CreateProject
 {
     public interface ICreateProjectUseCase
     {
-        public Task ExecuteAsync(ICreateProjectOutputPort output, CreateProjectDto createProjectDto);
+        public Task ExecuteAsync(ICreateProjectOutputPort output, CreateProjectDto projectDto);
     }
 }

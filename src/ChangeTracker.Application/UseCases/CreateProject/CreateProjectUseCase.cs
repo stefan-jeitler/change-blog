@@ -29,17 +29,17 @@ namespace ChangeTracker.Application.UseCases.CreateProject
             _unitOfWork = unitOfWork ?? throw new ArgumentNullException(nameof(unitOfWork));
         }
 
-        public async Task ExecuteAsync(ICreateProjectOutputPort output, CreateProjectDto createProjectDto)
+        public async Task ExecuteAsync(ICreateProjectOutputPort output, CreateProjectDto projectDto)
         {
             _unitOfWork.Start();
 
-            var account = await GetAccountAsync(output, createProjectDto.AccountId);
+            var account = await GetAccountAsync(output, projectDto.AccountId);
             if (account.HasNoValue)
                 return;
 
-            if (!Name.TryParse(createProjectDto.Name, out var name))
+            if (!Name.TryParse(projectDto.Name, out var name))
             {
-                output.InvalidName(createProjectDto.Name);
+                output.InvalidName(projectDto.Name);
                 return;
             }
 
@@ -50,7 +50,7 @@ namespace ChangeTracker.Application.UseCases.CreateProject
                 return;
             }
 
-            var versioningSchemeId = await GetVersioningSchemeId(output, createProjectDto, account.Value);
+            var versioningSchemeId = await GetVersioningSchemeId(output, projectDto, account.Value);
             if (versioningSchemeId.HasNoValue)
             {
                 output.VersioningSchemeDoesNotExist();

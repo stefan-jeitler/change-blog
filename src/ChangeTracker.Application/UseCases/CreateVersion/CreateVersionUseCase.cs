@@ -21,9 +21,9 @@ namespace ChangeTracker.Application.UseCases.CreateVersion
             _unitOfWork = unitOfWork ?? throw new ArgumentNullException(nameof(unitOfWork));
         }
 
-        public async Task ExecuteAsync(ICreateVersionOutputPort output, CreateVersionDto createVersionDto)
+        public async Task ExecuteAsync(ICreateVersionOutputPort output, CreateVersionDto versionDto)
         {
-            var (projectId, v) = createVersionDto;
+            var (projectId, v) = versionDto;
             if (!ClVersion.TryParse(v, out var version))
             {
                 output.InvalidVersionFormat(v);

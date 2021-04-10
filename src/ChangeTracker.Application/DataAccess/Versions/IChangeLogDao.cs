@@ -3,7 +3,7 @@ using System.Threading.Tasks;
 using ChangeTracker.Domain.ChangeLog;
 using OneOf;
 
-namespace ChangeTracker.Application.DataAccess
+namespace ChangeTracker.Application.DataAccess.Versions
 {
     public interface IChangeLogDao
     {

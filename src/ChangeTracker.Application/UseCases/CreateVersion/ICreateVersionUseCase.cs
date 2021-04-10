@@ -4,6 +4,6 @@ namespace ChangeTracker.Application.UseCases.CreateVersion
 {
     public interface ICreateVersionUseCase
     {
-        Task ExecuteAsync(ICreateVersionOutputPort output, CreateVersionDto createVersionDto);
+        Task ExecuteAsync(ICreateVersionOutputPort output, CreateVersionDto versionDto);
     }
 }

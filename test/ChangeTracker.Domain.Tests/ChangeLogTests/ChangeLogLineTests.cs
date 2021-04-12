@@ -48,7 +48,7 @@ namespace ChangeTracker.Domain.Tests.ChangeLogTests
         }
 
         [Fact]
-        public void Create_WithDeletionDate_DateIsProperlySet()
+        public void Create_WithDeletionAtDate_DateIsProperlySet()
         {
             var line = new ChangeLogLine(TestId,
                 null,
@@ -65,7 +65,7 @@ namespace ChangeTracker.Domain.Tests.ChangeLogTests
         }
 
         [Fact]
-        public void Create_WithOverloadedConstructor_IdAndCreatedAtDatetimeAreGenerated()
+        public void Create_WithOverloadedConstructor_IdAndCreatedAtDatetimeGenerated()
         {
             var line = new ChangeLogLine(TestVersionId, TestProjectId, TestText, TestPosition);
 
@@ -114,20 +114,6 @@ namespace ChangeTracker.Domain.Tests.ChangeLogTests
         }
 
         [Fact]
-        public void Create_WithVersionIdAndDeletionDate_InvalidOperationException()
-        {
-            Func<ChangeLogLine> act = () => new ChangeLogLine(TestId,
-                TestVersionId,
-                TestProjectId,
-                TestText,
-                TestPosition,
-                TestCreationDate,
-                TestDeletionDate);
-
-            act.Should().ThrowExactly<InvalidOperationException>("Released changeLog lines cannot be deleted.");
-        }
-
-        [Fact]
         public void Create_WithEmptyProjectId_ArgumentException()
         {
             Func<ChangeLogLine> act = () => new ChangeLogLine(TestId,
@@ -156,7 +142,7 @@ namespace ChangeTracker.Domain.Tests.ChangeLogTests
         [Theory]
         [InlineData("0001-01-01T00:00:00.0000000")]
         [InlineData("9999-12-31T23:59:59.9999999")]
-        public void Create_WithInvalidCreatedAtDate_ArgumentNullException(string invalidDate)
+        public void Create_WithInvalidCreatedAtDate_ArgumentException(string invalidDate)
         {
             var createdAt = DateTime.Parse(invalidDate);
 
@@ -170,7 +156,7 @@ namespace ChangeTracker.Domain.Tests.ChangeLogTests
         [Theory]
         [InlineData("0001-01-01T00:00:00.0000000")]
         [InlineData("9999-12-31T23:59:59.9999999")]
-        public void Create_WithInvalidDeletedAtDate_ArgumentNullException(string invalidDate)
+        public void Create_WithInvalidDeletedAtDate_ArgumentException(string invalidDate)
         {
             var deletedAt = DateTime.Parse(invalidDate);
 
@@ -180,5 +166,69 @@ namespace ChangeTracker.Domain.Tests.ChangeLogTests
 
             act.Should().ThrowExactly<ArgumentException>();
         }
+
+        [Fact]
+        public void AssignToVersion_CurrentVersionIsNull_SuccessfullyAssigned()
+        {
+            // arrange
+            var versionId = Guid.Parse("9102c1a0-09cf-4cb8-a6f6-fc0660be6109");
+            var line = new ChangeLogLine(TestId,
+                null,
+                TestProjectId,
+                TestText,
+                TestPosition,
+                TestCreationDate,
+                null,
+                null);
+
+            // act
+            var assignedLine = line.AssignToVersion(versionId, 0);
+
+            // assert
+            assignedLine.VersionId.Should().Be(versionId);
+        }
+
+        [Fact]
+        public void AssignToVersion_PositionProperlySet()
+        {
+            // arrange
+            var versionId = Guid.Parse("9102c1a0-09cf-4cb8-a6f6-fc0660be6109");
+            var line = new ChangeLogLine(TestId,
+                null,
+                TestProjectId,
+                TestText,
+                TestPosition,
+                TestCreationDate,
+                null,
+                null);
+
+            // act
+            var assignedLine = line.AssignToVersion(versionId, 2);
+
+            // assert
+            assignedLine.Position.Should().Be(2);
+        }
+
+        [Fact]
+        public void AssignToVersion_NewVersionIsEmpty_ArgumentException()
+        {
+            // arrange
+            var versionId = Guid.Parse("9102c1a0-09cf-4cb8-a6f6-fc0660be6109");
+            var line = new ChangeLogLine(TestId,
+                null,
+                TestProjectId,
+                TestText,
+                TestPosition,
+                TestCreationDate,
+                null,
+                null);
+
+            // act
+            Func<ChangeLogLine> act = () => line.AssignToVersion(Guid.Empty, 0);
+
+            // assert
+            act.Should().ThrowExactly<ArgumentException>();
+        }
+
     }
 }

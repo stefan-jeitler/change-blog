@@ -10,5 +10,6 @@ namespace ChangeTracker.Application.UseCases.CreateVersion
         void VersionDoesNotMatchScheme(string version);
         void ProjectDoesNotExist();
         void Conflict(string reason);
+        void VersionAlreadyExists(string version);
     }
 }

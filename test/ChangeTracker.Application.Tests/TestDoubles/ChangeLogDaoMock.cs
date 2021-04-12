@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Formats.Asn1;
 using System.Linq;
 using System.Threading.Tasks;
 using ChangeTracker.Application.DataAccess;
@@ -13,6 +14,11 @@ namespace ChangeTracker.Application.Tests.TestDoubles
     {
         public List<ChangeLogLine> ChangeLogs { get; set; } = new();
         public bool ProduceConflict { get; set; }
+
+        public Task<Maybe<ChangeLogLine>> GetAsync(Guid changeLogLineId)
+        {
+            return Task.FromResult(ChangeLogs.TryFirst(x => x.Id == changeLogLineId));
+        }
 
         public async Task<Result<ChangeLogLine, Conflict>> AddLineAsync(ChangeLogLine changeLogLine)
         {
@@ -36,7 +42,7 @@ namespace ChangeTracker.Application.Tests.TestDoubles
             return Result.Success<int, Conflict>(lines.Count);
         }
 
-        public async Task<ChangeLogInfo> GetChangeLogInfoAsync(Guid projectId, Guid versionId)
+        public async Task<ChangeLogsMetadata> GetChangeLogsMetadataAsync(Guid projectId, Guid versionId)
         {
             await Task.Yield();
 
@@ -44,15 +50,15 @@ namespace ChangeTracker.Application.Tests.TestDoubles
                 .Where(x => x.ProjectId == projectId && versionId == x.VersionId)
                 .ToList();
 
-            return new ChangeLogInfo(projectId, versionId,
+            return new ChangeLogsMetadata(projectId, versionId,
                 (uint) changeLogLines.Count,
                 changeLogLines
-                    .Select(x => (int)x.Position)
+                    .Select(x => (int) x.Position)
                     .DefaultIfEmpty(-1)
                     .Max());
         }
 
-        public async Task<ChangeLogInfo> GetPendingChangeLogInfoAsync(Guid projectId)
+        public async Task<ChangeLogsMetadata> GetPendingChangeLogMetadataAsync(Guid projectId)
         {
             await Task.Yield();
 
@@ -60,12 +66,25 @@ namespace ChangeTracker.Application.Tests.TestDoubles
                 .Where(x => x.ProjectId == projectId && x.VersionId is null)
                 .ToList();
 
-            return new ChangeLogInfo(projectId, null,
+            return new ChangeLogsMetadata(projectId, null,
                 (uint) changeLogLines.Count,
                 changeLogLines
-                    .Select(x => (int)x.Position)
+                    .Select(x => (int) x.Position)
                     .DefaultIfEmpty(-1)
                     .Max());
+        }
+
+        public async Task<Result<int, Conflict>> UpdateLineAsync(ChangeLogLine line)
+        {
+            await Task.Yield();
+
+            if (ProduceConflict)
+                return Result.Failure<int, Conflict>(new Conflict("some conflict."));
+
+            ChangeLogs.RemoveAll(x => x.Id == line.Id);
+            ChangeLogs.Add(line);
+
+            return Result.Success<int, Conflict>(1);
         }
     }
 }

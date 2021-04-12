@@ -11,29 +11,29 @@ namespace ChangeTracker.Application.Services.Labels
 {
     public static class ExtractLabelsService
     {
-        public static Maybe<List<Label>> Extract(IExtractLabelsOutputPort output, IEnumerable<string> labels)
+        public static Maybe<List<Label>> Extract(IExtractLabelsOutputPort output, IEnumerable<string> labels,
+            ChangeLogText text)
         {
-            var (parsedLabels, invalidLabels) = ParseLabels(labels);
+            var parsedLabels = ParseLabels(labels);
 
-            if (invalidLabels.Any())
+            if (parsedLabels.IsFailure)
             {
-                output.InvalidLabels(invalidLabels);
+                output.InvalidLabel(text, parsedLabels.Error);
                 return Maybe<List<Label>>.None;
             }
 
-            if (parsedLabels.Count > ChangeLogLine.MaxLabels)
+            if (parsedLabels.Value.Count > ChangeLogLine.MaxLabels)
             {
-                output.TooManyLabels(ChangeLogLine.MaxLabels);
+                output.TooManyLabels(text, ChangeLogLine.MaxLabels);
                 return Maybe<List<Label>>.None;
             }
 
-            return Maybe<List<Label>>.From(parsedLabels);
+            return Maybe<List<Label>>.From(parsedLabels.Value);
         }
 
-        private static (List<Label> parsedLabels, List<string> invalidLabels) ParseLabels(IEnumerable<string> labels)
+        private static Result<List<Label>, string> ParseLabels(IEnumerable<string> labels)
         {
             var parsedLabels = new List<Label>();
-            var invalidLabels = new List<string>();
             foreach (var l in labels)
             {
                 if (Label.TryParse(l, out var label))
@@ -42,11 +42,11 @@ namespace ChangeTracker.Application.Services.Labels
                 }
                 else
                 {
-                    invalidLabels.Add(l);
+                    return Result.Failure<List<Label>, string>(l);
                 }
             }
 
-            return (parsedLabels, invalidLabels);
+            return Result.Success<List<Label>, string>(parsedLabels);
         }
     }
 }

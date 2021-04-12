@@ -25,7 +25,7 @@ namespace ChangeTracker.Application.UseCases.CreateVersion
         public async Task ExecuteAsync(ICreateVersionOutputPort output, VersionDto versionDto)
         {
             var (projectId, v) = versionDto;
-            if (!ClVersion.TryParse(v, out var version))
+            if (!ClVersionValue.TryParse(v, out var version))
             {
                 output.InvalidVersionFormat(v);
                 return;
@@ -39,6 +39,13 @@ namespace ChangeTracker.Application.UseCases.CreateVersion
                 return;
             }
 
+            var clVersion = await _versionDao.FindAsync(project.Value.Id, version);
+            if (clVersion.HasValue)
+            {
+                output.VersionAlreadyExists(version.Value);
+                return;
+            }
+
             if (!version.Match(project.Value.VersioningScheme))
             {
                 output.VersionDoesNotMatchScheme(version.Value);
@@ -48,16 +55,20 @@ namespace ChangeTracker.Application.UseCases.CreateVersion
             await SaveVersionAsync(output, project.Value, version);
         }
 
-        private async Task SaveVersionAsync(ICreateVersionOutputPort output, Project project, ClVersion version)
+        private async Task SaveVersionAsync(ICreateVersionOutputPort output, Project project, ClVersionValue versionValue)
         {
-            var versionInfo = new ClVersionInfo(Guid.NewGuid(), project.Id, version, null,
-                DateTime.UtcNow, null);
+            var versionInfo = new ClVersion(Guid.NewGuid(),
+                project.Id,
+                versionValue, 
+                null,
+                DateTime.UtcNow,
+                null);
 
             await _versionDao
                 .AddAsync(versionInfo)
                 .Match(Finish, c => output.Conflict(c));
 
-            void Finish(ClVersionInfo vInfo)
+            void Finish(ClVersion vInfo)
             {
                 output.Created(vInfo.Id);
                 _unitOfWork.Commit();

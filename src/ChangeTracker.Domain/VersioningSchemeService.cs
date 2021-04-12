@@ -1,7 +1,7 @@
 ﻿using System;
 using ChangeTracker.Domain.Version;
 
-namespace ChangeTracker.Domain.ChangeLog.Services
+namespace ChangeTracker.Domain
 {
     public class VersioningSchemeService
     {

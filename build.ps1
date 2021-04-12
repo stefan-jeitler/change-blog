@@ -26,7 +26,7 @@ $buildArgs = @(
 
 Write-Host "`nMSBuild arguments:"
 $buildArgs | Write-Host
-Write-Host " "
+Write-Host ""
 
 dotnet msbuild $buildArgs
 

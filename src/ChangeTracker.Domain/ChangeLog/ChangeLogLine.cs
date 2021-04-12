@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Collections.Immutable;
+using System.Linq;
 
 // ReSharper disable InvertIf
 
@@ -13,7 +14,7 @@ namespace ChangeTracker.Domain.ChangeLog
 
         public ChangeLogLine(Guid id, Guid? versionId, Guid projectId, ChangeLogText text, uint position,
             DateTime createdAt, DateTime? deletedAt = null)
-            : this(id, versionId, projectId, text, position, createdAt, Array.Empty<Label>(), Array.Empty<Issue>(),
+            : this(id, versionId, projectId, text, position, createdAt, Enumerable.Empty<Label>(), Enumerable.Empty<Issue>(),
                 deletedAt)
         {
         }
@@ -45,7 +46,9 @@ namespace ChangeTracker.Domain.ChangeLog
 
             CreatedAt = createdAt;
 
-            VerifyDeletedDate(deletedAt, versionId);
+            if (deletedAt.HasValue && (deletedAt.Value == DateTime.MinValue || deletedAt.Value == DateTime.MaxValue))
+                throw new ArgumentException("Invalid deletion date.");
+
             DeletedAt = deletedAt;
         }
 
@@ -70,14 +73,46 @@ namespace ChangeTracker.Domain.ChangeLog
 
         public int AvailableIssuePlaces => MaxIssues - Issues.Count;
 
-        private static void VerifyDeletedDate(DateTime? deletedAt, Guid? versionId)
-        {
-            if (deletedAt.HasValue &&
-                (deletedAt.Value == DateTime.MinValue || deletedAt.Value == DateTime.MaxValue))
-                throw new ArgumentException("Invalid deletion date.");
+        public void AddLabel(Label label) => AddLabels(new List<Label>(1) {label});
 
-            if (deletedAt.HasValue && versionId.HasValue)
-                throw new InvalidOperationException("A line that has been released cannot be deleted.");
+        public void AddLabels(IReadOnlyCollection<Label> labels)
+        {
+            if (Labels.Count + labels.Count >= MaxLabels)
+                throw new ArgumentException($"Too many labels. Max. {MaxLabels} labels.");
+
+            Labels = Labels.Union(labels);
+        }
+
+        public void RemoveLabel(Label label) => RemoveLabels(new List<Label>(1) {label});
+
+        public void RemoveLabels(IReadOnlyCollection<Label> labels)
+        {
+            Labels = Labels.Except(labels);
+        }
+
+        public void AddIssue(Issue issue) => AddIssues(new List<Issue>(1) {issue});
+
+        public void AddIssues(IReadOnlyCollection<Issue> issues)
+        {
+            if (Issues.Count + issues.Count > MaxIssues)
+                throw new ArgumentException("");
+
+            Issues = Issues.Union(issues);
+        }
+
+        public void RemoveIssue(Issue issue) => RemoveIssues(new List<Issue>(1) {issue});
+
+        public void RemoveIssues(IReadOnlyCollection<Issue> issues)
+        {
+            Issues = Issues.Except(issues);
+        }
+
+        public ChangeLogLine AssignToVersion(Guid versionId, uint position)
+        {
+            if (versionId == Guid.Empty)
+                throw new ArgumentException("VersionId cannot be empty.");
+
+            return new ChangeLogLine(Id, versionId, ProjectId, Text, position, CreatedAt, Labels, Issues, DeletedAt);
         }
 
         private static ImmutableHashSet<T> Populate<T>(IEnumerable<T> items, ushort maxCount)
@@ -91,50 +126,6 @@ namespace ChangeTracker.Domain.ChangeLog
             }
 
             return itemsSet;
-        }
-
-        public void AddLabel(Label label) => AddLabels(new List<Label>(1) {label});
-
-        public void AddLabels(IReadOnlyCollection<Label> labels)
-        {
-            if (!IsPending)
-                throw new InvalidOperationException("You cannot add labels to an already released change log.");
-
-            if (Labels.Count + labels.Count >= MaxLabels)
-                throw new ArgumentException($"Too many labels. Max. {MaxLabels} labels.");
-
-            Labels = Labels.Union(labels);
-        }
-
-        public void RemoveLabel(Label label) => RemoveLabels(new List<Label>(1) {label});
-
-        public void RemoveLabels(IReadOnlyCollection<Label> labels)
-        {
-            if (!IsPending)
-                throw new InvalidOperationException("You cannot remove labels from an already released change log.");
-
-            Labels = Labels.Except(labels);
-        }
-
-        public void AddIssue(Issue issue) => AddIssues(new List<Issue>(1) {issue});
-        public void AddIssues(IReadOnlyCollection<Issue> issues)
-        {
-            if (!IsPending)
-                throw new InvalidOperationException("You cannot add issues to an already released change log.");
-
-            if (Issues.Count + issues.Count > MaxIssues)
-                throw new ArgumentException("");
-
-            Issues = Issues.Union(issues);
-        }
-
-        public void RemoveIssue(Issue issue) => RemoveIssues(new List<Issue>(1) {issue});
-        public void RemoveIssues(IReadOnlyCollection<Issue> issues)
-        {
-            if (!IsPending)
-                throw new InvalidOperationException("You cannot remove issues from an already released change log.");
-
-            Issues = Issues.Except(issues);
         }
     }
 }

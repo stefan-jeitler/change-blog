@@ -51,7 +51,7 @@ namespace ChangeTracker.Domain.Tests.ChangeLogTests
         }
 
         [Fact]
-        public void Create_With6Labels_ArgumentException()
+        public void Create_WithTooManyLabels_ArgumentException()
         {
             var labels = new []
             {
@@ -68,7 +68,7 @@ namespace ChangeTracker.Domain.Tests.ChangeLogTests
         }
 
         [Fact]
-        public void Create_WithoutLabels_EmptyListExists()
+        public void Create_WithoutLabels_Empty()
         {
             var line = new ChangeLogLine(TestId, TestVersionId,
                 TestProjectId, TestText, TestPosition,
@@ -78,7 +78,7 @@ namespace ChangeTracker.Domain.Tests.ChangeLogTests
         }
 
         [Fact]
-        public void AddLabel_ToPendingNote_LabelAdded()
+        public void AddLabel_ToLine_LabelAdded()
         {
             var featureLabel = Label.Parse("Feature");
             var line = new ChangeLogLine(TestId, null,
@@ -91,20 +91,7 @@ namespace ChangeTracker.Domain.Tests.ChangeLogTests
         }
 
         [Fact]
-        public void AddLabel_ToNotPendingNote_InvalidOperationException()
-        {
-            var featureLabel = Label.Parse("Feature");
-            var line = new ChangeLogLine(TestId, TestVersionId,
-                TestProjectId, TestText, TestPosition,
-                TestCreationDate);
-
-            Action act = () => line.AddLabel(featureLabel);
-
-            act.Should().ThrowExactly<InvalidOperationException>();
-        }
-
-        [Fact]
-        public void AddLabel_WhenMaxCountIsReached_()
+        public void AddLabel_MaxLabelsReached_ArgumentException()
         {
             // arrange
             var labels = new List<Label>
@@ -168,7 +155,7 @@ namespace ChangeTracker.Domain.Tests.ChangeLogTests
         }
 
         [Fact]
-        public void AvailableLabelPlaces_EmptyLabels_ReturnsFive()
+        public void AvailableLabelPlaces_EmptyLabels_ReturnsMaxLabels()
         {
             // arrange
             var line = new ChangeLogLine(TestId, TestVersionId,
@@ -179,7 +166,7 @@ namespace ChangeTracker.Domain.Tests.ChangeLogTests
             var remainingLabelPlaces = line.AvailableLabelPlaces;
 
             // assert
-            remainingLabelPlaces.Should().Be(5);
+            remainingLabelPlaces.Should().Be(ChangeLogLine.MaxLabels);
         }
 
         [Fact]
@@ -201,7 +188,7 @@ namespace ChangeTracker.Domain.Tests.ChangeLogTests
         }
 
         [Fact]
-        public void AvailableLabelPlaces_Full_ReturnsZero()
+        public void AvailableLabelPlaces_FiveLabelsExists_ReturnsZero()
         {
             // arrange
             var existingLabels = new Label[]
@@ -274,25 +261,6 @@ namespace ChangeTracker.Domain.Tests.ChangeLogTests
 
             // assert
             line.Labels.Should().BeEmpty();
-        }
-
-
-        [Fact]
-        public void RemoveLabel_FromNotPendingChangeLogLine_InvalidOperationException()
-        {
-            // arrange
-            var featureLabel = Label.Parse("Feature");
-            var existingLabels = new List<Label> {featureLabel};
-
-            var line = new ChangeLogLine(TestId, TestVersionId,
-                TestProjectId, TestText, TestPosition,
-                TestCreationDate, existingLabels, Array.Empty<Issue>());
-
-            // act
-            Action act = () => line.RemoveLabel(featureLabel);
-
-            // assert
-            act.Should().ThrowExactly<InvalidOperationException>();
         }
     }
 }

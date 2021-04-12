@@ -22,9 +22,10 @@ namespace ChangeTracker.Application.Tests.ServicesTests
         {
             // arrange
             var labels = new List<string> {"Bugfix", "ProxyIssue"};
-            
+            var text = ChangeLogText.Parse("some feature added");
+
             // act
-            var extractedLabels = ExtractLabelsService.Extract(_outputPortMock.Object, labels);
+            var extractedLabels = ExtractLabelsService.Extract(_outputPortMock.Object, labels, text);
 
             // assert
             extractedLabels.HasValue.Should().BeTrue();
@@ -38,17 +39,17 @@ namespace ChangeTracker.Application.Tests.ServicesTests
         {
             // arrange
             var labels = new List<string> {"Bugfix", "ProxyIssue", "invalid label"};
+            var text = ChangeLogText.Parse("some feature added");
 
-            _outputPortMock.Setup(m => m.InvalidLabels(It.IsAny<List<string>>()));
+            _outputPortMock.Setup(m => m.InvalidLabel(It.IsAny<string>(), It.IsAny<string>()));
 
             // act
-            var extractedLabels = ExtractLabelsService.Extract(_outputPortMock.Object, labels);
+            var extractedLabels = ExtractLabelsService.Extract(_outputPortMock.Object, labels, text);
 
             // assert
             _outputPortMock.Verify(m
-                => m.InvalidLabels(
-                    It.Is<List<string>>(x => x.Count == 1 &&
-                                             x.First() == "invalid label")), Times.Once);
+                => m.InvalidLabel(It.Is<string>(x => x == text.Value),
+                    It.Is<string>(x => x == labels.Last())), Times.Once);
 
             extractedLabels.HasValue.Should().BeFalse();
         }
@@ -59,14 +60,16 @@ namespace ChangeTracker.Application.Tests.ServicesTests
             // arrange
             var labels = new List<string>
                 {"Bugfix", "ProxyIssue", "Security", "ProxyStrikesBack", "Deprecated", "Feature"};
-            _outputPortMock.Setup(m => m.TooManyLabels(It.IsAny<int>()));
+
+            var text = ChangeLogText.Parse("some feature added");
+            _outputPortMock.Setup(m => m.TooManyLabels(It.IsAny<string>(), It.IsAny<int>()));
 
             // act
-            var extracted = ExtractLabelsService.Extract(_outputPortMock.Object, labels);
+            var extracted = ExtractLabelsService.Extract(_outputPortMock.Object, labels, text);
 
             // assert
             _outputPortMock.Verify(m
-                => m.TooManyLabels(It.Is<int>(x => x == ChangeLogLine.MaxLabels)), Times.Once);
+                => m.TooManyLabels(It.Is<string>(x => x == text.Value), It.Is<int>(x => x == ChangeLogLine.MaxLabels)), Times.Once);
 
             extracted.HasValue.Should().BeFalse();
         }

@@ -13,6 +13,7 @@ using ChangeTracker.Domain;
 using ChangeTracker.Domain.ChangeLog;
 using ChangeTracker.Domain.Version;
 using CSharpFunctionalExtensions;
+// ReSharper disable UseDeconstructionOnParameter
 
 namespace ChangeTracker.Application.UseCases.CreateCompleteVersion
 {
@@ -57,80 +58,87 @@ namespace ChangeTracker.Application.UseCases.CreateCompleteVersion
         }
 
         private static Maybe<IEnumerable<ChangeLogLine>> CreateLines(ICreateCompleteVersionOutputPort output,
-            IEnumerable<ChangeLogLineDto> linesDto, ClVersionInfo newVersion)
+            IEnumerable<ChangeLogLineDto> linesDto, ClVersion newVersion)
         {
             var uniqueLines = linesDto
                 .DistinctBy(x => x.Text)
                 .ToList();
 
-            if (uniqueLines.Count > ChangeLogInfo.MaxChangeLogLines)
+            if (uniqueLines.Count > ChangeLogsMetadata.MaxChangeLogLines)
             {
-                output.MaxChangeLogLinesReached(ChangeLogInfo.MaxChangeLogLines);
+                output.MaxChangeLogLinesReached(ChangeLogsMetadata.MaxChangeLogLines);
                 return Maybe<IEnumerable<ChangeLogLine>>.None;
             }
 
-            var lines = uniqueLines
-                .Select((lineDto, i) => CreateLine(output, lineDto, i, newVersion))
-                .ToList();
+            var lines = new List<ChangeLogLine>();
+            foreach (var (lineDto, i) in uniqueLines.Select((x, i) => (x, i)))
+            {
+                var line = CreateLine(output, lineDto, i, newVersion);
 
-            return lines.Any(x => x.HasNoValue)
-                ? Maybe<IEnumerable<ChangeLogLine>>.None
-                : Maybe<IEnumerable<ChangeLogLine>>.From(lines.Select(x => x.Value));
+                if (line.HasNoValue)
+                {
+                    return Maybe<IEnumerable<ChangeLogLine>>.None;
+                }
+
+                lines.Add(line.Value);
+            }
+
+            return Maybe<IEnumerable<ChangeLogLine>>.From(lines);
         }
 
         private static Maybe<ChangeLogLine> CreateLine(ICreateCompleteVersionOutputPort output, ChangeLogLineDto lineDto,
-            int position, ClVersionInfo clVersionInfo)
+            int position, ClVersion clVersion)
         {
-            var labels = ExtractLabelsService.Extract(output, lineDto.Labels);
-            if (labels.HasNoValue)
-                return Maybe<ChangeLogLine>.None;
-
-            var issues = ExtractIssuesService.Extract(output, lineDto.Issues);
-            if (issues.HasNoValue)
-                return Maybe<ChangeLogLine>.None;
-
             if (!ChangeLogText.TryParse(lineDto.Text, out var text))
             {
                 output.InvalidChangeLogLineText(lineDto.Text);
                 return Maybe<ChangeLogLine>.None;
             }
 
+            var labels = ExtractLabelsService.Extract(output, lineDto.Labels, text);
+            if (labels.HasNoValue)
+                return Maybe<ChangeLogLine>.None;
+
+            var issues = ExtractIssuesService.Extract(output, lineDto.Issues, text);
+            if (issues.HasNoValue)
+                return Maybe<ChangeLogLine>.None;
+
             var line = new ChangeLogLine(Guid.NewGuid(),
-                clVersionInfo.Id, clVersionInfo.ProjectId, text,
-                (uint) position, clVersionInfo.CreatedAt, labels.Value,
+                clVersion.Id, clVersion.ProjectId, text,
+                (uint) position, clVersion.CreatedAt, labels.Value,
                 issues.Value);
 
             return Maybe<ChangeLogLine>.From(line);
         }
 
-        private static Maybe<ClVersionInfo> CreateNewVersion(ICreateCompleteVersionOutputPort output,
+        private static Maybe<ClVersion> CreateNewVersion(ICreateCompleteVersionOutputPort output,
             Project project, string version, bool releaseImmediately)
         {
-            if (!ClVersion.TryParse(version, out var clVersion))
+            if (!ClVersionValue.TryParse(version, out var clVersion))
             {
                 output.InvalidVersionFormat(version);
-                return Maybe<ClVersionInfo>.None;
+                return Maybe<ClVersion>.None;
             }
 
             if (!clVersion.Match(project.VersioningScheme))
             {
                 output.VersionDoesNotMatchScheme(version);
-                return Maybe<ClVersionInfo>.None;
+                return Maybe<ClVersion>.None;
             }
 
             var utcNow = DateTime.UtcNow;
             DateTime? releaseDate = releaseImmediately ? utcNow : null;
-            var versionInfo = new ClVersionInfo(Guid.NewGuid(),
+            var versionInfo = new ClVersion(Guid.NewGuid(),
                 project.Id,
                 clVersion,
                 releaseDate,
                 utcNow,
                 null);
 
-            return Maybe<ClVersionInfo>.From(versionInfo);
+            return Maybe<ClVersion>.From(versionInfo);
         }
 
-        private async Task SaveNewReleasedVersion(ICreateCompleteVersionOutputPort output, ClVersionInfo newVersion,
+        private async Task SaveNewReleasedVersion(ICreateCompleteVersionOutputPort output, ClVersion newVersion,
             IEnumerable<ChangeLogLine> lines)
         {
             await _versionDao

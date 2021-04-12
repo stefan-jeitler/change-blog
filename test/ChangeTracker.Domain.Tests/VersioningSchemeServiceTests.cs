@@ -1,16 +1,15 @@
 ﻿using System;
-using ChangeTracker.Domain.ChangeLog.Services;
 using ChangeTracker.Domain.Tests.TestDoubles;
 using ChangeTracker.Domain.Version;
 using FluentAssertions;
 using Xunit;
 
-namespace ChangeTracker.Domain.Tests.ChangeLogTests.ServicesTests
+namespace ChangeTracker.Domain.Tests
 {
     public class VersioningSchemeServiceTests
     {
         [Fact]
-        public void FindSchemeIdForProject_NoCustomSchemeIdPresentAndNotAccountDefaultScheme_ReturnsDefaultSchemeId()
+        public void FindSchemeIdForProject_NoCustomSchemeIdPresentAndNoAccountDefaultScheme_ReturnsDefaultSchemeId()
         {
             // arrange
             var testAccount = new Account(TestAccount.Id, TestAccount.Name, null, TestAccount.CreationDate, null);

@@ -54,8 +54,8 @@ namespace ChangeTracker.Application.Tests.UseCaseTests
 
             // assert
             _outputPortMock.Verify(m => m.Created(It.IsAny<Guid>()), Times.Once);
-            var version = _versionDaoMock.VersionInfo.Single(x => x.ProjectId == TestAccount.Project.Id);
-            version.Value.Should().Be(ClVersion.Parse("1.23"));
+            var version = _versionDaoMock.Versions.Single(x => x.ProjectId == TestAccount.Project.Id);
+            version.Value.Should().Be(ClVersionValue.Parse("1.23"));
             version.IsDeleted.Should().BeFalse();
         }
 
@@ -185,7 +185,7 @@ namespace ChangeTracker.Application.Tests.UseCaseTests
             await releaseNewVersionUseCase.ExecuteAsync(_outputPortMock.Object, newVersionDto);
 
             // assert
-            _versionDaoMock.VersionInfo.Single().ReleasedAt.HasValue.Should().BeTrue();
+            _versionDaoMock.Versions.Single().ReleasedAt.HasValue.Should().BeTrue();
         }
 
         [Fact]
@@ -210,7 +210,7 @@ namespace ChangeTracker.Application.Tests.UseCaseTests
             await releaseNewVersionUseCase.ExecuteAsync(_outputPortMock.Object, newVersionDto);
 
             // assert
-            _versionDaoMock.VersionInfo.Single().ReleasedAt.HasValue.Should().BeFalse();
+            _versionDaoMock.Versions.Single().ReleasedAt.HasValue.Should().BeFalse();
         }
 
         [Fact]
@@ -233,7 +233,7 @@ namespace ChangeTracker.Application.Tests.UseCaseTests
 
             // assert
             _outputPortMock.Verify(m => 
-                m.MaxChangeLogLinesReached(It.Is<int>(x => x == ChangeLogInfo.MaxChangeLogLines)), Times.Once);
+                m.MaxChangeLogLinesReached(It.Is<int>(x => x == ChangeLogsMetadata.MaxChangeLogLines)), Times.Once);
         }
 
         [Fact]

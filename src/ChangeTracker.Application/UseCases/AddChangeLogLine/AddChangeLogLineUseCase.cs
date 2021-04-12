@@ -33,7 +33,7 @@ namespace ChangeTracker.Application.UseCases.AddChangeLogLine
         public async Task ExecuteAsync(IAddChangeLogLineOutputPort output,
             ChangeLogLineDto changeLogLineDto)
         {
-            if (!ClVersion.TryParse(changeLogLineDto.Version, out var version))
+            if (!ClVersionValue.TryParse(changeLogLineDto.Version, out var version))
             {
                 output.InvalidVersionFormat();
                 return;
@@ -45,11 +45,11 @@ namespace ChangeTracker.Application.UseCases.AddChangeLogLine
                 return;
             }
 
-            var labels = ExtractLabelsService.Extract(output, changeLogLineDto.Labels);
+            var labels = ExtractLabelsService.Extract(output, changeLogLineDto.Labels, text);
             if (labels.HasNoValue)
                 return;
 
-            var issues = ExtractIssuesService.Extract(output, changeLogLineDto.Issues);
+            var issues = ExtractIssuesService.Extract(output, changeLogLineDto.Issues, text);
             if (issues.HasNoValue)
                 return;
 
@@ -66,18 +66,18 @@ namespace ChangeTracker.Application.UseCases.AddChangeLogLine
         }
 
         private async Task<Maybe<ChangeLogLine>> CreateChangeLogLineAsync(IAddChangeLogLineOutputPort output,
-            ClVersionInfo versionInfo, ChangeLogText text, IEnumerable<Label> labels, IEnumerable<Issue> issues)
+            ClVersion version, ChangeLogText text, IEnumerable<Label> labels, IEnumerable<Issue> issues)
         {
-            var changeLogInfo = await _changeLogDao.GetChangeLogInfoAsync(versionInfo.ProjectId, versionInfo.Id);
+            var changeLogInfo = await _changeLogDao.GetChangeLogsMetadataAsync(version.ProjectId, version.Id);
             if (!changeLogInfo.IsPositionAvailable)
             {
-                output.MaxChangeLogLinesReached(ChangeLogInfo.MaxChangeLogLines);
+                output.MaxChangeLogLinesReached(ChangeLogsMetadata.MaxChangeLogLines);
                 return Maybe<ChangeLogLine>.None;
             }
 
             var changeLogLine = new ChangeLogLine(Guid.NewGuid(),
-                versionInfo.Id,
-                versionInfo.ProjectId,
+                version.Id,
+                version.ProjectId,
                 text,
                 (uint)changeLogInfo.NextFreePosition,
                 DateTime.UtcNow,

@@ -87,7 +87,7 @@ namespace ChangeTracker.Domain.Tests.ProjectTests
         [Theory]
         [InlineData("0001-01-01T00:00:00.0000000")]
         [InlineData("9999-12-31T23:59:59.9999999")]
-        public void Create_WithInvalidCreationDate_ArgumentException(string createdAt)
+        public void Create_WithInvalidCreatedAtDate_ArgumentException(string createdAt)
         {
             Func<Project> act = () => new Project(TestId,
                 TestAccount.Id,
@@ -102,7 +102,7 @@ namespace ChangeTracker.Domain.Tests.ProjectTests
         [Theory]
         [InlineData("0001-01-01T00:00:00.0000000")]
         [InlineData("9999-12-31T23:59:59.9999999")]
-        public void Create_WithInvalidDeletionDate_ArgumentException(string deletedAt)
+        public void Create_WithInvalidDeletedAtDate_ArgumentException(string deletedAt)
         {
             Func<Project> act = () => new Project(TestId,
                 TestAccount.Id,

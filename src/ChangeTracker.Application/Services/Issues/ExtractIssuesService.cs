@@ -9,29 +9,29 @@ namespace ChangeTracker.Application.Services.Issues
 {
     public static class ExtractIssuesService
     {
-        public static Maybe<List<Issue>> Extract(IExtractIssuesOutputPort output, IEnumerable<string> issues)
+        public static Maybe<List<Issue>> Extract(IExtractIssuesOutputPort output, IEnumerable<string> issues,
+            ChangeLogText text)
         {
-            var (parsedIssues, invalidIssues) = ParseIssues(issues);
+            var parsedIssues = ParseIssues(issues);
 
-            if (invalidIssues.Any())
+            if (parsedIssues.IsFailure)
             {
-                output.InvalidIssues(invalidIssues);
+                output.InvalidIssue(text, parsedIssues.Error);
                 return Maybe<List<Issue>>.None;
             }
 
-            if (parsedIssues.Count > ChangeLogLine.MaxIssues)
+            if (parsedIssues.Value.Count > ChangeLogLine.MaxIssues)
             {
-                output.TooManyIssues(ChangeLogLine.MaxIssues);
+                output.TooManyIssues(text, ChangeLogLine.MaxIssues);
                 return Maybe<List<Issue>>.None;
             }
 
-            return Maybe<List<Issue>>.From(parsedIssues);
+            return Maybe<List<Issue>>.From(parsedIssues.Value);
         }
 
-        private static (List<Issue> parsedIssues, List<string> invalidIssues) ParseIssues(IEnumerable<string> issues)
+        private static Result<List<Issue>, string> ParseIssues(IEnumerable<string> issues)
         {
             var parsedIssues = new List<Issue>();
-            var invalidIssues = new List<string>();
 
             foreach (var i in issues)
             {
@@ -41,11 +41,11 @@ namespace ChangeTracker.Application.Services.Issues
                 }
                 else
                 {
-                    invalidIssues.Add(i);
+                    return Result.Failure<List<Issue>, string>(i);
                 }
             }
 
-            return (parsedIssues, invalidIssues);
+            return Result.Success<List<Issue>, string>(parsedIssues);
         }
     }
 }

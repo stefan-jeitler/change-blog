@@ -20,9 +20,9 @@ namespace ChangeTracker.Application.Services.NotReleasedVersion
             _versionDao = versionDao;
         }
 
-        public async Task<Maybe<ClVersionInfo>> FindAsync(INotReleasedVersionOutputPort output, Guid projectId, ClVersion version)
+        public async Task<Maybe<ClVersion>> FindAsync(INotReleasedVersionOutputPort output, Guid projectId, ClVersionValue versionValue)
         {
-            var noVersionInfo = Maybe<ClVersionInfo>.None;
+            var noVersionInfo = Maybe<ClVersion>.None;
 
             var project = await _projectDao.FindAsync(projectId);
             if (project.HasNoValue)
@@ -31,7 +31,7 @@ namespace ChangeTracker.Application.Services.NotReleasedVersion
                 return noVersionInfo;
             }
 
-            var versionInfo = await _versionDao.FindAsync(project.Value.Id, version);
+            var versionInfo = await _versionDao.FindAsync(project.Value.Id, versionValue);
             if (versionInfo.HasNoValue)
             {
                 output.VersionDoesNotExist();

@@ -28,7 +28,7 @@ namespace ChangeTracker.DataAccess.Postgres.Tests
         }
 
         [Fact]
-        public void DbSession_StartTwoUows_OnlyOneConnectionIsOpened()
+        public void DbSession_StartTwoUows_OnlyOneConnectionOpened()
         {
             // arrange
             var dbConnectionMock = new Mock<IDbConnection>();
@@ -104,6 +104,7 @@ namespace ChangeTracker.DataAccess.Postgres.Tests
             // act
             var dbConnection = dbSession.DbConnection;
 
+            // assert
             dbConnection.Should().Be(dbConnectionMock.Object);
         }
 

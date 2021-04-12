@@ -4,6 +4,7 @@ using System.Linq;
 using ChangeTracker.Domain.ChangeLog;
 using FluentAssertions;
 using Xunit;
+// ReSharper disable InconsistentNaming
 
 namespace ChangeTracker.Domain.Tests.ChangeLogTests
 {
@@ -16,7 +17,6 @@ namespace ChangeTracker.Domain.Tests.ChangeLogTests
         private static readonly Guid TestProjectId = Guid.Parse("ef5656e5-15f0-418d-b3a4-b69f1c3abac5");
         private static readonly ChangeLogText TestText = ChangeLogText.Parse("New feature added");
         private static readonly DateTime TestCreationDate = DateTime.Parse("2021-04.02T18:28");
-        private static readonly DateTime TestDeletionDate = DateTime.Parse("2021-04.02T18:28");
 
         [Fact]
         public void Create_WithIssues_IssuesExists()
@@ -89,7 +89,7 @@ namespace ChangeTracker.Domain.Tests.ChangeLogTests
         }
 
         [Fact]
-        public void Create_WithMaxIssues_ArgumentException()
+        public void Create_WithMaxIssues_SuccessfulCreated()
         {
             var issues = new[]
             {
@@ -112,7 +112,7 @@ namespace ChangeTracker.Domain.Tests.ChangeLogTests
         }
 
         [Fact]
-        public void AddIssue_ToPendingChangeLogLine_SuccessfullyAdded()
+        public void AddIssue_ToLine_SuccessfullyAdded()
         {
             // arrange
             var issue = Issue.Parse("#1234");
@@ -127,24 +127,6 @@ namespace ChangeTracker.Domain.Tests.ChangeLogTests
 
             // assert
             line.Issues.Should().Contain(issue);
-        }
-
-        [Fact]
-        public void AddIssue_ToNotPendingChangeLogLine_InvalidOperationException()
-        {
-            // arrange
-            var issue = Issue.Parse("#1234");
-            var line = new ChangeLogLine(TestId,
-                TestVersionId, TestProjectId, TestText, 
-                TestPosition, TestCreationDate,
-                Enumerable.Empty<Label>(),
-                Enumerable.Empty<Issue>());
-
-            // act
-            Action act = () => line.AddIssue(issue);
-
-            // assert
-            act.Should().ThrowExactly<InvalidOperationException>();
         }
 
         [Fact]
@@ -186,7 +168,7 @@ namespace ChangeTracker.Domain.Tests.ChangeLogTests
         }
 
         [Fact]
-        public void RemoveIssue_ThatExists_IssueRemoved()
+        public void RemoveIssue_WhichExists_IssueRemoved()
         {
             var issue = Issue.Parse("#123411");
             var line = new ChangeLogLine(TestId,
@@ -218,20 +200,7 @@ namespace ChangeTracker.Domain.Tests.ChangeLogTests
         }
 
         [Fact]
-        public void RemoveIssue_NotPendingChangeLogLine_InvalidOperationException()
-        {
-            var line = new ChangeLogLine(TestId,
-                TestVersionId, TestProjectId, TestText,
-                TestPosition, TestCreationDate,
-                Enumerable.Empty<Label>(), Enumerable.Empty<Issue>());
-
-            Action act = () => line.RemoveIssue(Issue.Parse("#123411"));
-
-            act.Should().ThrowExactly<InvalidOperationException>();
-        }
-
-        [Fact]
-        public void AvailableIssuePlaces_NoIssueExists_ReturnsTen()
+        public void AvailableIssuePlaces_NoIssueExists_ReturnsMaxIssuesPerLine()
         {
             var line = new ChangeLogLine(TestId,
                 TestVersionId, TestProjectId, TestText,
@@ -240,7 +209,7 @@ namespace ChangeTracker.Domain.Tests.ChangeLogTests
 
             var remainingIssuePlaces = line.AvailableIssuePlaces;
 
-            remainingIssuePlaces.Should().Be(10);
+            remainingIssuePlaces.Should().Be(ChangeLogLine.MaxIssues);
         }
 
         [Fact]

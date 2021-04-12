@@ -2,11 +2,11 @@
 
 namespace ChangeTracker.Domain.ChangeLog
 {
-    public record ChangeLogInfo
+    public record ChangeLogsMetadata
     {
         public const int MaxChangeLogLines = 100;
 
-        public ChangeLogInfo(Guid projectId, Guid? versionId, uint count, int lastPosition)
+        public ChangeLogsMetadata(Guid projectId, Guid? versionId, uint count, int lastPosition)
         {
             if (projectId == Guid.Empty)
                 throw new ArgumentException("ProjectId cannot be empty.");
@@ -18,6 +18,10 @@ namespace ChangeTracker.Domain.ChangeLog
 
             VersionId = versionId;
             Count = count;
+
+            if (lastPosition < -1)
+                throw new ArgumentException("LastPosition must not be smaller than -1.");
+
             LastPosition = count == 0 ? -1 : lastPosition;
         }
 
@@ -27,7 +31,7 @@ namespace ChangeTracker.Domain.ChangeLog
         public int LastPosition { get; }
 
         public uint RemainingPositionsToAdd => MaxChangeLogLines - Count;
-        public int NextFreePosition => LastPosition + 1;
+        public uint NextFreePosition => (uint) (LastPosition + 1);
         public bool IsPositionAvailable => RemainingPositionsToAdd > 0;
     }
 }

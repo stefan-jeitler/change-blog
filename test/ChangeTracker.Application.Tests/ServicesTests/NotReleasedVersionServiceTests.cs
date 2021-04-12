@@ -38,7 +38,7 @@ namespace ChangeTracker.Application.Tests.ServicesTests
             _outputPortMock.Setup(m => m.ProjectDoesNotExist());
 
             // act
-            var version = await notReleasedVersion.FindAsync(_outputPortMock.Object, TestAccount.Project.Id, ClVersion.Parse("1.2"));
+            var version = await notReleasedVersion.FindAsync(_outputPortMock.Object, TestAccount.Project.Id, ClVersionValue.Parse("1.2"));
 
             // assert
             _outputPortMock.Verify(m => m.ProjectDoesNotExist(), Times.Once);
@@ -47,7 +47,7 @@ namespace ChangeTracker.Application.Tests.ServicesTests
 
 
         [Fact]
-        public async Task Find_VersionDoesNotExist_VersionDoesNotExistOutput()
+        public async Task Find_NotExistingVersion_VersionDoesNotExistOutput()
         {
             // arrange
             var projectId = TestAccount.Project.Id;
@@ -60,7 +60,7 @@ namespace ChangeTracker.Application.Tests.ServicesTests
             _outputPortMock.Setup(m => m.VersionDoesNotExist());
 
             // act
-            var version = await notReleasedVersion.FindAsync(_outputPortMock.Object, projectId, ClVersion.Parse("1.23"));
+            var version = await notReleasedVersion.FindAsync(_outputPortMock.Object, projectId, ClVersionValue.Parse("1.23"));
 
             // assert
             _outputPortMock.Verify(m => m.VersionDoesNotExist(), Times.Once);
@@ -69,7 +69,7 @@ namespace ChangeTracker.Application.Tests.ServicesTests
 
 
         [Fact]
-        public async Task Find_AlreadyReleasedVersion_VersionAlreadyReleasedOutput()
+        public async Task Find_ReleaseVersion_VersionAlreadyReleasedOutput()
         {
             // arrange
             var projectId = TestAccount.Project.Id;
@@ -77,8 +77,8 @@ namespace ChangeTracker.Application.Tests.ServicesTests
                 TestAccount.CustomVersioningScheme, TestAccount.CreationDate, null));
 
             var releasedAt = DateTime.Parse("2021-04-09");
-            var versionInfo = new ClVersionInfo(projectId, ClVersion.Parse("1.2"), releasedAt);
-            _versionDaoMock.VersionInfo.Add(versionInfo);
+            var versionInfo = new ClVersion(projectId, ClVersionValue.Parse("1.2"), releasedAt);
+            _versionDaoMock.Versions.Add(versionInfo);
 
             _changeLogDaoMock.ChangeLogs.Add(new ChangeLogLine(Guid.NewGuid(),
                 versionInfo.Id,
@@ -91,7 +91,7 @@ namespace ChangeTracker.Application.Tests.ServicesTests
             _outputPortMock.Setup(m => m.VersionAlreadyReleased(It.IsAny<DateTime>()));
 
             // act
-            var version = await notReleasedVersion.FindAsync(_outputPortMock.Object, projectId, ClVersion.Parse("1.2"));
+            var version = await notReleasedVersion.FindAsync(_outputPortMock.Object, projectId, ClVersionValue.Parse("1.2"));
 
             // assert
             _outputPortMock.Verify(m => m.VersionAlreadyReleased(
@@ -108,13 +108,13 @@ namespace ChangeTracker.Application.Tests.ServicesTests
             _projectDaoMock.Projects.Add(new Project(projectId, TestAccount.Id, TestAccount.Project.Name,
                 TestAccount.CustomVersioningScheme, TestAccount.CreationDate, null));
 
-            var versionInfo = new ClVersionInfo(Guid.NewGuid(),
+            var versionInfo = new ClVersion(Guid.NewGuid(),
                 projectId,
-                ClVersion.Parse("1.2"),
+                ClVersionValue.Parse("1.2"),
                 null,
                 DateTime.Parse("2021-04-09T12:00"),
                 deletedAt);
-            _versionDaoMock.VersionInfo.Add(versionInfo);
+            _versionDaoMock.Versions.Add(versionInfo);
 
             _changeLogDaoMock.ChangeLogs.Add(new ChangeLogLine(Guid.NewGuid(),
                 versionInfo.Id,
@@ -128,7 +128,7 @@ namespace ChangeTracker.Application.Tests.ServicesTests
             _outputPortMock.Setup(m => m.VersionDeleted(It.IsAny<DateTime>()));
 
             // act
-            var version = await notReleaseVersion.FindAsync(_outputPortMock.Object, projectId, ClVersion.Parse("1.2"));
+            var version = await notReleaseVersion.FindAsync(_outputPortMock.Object, projectId, ClVersionValue.Parse("1.2"));
 
             // assert
             _outputPortMock.Verify(m => m.VersionDeleted(
@@ -145,13 +145,13 @@ namespace ChangeTracker.Application.Tests.ServicesTests
             _projectDaoMock.Projects.Add(new Project(projectId, TestAccount.Id, TestAccount.Project.Name,
                 TestAccount.CustomVersioningScheme, TestAccount.CreationDate, null));
 
-            var versionInfo = new ClVersionInfo(Guid.NewGuid(),
+            var versionInfo = new ClVersion(Guid.NewGuid(),
                 projectId,
-                ClVersion.Parse("1.2"),
+                ClVersionValue.Parse("1.2"),
                 null,
                 DateTime.Parse("2021-04-09T12:00"),
                 null);
-            _versionDaoMock.VersionInfo.Add(versionInfo);
+            _versionDaoMock.Versions.Add(versionInfo);
 
             _changeLogDaoMock.ChangeLogs.Add(new ChangeLogLine(Guid.NewGuid(),
                 versionInfo.Id,
@@ -163,11 +163,11 @@ namespace ChangeTracker.Application.Tests.ServicesTests
             var notReleaseVersion = new NotReleasedVersionService(_projectDaoMock, _versionDaoMock);
 
             // act
-            var version = await notReleaseVersion.FindAsync(_outputPortMock.Object, projectId, ClVersion.Parse("1.2"));
+            var version = await notReleaseVersion.FindAsync(_outputPortMock.Object, projectId, ClVersionValue.Parse("1.2"));
 
             // assert
             version.HasValue.Should().BeTrue();
-            version.Value.Value.Should().Be(ClVersion.Parse("1.2"));
+            version.Value.Value.Should().Be(ClVersionValue.Parse("1.2"));
         }
     }
 }

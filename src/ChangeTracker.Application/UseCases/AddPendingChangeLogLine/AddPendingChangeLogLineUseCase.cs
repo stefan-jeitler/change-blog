@@ -34,11 +34,11 @@ namespace ChangeTracker.Application.UseCases.AddPendingChangeLogLine
                 return;
             }
 
-            var labels = ExtractLabelsService.Extract(outputPort, changeLogLineDto.Labels);
+            var labels = ExtractLabelsService.Extract(outputPort, changeLogLineDto.Labels, text);
             if (labels.HasNoValue)
                 return;
 
-            var issues = ExtractIssuesService.Extract(outputPort, changeLogLineDto.Issues);
+            var issues = ExtractIssuesService.Extract(outputPort, changeLogLineDto.Issues, text);
             if (issues.HasNoValue)
                 return;
 
@@ -63,10 +63,10 @@ namespace ChangeTracker.Application.UseCases.AddPendingChangeLogLine
                 return Maybe<ChangeLogLine>.None;
             }
 
-            var changeLogInfo = await _changeLogDao.GetPendingChangeLogInfoAsync(project.Value.Id);
+            var changeLogInfo = await _changeLogDao.GetPendingChangeLogMetadataAsync(project.Value.Id);
             if (!changeLogInfo.IsPositionAvailable)
             {
-                outputPort.MaxChangeLogLinesReached(ChangeLogInfo.MaxChangeLogLines);
+                outputPort.MaxChangeLogLinesReached(ChangeLogsMetadata.MaxChangeLogLines);
                 return Maybe<ChangeLogLine>.None;
             }
 
@@ -74,7 +74,7 @@ namespace ChangeTracker.Application.UseCases.AddPendingChangeLogLine
                 null,
                 project.Value.Id,
                 text,
-                (uint)changeLogInfo.NextFreePosition,
+                changeLogInfo.NextFreePosition,
                 DateTime.UtcNow, labels, issues);
 
             return Maybe<ChangeLogLine>.From(line);

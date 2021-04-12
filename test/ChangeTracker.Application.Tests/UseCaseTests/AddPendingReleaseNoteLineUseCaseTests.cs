@@ -22,12 +22,10 @@ namespace ChangeTracker.Application.Tests.UseCaseTests
         private readonly Mock<IAddPendingChangeLogLineOutputPort> _outputPortMock;
         private readonly ProjectDaoMock _projectDaoMock;
         private readonly Mock<IUnitOfWork> _unitOfWorkMock;
-        private readonly VersionDaoMock _versionDaoMock;
 
         public AddPendingReleaseNoteLineUseCaseTests()
         {
             _projectDaoMock = new ProjectDaoMock();
-            _versionDaoMock = new VersionDaoMock();
             _changeLogDaoMock = new ChangeLogDaoMock();
             _outputPortMock = new Mock<IAddPendingChangeLogLineOutputPort>(MockBehavior.Strict);
             _unitOfWorkMock = new Mock<IUnitOfWork>(MockBehavior.Strict);
@@ -88,7 +86,7 @@ namespace ChangeTracker.Application.Tests.UseCaseTests
 
             // assert
             _outputPortMock.Verify(m => m.MaxChangeLogLinesReached(
-                It.Is<int>(x => x == ChangeLogInfo.MaxChangeLogLines)), Times.Once);
+                It.Is<int>(x => x == ChangeLogsMetadata.MaxChangeLogLines)), Times.Once);
         }
 
         [Fact]

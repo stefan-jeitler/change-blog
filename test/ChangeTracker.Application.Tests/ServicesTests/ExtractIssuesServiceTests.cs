@@ -22,9 +22,10 @@ namespace ChangeTracker.Application.Tests.ServicesTests
         {
             // arrange
             var issues = new List<string> {"#1234"};
+            var text = ChangeLogText.Parse("some feature added");
 
             // act
-            var extractedIssues = ExtractIssuesService.Extract(_outputPortMock.Object, issues);
+            var extractedIssues = ExtractIssuesService.Extract(_outputPortMock.Object, issues, text);
 
             // assert
             extractedIssues.HasValue.Should().BeTrue();
@@ -36,15 +37,15 @@ namespace ChangeTracker.Application.Tests.ServicesTests
         {
             // arrange
             var issues = new List<string> {"#1234", "# 345"};
-            _outputPortMock.Setup(m => m.InvalidIssues(It.IsAny<List<string>>()));
+            var text = ChangeLogText.Parse("some feature added");
+            _outputPortMock.Setup(m => m.InvalidIssue(It.IsAny<string>(), It.IsAny<string>()));
 
             // act
-            var extractedIssues = ExtractIssuesService.Extract(_outputPortMock.Object, issues);
+            var extractedIssues = ExtractIssuesService.Extract(_outputPortMock.Object, issues, text);
 
             // assert
             _outputPortMock.Verify(m
-                => m.InvalidIssues(It.Is<List<string>>(x => x.Count == 1 &&
-                                                            x.First() == "# 345")), Times.Once);
+                => m.InvalidIssue(It.Is<string>(x => x == text.Value), It.Is<string>(x => x == "# 345")), Times.Once);
             extractedIssues.HasValue.Should().BeFalse();
         }
 
@@ -53,14 +54,15 @@ namespace ChangeTracker.Application.Tests.ServicesTests
         {
             // arrange
             var issues = new List<string> {"#1", "#2", "#3", "#4", "#5", "#6", "#7", "#8", "#9", "#10", "#11"};
-            _outputPortMock.Setup(m => m.TooManyIssues(It.IsAny<int>()));
+            var text = ChangeLogText.Parse("some feature added");
+            _outputPortMock.Setup(m => m.TooManyIssues(It.IsAny<string>(), It.IsAny<int>()));
 
             // act
-            var extractedIssues = ExtractIssuesService.Extract(_outputPortMock.Object, issues);
+            var extractedIssues = ExtractIssuesService.Extract(_outputPortMock.Object, issues, text);
 
             // assert
             _outputPortMock.Verify(m
-                => m.TooManyIssues(It.Is<int>(x => x == ChangeLogLine.MaxIssues)), Times.Once);
+                => m.TooManyIssues(It.IsAny<string>(), It.IsAny<int>()), Times.Once);
             extractedIssues.HasValue.Should().BeFalse();
         }
     }

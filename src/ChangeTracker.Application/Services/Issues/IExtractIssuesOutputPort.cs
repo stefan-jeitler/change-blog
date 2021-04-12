@@ -1,10 +1,11 @@
 ﻿using System.Collections.Generic;
+using ChangeTracker.Domain.ChangeLog;
 
 namespace ChangeTracker.Application.Services.Issues
 {
     public interface IExtractIssuesOutputPort
     {
-        void InvalidIssues(List<string> issues);
-        void TooManyIssues(int maxIssues);
+        void InvalidIssue(string changeLogText, string issue);
+        void TooManyIssues(string changeLogText, int maxIssues);
     }
 }

@@ -47,7 +47,7 @@ namespace ChangeTracker.Domain.Tests.ChangeLogTests
         [InlineData(" New feature added ")]
         [InlineData("  New feature added")]
         [InlineData("New feature added  ")]
-        public void Parse_WithWhitespaces_WhitespacesRemoved(string changeLogLine)
+        public void Parse_WithLeadingAndTrailingWhitespaces_WhitespacesRemoved(string changeLogLine)
         {
             var text = ChangeLogText.Parse(changeLogLine);
 
@@ -61,7 +61,7 @@ namespace ChangeTracker.Domain.Tests.ChangeLogTests
 
             Func<ChangeLogText> act = () => ChangeLogText.Parse(tooLongText);
 
-            act.Should().ThrowExactly<ArgumentException>();
+            act.Should().ThrowExactly<ArgumentException>("Too long");
         }
 
         [Fact]
@@ -71,7 +71,7 @@ namespace ChangeTracker.Domain.Tests.ChangeLogTests
 
             Func<ChangeLogText> act = () => ChangeLogText.Parse(tooShortText);
 
-            act.Should().ThrowExactly<ArgumentException>();
+            act.Should().ThrowExactly<ArgumentException>("Too short");
         }
 
         [Theory]

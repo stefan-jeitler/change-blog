@@ -3,122 +3,242 @@ using ChangeTracker.Domain.Version;
 using FluentAssertions;
 using Xunit;
 
-// ReSharper disable InconsistentNaming
-
 namespace ChangeTracker.Domain.Tests.VersionTests
 {
     public class ClVersionTests
     {
-        private const string TestVersion = "1.2.3";
+        private static readonly ClVersionValue TestVersionValue = ClVersionValue.Parse("1.2.3-dev.0");
+        private static readonly Guid TestId = Guid.Parse("4eaa1f8e-46d4-4cdd-92d4-6a2fe6f5ac10");
+        private static readonly Guid TestProjectId = Guid.Parse("d816fb67-f2c3-4d2a-8713-f93a432fbf41");
+        private static readonly DateTime TestReleaseDate =  DateTime.Parse("2021-04-02T19:30");
+        private static readonly DateTime TestCreationDate = DateTime.Parse("2021-04-02T17:30");
 
         [Fact]
-        public void Parse_ValidVersion_Successful()
+        public void Create_WithValidArguments_Successful()
         {
-            var version = ClVersion.Parse(TestVersion);
+            var version = new ClVersion(TestId, TestProjectId, TestVersionValue, TestReleaseDate, TestCreationDate,
+                null);
 
-            version.Value.Should().Be("1.2.3");
+            version.Id.Should().Be(TestId);
+            version.ProjectId.Should().Be(TestProjectId);
+            version.Value.Should().Be(TestVersionValue);
+            version.ReleasedAt.Should().Be(TestReleaseDate);
+            version.CreatedAt.Should().Be(TestCreationDate);
+            version.DeletedAt.Should().BeNull();
         }
 
         [Fact]
-        public void Parse_WithNullArgument_ArgumentNullException()
+        public void Create_WithEmptyId_ArgumentException()
         {
-            Func<ClVersion> act = () => ClVersion.Parse(null);
+            Func<ClVersion> act = () => new ClVersion(Guid.Empty,
+                TestProjectId,
+                TestVersionValue,
+                TestReleaseDate,
+                TestCreationDate,
+                null);
+
+            act.Should().ThrowExactly<ArgumentException>();
+        }
+
+        [Fact]
+        public void Create_WithEmptyProjectId_ArgumentException()
+        {
+            Func<ClVersion> act = () => new ClVersion(TestId,
+                Guid.Empty,
+                TestVersionValue,
+                TestReleaseDate,
+                TestCreationDate,
+                null);
+
+            act.Should().ThrowExactly<ArgumentException>();
+        }
+
+        [Fact]
+        public void Create_WithNullVersion_ArgumentNullException()
+        {
+            Func<ClVersion> act = () => new ClVersion(TestId,
+                TestProjectId,
+                null,
+                TestReleaseDate,
+                TestCreationDate,
+                null);
 
             act.Should().ThrowExactly<ArgumentNullException>();
         }
 
         [Fact]
-        public void Parse_WithEmptyString_ArgumentException()
+        public void IsReleased_ReleaseAtIsNull_ReturnsFalse()
         {
-            Func<ClVersion> act = () => ClVersion.Parse(string.Empty);
+            var version = new ClVersion(TestId,
+                TestProjectId, TestVersionValue,
+                null,
+                TestCreationDate,
+                null);
 
-            act.Should().ThrowExactly<ArgumentException>();
+            version.IsReleased.Should().BeFalse("Versions can be released later.");
         }
 
         [Fact]
-        public void Parse_TooLongVersion61Characters_ArgumentException()
+        public void IsReleased_ReleaseAtIsNotNull_ReturnsTrue()
         {
-            const string tooLongVersion = "6.1.1.1234+a6eda1a40b5261efa6496ad10f685199e93a37793a37793a37";
+            var version = new ClVersion(TestId,
+                TestProjectId, TestVersionValue,
+                DateTime.Parse("2021-04-06"),
+                TestCreationDate,
+                null);
 
-            Func<ClVersion> act = () => ClVersion.Parse(tooLongVersion);
-
-            act.Should().ThrowExactly<ArgumentException>();
+            version.IsReleased.Should().BeTrue();
         }
 
         [Fact]
-        public void Parse_WithWhitespaceOnly_ArgumentException()
+        public void IsDeleted_DeletedAtIsNull_ReturnsFalse()
         {
-            Func<ClVersion> act = () => ClVersion.Parse(" ");
+            var version = new ClVersion(TestId,
+                TestProjectId, TestVersionValue,
+                DateTime.Parse("2021-04-06"),
+                TestCreationDate,
+                null);
 
-            act.Should().ThrowExactly<ArgumentException>();
+            version.IsDeleted.Should().BeFalse();
         }
 
         [Fact]
-        public void Parse_WithWhitespacesInTheMiddle_ArgumentException()
+        public void IsDeleted_DeletedAtIsNotNull_ReturnsTrue()
         {
-            Func<ClVersion> act = () => ClVersion.Parse("1.2 .3");
+            var version = new ClVersion(TestId,
+                TestProjectId, TestVersionValue,
+                null,
+                TestCreationDate,
+                DateTime.Parse("2021-04-06"));
+
+            version.IsDeleted.Should().BeTrue();
+        }
+
+        [Fact]
+        public void Create_ReleaseAtAfterDeletedAt_InvalidOperationException()
+        {
+            Func<ClVersion> act = () => new ClVersion(TestId,
+                TestProjectId,
+                TestVersionValue,
+                DateTime.Parse("2021-04-12T19:30:00"),
+                TestCreationDate,
+                DateTime.Parse("2021-04-12T18:30:00"));
+
+            act.Should().ThrowExactly<InvalidOperationException>("Deleted version cannot be released.");
+        }
+
+        [Theory]
+        [InlineData("0001-01-01T00:00:00.0000000")]
+        [InlineData("9999-12-31T23:59:59.9999999")]
+        public void Create_WithReleasedAtTimeMinAndMaxValue_ArgumentException(string invalidDate)
+        {
+            Func<ClVersion> act = () => new ClVersion(TestId,
+                TestProjectId,
+                TestVersionValue,
+                DateTime.Parse(invalidDate),
+                TestCreationDate,
+                null);
 
             act.Should().ThrowExactly<ArgumentException>();
         }
 
         [Theory]
-        [InlineData(" 1.2.3")]
-        [InlineData("1.2.3 ")]
-        [InlineData(" 1.2.3 ")]
-        [InlineData(" 1.2.3  ")]
-        public void Parse_WithLeadingAndTrailingWhitespaces_WhitespacesRemoved(string versionValue)
+        [InlineData("0001-01-01T00:00:00.0000000")]
+        [InlineData("9999-12-31T23:59:59.9999999")]
+        public void Create_WithCreatedAtTimeMinAndMaxValue_ArgumentException(string invalidDate)
         {
-            var version = ClVersion.Parse(versionValue);
+            Func<ClVersion> act = () => new ClVersion(TestId,
+                TestProjectId,
+                TestVersionValue,
+                TestReleaseDate,
+                DateTime.Parse(invalidDate),
+                null);
 
-            version.Value.Should().Be(versionValue.Trim());
+            act.Should().ThrowExactly<ArgumentException>();
+        }
+
+        [Theory]
+        [InlineData("0001-01-01T00:00:00.0000000")]
+        [InlineData("9999-12-31T23:59:59.9999999")]
+        public void Create_WithDeletedAtTimeMinAndMaxValue_ArgumentException(string invalidDate)
+        {
+            Func<ClVersion> act = () => new ClVersion(TestId,
+                TestProjectId,
+                TestVersionValue,
+                TestReleaseDate,
+                TestCreationDate,
+                DateTime.Parse(invalidDate));
+
+            act.Should().ThrowExactly<ArgumentException>();
         }
 
         [Fact]
-        public void TryParse_ValidVersion_Successful()
+        public void Equals_TwoDifferentObjectsWithSameProperties_IsEqual()
         {
-            var isSuccess = ClVersion.TryParse(TestVersion, out var version);
+            var version1 = new ClVersion(TestId, TestProjectId, TestVersionValue, TestReleaseDate, TestCreationDate,
+                null);
+            var version2 = new ClVersion(TestId, TestProjectId, TestVersionValue, TestReleaseDate, TestCreationDate,
+                null);
 
-            isSuccess.Should().BeTrue();
-            version.Value.Should().Be(TestVersion);
+            var isEqual = version1.Equals((object) version2);
+
+            isEqual.Should().BeTrue();
         }
 
         [Fact]
-        public void TryParse_InvalidVersion_ReturnsFalse()
+        public void Equals_TwoDifferentObjectsWithDifferentProperties_NotEqual()
         {
-            var isSuccess = ClVersion.TryParse(string.Empty, out var version);
+            // arrange
+            var id2 = Guid.Parse("379b912d-34da-4377-8eef-dcaade0d0e09");
+            var testProjectId2 = Guid.Parse("c00141a4-da01-4511-9af2-71847858424a");
+            var version2 = ClVersionValue.Parse("5.4.3");
 
-            isSuccess.Should().BeFalse();
-            version.Should().BeNull();
+            var versionInfo1 = new ClVersion(TestId, TestProjectId, TestVersionValue, TestReleaseDate, TestCreationDate,
+                null);
+            var versionInfo2 =
+                new ClVersion(id2, testProjectId2, version2, TestReleaseDate, TestCreationDate, null);
+
+            // act
+            var isEqual = versionInfo1.Equals((object) versionInfo2);
+
+            // assert
+            isEqual.Should().BeFalse();
         }
 
         [Fact]
-        public void ImplicitCast_ToString_Exists()
+        public void GetHashCode_TwoDifferentObjectsWithSameProperties_SameHashCode()
         {
-            var version = ClVersion.Parse(TestVersion);
+            var version1 = new ClVersion(TestId, TestProjectId, TestVersionValue, TestReleaseDate, TestCreationDate,
+                null);
+            var version2 = new ClVersion(TestId, TestProjectId, TestVersionValue, TestReleaseDate, TestCreationDate,
+                null);
 
-            string v = version;
+            var hashCode1 = version1.GetHashCode();
+            var hashCode2 = version2.GetHashCode();
 
-            v.Should().Be(version.Value);
+            Assert.Equal(hashCode1, hashCode2);
         }
 
-        [Fact]
-        public void Match_SemVer2Version_ReturnsTrue()
-        {
-            var version = ClVersion.Parse("1.2.3-dev.0");
-
-            var success = version.Match(Defaults.VersioningScheme);
-
-            success.Should().BeTrue();
-        }
 
         [Fact]
-        public void Match_NoSemVer2Version_ReturnsFalse()
+        public void Equals_TwoDifferentObjectsWithDifferentProperties_DifferentHashCodes()
         {
-            var version = ClVersion.Parse("1.2.3.DEV");
+            // arrange
+            var id2 = Guid.Parse("379b912d-34da-4377-8eef-dcaade0d0e09");
+            var testProjectId2 = Guid.Parse("c00141a4-da01-4511-9af2-71847858424a");
+            var version2 = ClVersionValue.Parse("5.4.3");
 
-            var success = version.Match(Defaults.VersioningScheme);
+            var versionInfo1 = new ClVersion(TestId, TestProjectId, TestVersionValue, TestReleaseDate, TestCreationDate,
+                null);
+            var versionInfo2 =
+                new ClVersion(id2, testProjectId2, version2, TestReleaseDate, TestCreationDate, null);
 
-            success.Should().BeFalse();
+            // act
+            var hashCode1 = versionInfo1.GetHashCode();
+            var hashCode2 = versionInfo2.GetHashCode();
+
+            // assert
+            Assert.NotEqual(hashCode1, hashCode2);
         }
     }
 }

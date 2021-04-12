@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
 using ChangeTracker.Application.Services.Issues;
 using ChangeTracker.Application.Services.Labels;
 using ChangeTracker.Application.Services.NotReleasedVersion;

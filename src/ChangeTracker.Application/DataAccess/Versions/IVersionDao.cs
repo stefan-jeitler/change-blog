@@ -1,7 +1,5 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Threading.Tasks;
-using ChangeTracker.Domain.ChangeLog;
 using ChangeTracker.Domain.Version;
 using CSharpFunctionalExtensions;
 

@@ -17,9 +17,9 @@ namespace ChangeTracker.Application.UseCases.AddChangeLogLine
     public class AddChangeLogLineUseCase : IAddChangeLogLineUseCase
     {
         private readonly IChangeLogDao _changeLogDao;
-        private readonly IUnitOfWork _unitOfWork;
 
         private readonly NotReleasedVersionService _notReleasedVersion;
+        private readonly IUnitOfWork _unitOfWork;
 
         public AddChangeLogLineUseCase(IChangeLogDao changeLogDao,
             IUnitOfWork unitOfWork, NotReleasedVersionService notReleasedVersionService)
@@ -79,7 +79,7 @@ namespace ChangeTracker.Application.UseCases.AddChangeLogLine
                 version.Id,
                 version.ProjectId,
                 text,
-                (uint)changeLogInfo.NextFreePosition,
+                changeLogInfo.NextFreePosition,
                 DateTime.UtcNow,
                 labels,
                 issues);

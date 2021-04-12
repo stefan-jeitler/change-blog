@@ -1,7 +1,4 @@
-﻿using System.Collections.Generic;
-using ChangeTracker.Domain.ChangeLog;
-
-namespace ChangeTracker.Application.Services.Issues
+﻿namespace ChangeTracker.Application.Services.Issues
 {
     public interface IExtractIssuesOutputPort
     {

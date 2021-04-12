@@ -20,7 +20,8 @@ namespace ChangeTracker.Application.Services.NotReleasedVersion
             _versionDao = versionDao;
         }
 
-        public async Task<Maybe<ClVersion>> FindAsync(INotReleasedVersionOutputPort output, Guid projectId, ClVersionValue versionValue)
+        public async Task<Maybe<ClVersion>> FindAsync(INotReleasedVersionOutputPort output, Guid projectId,
+            ClVersionValue versionValue)
         {
             var noVersionInfo = Maybe<ClVersion>.None;
 

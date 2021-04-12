@@ -13,6 +13,7 @@ using ChangeTracker.Domain;
 using ChangeTracker.Domain.ChangeLog;
 using ChangeTracker.Domain.Version;
 using CSharpFunctionalExtensions;
+
 // ReSharper disable UseDeconstructionOnParameter
 
 namespace ChangeTracker.Application.UseCases.CreateCompleteVersion
@@ -42,8 +43,8 @@ namespace ChangeTracker.Application.UseCases.CreateCompleteVersion
                 return;
             }
 
-            var newVersion = CreateNewVersion(output, 
-                project.Value, versionDto.Version, 
+            var newVersion = CreateNewVersion(output,
+                project.Value, versionDto.Version,
                 versionDto.ReleaseImmediately);
 
             if (newVersion.HasNoValue)
@@ -86,7 +87,8 @@ namespace ChangeTracker.Application.UseCases.CreateCompleteVersion
             return Maybe<IEnumerable<ChangeLogLine>>.From(lines);
         }
 
-        private static Maybe<ChangeLogLine> CreateLine(ICreateCompleteVersionOutputPort output, ChangeLogLineDto lineDto,
+        private static Maybe<ChangeLogLine> CreateLine(ICreateCompleteVersionOutputPort output,
+            ChangeLogLineDto lineDto,
             int position, ClVersion clVersion)
         {
             if (!ChangeLogText.TryParse(lineDto.Text, out var text))

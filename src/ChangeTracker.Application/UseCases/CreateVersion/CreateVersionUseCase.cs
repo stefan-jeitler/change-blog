@@ -55,11 +55,12 @@ namespace ChangeTracker.Application.UseCases.CreateVersion
             await SaveVersionAsync(output, project.Value, version);
         }
 
-        private async Task SaveVersionAsync(ICreateVersionOutputPort output, Project project, ClVersionValue versionValue)
+        private async Task SaveVersionAsync(ICreateVersionOutputPort output, Project project,
+            ClVersionValue versionValue)
         {
             var versionInfo = new ClVersion(Guid.NewGuid(),
                 project.Id,
-                versionValue, 
+                versionValue,
                 null,
                 DateTime.UtcNow,
                 null);

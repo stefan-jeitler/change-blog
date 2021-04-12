@@ -1,5 +1,4 @@
 ﻿using System;
-using ChangeTracker.Application.DataAccess;
 
 namespace ChangeTracker.Application.UseCases.CreateProject
 {

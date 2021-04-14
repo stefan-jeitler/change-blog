@@ -1,8 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using ChangeTracker.Application.Extensions;
 using FluentAssertions;
 using Xunit;
@@ -14,7 +12,7 @@ namespace ChangeTracker.Application.Tests.ExtensionsTests
         [Fact]
         public void DistinctBy_WithNullSource_EagerArgumentNullException()
         {
-            Func<IEnumerable<int>> act = () => ((IEnumerable<int>)null).DistinctBy(x => x);
+            Func<IEnumerable<int>> act = () => ((IEnumerable<int>) null).DistinctBy(x => x);
 
             act.Should().ThrowExactly<ArgumentNullException>();
         }
@@ -24,7 +22,7 @@ namespace ChangeTracker.Application.Tests.ExtensionsTests
         {
             var sequence = Enumerable.Range(0, 5);
 
-            Func<IEnumerable<int>> act = () => sequence.DistinctBy((Func<int, bool>)null);
+            Func<IEnumerable<int>> act = () => sequence.DistinctBy((Func<int, bool>) null);
 
             act.Should().ThrowExactly<ArgumentNullException>();
         }

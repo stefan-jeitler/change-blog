@@ -138,7 +138,7 @@ namespace ChangeTracker.Domain.Tests.ChangeLogTests
 
             act.Should().ThrowExactly<ArgumentNullException>();
         }
-        
+
         [Theory]
         [InlineData("0001-01-01T00:00:00.0000000")]
         [InlineData("9999-12-31T23:59:59.9999999")]
@@ -229,6 +229,5 @@ namespace ChangeTracker.Domain.Tests.ChangeLogTests
             // assert
             act.Should().ThrowExactly<ArgumentException>();
         }
-
     }
 }

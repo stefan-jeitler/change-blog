@@ -19,23 +19,23 @@ namespace ChangeTracker.Application.UseCases.AssignPendingLineToVersion
 
         public AssignPendingLineUseCase(IVersionDao versionDao, IChangeLogDao changeLogDao, IUnitOfWork unitOfWork)
         {
-            _versionDao = versionDao;
-            _changeLogDao = changeLogDao;
-            _unitOfWork = unitOfWork;
+            _versionDao = versionDao ?? throw new ArgumentNullException(nameof(versionDao));
+            _changeLogDao = changeLogDao ?? throw new ArgumentNullException(nameof(changeLogDao));
+            _unitOfWork = unitOfWork ?? throw new ArgumentNullException(nameof(unitOfWork));
         }
 
         public async Task ExecuteAsync(IAssignPendingLineOutputPort output, PendingLineByVersionIdDto assignmentDto)
         {
             _unitOfWork.Start();
 
-            var versionInfo = await _versionDao.FindAsync(assignmentDto.ProjectId, assignmentDto.VersionId);
-            if (versionInfo.HasNoValue)
+            var version = await _versionDao.FindAsync(assignmentDto.ProjectId, assignmentDto.VersionId);
+            if (version.HasNoValue)
             {
                 output.VersionDoesNotExist();
                 return;
             }
 
-            await AssignToVersionAsync(output, versionInfo.Value, assignmentDto.ChangeLogLineId);
+            await AssignToVersionAsync(output, version.Value, assignmentDto.ChangeLogLineId);
         }
 
         public async Task ExecuteAsync(IAssignPendingLineOutputPort output, PendingLineByVersionDto assignmentDto)

@@ -14,7 +14,8 @@ namespace ChangeTracker.Domain.ChangeLog
 
         public ChangeLogLine(Guid id, Guid? versionId, Guid projectId, ChangeLogText text, uint position,
             DateTime createdAt, DateTime? deletedAt = null)
-            : this(id, versionId, projectId, text, position, createdAt, Enumerable.Empty<Label>(), Enumerable.Empty<Issue>(),
+            : this(id, versionId, projectId, text, position, createdAt, Enumerable.Empty<Label>(),
+                Enumerable.Empty<Issue>(),
                 deletedAt)
         {
         }

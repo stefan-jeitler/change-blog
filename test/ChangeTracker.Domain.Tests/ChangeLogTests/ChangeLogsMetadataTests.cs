@@ -85,7 +85,7 @@ namespace ChangeTracker.Domain.Tests.ChangeLogTests
 
             changeLogInfo.LastPosition.Should().Be(-1);
         }
-        
+
         [Fact]
         public void LastPosition_CountIsNotZero_ReturnsPositionPassedToConstructor()
         {

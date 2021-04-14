@@ -4,6 +4,7 @@ using System.Linq;
 using ChangeTracker.Domain.ChangeLog;
 using FluentAssertions;
 using Xunit;
+
 // ReSharper disable InconsistentNaming
 
 namespace ChangeTracker.Domain.Tests.ChangeLogTests
@@ -53,7 +54,7 @@ namespace ChangeTracker.Domain.Tests.ChangeLogTests
         [Fact]
         public void Create_WithTooManyLabels_ArgumentException()
         {
-            var labels = new []
+            var labels = new[]
             {
                 Label.Parse("Added"), Label.Parse("Changed"),
                 Label.Parse("Deprecated"), Label.Parse("Removed"),
@@ -191,7 +192,7 @@ namespace ChangeTracker.Domain.Tests.ChangeLogTests
         public void AvailableLabelPlaces_FiveLabelsExists_ReturnsZero()
         {
             // arrange
-            var existingLabels = new Label[]
+            var existingLabels = new[]
             {
                 Label.Parse("Feature"),
                 Label.Parse("Security"),
@@ -252,7 +253,7 @@ namespace ChangeTracker.Domain.Tests.ChangeLogTests
         public void RemoveLabel_NoLabelExists_NothingChanged()
         {
             // arrange
-            var line = new ChangeLogLine(TestId, null, 
+            var line = new ChangeLogLine(TestId, null,
                 TestProjectId, TestText, TestPosition,
                 TestCreationDate);
 

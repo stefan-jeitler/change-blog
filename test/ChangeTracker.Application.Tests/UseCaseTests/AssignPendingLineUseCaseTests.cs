@@ -17,18 +17,18 @@ namespace ChangeTracker.Application.Tests.UseCaseTests
 {
     public class AssignPendingLineUseCaseTests
     {
-        private readonly ChangeLogDaoMock _changeLogDaoMock;
+        private readonly ChangeLogDaoStub _changeLogDaoStub;
         private readonly Mock<IAssignPendingLineOutputPort> _outputPortMock;
-        private readonly ProjectDaoMock _projectDaoMock;
+        private readonly ProjectDaoStub _projectDaoStub;
         private readonly Mock<IUnitOfWork> _unitOfWorkMock;
-        private readonly VersionDaoMock _versionDaoMock;
+        private readonly VersionDaoStub _versionDaoStub;
 
 
         public AssignPendingLineUseCaseTests()
         {
-            _projectDaoMock = new ProjectDaoMock();
-            _versionDaoMock = new VersionDaoMock();
-            _changeLogDaoMock = new ChangeLogDaoMock();
+            _projectDaoStub = new ProjectDaoStub();
+            _versionDaoStub = new VersionDaoStub();
+            _changeLogDaoStub = new ChangeLogDaoStub();
             _outputPortMock = new Mock<IAssignPendingLineOutputPort>(MockBehavior.Strict);
             _unitOfWorkMock = new Mock<IUnitOfWork>();
         }
@@ -37,21 +37,21 @@ namespace ChangeTracker.Application.Tests.UseCaseTests
         public async Task AssignPendingLineByVersionId_HappyPath_SuccessfullyAssigned()
         {
             // arrange
-            _projectDaoMock.Projects.Add(new Project(TestAccount.Id,
+            _projectDaoStub.Projects.Add(new Project(TestAccount.Id,
                 Name.Parse("Test Project"),
                 TestAccount.CustomVersioningScheme,
                 TestAccount.CreationDate));
 
             var clVersion = new ClVersion(TestAccount.Project.Id, ClVersionValue.Parse("1.2"));
-            _versionDaoMock.Versions.Add(clVersion);
+            _versionDaoStub.Versions.Add(clVersion);
 
             var line = new ChangeLogLine(Guid.NewGuid(), null, TestAccount.Project.Id,
                 ChangeLogText.Parse("Some new changes"), 0, DateTime.Parse("2021-04-12"));
-            _changeLogDaoMock.ChangeLogs.Add(line);
+            _changeLogDaoStub.ChangeLogs.Add(line);
 
             var pendingLineDto = new PendingLineByVersionIdDto(TestAccount.Project.Id, clVersion.Id, line.Id);
             var assignToVersionUseCase =
-                new AssignPendingLineUseCase(_versionDaoMock, _changeLogDaoMock, _unitOfWorkMock.Object);
+                new AssignPendingLineUseCase(_versionDaoStub, _changeLogDaoStub, _unitOfWorkMock.Object);
 
             _outputPortMock.Setup(m => m.Assigned(It.IsAny<Guid>(), It.IsAny<Guid>()));
 
@@ -59,7 +59,7 @@ namespace ChangeTracker.Application.Tests.UseCaseTests
             await assignToVersionUseCase.ExecuteAsync(_outputPortMock.Object, pendingLineDto);
 
             // assert
-            _changeLogDaoMock.ChangeLogs.Single().VersionId.Value.Should().Be(clVersion.Id);
+            _changeLogDaoStub.ChangeLogs.Single().VersionId.Value.Should().Be(clVersion.Id);
             _outputPortMock.Verify(m => m.Assigned(It.Is<Guid>(x => x == clVersion.Id), It.Is<Guid>(x => x == line.Id)),
                 Times.Once);
             _unitOfWorkMock.Verify(m => m.Start(), Times.Once);
@@ -70,18 +70,18 @@ namespace ChangeTracker.Application.Tests.UseCaseTests
         public async Task AssignPendingLineByVersionValue_InvalidVersionFormat_InvalidVersionFormatOutput()
         {
             // arrange
-            _projectDaoMock.Projects.Add(new Project(TestAccount.Id,
+            _projectDaoStub.Projects.Add(new Project(TestAccount.Id,
                 Name.Parse("Test Project"),
                 TestAccount.CustomVersioningScheme,
                 TestAccount.CreationDate));
 
             var line = new ChangeLogLine(Guid.NewGuid(), null, TestAccount.Project.Id,
                 ChangeLogText.Parse("Some new changes"), 0, DateTime.Parse("2021-04-12"));
-            _changeLogDaoMock.ChangeLogs.Add(line);
+            _changeLogDaoStub.ChangeLogs.Add(line);
 
             var pendingLineDto = new PendingLineByVersionDto(TestAccount.Project.Id, "1. .2", line.Id);
             var assignToVersionUseCase =
-                new AssignPendingLineUseCase(_versionDaoMock, _changeLogDaoMock, _unitOfWorkMock.Object);
+                new AssignPendingLineUseCase(_versionDaoStub, _changeLogDaoStub, _unitOfWorkMock.Object);
 
             _outputPortMock.Setup(m => m.InvalidVersionFormat(It.IsAny<string>()));
 
@@ -96,21 +96,21 @@ namespace ChangeTracker.Application.Tests.UseCaseTests
         public async Task AssignPendingLineByVersionValue_NotExistingVersion_VersionDoesNotExistOutput()
         {
             // arrange
-            _projectDaoMock.Projects.Add(new Project(TestAccount.Id,
+            _projectDaoStub.Projects.Add(new Project(TestAccount.Id,
                 Name.Parse("Test Project"),
                 TestAccount.CustomVersioningScheme,
                 TestAccount.CreationDate));
 
             var clVersion = new ClVersion(TestAccount.Project.Id, ClVersionValue.Parse("1.2"));
-            _versionDaoMock.Versions.Add(clVersion);
+            _versionDaoStub.Versions.Add(clVersion);
 
             var line = new ChangeLogLine(Guid.NewGuid(), null, TestAccount.Project.Id,
                 ChangeLogText.Parse("Some new changes"), 0, DateTime.Parse("2021-04-12"));
-            _changeLogDaoMock.ChangeLogs.Add(line);
+            _changeLogDaoStub.ChangeLogs.Add(line);
 
             var pendingLineDto = new PendingLineByVersionDto(TestAccount.Project.Id, "1.3", line.Id);
             var assignToVersionUseCase =
-                new AssignPendingLineUseCase(_versionDaoMock, _changeLogDaoMock, _unitOfWorkMock.Object);
+                new AssignPendingLineUseCase(_versionDaoStub, _changeLogDaoStub, _unitOfWorkMock.Object);
 
             _outputPortMock.Setup(m => m.VersionDoesNotExist());
 
@@ -125,7 +125,7 @@ namespace ChangeTracker.Application.Tests.UseCaseTests
         public async Task AssignPendingLine_NotExistingVersion_VersionDoesNotExistOutput()
         {
             // arrange
-            _projectDaoMock.Projects.Add(new Project(TestAccount.Id,
+            _projectDaoStub.Projects.Add(new Project(TestAccount.Id,
                 Name.Parse("Test Project"),
                 TestAccount.CustomVersioningScheme,
                 TestAccount.CreationDate));
@@ -134,11 +134,11 @@ namespace ChangeTracker.Application.Tests.UseCaseTests
 
             var line = new ChangeLogLine(Guid.NewGuid(), null, TestAccount.Project.Id,
                 ChangeLogText.Parse("Some new changes"), 0, DateTime.Parse("2021-04-12"));
-            _changeLogDaoMock.ChangeLogs.Add(line);
+            _changeLogDaoStub.ChangeLogs.Add(line);
 
             var pendingLineDto = new PendingLineByVersionIdDto(TestAccount.Project.Id, versionId, line.Id);
             var assignToVersionUseCase =
-                new AssignPendingLineUseCase(_versionDaoMock, _changeLogDaoMock, _unitOfWorkMock.Object);
+                new AssignPendingLineUseCase(_versionDaoStub, _changeLogDaoStub, _unitOfWorkMock.Object);
 
             _outputPortMock.Setup(m => m.VersionDoesNotExist());
 
@@ -153,19 +153,19 @@ namespace ChangeTracker.Application.Tests.UseCaseTests
         public async Task AssignPendingLine_NotExistingChangeLogLine_ChangeLogLineDoesNotExistOutput()
         {
             // arrange
-            _projectDaoMock.Projects.Add(new Project(TestAccount.Id,
+            _projectDaoStub.Projects.Add(new Project(TestAccount.Id,
                 Name.Parse("Test Project"),
                 TestAccount.CustomVersioningScheme,
                 TestAccount.CreationDate));
 
             var clVersion = new ClVersion(TestAccount.Project.Id, ClVersionValue.Parse("1.2"));
-            _versionDaoMock.Versions.Add(clVersion);
+            _versionDaoStub.Versions.Add(clVersion);
 
             var lineId = Guid.Parse("2b4b147a-9ebd-4350-a45b-aaae5d8d63de");
 
             var pendingLineDto = new PendingLineByVersionIdDto(TestAccount.Project.Id, clVersion.Id, lineId);
             var assignToVersionUseCase =
-                new AssignPendingLineUseCase(_versionDaoMock, _changeLogDaoMock, _unitOfWorkMock.Object);
+                new AssignPendingLineUseCase(_versionDaoStub, _changeLogDaoStub, _unitOfWorkMock.Object);
 
             _outputPortMock.Setup(m => m.ChangeLogLineDoesNotExist());
 
@@ -180,22 +180,22 @@ namespace ChangeTracker.Application.Tests.UseCaseTests
         public async Task AssignPendingLine_TooManyLinesAssigned_ChangeLogLineDoesNotExistOutput()
         {
             // arrange
-            _projectDaoMock.Projects.Add(new Project(TestAccount.Id,
+            _projectDaoStub.Projects.Add(new Project(TestAccount.Id,
                 Name.Parse("Test Project"),
                 TestAccount.CustomVersioningScheme,
                 TestAccount.CreationDate));
 
             var clVersion = new ClVersion(TestAccount.Project.Id, ClVersionValue.Parse("1.2"));
-            _versionDaoMock.Versions.Add(clVersion);
+            _versionDaoStub.Versions.Add(clVersion);
 
             var lineId = Guid.Parse("2b4b147a-9ebd-4350-a45b-aaae5d8d63de");
 
-            _changeLogDaoMock.ChangeLogs.AddRange(Enumerable.Range(0, 100).Select(x =>
+            _changeLogDaoStub.ChangeLogs.AddRange(Enumerable.Range(0, 100).Select(x =>
                 new ChangeLogLine(clVersion.Id, TestAccount.Project.Id, ChangeLogText.Parse($"{x:D5}"), (uint) x)));
 
             var pendingLineDto = new PendingLineByVersionIdDto(TestAccount.Project.Id, clVersion.Id, lineId);
             var assignToVersionUseCase =
-                new AssignPendingLineUseCase(_versionDaoMock, _changeLogDaoMock, _unitOfWorkMock.Object);
+                new AssignPendingLineUseCase(_versionDaoStub, _changeLogDaoStub, _unitOfWorkMock.Object);
 
             _outputPortMock.Setup(m => m.MaxChangeLogLinesReached(It.IsAny<int>()));
 
@@ -212,23 +212,23 @@ namespace ChangeTracker.Application.Tests.UseCaseTests
         public async Task AssignPendingLine_ConflictWhileSaving_ConflictOutput()
         {
             // arrange
-            _projectDaoMock.Projects.Add(new Project(TestAccount.Id,
+            _projectDaoStub.Projects.Add(new Project(TestAccount.Id,
                 Name.Parse("Test Project"),
                 TestAccount.CustomVersioningScheme,
                 TestAccount.CreationDate));
 
             var clVersion = new ClVersion(TestAccount.Project.Id, ClVersionValue.Parse("1.2"));
-            _versionDaoMock.Versions.Add(clVersion);
+            _versionDaoStub.Versions.Add(clVersion);
 
             var line = new ChangeLogLine(Guid.NewGuid(), null, TestAccount.Project.Id,
                 ChangeLogText.Parse("Some new changes"), 0, DateTime.Parse("2021-04-12"));
-            _changeLogDaoMock.ChangeLogs.Add(line);
+            _changeLogDaoStub.ChangeLogs.Add(line);
 
-            _changeLogDaoMock.ProduceConflict = true;
+            _changeLogDaoStub.ProduceConflict = true;
 
             var pendingLineDto = new PendingLineByVersionIdDto(TestAccount.Project.Id, clVersion.Id, line.Id);
             var assignToVersionUseCase =
-                new AssignPendingLineUseCase(_versionDaoMock, _changeLogDaoMock, _unitOfWorkMock.Object);
+                new AssignPendingLineUseCase(_versionDaoStub, _changeLogDaoStub, _unitOfWorkMock.Object);
 
             _outputPortMock.Setup(m => m.Conflict(It.IsAny<string>()));
 

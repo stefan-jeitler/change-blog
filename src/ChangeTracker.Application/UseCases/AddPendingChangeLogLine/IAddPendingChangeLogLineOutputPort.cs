@@ -1,14 +1,11 @@
 ﻿using System;
-using ChangeTracker.Application.Services.Issues;
-using ChangeTracker.Application.Services.Labels;
+using ChangeTracker.Application.Services.ChangeLog;
 
 namespace ChangeTracker.Application.UseCases.AddPendingChangeLogLine
 {
-    public interface IAddPendingChangeLogLineOutputPort : IExtractLabelsOutputPort, IExtractIssuesOutputPort
+    public interface IAddPendingChangeLogLineOutputPort : IChangeLogLineParsingOutput
     {
-        void InvalidChangeLogLineText(string text);
         void ProjectDoesNotExist();
-        void MaxChangeLogLinesReached(int maxChangeLogLines);
         void Created(Guid changeLogLineId);
         void Conflict(string reason);
     }

@@ -3,14 +3,10 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using ChangeTracker.Application.DataAccess;
-using ChangeTracker.Application.Services.NotReleasedVersion;
+using ChangeTracker.Application.Services.ChangeLog;
 using ChangeTracker.Application.Tests.TestDoubles;
 using ChangeTracker.Application.UseCases.AddChangeLogLine;
-using ChangeTracker.Application.UseCases.AssignPendingLineToVersion;
-using ChangeTracker.Application.UseCases.AssignPendingLineToVersion.DTOs;
 using ChangeTracker.Domain;
-using ChangeTracker.Domain.ChangeLog;
-using ChangeTracker.Domain.Common;
 using ChangeTracker.Domain.Version;
 using FluentAssertions;
 using Moq;
@@ -20,17 +16,17 @@ namespace ChangeTracker.Application.Tests.UseCaseTests
 {
     public class AddChangeLogLineUseCaseTests
     {
-        private readonly ChangeLogDaoMock _changeLogDaoMock;
+        private readonly ChangeLogDaoStub _changeLogDaoStub;
         private readonly Mock<IAddChangeLogLineOutputPort> _outputPortMock;
-        private readonly ProjectDaoMock _projectDaoMock;
+        private readonly ProjectDaoStub _projectDaoStub;
         private readonly Mock<IUnitOfWork> _unitOfWorkMock;
-        private readonly VersionDaoMock _versionDaoMock;
+        private readonly VersionDaoStub _versionDaoStub;
 
         public AddChangeLogLineUseCaseTests()
         {
-            _projectDaoMock = new ProjectDaoMock();
-            _versionDaoMock = new VersionDaoMock();
-            _changeLogDaoMock = new ChangeLogDaoMock();
+            _projectDaoStub = new ProjectDaoStub();
+            _versionDaoStub = new VersionDaoStub();
+            _changeLogDaoStub = new ChangeLogDaoStub();
             _outputPortMock = new Mock<IAddChangeLogLineOutputPort>(MockBehavior.Strict);
             _unitOfWorkMock = new Mock<IUnitOfWork>(MockBehavior.Strict);
         }
@@ -40,17 +36,17 @@ namespace ChangeTracker.Application.Tests.UseCaseTests
         {
             // arrange
             const string changeLogLine = "Bug fixed.";
-            var labels = new List<string> { "Bugfix", "ProxyIssue" };
-            var issues = new List<string> { "#1234", "#12345" };
+            var labels = new List<string> {"Bugfix", "ProxyIssue"};
+            var issues = new List<string> {"#1234", "#12345"};
             var changeLogLineDto =
                 new ChangeLogLineDto(TestAccount.Project.Id, "1. .3", changeLogLine, labels, issues);
 
-            _projectDaoMock.Projects.Add(new Project(TestAccount.Project.Id, TestAccount.Id, TestAccount.Project.Name,
+            _projectDaoStub.Projects.Add(new Project(TestAccount.Project.Id, TestAccount.Id, TestAccount.Project.Name,
                 TestAccount.CustomVersioningScheme, TestAccount.CreationDate, null));
 
             var addChangeLogLineUseCase =
-                new AddChangeLogLineUseCase(_changeLogDaoMock, _unitOfWorkMock.Object,
-                    new NotReleasedVersionService(_projectDaoMock, _versionDaoMock));
+                new AddChangeLogLineUseCase(_changeLogDaoStub, _unitOfWorkMock.Object,
+                    _versionDaoStub, _projectDaoStub, new ChangeLogLineParsingService(_changeLogDaoStub));
 
             _outputPortMock.Setup(m => m.InvalidVersionFormat());
             _unitOfWorkMock.Setup(m => m.Start());
@@ -63,70 +59,25 @@ namespace ChangeTracker.Application.Tests.UseCaseTests
         }
 
         [Fact]
-        public async Task AddChangeLogLine_InvalidLineText_InvalidChangeLogLineOutput()
+        public async Task AddChangeLogLine_NotExistingProject_ProjectDoesNotExistOutput()
         {
             // arrange
-            const string changeLogLine = "a";
+            const string changeLogLine = "Bug fixed.";
             var labels = new List<string> {"Bugfix", "ProxyIssue"};
             var issues = new List<string> {"#1234", "#12345"};
-            var changeLogLineDto =
-                new ChangeLogLineDto(TestAccount.Project.Id, "1.2", changeLogLine, labels, issues);
-
-            _projectDaoMock.Projects.Add(new Project(TestAccount.Project.Id, TestAccount.Id, TestAccount.Project.Name,
-                TestAccount.CustomVersioningScheme, TestAccount.CreationDate, null));
+            var changeLogLineDto = new ChangeLogLineDto(TestAccount.Project.Id, "1.2.3", changeLogLine, labels, issues);
 
             var addChangeLogLineUseCase =
-                new AddChangeLogLineUseCase(_changeLogDaoMock, _unitOfWorkMock.Object,
-                    new NotReleasedVersionService(_projectDaoMock, _versionDaoMock));
+                new AddChangeLogLineUseCase(_changeLogDaoStub, _unitOfWorkMock.Object,
+                    _versionDaoStub, _projectDaoStub, new ChangeLogLineParsingService(_changeLogDaoStub));
 
-            _outputPortMock.Setup(m => m.InvalidChangeLogLineText(It.IsAny<string>()));
-            _unitOfWorkMock.Setup(m => m.Start());
+            _outputPortMock.Setup(m => m.ProjectDoesNotExist());
 
             // act
             await addChangeLogLineUseCase.ExecuteAsync(_outputPortMock.Object, changeLogLineDto);
 
             // assert
-            _outputPortMock.Verify(m
-                => m.InvalidChangeLogLineText(It.Is<string>(x => x == "a")), Times.Once);
-        }
-
-        [Fact]
-        public async Task AddChangeLogLine_NoMoreLinesAvailable_TooManyChangeLogLinesOutput()
-        {
-            // arrange
-            const string changeLogLine = "Some Bug fixed";
-            var labels = new List<string> {"Bugfix", "ProxyIssue"};
-            var issues = new List<string> {"#1234", "#12345"};
-            var changeLogLineDto =
-                new ChangeLogLineDto(TestAccount.Project.Id, "1.2", changeLogLine, labels, issues);
-
-            _projectDaoMock.Projects.Add(new Project(TestAccount.Project.Id, TestAccount.Id, TestAccount.Project.Name,
-                TestAccount.CustomVersioningScheme, TestAccount.CreationDate, null));
-
-            var versionInfo = new ClVersion(TestAccount.Project.Id, ClVersionValue.Parse("1.2"));
-            _versionDaoMock.Versions.Add(versionInfo);
-
-            _changeLogDaoMock.ChangeLogs.AddRange(Enumerable.Range(0, 100)
-                .Select(x => new ChangeLogLine(Guid.NewGuid(),
-                    versionInfo.Id,
-                    TestAccount.Project.Id,
-                    ChangeLogText.Parse($"{x:D5}"),
-                    (uint) x,
-                    DateTime.Parse("2021-04-09"))));
-
-            var addChangeLogLineUseCase =
-                new AddChangeLogLineUseCase(_changeLogDaoMock, _unitOfWorkMock.Object,
-                    new NotReleasedVersionService(_projectDaoMock, _versionDaoMock));
-
-            _outputPortMock.Setup(m => m.MaxChangeLogLinesReached(It.IsAny<int>()));
-            _unitOfWorkMock.Setup(m => m.Start());
-
-            // act
-            await addChangeLogLineUseCase.ExecuteAsync(_outputPortMock.Object, changeLogLineDto);
-
-            // assert
-            _outputPortMock.Verify(m => m.MaxChangeLogLinesReached(
-                It.Is<int>(x => x == ChangeLogsMetadata.MaxChangeLogLines)), Times.Once);
+            _outputPortMock.Verify(m => m.ProjectDoesNotExist(), Times.Once);
         }
 
         [Fact]
@@ -139,17 +90,17 @@ namespace ChangeTracker.Application.Tests.UseCaseTests
             var changeLogLineDto =
                 new ChangeLogLineDto(TestAccount.Project.Id, "1.2", changeLogLine, labels, issues);
 
-            _projectDaoMock.Projects.Add(new Project(TestAccount.Project.Id, TestAccount.Id, TestAccount.Project.Name,
+            _projectDaoStub.Projects.Add(new Project(TestAccount.Project.Id, TestAccount.Id, TestAccount.Project.Name,
                 TestAccount.CustomVersioningScheme, TestAccount.CreationDate, null));
 
-            var versionInfo = new ClVersion(TestAccount.Project.Id, ClVersionValue.Parse("1.2"));
-            _versionDaoMock.Versions.Add(versionInfo);
+            var version = new ClVersion(TestAccount.Project.Id, ClVersionValue.Parse("1.2"));
+            _versionDaoStub.Versions.Add(version);
 
-            _changeLogDaoMock.ProduceConflict = true;
+            _changeLogDaoStub.ProduceConflict = true;
 
             var addChangeLogLineUseCase =
-                new AddChangeLogLineUseCase(_changeLogDaoMock, _unitOfWorkMock.Object,
-                    new NotReleasedVersionService(_projectDaoMock, _versionDaoMock));
+                new AddChangeLogLineUseCase(_changeLogDaoStub, _unitOfWorkMock.Object,
+                    _versionDaoStub, _projectDaoStub, new ChangeLogLineParsingService(_changeLogDaoStub));
 
             _outputPortMock.Setup(m => m.Conflict(It.IsAny<string>()));
             _unitOfWorkMock.Setup(m => m.Start());
@@ -163,6 +114,32 @@ namespace ChangeTracker.Application.Tests.UseCaseTests
         }
 
         [Fact]
+        public async Task AddChangeLogLine_NotExistingVersion_VersionDoesNotExistOutput()
+        {
+            // arrange
+            const string changeLogLine = "Some Bug fixed";
+            var labels = new List<string> {"Bugfix", "ProxyIssue"};
+            var issues = new List<string> {"#1234", "#12345"};
+            var changeLogLineDto = new ChangeLogLineDto(TestAccount.Project.Id, "1.2", changeLogLine, labels, issues);
+
+            _projectDaoStub.Projects.Add(new Project(TestAccount.Project.Id, TestAccount.Id, TestAccount.Project.Name,
+                TestAccount.CustomVersioningScheme, TestAccount.CreationDate, null));
+
+            var addChangeLogLineUseCase =
+                new AddChangeLogLineUseCase(_changeLogDaoStub, _unitOfWorkMock.Object,
+                    _versionDaoStub, _projectDaoStub, new ChangeLogLineParsingService(_changeLogDaoStub));
+
+            _outputPortMock.Setup(m => m.VersionDoesNotExist(It.IsAny<string>()));
+            _unitOfWorkMock.Setup(m => m.Start());
+
+            // act
+            await addChangeLogLineUseCase.ExecuteAsync(_outputPortMock.Object, changeLogLineDto);
+
+            // assert
+            _outputPortMock.Verify(m => m.VersionDoesNotExist(It.Is<string>(x => x == "1.2")), Times.Once);
+        }
+
+        [Fact]
         public async Task AddChangeLogLine_ValidLine_CreatedOutputAndCommittedUow()
         {
             // arrange
@@ -172,21 +149,21 @@ namespace ChangeTracker.Application.Tests.UseCaseTests
             var changeLogLineDto =
                 new ChangeLogLineDto(TestAccount.Project.Id, "1.2", changeLogLine, labels, issues);
 
-            _projectDaoMock.Projects.Add(new Project(TestAccount.Project.Id, TestAccount.Id, TestAccount.Project.Name,
+            _projectDaoStub.Projects.Add(new Project(TestAccount.Project.Id, TestAccount.Id, TestAccount.Project.Name,
                 TestAccount.CustomVersioningScheme, TestAccount.CreationDate, null));
 
             var versionId = Guid.Parse("1d7831d5-32fb-437f-a9d5-bf5a7dd34b10");
-            var versionInfo = new ClVersion(versionId,
+            var version = new ClVersion(versionId,
                 TestAccount.Project.Id,
                 ClVersionValue.Parse("1.2"),
                 null,
                 DateTime.Parse("2021-04-09"),
                 null);
-            _versionDaoMock.Versions.Add(versionInfo);
+            _versionDaoStub.Versions.Add(version);
 
             var addChangeLogLineUseCase =
-                new AddChangeLogLineUseCase(_changeLogDaoMock, _unitOfWorkMock.Object,
-                    new NotReleasedVersionService(_projectDaoMock, _versionDaoMock));
+                new AddChangeLogLineUseCase(_changeLogDaoStub, _unitOfWorkMock.Object,
+                    _versionDaoStub, _projectDaoStub, new ChangeLogLineParsingService(_changeLogDaoStub));
 
             _outputPortMock.Setup(m => m.Created(It.IsAny<Guid>()));
             _unitOfWorkMock.Setup(m => m.Start());
@@ -211,21 +188,21 @@ namespace ChangeTracker.Application.Tests.UseCaseTests
             var changeLogLineDto =
                 new ChangeLogLineDto(TestAccount.Project.Id, "1.2", changeLogLine, labels, issues);
 
-            _projectDaoMock.Projects.Add(new Project(TestAccount.Project.Id, TestAccount.Id, TestAccount.Project.Name,
+            _projectDaoStub.Projects.Add(new Project(TestAccount.Project.Id, TestAccount.Id, TestAccount.Project.Name,
                 TestAccount.CustomVersioningScheme, TestAccount.CreationDate, null));
 
             var versionId = Guid.Parse("1d7831d5-32fb-437f-a9d5-bf5a7dd34b10");
-            var versionInfo = new ClVersion(versionId,
+            var version = new ClVersion(versionId,
                 TestAccount.Project.Id,
                 ClVersionValue.Parse("1.2"),
                 null,
                 DateTime.Parse("2021-04-09"),
                 null);
-            _versionDaoMock.Versions.Add(versionInfo);
+            _versionDaoStub.Versions.Add(version);
 
             var addChangeLogLineUseCase =
-                new AddChangeLogLineUseCase(_changeLogDaoMock, _unitOfWorkMock.Object,
-                    new NotReleasedVersionService(_projectDaoMock, _versionDaoMock));
+                new AddChangeLogLineUseCase(_changeLogDaoStub, _unitOfWorkMock.Object,
+                    _versionDaoStub, _projectDaoStub, new ChangeLogLineParsingService(_changeLogDaoStub));
 
             _outputPortMock.Setup(m => m.Created(It.IsAny<Guid>()));
             _unitOfWorkMock.Setup(m => m.Start());
@@ -235,7 +212,7 @@ namespace ChangeTracker.Application.Tests.UseCaseTests
             await addChangeLogLineUseCase.ExecuteAsync(_outputPortMock.Object, changeLogLineDto);
 
             // assert
-            var savedLine = _changeLogDaoMock.ChangeLogs.Single(x =>
+            var savedLine = _changeLogDaoStub.ChangeLogs.Single(x =>
                 x.ProjectId == TestAccount.Project.Id && x.VersionId!.Value == versionId);
 
             savedLine.Position.Should().Be(0);
@@ -243,43 +220,6 @@ namespace ChangeTracker.Application.Tests.UseCaseTests
             savedLine.DeletedAt.Should().BeNull();
             savedLine.Issues.Count.Should().Be(2);
             savedLine.Labels.Count.Should().Be(1);
-        }
-
-
-        [Fact]
-        public async Task AddChangeLogLine_LineContainsInvalidLabel_InvalidLabelOutput()
-        {
-            // arrange
-            const string changeLogLine = "Some Bug fixed";
-            var labels = new List<string> { "Bugfix", "invalid label" };
-            var issues = new List<string> { "#1234", "#12345" };
-            var changeLogLineDto =
-                new ChangeLogLineDto(TestAccount.Project.Id, "1.2", changeLogLine, labels, issues);
-
-            _projectDaoMock.Projects.Add(new Project(TestAccount.Project.Id, TestAccount.Id, TestAccount.Project.Name,
-                TestAccount.CustomVersioningScheme, TestAccount.CreationDate, null));
-
-            var versionId = Guid.Parse("1d7831d5-32fb-437f-a9d5-bf5a7dd34b10");
-            var versionInfo = new ClVersion(versionId,
-                TestAccount.Project.Id,
-                ClVersionValue.Parse("1.2"),
-                null,
-                DateTime.Parse("2021-04-09"),
-                null);
-            _versionDaoMock.Versions.Add(versionInfo);
-
-            _outputPortMock.Setup(m => m.InvalidLabel(It.IsAny<string>(), It.IsAny<string>()));
-
-            var addChangeLogLineUseCase =
-                new AddChangeLogLineUseCase(_changeLogDaoMock, _unitOfWorkMock.Object,
-                    new NotReleasedVersionService(_projectDaoMock, _versionDaoMock));
-
-            // act
-            await addChangeLogLineUseCase.ExecuteAsync(_outputPortMock.Object, changeLogLineDto);
-
-            // assert
-            _outputPortMock.Verify(m => m.InvalidLabel(It.Is<string>(x => x == changeLogLine), 
-                It.Is<string>(x => x == labels.Last())));
         }
     }
 }

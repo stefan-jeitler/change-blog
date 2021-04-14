@@ -4,14 +4,15 @@ using System.Linq;
 using ChangeTracker.Domain.ChangeLog;
 using FluentAssertions;
 using Xunit;
+
 // ReSharper disable InconsistentNaming
 
 namespace ChangeTracker.Domain.Tests.ChangeLogTests
 {
     public class ChangeLogLineIssuesTests
     {
-        private static readonly Issue TestIssue = Issue.Parse("#1234");
         private const int TestPosition = 5;
+        private static readonly Issue TestIssue = Issue.Parse("#1234");
         private static readonly Guid TestId = Guid.Parse("51d89265-52c2-4a38-a0fe-b99bdc5523d0");
         private static readonly Guid TestVersionId = Guid.Parse("66845d0a-45bc-4834-96d0-b48c2c403628");
         private static readonly Guid TestProjectId = Guid.Parse("ef5656e5-15f0-418d-b3a4-b69f1c3abac5");
@@ -73,7 +74,7 @@ namespace ChangeTracker.Domain.Tests.ChangeLogTests
                 Issue.Parse("#1231"), Issue.Parse("#1232"), Issue.Parse("#1233"),
                 Issue.Parse("#1234"), Issue.Parse("#1235"), Issue.Parse("#1236"),
                 Issue.Parse("#1237"), Issue.Parse("#1238"), Issue.Parse("#1239"),
-                Issue.Parse("#12310"), Issue.Parse("#12311"),
+                Issue.Parse("#12310"), Issue.Parse("#12311")
             };
 
             Func<ChangeLogLine> act = () => new ChangeLogLine(TestId,
@@ -117,7 +118,7 @@ namespace ChangeTracker.Domain.Tests.ChangeLogTests
             // arrange
             var issue = Issue.Parse("#1234");
             var line = new ChangeLogLine(TestId,
-                null, TestProjectId, TestText, 
+                null, TestProjectId, TestText,
                 TestPosition, TestCreationDate,
                 Enumerable.Empty<Label>(),
                 Enumerable.Empty<Issue>());
@@ -133,7 +134,7 @@ namespace ChangeTracker.Domain.Tests.ChangeLogTests
         public void AddIssue_MaxIssuesReached_ArgumentException()
         {
             // arrange
-            var issues = new []
+            var issues = new[]
             {
                 Issue.Parse("#12341"), Issue.Parse("#12342"), Issue.Parse("#12343"),
                 Issue.Parse("#12344"), Issue.Parse("#12345"), Issue.Parse("#12346"),
@@ -142,7 +143,7 @@ namespace ChangeTracker.Domain.Tests.ChangeLogTests
             };
 
             var line = new ChangeLogLine(TestId,
-                null, TestProjectId, TestText, 
+                null, TestProjectId, TestText,
                 TestPosition, TestCreationDate,
                 Enumerable.Empty<Label>(), issues);
 
@@ -175,7 +176,7 @@ namespace ChangeTracker.Domain.Tests.ChangeLogTests
                 null, TestProjectId, TestText,
                 TestPosition, TestCreationDate,
                 Enumerable.Empty<Label>(),
-                new List<Issue>(1){issue});
+                new List<Issue>(1) {issue});
 
             line.RemoveIssue(issue);
 
@@ -191,7 +192,7 @@ namespace ChangeTracker.Domain.Tests.ChangeLogTests
                 null, TestProjectId, TestText,
                 TestPosition, TestCreationDate,
                 Enumerable.Empty<Label>(),
-                new List<Issue>(1){issue1, issue2});
+                new List<Issue>(1) {issue1, issue2});
 
             line.RemoveIssue(issue2);
 

@@ -1,17 +1,14 @@
 ﻿using System;
-using ChangeTracker.Application.Services.Issues;
-using ChangeTracker.Application.Services.Labels;
-using ChangeTracker.Application.Services.NotReleasedVersion;
+using ChangeTracker.Application.Services.ChangeLog;
 
 namespace ChangeTracker.Application.UseCases.AddChangeLogLine
 {
-    public interface IAddChangeLogLineOutputPort
-        : INotReleasedVersionOutputPort, IExtractLabelsOutputPort, IExtractIssuesOutputPort
+    public interface IAddChangeLogLineOutputPort : IChangeLogLineParsingOutput
     {
         void InvalidVersionFormat();
-        void InvalidChangeLogLineText(string text);
-        void MaxChangeLogLinesReached(int maxChangeLogLines);
+        void ProjectDoesNotExist();
         void Created(Guid changeLogLineId);
         void Conflict(string reason);
+        void VersionDoesNotExist(string version);
     }
 }

@@ -1,11 +1,10 @@
-﻿using System;
-using System.Collections.Generic;
+using System;
 using System.Threading.Tasks;
 using ChangeTracker.Application.DataAccess;
+using ChangeTracker.Application.DataAccess.Projects;
 using ChangeTracker.Application.DataAccess.Versions;
-using ChangeTracker.Application.Services.Issues;
-using ChangeTracker.Application.Services.Labels;
-using ChangeTracker.Application.Services.NotReleasedVersion;
+using ChangeTracker.Application.Services.ChangeLog;
+using ChangeTracker.Domain;
 using ChangeTracker.Domain.ChangeLog;
 using ChangeTracker.Domain.Version;
 using CSharpFunctionalExtensions;
@@ -17,74 +16,61 @@ namespace ChangeTracker.Application.UseCases.AddChangeLogLine
     public class AddChangeLogLineUseCase : IAddChangeLogLineUseCase
     {
         private readonly IChangeLogDao _changeLogDao;
-
-        private readonly NotReleasedVersionService _notReleasedVersion;
+        private readonly ChangeLogLineParsingService _changeLogLineParsing;
+        private readonly IProjectDao _projectDao;
         private readonly IUnitOfWork _unitOfWork;
+        private readonly IVersionDao _versionDao;
 
         public AddChangeLogLineUseCase(IChangeLogDao changeLogDao,
-            IUnitOfWork unitOfWork, NotReleasedVersionService notReleasedVersionService)
+            IUnitOfWork unitOfWork, IVersionDao versionDao, IProjectDao projectDao,
+            ChangeLogLineParsingService changeLogLineParsing)
         {
             _changeLogDao = changeLogDao ?? throw new ArgumentNullException(nameof(changeLogDao));
             _unitOfWork = unitOfWork ?? throw new ArgumentNullException(nameof(unitOfWork));
-            _notReleasedVersion = notReleasedVersionService ??
-                                  throw new ArgumentNullException(nameof(notReleasedVersionService));
+            _versionDao = versionDao;
+            _projectDao = projectDao;
+            _changeLogLineParsing = changeLogLineParsing;
         }
 
-        public async Task ExecuteAsync(IAddChangeLogLineOutputPort output,
-            ChangeLogLineDto changeLogLineDto)
+        public async Task ExecuteAsync(IAddChangeLogLineOutputPort output, ChangeLogLineDto changeLogLineDto)
         {
-            if (!ClVersionValue.TryParse(changeLogLineDto.Version, out var version))
+            if (!ClVersionValue.TryParse(changeLogLineDto.Version, out var versionValue))
             {
                 output.InvalidVersionFormat();
                 return;
             }
 
-            if (!ChangeLogText.TryParse(changeLogLineDto.Text, out var text))
+            var project = await _projectDao.FindAsync(changeLogLineDto.ProjectId);
+            if (project.HasNoValue)
             {
-                output.InvalidChangeLogLineText(changeLogLineDto.Text);
+                output.ProjectDoesNotExist();
                 return;
             }
 
-            var labels = ExtractLabelsService.Extract(output, changeLogLineDto.Labels, text);
-            if (labels.HasNoValue)
+            var version = await _versionDao.FindAsync(project.Value.Id, versionValue);
+            if (version.HasNoValue)
+            {
+                output.VersionDoesNotExist(versionValue.Value);
                 return;
-
-            var issues = ExtractIssuesService.Extract(output, changeLogLineDto.Issues, text);
-            if (issues.HasNoValue)
-                return;
+            }
 
             _unitOfWork.Start();
 
-            var versionInfo = await _notReleasedVersion.FindAsync(output, changeLogLineDto.ProjectId, version);
-            var newChangeLogLine = await versionInfo
-                .Bind(x => CreateChangeLogLineAsync(output, x, text, labels.Value, issues.Value));
-
-            if (newChangeLogLine.HasNoValue)
+            var line = await CreateChangeLogLineAsync(output, changeLogLineDto, project.Value, version.Value.Id);
+            if (line.HasNoValue)
                 return;
 
-            await SaveChangeLogLineAsync(output, newChangeLogLine.Value);
+            await SaveChangeLogLineAsync(output, line.Value);
         }
 
-        private async Task<Maybe<ChangeLogLine>> CreateChangeLogLineAsync(IAddChangeLogLineOutputPort output,
-            ClVersion version, ChangeLogText text, IEnumerable<Label> labels, IEnumerable<Issue> issues)
+        private async Task<Maybe<ChangeLogLine>> CreateChangeLogLineAsync(IChangeLogLineParsingOutput output,
+            ChangeLogLineDto changeLogLineDto, Project project, Guid versionId)
         {
-            var changeLogInfo = await _changeLogDao.GetChangeLogsMetadataAsync(version.ProjectId, version.Id);
-            if (!changeLogInfo.IsPositionAvailable)
-            {
-                output.MaxChangeLogLinesReached(ChangeLogsMetadata.MaxChangeLogLines);
-                return Maybe<ChangeLogLine>.None;
-            }
+            var parsingDto = new ChangeLogLineParsingDto(project.Id,
+                versionId, changeLogLineDto.Text,
+                changeLogLineDto.Labels, changeLogLineDto.Issues);
 
-            var changeLogLine = new ChangeLogLine(Guid.NewGuid(),
-                version.Id,
-                version.ProjectId,
-                text,
-                changeLogInfo.NextFreePosition,
-                DateTime.UtcNow,
-                labels,
-                issues);
-
-            return Maybe<ChangeLogLine>.From(changeLogLine);
+            return await _changeLogLineParsing.ParseAsync(output, parsingDto);
         }
 
         private async Task SaveChangeLogLineAsync(IAddChangeLogLineOutputPort output, ChangeLogLine changeLogLine)

@@ -7,35 +7,45 @@ namespace ChangeTracker.Domain.Tests.AccountTests
 {
     public class AccountTests
     {
-        private static readonly Guid TestAccountId = Guid.Parse("c1b588ee-069d-453e-8f74-fc43b7ae0649");
-        private static readonly Name TestAccountName = Name.Parse("Account X");
-        private static readonly Guid TestDefaultVersioningSchemeId = Guid.Parse("042b3384-a149-4739-b281-89e51cbcf549");
-        private static readonly DateTime TestCreationDate = DateTime.Parse("2021-04-03");
+        private Guid? _defaultVersioningSchemeId;
+        private Guid _testAccountId;
+        private DateTime _testCreationDate;
+        private DateTime _testDeletionDate;
+        private Name _testName;
+
+        public AccountTests()
+        {
+            _testAccountId = Guid.Parse("c1b588ee-069d-453e-8f74-fc43b7ae0649");
+            _testName = Name.Parse("Account X");
+            _defaultVersioningSchemeId = Guid.Parse("042b3384-a149-4739-b281-89e51cbcf549");
+            _testCreationDate = DateTime.Parse("2021-04-03");
+            _testDeletionDate = DateTime.Parse("2021-04-03");
+        }
+
+        private Account CreateAccount() => new(_testAccountId,
+            _testName,
+            _defaultVersioningSchemeId,
+            _testCreationDate,
+            _testDeletionDate);
 
         [Fact]
         public void Create_WithValidArguments_Successful()
         {
-            var account = new Account(TestAccountId,
-                TestAccountName,
-                TestDefaultVersioningSchemeId,
-                TestCreationDate,
-                null);
+            var account = CreateAccount();
 
-            account.Id.Should().Be(TestAccountId);
-            account.Name.Should().Be(TestAccountName);
-            account.DefaultVersioningSchemeId.HasValue.Should().BeTrue();
-            account.DefaultVersioningSchemeId.Value.Should().Be(TestDefaultVersioningSchemeId);
-            account.CreatedAt.Should().Be(TestCreationDate);
+            account.Id.Should().Be(_testAccountId);
+            account.Name.Should().Be(_testName);
+            account.DefaultVersioningSchemeId.Should().HaveValue();
+            account.DefaultVersioningSchemeId!.Value.Should().Be(_defaultVersioningSchemeId!.Value);
+            account.CreatedAt.Should().Be(_testCreationDate);
         }
 
         [Fact]
         public void Create_WithEmptyId_ArgumentException()
         {
-            Func<Account> act = () => new Account(Guid.Empty,
-                TestAccountName,
-                TestDefaultVersioningSchemeId,
-                TestCreationDate,
-                null);
+            _testAccountId = Guid.Empty;
+
+            Func<Account> act = CreateAccount;
 
             act.Should().ThrowExactly<ArgumentException>();
         }
@@ -43,11 +53,9 @@ namespace ChangeTracker.Domain.Tests.AccountTests
         [Fact]
         public void Create_WithNullName_ArgumentNullException()
         {
-            Func<Account> act = () => new Account(TestAccountId,
-                null,
-                TestDefaultVersioningSchemeId,
-                TestCreationDate,
-                null);
+            _testName = null;
+
+            Func<Account> act = CreateAccount;
 
             act.Should().ThrowExactly<ArgumentNullException>();
         }
@@ -56,9 +64,9 @@ namespace ChangeTracker.Domain.Tests.AccountTests
         [Fact]
         public void Create_WithNullVersioningSchemeId_NullIsAllowed()
         {
-            var account = new Account(TestAccountId, TestAccountName, null,
-                TestCreationDate,
-                null);
+            _defaultVersioningSchemeId = null;
+
+            var account = CreateAccount();
 
             account.DefaultVersioningSchemeId.HasValue.Should().BeFalse();
         }
@@ -68,11 +76,9 @@ namespace ChangeTracker.Domain.Tests.AccountTests
         [InlineData("9999-12-31T23:59:59.9999999")]
         public void Create_WithInvalidCreationDate_ArgumentException(string invalidDate)
         {
-            Func<Account> act = () => new Account(TestAccountId,
-                TestAccountName,
-                TestDefaultVersioningSchemeId,
-                DateTime.Parse(invalidDate),
-                null);
+            _testCreationDate = DateTime.Parse(invalidDate);
+
+            Func<Account> act = CreateAccount;
 
             act.Should().ThrowExactly<ArgumentException>();
         }
@@ -82,11 +88,9 @@ namespace ChangeTracker.Domain.Tests.AccountTests
         [InlineData("9999-12-31T23:59:59.9999999")]
         public void Create_WithInvalidDeletionDate_ArgumentException(string invalidDate)
         {
-            Func<Account> act = () => new Account(TestAccountId,
-                TestAccountName,
-                TestDefaultVersioningSchemeId,
-                TestCreationDate,
-                DateTime.Parse(invalidDate));
+            _testDeletionDate = DateTime.Parse(invalidDate);
+
+            Func<Account> act = CreateAccount;
 
             act.Should().ThrowExactly<ArgumentException>();
         }

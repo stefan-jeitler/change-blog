@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using ChangeTracker.Domain.ChangeLog;
 using FluentAssertions;
 using Xunit;
@@ -9,65 +10,78 @@ namespace ChangeTracker.Domain.Tests.ChangeLogTests
 {
     public class ChangeLogLineTests
     {
-        private const uint TestPosition = 5;
-        private static readonly Guid TestId = Guid.Parse("51d89265-52c2-4a38-a0fe-b99bdc5523d0");
-        private static readonly Guid TestVersionId = Guid.Parse("66845d0a-45bc-4834-96d0-b48c2c403628");
-        private static readonly Guid TestProjectId = Guid.Parse("ef5656e5-15f0-418d-b3a4-b69f1c3abac5");
-        private static readonly ChangeLogText TestText = ChangeLogText.Parse("New feature added");
-        private static readonly DateTime TestCreationDate = DateTime.Parse("2021-04.02T18:28");
-        private static readonly DateTime TestDeletionDate = DateTime.Parse("2021-04.02T18:28");
+        private Guid _testId;
+        private Guid _testProjectId;
+        private ChangeLogText _testText;
+        private readonly uint _testPosition;
+        private readonly List<Issue> _testIssues;
+        private readonly List<Label> _testLabels;
+        private Guid? _testVersionId;
+        private DateTime _testCreationDate;
+        private DateTime? _testDeletionDate;
+
+        public ChangeLogLineTests()
+        {
+            _testPosition = 5;
+            _testIssues = new List<Issue>(1) { Issue.Parse("#1234") };
+            _testLabels = new List<Label>(1) { Label.Parse("Feature") };
+            _testId = Guid.Parse("51d89265-52c2-4a38-a0fe-b99bdc5523d0");
+            _testVersionId = Guid.Parse("66845d0a-45bc-4834-96d0-b48c2c403628");
+            _testProjectId = Guid.Parse("ef5656e5-15f0-418d-b3a4-b69f1c3abac5");
+            _testText = ChangeLogText.Parse("New feature added");
+            _testCreationDate = DateTime.Parse("2021-04-02T18:28");
+            _testDeletionDate = null;
+        }
+
+        private ChangeLogLine CreateChangeLogLine() => new(_testId, 
+            _testVersionId, 
+            _testProjectId,
+            _testText, 
+            _testPosition, 
+            _testCreationDate, 
+            _testLabels,
+            _testIssues,
+            _testDeletionDate);
 
         [Fact]
         public void Create_WithValidArguments_Successful()
         {
-            var line = new ChangeLogLine(TestId,
-                TestVersionId,
-                TestProjectId,
-                TestText,
-                TestPosition,
-                TestCreationDate,
-                null,
-                null);
+            var line = CreateChangeLogLine();
 
-            line.Id.Should().Be(TestId);
-            line.VersionId.Should().Be(TestVersionId);
-            line.ProjectId.Should().Be(TestProjectId);
-            line.Text.Should().Be(TestText);
-            line.Position.Should().Be(TestPosition);
-            line.CreatedAt.Should().Be(TestCreationDate);
-            line.Labels.Should().BeEmpty();
+            line.Id.Should().Be(_testId);
+            line.VersionId.Should().Be(_testVersionId);
+            line.ProjectId.Should().Be(_testProjectId);
+            line.Text.Should().Be(_testText);
+            line.Position.Should().Be(_testPosition);
+            line.CreatedAt.Should().Be(_testCreationDate);
+            line.Labels.Count.Should().Be(1);
+            line.Issues.Count.Should().Be(1);
             line.DeletedAt.Should().BeNull();
         }
 
         [Fact]
         public void Create_WithOverloadedConstructor_IdIsGenerated()
         {
-            var line = new ChangeLogLine(TestVersionId, TestProjectId, TestText, TestPosition);
+            var line = new ChangeLogLine(_testVersionId, _testProjectId, _testText, _testPosition);
 
             line.Id.Should().NotBe(Guid.Empty);
         }
 
         [Fact]
-        public void Create_WithDeletionAtDate_DateIsProperlySet()
+        public void Create_WithDeletionDate_DateIsProperlySet()
         {
-            var line = new ChangeLogLine(TestId,
-                null,
-                TestProjectId,
-                TestText,
-                TestPosition,
-                TestCreationDate,
-                null,
-                null,
-                TestDeletionDate);
+            _testDeletionDate = DateTime.Parse("2021-04-16");
+
+            var line = CreateChangeLogLine();
 
             line.DeletedAt.HasValue.Should().BeTrue();
-            line.DeletedAt.Value.Should().Be(TestDeletionDate);
+            line.DeletedAt.Value.Should().Be(_testDeletionDate.Value);
         }
 
         [Fact]
         public void Create_WithOverloadedConstructor_IdAndCreatedAtDatetimeGenerated()
         {
-            var line = new ChangeLogLine(TestVersionId, TestProjectId, TestText, TestPosition);
+            var line = new ChangeLogLine(_testVersionId, _testProjectId, _testText, _testPosition);
 
             line.Id.Should().NotBe(Guid.Empty);
             line.CreatedAt.Should().BeAfter(DateTime.UtcNow.AddMinutes(-1));
@@ -77,12 +91,9 @@ namespace ChangeTracker.Domain.Tests.ChangeLogTests
         [Fact]
         public void Create_WithEmptyId_ArgumentException()
         {
-            Func<ChangeLogLine> act = () => new ChangeLogLine(Guid.Empty,
-                TestVersionId,
-                TestProjectId,
-                TestText,
-                TestPosition,
-                TestCreationDate);
+            _testId = Guid.Empty;
+
+            Func<ChangeLogLine> act = CreateChangeLogLine;
 
             act.Should().ThrowExactly<ArgumentException>();
         }
@@ -90,12 +101,9 @@ namespace ChangeTracker.Domain.Tests.ChangeLogTests
         [Fact]
         public void Create_WithEmptyVersionId_Successful()
         {
-            Func<ChangeLogLine> act = () => new ChangeLogLine(TestId,
-                Guid.Empty,
-                TestProjectId,
-                TestText,
-                TestPosition,
-                TestCreationDate);
+            _testVersionId = Guid.Empty;
+
+            Func<ChangeLogLine> act = CreateChangeLogLine;
 
             act.Should().ThrowExactly<ArgumentException>();
         }
@@ -103,12 +111,9 @@ namespace ChangeTracker.Domain.Tests.ChangeLogTests
         [Fact]
         public void Create_WithNullVersionId_IsPendingChangeLogLine()
         {
-            var line = new ChangeLogLine(TestId,
-                null,
-                TestProjectId,
-                TestText,
-                TestPosition,
-                TestCreationDate);
+            _testVersionId = null;
+
+            var line = CreateChangeLogLine();
 
             line.IsPending.Should().BeTrue();
         }
@@ -116,12 +121,9 @@ namespace ChangeTracker.Domain.Tests.ChangeLogTests
         [Fact]
         public void Create_WithEmptyProjectId_ArgumentException()
         {
-            Func<ChangeLogLine> act = () => new ChangeLogLine(TestId,
-                TestVersionId,
-                Guid.Empty,
-                TestText,
-                TestPosition,
-                TestCreationDate);
+            _testProjectId = Guid.Empty;
+
+            Func<ChangeLogLine> act = CreateChangeLogLine;
 
             act.Should().ThrowExactly<ArgumentException>();
         }
@@ -129,12 +131,9 @@ namespace ChangeTracker.Domain.Tests.ChangeLogTests
         [Fact]
         public void Create_WithNullText_ArgumentNullException()
         {
-            Func<ChangeLogLine> act = () => new ChangeLogLine(TestId,
-                TestVersionId,
-                TestProjectId,
-                null,
-                TestPosition,
-                TestCreationDate);
+            _testText = null;
+
+            Func<ChangeLogLine> act = CreateChangeLogLine;
 
             act.Should().ThrowExactly<ArgumentNullException>();
         }
@@ -144,10 +143,9 @@ namespace ChangeTracker.Domain.Tests.ChangeLogTests
         [InlineData("9999-12-31T23:59:59.9999999")]
         public void Create_WithInvalidCreatedAtDate_ArgumentException(string invalidDate)
         {
-            var createdAt = DateTime.Parse(invalidDate);
+            _testCreationDate = DateTime.Parse(invalidDate);
 
-            Func<ChangeLogLine> act = () =>
-                new ChangeLogLine(TestId, TestVersionId, TestProjectId, TestText, TestPosition, createdAt);
+            Func<ChangeLogLine> act = CreateChangeLogLine;
 
             act.Should().ThrowExactly<ArgumentException>();
         }
@@ -158,11 +156,9 @@ namespace ChangeTracker.Domain.Tests.ChangeLogTests
         [InlineData("9999-12-31T23:59:59.9999999")]
         public void Create_WithInvalidDeletedAtDate_ArgumentException(string invalidDate)
         {
-            var deletedAt = DateTime.Parse(invalidDate);
+            _testDeletionDate = DateTime.Parse(invalidDate);
 
-            Func<ChangeLogLine> act = () =>
-                new ChangeLogLine(TestId, TestVersionId, TestProjectId, TestText, TestPosition, TestCreationDate,
-                    deletedAt);
+            Func<ChangeLogLine> act = CreateChangeLogLine;
 
             act.Should().ThrowExactly<ArgumentException>();
         }
@@ -172,14 +168,8 @@ namespace ChangeTracker.Domain.Tests.ChangeLogTests
         {
             // arrange
             var versionId = Guid.Parse("9102c1a0-09cf-4cb8-a6f6-fc0660be6109");
-            var line = new ChangeLogLine(TestId,
-                null,
-                TestProjectId,
-                TestText,
-                TestPosition,
-                TestCreationDate,
-                null,
-                null);
+            _testVersionId = null;
+            var line = CreateChangeLogLine();
 
             // act
             var assignedLine = line.AssignToVersion(versionId, 0);
@@ -193,14 +183,7 @@ namespace ChangeTracker.Domain.Tests.ChangeLogTests
         {
             // arrange
             var versionId = Guid.Parse("9102c1a0-09cf-4cb8-a6f6-fc0660be6109");
-            var line = new ChangeLogLine(TestId,
-                null,
-                TestProjectId,
-                TestText,
-                TestPosition,
-                TestCreationDate,
-                null,
-                null);
+            var line = CreateChangeLogLine();
 
             // act
             var assignedLine = line.AssignToVersion(versionId, 2);
@@ -213,15 +196,8 @@ namespace ChangeTracker.Domain.Tests.ChangeLogTests
         public void AssignToVersion_NewVersionIsEmpty_ArgumentException()
         {
             // arrange
-            var versionId = Guid.Parse("9102c1a0-09cf-4cb8-a6f6-fc0660be6109");
-            var line = new ChangeLogLine(TestId,
-                null,
-                TestProjectId,
-                TestText,
-                TestPosition,
-                TestCreationDate,
-                null,
-                null);
+            _testVersionId = null;
+            var line = CreateChangeLogLine();
 
             // act
             Func<ChangeLogLine> act = () => line.AssignToVersion(Guid.Empty, 0);

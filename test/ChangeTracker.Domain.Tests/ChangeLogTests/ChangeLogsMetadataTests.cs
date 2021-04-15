@@ -13,12 +13,12 @@ namespace ChangeTracker.Domain.Tests.ChangeLogTests
         [Fact]
         public void Create_WithValidArguments_Successful()
         {
-            var changeLogInfo = new ChangeLogsMetadata(TestProjectId, TestVersionId, 1, 2);
+            var changeLogsMetaData = new ChangeLogsMetadata(TestProjectId, TestVersionId, 1, 2);
 
-            changeLogInfo.ProjectId.Should().Be(TestProjectId);
-            changeLogInfo.VersionId.Should().Be(TestVersionId);
-            changeLogInfo.Count.Should().Be(1);
-            changeLogInfo.LastPosition.Should().Be(2);
+            changeLogsMetaData.ProjectId.Should().Be(TestProjectId);
+            changeLogsMetaData.VersionId.Should().Be(TestVersionId);
+            changeLogsMetaData.Count.Should().Be(1);
+            changeLogsMetaData.LastPosition.Should().Be(2);
         }
 
         [Fact]
@@ -40,58 +40,58 @@ namespace ChangeTracker.Domain.Tests.ChangeLogTests
         [Fact]
         public void Create_WithNullVersionId_IsAllowed()
         {
-            var changeLogInfo = new ChangeLogsMetadata(TestProjectId, null, 1, 2);
+            var changeLogsMetaData = new ChangeLogsMetadata(TestProjectId, null, 1, 2);
 
-            changeLogInfo.VersionId.Should()
+            changeLogsMetaData.VersionId.Should()
                 .BeNull("Pending changeLog lines allowed, that are not assigned to a version yet.");
         }
 
         [Fact]
         public void RemainingPositionsToAdd_FiveNotesExists_NinetyFiveAvailablePositions()
         {
-            var changeLogInfo = new ChangeLogsMetadata(TestProjectId, TestVersionId, 5, 4);
+            var changeLogsMetaData = new ChangeLogsMetadata(TestProjectId, TestVersionId, 5, 4);
 
-            changeLogInfo.RemainingPositionsToAdd.Should().Be(95);
+            changeLogsMetaData.RemainingPositionsToAdd.Should().Be(95);
         }
 
         [Fact]
         public void NextFreePosition_LastPositionIsTen_ReturnsEleven()
         {
-            var changeLogInfo = new ChangeLogsMetadata(TestProjectId, TestVersionId, 5, 10);
+            var changeLogsMetaData = new ChangeLogsMetadata(TestProjectId, TestVersionId, 5, 10);
 
-            changeLogInfo.NextFreePosition.Should().Be(11);
+            changeLogsMetaData.NextFreePosition.Should().Be(11);
         }
 
         [Fact]
         public void AvailablePositions_MaxPositionsReached_ReturnsFalse()
         {
-            var changeLogInfo = new ChangeLogsMetadata(TestProjectId, TestVersionId, 100, 112);
+            var changeLogsMetaData = new ChangeLogsMetadata(TestProjectId, TestVersionId, 100, 112);
 
-            changeLogInfo.IsPositionAvailable.Should().BeFalse();
+            changeLogsMetaData.IsPositionAvailable.Should().BeFalse();
         }
 
         [Fact]
         public void AvailablePositions_ThereAreFreePositions_ReturnsTrue()
         {
-            var changeLogInfo = new ChangeLogsMetadata(TestProjectId, TestVersionId, 50, 112);
+            var changeLogsMetaData = new ChangeLogsMetadata(TestProjectId, TestVersionId, 50, 112);
 
-            changeLogInfo.IsPositionAvailable.Should().BeTrue();
+            changeLogsMetaData.IsPositionAvailable.Should().BeTrue();
         }
 
         [Fact]
         public void LastPosition_CountIsZero_ReturnsMinusOne()
         {
-            var changeLogInfo = new ChangeLogsMetadata(TestProjectId, TestVersionId, 0, 5);
+            var changeLogsMetaData = new ChangeLogsMetadata(TestProjectId, TestVersionId, 0, 5);
 
-            changeLogInfo.LastPosition.Should().Be(-1);
+            changeLogsMetaData.LastPosition.Should().Be(-1);
         }
 
         [Fact]
         public void LastPosition_CountIsNotZero_ReturnsPositionPassedToConstructor()
         {
-            var changeLogInfo = new ChangeLogsMetadata(TestProjectId, TestVersionId, 1, 5);
+            var changeLogsMetaData = new ChangeLogsMetadata(TestProjectId, TestVersionId, 1, 5);
 
-            changeLogInfo.LastPosition.Should().Be(5);
+            changeLogsMetaData.LastPosition.Should().Be(5);
         }
     }
 }

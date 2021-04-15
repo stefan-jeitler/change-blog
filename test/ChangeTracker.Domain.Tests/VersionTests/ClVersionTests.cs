@@ -7,35 +7,45 @@ namespace ChangeTracker.Domain.Tests.VersionTests
 {
     public class ClVersionTests
     {
-        private static readonly ClVersionValue TestVersionValue = ClVersionValue.Parse("1.2.3-dev.0");
-        private static readonly Guid TestId = Guid.Parse("4eaa1f8e-46d4-4cdd-92d4-6a2fe6f5ac10");
-        private static readonly Guid TestProjectId = Guid.Parse("d816fb67-f2c3-4d2a-8713-f93a432fbf41");
-        private static readonly DateTime TestReleaseDate = DateTime.Parse("2021-04-02T19:30");
-        private static readonly DateTime TestCreationDate = DateTime.Parse("2021-04-02T17:30");
+        private DateTime _testCreationDate;
+        private DateTime? _testDeletionDate;
+        private Guid _testId;
+        private Guid _testProjectId;
+        private DateTime? _testReleaseDate;
+        private ClVersionValue _testVersionValue;
+
+        public ClVersionTests()
+        {
+            _testVersionValue = ClVersionValue.Parse("1.2.3-dev.0");
+            _testId = Guid.Parse("4eaa1f8e-46d4-4cdd-92d4-6a2fe6f5ac10");
+            _testProjectId = Guid.Parse("d816fb67-f2c3-4d2a-8713-f93a432fbf41");
+            _testReleaseDate = DateTime.Parse("2021-04-02T19:30");
+            _testCreationDate = DateTime.Parse("2021-04-02T17:30");
+            _testDeletionDate = null;
+        }
+
+        private ClVersion CreateVersion() => new(_testId, _testProjectId, _testVersionValue, _testReleaseDate,
+            _testCreationDate, _testDeletionDate);
 
         [Fact]
         public void Create_WithValidArguments_Successful()
         {
-            var version = new ClVersion(TestId, TestProjectId, TestVersionValue, TestReleaseDate, TestCreationDate,
-                null);
+            var version = CreateVersion();
 
-            version.Id.Should().Be(TestId);
-            version.ProjectId.Should().Be(TestProjectId);
-            version.Value.Should().Be(TestVersionValue);
-            version.ReleasedAt.Should().Be(TestReleaseDate);
-            version.CreatedAt.Should().Be(TestCreationDate);
+            version.Id.Should().Be(_testId);
+            version.ProjectId.Should().Be(_testProjectId);
+            version.Value.Should().Be(_testVersionValue);
+            version.ReleasedAt.Should().Be(_testReleaseDate);
+            version.CreatedAt.Should().Be(_testCreationDate);
             version.DeletedAt.Should().BeNull();
         }
 
         [Fact]
         public void Create_WithEmptyId_ArgumentException()
         {
-            Func<ClVersion> act = () => new ClVersion(Guid.Empty,
-                TestProjectId,
-                TestVersionValue,
-                TestReleaseDate,
-                TestCreationDate,
-                null);
+            _testId = Guid.Empty;
+
+            Func<ClVersion> act = CreateVersion;
 
             act.Should().ThrowExactly<ArgumentException>();
         }
@@ -43,12 +53,9 @@ namespace ChangeTracker.Domain.Tests.VersionTests
         [Fact]
         public void Create_WithEmptyProjectId_ArgumentException()
         {
-            Func<ClVersion> act = () => new ClVersion(TestId,
-                Guid.Empty,
-                TestVersionValue,
-                TestReleaseDate,
-                TestCreationDate,
-                null);
+            _testProjectId = Guid.Empty;
+
+            Func<ClVersion> act = CreateVersion;
 
             act.Should().ThrowExactly<ArgumentException>();
         }
@@ -56,12 +63,9 @@ namespace ChangeTracker.Domain.Tests.VersionTests
         [Fact]
         public void Create_WithNullVersion_ArgumentNullException()
         {
-            Func<ClVersion> act = () => new ClVersion(TestId,
-                TestProjectId,
-                null,
-                TestReleaseDate,
-                TestCreationDate,
-                null);
+            _testVersionValue = null;
+
+            Func<ClVersion> act = CreateVersion;
 
             act.Should().ThrowExactly<ArgumentNullException>();
         }
@@ -69,11 +73,9 @@ namespace ChangeTracker.Domain.Tests.VersionTests
         [Fact]
         public void IsReleased_ReleaseAtIsNull_ReturnsFalse()
         {
-            var version = new ClVersion(TestId,
-                TestProjectId, TestVersionValue,
-                null,
-                TestCreationDate,
-                null);
+            _testReleaseDate = null;
+
+            var version = CreateVersion();
 
             version.IsReleased.Should().BeFalse("Versions can be released later.");
         }
@@ -81,11 +83,9 @@ namespace ChangeTracker.Domain.Tests.VersionTests
         [Fact]
         public void IsReleased_ReleaseAtIsNotNull_ReturnsTrue()
         {
-            var version = new ClVersion(TestId,
-                TestProjectId, TestVersionValue,
-                DateTime.Parse("2021-04-06"),
-                TestCreationDate,
-                null);
+            _testReleaseDate = DateTime.Parse("2021-04-16");
+
+            var version = CreateVersion();
 
             version.IsReleased.Should().BeTrue();
         }
@@ -93,11 +93,9 @@ namespace ChangeTracker.Domain.Tests.VersionTests
         [Fact]
         public void IsDeleted_DeletedAtIsNull_ReturnsFalse()
         {
-            var version = new ClVersion(TestId,
-                TestProjectId, TestVersionValue,
-                DateTime.Parse("2021-04-06"),
-                TestCreationDate,
-                null);
+            _testDeletionDate = null;
+
+            var version = CreateVersion();
 
             version.IsDeleted.Should().BeFalse();
         }
@@ -105,24 +103,20 @@ namespace ChangeTracker.Domain.Tests.VersionTests
         [Fact]
         public void IsDeleted_DeletedAtIsNotNull_ReturnsTrue()
         {
-            var version = new ClVersion(TestId,
-                TestProjectId, TestVersionValue,
-                null,
-                TestCreationDate,
-                DateTime.Parse("2021-04-06"));
+            _testDeletionDate = DateTime.Parse("2021-04-16");
+
+            var version = CreateVersion();
 
             version.IsDeleted.Should().BeTrue();
         }
 
         [Fact]
-        public void Create_ReleaseAtAfterDeletedAt_InvalidOperationException()
+        public void Create_ReleasedAtAfterDeletedAt_InvalidOperationException()
         {
-            Func<ClVersion> act = () => new ClVersion(TestId,
-                TestProjectId,
-                TestVersionValue,
-                DateTime.Parse("2021-04-12T19:30:00"),
-                TestCreationDate,
-                DateTime.Parse("2021-04-12T18:30:00"));
+            _testDeletionDate = DateTime.Parse("2021-04-16T18:30:00Z");
+            _testReleaseDate = DateTime.Parse("2021-04-16T18:30:01Z");
+
+            Func<ClVersion> act = CreateVersion;
 
             act.Should().ThrowExactly<InvalidOperationException>("Deleted version cannot be released.");
         }
@@ -132,12 +126,9 @@ namespace ChangeTracker.Domain.Tests.VersionTests
         [InlineData("9999-12-31T23:59:59.9999999")]
         public void Create_WithReleasedAtTimeMinAndMaxValue_ArgumentException(string invalidDate)
         {
-            Func<ClVersion> act = () => new ClVersion(TestId,
-                TestProjectId,
-                TestVersionValue,
-                DateTime.Parse(invalidDate),
-                TestCreationDate,
-                null);
+            _testReleaseDate = DateTime.Parse(invalidDate);
+
+            Func<ClVersion> act = CreateVersion;
 
             act.Should().ThrowExactly<ArgumentException>();
         }
@@ -147,12 +138,9 @@ namespace ChangeTracker.Domain.Tests.VersionTests
         [InlineData("9999-12-31T23:59:59.9999999")]
         public void Create_WithCreatedAtTimeMinAndMaxValue_ArgumentException(string invalidDate)
         {
-            Func<ClVersion> act = () => new ClVersion(TestId,
-                TestProjectId,
-                TestVersionValue,
-                TestReleaseDate,
-                DateTime.Parse(invalidDate),
-                null);
+            _testCreationDate = DateTime.Parse(invalidDate);
+
+            Func<ClVersion> act = CreateVersion;
 
             act.Should().ThrowExactly<ArgumentException>();
         }
@@ -162,12 +150,9 @@ namespace ChangeTracker.Domain.Tests.VersionTests
         [InlineData("9999-12-31T23:59:59.9999999")]
         public void Create_WithDeletedAtTimeMinAndMaxValue_ArgumentException(string invalidDate)
         {
-            Func<ClVersion> act = () => new ClVersion(TestId,
-                TestProjectId,
-                TestVersionValue,
-                TestReleaseDate,
-                TestCreationDate,
-                DateTime.Parse(invalidDate));
+            _testDeletionDate = DateTime.Parse(invalidDate);
+
+            Func<ClVersion> act = CreateVersion;
 
             act.Should().ThrowExactly<ArgumentException>();
         }
@@ -175,10 +160,8 @@ namespace ChangeTracker.Domain.Tests.VersionTests
         [Fact]
         public void Equals_TwoDifferentObjectsWithSameProperties_IsEqual()
         {
-            var version1 = new ClVersion(TestId, TestProjectId, TestVersionValue, TestReleaseDate, TestCreationDate,
-                null);
-            var version2 = new ClVersion(TestId, TestProjectId, TestVersionValue, TestReleaseDate, TestCreationDate,
-                null);
+            var version1 = CreateVersion();
+            var version2 = CreateVersion();
 
             var isEqual = version1.Equals((object) version2);
 
@@ -189,11 +172,11 @@ namespace ChangeTracker.Domain.Tests.VersionTests
         public void Equals_TwoDifferentObjectsWithDifferentProperties_NotEqual()
         {
             // arrange
-            var id2 = Guid.Parse("379b912d-34da-4377-8eef-dcaade0d0e09");
-            var testProjectId2 = Guid.Parse("c00141a4-da01-4511-9af2-71847858424a");
-            var version1 = new ClVersion(TestId, TestProjectId, TestVersionValue, TestReleaseDate, TestCreationDate, null);
-            var version2 = new ClVersion(id2, testProjectId2, ClVersionValue.Parse("5.4.3"),
-                TestReleaseDate, TestCreationDate, null);
+            var version1 = CreateVersion();
+
+            _testId = Guid.Parse("379b912d-34da-4377-8eef-dcaade0d0e09");
+            _testProjectId = Guid.Parse("c00141a4-da01-4511-9af2-71847858424a");
+            var version2 = CreateVersion();
 
             // act
             var isEqual = version1.Equals((object) version2);
@@ -205,10 +188,8 @@ namespace ChangeTracker.Domain.Tests.VersionTests
         [Fact]
         public void GetHashCode_TwoDifferentObjectsWithSameProperties_SameHashCode()
         {
-            var version1 = new ClVersion(TestId, TestProjectId, TestVersionValue, TestReleaseDate, TestCreationDate,
-                null);
-            var version2 = new ClVersion(TestId, TestProjectId, TestVersionValue, TestReleaseDate, TestCreationDate,
-                null);
+            var version1 = CreateVersion();
+            var version2 = CreateVersion();
 
             var hashCode1 = version1.GetHashCode();
             var hashCode2 = version2.GetHashCode();
@@ -221,11 +202,11 @@ namespace ChangeTracker.Domain.Tests.VersionTests
         public void Equals_TwoDifferentObjectsWithDifferentProperties_DifferentHashCodes()
         {
             // arrange
-            var id2 = Guid.Parse("379b912d-34da-4377-8eef-dcaade0d0e09");
-            var testProjectId2 = Guid.Parse("c00141a4-da01-4511-9af2-71847858424a");
-            var version1 = new ClVersion(TestId, TestProjectId, TestVersionValue, TestReleaseDate, TestCreationDate, null);
-            var version2 = new ClVersion(id2, testProjectId2, ClVersionValue.Parse("5.4.3"),
-                TestReleaseDate, TestCreationDate, null);
+            var version1 = CreateVersion();
+
+            _testId = Guid.Parse("379b912d-34da-4377-8eef-dcaade0d0e09");
+            _testProjectId = Guid.Parse("c00141a4-da01-4511-9af2-71847858424a");
+            var version2 = CreateVersion();
 
             // act
             var hashCode1 = version1.GetHashCode();

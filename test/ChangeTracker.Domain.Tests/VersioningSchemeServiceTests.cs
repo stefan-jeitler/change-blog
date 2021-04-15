@@ -13,12 +13,11 @@ namespace ChangeTracker.Domain.Tests
         {
             // arrange
             var testAccount = new Account(TestAccount.Id, TestAccount.Name, null, TestAccount.CreationDate, null);
-            var customSchemeId = (Guid?) null;
 
             var service = new VersioningSchemeService(testAccount);
 
             // act
-            var schemeId = service.FindSchemeIdForProject(customSchemeId);
+            var schemeId = service.FindSchemeIdForProject(null);
 
             // assert
             schemeId.Should().Be(Defaults.VersioningScheme.Id);

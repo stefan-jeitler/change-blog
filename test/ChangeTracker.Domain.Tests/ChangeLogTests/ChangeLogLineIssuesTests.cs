@@ -52,9 +52,9 @@ namespace ChangeTracker.Domain.Tests.ChangeLogTests
 
 
         [Fact]
-        public void Create_WithNullIssues_Empty()
+        public void Create_WithNullIssues_ArgumentNullException()
         {
-            var line = new ChangeLogLine(TestId,
+            Func<ChangeLogLine> act = () => new ChangeLogLine(TestId,
                 TestVersionId,
                 TestProjectId,
                 TestText,
@@ -63,7 +63,7 @@ namespace ChangeTracker.Domain.Tests.ChangeLogTests
                 Enumerable.Empty<Label>(),
                 null);
 
-            line.Issues.Should().BeEmpty();
+            act.Should().ThrowExactly<ArgumentNullException>();
         }
 
         [Fact]
@@ -169,7 +169,7 @@ namespace ChangeTracker.Domain.Tests.ChangeLogTests
         }
 
         [Fact]
-        public void RemoveIssue_WhichExists_IssueRemoved()
+        public void RemoveIssue_ThatExists_IssueRemoved()
         {
             var issue = Issue.Parse("#123411");
             var line = new ChangeLogLine(TestId,

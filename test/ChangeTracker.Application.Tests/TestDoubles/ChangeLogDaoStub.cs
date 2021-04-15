@@ -14,7 +14,7 @@ namespace ChangeTracker.Application.Tests.TestDoubles
         public List<ChangeLogLine> ChangeLogs { get; set; } = new();
         public bool ProduceConflict { get; set; }
 
-        public Task<Maybe<ChangeLogLine>> GetAsync(Guid changeLogLineId)
+        public Task<Maybe<ChangeLogLine>> FindAsync(Guid changeLogLineId)
         {
             return Task.FromResult(ChangeLogs.TryFirst(x => x.Id == changeLogLineId));
         }
@@ -36,6 +36,9 @@ namespace ChangeTracker.Application.Tests.TestDoubles
         {
             await Task.Yield();
             var lines = changeLogLines.ToList();
+
+            if (ProduceConflict)
+                return Result.Failure<int, Conflict>(new Conflict("something went wrong."));
 
             ChangeLogs.AddRange(lines);
             return Result.Success<int, Conflict>(lines.Count);

@@ -1,6 +1,7 @@
 ﻿using System;
 using ChangeTracker.Domain.Common;
 using ChangeTracker.Domain.Tests.TestDoubles;
+using ChangeTracker.Domain.Version;
 using FluentAssertions;
 using Xunit;
 
@@ -8,39 +9,56 @@ namespace ChangeTracker.Domain.Tests.ProjectTests
 {
     public class ProjectTests
     {
-        private static readonly Guid TestId = Guid.Parse("992b6432-b792-4f0d-87c2-786f24a5a564");
-        private static readonly Name TestName = Name.Parse("ProjectX");
-        private static readonly DateTime TestCreationDate = DateTime.Parse("2021-04-03");
+        private Guid _testAccountId;
+        private DateTime _testCreationDate;
+        private DateTime? _testDeletionDate;
+        private Guid _testId;
+        private Name _testName;
+        private VersioningScheme _testVersioningScheme;
+
+        public ProjectTests()
+        {
+            _testId = Guid.Parse("992b6432-b792-4f0d-87c2-786f24a5a564");
+            _testName = Name.Parse("ProjectX");
+            _testCreationDate = DateTime.Parse("2021-04-03");
+            _testAccountId = TestAccount.Id;
+            _testVersioningScheme = TestAccount.CustomVersioningScheme;
+            _testDeletionDate = null;
+        }
+
+        private Project CreateProject() => new(_testId, _testAccountId, _testName, _testVersioningScheme,
+            _testCreationDate, _testDeletionDate);
 
         [Fact]
         public void Create_WithValidArguments_Successful()
         {
-            var deletedAt = DateTime.Parse("2021-04-08");
-            var project = new Project(TestId,
-                TestAccount.Id,
-                TestName,
-                TestAccount.CustomVersioningScheme,
-                TestCreationDate,
-                deletedAt);
+            var project = CreateProject();
 
-            project.Id.Should().Be(TestId);
-            project.AccountId.Should().Be(TestAccount.Id);
-            project.Name.Should().Be(TestName);
-            project.VersioningScheme.Should().Be(TestAccount.CustomVersioningScheme);
-            project.CreatedAt.Should().Be(TestCreationDate);
+            project.Id.Should().Be(_testId);
+            project.AccountId.Should().Be(_testAccountId);
+            project.Name.Should().Be(_testName);
+            project.VersioningScheme.Should().Be(_testVersioningScheme);
+            project.CreatedAt.Should().Be(_testCreationDate);
+            project.DeletedAt.HasValue.Should().BeFalse();
+        }
+
+        [Fact]
+        public void Create_WithDeletedAtDate_DateProperlySet()
+        {
+            _testDeletionDate = DateTime.Parse("2021-04-16");
+
+            var project = CreateProject();
+
             project.DeletedAt.HasValue.Should().BeTrue();
-            project.DeletedAt.Value.Should().Be(deletedAt);
+            project.DeletedAt.Value.Should().Be(_testDeletionDate.Value);
         }
 
         [Fact]
         public void Create_WithEmptyId_ArgumentException()
         {
-            Func<Project> act = () => new Project(Guid.Empty,
-                TestAccount.Id,
-                TestName,
-                TestAccount.CustomVersioningScheme,
-                TestCreationDate,
-                null);
+            _testId = Guid.Empty;
+
+            Func<Project> act = CreateProject;
 
             act.Should().ThrowExactly<ArgumentException>();
         }
@@ -48,12 +66,9 @@ namespace ChangeTracker.Domain.Tests.ProjectTests
         [Fact]
         public void Create_WithEmptyAccountId_ArgumentException()
         {
-            Func<Project> act = () => new Project(TestId,
-                Guid.Empty,
-                TestName,
-                TestAccount.CustomVersioningScheme,
-                TestCreationDate,
-                null);
+            _testAccountId = Guid.Empty;
+
+            Func<Project> act = CreateProject;
 
             act.Should().ThrowExactly<ArgumentException>();
         }
@@ -61,12 +76,9 @@ namespace ChangeTracker.Domain.Tests.ProjectTests
         [Fact]
         public void Create_WithNullName_ArgumentNullException()
         {
-            Func<Project> act = () => new Project(TestId,
-                TestAccount.Id,
-                null,
-                TestAccount.CustomVersioningScheme,
-                TestCreationDate,
-                null);
+            _testName = null;
+
+            Func<Project> act = CreateProject;
 
             act.Should().ThrowExactly<ArgumentNullException>();
         }
@@ -74,12 +86,9 @@ namespace ChangeTracker.Domain.Tests.ProjectTests
         [Fact]
         public void Create_WithNullVersioningScheme_ArgumentException()
         {
-            Func<Project> act = () => new Project(TestId,
-                TestAccount.Id,
-                TestName,
-                null,
-                TestCreationDate,
-                null);
+            _testVersioningScheme = null;
+
+            Func<Project> act = CreateProject;
 
             act.Should().ThrowExactly<ArgumentNullException>();
         }
@@ -87,14 +96,11 @@ namespace ChangeTracker.Domain.Tests.ProjectTests
         [Theory]
         [InlineData("0001-01-01T00:00:00.0000000")]
         [InlineData("9999-12-31T23:59:59.9999999")]
-        public void Create_WithInvalidCreatedAtDate_ArgumentException(string createdAt)
+        public void Create_WithInvalidCreatedAtDate_ArgumentException(string invalidDate)
         {
-            Func<Project> act = () => new Project(TestId,
-                TestAccount.Id,
-                TestName,
-                TestAccount.CustomVersioningScheme,
-                DateTime.Parse(createdAt),
-                null);
+            _testCreationDate = DateTime.Parse(invalidDate);
+
+            Func<Project> act = CreateProject;
 
             act.Should().ThrowExactly<ArgumentException>();
         }
@@ -102,14 +108,11 @@ namespace ChangeTracker.Domain.Tests.ProjectTests
         [Theory]
         [InlineData("0001-01-01T00:00:00.0000000")]
         [InlineData("9999-12-31T23:59:59.9999999")]
-        public void Create_WithInvalidDeletedAtDate_ArgumentException(string deletedAt)
+        public void Create_WithInvalidDeletedAtDate_ArgumentException(string invalidDate)
         {
-            Func<Project> act = () => new Project(TestId,
-                TestAccount.Id,
-                TestName,
-                TestAccount.CustomVersioningScheme,
-                TestCreationDate,
-                DateTime.Parse(deletedAt));
+            _testDeletionDate = DateTime.Parse(invalidDate);
+
+            Func<Project> act = CreateProject;
 
             act.Should().ThrowExactly<ArgumentException>();
         }

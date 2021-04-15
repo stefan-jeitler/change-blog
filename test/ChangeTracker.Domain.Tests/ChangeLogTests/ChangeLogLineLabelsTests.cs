@@ -42,13 +42,18 @@ namespace ChangeTracker.Domain.Tests.ChangeLogTests
         }
 
         [Fact]
-        public void Create_WithNullArgument_EmptyList()
+        public void Create_WithNullLabels_ArgumentNullException()
         {
-            var line = new ChangeLogLine(TestId, TestVersionId,
-                TestProjectId, TestText, TestPosition,
-                TestCreationDate);
+            Func<ChangeLogLine> act = () => new ChangeLogLine(TestId,
+                TestVersionId,
+                TestProjectId,
+                TestText,
+                TestPosition,
+                TestCreationDate,
+                null,
+                Enumerable.Empty<Issue>());
 
-            line.Labels.Should().BeEmpty();
+            act.Should().ThrowExactly<ArgumentNullException>();
         }
 
         [Fact]

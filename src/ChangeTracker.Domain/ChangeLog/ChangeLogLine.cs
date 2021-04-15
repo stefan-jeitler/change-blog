@@ -39,8 +39,8 @@ namespace ChangeTracker.Domain.ChangeLog
             ProjectId = projectId;
             Text = text ?? throw new ArgumentNullException(nameof(text));
             Position = position;
-            Labels = Populate(labels, MaxLabels);
-            Issues = Populate(issues, MaxIssues);
+            Labels = Populate(labels ?? throw new ArgumentNullException(nameof(labels)), MaxLabels);
+            Issues = Populate(issues ?? throw new ArgumentNullException(nameof(issues)), MaxIssues);
 
             if (createdAt == DateTime.MinValue || createdAt == DateTime.MaxValue)
                 throw new ArgumentException("Invalid creation date", nameof(createdAt));
@@ -118,7 +118,7 @@ namespace ChangeTracker.Domain.ChangeLog
 
         private static ImmutableHashSet<T> Populate<T>(IEnumerable<T> items, ushort maxCount)
         {
-            var itemsSet = items?.ToImmutableHashSet() ?? ImmutableHashSet<T>.Empty;
+            var itemsSet = items.ToImmutableHashSet();
 
             if (itemsSet.Count > maxCount)
             {

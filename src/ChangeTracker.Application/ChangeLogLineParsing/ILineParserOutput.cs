@@ -1,12 +1,11 @@
-﻿namespace ChangeTracker.Application.Services.ChangeLogLineParsing
+﻿namespace ChangeTracker.Application.ChangeLogLineParsing
 {
-    public interface IChangeLogLineParsingOutput
+    public interface ILineParserOutput
     {
         void InvalidChangeLogLineText(string text);
         void InvalidIssue(string changeLogText, string issue);
         void TooManyIssues(string changeLogText, int maxIssues);
         void InvalidLabel(string changeLogText, string labels);
         void TooManyLabels(string changeLogText, int maxLabelsCount);
-        void TooManyLines(int maxChangeLogLines);
     }
 }

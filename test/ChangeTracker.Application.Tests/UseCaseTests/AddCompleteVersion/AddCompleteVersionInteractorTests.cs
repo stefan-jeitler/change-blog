@@ -2,8 +2,8 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using ChangeTracker.Application.ChangeLogLineParsing;
 using ChangeTracker.Application.DataAccess;
-using ChangeTracker.Application.Services.ChangeLogLineParsing;
 using ChangeTracker.Application.Tests.TestDoubles;
 using ChangeTracker.Application.UseCases.AddCompleteVersion;
 using ChangeTracker.Application.UseCases.AddCompleteVersion.Models;
@@ -32,8 +32,10 @@ namespace ChangeTracker.Application.Tests.UseCaseTests.AddCompleteVersion
             _outputPortMock = new Mock<IAddCompleteVersionOutputPort>(MockBehavior.Strict);
         }
 
+        private AddCompleteVersionInteractor CreateInteractor() => new(_projectDaoStub, _versionDaoStub, _changeLogDaoStub, _unitOfWorkMock.Object);
+
         [Fact]
-        public async Task ReleaseNewVersion_ValidVersion_Successful()
+        public async Task AddCompleteVersion_ValidVersion_Successful()
         {
             // arrange
             var changeLogLines = new List<ChangeLogLineRequestModel>
@@ -47,11 +49,10 @@ namespace ChangeTracker.Application.Tests.UseCaseTests.AddCompleteVersion
             _projectDaoStub.Projects.Add(TestAccount.Project);
 
             _outputPortMock.Setup(m => m.Created(It.IsAny<Guid>()));
-            var releaseNewVersionUseCase = new AddCompleteVersionInteractor(_projectDaoStub, _versionDaoStub,
-                _changeLogDaoStub, _unitOfWorkMock.Object, new ChangeLogLineParsingService(_changeLogDaoStub));
+            var addCompleteVersionInteractor = CreateInteractor();
 
             // act
-            await releaseNewVersionUseCase.ExecuteAsync(_outputPortMock.Object, versionRequestModel);
+            await addCompleteVersionInteractor.ExecuteAsync(_outputPortMock.Object, versionRequestModel);
 
             // assert
             _outputPortMock.Verify(m => m.Created(It.IsAny<Guid>()), Times.Once);
@@ -61,7 +62,7 @@ namespace ChangeTracker.Application.Tests.UseCaseTests.AddCompleteVersion
         }
 
         [Fact]
-        public async Task ReleaseNewVersion_NotExistingProject_ProjectDoesNotExistOutput()
+        public async Task AddCompleteVersion_NotExistingProject_ProjectDoesNotExistOutput()
         {
             // arrange
             var changeLogLines = new List<ChangeLogLineRequestModel>
@@ -74,11 +75,10 @@ namespace ChangeTracker.Application.Tests.UseCaseTests.AddCompleteVersion
 
 
             _outputPortMock.Setup(m => m.ProjectDoesNotExist());
-            var releaseNewVersionUseCase = new AddCompleteVersionInteractor(_projectDaoStub, _versionDaoStub,
-                _changeLogDaoStub, _unitOfWorkMock.Object, new ChangeLogLineParsingService(_changeLogDaoStub));
+            var addCompleteVersionInteractor = CreateInteractor();
 
             // act
-            await releaseNewVersionUseCase.ExecuteAsync(_outputPortMock.Object, versionRequestModel);
+            await addCompleteVersionInteractor.ExecuteAsync(_outputPortMock.Object, versionRequestModel);
 
             // assert
             _outputPortMock.Verify(m => m.ProjectDoesNotExist(), Times.Once);
@@ -86,7 +86,7 @@ namespace ChangeTracker.Application.Tests.UseCaseTests.AddCompleteVersion
 
 
         [Fact]
-        public async Task ReleaseNewVersion_VersionExists_VersionAlreadyExistsOutput()
+        public async Task AddCompleteVersion_VersionExists_VersionAlreadyExistsOutput()
         {
             // arrange
             var changeLogLines = new List<ChangeLogLineRequestModel>
@@ -99,18 +99,17 @@ namespace ChangeTracker.Application.Tests.UseCaseTests.AddCompleteVersion
             _versionDaoStub.Versions.Add(new ClVersion(TestAccount.Project.Id, ClVersionValue.Parse("1.23")));
 
             _outputPortMock.Setup(m => m.VersionAlreadyExists(It.IsAny<string>()));
-            var releaseNewVersionUseCase = new AddCompleteVersionInteractor(_projectDaoStub, _versionDaoStub,
-                _changeLogDaoStub, _unitOfWorkMock.Object, new ChangeLogLineParsingService(_changeLogDaoStub));
+            var addCompleteVersionInteractor = CreateInteractor();
 
             // act
-            await releaseNewVersionUseCase.ExecuteAsync(_outputPortMock.Object, versionRequestModel);
+            await addCompleteVersionInteractor.ExecuteAsync(_outputPortMock.Object, versionRequestModel);
 
             // assert
             _outputPortMock.Verify(m => m.VersionAlreadyExists(It.Is<string>(x => x == "1.23")), Times.Once);
         }
 
         [Fact]
-        public async Task ReleaseNewVersion_InvalidVersionFormat_InvalidVersionFormatOutput()
+        public async Task AddCompleteVersion_InvalidVersionFormat_InvalidVersionFormatOutput()
         {
             // arrange
             var changeLogLines = new List<ChangeLogLineRequestModel>
@@ -123,11 +122,10 @@ namespace ChangeTracker.Application.Tests.UseCaseTests.AddCompleteVersion
 
             _projectDaoStub.Projects.Add(TestAccount.Project);
             _outputPortMock.Setup(m => m.InvalidVersionFormat(It.IsAny<string>()));
-            var releaseNewVersionUseCase = new AddCompleteVersionInteractor(_projectDaoStub, _versionDaoStub,
-                _changeLogDaoStub, _unitOfWorkMock.Object, new ChangeLogLineParsingService(_changeLogDaoStub));
+            var addCompleteVersionInteractor = CreateInteractor();
 
             // act
-            await releaseNewVersionUseCase.ExecuteAsync(_outputPortMock.Object, versionRequestModel);
+            await addCompleteVersionInteractor.ExecuteAsync(_outputPortMock.Object, versionRequestModel);
 
             // assert
             _outputPortMock.Verify(m =>
@@ -135,7 +133,7 @@ namespace ChangeTracker.Application.Tests.UseCaseTests.AddCompleteVersion
         }
 
         [Fact]
-        public async Task ReleaseNewVersion_VersionDoesNotMachScheme_InvalidVersionFormatOutput()
+        public async Task AddCompleteVersion_VersionDoesNotMachScheme_InvalidVersionFormatOutput()
         {
             // arrange
             var changeLogLines = new List<ChangeLogLineRequestModel>
@@ -148,11 +146,10 @@ namespace ChangeTracker.Application.Tests.UseCaseTests.AddCompleteVersion
 
             _projectDaoStub.Projects.Add(TestAccount.Project);
             _outputPortMock.Setup(m => m.VersionDoesNotMatchScheme(It.IsAny<string>()));
-            var releaseNewVersionUseCase = new AddCompleteVersionInteractor(_projectDaoStub, _versionDaoStub,
-                _changeLogDaoStub, _unitOfWorkMock.Object, new ChangeLogLineParsingService(_changeLogDaoStub));
+            var addCompleteVersionInteractor = CreateInteractor();
 
             // act
-            await releaseNewVersionUseCase.ExecuteAsync(_outputPortMock.Object, versionRequestModel);
+            await addCompleteVersionInteractor.ExecuteAsync(_outputPortMock.Object, versionRequestModel);
 
             // assert
             _outputPortMock.Verify(m =>
@@ -160,7 +157,7 @@ namespace ChangeTracker.Application.Tests.UseCaseTests.AddCompleteVersion
         }
 
         [Fact]
-        public async Task ReleaseNewVersion_LineDuplicates_DuplicatesRemoved()
+        public async Task AddCompleteVersion_LineDuplicates_DuplicatesRemoved()
         {
             // arrange
             var changeLogLines = new List<ChangeLogLineRequestModel>
@@ -174,14 +171,14 @@ namespace ChangeTracker.Application.Tests.UseCaseTests.AddCompleteVersion
 
             _projectDaoStub.Projects.Add(TestAccount.Project);
             _outputPortMock.Setup(m => m.Created(It.IsAny<Guid>()));
-            var releaseNewVersionUseCase = new AddCompleteVersionInteractor(_projectDaoStub, _versionDaoStub,
-                _changeLogDaoStub, _unitOfWorkMock.Object, new ChangeLogLineParsingService(_changeLogDaoStub));
+            var addCompleteVersionInteractor = CreateInteractor();
 
             // act
-            await releaseNewVersionUseCase.ExecuteAsync(_outputPortMock.Object, versionRequestModel);
+            await addCompleteVersionInteractor.ExecuteAsync(_outputPortMock.Object, versionRequestModel);
 
             // assert
             _outputPortMock.Verify(m => m.Created(It.IsAny<Guid>()), Times.Once);
+
             var createdLines = _changeLogDaoStub.ChangeLogs
                 .Where(x => x.ProjectId == TestAccount.Project.Id)
                 .ToList();
@@ -190,7 +187,7 @@ namespace ChangeTracker.Application.Tests.UseCaseTests.AddCompleteVersion
         }
 
         [Fact]
-        public async Task ReleaseNewVersion_TooManyChangeLogLines_MaxChangeLogLinesReached()
+        public async Task AddCompleteVersion_TooManyChangeLogLines_TooManyLinesOutput()
         {
             // arrange
             var changeLogLines = Enumerable.Range(0, 101)
@@ -201,11 +198,10 @@ namespace ChangeTracker.Application.Tests.UseCaseTests.AddCompleteVersion
 
             _projectDaoStub.Projects.Add(TestAccount.Project);
             _outputPortMock.Setup(m => m.TooManyLines(It.IsAny<int>()));
-            var releaseNewVersionUseCase = new AddCompleteVersionInteractor(_projectDaoStub, _versionDaoStub,
-                _changeLogDaoStub, _unitOfWorkMock.Object, new ChangeLogLineParsingService(_changeLogDaoStub));
+            var addCompleteVersionInteractor = CreateInteractor();
 
             // act
-            await releaseNewVersionUseCase.ExecuteAsync(_outputPortMock.Object, versionRequestModel);
+            await addCompleteVersionInteractor.ExecuteAsync(_outputPortMock.Object, versionRequestModel);
 
             // assert
             _outputPortMock.Verify(m =>
@@ -227,11 +223,10 @@ namespace ChangeTracker.Application.Tests.UseCaseTests.AddCompleteVersion
 
             _projectDaoStub.Projects.Add(TestAccount.Project);
             _outputPortMock.Setup(m => m.Created(It.IsAny<Guid>()));
-            var releaseNewVersionUseCase = new AddCompleteVersionInteractor(_projectDaoStub, _versionDaoStub,
-                _changeLogDaoStub, _unitOfWorkMock.Object, new ChangeLogLineParsingService(_changeLogDaoStub));
+            var addCompleteVersionInteractor = CreateInteractor();
 
             // act
-            await releaseNewVersionUseCase.ExecuteAsync(_outputPortMock.Object, versionRequestModel);
+            await addCompleteVersionInteractor.ExecuteAsync(_outputPortMock.Object, versionRequestModel);
 
             // assert
             _versionDaoStub.Versions.Single().ReleasedAt.HasValue.Should().BeTrue();
@@ -252,18 +247,17 @@ namespace ChangeTracker.Application.Tests.UseCaseTests.AddCompleteVersion
 
             _projectDaoStub.Projects.Add(TestAccount.Project);
             _outputPortMock.Setup(m => m.Created(It.IsAny<Guid>()));
-            var releaseNewVersionUseCase = new AddCompleteVersionInteractor(_projectDaoStub, _versionDaoStub,
-                _changeLogDaoStub, _unitOfWorkMock.Object, new ChangeLogLineParsingService(_changeLogDaoStub));
+            var addCompleteVersionInteractor = CreateInteractor();
 
             // act
-            await releaseNewVersionUseCase.ExecuteAsync(_outputPortMock.Object, versionRequestModel);
+            await addCompleteVersionInteractor.ExecuteAsync(_outputPortMock.Object, versionRequestModel);
 
             // assert
             _versionDaoStub.Versions.Single().ReleasedAt.HasValue.Should().BeFalse();
         }
 
         [Fact]
-        public async Task ReleaseNewVersion_ValidVersion_PositionsProperlySet()
+        public async Task AddCompleteVersion_ValidVersion_PositionsProperlySet()
         {
             // arrange
             var changeLogLines = Enumerable.Range(0, 50)
@@ -274,11 +268,10 @@ namespace ChangeTracker.Application.Tests.UseCaseTests.AddCompleteVersion
 
             _projectDaoStub.Projects.Add(TestAccount.Project);
             _outputPortMock.Setup(m => m.Created(It.IsAny<Guid>()));
-            var releaseNewVersionUseCase = new AddCompleteVersionInteractor(_projectDaoStub, _versionDaoStub,
-                _changeLogDaoStub, _unitOfWorkMock.Object, new ChangeLogLineParsingService(_changeLogDaoStub));
+            var addCompleteVersionInteractor = CreateInteractor();
 
             // act
-            await releaseNewVersionUseCase.ExecuteAsync(_outputPortMock.Object, versionRequestModel);
+            await addCompleteVersionInteractor.ExecuteAsync(_outputPortMock.Object, versionRequestModel);
 
             // assert
             foreach (var (lineRequestModel, i) in changeLogLines.Select((x, i) => (x, i)))
@@ -288,7 +281,7 @@ namespace ChangeTracker.Application.Tests.UseCaseTests.AddCompleteVersion
         }
 
         [Fact]
-        public async Task ReleaseNewVersion_ValidVersion_TransactionStartedAndCommitted()
+        public async Task AddCompleteVersion_ValidVersion_TransactionStartedAndCommitted()
         {
             // arrange
             var changeLogLines = new List<ChangeLogLineRequestModel>
@@ -301,11 +294,10 @@ namespace ChangeTracker.Application.Tests.UseCaseTests.AddCompleteVersion
 
             _projectDaoStub.Projects.Add(TestAccount.Project);
             _outputPortMock.Setup(m => m.Created(It.IsAny<Guid>()));
-            var releaseNewVersionUseCase = new AddCompleteVersionInteractor(_projectDaoStub, _versionDaoStub,
-                _changeLogDaoStub, _unitOfWorkMock.Object, new ChangeLogLineParsingService(_changeLogDaoStub));
+            var addCompleteVersionInteractor = CreateInteractor();
 
             // act
-            await releaseNewVersionUseCase.ExecuteAsync(_outputPortMock.Object, versionRequestModel);
+            await addCompleteVersionInteractor.ExecuteAsync(_outputPortMock.Object, versionRequestModel);
 
             // assert
             _unitOfWorkMock.Verify(m => m.Start(), Times.Once);
@@ -313,7 +305,7 @@ namespace ChangeTracker.Application.Tests.UseCaseTests.AddCompleteVersion
         }
 
         [Fact]
-        public async Task ReleaseNewVersion_ConflictWhileSaving_ConflictOutput()
+        public async Task AddCompleteVersion_ConflictWhileSaving_ConflictOutput()
         {
             // arrange
             var changeLogLines = new List<ChangeLogLineRequestModel>
@@ -329,11 +321,10 @@ namespace ChangeTracker.Application.Tests.UseCaseTests.AddCompleteVersion
             _outputPortMock.Setup(m => m.Conflict(It.IsAny<string>()));
             _unitOfWorkMock.Setup(m => m.Start());
 
-            var releaseNewVersionUseCase = new AddCompleteVersionInteractor(_projectDaoStub, _versionDaoStub,
-                _changeLogDaoStub, _unitOfWorkMock.Object, new ChangeLogLineParsingService(_changeLogDaoStub));
+            var addCompleteVersionInteractor = CreateInteractor();
 
             // act
-            await releaseNewVersionUseCase.ExecuteAsync(_outputPortMock.Object, versionRequestModel);
+            await addCompleteVersionInteractor.ExecuteAsync(_outputPortMock.Object, versionRequestModel);
 
             // assert
             _outputPortMock.Verify(m => m.Conflict(It.IsAny<string>()), Times.Once);

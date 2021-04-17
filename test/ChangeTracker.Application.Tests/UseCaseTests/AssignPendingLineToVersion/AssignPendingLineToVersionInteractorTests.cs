@@ -33,6 +33,8 @@ namespace ChangeTracker.Application.Tests.UseCaseTests.AssignPendingLineToVersio
             _unitOfWorkMock = new Mock<IUnitOfWork>();
         }
 
+        private AssignPendingLogToVersionInteractor CreateInteractor() => new(_versionDaoStub, _changeLogDaoStub, _unitOfWorkMock.Object);
+
         [Fact]
         public async Task AssignPendingLineByVersionId_HappyPath_SuccessfullyAssigned()
         {
@@ -50,13 +52,12 @@ namespace ChangeTracker.Application.Tests.UseCaseTests.AssignPendingLineToVersio
             _changeLogDaoStub.ChangeLogs.Add(line);
 
             var assignmentRequestModel = new VersionIdAssignmentRequestModel(TestAccount.Project.Id, clVersion.Id, line.Id);
-            var assignToVersionUseCase =
-                new AssignPendingLogToVersionInteractor(_versionDaoStub, _changeLogDaoStub, _unitOfWorkMock.Object);
+            var assignToVersionInteractor = CreateInteractor();
 
             _outputPortMock.Setup(m => m.Assigned(It.IsAny<Guid>(), It.IsAny<Guid>()));
 
             // act
-            await assignToVersionUseCase.ExecuteAsync(_outputPortMock.Object, assignmentRequestModel);
+            await assignToVersionInteractor.ExecuteAsync(_outputPortMock.Object, assignmentRequestModel);
 
             // assert
             _changeLogDaoStub.ChangeLogs.Should().ContainSingle(x => x.VersionId == clVersion.Id);
@@ -80,13 +81,12 @@ namespace ChangeTracker.Application.Tests.UseCaseTests.AssignPendingLineToVersio
             _changeLogDaoStub.ChangeLogs.Add(line);
 
             var assignmentRequestModel = new VersionAssignmentRequestModel(TestAccount.Project.Id, "1. .2", line.Id);
-            var assignToVersionUseCase =
-                new AssignPendingLogToVersionInteractor(_versionDaoStub, _changeLogDaoStub, _unitOfWorkMock.Object);
+            var assignToVersionInteractor = CreateInteractor();
 
             _outputPortMock.Setup(m => m.InvalidVersionFormat(It.IsAny<string>()));
 
             // act
-            await assignToVersionUseCase.ExecuteAsync(_outputPortMock.Object, assignmentRequestModel);
+            await assignToVersionInteractor.ExecuteAsync(_outputPortMock.Object, assignmentRequestModel);
 
             // assert
             _outputPortMock.Verify(m => m.InvalidVersionFormat(It.Is<string>(x => x == "1. .2")), Times.Once);
@@ -109,13 +109,12 @@ namespace ChangeTracker.Application.Tests.UseCaseTests.AssignPendingLineToVersio
             _changeLogDaoStub.ChangeLogs.Add(line);
 
             var assignmentRequestModel = new VersionAssignmentRequestModel(TestAccount.Project.Id, "1.3", line.Id);
-            var assignToVersionUseCase =
-                new AssignPendingLogToVersionInteractor(_versionDaoStub, _changeLogDaoStub, _unitOfWorkMock.Object);
+            var assignToVersionInteractor = CreateInteractor();
 
             _outputPortMock.Setup(m => m.VersionDoesNotExist());
 
             // act
-            await assignToVersionUseCase.ExecuteAsync(_outputPortMock.Object, assignmentRequestModel);
+            await assignToVersionInteractor.ExecuteAsync(_outputPortMock.Object, assignmentRequestModel);
 
             // assert
             _outputPortMock.Verify(m => m.VersionDoesNotExist(), Times.Once);
@@ -137,13 +136,12 @@ namespace ChangeTracker.Application.Tests.UseCaseTests.AssignPendingLineToVersio
             _changeLogDaoStub.ChangeLogs.Add(line);
 
             var assignmentRequestModel = new VersionIdAssignmentRequestModel(TestAccount.Project.Id, versionId, line.Id);
-            var assignToVersionUseCase =
-                new AssignPendingLogToVersionInteractor(_versionDaoStub, _changeLogDaoStub, _unitOfWorkMock.Object);
+            var assignToVersionInteractor = CreateInteractor();
 
             _outputPortMock.Setup(m => m.VersionDoesNotExist());
 
             // act
-            await assignToVersionUseCase.ExecuteAsync(_outputPortMock.Object, assignmentRequestModel);
+            await assignToVersionInteractor.ExecuteAsync(_outputPortMock.Object, assignmentRequestModel);
 
             // assert
             _outputPortMock.Verify(m => m.VersionDoesNotExist(), Times.Once);
@@ -164,13 +162,12 @@ namespace ChangeTracker.Application.Tests.UseCaseTests.AssignPendingLineToVersio
             var lineId = Guid.Parse("2b4b147a-9ebd-4350-a45b-aaae5d8d63de");
 
             var assignmentRequestModel = new VersionIdAssignmentRequestModel(TestAccount.Project.Id, clVersion.Id, lineId);
-            var assignToVersionUseCase =
-                new AssignPendingLogToVersionInteractor(_versionDaoStub, _changeLogDaoStub, _unitOfWorkMock.Object);
+            var assignToVersionInteractor = CreateInteractor();
 
             _outputPortMock.Setup(m => m.ChangeLogLineDoesNotExist());
 
             // act
-            await assignToVersionUseCase.ExecuteAsync(_outputPortMock.Object, assignmentRequestModel);
+            await assignToVersionInteractor.ExecuteAsync(_outputPortMock.Object, assignmentRequestModel);
 
             // assert
             _outputPortMock.Verify(m => m.ChangeLogLineDoesNotExist(), Times.Once);
@@ -194,13 +191,12 @@ namespace ChangeTracker.Application.Tests.UseCaseTests.AssignPendingLineToVersio
                 new ChangeLogLine(clVersion.Id, TestAccount.Project.Id, ChangeLogText.Parse($"{x:D5}"), (uint) x)));
 
             var assignmentRequestModel = new VersionIdAssignmentRequestModel(TestAccount.Project.Id, clVersion.Id, lineId);
-            var assignToVersionUseCase =
-                new AssignPendingLogToVersionInteractor(_versionDaoStub, _changeLogDaoStub, _unitOfWorkMock.Object);
+            var assignToVersionInteractor = CreateInteractor();
 
             _outputPortMock.Setup(m => m.MaxChangeLogLinesReached(It.IsAny<int>()));
 
             // act
-            await assignToVersionUseCase.ExecuteAsync(_outputPortMock.Object, assignmentRequestModel);
+            await assignToVersionInteractor.ExecuteAsync(_outputPortMock.Object, assignmentRequestModel);
 
             // assert
             _outputPortMock.Verify(
@@ -227,13 +223,12 @@ namespace ChangeTracker.Application.Tests.UseCaseTests.AssignPendingLineToVersio
             _changeLogDaoStub.ProduceConflict = true;
 
             var assignmentRequestModel = new VersionIdAssignmentRequestModel(TestAccount.Project.Id, clVersion.Id, line.Id);
-            var assignToVersionUseCase =
-                new AssignPendingLogToVersionInteractor(_versionDaoStub, _changeLogDaoStub, _unitOfWorkMock.Object);
+            var assignToVersionInteractor = CreateInteractor();
 
             _outputPortMock.Setup(m => m.Conflict(It.IsAny<string>()));
 
             // act
-            await assignToVersionUseCase.ExecuteAsync(_outputPortMock.Object, assignmentRequestModel);
+            await assignToVersionInteractor.ExecuteAsync(_outputPortMock.Object, assignmentRequestModel);
 
             // assert
             _unitOfWorkMock.Verify(m => m.Commit(), Times.Never);

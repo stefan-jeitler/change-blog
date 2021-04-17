@@ -1,12 +1,13 @@
 ﻿using System;
-using ChangeTracker.Application.Services.ChangeLogLineParsing;
+using ChangeTracker.Application.ChangeLogLineParsing;
 
 namespace ChangeTracker.Application.UseCases.AddPendingChangeLogLine
 {
-    public interface IAddPendingChangeLogLineOutputPort : IChangeLogLineParsingOutput
+    public interface IAddPendingLineOutputPort : ILineParserOutput
     {
         void ProjectDoesNotExist();
         void Created(Guid changeLogLineId);
         void Conflict(string reason);
+        void TooManyLines(int maxChangeLogLines);
     }
 }

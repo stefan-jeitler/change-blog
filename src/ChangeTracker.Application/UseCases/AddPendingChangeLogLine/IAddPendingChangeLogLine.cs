@@ -4,6 +4,6 @@ namespace ChangeTracker.Application.UseCases.AddPendingChangeLogLine
 {
     public interface IAddPendingChangeLogLine
     {
-        Task ExecuteAsync(IAddPendingChangeLogLineOutputPort outputPort, PendingLineRequestModel lineRequestModel);
+        Task ExecuteAsync(IAddPendingLineOutputPort outputPort, PendingLineRequestModel lineRequestModel);
     }
 }

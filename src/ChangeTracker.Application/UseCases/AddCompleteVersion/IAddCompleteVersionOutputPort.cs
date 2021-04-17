@@ -1,9 +1,9 @@
 ﻿using System;
-using ChangeTracker.Application.Services.ChangeLogLineParsing;
+using ChangeTracker.Application.ChangeLogLineParsing;
 
 namespace ChangeTracker.Application.UseCases.AddCompleteVersion
 {
-    public interface IAddCompleteVersionOutputPort : IChangeLogLineParsingOutput
+    public interface IAddCompleteVersionOutputPort : ILineParserOutput
     {
         void ProjectDoesNotExist();
         void InvalidVersionFormat(string version);
@@ -11,5 +11,6 @@ namespace ChangeTracker.Application.UseCases.AddCompleteVersion
         void Created(Guid versionId);
         void Conflict(string reason);
         void VersionAlreadyExists(string version);
+        void TooManyLines(int maxChangeLogLines);
     }
 }

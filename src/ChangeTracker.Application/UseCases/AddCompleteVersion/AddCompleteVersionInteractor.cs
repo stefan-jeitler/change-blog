@@ -2,11 +2,11 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using ChangeTracker.Application.ChangeLogLineParsing;
 using ChangeTracker.Application.DataAccess;
 using ChangeTracker.Application.DataAccess.Projects;
 using ChangeTracker.Application.DataAccess.Versions;
 using ChangeTracker.Application.Extensions;
-using ChangeTracker.Application.Services.ChangeLogLineParsing;
 using ChangeTracker.Application.UseCases.AddCompleteVersion.Models;
 using ChangeTracker.Domain;
 using ChangeTracker.Domain.ChangeLog;
@@ -23,16 +23,14 @@ namespace ChangeTracker.Application.UseCases.AddCompleteVersion
         private readonly IProjectDao _projectDao;
         private readonly IUnitOfWork _unitOfWork;
         private readonly IVersionDao _versionDao;
-        private readonly ChangeLogLineParsingService _changeLogLineParsing;
 
         public AddCompleteVersionInteractor(IProjectDao projectDao, IVersionDao versionDao, IChangeLogDao changeLogDao,
-            IUnitOfWork unitOfWork, ChangeLogLineParsingService changeLogLineParsing)
+            IUnitOfWork unitOfWork)
         {
             _projectDao = projectDao ?? throw new ArgumentNullException(nameof(projectDao));
             _versionDao = versionDao ?? throw new ArgumentNullException(nameof(versionDao));
             _changeLogDao = changeLogDao ?? throw new ArgumentNullException(nameof(changeLogDao));
             _unitOfWork = unitOfWork ?? throw new ArgumentNullException(nameof(unitOfWork));
-            _changeLogLineParsing = changeLogLineParsing ?? throw new ArgumentNullException(nameof(changeLogLineParsing));
         }
 
         public async Task ExecuteAsync(IAddCompleteVersionOutputPort output, CompleteVersionRequestModel versionRequestModel)
@@ -54,7 +52,7 @@ namespace ChangeTracker.Application.UseCases.AddCompleteVersion
                 return;
             }
 
-            var lines = await newVersion.Bind(v => CreateLines(output, versionRequestModel.Lines, v));
+            var lines = newVersion.Bind(v => CreateLines(output, versionRequestModel.Lines, v));
             if (lines.HasNoValue)
                 return;
 
@@ -62,7 +60,7 @@ namespace ChangeTracker.Application.UseCases.AddCompleteVersion
             await SaveCompleteVersionAsync(output, newVersion.Value, lines.Value);
         }
 
-        private async Task<Maybe<IEnumerable<ChangeLogLine>>> CreateLines(IChangeLogLineParsingOutput output,
+        private static Maybe<IEnumerable<ChangeLogLine>> CreateLines(IAddCompleteVersionOutputPort output,
             IEnumerable<ChangeLogLineRequestModel> requestModel, ClVersion newVersion)
         {
             var uniqueLines = requestModel
@@ -78,7 +76,7 @@ namespace ChangeTracker.Application.UseCases.AddCompleteVersion
             var lines = new List<ChangeLogLine>();
             foreach (var (lineRequestModel, i) in uniqueLines.Select((x, i) => (x, i)))
             {
-                var line = await CreateLineAsync(output, lineRequestModel, newVersion, (uint) i);
+                var line = CreateLine(output, lineRequestModel, newVersion, (uint) i);
 
                 if (line.HasNoValue)
                 {
@@ -89,19 +87,6 @@ namespace ChangeTracker.Application.UseCases.AddCompleteVersion
             }
 
             return Maybe<IEnumerable<ChangeLogLine>>.From(lines);
-        }
-
-        private async Task<Maybe<ChangeLogLine>> CreateLineAsync(IChangeLogLineParsingOutput output,
-            ChangeLogLineRequestModel lineRequestModel, ClVersion clVersion, uint position)
-        {
-            var lineParsingRequestModel = new LineParsingRequestModel(clVersion.ProjectId,
-                clVersion.Id,
-                lineRequestModel.Text,
-                lineRequestModel.Labels,
-                lineRequestModel.Issues,
-                position);
-
-            return await _changeLogLineParsing.ParseAsync(output, lineParsingRequestModel);
         }
 
         private static Maybe<ClVersion> CreateNewVersion(IAddCompleteVersionOutputPort output,
@@ -129,6 +114,22 @@ namespace ChangeTracker.Application.UseCases.AddCompleteVersion
                 null);
 
             return Maybe<ClVersion>.From(version);
+        }
+
+        private static Maybe<ChangeLogLine> CreateLine(ILineParserOutput output,
+            ChangeLogLineRequestModel requestModel, ClVersion clVersion, uint position)
+        {
+            var lineParsingRequestModel = new LineParserRequestModel(requestModel.Text, requestModel.Labels, requestModel.Issues);
+            var parsedLine = LineParser.Parse(output, lineParsingRequestModel);
+            if (parsedLine.HasNoValue)
+                return Maybe<ChangeLogLine>.None;
+
+            var changeLogLine = new ChangeLogLine(Guid.NewGuid(),
+                clVersion.Id, clVersion.ProjectId,
+                parsedLine.Value.Text, position, DateTime.UtcNow,
+                parsedLine.Value.Labels, parsedLine.Value.Issues);
+
+            return Maybe<ChangeLogLine>.From(changeLogLine);
         }
 
         private async Task SaveCompleteVersionAsync(IAddCompleteVersionOutputPort output, ClVersion newVersion,

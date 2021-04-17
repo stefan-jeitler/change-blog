@@ -44,31 +44,15 @@ namespace ChangeTracker.Application.Tests.TestDoubles
             return Result.Success<int, Conflict>(lines.Count);
         }
 
-        public async Task<ChangeLogsMetadata> GetChangeLogsMetadataAsync(Guid projectId, Guid versionId)
+        public async Task<ChangeLogsMetadata> GetChangeLogsMetadataAsync(Guid projectId, Guid? versionId)
         {
             await Task.Yield();
 
-            var changeLogLines = ChangeLogs
-                .Where(x => x.ProjectId == projectId && versionId == x.VersionId)
-                .ToList();
+            var changeLogLines = versionId.HasValue
+                ? ChangeLogs.Where(x => x.ProjectId == projectId && x.VersionId == versionId.Value).ToList()
+                : ChangeLogs.Where(x => x.ProjectId == projectId).ToList();
 
             return new ChangeLogsMetadata(projectId, versionId,
-                (uint) changeLogLines.Count,
-                changeLogLines
-                    .Select(x => (int) x.Position)
-                    .DefaultIfEmpty(-1)
-                    .Max());
-        }
-
-        public async Task<ChangeLogsMetadata> GetPendingChangeLogsMetadataAsync(Guid projectId)
-        {
-            await Task.Yield();
-
-            var changeLogLines = ChangeLogs
-                .Where(x => x.ProjectId == projectId && x.VersionId is null)
-                .ToList();
-
-            return new ChangeLogsMetadata(projectId, null,
                 (uint) changeLogLines.Count,
                 changeLogLines
                     .Select(x => (int) x.Position)

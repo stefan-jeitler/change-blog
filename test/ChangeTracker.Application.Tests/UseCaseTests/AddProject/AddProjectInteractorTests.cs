@@ -27,6 +27,11 @@ namespace ChangeTracker.Application.Tests.UseCaseTests.AddProject
             _outputPortMock = new Mock<IAddProjectOutputPort>(MockBehavior.Strict);
         }
 
+        private AddProjectInteractor CreateInteractor() => new(_accountDaoStub,
+            _versioningSchemeDaoStub,
+            _projectDaoStub,
+            _unitOfWorkMock.Object);
+
         [Fact]
         public async Task CreateProject_Successful()
         {
@@ -34,17 +39,14 @@ namespace ChangeTracker.Application.Tests.UseCaseTests.AddProject
             var account = new Account(TestAccount.Id, TestAccount.Name, null, TestAccount.CreationDate, null);
             _accountDaoStub.Account = account;
             _versioningSchemeDaoStub.VersioningScheme = TestAccount.CustomVersioningScheme;
-            var createProjectUseCase = new AddProjectInteractor(_accountDaoStub,
-                _versioningSchemeDaoStub,
-                _projectDaoStub,
-                _unitOfWorkMock.Object);
             var projectRequestModel = new ProjectRequestModel(TestAccount.Id, TestAccount.Name.Value,
                 TestAccount.CustomVersioningScheme.Id);
+            var createProjectInteractor = CreateInteractor();
 
             _outputPortMock.Setup(m => m.Created(It.IsAny<Guid>(), It.IsAny<Guid>()));
 
             // act
-            await createProjectUseCase.ExecuteAsync(_outputPortMock.Object, projectRequestModel);
+            await createProjectInteractor.ExecuteAsync(_outputPortMock.Object, projectRequestModel);
 
             // assert
             _outputPortMock.Verify(
@@ -60,15 +62,12 @@ namespace ChangeTracker.Application.Tests.UseCaseTests.AddProject
         public async Task CreateProject_NotExistingAccount_AccountDoesNotExistsOutput()
         {
             // arrange
-            var createProjectUseCase = new AddProjectInteractor(_accountDaoStub,
-                _versioningSchemeDaoStub,
-                _projectDaoStub,
-                _unitOfWorkMock.Object);
             var projectRequestModel = new ProjectRequestModel(TestAccount.Id, TestAccount.Name.Value, null);
+            var createProjectInteractor = CreateInteractor();
             _outputPortMock.Setup(m => m.AccountDoesNotExist());
 
             // act
-            await createProjectUseCase.ExecuteAsync(_outputPortMock.Object, projectRequestModel);
+            await createProjectInteractor.ExecuteAsync(_outputPortMock.Object, projectRequestModel);
 
             // assert
             _outputPortMock.Verify(m => m.AccountDoesNotExist(), Times.Once);
@@ -81,16 +80,14 @@ namespace ChangeTracker.Application.Tests.UseCaseTests.AddProject
             var deletedAccount = new Account(TestAccount.Id, TestAccount.Name, null, TestAccount.CreationDate,
                 DateTime.Parse("2021-04-04"));
             _accountDaoStub.Account = deletedAccount;
-            var createProjectUseCase = new AddProjectInteractor(_accountDaoStub,
-                _versioningSchemeDaoStub,
-                _projectDaoStub,
-                _unitOfWorkMock.Object);
 
             var projectRequestModel = new ProjectRequestModel(TestAccount.Id, TestAccount.Name.Value, null);
+            var createProjectInteractor = CreateInteractor();
+
             _outputPortMock.Setup(m => m.AccountDeleted(It.IsAny<Guid>()));
 
             // act
-            await createProjectUseCase.ExecuteAsync(_outputPortMock.Object, projectRequestModel);
+            await createProjectInteractor.ExecuteAsync(_outputPortMock.Object, projectRequestModel);
 
             // assert
             _outputPortMock.Verify(m
@@ -103,16 +100,14 @@ namespace ChangeTracker.Application.Tests.UseCaseTests.AddProject
             // arrange
             _accountDaoStub.Account =
                 new Account(TestAccount.Id, TestAccount.Name, null, TestAccount.CreationDate, null);
-            var createProjectUseCase = new AddProjectInteractor(_accountDaoStub,
-                _versioningSchemeDaoStub,
-                _projectDaoStub,
-                _unitOfWorkMock.Object);
 
             var projectRequestModel = new ProjectRequestModel(TestAccount.Id, "", null);
+            var createProjectInteractor = CreateInteractor();
+
             _outputPortMock.Setup(m => m.InvalidName(It.IsAny<string>()));
 
             // act
-            await createProjectUseCase.ExecuteAsync(_outputPortMock.Object, projectRequestModel);
+            await createProjectInteractor.ExecuteAsync(_outputPortMock.Object, projectRequestModel);
 
             // assert
             _outputPortMock.Verify(m => m.InvalidName(It.IsAny<string>()), Times.Once);
@@ -126,16 +121,14 @@ namespace ChangeTracker.Application.Tests.UseCaseTests.AddProject
                 new Account(TestAccount.Id, TestAccount.Name, null, TestAccount.CreationDate, null);
             _projectDaoStub.Projects.Add(new Project(TestAccount.Id, TestAccount.Name, Defaults.VersioningScheme,
                 DateTime.Parse("2021-04-04")));
-            var createProjectUseCase = new AddProjectInteractor(_accountDaoStub,
-                _versioningSchemeDaoStub,
-                _projectDaoStub,
-                _unitOfWorkMock.Object);
 
             var projectRequestModel = new ProjectRequestModel(TestAccount.Id, TestAccount.Name.Value, null);
+            var createProjectInteractor = CreateInteractor();
+
             _outputPortMock.Setup(m => m.ProjectAlreadyExists());
 
             // act
-            await createProjectUseCase.ExecuteAsync(_outputPortMock.Object, projectRequestModel);
+            await createProjectInteractor.ExecuteAsync(_outputPortMock.Object, projectRequestModel);
 
             // assert
             _outputPortMock.Verify(m => m.ProjectAlreadyExists(), Times.Once);
@@ -147,18 +140,15 @@ namespace ChangeTracker.Application.Tests.UseCaseTests.AddProject
             // arrange
             _accountDaoStub.Account =
                 new Account(TestAccount.Id, TestAccount.Name, null, TestAccount.CreationDate, null);
-            var createProjectUseCase = new AddProjectInteractor(_accountDaoStub,
-                _versioningSchemeDaoStub,
-                _projectDaoStub,
-                _unitOfWorkMock.Object);
-
             var notExistingVersioningSchemeId = Guid.Parse("3984bcf2-9930-4d41-984e-b72ccc6d6c87");
-            var projectRequestModel =
-                new ProjectRequestModel(TestAccount.Id, TestAccount.Name.Value, notExistingVersioningSchemeId);
+
+            var projectRequestModel = new ProjectRequestModel(TestAccount.Id, TestAccount.Name.Value, notExistingVersioningSchemeId);
+            var createProjectInteractor = CreateInteractor();
+
             _outputPortMock.Setup(m => m.VersioningSchemeDoesNotExist());
 
             // act
-            await createProjectUseCase.ExecuteAsync(_outputPortMock.Object, projectRequestModel);
+            await createProjectInteractor.ExecuteAsync(_outputPortMock.Object, projectRequestModel);
 
             // assert
             _outputPortMock.Verify(m => m.VersioningSchemeDoesNotExist(), Times.Once);
@@ -174,16 +164,14 @@ namespace ChangeTracker.Application.Tests.UseCaseTests.AddProject
             _versioningSchemeDaoStub.VersioningScheme = TestAccount.CustomVersioningScheme;
             _projectDaoStub.ProduceConflict = true;
 
-            var createProjectUseCase = new AddProjectInteractor(_accountDaoStub, _versioningSchemeDaoStub,
-                _projectDaoStub, _unitOfWorkMock.Object);
-
             var projectRequestModel = new ProjectRequestModel(TestAccount.Id, TestAccount.Name.Value,
                 TestAccount.CustomVersioningScheme.Id);
+            var createProjectInteractor = CreateInteractor();
 
             _outputPortMock.Setup(m => m.Conflict(It.IsAny<string>()));
 
             // act
-            await createProjectUseCase.ExecuteAsync(_outputPortMock.Object, projectRequestModel);
+            await createProjectInteractor.ExecuteAsync(_outputPortMock.Object, projectRequestModel);
 
             // assert
             _outputPortMock.Verify(m => m.Conflict(It.IsAny<string>()), Times.Once);

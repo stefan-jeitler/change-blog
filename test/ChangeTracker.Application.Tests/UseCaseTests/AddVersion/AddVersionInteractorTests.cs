@@ -25,19 +25,20 @@ namespace ChangeTracker.Application.Tests.UseCaseTests.AddVersion
             _outputPortMock = new Mock<IAddVersionOutputPort>(MockBehavior.Strict);
         }
 
+        private AddVersionInteractor CreateInteractor() => new(_versionDaoStub, _projectDaoStub, _unitOfWorkMock.Object);
+
         [Fact]
         public async Task CreateVersion_Successful()
         {
             // arrange
             _projectDaoStub.Projects.Add(TestAccount.Project);
             var versionRequestModel = new VersionRequestModel(TestAccount.Project.Id, "1.2.3");
-            var createVersionUseCase =
-                new AddVersionInteractor(_versionDaoStub, _projectDaoStub, _unitOfWorkMock.Object);
+            var createVersionInteractor = CreateInteractor();
 
             _outputPortMock.Setup(m => m.Created(It.IsAny<Guid>()));
 
             // act
-            await createVersionUseCase.ExecuteAsync(_outputPortMock.Object, versionRequestModel);
+            await createVersionInteractor.ExecuteAsync(_outputPortMock.Object, versionRequestModel);
 
             // assert
             _outputPortMock.Verify(m => m.Created(It.Is<Guid>(x => x != Guid.Empty)));
@@ -49,13 +50,12 @@ namespace ChangeTracker.Application.Tests.UseCaseTests.AddVersion
             // arrange
             _projectDaoStub.Projects.Add(TestAccount.Project);
             var versionRequestModel = new VersionRequestModel(TestAccount.Project.Id, "1. .3");
-            var createVersionUseCase =
-                new AddVersionInteractor(_versionDaoStub, _projectDaoStub, _unitOfWorkMock.Object);
+            var createVersionInteractor = CreateInteractor();
 
             _outputPortMock.Setup(m => m.InvalidVersionFormat(It.IsAny<string>()));
 
             // act
-            await createVersionUseCase.ExecuteAsync(_outputPortMock.Object, versionRequestModel);
+            await createVersionInteractor.ExecuteAsync(_outputPortMock.Object, versionRequestModel);
 
             // assert
             _outputPortMock.Verify(m => m.InvalidVersionFormat(It.Is<string>(x => x == "1. .3")));
@@ -66,13 +66,12 @@ namespace ChangeTracker.Application.Tests.UseCaseTests.AddVersion
         {
             // arrange
             var versionRequestModel = new VersionRequestModel(TestAccount.Project.Id, "1.2.3");
-            var createVersionUseCase =
-                new AddVersionInteractor(_versionDaoStub, _projectDaoStub, _unitOfWorkMock.Object);
+            var createVersionInteractor = CreateInteractor();
 
             _outputPortMock.Setup(m => m.ProjectDoesNotExist());
 
             // act
-            await createVersionUseCase.ExecuteAsync(_outputPortMock.Object, versionRequestModel);
+            await createVersionInteractor.ExecuteAsync(_outputPortMock.Object, versionRequestModel);
 
             // assert
             _outputPortMock.Verify(m => m.ProjectDoesNotExist());
@@ -86,13 +85,12 @@ namespace ChangeTracker.Application.Tests.UseCaseTests.AddVersion
                 TestAccount.CustomVersioningScheme, DateTime.Parse("2021-04-04"), DateTime.Parse("2021-04-05")));
 
             var versionRequestModel = new VersionRequestModel(TestAccount.Project.Id, "12*");
-            var createVersionUseCase =
-                new AddVersionInteractor(_versionDaoStub, _projectDaoStub, _unitOfWorkMock.Object);
+            var createVersionInteractor = CreateInteractor();
 
             _outputPortMock.Setup(m => m.VersionDoesNotMatchScheme(It.IsAny<string>()));
 
             // act
-            await createVersionUseCase.ExecuteAsync(_outputPortMock.Object, versionRequestModel);
+            await createVersionInteractor.ExecuteAsync(_outputPortMock.Object, versionRequestModel);
 
             // assert
             _outputPortMock.Verify(m => m.VersionDoesNotMatchScheme(It.Is<string>(x => x == "12*")));
@@ -112,13 +110,12 @@ namespace ChangeTracker.Application.Tests.UseCaseTests.AddVersion
                 DateTime.Parse("2021-04-12"), DateTime.Parse("2021-04-12")));
 
             var versionRequestModel = new VersionRequestModel(TestAccount.Project.Id, version);
-            var createVersionUseCase =
-                new AddVersionInteractor(_versionDaoStub, _projectDaoStub, _unitOfWorkMock.Object);
+            var createVersionInteractor = CreateInteractor();
 
             _outputPortMock.Setup(m => m.VersionAlreadyExists(It.IsAny<string>()));
 
             // act
-            await createVersionUseCase.ExecuteAsync(_outputPortMock.Object, versionRequestModel);
+            await createVersionInteractor.ExecuteAsync(_outputPortMock.Object, versionRequestModel);
 
             // assert
             _outputPortMock.Verify(m => m.VersionAlreadyExists(It.Is<string>(x => x == version.Value)));
@@ -130,12 +127,12 @@ namespace ChangeTracker.Application.Tests.UseCaseTests.AddVersion
             // arrange
             _projectDaoStub.Projects.Add(TestAccount.Project);
             var versionRequestModel = new VersionRequestModel(TestAccount.Project.Id, "1.2.3");
-            var createVersionUseCase = new AddVersionInteractor(_versionDaoStub, _projectDaoStub, _unitOfWorkMock.Object);
+            var createVersionInteractor = CreateInteractor();
             _versionDaoStub.ProduceConflict = true;
             _outputPortMock.Setup(m => m.Conflict(It.IsAny<string>()));
 
             // act
-            await createVersionUseCase.ExecuteAsync(_outputPortMock.Object, versionRequestModel);
+            await createVersionInteractor.ExecuteAsync(_outputPortMock.Object, versionRequestModel);
 
             // assert
             _outputPortMock.Verify(m => m.Conflict(It.IsAny<string>()));

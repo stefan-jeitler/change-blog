@@ -2,11 +2,12 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using ChangeTracker.Application.ChangeLogLineParsing;
 using ChangeTracker.Application.DataAccess;
-using ChangeTracker.Application.Services.ChangeLogLineParsing;
 using ChangeTracker.Application.Tests.TestDoubles;
 using ChangeTracker.Application.UseCases.AddChangeLogLine;
 using ChangeTracker.Domain;
+using ChangeTracker.Domain.ChangeLog;
 using ChangeTracker.Domain.Version;
 using FluentAssertions;
 using Moq;
@@ -17,7 +18,7 @@ namespace ChangeTracker.Application.Tests.UseCaseTests.AddChangeLogLine
     public class AddChangeLogLineInteractorTests
     {
         private readonly ChangeLogDaoStub _changeLogDaoStub;
-        private readonly Mock<IAddChangeLogLineOutputPort> _outputPortMock;
+        private readonly Mock<IAddLineOutputPort> _outputPortMock;
         private readonly ProjectDaoStub _projectDaoStub;
         private readonly Mock<IUnitOfWork> _unitOfWorkMock;
         private readonly VersionDaoStub _versionDaoStub;
@@ -27,9 +28,12 @@ namespace ChangeTracker.Application.Tests.UseCaseTests.AddChangeLogLine
             _projectDaoStub = new ProjectDaoStub();
             _versionDaoStub = new VersionDaoStub();
             _changeLogDaoStub = new ChangeLogDaoStub();
-            _outputPortMock = new Mock<IAddChangeLogLineOutputPort>(MockBehavior.Strict);
+            _outputPortMock = new Mock<IAddLineOutputPort>(MockBehavior.Strict);
             _unitOfWorkMock = new Mock<IUnitOfWork>(MockBehavior.Strict);
         }
+
+        private AddChangeLogLineInteractor CreateInteractor() => new(_changeLogDaoStub, _unitOfWorkMock.Object,
+            _versionDaoStub, _projectDaoStub);
 
         [Fact]
         public async Task AddChangeLogLine_InvalidVersion_InvalidVersionFormatOutput()
@@ -44,15 +48,13 @@ namespace ChangeTracker.Application.Tests.UseCaseTests.AddChangeLogLine
             _projectDaoStub.Projects.Add(new Project(TestAccount.Project.Id, TestAccount.Id, TestAccount.Project.Name,
                 TestAccount.CustomVersioningScheme, TestAccount.CreationDate, null));
 
-            var addChangeLogLineUseCase =
-                new AddChangeLogLineInteractor(_changeLogDaoStub, _unitOfWorkMock.Object,
-                    _versionDaoStub, _projectDaoStub, new ChangeLogLineParsingService(_changeLogDaoStub));
+            var addLineInteractor = CreateInteractor();
 
             _outputPortMock.Setup(m => m.InvalidVersionFormat());
             _unitOfWorkMock.Setup(m => m.Start());
 
             // act
-            await addChangeLogLineUseCase.ExecuteAsync(_outputPortMock.Object, changeLogLineRequestModel);
+            await addLineInteractor.ExecuteAsync(_outputPortMock.Object, changeLogLineRequestModel);
 
             // assert
             _outputPortMock.Verify(m => m.InvalidVersionFormat(), Times.Once);
@@ -67,14 +69,12 @@ namespace ChangeTracker.Application.Tests.UseCaseTests.AddChangeLogLine
             var issues = new List<string> {"#1234", "#12345"};
             var changeLogLineRequestModel = new ChangeLogLineRequestModel(TestAccount.Project.Id, "1.2.3", changeLogLine, labels, issues);
 
-            var addChangeLogLineUseCase =
-                new AddChangeLogLineInteractor(_changeLogDaoStub, _unitOfWorkMock.Object,
-                    _versionDaoStub, _projectDaoStub, new ChangeLogLineParsingService(_changeLogDaoStub));
+            var addLineInteractor = CreateInteractor();
 
             _outputPortMock.Setup(m => m.ProjectDoesNotExist());
 
             // act
-            await addChangeLogLineUseCase.ExecuteAsync(_outputPortMock.Object, changeLogLineRequestModel);
+            await addLineInteractor.ExecuteAsync(_outputPortMock.Object, changeLogLineRequestModel);
 
             // assert
             _outputPortMock.Verify(m => m.ProjectDoesNotExist(), Times.Once);
@@ -98,15 +98,13 @@ namespace ChangeTracker.Application.Tests.UseCaseTests.AddChangeLogLine
 
             _changeLogDaoStub.ProduceConflict = true;
 
-            var addChangeLogLineUseCase =
-                new AddChangeLogLineInteractor(_changeLogDaoStub, _unitOfWorkMock.Object,
-                    _versionDaoStub, _projectDaoStub, new ChangeLogLineParsingService(_changeLogDaoStub));
+            var addLineInteractor = CreateInteractor();
 
             _outputPortMock.Setup(m => m.Conflict(It.IsAny<string>()));
             _unitOfWorkMock.Setup(m => m.Start());
 
             // act
-            await addChangeLogLineUseCase.ExecuteAsync(_outputPortMock.Object, changeLogLineRequestModel);
+            await addLineInteractor.ExecuteAsync(_outputPortMock.Object, changeLogLineRequestModel);
 
             // assert
             _outputPortMock.Verify(m => m.Conflict(It.IsAny<string>()), Times.Once);
@@ -125,15 +123,13 @@ namespace ChangeTracker.Application.Tests.UseCaseTests.AddChangeLogLine
             _projectDaoStub.Projects.Add(new Project(TestAccount.Project.Id, TestAccount.Id, TestAccount.Project.Name,
                 TestAccount.CustomVersioningScheme, TestAccount.CreationDate, null));
 
-            var addChangeLogLineUseCase =
-                new AddChangeLogLineInteractor(_changeLogDaoStub, _unitOfWorkMock.Object,
-                    _versionDaoStub, _projectDaoStub, new ChangeLogLineParsingService(_changeLogDaoStub));
+            var addLineInteractor = CreateInteractor();
 
             _outputPortMock.Setup(m => m.VersionDoesNotExist(It.IsAny<string>()));
             _unitOfWorkMock.Setup(m => m.Start());
 
             // act
-            await addChangeLogLineUseCase.ExecuteAsync(_outputPortMock.Object, changeLogLineRequestModel);
+            await addLineInteractor.ExecuteAsync(_outputPortMock.Object, changeLogLineRequestModel);
 
             // assert
             _outputPortMock.Verify(m => m.VersionDoesNotExist(It.Is<string>(x => x == "1.2")), Times.Once);
@@ -161,21 +157,51 @@ namespace ChangeTracker.Application.Tests.UseCaseTests.AddChangeLogLine
                 null);
             _versionDaoStub.Versions.Add(version);
 
-            var addChangeLogLineUseCase =
-                new AddChangeLogLineInteractor(_changeLogDaoStub, _unitOfWorkMock.Object,
-                    _versionDaoStub, _projectDaoStub, new ChangeLogLineParsingService(_changeLogDaoStub));
+            var addLineInteractor = CreateInteractor();
 
             _outputPortMock.Setup(m => m.Created(It.IsAny<Guid>()));
             _unitOfWorkMock.Setup(m => m.Start());
             _unitOfWorkMock.Setup(m => m.Commit());
 
             // act
-            await addChangeLogLineUseCase.ExecuteAsync(_outputPortMock.Object, changeLogLineRequestModel);
+            await addLineInteractor.ExecuteAsync(_outputPortMock.Object, changeLogLineRequestModel);
 
             // assert
             _outputPortMock.Verify(m => m.Created(It.IsAny<Guid>()), Times.Once);
             _unitOfWorkMock.Verify(m => m.Start(), Times.Once);
             _unitOfWorkMock.Verify(m => m.Commit(), Times.Once);
+        }
+
+        [Fact]
+        public async Task AddChangeLogLine_MaxLinesReached_TooManyLinesOutput()
+        {
+            // arrange
+            const string changeLogLine = "Some Bug fixed";
+            var labels = new List<string> {"Bugfix", "ProxyIssue"};
+            var issues = new List<string> {"#1234", "#12345"};
+            var changeLogLineRequestModel =
+                new ChangeLogLineRequestModel(TestAccount.Project.Id, "1.2", changeLogLine, labels, issues);
+
+            _projectDaoStub.Projects.Add(new Project(TestAccount.Project.Id, TestAccount.Id, TestAccount.Project.Name,
+                TestAccount.CustomVersioningScheme, TestAccount.CreationDate, null));
+
+            var versionId = Guid.Parse("1d7831d5-32fb-437f-a9d5-bf5a7dd34b10");
+            var version = new ClVersion(versionId,
+                TestAccount.Project.Id, ClVersionValue.Parse("1.2"), null, DateTime.Parse("2021-04-09"), null);
+            _versionDaoStub.Versions.Add(version);
+
+            _changeLogDaoStub.ChangeLogs.AddRange(Enumerable.Range(0, 100)
+                .Select(x => new ChangeLogLine(versionId, TestAccount.Project.Id, ChangeLogText.Parse($"{x:D5}"), (uint)x)));
+
+            var addLineInteractor = CreateInteractor();
+            _unitOfWorkMock.Setup(m => m.Start());
+            _outputPortMock.Setup(m => m.TooManyLines(It.IsAny<int>()));
+
+            // act
+            await addLineInteractor.ExecuteAsync(_outputPortMock.Object, changeLogLineRequestModel);
+
+            // assert
+            _outputPortMock.Verify(m => m.TooManyLines(It.Is<int>(x => x == ChangeLogsMetadata.MaxChangeLogLines)), Times.Once);
         }
 
         [Fact]
@@ -200,15 +226,13 @@ namespace ChangeTracker.Application.Tests.UseCaseTests.AddChangeLogLine
                 null);
             _versionDaoStub.Versions.Add(version);
 
-            var addChangeLogLineUseCase =
-                new AddChangeLogLineInteractor(_changeLogDaoStub, _unitOfWorkMock.Object,
-                    _versionDaoStub, _projectDaoStub, new ChangeLogLineParsingService(_changeLogDaoStub));
+            var addLineInteractor = CreateInteractor();
 
             _outputPortMock.Setup(m => m.VersionAlreadyReleased(It.IsAny<string>()));
             _unitOfWorkMock.Setup(m => m.Start());
             
             // act
-            await addChangeLogLineUseCase.ExecuteAsync(_outputPortMock.Object, changeLogLineRequestModel);
+            await addLineInteractor.ExecuteAsync(_outputPortMock.Object, changeLogLineRequestModel);
 
             // assert
             _outputPortMock.Verify(m => m.VersionAlreadyReleased(It.Is<string>(x => x == "1.2")), Times.Once);
@@ -236,15 +260,13 @@ namespace ChangeTracker.Application.Tests.UseCaseTests.AddChangeLogLine
                 DateTime.Parse("2021-04-09"));
             _versionDaoStub.Versions.Add(version);
 
-            var addChangeLogLineUseCase =
-                new AddChangeLogLineInteractor(_changeLogDaoStub, _unitOfWorkMock.Object,
-                    _versionDaoStub, _projectDaoStub, new ChangeLogLineParsingService(_changeLogDaoStub));
+            var addLineInteractor = CreateInteractor();
 
             _outputPortMock.Setup(m => m.VersionDeleted(It.IsAny<string>()));
             _unitOfWorkMock.Setup(m => m.Start());
             
             // act
-            await addChangeLogLineUseCase.ExecuteAsync(_outputPortMock.Object, changeLogLineRequestModel);
+            await addLineInteractor.ExecuteAsync(_outputPortMock.Object, changeLogLineRequestModel);
 
             // assert
             _outputPortMock.Verify(m => m.VersionDeleted(It.Is<string>(x => x == "1.2")), Times.Once);
@@ -272,16 +294,14 @@ namespace ChangeTracker.Application.Tests.UseCaseTests.AddChangeLogLine
                 null);
             _versionDaoStub.Versions.Add(version);
 
-            var addChangeLogLineUseCase =
-                new AddChangeLogLineInteractor(_changeLogDaoStub, _unitOfWorkMock.Object,
-                    _versionDaoStub, _projectDaoStub, new ChangeLogLineParsingService(_changeLogDaoStub));
+            var addLineInteractor = CreateInteractor();
 
             _outputPortMock.Setup(m => m.Created(It.IsAny<Guid>()));
             _unitOfWorkMock.Setup(m => m.Start());
             _unitOfWorkMock.Setup(m => m.Commit());
 
             // act
-            await addChangeLogLineUseCase.ExecuteAsync(_outputPortMock.Object, changeLogLineRequestModel);
+            await addLineInteractor.ExecuteAsync(_outputPortMock.Object, changeLogLineRequestModel);
 
             // assert
             var savedLine = _changeLogDaoStub.ChangeLogs.Single(x =>

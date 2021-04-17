@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Threading.Tasks;
 using ChangeTracker.Application.ChangeLogLineParsing;
 using ChangeTracker.Application.Tests.TestDoubles;
 using ChangeTracker.Domain.ChangeLog;
@@ -141,7 +140,8 @@ namespace ChangeTracker.Application.Tests.ServicesTests.ChangeLogLineParsing
         {
             // arrange
             const string text = "a";
-            var lineParsingRequestModel = new LineParserRequestModel(text, Array.Empty<string>(), Array.Empty<string>());
+            var lineParsingRequestModel =
+                new LineParserRequestModel(text, Array.Empty<string>(), Array.Empty<string>());
             _outputPortMock.Setup(m => m.InvalidChangeLogLineText(It.IsAny<string>()));
 
             // act

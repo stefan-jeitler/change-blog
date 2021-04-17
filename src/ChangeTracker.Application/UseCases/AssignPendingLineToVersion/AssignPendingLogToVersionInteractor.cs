@@ -17,14 +17,16 @@ namespace ChangeTracker.Application.UseCases.AssignPendingLineToVersion
         private readonly IUnitOfWork _unitOfWork;
         private readonly IVersionDao _versionDao;
 
-        public AssignPendingLogToVersionInteractor(IVersionDao versionDao, IChangeLogDao changeLogDao, IUnitOfWork unitOfWork)
+        public AssignPendingLogToVersionInteractor(IVersionDao versionDao, IChangeLogDao changeLogDao,
+            IUnitOfWork unitOfWork)
         {
             _versionDao = versionDao ?? throw new ArgumentNullException(nameof(versionDao));
             _changeLogDao = changeLogDao ?? throw new ArgumentNullException(nameof(changeLogDao));
             _unitOfWork = unitOfWork ?? throw new ArgumentNullException(nameof(unitOfWork));
         }
 
-        public async Task ExecuteAsync(IAssignPendingLineOutputPort output, VersionIdAssignmentRequestModel requestModel)
+        public async Task ExecuteAsync(IAssignPendingLineOutputPort output,
+            VersionIdAssignmentRequestModel requestModel)
         {
             _unitOfWork.Start();
 

@@ -79,16 +79,16 @@ namespace ChangeTracker.Application.UseCases.AddChangeLogLine
                 return Maybe<ClVersion>.None;
             }
 
-
             return version;
         }
 
         private async Task<Maybe<ChangeLogLine>> CreateChangeLogLineAsync(IAddLineOutputPort output,
             ChangeLogLineRequestModel requestModel, Project project, Guid versionId)
         {
-            var lineParsingRequestModel = new LineParserRequestModel(requestModel.Text, requestModel.Labels, requestModel.Issues);
+            var lineParsingRequestModel =
+                new LineParserRequestModel(requestModel.Text, requestModel.Labels, requestModel.Issues);
             var parsedLine = LineParser.Parse(output, lineParsingRequestModel);
-            if(parsedLine.HasNoValue)
+            if (parsedLine.HasNoValue)
                 return Maybe<ChangeLogLine>.None;
 
             var changeLogsMetadata = await _changeLogDao.GetChangeLogsMetadataAsync(project.Id, versionId);

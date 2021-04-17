@@ -1,8 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using ChangeTracker.Application.UseCases.AddVersion;
 using FluentAssertions;
 using Xunit;
@@ -11,7 +7,6 @@ namespace ChangeTracker.Application.Tests.UseCaseTests.AddVersion
 {
     public class VersionRequestModelTests
     {
-
         private Guid _testProjectId;
         private string _testVersion;
 

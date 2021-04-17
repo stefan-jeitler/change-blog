@@ -8,13 +8,13 @@ namespace ChangeTracker.Domain.Tests.VersionTests
 {
     public class VersioningSchemeTest
     {
+        private Guid? _testAccountId;
+        private DateTime _testCreationDate;
+        private DateTime? _testDeletionDate;
+        private Text _testDescription;
         private Guid _testId;
         private Name _testName;
         private Text _testRegexPatter;
-        private Guid? _testAccountId;
-        private Text _testDescription;
-        private DateTime _testCreationDate;
-        private DateTime? _testDeletionDate;
 
         public VersioningSchemeTest()
         {

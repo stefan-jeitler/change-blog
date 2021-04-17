@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using ChangeTracker.Application.ChangeLogLineParsing;
 using ChangeTracker.Application.DataAccess;
 using ChangeTracker.Application.Tests.TestDoubles;
 using ChangeTracker.Application.UseCases.AddCompleteVersion;
@@ -32,7 +31,8 @@ namespace ChangeTracker.Application.Tests.UseCaseTests.AddCompleteVersion
             _outputPortMock = new Mock<IAddCompleteVersionOutputPort>(MockBehavior.Strict);
         }
 
-        private AddCompleteVersionInteractor CreateInteractor() => new(_projectDaoStub, _versionDaoStub, _changeLogDaoStub, _unitOfWorkMock.Object);
+        private AddCompleteVersionInteractor CreateInteractor() => new(_projectDaoStub, _versionDaoStub,
+            _changeLogDaoStub, _unitOfWorkMock.Object);
 
         [Fact]
         public async Task AddCompleteVersion_ValidVersion_Successful()
@@ -191,7 +191,8 @@ namespace ChangeTracker.Application.Tests.UseCaseTests.AddCompleteVersion
         {
             // arrange
             var changeLogLines = Enumerable.Range(0, 101)
-                .Select(x => new ChangeLogLineRequestModel($"{x:D5}", new List<string> { "Security" }, new List<string>()))
+                .Select(x =>
+                    new ChangeLogLineRequestModel($"{x:D5}", new List<string> {"Security"}, new List<string>()))
                 .ToList();
 
             var versionRequestModel = new CompleteVersionRequestModel(TestAccount.Project.Id, "1.23", changeLogLines);
@@ -219,7 +220,8 @@ namespace ChangeTracker.Application.Tests.UseCaseTests.AddCompleteVersion
                 new("Allow https only", new List<string> {"Security"}, new List<string>()),
                 new("Allow https only", new List<string> {"Security"}, new List<string>())
             };
-            var versionRequestModel = new CompleteVersionRequestModel(TestAccount.Project.Id, "1.23", changeLogLines, true);
+            var versionRequestModel =
+                new CompleteVersionRequestModel(TestAccount.Project.Id, "1.23", changeLogLines, true);
 
             _projectDaoStub.Projects.Add(TestAccount.Project);
             _outputPortMock.Setup(m => m.Created(It.IsAny<Guid>()));
@@ -261,7 +263,8 @@ namespace ChangeTracker.Application.Tests.UseCaseTests.AddCompleteVersion
         {
             // arrange
             var changeLogLines = Enumerable.Range(0, 50)
-                .Select(x => new ChangeLogLineRequestModel($"{x:D5}", new List<string> {"Security"}, new List<string>()))
+                .Select(x =>
+                    new ChangeLogLineRequestModel($"{x:D5}", new List<string> {"Security"}, new List<string>()))
                 .ToList();
 
             var versionRequestModel = new CompleteVersionRequestModel(TestAccount.Project.Id, "1.23", changeLogLines);

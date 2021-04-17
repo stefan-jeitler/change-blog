@@ -142,7 +142,8 @@ namespace ChangeTracker.Application.Tests.UseCaseTests.AddProject
                 new Account(TestAccount.Id, TestAccount.Name, null, TestAccount.CreationDate, null);
             var notExistingVersioningSchemeId = Guid.Parse("3984bcf2-9930-4d41-984e-b72ccc6d6c87");
 
-            var projectRequestModel = new ProjectRequestModel(TestAccount.Id, TestAccount.Name.Value, notExistingVersioningSchemeId);
+            var projectRequestModel =
+                new ProjectRequestModel(TestAccount.Id, TestAccount.Name.Value, notExistingVersioningSchemeId);
             var createProjectInteractor = CreateInteractor();
 
             _outputPortMock.Setup(m => m.VersioningSchemeDoesNotExist());

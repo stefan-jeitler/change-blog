@@ -10,21 +10,21 @@ namespace ChangeTracker.Domain.Tests.ChangeLogTests
 {
     public class ChangeLogLineTests
     {
+        private readonly List<Issue> _testIssues;
+        private readonly List<Label> _testLabels;
+        private readonly uint _testPosition;
+        private DateTime _testCreationDate;
+        private DateTime? _testDeletionDate;
         private Guid _testId;
         private Guid _testProjectId;
         private ChangeLogText _testText;
-        private readonly uint _testPosition;
-        private readonly List<Issue> _testIssues;
-        private readonly List<Label> _testLabels;
         private Guid? _testVersionId;
-        private DateTime _testCreationDate;
-        private DateTime? _testDeletionDate;
 
         public ChangeLogLineTests()
         {
             _testPosition = 5;
-            _testIssues = new List<Issue>(1) { Issue.Parse("#1234") };
-            _testLabels = new List<Label>(1) { Label.Parse("Feature") };
+            _testIssues = new List<Issue>(1) {Issue.Parse("#1234")};
+            _testLabels = new List<Label>(1) {Label.Parse("Feature")};
             _testId = Guid.Parse("51d89265-52c2-4a38-a0fe-b99bdc5523d0");
             _testVersionId = Guid.Parse("66845d0a-45bc-4834-96d0-b48c2c403628");
             _testProjectId = Guid.Parse("ef5656e5-15f0-418d-b3a4-b69f1c3abac5");
@@ -33,12 +33,12 @@ namespace ChangeTracker.Domain.Tests.ChangeLogTests
             _testDeletionDate = null;
         }
 
-        private ChangeLogLine CreateChangeLogLine() => new(_testId, 
-            _testVersionId, 
+        private ChangeLogLine CreateChangeLogLine() => new(_testId,
+            _testVersionId,
             _testProjectId,
-            _testText, 
-            _testPosition, 
-            _testCreationDate, 
+            _testText,
+            _testPosition,
+            _testCreationDate,
             _testLabels,
             _testIssues,
             _testDeletionDate);

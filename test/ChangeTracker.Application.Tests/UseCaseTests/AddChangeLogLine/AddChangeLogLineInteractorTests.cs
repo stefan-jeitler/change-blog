@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using ChangeTracker.Application.ChangeLogLineParsing;
 using ChangeTracker.Application.DataAccess;
 using ChangeTracker.Application.Tests.TestDoubles;
 using ChangeTracker.Application.UseCases.AddChangeLogLine;
@@ -67,7 +66,8 @@ namespace ChangeTracker.Application.Tests.UseCaseTests.AddChangeLogLine
             const string changeLogLine = "Bug fixed.";
             var labels = new List<string> {"Bugfix", "ProxyIssue"};
             var issues = new List<string> {"#1234", "#12345"};
-            var changeLogLineRequestModel = new ChangeLogLineRequestModel(TestAccount.Project.Id, "1.2.3", changeLogLine, labels, issues);
+            var changeLogLineRequestModel =
+                new ChangeLogLineRequestModel(TestAccount.Project.Id, "1.2.3", changeLogLine, labels, issues);
 
             var addLineInteractor = CreateInteractor();
 
@@ -118,7 +118,8 @@ namespace ChangeTracker.Application.Tests.UseCaseTests.AddChangeLogLine
             const string changeLogLine = "Some Bug fixed";
             var labels = new List<string> {"Bugfix", "ProxyIssue"};
             var issues = new List<string> {"#1234", "#12345"};
-            var changeLogLineRequestModel = new ChangeLogLineRequestModel(TestAccount.Project.Id, "1.2", changeLogLine, labels, issues);
+            var changeLogLineRequestModel =
+                new ChangeLogLineRequestModel(TestAccount.Project.Id, "1.2", changeLogLine, labels, issues);
 
             _projectDaoStub.Projects.Add(new Project(TestAccount.Project.Id, TestAccount.Id, TestAccount.Project.Name,
                 TestAccount.CustomVersioningScheme, TestAccount.CreationDate, null));
@@ -191,7 +192,8 @@ namespace ChangeTracker.Application.Tests.UseCaseTests.AddChangeLogLine
             _versionDaoStub.Versions.Add(version);
 
             _changeLogDaoStub.ChangeLogs.AddRange(Enumerable.Range(0, 100)
-                .Select(x => new ChangeLogLine(versionId, TestAccount.Project.Id, ChangeLogText.Parse($"{x:D5}"), (uint)x)));
+                .Select(x =>
+                    new ChangeLogLine(versionId, TestAccount.Project.Id, ChangeLogText.Parse($"{x:D5}"), (uint) x)));
 
             var addLineInteractor = CreateInteractor();
             _unitOfWorkMock.Setup(m => m.Start());
@@ -201,7 +203,8 @@ namespace ChangeTracker.Application.Tests.UseCaseTests.AddChangeLogLine
             await addLineInteractor.ExecuteAsync(_outputPortMock.Object, changeLogLineRequestModel);
 
             // assert
-            _outputPortMock.Verify(m => m.TooManyLines(It.Is<int>(x => x == ChangeLogsMetadata.MaxChangeLogLines)), Times.Once);
+            _outputPortMock.Verify(m => m.TooManyLines(It.Is<int>(x => x == ChangeLogsMetadata.MaxChangeLogLines)),
+                Times.Once);
         }
 
         [Fact]
@@ -230,7 +233,7 @@ namespace ChangeTracker.Application.Tests.UseCaseTests.AddChangeLogLine
 
             _outputPortMock.Setup(m => m.VersionAlreadyReleased(It.IsAny<string>()));
             _unitOfWorkMock.Setup(m => m.Start());
-            
+
             // act
             await addLineInteractor.ExecuteAsync(_outputPortMock.Object, changeLogLineRequestModel);
 
@@ -264,7 +267,7 @@ namespace ChangeTracker.Application.Tests.UseCaseTests.AddChangeLogLine
 
             _outputPortMock.Setup(m => m.VersionDeleted(It.IsAny<string>()));
             _unitOfWorkMock.Setup(m => m.Start());
-            
+
             // act
             await addLineInteractor.ExecuteAsync(_outputPortMock.Object, changeLogLineRequestModel);
 

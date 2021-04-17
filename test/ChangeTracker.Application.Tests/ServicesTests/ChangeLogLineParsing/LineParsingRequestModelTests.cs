@@ -8,9 +8,9 @@ namespace ChangeTracker.Application.Tests.ServicesTests.ChangeLogLineParsing
 {
     public class LineParsingRequestModelTests
     {
-        private string _testText;
         private IList<string> _testIssues;
         private IList<string> _testLabels;
+        private string _testText;
 
         public LineParsingRequestModelTests()
         {

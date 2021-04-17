@@ -14,7 +14,7 @@ namespace ChangeTracker.Application.UseCases.AssignPendingLineToVersion.Models
 
             if (changeLogLineId == Guid.Empty)
                 throw new ArgumentException("LineId cannot be empty.");
-            
+
             ChangeLogLineId = changeLogLineId;
         }
 

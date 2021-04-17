@@ -25,7 +25,8 @@ namespace ChangeTracker.Application.Tests.UseCaseTests.AddVersion
             _outputPortMock = new Mock<IAddVersionOutputPort>(MockBehavior.Strict);
         }
 
-        private AddVersionInteractor CreateInteractor() => new(_versionDaoStub, _projectDaoStub, _unitOfWorkMock.Object);
+        private AddVersionInteractor CreateInteractor() =>
+            new(_versionDaoStub, _projectDaoStub, _unitOfWorkMock.Object);
 
         [Fact]
         public async Task CreateVersion_Successful()

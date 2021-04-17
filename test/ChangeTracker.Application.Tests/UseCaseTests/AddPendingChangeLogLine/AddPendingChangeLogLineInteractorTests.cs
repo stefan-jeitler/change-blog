@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using ChangeTracker.Application.ChangeLogLineParsing;
 using ChangeTracker.Application.DataAccess;
 using ChangeTracker.Application.Tests.TestDoubles;
 using ChangeTracker.Application.UseCases.AddPendingChangeLogLine;
@@ -28,7 +27,8 @@ namespace ChangeTracker.Application.Tests.UseCaseTests.AddPendingChangeLogLine
             _unitOfWorkMock = new Mock<IUnitOfWork>(MockBehavior.Strict);
         }
 
-        private AddPendingChangeLogLineInteractor CreateInteractor() => new(_projectDaoStub, _changeLogDaoStub, _unitOfWorkMock.Object);
+        private AddPendingChangeLogLineInteractor CreateInteractor() =>
+            new(_projectDaoStub, _changeLogDaoStub, _unitOfWorkMock.Object);
 
         [Fact]
         public async Task AddChangeLogLine_NotExistingProject_ProjectDoesNotExistOutput()
@@ -99,7 +99,8 @@ namespace ChangeTracker.Application.Tests.UseCaseTests.AddPendingChangeLogLine
                 TestAccount.CustomVersioningScheme, TestAccount.CreationDate, null));
 
             _changeLogDaoStub.ChangeLogs.AddRange(Enumerable.Range(0, 100)
-                .Select(x => new ChangeLogLine(null, TestAccount.Project.Id, ChangeLogText.Parse($"{x:D5}"), (uint)x)));
+                .Select(x =>
+                    new ChangeLogLine(null, TestAccount.Project.Id, ChangeLogText.Parse($"{x:D5}"), (uint) x)));
 
             var addPendingLineInteractor = CreateInteractor();
 
@@ -110,7 +111,8 @@ namespace ChangeTracker.Application.Tests.UseCaseTests.AddPendingChangeLogLine
             await addPendingLineInteractor.ExecuteAsync(_outputPortMock.Object, lineRequestModel);
 
             // assert
-            _outputPortMock.Verify(m => m.TooManyLines(It.Is<int>(x => x == ChangeLogsMetadata.MaxChangeLogLines)), Times.Once);
+            _outputPortMock.Verify(m => m.TooManyLines(It.Is<int>(x => x == ChangeLogsMetadata.MaxChangeLogLines)),
+                Times.Once);
         }
 
         [Fact]

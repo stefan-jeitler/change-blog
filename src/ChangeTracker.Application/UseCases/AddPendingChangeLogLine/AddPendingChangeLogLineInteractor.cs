@@ -47,7 +47,8 @@ namespace ChangeTracker.Application.UseCases.AddPendingChangeLogLine
             PendingLineRequestModel requestModel,
             Project project)
         {
-            var lineParsingRequestModel = new LineParserRequestModel(requestModel.Text, requestModel.Labels, requestModel.Issues);
+            var lineParsingRequestModel =
+                new LineParserRequestModel(requestModel.Text, requestModel.Labels, requestModel.Issues);
             var parsedLine = LineParser.Parse(output, lineParsingRequestModel);
             if (parsedLine.HasNoValue)
                 return Maybe<ChangeLogLine>.None;

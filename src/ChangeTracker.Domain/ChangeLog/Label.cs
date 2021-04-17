@@ -36,7 +36,7 @@ namespace ChangeTracker.Domain.ChangeLog
             label = null;
 
             if (candidate is null)
-                return new ArgumentNullException(nameof(candidate), "Label must not be.");
+                return new ArgumentNullException(nameof(candidate), "Label must not be null.");
 
             var c = candidate.Trim();
 

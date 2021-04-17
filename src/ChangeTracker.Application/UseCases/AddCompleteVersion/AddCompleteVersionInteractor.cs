@@ -33,7 +33,8 @@ namespace ChangeTracker.Application.UseCases.AddCompleteVersion
             _unitOfWork = unitOfWork ?? throw new ArgumentNullException(nameof(unitOfWork));
         }
 
-        public async Task ExecuteAsync(IAddCompleteVersionOutputPort output, CompleteVersionRequestModel versionRequestModel)
+        public async Task ExecuteAsync(IAddCompleteVersionOutputPort output,
+            CompleteVersionRequestModel versionRequestModel)
         {
             var project = await _projectDao.FindAsync(versionRequestModel.ProjectId);
             if (project.HasNoValue)
@@ -42,7 +43,8 @@ namespace ChangeTracker.Application.UseCases.AddCompleteVersion
                 return;
             }
 
-            var newVersion = CreateNewVersion(output, project.Value, versionRequestModel.Version, versionRequestModel.ReleaseImmediately);
+            var newVersion = CreateNewVersion(output, project.Value, versionRequestModel.Version,
+                versionRequestModel.ReleaseImmediately);
             if (newVersion.HasNoValue)
                 return;
 
@@ -119,7 +121,8 @@ namespace ChangeTracker.Application.UseCases.AddCompleteVersion
         private static Maybe<ChangeLogLine> CreateLine(ILineParserOutput output,
             ChangeLogLineRequestModel requestModel, ClVersion clVersion, uint position)
         {
-            var lineParsingRequestModel = new LineParserRequestModel(requestModel.Text, requestModel.Labels, requestModel.Issues);
+            var lineParsingRequestModel =
+                new LineParserRequestModel(requestModel.Text, requestModel.Labels, requestModel.Issues);
             var parsedLine = LineParser.Parse(output, lineParsingRequestModel);
             if (parsedLine.HasNoValue)
                 return Maybe<ChangeLogLine>.None;

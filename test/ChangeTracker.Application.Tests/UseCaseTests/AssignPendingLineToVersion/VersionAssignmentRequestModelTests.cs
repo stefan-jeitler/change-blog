@@ -1,8 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using ChangeTracker.Application.UseCases.AssignPendingLineToVersion.Models;
 using FluentAssertions;
 using Xunit;
@@ -11,9 +7,9 @@ namespace ChangeTracker.Application.Tests.UseCaseTests.AssignPendingLineToVersio
 {
     public class VersionAssignmentRequestModelTests
     {
+        private Guid _testLineId;
         private Guid _testProjectId;
         private string _testVersion;
-        private Guid _testLineId;
 
         public VersionAssignmentRequestModelTests()
         {

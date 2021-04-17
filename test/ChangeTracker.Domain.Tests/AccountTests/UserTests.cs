@@ -7,11 +7,11 @@ namespace ChangeTracker.Domain.Tests.AccountTests
 {
     public class UserTests
     {
-        private Guid _testUserId;
+        private DateTime _testDeletionDate;
         private Email _testEmail;
         private Name _testFirstName;
         private Name _testLastName;
-        private DateTime _testDeletionDate;
+        private Guid _testUserId;
 
         public UserTests()
         {

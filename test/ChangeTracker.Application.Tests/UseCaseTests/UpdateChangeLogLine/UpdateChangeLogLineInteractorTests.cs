@@ -89,8 +89,7 @@ namespace ChangeTracker.Application.Tests.UseCaseTests.UpdateChangeLogLine
             // arrange
             var lineId = Guid.Parse("0683e1e1-0e0d-405c-b77e-a6d0d5141b67");
             const string text = "some features added";
-            var requestModel =
-                new ChangeLogLineRequestModel(lineId, text, Array.Empty<string>(), Array.Empty<string>());
+            var requestModel = new ChangeLogLineRequestModel(lineId, text, Array.Empty<string>(), Array.Empty<string>());
             var updateLineInteractor = CreateInteractor();
 
             _outputPortMock.Setup(m => m.ChangeLogLineDoesNotExist());

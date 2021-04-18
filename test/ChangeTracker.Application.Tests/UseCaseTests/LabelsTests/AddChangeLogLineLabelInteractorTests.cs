@@ -7,7 +7,6 @@ using ChangeTracker.Application.Tests.TestDoubles;
 using ChangeTracker.Application.UseCases.Labels.AddChangeLogLineLabel;
 using ChangeTracker.Application.UseCases.Labels.SharedModels;
 using ChangeTracker.Domain.ChangeLog;
-using ChangeTracker.Domain.Version;
 using Moq;
 using Xunit;
 
@@ -18,18 +17,16 @@ namespace ChangeTracker.Application.Tests.UseCaseTests.LabelsTests
         private readonly ChangeLogDaoStub _changeLogDaoStub;
         private readonly Mock<IAddChangeLogLineLabelOutputPort> _outputPortMock;
         private readonly Mock<IUnitOfWork> _unitOfWorkMock;
-        private readonly VersionDaoStub _versionDaoStub;
 
         public AddChangeLogLineLabelInteractorTests()
         {
             _outputPortMock = new Mock<IAddChangeLogLineLabelOutputPort>(MockBehavior.Strict);
             _unitOfWorkMock = new Mock<IUnitOfWork>();
             _changeLogDaoStub = new ChangeLogDaoStub();
-            _versionDaoStub = new VersionDaoStub();
         }
 
         private AddChangeLogLineLabelInteractor CreateInteractor() =>
-            new(_unitOfWorkMock.Object, _changeLogDaoStub, _versionDaoStub);
+            new(_unitOfWorkMock.Object, _changeLogDaoStub, _changeLogDaoStub);
 
         [Fact]
         public async Task AddLabel_HappyPath_Successful()
@@ -103,7 +100,8 @@ namespace ChangeTracker.Application.Tests.UseCaseTests.LabelsTests
             var existingLabels =
                 new List<string> {"Feature", "Bug", "Security", "Deprecated", "Added"}.Select(Label.Parse);
             _changeLogDaoStub.ChangeLogs.Add(new ChangeLogLine(lineId, null, TestAccount.Project.Id,
-                ChangeLogText.Parse("Some text"), 0U, DateTime.Parse("2021-04-17"), existingLabels, Array.Empty<Issue>()));
+                ChangeLogText.Parse("Some text"), 0U, DateTime.Parse("2021-04-17"), existingLabels,
+                Array.Empty<Issue>()));
             _outputPortMock.Setup(m => m.MaxLabelsReached(It.IsAny<int>()));
 
             _changeLogDaoStub.ProduceConflict = true;
@@ -130,52 +128,6 @@ namespace ChangeTracker.Application.Tests.UseCaseTests.LabelsTests
 
             // assert
             _outputPortMock.Verify(m => m.ChangeLogLineDoesNotExist());
-        }
-
-        [Fact]
-        public async Task AddLabel_LineBelongsToReleasedVersion_RelatedVersionAlreadyReleasedOutput()
-        {
-            // arrange
-            var lineId = Guid.Parse("0683e1e1-0e0d-405c-b77e-a6d0d5141b67");
-            var versionId = Guid.Parse("1d7831d5-32fb-437f-a9d5-bf5a7dd34b10");
-            var requestModel = new ChangeLogLineLabelRequestModel(lineId, "SomeLabel");
-            var addLabelInteractor = CreateInteractor();
-
-            _changeLogDaoStub.ChangeLogs.Add(new ChangeLogLine(lineId, versionId, TestAccount.Project.Id,
-                ChangeLogText.Parse("Some text"), 0U, DateTime.Parse("2021-04-17")));
-            _versionDaoStub.Versions.Add(new ClVersion(versionId, TestAccount.Project.Id, ClVersionValue.Parse("1.2.3"),
-                DateTime.Parse("2021-04-18"), DateTime.Parse("2021-04-18"), null));
-
-            _outputPortMock.Setup(m => m.RelatedVersionAlreadyReleased());
-
-            // act
-            await addLabelInteractor.ExecuteAsync(_outputPortMock.Object, requestModel);
-
-            // assert
-            _outputPortMock.Verify(m => m.RelatedVersionAlreadyReleased());
-        }
-
-        [Fact]
-        public async Task AddLabel_LineBelongsToDeletedVersion_RelatedVersionDeletedOutput()
-        {
-            // arrange
-            var lineId = Guid.Parse("0683e1e1-0e0d-405c-b77e-a6d0d5141b67");
-            var versionId = Guid.Parse("1d7831d5-32fb-437f-a9d5-bf5a7dd34b10");
-            var requestModel = new ChangeLogLineLabelRequestModel(lineId, "SomeLabel");
-            var addLabelInteractor = CreateInteractor();
-
-            _changeLogDaoStub.ChangeLogs.Add(new ChangeLogLine(lineId, versionId, TestAccount.Project.Id,
-                ChangeLogText.Parse("Some text"), 0U, DateTime.Parse("2021-04-17")));
-            _versionDaoStub.Versions.Add(new ClVersion(versionId, TestAccount.Project.Id, ClVersionValue.Parse("1.2.3"),
-                null, DateTime.Parse("2021-04-18"), DateTime.Parse("2021-04-18")));
-
-            _outputPortMock.Setup(m => m.RelatedVersionDeleted());
-
-            // act
-            await addLabelInteractor.ExecuteAsync(_outputPortMock.Object, requestModel);
-
-            // assert
-            _outputPortMock.Verify(m => m.RelatedVersionDeleted());
         }
     }
 }

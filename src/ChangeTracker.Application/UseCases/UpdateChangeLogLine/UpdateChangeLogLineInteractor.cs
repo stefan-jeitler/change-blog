@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Collections.Immutable;
 using System.Linq;
 using System.Threading.Tasks;
@@ -14,30 +15,28 @@ namespace ChangeTracker.Application.UseCases.UpdateChangeLogLine
 {
     public class UpdateChangeLogLineInteractor : IUpdateChangeLogLine
     {
-        private readonly IChangeLogDao _changeLogDao;
+        private readonly IChangeLogCommandsDao _changeLogCommands;
+        private readonly IChangeLogQueriesDao _changeLogQueries;
         private readonly IUnitOfWork _unitOfWork;
-        private readonly IVersionDao _versionDao;
 
-        public UpdateChangeLogLineInteractor(IChangeLogDao changeLogDao, IUnitOfWork unitOfWork, IVersionDao versionDao)
+        public UpdateChangeLogLineInteractor(IChangeLogQueriesDao changeLogQueries,
+            IChangeLogCommandsDao changeLogCommands, IUnitOfWork unitOfWork)
         {
-            _changeLogDao = changeLogDao;
-            _unitOfWork = unitOfWork;
-            _versionDao = versionDao;
+            _changeLogQueries = changeLogQueries ?? throw new ArgumentNullException(nameof(changeLogQueries)); ;
+            _unitOfWork = unitOfWork ?? throw new ArgumentNullException(nameof(unitOfWork)); ;
+            _changeLogCommands = changeLogCommands ?? throw new ArgumentNullException(nameof(changeLogCommands)); ;
         }
 
         public async Task ExecuteAsync(IUpdateLineOutputPort output, ChangeLogLineRequestModel requestModel)
         {
             _unitOfWork.Start();
 
-            var existingLine = await _changeLogDao.FindLineAsync(requestModel.ChangeLogLineId);
+            var existingLine = await _changeLogQueries.FindLineAsync(requestModel.ChangeLogLineId);
             if (existingLine.HasNoValue)
             {
                 output.ChangeLogLineDoesNotExist();
                 return;
             }
-
-            if (!await CanUpdateLineAsync(output, existingLine.Value))
-                return;
 
             var parsedNewLine = ParseLine(output, requestModel);
             if (parsedNewLine.HasNoValue)
@@ -50,28 +49,6 @@ namespace ChangeTracker.Application.UseCases.UpdateChangeLogLine
             }
 
             await UpdateLineAsync(output, existingLine.Value, parsedNewLine.Value);
-        }
-
-        private async Task<bool> CanUpdateLineAsync(IUpdateLineOutputPort output, ChangeLogLine existingLine)
-        {
-            if (existingLine.IsPending)
-                return true;
-
-            var version = await _versionDao.GetVersionAsync(existingLine.ProjectId, existingLine.VersionId!.Value);
-
-            if (version.IsReleased)
-            {
-                output.RelatedVersionAlreadyReleased();
-                return false;
-            }
-
-            if (version.IsDeleted)
-            {
-                output.RelatedVersionDeleted();
-                return false;
-            }
-
-            return true;
         }
 
         private static bool NothingChanged(ChangeLogLine existingLine, LineParserResponseModel parsedNewLine)
@@ -101,7 +78,7 @@ namespace ChangeTracker.Application.UseCases.UpdateChangeLogLine
                 updatedValues.Text, existingLine.Position, existingLine.CreatedAt, updatedValues.Labels,
                 updatedValues.Issues, existingLine.DeletedAt);
 
-            await _changeLogDao.UpdateLineAsync(line)
+            await _changeLogCommands.UpdateLineAsync(line)
                 .Match(Finish, c => output.Conflict(c.Reason));
 
             void Finish(int c)

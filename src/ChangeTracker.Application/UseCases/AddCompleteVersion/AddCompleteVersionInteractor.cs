@@ -19,18 +19,18 @@ namespace ChangeTracker.Application.UseCases.AddCompleteVersion
 {
     public class AddCompleteVersionInteractor : IAddCompleteVersion
     {
-        private readonly IChangeLogDao _changeLogDao;
+        private readonly IChangeLogCommandsDao _changeLogCommands;
         private readonly IProjectDao _projectDao;
         private readonly IUnitOfWork _unitOfWork;
         private readonly IVersionDao _versionDao;
 
-        public AddCompleteVersionInteractor(IProjectDao projectDao, IVersionDao versionDao, IChangeLogDao changeLogDao,
-            IUnitOfWork unitOfWork)
+        public AddCompleteVersionInteractor(IProjectDao projectDao, IVersionDao versionDao,
+            IUnitOfWork unitOfWork, IChangeLogCommandsDao changeLogCommands)
         {
             _projectDao = projectDao ?? throw new ArgumentNullException(nameof(projectDao));
             _versionDao = versionDao ?? throw new ArgumentNullException(nameof(versionDao));
-            _changeLogDao = changeLogDao ?? throw new ArgumentNullException(nameof(changeLogDao));
             _unitOfWork = unitOfWork ?? throw new ArgumentNullException(nameof(unitOfWork));
+            _changeLogCommands = changeLogCommands ?? throw new ArgumentNullException(nameof(changeLogCommands));
         }
 
         public async Task ExecuteAsync(IAddCompleteVersionOutputPort output,
@@ -119,7 +119,7 @@ namespace ChangeTracker.Application.UseCases.AddCompleteVersion
         }
 
         private static Maybe<ChangeLogLine> CreateLine(ILineParserOutput output,
-            ChangeLogLineRequestModel requestModel, ClVersion clVersion, uint position)
+            ChangeLogLineRequestModel requestModel, ClVersion version, uint position)
         {
             var lineParsingRequestModel =
                 new LineParserRequestModel(requestModel.Text, requestModel.Labels, requestModel.Issues);
@@ -128,7 +128,7 @@ namespace ChangeTracker.Application.UseCases.AddCompleteVersion
                 return Maybe<ChangeLogLine>.None;
 
             var changeLogLine = new ChangeLogLine(Guid.NewGuid(),
-                clVersion.Id, clVersion.ProjectId,
+                version.Id, version.ProjectId,
                 parsedLine.Value.Text, position, DateTime.UtcNow,
                 parsedLine.Value.Labels, parsedLine.Value.Issues);
 
@@ -140,7 +140,7 @@ namespace ChangeTracker.Application.UseCases.AddCompleteVersion
         {
             await _versionDao
                 .AddVersionAsync(newVersion)
-                .Bind(_ => _changeLogDao.AddLinesAsync(lines))
+                .Bind(_ => _changeLogCommands.AddLinesAsync(lines))
                 .Match(Finish, c => output.Conflict(c));
 
             void Finish(int count)

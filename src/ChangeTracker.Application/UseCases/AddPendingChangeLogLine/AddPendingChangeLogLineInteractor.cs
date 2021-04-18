@@ -12,16 +12,18 @@ namespace ChangeTracker.Application.UseCases.AddPendingChangeLogLine
 {
     public class AddPendingChangeLogLineInteractor : IAddPendingChangeLogLine
     {
-        private readonly IChangeLogDao _changeLogDao;
+        private readonly IChangeLogCommandsDao _changeLogCommands;
+        private readonly IChangeLogQueriesDao _changeLogQueries;
         private readonly IProjectDao _projectDao;
         private readonly IUnitOfWork _unitOfWork;
 
-        public AddPendingChangeLogLineInteractor(IProjectDao projectDao, IChangeLogDao changeLogDao,
-            IUnitOfWork unitOfWork)
+        public AddPendingChangeLogLineInteractor(IProjectDao projectDao, IChangeLogQueriesDao changeLogQueriesDao,
+            IChangeLogCommandsDao changeLogCommands, IUnitOfWork unitOfWork)
         {
             _projectDao = projectDao ?? throw new ArgumentNullException(nameof(projectDao));
-            _changeLogDao = changeLogDao ?? throw new ArgumentNullException(nameof(changeLogDao));
+            _changeLogQueries = changeLogQueriesDao ?? throw new ArgumentNullException(nameof(changeLogQueriesDao));
             _unitOfWork = unitOfWork ?? throw new ArgumentNullException(nameof(unitOfWork));
+            _changeLogCommands = changeLogCommands ?? throw new ArgumentNullException(nameof(changeLogCommands));
         }
 
         public async Task ExecuteAsync(IAddPendingLineOutputPort output,
@@ -53,7 +55,7 @@ namespace ChangeTracker.Application.UseCases.AddPendingChangeLogLine
             if (parsedLine.HasNoValue)
                 return Maybe<ChangeLogLine>.None;
 
-            var changeLogsMetadata = await _changeLogDao.GetChangeLogsMetadataAsync(project.Id);
+            var changeLogsMetadata = await _changeLogQueries.GetChangeLogsMetadataAsync(project.Id);
 
             if (!changeLogsMetadata.IsPositionAvailable)
             {
@@ -72,7 +74,7 @@ namespace ChangeTracker.Application.UseCases.AddPendingChangeLogLine
 
         private async Task SaveChangeLogLineAsync(IAddPendingLineOutputPort outputPort, ChangeLogLine line)
         {
-            await _changeLogDao
+            await _changeLogCommands
                 .AddLineAsync(line)
                 .Match(Finish, c => outputPort.Conflict(c));
 

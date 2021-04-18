@@ -31,8 +31,8 @@ namespace ChangeTracker.Application.Tests.UseCaseTests.AddChangeLogLine
             _unitOfWorkMock = new Mock<IUnitOfWork>(MockBehavior.Strict);
         }
 
-        private AddChangeLogLineInteractor CreateInteractor() => new(_changeLogDaoStub, _unitOfWorkMock.Object,
-            _versionDaoStub, _projectDaoStub);
+        private AddChangeLogLineInteractor CreateInteractor() => new(_changeLogDaoStub, _changeLogDaoStub,
+            _unitOfWorkMock.Object, _versionDaoStub);
 
         [Fact]
         public async Task AddChangeLogLine_InvalidVersion_InvalidVersionFormatOutput()
@@ -57,27 +57,6 @@ namespace ChangeTracker.Application.Tests.UseCaseTests.AddChangeLogLine
 
             // assert
             _outputPortMock.Verify(m => m.InvalidVersionFormat(), Times.Once);
-        }
-
-        [Fact]
-        public async Task AddChangeLogLine_NotExistingProject_ProjectDoesNotExistOutput()
-        {
-            // arrange
-            const string changeLogLine = "Bug fixed.";
-            var labels = new List<string> {"Bugfix", "ProxyIssue"};
-            var issues = new List<string> {"#1234", "#12345"};
-            var changeLogLineRequestModel =
-                new ChangeLogLineRequestModel(TestAccount.Project.Id, "1.2.3", changeLogLine, labels, issues);
-
-            var addLineInteractor = CreateInteractor();
-
-            _outputPortMock.Setup(m => m.ProjectDoesNotExist());
-
-            // act
-            await addLineInteractor.ExecuteAsync(_outputPortMock.Object, changeLogLineRequestModel);
-
-            // assert
-            _outputPortMock.Verify(m => m.ProjectDoesNotExist(), Times.Once);
         }
 
         [Fact]
@@ -205,74 +184,6 @@ namespace ChangeTracker.Application.Tests.UseCaseTests.AddChangeLogLine
             // assert
             _outputPortMock.Verify(m => m.TooManyLines(It.Is<int>(x => x == ChangeLogsMetadata.MaxChangeLogLines)),
                 Times.Once);
-        }
-
-        [Fact]
-        public async Task AddChangeLogLine_VersionAlreadyReleased_VersionAlreadyReleasedOutput()
-        {
-            // arrange
-            const string changeLogLine = "Some Bug fixed";
-            var labels = new List<string> {"Bugfix", "ProxyIssue"};
-            var issues = new List<string> {"#1234", "#12345"};
-            var changeLogLineRequestModel =
-                new ChangeLogLineRequestModel(TestAccount.Project.Id, "1.2", changeLogLine, labels, issues);
-
-            _projectDaoStub.Projects.Add(new Project(TestAccount.Project.Id, TestAccount.Id, TestAccount.Project.Name,
-                TestAccount.CustomVersioningScheme, TestAccount.CreationDate, null));
-
-            var versionId = Guid.Parse("1d7831d5-32fb-437f-a9d5-bf5a7dd34b10");
-            var version = new ClVersion(versionId,
-                TestAccount.Project.Id,
-                ClVersionValue.Parse("1.2"),
-                DateTime.Parse("2021-04-09"),
-                DateTime.Parse("2021-04-09"),
-                null);
-            _versionDaoStub.Versions.Add(version);
-
-            var addLineInteractor = CreateInteractor();
-
-            _outputPortMock.Setup(m => m.RelatedVersionAlreadyReleased(It.IsAny<string>()));
-            _unitOfWorkMock.Setup(m => m.Start());
-
-            // act
-            await addLineInteractor.ExecuteAsync(_outputPortMock.Object, changeLogLineRequestModel);
-
-            // assert
-            _outputPortMock.Verify(m => m.RelatedVersionAlreadyReleased(It.Is<string>(x => x == "1.2")), Times.Once);
-        }
-
-        [Fact]
-        public async Task AddChangeLogLine_VersionDeleted_VersionDeletedOutput()
-        {
-            // arrange
-            const string changeLogLine = "Some Bug fixed";
-            var labels = new List<string> {"Bugfix", "ProxyIssue"};
-            var issues = new List<string> {"#1234", "#12345"};
-            var changeLogLineRequestModel =
-                new ChangeLogLineRequestModel(TestAccount.Project.Id, "1.2", changeLogLine, labels, issues);
-
-            _projectDaoStub.Projects.Add(new Project(TestAccount.Project.Id, TestAccount.Id, TestAccount.Project.Name,
-                TestAccount.CustomVersioningScheme, TestAccount.CreationDate, null));
-
-            var versionId = Guid.Parse("1d7831d5-32fb-437f-a9d5-bf5a7dd34b10");
-            var version = new ClVersion(versionId,
-                TestAccount.Project.Id,
-                ClVersionValue.Parse("1.2"),
-                null,
-                DateTime.Parse("2021-04-09"),
-                DateTime.Parse("2021-04-09"));
-            _versionDaoStub.Versions.Add(version);
-
-            var addLineInteractor = CreateInteractor();
-
-            _outputPortMock.Setup(m => m.RelatedVersionDeleted(It.IsAny<string>()));
-            _unitOfWorkMock.Setup(m => m.Start());
-
-            // act
-            await addLineInteractor.ExecuteAsync(_outputPortMock.Object, changeLogLineRequestModel);
-
-            // assert
-            _outputPortMock.Verify(m => m.RelatedVersionDeleted(It.Is<string>(x => x == "1.2")), Times.Once);
         }
 
         [Fact]

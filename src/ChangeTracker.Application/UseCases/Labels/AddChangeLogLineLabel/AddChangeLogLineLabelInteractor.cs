@@ -5,31 +5,40 @@ using ChangeTracker.Application.DataAccess.Versions;
 using ChangeTracker.Application.UseCases.Labels.SharedModels;
 using ChangeTracker.Domain.ChangeLog;
 using CSharpFunctionalExtensions;
+
 // ReSharper disable InvertIf
 
 namespace ChangeTracker.Application.UseCases.Labels.AddChangeLogLineLabel
 {
     public class AddChangeLogLineLabelInteractor : IAddChangeLogLineLabel
     {
+        private readonly IChangeLogCommandsDao _changeLogCommands;
+        private readonly IChangeLogQueriesDao _changeLogQueries;
         private readonly IUnitOfWork _unitOfWork;
-        private readonly IChangeLogDao _changeLogDao;
-        private readonly IVersionDao _versionDao;
 
-        public AddChangeLogLineLabelInteractor(IUnitOfWork unitOfWork, IChangeLogDao changeLogDao, IVersionDao versionDao)
+        public AddChangeLogLineLabelInteractor(IUnitOfWork unitOfWork, IChangeLogQueriesDao changeLogQueries,
+            IChangeLogCommandsDao changeLogCommands)
         {
-            _unitOfWork = unitOfWork;
-            _changeLogDao = changeLogDao;
-            _versionDao = versionDao;
+            _unitOfWork = unitOfWork ?? throw new ArgumentNullException(nameof(unitOfWork));
+            _changeLogQueries = changeLogQueries ?? throw new ArgumentNullException(nameof(changeLogQueries));
+            _changeLogCommands = changeLogCommands ?? throw new ArgumentNullException(nameof(changeLogCommands));
         }
 
-        public async Task ExecuteAsync(IAddChangeLogLineLabelOutputPort output, ChangeLogLineLabelRequestModel requestModel)
+        public async Task ExecuteAsync(IAddChangeLogLineLabelOutputPort output,
+            ChangeLogLineLabelRequestModel requestModel)
         {
             _unitOfWork.Start();
 
-            var line = await _changeLogDao.FindLineAsync(requestModel.ChangeLogLineId);
+            var line = await _changeLogQueries.FindLineAsync(requestModel.ChangeLogLineId);
             if (line.HasNoValue)
             {
                 output.ChangeLogLineDoesNotExist();
+                return;
+            }
+
+            if (line.Value.AvailableLabelPlaces <= 0)
+            {
+                output.MaxLabelsReached(ChangeLogLine.MaxLabels);
                 return;
             }
 
@@ -39,48 +48,14 @@ namespace ChangeTracker.Application.UseCases.Labels.AddChangeLogLineLabel
                 return;
             }
 
-            if (line.Value.IsPending)
-            {
-                await AddLabelAsync(output, line.Value, label);
-                return;
-            }
-
-            if (await IsVersionReadOnlyAsync(output, line.Value))
-                return;
-
             await AddLabelAsync(output, line.Value, label);
-        }
-
-        private async Task<bool> IsVersionReadOnlyAsync(IAddChangeLogLineLabelOutputPort output, ChangeLogLine line)
-        {
-            var version = await _versionDao.GetVersionAsync(line.ProjectId, line.VersionId!.Value);
-
-            if (version.IsReleased)
-            {
-                output.RelatedVersionAlreadyReleased();
-                return true;
-            }
-
-            if (version.IsDeleted)
-            {
-                output.RelatedVersionDeleted();
-                return true;
-            }
-
-            return false;
         }
 
         private async Task AddLabelAsync(IAddChangeLogLineLabelOutputPort output, ChangeLogLine line, Label label)
         {
-            if (line.AvailableLabelPlaces <= 0)
-            {
-                output.MaxLabelsReached(ChangeLogLine.MaxLabels);
-                return;
-            }
-
             line.AddLabel(label);
 
-            await _changeLogDao.UpdateLineAsync(line)
+            await _changeLogCommands.UpdateLineAsync(line)
                 .Match(Finish, c => output.Conflict(c.Reason));
 
             void Finish(int count)

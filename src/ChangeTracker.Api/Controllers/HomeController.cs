@@ -4,6 +4,7 @@ using ChangeTracker.Api.DTOs;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Hosting;
+
 // ReSharper disable InconsistentNaming
 
 namespace ChangeTracker.Api.Controllers

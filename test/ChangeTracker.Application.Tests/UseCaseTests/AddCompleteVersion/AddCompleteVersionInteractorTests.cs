@@ -32,7 +32,7 @@ namespace ChangeTracker.Application.Tests.UseCaseTests.AddCompleteVersion
         }
 
         private AddCompleteVersionInteractor CreateInteractor() => new(_projectDaoStub, _versionDaoStub,
-            _changeLogDaoStub, _unitOfWorkMock.Object);
+            _unitOfWorkMock.Object, _changeLogDaoStub);
 
         [Fact]
         public async Task AddCompleteVersion_ValidVersion_Successful()

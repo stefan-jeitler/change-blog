@@ -26,11 +26,11 @@ namespace ChangeTracker.Application.Tests.TestDoubles
             DateTime.Parse("2021-04-05T15:00:00"),
             null);
 
-        public static readonly Project Project = new(Guid.Parse("ab9f36eb-0cc5-4855-bddb-a3d5d8ad0117"), 
+        public static readonly Project Project = new(Guid.Parse("ab9f36eb-0cc5-4855-bddb-a3d5d8ad0117"),
             Id,
             Name.Parse("Test Project"),
             CustomVersioningScheme,
-            DateTime.Parse("2021-04-04"), 
+            DateTime.Parse("2021-04-04"),
             null);
     }
 }

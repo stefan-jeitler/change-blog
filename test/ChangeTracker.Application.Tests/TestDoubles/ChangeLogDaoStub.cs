@@ -9,15 +9,10 @@ using CSharpFunctionalExtensions;
 
 namespace ChangeTracker.Application.Tests.TestDoubles
 {
-    public class ChangeLogDaoStub : IChangeLogDao
+    public class ChangeLogDaoStub : IChangeLogQueriesDao, IChangeLogCommandsDao
     {
         public List<ChangeLogLine> ChangeLogs { get; set; } = new();
         public bool ProduceConflict { get; set; }
-
-        public Task<Maybe<ChangeLogLine>> FindLineAsync(Guid changeLogLineId)
-        {
-            return Task.FromResult(ChangeLogs.TryFirst(x => x.Id == changeLogLineId));
-        }
 
         public async Task<Result<ChangeLogLine, Conflict>> AddLineAsync(ChangeLogLine changeLogLine)
         {
@@ -44,6 +39,24 @@ namespace ChangeTracker.Application.Tests.TestDoubles
             return Result.Success<int, Conflict>(lines.Count);
         }
 
+        public async Task<Result<int, Conflict>> UpdateLineAsync(ChangeLogLine changeLogLine)
+        {
+            await Task.Yield();
+
+            if (ProduceConflict)
+                return Result.Failure<int, Conflict>(new Conflict("some conflict."));
+
+            ChangeLogs.RemoveAll(x => x.Id == changeLogLine.Id);
+            ChangeLogs.Add(changeLogLine);
+
+            return Result.Success<int, Conflict>(1);
+        }
+
+        public Task<Maybe<ChangeLogLine>> FindLineAsync(Guid changeLogLineId)
+        {
+            return Task.FromResult(ChangeLogs.TryFirst(x => x.Id == changeLogLineId));
+        }
+
         public async Task<ChangeLogsMetadata> GetChangeLogsMetadataAsync(Guid projectId, Guid? versionId)
         {
             await Task.Yield();
@@ -58,19 +71,6 @@ namespace ChangeTracker.Application.Tests.TestDoubles
                     .Select(x => (int) x.Position)
                     .DefaultIfEmpty(-1)
                     .Max());
-        }
-
-        public async Task<Result<int, Conflict>> UpdateLineAsync(ChangeLogLine line)
-        {
-            await Task.Yield();
-
-            if (ProduceConflict)
-                return Result.Failure<int, Conflict>(new Conflict("some conflict."));
-
-            ChangeLogs.RemoveAll(x => x.Id == line.Id);
-            ChangeLogs.Add(line);
-
-            return Result.Success<int, Conflict>(1);
         }
     }
 }

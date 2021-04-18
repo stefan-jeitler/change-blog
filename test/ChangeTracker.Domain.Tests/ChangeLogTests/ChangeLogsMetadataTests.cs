@@ -47,6 +47,14 @@ namespace ChangeTracker.Domain.Tests.ChangeLogTests
         }
 
         [Fact]
+        public void Create_WithPositionSmallerThanMinusOne_ArgumentException()
+        {
+            Func<ChangeLogsMetadata> act = () => new ChangeLogsMetadata(TestProjectId, null, 1, -2);
+
+            act.Should().ThrowExactly<ArgumentException>();
+        }
+
+        [Fact]
         public void RemainingPositionsToAdd_FiveNotesExists_NinetyFiveAvailablePositions()
         {
             var changeLogsMetaData = new ChangeLogsMetadata(TestProjectId, TestVersionId, 5, 4);

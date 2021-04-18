@@ -9,7 +9,5 @@ namespace ChangeTracker.Application.UseCases.UpdateChangeLogLine
         void ChangeLogLineDoesNotExist();
         void NotModified();
         void Conflict(string reason);
-        void RelatedVersionAlreadyReleased();
-        void RelatedVersionDeleted();
     }
 }

@@ -13,16 +13,18 @@ namespace ChangeTracker.Application.UseCases.AssignPendingLineToVersion
 {
     public class AssignPendingLogToVersionInteractor : IAssignPendingLogToVersion
     {
-        private readonly IChangeLogDao _changeLogDao;
+        private readonly IChangeLogCommandsDao _changeLogCommands;
+        private readonly IChangeLogQueriesDao _changeLogQueries;
         private readonly IUnitOfWork _unitOfWork;
         private readonly IVersionDao _versionDao;
 
-        public AssignPendingLogToVersionInteractor(IVersionDao versionDao, IChangeLogDao changeLogDao,
-            IUnitOfWork unitOfWork)
+        public AssignPendingLogToVersionInteractor(IVersionDao versionDao, IChangeLogQueriesDao changeLogQueriesDao,
+            IChangeLogCommandsDao changeLogCommands, IUnitOfWork unitOfWork)
         {
             _versionDao = versionDao ?? throw new ArgumentNullException(nameof(versionDao));
-            _changeLogDao = changeLogDao ?? throw new ArgumentNullException(nameof(changeLogDao));
+            _changeLogQueries = changeLogQueriesDao ?? throw new ArgumentNullException(nameof(changeLogQueriesDao));
             _unitOfWork = unitOfWork ?? throw new ArgumentNullException(nameof(unitOfWork));
+            _changeLogCommands = changeLogCommands ?? throw new ArgumentNullException(nameof(changeLogCommands));
         }
 
         public async Task ExecuteAsync(IAssignPendingLineOutputPort output,
@@ -34,18 +36,6 @@ namespace ChangeTracker.Application.UseCases.AssignPendingLineToVersion
             if (version.HasNoValue)
             {
                 output.VersionDoesNotExist();
-                return;
-            }
-
-            if (version.Value.IsReleased)
-            {
-                output.RelatedVersionAlreadyReleased();
-                return;
-            }
-
-            if (version.Value.IsDeleted)
-            {
-                output.RelatedVersionDeleted();
                 return;
             }
 
@@ -75,14 +65,14 @@ namespace ChangeTracker.Application.UseCases.AssignPendingLineToVersion
         private async Task AssignToVersionAsync(IAssignPendingLineOutputPort output, ClVersion version,
             Guid pendingLineId)
         {
-            var changeLogsMetadata = await _changeLogDao.GetChangeLogsMetadataAsync(version.ProjectId, version.Id);
+            var changeLogsMetadata = await _changeLogQueries.GetChangeLogsMetadataAsync(version.ProjectId, version.Id);
             if (!changeLogsMetadata.IsPositionAvailable)
             {
                 output.MaxChangeLogLinesReached(ChangeLogsMetadata.MaxChangeLogLines);
                 return;
             }
 
-            var existingLine = await _changeLogDao.FindLineAsync(pendingLineId);
+            var existingLine = await _changeLogQueries.FindLineAsync(pendingLineId);
             if (existingLine.HasNoValue)
             {
                 output.ChangeLogLineDoesNotExist();
@@ -96,7 +86,7 @@ namespace ChangeTracker.Application.UseCases.AssignPendingLineToVersion
 
         private async Task SaveLineAsync(IAssignPendingLineOutputPort output, ChangeLogLine assignedLine)
         {
-            await _changeLogDao.UpdateLineAsync(assignedLine)
+            await _changeLogCommands.UpdateLineAsync(assignedLine)
                 .Match(Finish, c => output.Conflict(c.Reason));
 
             void Finish(int count)

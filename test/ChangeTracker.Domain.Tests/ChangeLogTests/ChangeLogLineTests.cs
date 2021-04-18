@@ -74,8 +74,8 @@ namespace ChangeTracker.Domain.Tests.ChangeLogTests
 
             var line = CreateChangeLogLine();
 
-            line.DeletedAt.HasValue.Should().BeTrue();
-            line.DeletedAt.Value.Should().Be(_testDeletionDate.Value);
+            line.DeletedAt.Should().HaveValue();
+            line.DeletedAt!.Value.Should().Be(_testDeletionDate!.Value);
         }
 
         [Fact]

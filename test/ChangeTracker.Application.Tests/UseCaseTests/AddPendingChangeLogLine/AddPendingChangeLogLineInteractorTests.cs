@@ -28,7 +28,7 @@ namespace ChangeTracker.Application.Tests.UseCaseTests.AddPendingChangeLogLine
         }
 
         private AddPendingChangeLogLineInteractor CreateInteractor() =>
-            new(_projectDaoStub, _changeLogDaoStub, _unitOfWorkMock.Object);
+            new(_projectDaoStub, _changeLogDaoStub, _changeLogDaoStub, _unitOfWorkMock.Object);
 
         [Fact]
         public async Task AddChangeLogLine_NotExistingProject_ProjectDoesNotExistOutput()

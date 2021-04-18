@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using ChangeTracker.Application.ChangeLogLineParsing;
+using ChangeTracker.Application.Services.ChangeLogLineParsing;
 using ChangeTracker.Application.Tests.TestDoubles;
 using ChangeTracker.Domain.ChangeLog;
 using FluentAssertions;

@@ -1,9 +1,9 @@
 using System;
 using System.Threading.Tasks;
-using ChangeTracker.Application.ChangeLogLineParsing;
 using ChangeTracker.Application.DataAccess;
 using ChangeTracker.Application.DataAccess.Projects;
 using ChangeTracker.Application.DataAccess.Versions;
+using ChangeTracker.Application.Services.ChangeLogLineParsing;
 using ChangeTracker.Domain;
 using ChangeTracker.Domain.ChangeLog;
 using ChangeTracker.Domain.Version;
@@ -37,7 +37,7 @@ namespace ChangeTracker.Application.UseCases.AddChangeLogLine
                 return;
             }
 
-            var project = await _projectDao.FindAsync(requestModel.ProjectId);
+            var project = await _projectDao.FindProjectAsync(requestModel.ProjectId);
             if (project.HasNoValue)
             {
                 output.ProjectDoesNotExist();
@@ -60,7 +60,7 @@ namespace ChangeTracker.Application.UseCases.AddChangeLogLine
         private async Task<Maybe<ClVersion>> GetVersionAsync(IAddLineOutputPort output, Guid projectId,
             ClVersionValue versionValue)
         {
-            var version = await _versionDao.FindAsync(projectId, versionValue);
+            var version = await _versionDao.FindVersionAsync(projectId, versionValue);
             if (version.HasNoValue)
             {
                 output.VersionDoesNotExist(versionValue.Value);
@@ -69,13 +69,13 @@ namespace ChangeTracker.Application.UseCases.AddChangeLogLine
 
             if (version.Value.IsReleased)
             {
-                output.VersionAlreadyReleased(versionValue);
+                output.RelatedVersionAlreadyReleased(versionValue);
                 return Maybe<ClVersion>.None;
             }
 
             if (version.Value.IsDeleted)
             {
-                output.VersionDeleted(versionValue);
+                output.RelatedVersionDeleted(versionValue);
                 return Maybe<ClVersion>.None;
             }
 

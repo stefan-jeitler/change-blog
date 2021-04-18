@@ -2,10 +2,9 @@
 using System.Collections.Immutable;
 using System.Linq;
 using System.Threading.Tasks;
-using ChangeTracker.Application.ChangeLogLineParsing;
 using ChangeTracker.Application.DataAccess;
 using ChangeTracker.Application.DataAccess.Versions;
-using ChangeTracker.Application.Exceptions;
+using ChangeTracker.Application.Services.ChangeLogLineParsing;
 using ChangeTracker.Domain.ChangeLog;
 using CSharpFunctionalExtensions;
 
@@ -30,7 +29,7 @@ namespace ChangeTracker.Application.UseCases.UpdateChangeLogLine
         {
             _unitOfWork.Start();
 
-            var existingLine = await _changeLogDao.FindAsync(requestModel.ChangeLogLineId);
+            var existingLine = await _changeLogDao.FindLineAsync(requestModel.ChangeLogLineId);
             if (existingLine.HasNoValue)
             {
                 output.ChangeLogLineDoesNotExist();
@@ -58,23 +57,17 @@ namespace ChangeTracker.Application.UseCases.UpdateChangeLogLine
             if (existingLine.IsPending)
                 return true;
 
-            var version = await _versionDao.FindAsync(existingLine.ProjectId, existingLine.VersionId!.Value);
-            if (version.HasNoValue)
-            {
-                throw new ReallyBadException("This should never happen. " +
-                                             "The database and the current transaction guarantees that a line has an appropriate version. " +
-                                             "If this occurs anyway, file an issue.");
-            }
+            var version = await _versionDao.GetVersionAsync(existingLine.ProjectId, existingLine.VersionId!.Value);
 
-            if (version.Value.IsReleased)
+            if (version.IsReleased)
             {
-                output.AppropriateVersionAlreadyReleased();
+                output.RelatedVersionAlreadyReleased();
                 return false;
             }
 
-            if (version.Value.IsDeleted)
+            if (version.IsDeleted)
             {
-                output.AppropriateVersionDeleted();
+                output.RelatedVersionDeleted();
                 return false;
             }
 

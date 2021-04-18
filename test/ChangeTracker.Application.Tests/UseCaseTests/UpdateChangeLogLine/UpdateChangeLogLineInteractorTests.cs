@@ -142,13 +142,13 @@ namespace ChangeTracker.Application.Tests.UseCaseTests.UpdateChangeLogLine
             _versionDaoStub.Versions.Add(new ClVersion(versionId, TestAccount.Project.Id, ClVersionValue.Parse("1.2.3"),
                 DateTime.Parse("2021-04-17"), DateTime.Parse("2021-04-07"), null));
 
-            _outputPortMock.Setup(m => m.AppropriateVersionAlreadyReleased());
+            _outputPortMock.Setup(m => m.RelatedVersionAlreadyReleased());
 
             // act
             await updateLineInteractor.ExecuteAsync(_outputPortMock.Object, requestModel);
 
             // assert
-            _outputPortMock.Verify(m => m.AppropriateVersionAlreadyReleased(), Times.Once);
+            _outputPortMock.Verify(m => m.RelatedVersionAlreadyReleased(), Times.Once);
         }
 
         [Fact]
@@ -169,13 +169,13 @@ namespace ChangeTracker.Application.Tests.UseCaseTests.UpdateChangeLogLine
             _versionDaoStub.Versions.Add(new ClVersion(versionId, TestAccount.Project.Id, ClVersionValue.Parse("1.2.3"),
                 null, DateTime.Parse("2021-04-07"), DateTime.Parse("2021-01-17")));
 
-            _outputPortMock.Setup(m => m.AppropriateVersionDeleted());
+            _outputPortMock.Setup(m => m.RelatedVersionDeleted());
 
             // act
             await updateLineInteractor.ExecuteAsync(_outputPortMock.Object, requestModel);
 
             // assert
-            _outputPortMock.Verify(m => m.AppropriateVersionDeleted(), Times.Once);
+            _outputPortMock.Verify(m => m.RelatedVersionDeleted(), Times.Once);
         }
     }
 }

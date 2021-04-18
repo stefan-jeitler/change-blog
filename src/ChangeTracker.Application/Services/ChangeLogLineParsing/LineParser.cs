@@ -5,7 +5,7 @@ using CSharpFunctionalExtensions;
 // ReSharper disable ConvertIfStatementToReturnStatement
 // ReSharper disable InvertIf
 
-namespace ChangeTracker.Application.ChangeLogLineParsing
+namespace ChangeTracker.Application.Services.ChangeLogLineParsing
 {
     public static class LineParser
     {

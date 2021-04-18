@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 using ChangeTracker.Application.DataAccess;
 using ChangeTracker.Application.DataAccess.Versions;
@@ -13,7 +14,7 @@ namespace ChangeTracker.Application.Tests.TestDoubles
         public List<ClVersion> Versions { get; } = new();
         public bool ProduceConflict { get; set; }
 
-        public Task<Maybe<ClVersion>> FindAsync(Guid projectId, ClVersionValue versionValue)
+        public Task<Maybe<ClVersion>> FindVersionAsync(Guid projectId, ClVersionValue versionValue)
         {
             var version = Versions.TryFirst(x => x.ProjectId == projectId && x.Value == versionValue);
 
@@ -21,12 +22,17 @@ namespace ChangeTracker.Application.Tests.TestDoubles
             );
         }
 
-        public Task<Maybe<ClVersion>> FindAsync(Guid projectId, Guid versionId)
+        public Task<Maybe<ClVersion>> FindVersionAsync(Guid projectId, Guid versionId)
         {
             return Task.FromResult(Versions.TryFirst(x => x.ProjectId == projectId && x.Id == versionId));
         }
 
-        public Task<Result<ClVersion, Conflict>> AddAsync(ClVersion clVersion)
+        public Task<ClVersion> GetVersionAsync(Guid projectId, Guid versionId)
+        {
+            return Task.FromResult(Versions.Single(x => x.ProjectId == projectId && x.Id == versionId));
+        }
+
+        public Task<Result<ClVersion, Conflict>> AddVersionAsync(ClVersion clVersion)
         {
             if (ProduceConflict)
             {

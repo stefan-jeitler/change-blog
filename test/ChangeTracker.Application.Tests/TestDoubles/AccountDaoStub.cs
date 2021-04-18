@@ -10,7 +10,7 @@ namespace ChangeTracker.Application.Tests.TestDoubles
     {
         public Account Account { get; set; }
 
-        public Task<Maybe<Account>> FindAsync(Guid accountId) =>
+        public Task<Maybe<Account>> FindAccountAsync(Guid accountId) =>
             Task.FromResult(accountId == Account?.Id
                 ? Maybe<Account>.From(Account)
                 : Maybe<Account>.None);

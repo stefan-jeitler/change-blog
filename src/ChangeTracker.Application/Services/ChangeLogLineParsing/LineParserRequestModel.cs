@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 
-namespace ChangeTracker.Application.ChangeLogLineParsing
+namespace ChangeTracker.Application.Services.ChangeLogLineParsing
 {
     public class LineParserRequestModel
     {

@@ -1,4 +1,4 @@
-﻿namespace ChangeTracker.Application.ChangeLogLineParsing
+﻿namespace ChangeTracker.Application.Services.ChangeLogLineParsing
 {
     public interface ILineParserOutput
     {

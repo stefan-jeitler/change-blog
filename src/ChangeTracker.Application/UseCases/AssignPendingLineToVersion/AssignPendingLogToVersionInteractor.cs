@@ -30,10 +30,22 @@ namespace ChangeTracker.Application.UseCases.AssignPendingLineToVersion
         {
             _unitOfWork.Start();
 
-            var version = await _versionDao.FindAsync(requestModel.ProjectId, requestModel.VersionId);
+            var version = await _versionDao.FindVersionAsync(requestModel.ProjectId, requestModel.VersionId);
             if (version.HasNoValue)
             {
                 output.VersionDoesNotExist();
+                return;
+            }
+
+            if (version.Value.IsReleased)
+            {
+                output.RelatedVersionAlreadyReleased();
+                return;
+            }
+
+            if (version.Value.IsDeleted)
+            {
+                output.RelatedVersionDeleted();
                 return;
             }
 
@@ -50,7 +62,7 @@ namespace ChangeTracker.Application.UseCases.AssignPendingLineToVersion
 
             _unitOfWork.Start();
 
-            var version = await _versionDao.FindAsync(requestModel.ProjectId, versionValue);
+            var version = await _versionDao.FindVersionAsync(requestModel.ProjectId, versionValue);
             if (version.HasNoValue)
             {
                 output.VersionDoesNotExist();
@@ -70,7 +82,7 @@ namespace ChangeTracker.Application.UseCases.AssignPendingLineToVersion
                 return;
             }
 
-            var existingLine = await _changeLogDao.FindAsync(pendingLineId);
+            var existingLine = await _changeLogDao.FindLineAsync(pendingLineId);
             if (existingLine.HasNoValue)
             {
                 output.ChangeLogLineDoesNotExist();

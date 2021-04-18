@@ -1,5 +1,5 @@
 ﻿using System;
-using ChangeTracker.Application.ChangeLogLineParsing;
+using ChangeTracker.Application.Services.ChangeLogLineParsing;
 
 namespace ChangeTracker.Application.UseCases.AddChangeLogLine
 {
@@ -10,8 +10,8 @@ namespace ChangeTracker.Application.UseCases.AddChangeLogLine
         void Created(Guid changeLogLineId);
         void Conflict(string reason);
         void VersionDoesNotExist(string version);
-        void VersionAlreadyReleased(string version);
-        void VersionDeleted(string version);
+        void RelatedVersionAlreadyReleased(string version);
+        void RelatedVersionDeleted(string version);
         void TooManyLines(int maxChangeLogLines);
     }
 }

@@ -14,7 +14,7 @@ namespace ChangeTracker.Application.Tests.TestDoubles
         public List<ChangeLogLine> ChangeLogs { get; set; } = new();
         public bool ProduceConflict { get; set; }
 
-        public Task<Maybe<ChangeLogLine>> FindAsync(Guid changeLogLineId)
+        public Task<Maybe<ChangeLogLine>> FindLineAsync(Guid changeLogLineId)
         {
             return Task.FromResult(ChangeLogs.TryFirst(x => x.Id == changeLogLineId));
         }

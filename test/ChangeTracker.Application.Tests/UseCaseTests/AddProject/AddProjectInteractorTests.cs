@@ -74,7 +74,7 @@ namespace ChangeTracker.Application.Tests.UseCaseTests.AddProject
         }
 
         [Fact]
-        public async Task CreateProject_DeletedAccount_AccountDoesNotExistsOutput()
+        public async Task CreateProject_DeletedAccount_AccountDeletedOutput()
         {
             // arrange
             var deletedAccount = new Account(TestAccount.Id, TestAccount.Name, null, TestAccount.CreationDate,
@@ -114,7 +114,7 @@ namespace ChangeTracker.Application.Tests.UseCaseTests.AddProject
         }
 
         [Fact]
-        public async Task CreateProject_ProjectExists_InvalidNameOutput()
+        public async Task CreateProject_ProjectExists_ProjectAlreadyExistsOutput()
         {
             // arrange
             _accountDaoStub.Account =

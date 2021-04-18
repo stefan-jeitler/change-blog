@@ -2,11 +2,11 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using ChangeTracker.Application.ChangeLogLineParsing;
 using ChangeTracker.Application.DataAccess;
 using ChangeTracker.Application.DataAccess.Projects;
 using ChangeTracker.Application.DataAccess.Versions;
 using ChangeTracker.Application.Extensions;
+using ChangeTracker.Application.Services.ChangeLogLineParsing;
 using ChangeTracker.Application.UseCases.AddCompleteVersion.Models;
 using ChangeTracker.Domain;
 using ChangeTracker.Domain.ChangeLog;
@@ -36,7 +36,7 @@ namespace ChangeTracker.Application.UseCases.AddCompleteVersion
         public async Task ExecuteAsync(IAddCompleteVersionOutputPort output,
             CompleteVersionRequestModel versionRequestModel)
         {
-            var project = await _projectDao.FindAsync(versionRequestModel.ProjectId);
+            var project = await _projectDao.FindProjectAsync(versionRequestModel.ProjectId);
             if (project.HasNoValue)
             {
                 output.ProjectDoesNotExist();
@@ -48,7 +48,7 @@ namespace ChangeTracker.Application.UseCases.AddCompleteVersion
             if (newVersion.HasNoValue)
                 return;
 
-            if ((await _versionDao.FindAsync(project.Value.Id, newVersion.Value.Value)).HasValue)
+            if ((await _versionDao.FindVersionAsync(project.Value.Id, newVersion.Value.Value)).HasValue)
             {
                 output.VersionAlreadyExists(newVersion.Value.Value);
                 return;
@@ -139,7 +139,7 @@ namespace ChangeTracker.Application.UseCases.AddCompleteVersion
             IEnumerable<ChangeLogLine> lines)
         {
             await _versionDao
-                .AddAsync(newVersion)
+                .AddVersionAsync(newVersion)
                 .Bind(_ => _changeLogDao.AddLinesAsync(lines))
                 .Match(Finish, c => output.Conflict(c));
 

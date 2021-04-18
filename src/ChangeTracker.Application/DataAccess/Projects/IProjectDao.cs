@@ -8,8 +8,8 @@ namespace ChangeTracker.Application.DataAccess.Projects
 {
     public interface IProjectDao
     {
-        Task<Maybe<Project>> FindAsync(Guid accountId, Name name);
-        Task<Maybe<Project>> FindAsync(Guid projectId);
-        Task<Result<Project, Conflict>> AddAsync(Project newProject);
+        Task<Maybe<Project>> FindProjectAsync(Guid accountId, Name name);
+        Task<Maybe<Project>> FindProjectAsync(Guid projectId);
+        Task<Result<Project, Conflict>> AddProjectAsync(Project newProject);
     }
 }

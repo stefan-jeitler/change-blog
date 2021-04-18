@@ -14,7 +14,7 @@ namespace ChangeTracker.Application.Tests.TestDoubles
         public List<Project> Projects { get; set; } = new();
         public bool ProduceConflict { get; set; }
 
-        public Task<Maybe<Project>> FindAsync(Guid accountId, Name name)
+        public Task<Maybe<Project>> FindProjectAsync(Guid accountId, Name name)
         {
             var project = Projects.TryFirst(x => x.AccountId == accountId
                                                  && x.Name == name);
@@ -22,10 +22,10 @@ namespace ChangeTracker.Application.Tests.TestDoubles
             return Task.FromResult(project);
         }
 
-        public Task<Maybe<Project>> FindAsync(Guid projectId) =>
+        public Task<Maybe<Project>> FindProjectAsync(Guid projectId) =>
             Task.FromResult(Projects.TryFirst(x => x.Id == projectId));
 
-        public Task<Result<Project, Conflict>> AddAsync(Project newProject)
+        public Task<Result<Project, Conflict>> AddProjectAsync(Project newProject)
         {
             if (ProduceConflict)
             {

@@ -29,7 +29,7 @@ namespace ChangeTracker.Application.Tests.UseCaseTests.AddVersion
             new(_versionDaoStub, _projectDaoStub, _unitOfWorkMock.Object);
 
         [Fact]
-        public async Task CreateVersion_Successful()
+        public async Task CreateVersion_HappyPath_Successful()
         {
             // arrange
             _projectDaoStub.Projects.Add(TestAccount.Project);
@@ -79,7 +79,7 @@ namespace ChangeTracker.Application.Tests.UseCaseTests.AddVersion
         }
 
         [Fact]
-        public async Task CreateVersion_WithInvalidVersionValue_VersionSchemeMismatchOutput()
+        public async Task CreateVersion_VersionSchemeMismatch_VersionDoesNotMatchSchemeOutput()
         {
             // arrange
             _projectDaoStub.Projects.Add(new Project(TestAccount.Project.Id, TestAccount.Id, TestAccount.Project.Name,

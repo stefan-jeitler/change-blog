@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using ChangeTracker.Domain.ChangeLog;
 
-namespace ChangeTracker.Application.ChangeLogLineParsing
+namespace ChangeTracker.Application.Services.ChangeLogLineParsing
 {
     public class LineParserResponseModel
     {

@@ -1,9 +1,9 @@
 ﻿using System;
 using System.Threading.Tasks;
-using ChangeTracker.Application.ChangeLogLineParsing;
 using ChangeTracker.Application.DataAccess;
 using ChangeTracker.Application.DataAccess.Projects;
 using ChangeTracker.Application.DataAccess.Versions;
+using ChangeTracker.Application.Services.ChangeLogLineParsing;
 using ChangeTracker.Domain;
 using ChangeTracker.Domain.ChangeLog;
 using CSharpFunctionalExtensions;
@@ -27,7 +27,7 @@ namespace ChangeTracker.Application.UseCases.AddPendingChangeLogLine
         public async Task ExecuteAsync(IAddPendingLineOutputPort output,
             PendingLineRequestModel lineRequestModel)
         {
-            var project = await _projectDao.FindAsync(lineRequestModel.ProjectId);
+            var project = await _projectDao.FindProjectAsync(lineRequestModel.ProjectId);
             if (project.HasNoValue)
             {
                 output.ProjectDoesNotExist();

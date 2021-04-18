@@ -10,5 +10,7 @@ namespace ChangeTracker.Application.UseCases.AssignPendingLineToVersion
         void ChangeLogLineDoesNotExist();
         void Conflict(string reason);
         void Assigned(Guid versionId, Guid changeLogLineId);
+        void RelatedVersionAlreadyReleased();
+        void RelatedVersionDeleted();
     }
 }

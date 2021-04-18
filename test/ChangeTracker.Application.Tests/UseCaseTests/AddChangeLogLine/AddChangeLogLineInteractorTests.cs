@@ -231,14 +231,14 @@ namespace ChangeTracker.Application.Tests.UseCaseTests.AddChangeLogLine
 
             var addLineInteractor = CreateInteractor();
 
-            _outputPortMock.Setup(m => m.VersionAlreadyReleased(It.IsAny<string>()));
+            _outputPortMock.Setup(m => m.RelatedVersionAlreadyReleased(It.IsAny<string>()));
             _unitOfWorkMock.Setup(m => m.Start());
 
             // act
             await addLineInteractor.ExecuteAsync(_outputPortMock.Object, changeLogLineRequestModel);
 
             // assert
-            _outputPortMock.Verify(m => m.VersionAlreadyReleased(It.Is<string>(x => x == "1.2")), Times.Once);
+            _outputPortMock.Verify(m => m.RelatedVersionAlreadyReleased(It.Is<string>(x => x == "1.2")), Times.Once);
         }
 
         [Fact]
@@ -265,14 +265,14 @@ namespace ChangeTracker.Application.Tests.UseCaseTests.AddChangeLogLine
 
             var addLineInteractor = CreateInteractor();
 
-            _outputPortMock.Setup(m => m.VersionDeleted(It.IsAny<string>()));
+            _outputPortMock.Setup(m => m.RelatedVersionDeleted(It.IsAny<string>()));
             _unitOfWorkMock.Setup(m => m.Start());
 
             // act
             await addLineInteractor.ExecuteAsync(_outputPortMock.Object, changeLogLineRequestModel);
 
             // assert
-            _outputPortMock.Verify(m => m.VersionDeleted(It.Is<string>(x => x == "1.2")), Times.Once);
+            _outputPortMock.Verify(m => m.RelatedVersionDeleted(It.Is<string>(x => x == "1.2")), Times.Once);
         }
 
         [Fact]

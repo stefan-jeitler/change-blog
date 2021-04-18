@@ -7,6 +7,6 @@ namespace ChangeTracker.Application.DataAccess.Accounts
 {
     public interface IAccountDao
     {
-        Task<Maybe<Account>> FindAsync(Guid accountId);
+        Task<Maybe<Account>> FindAccountAsync(Guid accountId);
     }
 }

@@ -1,5 +1,5 @@
 ﻿using System;
-using ChangeTracker.Application.ChangeLogLineParsing;
+using ChangeTracker.Application.Services.ChangeLogLineParsing;
 
 namespace ChangeTracker.Application.UseCases.AddCompleteVersion
 {

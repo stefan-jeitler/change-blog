@@ -210,6 +210,69 @@ namespace ChangeTracker.Application.Tests.UseCaseTests.AssignPendingLineToVersio
         }
 
         [Fact]
+        public async Task AssignPendingLine_VersionAlreadyReleased_RelatedVersionAlreadyReleasedOutput()
+        {
+            // arrange
+            var lineId = Guid.Parse("2b4b147a-9ebd-4350-a45b-aaae5d8d63de");
+            _projectDaoStub.Projects.Add(new Project(TestAccount.Id,
+                Name.Parse("Test Project"),
+                TestAccount.CustomVersioningScheme,
+                TestAccount.CreationDate));
+
+            var clVersion = new ClVersion(Guid.NewGuid(), TestAccount.Project.Id, ClVersionValue.Parse("1.2"), 
+                DateTime.Parse("2021-04-17"), DateTime.Parse("2021-04-17"), null);
+            _versionDaoStub.Versions.Add(clVersion);
+
+            var line = new ChangeLogLine(lineId, clVersion.Id, TestAccount.Project.Id,
+                ChangeLogText.Parse("Some new changes"), 0, DateTime.Parse("2021-04-12"));
+            _changeLogDaoStub.ChangeLogs.Add(line);
+
+
+            var assignmentRequestModel =
+                new VersionIdAssignmentRequestModel(TestAccount.Project.Id, clVersion.Id, lineId);
+            var assignToVersionInteractor = CreateInteractor();
+
+            _outputPortMock.Setup(m => m.RelatedVersionAlreadyReleased());
+
+            // act
+            await assignToVersionInteractor.ExecuteAsync(_outputPortMock.Object, assignmentRequestModel);
+
+            // assert
+            _outputPortMock.Verify(m => m.RelatedVersionAlreadyReleased(), Times.Once);
+        }
+
+        [Fact]
+        public async Task AssignPendingLine_VersionDeleted_RelatedVersionDeletedOutput()
+        {
+            // arrange
+            var lineId = Guid.Parse("2b4b147a-9ebd-4350-a45b-aaae5d8d63de");
+            _projectDaoStub.Projects.Add(new Project(TestAccount.Id,
+                Name.Parse("Test Project"),
+                TestAccount.CustomVersioningScheme,
+                TestAccount.CreationDate));
+
+            var clVersion = new ClVersion(Guid.NewGuid(), TestAccount.Project.Id, ClVersionValue.Parse("1.2"), 
+                null, DateTime.Parse("2021-04-17"), DateTime.Parse("2021-04-17"));
+            _versionDaoStub.Versions.Add(clVersion);
+
+            var line = new ChangeLogLine(lineId, clVersion.Id, TestAccount.Project.Id,
+                ChangeLogText.Parse("Some new changes"), 0, DateTime.Parse("2021-04-12"));
+            _changeLogDaoStub.ChangeLogs.Add(line);
+
+            var assignmentRequestModel =
+                new VersionIdAssignmentRequestModel(TestAccount.Project.Id, clVersion.Id, lineId);
+            var assignToVersionInteractor = CreateInteractor();
+
+            _outputPortMock.Setup(m => m.RelatedVersionDeleted());
+
+            // act
+            await assignToVersionInteractor.ExecuteAsync(_outputPortMock.Object, assignmentRequestModel);
+
+            // assert
+            _outputPortMock.Verify(m => m.RelatedVersionDeleted(), Times.Once);
+        }
+
+        [Fact]
         public async Task AssignPendingLine_ConflictWhileSaving_ConflictOutput()
         {
             // arrange

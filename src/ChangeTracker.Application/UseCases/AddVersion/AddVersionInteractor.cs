@@ -32,14 +32,14 @@ namespace ChangeTracker.Application.UseCases.AddVersion
             }
 
             _unitOfWork.Start();
-            var project = await _projectDao.FindAsync(projectId);
+            var project = await _projectDao.FindProjectAsync(projectId);
             if (project.HasNoValue)
             {
                 output.ProjectDoesNotExist();
                 return;
             }
 
-            var clVersion = await _versionDao.FindAsync(project.Value.Id, version);
+            var clVersion = await _versionDao.FindVersionAsync(project.Value.Id, version);
             if (clVersion.HasValue)
             {
                 output.VersionAlreadyExists(version.Value);
@@ -66,7 +66,7 @@ namespace ChangeTracker.Application.UseCases.AddVersion
                 null);
 
             await _versionDao
-                .AddAsync(version)
+                .AddVersionAsync(version)
                 .Match(Finish, c => output.Conflict(c));
 
             void Finish(ClVersion vInfo)

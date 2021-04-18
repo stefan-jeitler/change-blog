@@ -1,6 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
-using ChangeTracker.Application.ChangeLogLineParsing;
+using ChangeTracker.Application.Services.ChangeLogLineParsing;
 using FluentAssertions;
 using Xunit;
 

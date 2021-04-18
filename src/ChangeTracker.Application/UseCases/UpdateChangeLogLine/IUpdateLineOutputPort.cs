@@ -1,5 +1,5 @@
 ﻿using System;
-using ChangeTracker.Application.ChangeLogLineParsing;
+using ChangeTracker.Application.Services.ChangeLogLineParsing;
 
 namespace ChangeTracker.Application.UseCases.UpdateChangeLogLine
 {
@@ -9,7 +9,7 @@ namespace ChangeTracker.Application.UseCases.UpdateChangeLogLine
         void ChangeLogLineDoesNotExist();
         void NotModified();
         void Conflict(string reason);
-        void AppropriateVersionAlreadyReleased();
-        void AppropriateVersionDeleted();
+        void RelatedVersionAlreadyReleased();
+        void RelatedVersionDeleted();
     }
 }

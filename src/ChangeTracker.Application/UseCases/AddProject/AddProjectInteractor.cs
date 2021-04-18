@@ -42,7 +42,7 @@ namespace ChangeTracker.Application.UseCases.AddProject
                 return;
             }
 
-            var existingProject = await _projectDao.FindAsync(account.Value.Id, name);
+            var existingProject = await _projectDao.FindProjectAsync(account.Value.Id, name);
             if (existingProject.HasValue)
             {
                 output.ProjectAlreadyExists();
@@ -62,7 +62,7 @@ namespace ChangeTracker.Application.UseCases.AddProject
 
         private async Task<Maybe<Account>> GetAccountAsync(IAddProjectOutputPort output, Guid accountId)
         {
-            var account = await _accountDao.FindAsync(accountId);
+            var account = await _accountDao.FindAccountAsync(accountId);
             if (account.HasNoValue)
             {
                 output.AccountDoesNotExist();
@@ -91,7 +91,7 @@ namespace ChangeTracker.Application.UseCases.AddProject
         private async Task SaveProjectAsync(IAddProjectOutputPort output, Project newProject)
         {
             await _projectDao
-                .AddAsync(newProject)
+                .AddProjectAsync(newProject)
                 .Match(Finish, c => output.Conflict(c));
 
             void Finish(Project x)

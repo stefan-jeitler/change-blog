@@ -69,10 +69,10 @@ namespace ChangeTracker.Application.UseCases.AddVersion
                 .AddVersionAsync(version)
                 .Match(Finish, c => output.Conflict(c));
 
-            void Finish(ClVersion vInfo)
+            void Finish(ClVersion v)
             {
                 _unitOfWork.Commit();
-                output.Created(vInfo.Id);
+                output.Created(v.Id);
             }
         }
     }

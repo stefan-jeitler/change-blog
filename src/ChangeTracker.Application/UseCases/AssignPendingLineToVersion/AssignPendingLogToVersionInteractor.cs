@@ -89,10 +89,10 @@ namespace ChangeTracker.Application.UseCases.AssignPendingLineToVersion
             await _changeLogCommands.UpdateLineAsync(assignedLine)
                 .Match(Finish, c => output.Conflict(c.Reason));
 
-            void Finish(int count)
+            void Finish(ChangeLogLine l)
             {
                 _unitOfWork.Commit();
-                output.Assigned(assignedLine.VersionId!.Value, assignedLine.Id);
+                output.Assigned(l.VersionId!.Value, l.Id);
             }
         }
     }

@@ -9,6 +9,6 @@ namespace ChangeTracker.Application.DataAccess.Versions
     {
         Task<Result<ChangeLogLine, Conflict>> AddLineAsync(ChangeLogLine changeLogLine);
         Task<Result<int, Conflict>> AddLinesAsync(IEnumerable<ChangeLogLine> changeLogLines);
-        Task<Result<int, Conflict>> UpdateLineAsync(ChangeLogLine changeLogLine);
+        Task<Result<ChangeLogLine, Conflict>> UpdateLineAsync(ChangeLogLine changeLogLine);
     }
 }

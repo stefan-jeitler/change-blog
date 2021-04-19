@@ -52,7 +52,7 @@ namespace ChangeTracker.Application.Decorators
             return await _changeLogCommandsComponent.AddLinesAsync(lines);
         }
 
-        public Task<Result<int, Conflict>> UpdateLineAsync(ChangeLogLine changeLogLine)
+        public Task<Result<ChangeLogLine, Conflict>> UpdateLineAsync(ChangeLogLine changeLogLine)
         {
             return CheckVersionAsync(changeLogLine)
                 .Bind(l => _changeLogCommandsComponent.UpdateLineAsync(l));

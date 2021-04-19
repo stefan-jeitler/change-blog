@@ -48,7 +48,6 @@ namespace ChangeTracker.Application.Tests.UseCaseTests.UpdateChangeLogLine
             // act
             await updateLineInteractor.ExecuteAsync(_outputPortMock.Object, requestModel);
 
-
             // assert
             _outputPortMock.Verify(m => m.Updated(It.Is<Guid>(x => x == lineId)), Times.Once);
             _unitOfWorkMock.Verify(m => m.Start(), Times.Once);
@@ -97,29 +96,6 @@ namespace ChangeTracker.Application.Tests.UseCaseTests.UpdateChangeLogLine
 
             // assert
             _outputPortMock.Verify(m => m.ChangeLogLineDoesNotExist(), Times.Once);
-        }
-
-        [Fact]
-        public async Task UpdateLine_WithoutChanges_NotModifiedOutput()
-        {
-            // arrange
-            var lineId = Guid.Parse("0683e1e1-0e0d-405c-b77e-a6d0d5141b67");
-            const string text = "some features added";
-            var labels = new List<string> {"FirstLabel", "SecondLabel"};
-            var requestModel = new ChangeLogLineRequestModel(lineId, text, labels, Array.Empty<string>());
-            var updateLineInteractor = CreateInteractor();
-
-            _changeLogDaoStub.ChangeLogs.Add(new ChangeLogLine(lineId, null, TestAccount.Project.Id,
-                ChangeLogText.Parse(text), 0, DateTime.Parse("2021-04-17"), labels.Select(Label.Parse),
-                Array.Empty<Issue>()));
-
-            _outputPortMock.Setup(m => m.NotModified());
-
-            // act
-            await updateLineInteractor.ExecuteAsync(_outputPortMock.Object, requestModel);
-
-            // assert
-            _outputPortMock.Verify(m => m.NotModified(), Times.Once);
         }
     }
 }

@@ -6,5 +6,7 @@ namespace ChangeTracker.Application.UseCases.Labels.RemoveChangeLogLineLabel
     {
         void Removed(Guid lineId);
         void InvalidLabel(string label);
+        void Conflict(string reason);
+        void ChangeLogLineDoesNotExist();
     }
 }

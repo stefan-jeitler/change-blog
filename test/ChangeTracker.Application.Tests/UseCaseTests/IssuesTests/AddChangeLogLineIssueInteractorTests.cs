@@ -1,41 +1,40 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using ChangeTracker.Application.DataAccess;
 using ChangeTracker.Application.Tests.TestDoubles;
-using ChangeTracker.Application.UseCases.Labels.AddChangeLogLineLabel;
-using ChangeTracker.Application.UseCases.Labels.SharedModels;
+using ChangeTracker.Application.UseCases.Issues.AddChangeLogLineIssue;
+using ChangeTracker.Application.UseCases.Issues.SharedModels;
 using ChangeTracker.Domain.ChangeLog;
 using FluentAssertions;
 using Moq;
 using Xunit;
 
-namespace ChangeTracker.Application.Tests.UseCaseTests.LabelsTests
+namespace ChangeTracker.Application.Tests.UseCaseTests.IssuesTests
 {
-    public class AddChangeLogLineLabelInteractorTests
+    public class AddChangeLogLineIssueInteractorTests
     {
         private readonly ChangeLogDaoStub _changeLogDaoStub;
-        private readonly Mock<IAddChangeLogLineLabelOutputPort> _outputPortMock;
+        private readonly Mock<IAddChangeLogLineIssueOutputPort> _outputPortMock;
         private readonly Mock<IUnitOfWork> _unitOfWorkMock;
 
-        public AddChangeLogLineLabelInteractorTests()
+        public AddChangeLogLineIssueInteractorTests()
         {
-            _outputPortMock = new Mock<IAddChangeLogLineLabelOutputPort>(MockBehavior.Strict);
+            _outputPortMock = new Mock<IAddChangeLogLineIssueOutputPort>(MockBehavior.Strict);
             _unitOfWorkMock = new Mock<IUnitOfWork>();
             _changeLogDaoStub = new ChangeLogDaoStub();
         }
 
-        private AddChangeLogLineLabelInteractor CreateInteractor() =>
+        private AddChangeLogLineIssueInteractor CreateInteractor() =>
             new(_unitOfWorkMock.Object, _changeLogDaoStub, _changeLogDaoStub);
 
         [Fact]
-        public async Task AddLabel_HappyPath_LabelAddedAndUowCommitted()
+        public async Task AddIssue_HappyPath_IssueAddedAndUowCommitted()
         {
             // arrange
             var lineId = Guid.Parse("0683e1e1-0e0d-405c-b77e-a6d0d5141b67");
-            var label = Label.Parse("SomeLabel");
-            var requestModel = new ChangeLogLineLabelRequestModel(lineId, label.Value);
+            var issue = Issue.Parse("#1234");
+            var requestModel = new ChangeLogLineIssueRequestModel(lineId, issue.Value);
             var addLabelInteractor = CreateInteractor();
 
             _changeLogDaoStub.ChangeLogs.Add(new ChangeLogLine(lineId, null, TestAccount.Project.Id,
@@ -49,34 +48,34 @@ namespace ChangeTracker.Application.Tests.UseCaseTests.LabelsTests
             _outputPortMock.Verify(m => m.Added(It.Is<Guid>(x => x == lineId)));
             _unitOfWorkMock.Verify(m => m.Start(), Times.Once);
             _unitOfWorkMock.Verify(m => m.Commit(), Times.Once);
-            _changeLogDaoStub.ChangeLogs.Single().Labels.Should().ContainSingle(x => x == label);
+            _changeLogDaoStub.ChangeLogs.Single().Issues.Should().ContainSingle(x => x == issue);
         }
 
         [Fact]
-        public async Task AddLabel_InvalidLabel_InvalidLabelOutput()
+        public async Task AddIssue_InvalidIssue_InvalidLabelOutput()
         {
             // arrange
             var lineId = Guid.Parse("0683e1e1-0e0d-405c-b77e-a6d0d5141b67");
-            var requestModel = new ChangeLogLineLabelRequestModel(lineId, "Some Label");
+            var requestModel = new ChangeLogLineIssueRequestModel(lineId, "# 234");
             var addLabelInteractor = CreateInteractor();
 
             _changeLogDaoStub.ChangeLogs.Add(new ChangeLogLine(lineId, null, TestAccount.Project.Id,
                 ChangeLogText.Parse("Some text"), 0U, DateTime.Parse("2021-04-17")));
-            _outputPortMock.Setup(m => m.InvalidLabel(It.IsAny<string>()));
+            _outputPortMock.Setup(m => m.InvalidIssue(It.IsAny<string>()));
 
             // act
             await addLabelInteractor.ExecuteAsync(_outputPortMock.Object, requestModel);
 
             // assert
-            _outputPortMock.Verify(m => m.InvalidLabel(It.Is<string>(x => x == "Some Label")));
+            _outputPortMock.Verify(m => m.InvalidIssue(It.Is<string>(x => x == "# 234")));
         }
 
         [Fact]
-        public async Task AddLabel_ConflictWhileSaving_ConflictOutput()
+        public async Task AddIssue_ConflictWhileSaving_ConflictOutput()
         {
             // arrange
             var lineId = Guid.Parse("0683e1e1-0e0d-405c-b77e-a6d0d5141b67");
-            var requestModel = new ChangeLogLineLabelRequestModel(lineId, "SomeLabel");
+            var requestModel = new ChangeLogLineIssueRequestModel(lineId, "#1234");
             var addLabelInteractor = CreateInteractor();
 
             _changeLogDaoStub.ChangeLogs.Add(new ChangeLogLine(lineId, null, TestAccount.Project.Id,
@@ -93,19 +92,18 @@ namespace ChangeTracker.Application.Tests.UseCaseTests.LabelsTests
         }
 
         [Fact]
-        public async Task AddLabel_ExistingLineWithMaxLabels_MaxLabelsReachedOutput()
+        public async Task AddIssue_ExistingLineWithMaxLabels_MaxLabelsReachedOutput()
         {
             // arrange
             var lineId = Guid.Parse("0683e1e1-0e0d-405c-b77e-a6d0d5141b67");
-            var requestModel = new ChangeLogLineLabelRequestModel(lineId, "SomeLabel");
+            var requestModel = new ChangeLogLineIssueRequestModel(lineId, "#1234");
             var addLabelInteractor = CreateInteractor();
 
-            var existingLabels =
-                new List<string> {"Feature", "Bug", "Security", "Deprecated", "Added"}.Select(Label.Parse);
+            var existingIssues = Enumerable.Range(0, 10).Select(x => $"{x:D5}").Select(Issue.Parse);
             _changeLogDaoStub.ChangeLogs.Add(new ChangeLogLine(lineId, null, TestAccount.Project.Id,
-                ChangeLogText.Parse("Some text"), 0U, DateTime.Parse("2021-04-17"), existingLabels,
-                Array.Empty<Issue>()));
-            _outputPortMock.Setup(m => m.MaxLabelsReached(It.IsAny<int>()));
+                ChangeLogText.Parse("Some text"), 0U, DateTime.Parse("2021-04-17"), Array.Empty<Label>(),
+                existingIssues));
+            _outputPortMock.Setup(m => m.MaxIssuesReached(It.IsAny<int>()));
 
             _changeLogDaoStub.ProduceConflict = true;
 
@@ -113,15 +111,15 @@ namespace ChangeTracker.Application.Tests.UseCaseTests.LabelsTests
             await addLabelInteractor.ExecuteAsync(_outputPortMock.Object, requestModel);
 
             // assert
-            _outputPortMock.Verify(m => m.MaxLabelsReached(It.Is<int>(x => x == ChangeLogLine.MaxLabels)), Times.Once);
+            _outputPortMock.Verify(m => m.MaxIssuesReached(It.Is<int>(x => x == ChangeLogLine.MaxIssues)), Times.Once);
         }
 
         [Fact]
-        public async Task AddLabel_NotExistingChangeLogLine_ChangeLogLineDoesNotExistOutput()
+        public async Task AddIssue_NotExistingChangeLogLine_ChangeLogLineDoesNotExistOutput()
         {
             // arrange
             var lineId = Guid.Parse("0683e1e1-0e0d-405c-b77e-a6d0d5141b67");
-            var requestModel = new ChangeLogLineLabelRequestModel(lineId, "SomeLabel");
+            var requestModel = new ChangeLogLineIssueRequestModel(lineId, "#1234");
             var addLabelInteractor = CreateInteractor();
 
             _outputPortMock.Setup(m => m.ChangeLogLineDoesNotExist());

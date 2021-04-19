@@ -35,9 +35,12 @@ namespace ChangeTracker.Application.UseCases.AddChangeLogLine
                 return;
             }
 
-            var version = await GetVersionAsync(output, requestModel.ProjectId, versionValue);
+            var version = await _versionDao.FindVersionAsync(requestModel.ProjectId, versionValue);
             if (version.HasNoValue)
+            {
+                output.VersionDoesNotExist(versionValue.Value);
                 return;
+            }
 
             _unitOfWork.Start();
 
@@ -46,19 +49,6 @@ namespace ChangeTracker.Application.UseCases.AddChangeLogLine
                 return;
 
             await SaveChangeLogLineAsync(output, line.Value);
-        }
-
-        private async Task<Maybe<ClVersion>> GetVersionAsync(IAddLineOutputPort output, Guid projectId,
-            ClVersionValue versionValue)
-        {
-            var version = await _versionDao.FindVersionAsync(projectId, versionValue);
-            if (version.HasNoValue)
-            {
-                output.VersionDoesNotExist(versionValue.Value);
-                return Maybe<ClVersion>.None;
-            }
-
-            return version;
         }
 
         private async Task<Maybe<ChangeLogLine>> CreateChangeLogLineAsync(IAddLineOutputPort output,

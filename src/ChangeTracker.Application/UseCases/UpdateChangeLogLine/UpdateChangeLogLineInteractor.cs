@@ -22,9 +22,9 @@ namespace ChangeTracker.Application.UseCases.UpdateChangeLogLine
         public UpdateChangeLogLineInteractor(IChangeLogQueriesDao changeLogQueries,
             IChangeLogCommandsDao changeLogCommands, IUnitOfWork unitOfWork)
         {
-            _changeLogQueries = changeLogQueries ?? throw new ArgumentNullException(nameof(changeLogQueries)); ;
-            _unitOfWork = unitOfWork ?? throw new ArgumentNullException(nameof(unitOfWork)); ;
-            _changeLogCommands = changeLogCommands ?? throw new ArgumentNullException(nameof(changeLogCommands)); ;
+            _changeLogQueries = changeLogQueries ?? throw new ArgumentNullException(nameof(changeLogQueries));
+            _unitOfWork = unitOfWork ?? throw new ArgumentNullException(nameof(unitOfWork));
+            _changeLogCommands = changeLogCommands ?? throw new ArgumentNullException(nameof(changeLogCommands));
         }
 
         public async Task ExecuteAsync(IUpdateLineOutputPort output, ChangeLogLineRequestModel requestModel)
@@ -42,24 +42,7 @@ namespace ChangeTracker.Application.UseCases.UpdateChangeLogLine
             if (parsedNewLine.HasNoValue)
                 return;
 
-            if (NothingChanged(existingLine.Value, parsedNewLine.Value))
-            {
-                output.NotModified();
-                return;
-            }
-
             await UpdateLineAsync(output, existingLine.Value, parsedNewLine.Value);
-        }
-
-        private static bool NothingChanged(ChangeLogLine existingLine, LineParserResponseModel parsedNewLine)
-        {
-            return existingLine.Text == parsedNewLine.Text &&
-                   Same(existingLine.Labels, parsedNewLine.Labels) &&
-                   Same(existingLine.Issues, parsedNewLine.Issues);
-
-            static bool Same<T>(IImmutableSet<T> existingItems, IReadOnlyCollection<T> newItems)
-                => existingItems.Count == newItems.Count
-                   && newItems.All(existingItems.Contains);
         }
 
         private static Maybe<LineParserResponseModel> ParseLine(ILineParserOutput output,
@@ -81,10 +64,10 @@ namespace ChangeTracker.Application.UseCases.UpdateChangeLogLine
             await _changeLogCommands.UpdateLineAsync(line)
                 .Match(Finish, c => output.Conflict(c.Reason));
 
-            void Finish(int c)
+            void Finish(ChangeLogLine l)
             {
                 _unitOfWork.Commit();
-                output.Updated(line.Id);
+                output.Updated(l.Id);
             }
         }
     }

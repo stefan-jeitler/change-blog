@@ -2,21 +2,19 @@
 using System.Threading.Tasks;
 using ChangeTracker.Application.DataAccess;
 using ChangeTracker.Application.DataAccess.Versions;
-using ChangeTracker.Application.UseCases.Labels.SharedModels;
+using ChangeTracker.Application.UseCases.Issues.SharedModels;
 using ChangeTracker.Domain.ChangeLog;
 using CSharpFunctionalExtensions;
 
-// ReSharper disable InvertIf
-
-namespace ChangeTracker.Application.UseCases.Labels.AddChangeLogLineLabel
+namespace ChangeTracker.Application.UseCases.Issues.AddChangeLogLineIssue
 {
-    public class AddChangeLogLineLabelInteractor : IAddChangeLogLineLabel
+    public class AddChangeLogLineIssueInteractor : IAddChangeLogLineIssue
     {
         private readonly IChangeLogCommandsDao _changeLogCommands;
         private readonly IChangeLogQueriesDao _changeLogQueries;
         private readonly IUnitOfWork _unitOfWork;
 
-        public AddChangeLogLineLabelInteractor(IUnitOfWork unitOfWork, IChangeLogQueriesDao changeLogQueries,
+        public AddChangeLogLineIssueInteractor(IUnitOfWork unitOfWork, IChangeLogQueriesDao changeLogQueries,
             IChangeLogCommandsDao changeLogCommands)
         {
             _unitOfWork = unitOfWork ?? throw new ArgumentNullException(nameof(unitOfWork));
@@ -24,12 +22,12 @@ namespace ChangeTracker.Application.UseCases.Labels.AddChangeLogLineLabel
             _changeLogCommands = changeLogCommands ?? throw new ArgumentNullException(nameof(changeLogCommands));
         }
 
-        public async Task ExecuteAsync(IAddChangeLogLineLabelOutputPort output,
-            ChangeLogLineLabelRequestModel requestModel)
+        public async Task ExecuteAsync(IAddChangeLogLineIssueOutputPort output,
+            ChangeLogLineIssueRequestModel requestModel)
         {
-            if (!Label.TryParse(requestModel.Label, out var label))
+            if (!Issue.TryParse(requestModel.Issue, out var issue))
             {
-                output.InvalidLabel(requestModel.Label);
+                output.InvalidIssue(requestModel.Issue);
                 return;
             }
 
@@ -42,18 +40,18 @@ namespace ChangeTracker.Application.UseCases.Labels.AddChangeLogLineLabel
                 return;
             }
 
-            if (line.Value.AvailableLabelPlaces <= 0)
+            if (line.Value.AvailableIssuePlaces <= 0)
             {
-                output.MaxLabelsReached(ChangeLogLine.MaxLabels);
+                output.MaxIssuesReached(ChangeLogLine.MaxIssues);
                 return;
             }
 
-            await AddLabelAsync(output, line.Value, label);
+            await AddIssueAsync(output, line.Value, issue);
         }
 
-        private async Task AddLabelAsync(IAddChangeLogLineLabelOutputPort output, ChangeLogLine line, Label label)
+        private async Task AddIssueAsync(IAddChangeLogLineIssueOutputPort output, ChangeLogLine line, Issue issue)
         {
-            line.AddLabel(label);
+            line.AddIssue(issue);
 
             await _changeLogCommands.UpdateLineAsync(line)
                 .Match(Finish, c => output.Conflict(c.Reason));

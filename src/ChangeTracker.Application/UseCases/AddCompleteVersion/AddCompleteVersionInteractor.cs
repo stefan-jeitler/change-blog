@@ -62,6 +62,33 @@ namespace ChangeTracker.Application.UseCases.AddCompleteVersion
             await SaveCompleteVersionAsync(output, newVersion.Value, lines.Value);
         }
 
+        private static Maybe<ClVersion> CreateNewVersion(IAddCompleteVersionOutputPort output,
+            Project project, string versionCandidate, bool releaseImmediately)
+        {
+            if (!ClVersionValue.TryParse(versionCandidate, out var clVersion))
+            {
+                output.InvalidVersionFormat(versionCandidate);
+                return Maybe<ClVersion>.None;
+            }
+
+            if (!clVersion.Match(project.VersioningScheme))
+            {
+                output.VersionDoesNotMatchScheme(clVersion.Value);
+                return Maybe<ClVersion>.None;
+            }
+
+            var utcNow = DateTime.UtcNow;
+            DateTime? releaseDate = releaseImmediately ? utcNow : null;
+            var version = new ClVersion(Guid.NewGuid(),
+                project.Id,
+                clVersion,
+                releaseDate,
+                utcNow,
+                null);
+
+            return Maybe<ClVersion>.From(version);
+        }
+
         private static Maybe<IEnumerable<ChangeLogLine>> CreateLines(IAddCompleteVersionOutputPort output,
             IEnumerable<ChangeLogLineRequestModel> requestModel, ClVersion newVersion)
         {
@@ -89,33 +116,6 @@ namespace ChangeTracker.Application.UseCases.AddCompleteVersion
             }
 
             return Maybe<IEnumerable<ChangeLogLine>>.From(lines);
-        }
-
-        private static Maybe<ClVersion> CreateNewVersion(IAddCompleteVersionOutputPort output,
-            Project project, string versionCandidate, bool releaseImmediately)
-        {
-            if (!ClVersionValue.TryParse(versionCandidate, out var clVersion))
-            {
-                output.InvalidVersionFormat(versionCandidate);
-                return Maybe<ClVersion>.None;
-            }
-
-            if (!clVersion.Match(project.VersioningScheme))
-            {
-                output.VersionDoesNotMatchScheme(clVersion.Value);
-                return Maybe<ClVersion>.None;
-            }
-
-            var utcNow = DateTime.UtcNow;
-            DateTime? releaseDate = releaseImmediately ? utcNow : null;
-            var version = new ClVersion(Guid.NewGuid(),
-                project.Id,
-                clVersion,
-                releaseDate,
-                utcNow,
-                null);
-
-            return Maybe<ClVersion>.From(version);
         }
 
         private static Maybe<ChangeLogLine> CreateLine(ILineParserOutput output,

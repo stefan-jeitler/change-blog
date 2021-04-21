@@ -1,8 +1,11 @@
-﻿using System.Linq;
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 using ChangeTracker.Application.DataAccess;
 using ChangeTracker.Application.DataAccess.Versions;
 using ChangeTracker.Application.UseCases.AssignAllPendingLinesToVersion.Models;
+using ChangeTracker.Domain.ChangeLog;
 using ChangeTracker.Domain.Version;
 using CSharpFunctionalExtensions;
 
@@ -49,28 +52,44 @@ namespace ChangeTracker.Application.UseCases.AssignAllPendingLinesToVersion
                 return;
             }
 
-            var versionChangeLogs = await _changeLogQueries.GetChangeLogsMetadataAsync(projectId, clVersion.Value.Id);
+            var assignedLines = await AssignLinesAsync(output, projectId, clVersion.Value);
+            if (assignedLines.HasNoValue)
+                return;
+
+            await MoveLinesAsync(output, assignedLines.Value, clVersion.Value);
+        }
+
+        private async Task<Maybe<IEnumerable<ChangeLogLine>>> AssignLinesAsync(IAssignAllPendingLinesToVersionOutputPort output, 
+            Guid projectId, ClVersion version)
+        {
+            var versionChangeLogs = await _changeLogQueries.GetChangeLogsMetadataAsync(projectId, version.Id);
             var pendingChangeLogs = await _changeLogQueries.GetChangeLogsMetadataAsync(projectId);
 
             if (pendingChangeLogs.Count > versionChangeLogs.RemainingPositionsToAdd)
             {
                 output.TooManyLinesToAdd(versionChangeLogs.RemainingPositionsToAdd);
-                return;
+                return Maybe<IEnumerable<ChangeLogLine>>.None;
             }
 
             var lines = await _changeLogQueries.GetPendingLines(projectId);
 
             var assignedLines = lines
                 .Select((x, i) => new {Line = x, Position = versionChangeLogs.NextFreePosition + i})
-                .Select(x => x.Line.AssignToVersion(clVersion.Value.Id, (uint) x.Position));
+                .Select(x => x.Line.AssignToVersion(version.Id, (uint) x.Position));
 
+            return Maybe<IEnumerable<ChangeLogLine>>.From(assignedLines);
+        }
+
+        private async Task MoveLinesAsync(IAssignAllPendingLinesToVersionOutputPort output, IEnumerable<ChangeLogLine> assignedLines,
+            ClVersion version)
+        {
             await _changeLogCommands.MoveLinesAsync(assignedLines)
                 .Match(Finish, c => output.Conflict(c.Reason));
 
             void Finish(int count)
             {
                 _unitOfWork.Commit();
-                output.Assigned(clVersion.Value.Id);
+                output.Assigned(version.Id);
             }
         }
     }

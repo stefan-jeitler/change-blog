@@ -39,6 +39,32 @@ namespace ChangeTracker.Application.Tests.TestDoubles
             return Result.Success<int, Conflict>(lines.Count);
         }
 
+        public async Task<Result<int, Conflict>> MoveLinesAsync(IEnumerable<ChangeLogLine> changeLogLines)
+        {
+            var lines = changeLogLines.ToList();
+            foreach (var line in lines)
+            {
+                var movedLine = await MoveLineAsync(line);
+                if (movedLine.IsFailure)
+                    return Result.Failure<int, Conflict>(movedLine.Error);
+            }
+
+            return Result.Success<int, Conflict>(lines.Count);
+        }
+
+        public async Task<Result<int, Conflict>> MoveLineAsync(ChangeLogLine changeLogLine)
+        {
+            await Task.Yield();
+
+            if (ProduceConflict)
+                return Result.Failure<int, Conflict>(new Conflict("some conflict"));
+
+            ChangeLogs.RemoveAll(x => x.Id == changeLogLine.Id);
+            ChangeLogs.Add(changeLogLine);
+
+            return Result.Success<int, Conflict>(1);
+        }
+
         public async Task<Result<ChangeLogLine, Conflict>> UpdateLineAsync(ChangeLogLine changeLogLine)
         {
             await Task.Yield();
@@ -71,6 +97,15 @@ namespace ChangeTracker.Application.Tests.TestDoubles
                     .Select(x => (int) x.Position)
                     .DefaultIfEmpty(-1)
                     .Max());
+        }
+
+        public async Task<IList<ChangeLogLine>> GetPendingLines(Guid projectId)
+        {
+            await Task.Yield();
+
+            return ChangeLogs
+                .Where(x => x.IsPending)
+                .ToList();
         }
     }
 }

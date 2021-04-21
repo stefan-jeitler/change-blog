@@ -52,11 +52,31 @@ namespace ChangeTracker.Application.Decorators
             return await _changeLogCommandsComponent.AddLinesAsync(lines);
         }
 
+        public async Task<Result<int, Conflict>> MoveLinesAsync(IEnumerable<ChangeLogLine> changeLogLines)
+        {
+            var lines = changeLogLines.ToList();
+            foreach (var line in lines)
+            {
+                var result = await CheckVersionAsync(line);
+                if (result.IsFailure)
+                    return Result.Failure<int, Conflict>(result.Error);
+            }
+
+            return await _changeLogCommandsComponent.MoveLinesAsync(lines);
+        }
+
+        public Task<Result<int, Conflict>> MoveLineAsync(ChangeLogLine changeLogLine)
+        {
+            return CheckVersionAsync(changeLogLine)
+                .Bind(_ => _changeLogCommandsComponent.MoveLineAsync(changeLogLine));
+        }
+
         public Task<Result<ChangeLogLine, Conflict>> UpdateLineAsync(ChangeLogLine changeLogLine)
         {
             return CheckVersionAsync(changeLogLine)
-                .Bind(l => _changeLogCommandsComponent.UpdateLineAsync(l));
+                .Bind(_ => _changeLogCommandsComponent.UpdateLineAsync(changeLogLine));
         }
+
 
         private async Task<Result<ChangeLogLine, Conflict>> CheckVersionAsync(ChangeLogLine line)
         {

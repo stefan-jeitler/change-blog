@@ -37,7 +37,7 @@ namespace ChangeTracker.Application.Tests.UseCaseTests.AssignPendingLineToVersio
             new(_versionDaoStub, _changeLogDaoStub, _changeLogDaoStub, _unitOfWorkMock.Object);
 
         [Fact]
-        public async Task AssignPendingLineByVersionId_HappyPath_SuccessfullyAssigned()
+        public async Task AssignPendingLineByVersionId_HappyPath_AssignedAndUowCommited()
         {
             // arrange
             _projectDaoStub.Projects.Add(new Project(TestAccount.Id,

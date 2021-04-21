@@ -71,29 +71,6 @@ namespace ChangeTracker.DataAccess.Postgres.Tests
         }
 
         [Fact]
-        public void DbSession_StartTwoUowAndRollbackBoth_SecondCallPerformsRollback()
-        {
-            // arrange
-            var dbConnectionMock = new Mock<IDbConnection>();
-            var dbTransactionMock = new Mock<IDbTransaction>();
-
-            dbConnectionMock.Setup(x => x.BeginTransaction()).Returns(dbTransactionMock.Object);
-
-            var lazyDbConnection = new LazyDbConnection(() => dbConnectionMock.Object);
-            var dbSession = new DbSession(lazyDbConnection);
-
-            dbSession.Start();
-            dbSession.Start();
-
-            // act
-            dbSession.Rollback();
-            dbSession.Rollback();
-
-            // assert
-            dbTransactionMock.Verify(m => m.Rollback(), Times.Once);
-        }
-
-        [Fact]
         public void DbSession_DbConnectionIsAvailableIfNoUowStarted_Successful()
         {
             // arrange

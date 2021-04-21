@@ -72,7 +72,7 @@ namespace ChangeTracker.DataAccess.Postgres.DbUpdater
                 var duplicateVersions = string.Join(" - ", duplicates.Select(x => x.Key));
 
                 throw new Exception(
-                    $"There are DbUpdates with the same schema version. see versions: {duplicateVersions}");
+                    $"There are DbUpdates with the same schema version. see version(s): {duplicateVersions}");
             }
         }
 
@@ -91,7 +91,7 @@ namespace ChangeTracker.DataAccess.Postgres.DbUpdater
 
         private async Task CreateSchemaTableAsync()
         {
-            if (await _dbConnection.TableExistsAsync("schemaversion"))
+            if (await _dbConnection.TableExistsAsync("schema_version"))
                 return;
 
             const string createSchemaTableSql = @"

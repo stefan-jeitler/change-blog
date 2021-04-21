@@ -5,7 +5,7 @@ namespace ChangeTracker.DataAccess.Postgres
 {
     public sealed class DbSession : IDbAccessor, IUnitOfWork
     {
-        private static readonly object Lock = new();
+        private readonly object _lock = new();
         private readonly LazyDbConnection _dbConnection;
         private uint _startedUows;
         private IDbTransaction _transaction;
@@ -19,7 +19,7 @@ namespace ChangeTracker.DataAccess.Postgres
 
         public void Start()
         {
-            lock (Lock)
+            lock (_lock)
             {
                 if (_startedUows >= 1)
                 {
@@ -38,27 +38,11 @@ namespace ChangeTracker.DataAccess.Postgres
 
         public void Commit()
         {
-            lock (Lock)
+            lock (_lock)
             {
                 if (_startedUows == 1)
                 {
                     _transaction.Commit();
-                    _transaction.Dispose();
-                    _dbConnection.Value.Close();
-                }
-
-                if (_startedUows > 0)
-                    _startedUows--;
-            }
-        }
-
-        public void Rollback()
-        {
-            lock (Lock)
-            {
-                if (_startedUows == 1)
-                {
-                    _transaction.Rollback();
                     _transaction.Dispose();
                     _dbConnection.Value.Close();
                 }

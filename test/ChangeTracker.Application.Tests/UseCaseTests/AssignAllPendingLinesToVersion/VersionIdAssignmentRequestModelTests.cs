@@ -1,13 +1,16 @@
 ﻿using System;
-using ChangeTracker.Application.UseCases.AssignPendingLineToVersion.Models;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+using ChangeTracker.Application.UseCases.AssignAllPendingLinesToVersion.Models;
 using FluentAssertions;
 using Xunit;
 
-namespace ChangeTracker.Application.Tests.UseCaseTests.AssignPendingLineToVersion
+namespace ChangeTracker.Application.Tests.UseCaseTests.AssignAllPendingLinesToVersion
 {
     public class VersionIdAssignmentRequestModelTests
     {
-        private Guid _testLineId;
         private Guid _testProjectId;
         private Guid _testVersionId;
 
@@ -15,10 +18,9 @@ namespace ChangeTracker.Application.Tests.UseCaseTests.AssignPendingLineToVersio
         {
             _testProjectId = Guid.Parse("f02cf1c7-d8a7-492f-b46d-a2ba916770d0");
             _testVersionId = Guid.Parse("30027f7d-91e4-4d08-afdc-a21d19656bb6");
-            _testLineId = Guid.Parse("1763b2e7-9835-4992-8f73-8c2026530b2c");
         }
 
-        public VersionIdAssignmentRequestModel CreateRequestModel() => new(_testProjectId, _testVersionId, _testLineId);
+        public VersionIdAssignmentRequestModel CreateRequestModel() => new(_testProjectId, _testVersionId);
 
         [Fact]
         public void Create_HappyPath_Successful()
@@ -27,7 +29,6 @@ namespace ChangeTracker.Application.Tests.UseCaseTests.AssignPendingLineToVersio
 
             requestModel.ProjectId.Should().Be(_testProjectId);
             requestModel.VersionId.Should().Be(_testVersionId);
-            requestModel.ChangeLogLineId.Should().Be(_testLineId);
         }
 
         [Fact]
@@ -44,16 +45,6 @@ namespace ChangeTracker.Application.Tests.UseCaseTests.AssignPendingLineToVersio
         public void Create_WithEmptyVersionId_ArgumentException()
         {
             _testVersionId = Guid.Empty;
-
-            Func<VersionIdAssignmentRequestModel> act = CreateRequestModel;
-
-            act.Should().ThrowExactly<ArgumentException>();
-        }
-
-        [Fact]
-        public void Create_WithEmptyLineId_ArgumentException()
-        {
-            _testLineId = Guid.Empty;
 
             Func<VersionIdAssignmentRequestModel> act = CreateRequestModel;
 

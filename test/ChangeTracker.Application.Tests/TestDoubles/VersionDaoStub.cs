@@ -18,8 +18,7 @@ namespace ChangeTracker.Application.Tests.TestDoubles
         {
             var version = Versions.TryFirst(x => x.ProjectId == projectId && x.Value == versionValue);
 
-            return Task.FromResult(version
-            );
+            return Task.FromResult(version);
         }
 
         public Task<Maybe<ClVersion>> FindVersionAsync(Guid projectId, Guid versionId)

@@ -4,6 +4,5 @@
     {
         public void Start();
         public void Commit();
-        public void Rollback();
     }
 }

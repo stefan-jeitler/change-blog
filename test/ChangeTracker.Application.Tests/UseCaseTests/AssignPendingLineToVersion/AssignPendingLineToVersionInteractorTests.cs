@@ -210,6 +210,35 @@ namespace ChangeTracker.Application.Tests.UseCaseTests.AssignPendingLineToVersio
         }
 
         [Fact]
+        public async Task AssignPendingLine_ExistingLineIsNotPending_ChangeLogLineIsNotPending()
+        {
+            // arrange
+            _projectDaoStub.Projects.Add(new Project(TestAccount.Id,
+                Name.Parse("Test Project"),
+                TestAccount.CustomVersioningScheme,
+                TestAccount.CreationDate));
+
+            var clVersion = new ClVersion(TestAccount.Project.Id, ClVersionValue.Parse("1.2"));
+            _versionDaoStub.Versions.Add(clVersion);
+
+            var line = new ChangeLogLine(Guid.NewGuid(), clVersion.Id, TestAccount.Project.Id,
+                ChangeLogText.Parse("Some new changes"), 0, DateTime.Parse("2021-04-12"));
+            _changeLogDaoStub.ChangeLogs.Add(line);
+
+            var assignmentRequestModel =
+                new VersionIdAssignmentRequestModel(TestAccount.Project.Id, clVersion.Id, line.Id);
+            var assignToVersionInteractor = CreateInteractor();
+
+            _outputPortMock.Setup(m => m.ChangeLogLineIsNotPending(It.IsAny<Guid>()));
+
+            // act
+            await assignToVersionInteractor.ExecuteAsync(_outputPortMock.Object, assignmentRequestModel);
+
+            // assert
+            _outputPortMock.Verify(m => m.ChangeLogLineIsNotPending(It.Is<Guid>(x => x == line.Id)), Times.Once);
+        }
+
+        [Fact]
         public async Task AssignPendingLine_ConflictWhileSaving_ConflictOutput()
         {
             // arrange
@@ -238,7 +267,7 @@ namespace ChangeTracker.Application.Tests.UseCaseTests.AssignPendingLineToVersio
 
             // assert
             _unitOfWorkMock.Verify(m => m.Commit(), Times.Never);
-            _outputPortMock.Verify(m => m.Conflict(It.IsAny<string>()));
+            _outputPortMock.Verify(m => m.Conflict(It.IsAny<string>()), Times.Once);
         }
     }
 }

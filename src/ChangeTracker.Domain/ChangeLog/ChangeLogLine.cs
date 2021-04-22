@@ -110,6 +110,9 @@ namespace ChangeTracker.Domain.ChangeLog
 
         public ChangeLogLine AssignToVersion(Guid versionId, uint position)
         {
+            if (!IsPending)
+                throw new ArgumentException("Not pending lines cannot be assigned.");
+
             if (versionId == Guid.Empty)
                 throw new ArgumentException("VersionId cannot be empty.");
 

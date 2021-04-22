@@ -79,6 +79,12 @@ namespace ChangeTracker.Application.UseCases.AssignPendingLineToVersion
                 return;
             }
 
+            if (!existingLine.Value.IsPending)
+            {
+                output.ChangeLogLineIsNotPending(existingLine.Value.Id);
+                return;
+            }
+
             var assignedLine = existingLine.Value.AssignToVersion(version.Id, changeLogsMetadata.NextFreePosition);
 
             await SaveLineAsync(output, assignedLine);

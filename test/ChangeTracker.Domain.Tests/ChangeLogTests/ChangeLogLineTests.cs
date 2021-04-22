@@ -182,11 +182,11 @@ namespace ChangeTracker.Domain.Tests.ChangeLogTests
         public void AssignToVersion_PositionProperlySet()
         {
             // arrange
-            var versionId = Guid.Parse("9102c1a0-09cf-4cb8-a6f6-fc0660be6109");
+            _testVersionId = null;
             var line = CreateChangeLogLine();
 
             // act
-            var assignedLine = line.AssignToVersion(versionId, 2);
+            var assignedLine = line.AssignToVersion(Guid.Parse("9102c1a0-09cf-4cb8-a6f6-fc0660be6109"), 2);
 
             // assert
             assignedLine.Position.Should().Be(2);
@@ -201,6 +201,21 @@ namespace ChangeTracker.Domain.Tests.ChangeLogTests
 
             // act
             Func<ChangeLogLine> act = () => line.AssignToVersion(Guid.Empty, 0);
+
+            // assert
+            act.Should().ThrowExactly<ArgumentException>();
+        }
+
+        [Fact]
+        public void AssignToVersion_LineIsNotPending_ArgumentException()
+        {
+            // arrange
+            var versionId = Guid.Parse("9102c1a0-09cf-4cb8-a6f6-fc0660be6109");
+            _testVersionId = versionId;
+            var line = CreateChangeLogLine();
+
+            // act
+            Func<ChangeLogLine> act = () => line.AssignToVersion(versionId, 0);
 
             // assert
             act.Should().ThrowExactly<ArgumentException>();

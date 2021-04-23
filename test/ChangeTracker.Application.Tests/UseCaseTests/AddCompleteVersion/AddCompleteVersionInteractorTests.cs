@@ -157,36 +157,6 @@ namespace ChangeTracker.Application.Tests.UseCaseTests.AddCompleteVersion
         }
 
         [Fact]
-        public async Task AddCompleteVersion_LineDuplicates_DuplicatesRemoved()
-        {
-            // arrange
-            var changeLogLines = new List<ChangeLogLineRequestModel>
-            {
-                new("Proxy bug resolved", new List<string> {"ProxyStrikesBack"}, new List<string> {"#123"}),
-                new("New feature added", new List<string> {"Feature"}, new List<string>()),
-                new("Allow https only", new List<string> {"Security"}, new List<string>()),
-                new("Allow https only", new List<string> {"Security"}, new List<string>())
-            };
-            var versionRequestModel = new CompleteVersionRequestModel(TestAccount.Project.Id, "1.23", changeLogLines);
-
-            _projectDaoStub.Projects.Add(TestAccount.Project);
-            _outputPortMock.Setup(m => m.Created(It.IsAny<Guid>()));
-            var addCompleteVersionInteractor = CreateInteractor();
-
-            // act
-            await addCompleteVersionInteractor.ExecuteAsync(_outputPortMock.Object, versionRequestModel);
-
-            // assert
-            _outputPortMock.Verify(m => m.Created(It.IsAny<Guid>()), Times.Once);
-
-            var createdLines = _changeLogDaoStub.ChangeLogs
-                .Where(x => x.ProjectId == TestAccount.Project.Id)
-                .ToList();
-
-            createdLines.Count.Should().Be(3);
-        }
-
-        [Fact]
         public async Task AddCompleteVersion_TooManyChangeLogLines_TooManyLinesOutput()
         {
             // arrange

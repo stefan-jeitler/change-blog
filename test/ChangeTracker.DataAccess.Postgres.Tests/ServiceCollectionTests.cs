@@ -11,7 +11,7 @@ namespace ChangeTracker.DataAccess.Postgres.Tests
         {
             // arrange
             var serviceCollection = new ServiceCollection();
-            serviceCollection.AddPostgresDbSession("connection-sting");
+            serviceCollection.AddPostgresDbSession("connection-string");
 
             using var serviceProvider = serviceCollection.BuildServiceProvider();
             using var scope = serviceProvider.CreateScope();

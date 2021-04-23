@@ -58,5 +58,125 @@ namespace ChangeTracker.Application.Tests.UseCaseTests.AssignAllPendingLinesToVe
             _changeLogDaoStub.ChangeLogs.Should().HaveCount(3);
             _changeLogDaoStub.ChangeLogs.All(x => x.VersionId == clVersion.Id).Should().BeTrue();
         }
+
+        [Fact]
+        public async Task AssignAllPendingLinesByVersionId_NotExistingVersion_VersionDoesNotExistOutput()
+        {
+            // arrange
+            var versionId = Guid.Parse("1d7831d5-32fb-437f-a9d5-bf5a7dd34b10");
+            var requestModel = new VersionIdAssignmentRequestModel(TestAccount.Project.Id, versionId);
+            var assignAllPendingLinesInteractor = CreateInteractor();
+
+            _outputPortMock.Setup(m => m.VersionDoesNotExist());
+
+            // act
+            await assignAllPendingLinesInteractor.ExecuteAsync(_outputPortMock.Object, requestModel);
+
+            // assert
+            _outputPortMock.Verify(m => m.VersionDoesNotExist(), Times.Once);
+        }
+
+        [Fact]
+        public async Task AssignAllPendingLines_InvalidVersionFormat_InvalidVersionFormatOutput()
+        {
+            // arrange
+            var requestModel = new VersionAssignmentRequestModel(TestAccount.Project.Id, "1. .3");
+            var assignAllPendingLinesInteractor = CreateInteractor();
+
+            _outputPortMock.Setup(m => m.InvalidVersionFormat(It.IsAny<string>()));
+
+            // act
+            await assignAllPendingLinesInteractor.ExecuteAsync(_outputPortMock.Object, requestModel);
+
+            // assert
+            _outputPortMock.Verify(m => m.InvalidVersionFormat(It.Is<string>(x => x == requestModel.Version)), Times.Once);
+        }
+
+        [Fact]
+        public async Task AssignAllPendingLines_NotExistingVersion_VersionDoesNotExistOutput()
+        {
+            // arrange
+            var requestModel = new VersionAssignmentRequestModel(TestAccount.Project.Id, "1.2.3");
+            var assignAllPendingLinesInteractor = CreateInteractor();
+
+            _outputPortMock.Setup(m => m.VersionDoesNotExist());
+
+            // act
+            await assignAllPendingLinesInteractor.ExecuteAsync(_outputPortMock.Object, requestModel);
+
+            // assert
+            _outputPortMock.Verify(m => m.VersionDoesNotExist(), Times.Once);
+        }
+
+        [Fact]
+        public async Task AssignAllPendingLines_NoPendingLines_NoPendingChangeLogLinesOutput()
+        {
+            // arrange
+            var requestModel = new VersionAssignmentRequestModel(TestAccount.Project.Id, "1.2.3");
+            var assignAllPendingLinesInteractor = CreateInteractor();
+
+            var clVersion = new ClVersion(TestAccount.Project.Id, ClVersionValue.Parse("1.2.3"));
+            _versionDaoStub.Versions.Add(clVersion);
+
+            _outputPortMock.Setup(m => m.NoPendingChangeLogLines());
+
+            // act
+            await assignAllPendingLinesInteractor.ExecuteAsync(_outputPortMock.Object, requestModel);
+
+            // assert
+            _outputPortMock.Verify(m => m.NoPendingChangeLogLines(), Times.Once);
+        }
+
+        [Fact]
+        public async Task AssignAllPendingLines_NotEnoughLinePlacesAvailable_TooManyLinesToAddOutput()
+        {
+            // arrange
+            var requestModel = new VersionAssignmentRequestModel(TestAccount.Project.Id, "1.2.3");
+            var assignAllPendingLinesInteractor = CreateInteractor();
+
+            var pendingLines = Enumerable.Range(0, 60)
+                .Select(x => new ChangeLogLine(null, TestAccount.Project.Id, ChangeLogText.Parse($"{x:D5}"), (uint)x));
+            _changeLogDaoStub.ChangeLogs.AddRange(pendingLines);
+
+            var clVersion = new ClVersion(TestAccount.Project.Id, ClVersionValue.Parse("1.2.3"));
+            _versionDaoStub.Versions.Add(clVersion);
+
+            var assignedLines = Enumerable.Range(0, 60)
+                .Select(x => new ChangeLogLine(clVersion.Id, TestAccount.Project.Id, ChangeLogText.Parse($"{x:D5}"), (uint)x));
+            _changeLogDaoStub.ChangeLogs.AddRange(assignedLines);
+
+            _outputPortMock.Setup(m => m.TooManyLinesToAdd(It.IsAny<uint>()));
+
+            // act
+            await assignAllPendingLinesInteractor.ExecuteAsync(_outputPortMock.Object, requestModel);
+
+            // assert
+            _outputPortMock.Verify(m => m.TooManyLinesToAdd(It.Is<uint>(x => x == 40)), Times.Once);
+        }
+
+        [Fact]
+        public async Task AssignAllPendingLines_ConflictWhileSaving_ConflictOutput()
+        {
+            // arrange
+            var requestModel = new VersionAssignmentRequestModel(TestAccount.Project.Id, "1.2.3");
+            var assignAllPendingLinesInteractor = CreateInteractor();
+
+            var pendingLines = Enumerable.Range(0, 60)
+                .Select(x => new ChangeLogLine(null, TestAccount.Project.Id, ChangeLogText.Parse($"{x:D5}"), (uint)x));
+            _changeLogDaoStub.ChangeLogs.AddRange(pendingLines);
+
+            var clVersion = new ClVersion(TestAccount.Project.Id, ClVersionValue.Parse("1.2.3"));
+            _versionDaoStub.Versions.Add(clVersion);
+
+            _changeLogDaoStub.ProduceConflict = true;
+
+            _outputPortMock.Setup(m => m.Conflict(It.IsAny<string>()));
+
+            // act
+            await assignAllPendingLinesInteractor.ExecuteAsync(_outputPortMock.Object, requestModel);
+
+            // assert
+            _outputPortMock.Verify(m => m.Conflict(It.IsAny<string>()), Times.Once);
+        }
     }
 }

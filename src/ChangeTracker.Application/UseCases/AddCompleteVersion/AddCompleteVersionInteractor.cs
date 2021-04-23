@@ -92,18 +92,17 @@ namespace ChangeTracker.Application.UseCases.AddCompleteVersion
         private static Maybe<IEnumerable<ChangeLogLine>> CreateLines(IAddCompleteVersionOutputPort output,
             IEnumerable<ChangeLogLineRequestModel> requestModel, ClVersion newVersion)
         {
-            var uniqueLines = requestModel
-                .DistinctBy(x => x.Text)
+            var lineCandidates = requestModel
                 .ToList();
 
-            if (uniqueLines.Count > ChangeLogsMetadata.MaxChangeLogLines)
+            if (lineCandidates.Count > ChangeLogsMetadata.MaxChangeLogLines)
             {
                 output.TooManyLines(ChangeLogsMetadata.MaxChangeLogLines);
                 return Maybe<IEnumerable<ChangeLogLine>>.None;
             }
 
             var lines = new List<ChangeLogLine>();
-            foreach (var (lineRequestModel, i) in uniqueLines.Select((x, i) => (x, i)))
+            foreach (var (lineRequestModel, i) in lineCandidates.Select((x, i) => (x, i)))
             {
                 var line = CreateLine(output, lineRequestModel, newVersion, (uint) i);
 
@@ -123,9 +122,12 @@ namespace ChangeTracker.Application.UseCases.AddCompleteVersion
         {
             var lineParsingRequestModel =
                 new LineParserRequestModel(requestModel.Text, requestModel.Labels, requestModel.Issues);
+
             var parsedLine = LineParser.Parse(output, lineParsingRequestModel);
             if (parsedLine.HasNoValue)
+            {
                 return Maybe<ChangeLogLine>.None;
+            }
 
             var changeLogLine = new ChangeLogLine(Guid.NewGuid(),
                 version.Id, version.ProjectId,

@@ -30,6 +30,15 @@ namespace ChangeTracker.Application.UseCases.AssignAllPendingLinesToVersion
         public async Task ExecuteAsync(IAssignAllPendingLinesToVersionOutputPort output,
             VersionIdAssignmentRequestModel requestModel)
         {
+            var clVersion = await _versionDao.FindVersionAsync(requestModel.ProjectId, requestModel.VersionId);
+
+            if (clVersion.HasNoValue)
+            {
+                output.VersionDoesNotExist();
+                return;
+            }
+
+            await AssignAllPendingLinesToVersionAsync(output, clVersion.Value);
         }
 
         public async Task ExecuteAsync(IAssignAllPendingLinesToVersionOutputPort output,
@@ -43,8 +52,6 @@ namespace ChangeTracker.Application.UseCases.AssignAllPendingLinesToVersion
                 return;
             }
 
-            _unitOfWork.Start();
-
             var clVersion = await _versionDao.FindVersionAsync(projectId, version);
             if (clVersion.HasNoValue)
             {
@@ -52,18 +59,32 @@ namespace ChangeTracker.Application.UseCases.AssignAllPendingLinesToVersion
                 return;
             }
 
-            var assignedLines = await AssignLinesAsync(output, projectId, clVersion.Value);
+            await AssignAllPendingLinesToVersionAsync(output, clVersion.Value);
+        }
+
+        private async Task AssignAllPendingLinesToVersionAsync(IAssignAllPendingLinesToVersionOutputPort output, ClVersion clVersion)
+        {
+            _unitOfWork.Start();
+
+            var assignedLines = await AssignLinesAsync(output, clVersion);
             if (assignedLines.HasNoValue)
                 return;
 
-            await MoveLinesAsync(output, assignedLines.Value, clVersion.Value);
+            await MoveLinesAsync(output, assignedLines.Value, clVersion);
         }
 
-        private async Task<Maybe<IEnumerable<ChangeLogLine>>> AssignLinesAsync(IAssignAllPendingLinesToVersionOutputPort output, 
-            Guid projectId, ClVersion version)
+        private async Task<Maybe<IEnumerable<ChangeLogLine>>> AssignLinesAsync(
+            IAssignAllPendingLinesToVersionOutputPort output, ClVersion clVersion)
         {
-            var versionChangeLogs = await _changeLogQueries.GetChangeLogsMetadataAsync(projectId, version.Id);
+            var projectId = clVersion.ProjectId;
+            var versionChangeLogs = await _changeLogQueries.GetChangeLogsMetadataAsync(projectId, clVersion.Id);
             var pendingChangeLogs = await _changeLogQueries.GetChangeLogsMetadataAsync(projectId);
+
+            if (pendingChangeLogs.Count == 0)
+            {
+                output.NoPendingChangeLogLines();
+                return Maybe<IEnumerable<ChangeLogLine>>.None;
+            }
 
             if (pendingChangeLogs.Count > versionChangeLogs.RemainingPositionsToAdd)
             {
@@ -75,13 +96,14 @@ namespace ChangeTracker.Application.UseCases.AssignAllPendingLinesToVersion
 
             var assignedLines = lines
                 .Select((x, i) => new {Line = x, Position = versionChangeLogs.NextFreePosition + i})
-                .Select(x => x.Line.AssignToVersion(version.Id, (uint) x.Position));
+                .Select(x => x.Line.AssignToVersion(clVersion.Id, (uint) x.Position));
 
             return Maybe<IEnumerable<ChangeLogLine>>.From(assignedLines);
         }
 
-        private async Task MoveLinesAsync(IAssignAllPendingLinesToVersionOutputPort output, IEnumerable<ChangeLogLine> assignedLines,
-            ClVersion version)
+        private async Task MoveLinesAsync(IAssignAllPendingLinesToVersionOutputPort output,
+            IEnumerable<ChangeLogLine> assignedLines,
+            ClVersion clVersion)
         {
             await _changeLogCommands.MoveLinesAsync(assignedLines)
                 .Match(Finish, c => output.Conflict(c.Reason));
@@ -89,7 +111,7 @@ namespace ChangeTracker.Application.UseCases.AssignAllPendingLinesToVersion
             void Finish(int count)
             {
                 _unitOfWork.Commit();
-                output.Assigned(version.Id);
+                output.Assigned(clVersion.Id);
             }
         }
     }

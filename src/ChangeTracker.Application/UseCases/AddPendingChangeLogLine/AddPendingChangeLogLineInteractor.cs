@@ -72,7 +72,6 @@ namespace ChangeTracker.Application.UseCases.AddPendingChangeLogLine
             return Maybe<ChangeLogLine>.From(changeLogLine);
         }
 
-
         private async Task SaveChangeLogLineAsync(IAddPendingLineOutputPort outputPort, ChangeLogLine line)
         {
             await _changeLogCommands

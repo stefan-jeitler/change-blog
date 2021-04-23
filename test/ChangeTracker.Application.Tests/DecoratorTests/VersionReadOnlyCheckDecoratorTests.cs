@@ -133,7 +133,7 @@ namespace ChangeTracker.Application.Tests.DecoratorTests
         }
 
         [Fact]
-        public async Task AddLines_ChangeLogLineIsPending_SuccessfullyAdded()
+        public async Task AddLines_ChangeLogLinesArePending_SuccessfullyAdded()
         {
             // arrange
             var firstLineId = Guid.Parse("0683e1e1-0e0d-405c-b77e-a6d0d5141b67");
@@ -159,7 +159,7 @@ namespace ChangeTracker.Application.Tests.DecoratorTests
         }
 
         [Fact]
-        public async Task AddLines_RelatedVersionOfSecondLineIsReadOnly_SuccessfullyAdded()
+        public async Task AddLines_RelatedVersionOfSecondLineIsReadOnly_Conflict()
         {
             // arrange
             var versionId = Guid.Parse("1d7831d5-32fb-437f-a9d5-bf5a7dd34b10");
@@ -249,6 +249,39 @@ namespace ChangeTracker.Application.Tests.DecoratorTests
             // assert
             result.IsSuccess.Should().BeTrue();
             _changeLogDaoStub.ChangeLogs.All(x => x.VersionId == versionId).Should().BeTrue();
+        }
+
+        [Fact]
+        public async Task MoveLines_RelatedVersionIsReleased_SuccessfullyMoved()
+        {
+            // arrange
+            var versionId = Guid.Parse("1d7831d5-32fb-437f-a9d5-bf5a7dd34b10");
+            var version = new ClVersion(versionId, TestAccount.Project.Id, ClVersionValue.Parse("1.2.3"),
+                DateTime.Parse("2021-04-17"), DateTime.Parse("2021-04-17"), null);
+            _versionDaoStub.Versions.Add(version);
+
+            var firstLineId = Guid.Parse("0683e1e1-0e0d-405c-b77e-a6d0d5141b67");
+            var firstLineUnassigned = new ChangeLogLine(firstLineId, null, TestAccount.Project.Id,
+                ChangeLogText.Parse("some text"),
+                0U, DateTime.Parse("2021-04-17"));
+            _changeLogDaoStub.ChangeLogs.Add(firstLineUnassigned);
+
+            var secondLineId = Guid.Parse("4d755355-b527-4a4d-afbe-ab00a025609e");
+            var secondLineUnassigned = new ChangeLogLine(secondLineId, null, TestAccount.Project.Id,
+                ChangeLogText.Parse("some other text"),
+                1U, DateTime.Parse("2021-04-17"));
+            _changeLogDaoStub.ChangeLogs.Add(secondLineUnassigned);
+
+            var firstLineAssigned = firstLineUnassigned.AssignToVersion(versionId, 0);
+            var secondLineAssigned = secondLineUnassigned.AssignToVersion(versionId, 1);
+
+            var decorator = new VersionReadonlyCheckDecorator(_changeLogDaoStub, _versionDaoStub, _memoryCache);
+
+            // act
+            var result = await decorator.MoveLinesAsync(new List<ChangeLogLine>(2) {firstLineAssigned, secondLineAssigned});
+
+            // assert
+            result.IsSuccess.Should().BeFalse();
         }
     }
 }

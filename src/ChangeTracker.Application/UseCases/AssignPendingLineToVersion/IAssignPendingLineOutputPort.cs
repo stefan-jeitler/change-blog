@@ -11,5 +11,6 @@ namespace ChangeTracker.Application.UseCases.AssignPendingLineToVersion
         void Conflict(string reason);
         void Assigned(Guid versionId, Guid changeLogLineId);
         void ChangeLogLineIsNotPending(Guid changeLogLineId);
+        void LineWithSameTextAlreadyExists(string text);
     }
 }

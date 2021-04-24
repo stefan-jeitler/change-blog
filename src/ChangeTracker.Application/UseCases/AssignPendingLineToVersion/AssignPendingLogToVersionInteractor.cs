@@ -32,7 +32,7 @@ namespace ChangeTracker.Application.UseCases.AssignPendingLineToVersion
         {
             _unitOfWork.Start();
 
-            var version = await _versionDao.FindVersionAsync(requestModel.ProjectId, requestModel.VersionId);
+            var version = await _versionDao.FindVersionAsync(requestModel.VersionId);
             if (version.HasNoValue)
             {
                 output.VersionDoesNotExist();
@@ -85,14 +85,20 @@ namespace ChangeTracker.Application.UseCases.AssignPendingLineToVersion
                 return;
             }
 
+            if (changeLogsMetadata.Texts.Contains(existingLine.Value.Text))
+            {
+                output.LineWithSameTextAlreadyExists(existingLine.Value.Text);
+                return;
+            }
+            
             var assignedLine = existingLine.Value.AssignToVersion(version.Id, changeLogsMetadata.NextFreePosition);
 
-            await SaveLineAsync(output, assignedLine);
+            await MoveLineAsync(output, assignedLine);
         }
 
-        private async Task SaveLineAsync(IAssignPendingLineOutputPort output, ChangeLogLine assignedLine)
+        private async Task MoveLineAsync(IAssignPendingLineOutputPort output, ChangeLogLine assignedLine)
         {
-            await _changeLogCommands.UpdateLineAsync(assignedLine)
+            await _changeLogCommands.MoveLineAsync(assignedLine)
                 .Match(Finish, c => output.Conflict(c.Reason));
 
             void Finish(ChangeLogLine l)

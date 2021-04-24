@@ -44,7 +44,13 @@ namespace ChangeTracker.Application.UseCases.AddChangeLogLine
 
             _unitOfWork.Start();
 
-            var line = await CreateChangeLogLineAsync(output, requestModel, version.Value);
+            await AddLineAsync(output, requestModel, version.Value);
+        }
+
+        private async Task AddLineAsync(IAddLineOutputPort output, ChangeLogLineRequestModel requestModel,
+            ClVersion clVersion)
+        {
+            var line = await CreateChangeLogLineAsync(output, requestModel, clVersion);
             if (line.HasNoValue)
                 return;
 
@@ -61,26 +67,34 @@ namespace ChangeTracker.Application.UseCases.AddChangeLogLine
             if (parsedLine.HasNoValue)
                 return Maybe<ChangeLogLine>.None;
 
-            var changeLogsMetadata = await _changeLogQueries.GetChangeLogsMetadataAsync(version.ProjectId, version.Id);
-
-            if (!changeLogsMetadata.IsPositionAvailable)
-            {
-                output.TooManyLines(ChangeLogsMetadata.MaxChangeLogLines);
+            var changeLogsMetadata = await GetChangeLogsMetadataAsync(output, version, parsedLine.Value.Text);
+            if(changeLogsMetadata.HasNoValue)
                 return Maybe<ChangeLogLine>.None;
-            }
-
-            if (changeLogsMetadata.Texts.Contains(parsedLine.Value.Text))
-            {
-                output.LineWithSameTextAlreadyExists(parsedLine.Value.Text);
-                return Maybe<ChangeLogLine>.None;
-            }
-
+            
             var changeLogLine = new ChangeLogLine(Guid.NewGuid(),
-                version.Id, version.ProjectId,
-                parsedLine.Value.Text, changeLogsMetadata.NextFreePosition, DateTime.UtcNow,
+                version.Id, version.ProjectId, parsedLine.Value.Text, 
+                changeLogsMetadata.Value.NextFreePosition, DateTime.UtcNow, 
                 parsedLine.Value.Labels, parsedLine.Value.Issues);
 
             return Maybe<ChangeLogLine>.From(changeLogLine);
+        }
+
+        private async Task<Maybe<ChangeLogsMetadata>> GetChangeLogsMetadataAsync(IAddLineOutputPort output, ClVersion clVersion, ChangeLogText text)
+        {
+            var changeLogsMetadata = await _changeLogQueries.GetChangeLogsMetadataAsync(clVersion.ProjectId, clVersion.Id);
+            if (!changeLogsMetadata.IsPositionAvailable)
+            {
+                output.TooManyLines(ChangeLogsMetadata.MaxChangeLogLines);
+                return Maybe<ChangeLogsMetadata>.None;
+            }
+
+            if (changeLogsMetadata.Texts.Contains(text))
+            {
+                output.LineWithSameTextAlreadyExists(text);
+                return Maybe<ChangeLogsMetadata>.None;
+            }
+
+            return Maybe<ChangeLogsMetadata>.From(changeLogsMetadata);
         }
 
         private async Task SaveChangeLogLineAsync(IAddLineOutputPort output, ChangeLogLine changeLogLine)

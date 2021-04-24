@@ -14,5 +14,6 @@ namespace ChangeTracker.Application.UseCases.AssignAllPendingLinesToVersion
         void TooManyLinesToAdd(uint remainingLinesToAdd);
         void Conflict(string reason);
         void NoPendingChangeLogLines();
+        void LineWithSameTextAlreadyExists(List<string> texts);
     }
 }

@@ -52,17 +52,17 @@ namespace ChangeTracker.Application.Tests.TestDoubles
             return Result.Success<int, Conflict>(lines.Count);
         }
 
-        public async Task<Result<int, Conflict>> MoveLineAsync(ChangeLogLine changeLogLine)
+        public async Task<Result<ChangeLogLine, Conflict>> MoveLineAsync(ChangeLogLine changeLogLine)
         {
             await Task.Yield();
 
             if (ProduceConflict)
-                return Result.Failure<int, Conflict>(new Conflict("some conflict"));
+                return Result.Failure<ChangeLogLine, Conflict>(new Conflict("some conflict"));
 
             ChangeLogs.RemoveAll(x => x.Id == changeLogLine.Id);
             ChangeLogs.Add(changeLogLine);
 
-            return Result.Success<int, Conflict>(1);
+            return Result.Success<ChangeLogLine, Conflict>(changeLogLine);
         }
 
         public async Task<Result<ChangeLogLine, Conflict>> UpdateLineAsync(ChangeLogLine changeLogLine)

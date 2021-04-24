@@ -23,7 +23,6 @@ namespace ChangeTracker.Application.Tests.UseCaseTests.AssignPendingLineToVersio
         private readonly Mock<IUnitOfWork> _unitOfWorkMock;
         private readonly VersionDaoStub _versionDaoStub;
 
-
         public AssignPendingLineToVersionInteractorTests()
         {
             _projectDaoStub = new ProjectDaoStub();
@@ -37,7 +36,7 @@ namespace ChangeTracker.Application.Tests.UseCaseTests.AssignPendingLineToVersio
             new(_versionDaoStub, _changeLogDaoStub, _changeLogDaoStub, _unitOfWorkMock.Object);
 
         [Fact]
-        public async Task AssignPendingLineByVersionId_HappyPath_AssignedAndUowCommited()
+        public async Task AssignPendingLineByVersionId_HappyPath_AssignedAndUowCommitted()
         {
             // arrange
             _projectDaoStub.Projects.Add(new Project(TestAccount.Id,
@@ -53,7 +52,7 @@ namespace ChangeTracker.Application.Tests.UseCaseTests.AssignPendingLineToVersio
             _changeLogDaoStub.ChangeLogs.Add(line);
 
             var assignmentRequestModel =
-                new VersionIdAssignmentRequestModel(TestAccount.Project.Id, clVersion.Id, line.Id);
+                new VersionIdAssignmentRequestModel(clVersion.Id, line.Id);
             var assignToVersionInteractor = CreateInteractor();
 
             _outputPortMock.Setup(m => m.Assigned(It.IsAny<Guid>(), It.IsAny<Guid>()));
@@ -138,7 +137,7 @@ namespace ChangeTracker.Application.Tests.UseCaseTests.AssignPendingLineToVersio
             _changeLogDaoStub.ChangeLogs.Add(line);
 
             var assignmentRequestModel =
-                new VersionIdAssignmentRequestModel(TestAccount.Project.Id, versionId, line.Id);
+                new VersionIdAssignmentRequestModel(versionId, line.Id);
             var assignToVersionInteractor = CreateInteractor();
 
             _outputPortMock.Setup(m => m.VersionDoesNotExist());
@@ -165,7 +164,7 @@ namespace ChangeTracker.Application.Tests.UseCaseTests.AssignPendingLineToVersio
             var lineId = Guid.Parse("2b4b147a-9ebd-4350-a45b-aaae5d8d63de");
 
             var assignmentRequestModel =
-                new VersionIdAssignmentRequestModel(TestAccount.Project.Id, clVersion.Id, lineId);
+                new VersionIdAssignmentRequestModel(clVersion.Id, lineId);
             var assignToVersionInteractor = CreateInteractor();
 
             _outputPortMock.Setup(m => m.ChangeLogLineDoesNotExist());
@@ -195,7 +194,7 @@ namespace ChangeTracker.Application.Tests.UseCaseTests.AssignPendingLineToVersio
                 new ChangeLogLine(clVersion.Id, TestAccount.Project.Id, ChangeLogText.Parse($"{x:D5}"), (uint) x)));
 
             var assignmentRequestModel =
-                new VersionIdAssignmentRequestModel(TestAccount.Project.Id, clVersion.Id, lineId);
+                new VersionIdAssignmentRequestModel(clVersion.Id, lineId);
             var assignToVersionInteractor = CreateInteractor();
 
             _outputPortMock.Setup(m => m.MaxChangeLogLinesReached(It.IsAny<int>()));
@@ -207,6 +206,37 @@ namespace ChangeTracker.Application.Tests.UseCaseTests.AssignPendingLineToVersio
             _outputPortMock.Verify(
                 m => m.MaxChangeLogLinesReached(It.Is<int>(x => x == ChangeLogsMetadata.MaxChangeLogLines)),
                 Times.Once);
+        }
+
+        [Fact]
+        public async Task AssignPendingLine_VersionContainsALineWithSameText_LineWithSameTextAlreadyExistsOutput()
+        {
+            // arrange
+            _projectDaoStub.Projects.Add(new Project(TestAccount.Id,
+                Name.Parse("Test Project"),
+                TestAccount.CustomVersioningScheme,
+                TestAccount.CreationDate));
+
+            var clVersion = new ClVersion(TestAccount.Project.Id, ClVersionValue.Parse("1.2"));
+            _versionDaoStub.Versions.Add(clVersion);
+
+            var pendingLine = new ChangeLogLine(null, TestAccount.Project.Id, ChangeLogText.Parse("00000"), 0);
+            _changeLogDaoStub.ChangeLogs.Add(pendingLine);
+
+            _changeLogDaoStub.ChangeLogs.AddRange(Enumerable.Range(0, 1).Select(x =>
+                new ChangeLogLine(clVersion.Id, TestAccount.Project.Id, ChangeLogText.Parse($"{x:D5}"), (uint) x)));
+
+            var assignmentRequestModel =
+                new VersionIdAssignmentRequestModel(clVersion.Id, pendingLine.Id);
+            var assignToVersionInteractor = CreateInteractor();
+
+            _outputPortMock.Setup(m => m.LineWithSameTextAlreadyExists(It.IsAny<string>()));
+
+            // act
+            await assignToVersionInteractor.ExecuteAsync(_outputPortMock.Object, assignmentRequestModel);
+
+            // assert
+            _outputPortMock.Verify(m => m.LineWithSameTextAlreadyExists(It.Is<string>(x => x == "00000")), Times.Once);
         }
 
         [Fact]
@@ -226,7 +256,7 @@ namespace ChangeTracker.Application.Tests.UseCaseTests.AssignPendingLineToVersio
             _changeLogDaoStub.ChangeLogs.Add(line);
 
             var assignmentRequestModel =
-                new VersionIdAssignmentRequestModel(TestAccount.Project.Id, clVersion.Id, line.Id);
+                new VersionIdAssignmentRequestModel(clVersion.Id, line.Id);
             var assignToVersionInteractor = CreateInteractor();
 
             _outputPortMock.Setup(m => m.ChangeLogLineIsNotPending(It.IsAny<Guid>()));
@@ -257,7 +287,7 @@ namespace ChangeTracker.Application.Tests.UseCaseTests.AssignPendingLineToVersio
             _changeLogDaoStub.ProduceConflict = true;
 
             var assignmentRequestModel =
-                new VersionIdAssignmentRequestModel(TestAccount.Project.Id, clVersion.Id, line.Id);
+                new VersionIdAssignmentRequestModel(clVersion.Id, line.Id);
             var assignToVersionInteractor = CreateInteractor();
 
             _outputPortMock.Setup(m => m.Conflict(It.IsAny<string>()));

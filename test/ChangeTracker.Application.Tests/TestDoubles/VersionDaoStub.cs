@@ -21,14 +21,14 @@ namespace ChangeTracker.Application.Tests.TestDoubles
             return Task.FromResult(version);
         }
 
-        public Task<Maybe<ClVersion>> FindVersionAsync(Guid projectId, Guid versionId)
+        public Task<Maybe<ClVersion>> FindVersionAsync(Guid versionId)
         {
-            return Task.FromResult(Versions.TryFirst(x => x.ProjectId == projectId && x.Id == versionId));
+            return Task.FromResult(Versions.TryFirst(x => x.Id == versionId));
         }
 
-        public Task<ClVersion> GetVersionAsync(Guid projectId, Guid versionId)
+        public Task<ClVersion> GetVersionAsync(Guid versionId)
         {
-            return Task.FromResult(Versions.Single(x => x.ProjectId == projectId && x.Id == versionId));
+            return Task.FromResult(Versions.Single(x => x.Id == versionId));
         }
 
         public Task<Result<ClVersion, Conflict>> AddVersionAsync(ClVersion clVersion)

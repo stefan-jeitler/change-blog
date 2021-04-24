@@ -13,6 +13,10 @@ using Microsoft.Extensions.Caching.Memory;
 
 namespace ChangeTracker.Application.Decorators
 {
+
+    /// <summary>
+    /// Checks whether the target version is read-only
+    /// </summary>
     public class VersionReadonlyCheckDecorator : IChangeLogCommandsDao
     {
         private const string VersionDeletedMessage = "The related version has been deleted. ChangeLogLineId {0}";
@@ -65,7 +69,7 @@ namespace ChangeTracker.Application.Decorators
             return await _changeLogCommandsComponent.MoveLinesAsync(lines);
         }
 
-        public Task<Result<int, Conflict>> MoveLineAsync(ChangeLogLine changeLogLine)
+        public Task<Result<ChangeLogLine, Conflict>> MoveLineAsync(ChangeLogLine changeLogLine)
         {
             return CheckVersionAsync(changeLogLine)
                 .Bind(_ => _changeLogCommandsComponent.MoveLineAsync(changeLogLine));
@@ -107,7 +111,7 @@ namespace ChangeTracker.Application.Decorators
                 entry =>
                 {
                     entry.AbsoluteExpirationRelativeToNow = TimeSpan.FromSeconds(3);
-                    return _versionDao.GetVersionAsync(line.ProjectId, line.VersionId!.Value);
+                    return _versionDao.GetVersionAsync(line.VersionId!.Value);
                 });
         }
     }

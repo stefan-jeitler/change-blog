@@ -18,26 +18,15 @@ namespace ChangeTracker.Application.Tests.UseCaseTests.AssignPendingLineToVersio
             _testLineId = Guid.Parse("1763b2e7-9835-4992-8f73-8c2026530b2c");
         }
 
-        public VersionIdAssignmentRequestModel CreateRequestModel() => new(_testProjectId, _testVersionId, _testLineId);
+        public VersionIdAssignmentRequestModel CreateRequestModel() => new(_testVersionId, _testLineId);
 
         [Fact]
         public void Create_HappyPath_Successful()
         {
             var requestModel = CreateRequestModel();
-
-            requestModel.ProjectId.Should().Be(_testProjectId);
+            
             requestModel.VersionId.Should().Be(_testVersionId);
             requestModel.ChangeLogLineId.Should().Be(_testLineId);
-        }
-
-        [Fact]
-        public void Create_WithEmptyProjectId_ArgumentException()
-        {
-            _testProjectId = Guid.Empty;
-
-            Func<VersionIdAssignmentRequestModel> act = CreateRequestModel;
-
-            act.Should().ThrowExactly<ArgumentException>();
         }
 
         [Fact]

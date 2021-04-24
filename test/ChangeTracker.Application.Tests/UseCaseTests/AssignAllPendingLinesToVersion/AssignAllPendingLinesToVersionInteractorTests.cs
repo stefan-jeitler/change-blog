@@ -155,6 +155,32 @@ namespace ChangeTracker.Application.Tests.UseCaseTests.AssignAllPendingLinesToVe
         }
 
         [Fact]
+        public async Task AssignAllPendingLines_PendingLinesContainsTextsThatExistsAlreadyInVersion_LinesWithSameTextAlreadyExistsOutput()
+        {
+            // arrange
+            var requestModel = new VersionAssignmentRequestModel(TestAccount.Project.Id, "1.2.3");
+            var assignAllPendingLinesInteractor = CreateInteractor();
+
+            var pendingLines = Enumerable.Range(0, 10)
+                .Select(x => new ChangeLogLine(null, TestAccount.Project.Id, ChangeLogText.Parse($"{x:D5}"), (uint)x));
+            _changeLogDaoStub.ChangeLogs.AddRange(pendingLines);
+
+            var clVersion = new ClVersion(TestAccount.Project.Id, ClVersionValue.Parse("1.2.3"));
+            _versionDaoStub.Versions.Add(clVersion);
+
+            var assignedLine = new ChangeLogLine(clVersion.Id, TestAccount.Project.Id, ChangeLogText.Parse($"00000"), (uint)0);
+            _changeLogDaoStub.ChangeLogs.Add(assignedLine);
+
+            _outputPortMock.Setup(m => m.LineWithSameTextAlreadyExists(It.IsAny<List<string>>()));
+
+            // act
+            await assignAllPendingLinesInteractor.ExecuteAsync(_outputPortMock.Object, requestModel);
+
+            // assert
+            _outputPortMock.Verify(m => m.LineWithSameTextAlreadyExists(It.Is<List<string>>(x => x.Single() == "00000")), Times.Once);
+        }
+
+        [Fact]
         public async Task AssignAllPendingLines_ConflictWhileSaving_ConflictOutput()
         {
             // arrange

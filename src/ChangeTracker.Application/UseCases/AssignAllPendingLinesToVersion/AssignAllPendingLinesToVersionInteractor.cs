@@ -30,7 +30,7 @@ namespace ChangeTracker.Application.UseCases.AssignAllPendingLinesToVersion
         public async Task ExecuteAsync(IAssignAllPendingLinesToVersionOutputPort output,
             VersionIdAssignmentRequestModel requestModel)
         {
-            var clVersion = await _versionDao.FindVersionAsync(requestModel.ProjectId, requestModel.VersionId);
+            var clVersion = await _versionDao.FindVersionAsync(requestModel.VersionId);
 
             if (clVersion.HasNoValue)
             {
@@ -93,6 +93,13 @@ namespace ChangeTracker.Application.UseCases.AssignAllPendingLinesToVersion
             }
 
             var lines = await _changeLogQueries.GetPendingLines(projectId);
+
+            var duplicateTexts = pendingChangeLogs.Texts.Intersect(versionChangeLogs.Texts);
+            if (duplicateTexts.Any())
+            {
+                output.LineWithSameTextAlreadyExists(duplicateTexts.Select(x => x.Value).ToList());
+                return Maybe<IEnumerable<ChangeLogLine>>.None;
+            }
 
             var assignedLines = lines
                 .Select((x, i) => new {Line = x, Position = versionChangeLogs.NextFreePosition + i})

@@ -4,13 +4,8 @@ namespace ChangeTracker.Application.UseCases.AssignPendingLineToVersion.Models
 {
     public class VersionIdAssignmentRequestModel
     {
-        public VersionIdAssignmentRequestModel(Guid projectId, Guid versionId, Guid changeLogLineId)
+        public VersionIdAssignmentRequestModel(Guid versionId, Guid changeLogLineId)
         {
-            if (projectId == Guid.Empty)
-                throw new ArgumentException("ProjectId cannot be empty.");
-
-            ProjectId = projectId;
-
             if (versionId == Guid.Empty)
                 throw new ArgumentException("VersionId cannot be empty.");
 
@@ -21,8 +16,7 @@ namespace ChangeTracker.Application.UseCases.AssignPendingLineToVersion.Models
 
             ChangeLogLineId = changeLogLineId;
         }
-
-        public Guid ProjectId { get; }
+        
         public Guid VersionId { get; }
         public Guid ChangeLogLineId { get; }
     }

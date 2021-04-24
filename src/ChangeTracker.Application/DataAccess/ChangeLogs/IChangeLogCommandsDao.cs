@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Threading.Tasks;
 using ChangeTracker.Domain.ChangeLog;
 using CSharpFunctionalExtensions;
@@ -23,6 +24,8 @@ namespace ChangeTracker.Application.DataAccess.ChangeLogs
         /// <param name="changeLogLine"></param>
         /// <returns></returns>
         Task<Result<ChangeLogLine, Conflict>> MoveLineAsync(ChangeLogLine changeLogLine);
+
+        Task<Result<int, Conflict>> MakeLinesPending(Guid versionId);
 
         Task<Result<ChangeLogLine, Conflict>> UpdateLineAsync(ChangeLogLine changeLogLine);
     }

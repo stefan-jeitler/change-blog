@@ -76,6 +76,9 @@ namespace ChangeTracker.Application.Decorators
                 .Bind(_ => _changeLogCommandsComponent.MoveLineAsync(changeLogLine));
         }
 
+        public Task<Result<int, Conflict>> MakeLinesPending(Guid versionId) =>
+            _changeLogCommandsComponent.MakeLinesPending(versionId);
+
         public Task<Result<ChangeLogLine, Conflict>> UpdateLineAsync(ChangeLogLine changeLogLine)
         {
             return CheckVersionAsync(changeLogLine)

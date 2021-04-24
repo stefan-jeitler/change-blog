@@ -5,13 +5,14 @@ using System.Threading.Tasks;
 using ChangeTracker.Application.DataAccess;
 using ChangeTracker.Application.DataAccess.Projects;
 using ChangeTracker.Application.DataAccess.Versions;
-using ChangeTracker.Application.Extensions;
 using ChangeTracker.Application.Services.ChangeLogLineParsing;
 using ChangeTracker.Application.UseCases.AddCompleteVersion.Models;
 using ChangeTracker.Domain;
 using ChangeTracker.Domain.ChangeLog;
 using ChangeTracker.Domain.Version;
 using CSharpFunctionalExtensions;
+
+// ReSharper disable InvertIf
 
 // ReSharper disable UseDeconstructionOnParameter
 
@@ -95,12 +96,30 @@ namespace ChangeTracker.Application.UseCases.AddCompleteVersion
             var lineCandidates = requestModel
                 .ToList();
 
+            var duplicates = lineCandidates
+                .GroupBy(x => x.Text)
+                .Where(x => x.Skip(1).Any())
+                .Select(x => x.Key)
+                .ToList();
+
+            if (duplicates.Any())
+            {
+                output.LinesWithSameTextsAreNotAllowed(duplicates);
+                return Maybe<IEnumerable<ChangeLogLine>>.None;
+            }
+
             if (lineCandidates.Count > ChangeLogsMetadata.MaxChangeLogLines)
             {
                 output.TooManyLines(ChangeLogsMetadata.MaxChangeLogLines);
                 return Maybe<IEnumerable<ChangeLogLine>>.None;
             }
 
+            return ParseLines(output, lineCandidates, newVersion);
+        }
+
+        private static Maybe<IEnumerable<ChangeLogLine>> ParseLines(ILineParserOutput output,
+            IEnumerable<ChangeLogLineRequestModel> lineCandidates, ClVersion newVersion)
+        {
             var lines = new List<ChangeLogLine>();
             foreach (var (lineRequestModel, i) in lineCandidates.Select((x, i) => (x, i)))
             {
@@ -118,7 +137,7 @@ namespace ChangeTracker.Application.UseCases.AddCompleteVersion
         }
 
         private static Maybe<ChangeLogLine> CreateLine(ILineParserOutput output,
-            ChangeLogLineRequestModel requestModel, ClVersion version, uint position)
+            ChangeLogLineRequestModel requestModel, ClVersion clVersion, uint position)
         {
             var lineParsingRequestModel =
                 new LineParserRequestModel(requestModel.Text, requestModel.Labels, requestModel.Issues);
@@ -130,7 +149,7 @@ namespace ChangeTracker.Application.UseCases.AddCompleteVersion
             }
 
             var changeLogLine = new ChangeLogLine(Guid.NewGuid(),
-                version.Id, version.ProjectId,
+                clVersion.Id, clVersion.ProjectId,
                 parsedLine.Value.Text, position, DateTime.UtcNow,
                 parsedLine.Value.Labels, parsedLine.Value.Issues);
 

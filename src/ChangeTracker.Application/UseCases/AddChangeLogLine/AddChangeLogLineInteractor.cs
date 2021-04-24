@@ -69,6 +69,12 @@ namespace ChangeTracker.Application.UseCases.AddChangeLogLine
                 return Maybe<ChangeLogLine>.None;
             }
 
+            if (changeLogsMetadata.Texts.Contains(parsedLine.Value.Text))
+            {
+                output.LineWithSameTextAlreadyExists(parsedLine.Value.Text);
+                return Maybe<ChangeLogLine>.None;
+            }
+
             var changeLogLine = new ChangeLogLine(Guid.NewGuid(),
                 version.Id, version.ProjectId,
                 parsedLine.Value.Text, changeLogsMetadata.NextFreePosition, DateTime.UtcNow,

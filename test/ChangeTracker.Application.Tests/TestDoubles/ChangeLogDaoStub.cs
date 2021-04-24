@@ -89,14 +89,9 @@ namespace ChangeTracker.Application.Tests.TestDoubles
 
             var changeLogLines = versionId.HasValue
                 ? ChangeLogs.Where(x => x.ProjectId == projectId && x.VersionId == versionId.Value).ToList()
-                : ChangeLogs.Where(x => x.ProjectId == projectId).ToList();
+                : ChangeLogs.Where(x => x.ProjectId == projectId && !x.VersionId.HasValue).ToList();
 
-            return new ChangeLogsMetadata(projectId, versionId,
-                (uint) changeLogLines.Count,
-                changeLogLines
-                    .Select(x => (int) x.Position)
-                    .DefaultIfEmpty(-1)
-                    .Max());
+            return ChangeLogsMetadata.Create(projectId, changeLogLines);
         }
 
         public async Task<IList<ChangeLogLine>> GetPendingLines(Guid projectId)

@@ -187,7 +187,6 @@ namespace ChangeTracker.Application.Tests.UseCaseTests.AddCompleteVersion
             {
                 new("Proxy bug resolved", new List<string> {"ProxyStrikesBack"}, new List<string> {"#123"}),
                 new("New feature added", new List<string> {"Feature"}, new List<string>()),
-                new("Allow https only", new List<string> {"Security"}, new List<string>()),
                 new("Allow https only", new List<string> {"Security"}, new List<string>())
             };
             var versionRequestModel =
@@ -205,7 +204,7 @@ namespace ChangeTracker.Application.Tests.UseCaseTests.AddCompleteVersion
         }
 
         [Fact]
-        public async Task CreateCompleteVersion_DoNotReleaseVersionYet_ReleaseDateIsNull()
+        public async Task CreateCompleteVersion_LinesWithSameText_SameTextsAreNotAllowed()
         {
             // arrange
             var changeLogLines = new List<ChangeLogLineRequestModel>
@@ -213,7 +212,31 @@ namespace ChangeTracker.Application.Tests.UseCaseTests.AddCompleteVersion
                 new("Proxy bug resolved", new List<string> {"ProxyStrikesBack"}, new List<string> {"#123"}),
                 new("New feature added", new List<string> {"Feature"}, new List<string>()),
                 new("Allow https only", new List<string> {"Security"}, new List<string>()),
-                new("Allow https only", new List<string> {"Security"}, new List<string>())
+                new("Allow https only", new List<string> {"Security"}, new List<string> {"#1234"})
+            };
+            var versionRequestModel = new CompleteVersionRequestModel(TestAccount.Project.Id, "1.23", changeLogLines);
+
+            _projectDaoStub.Projects.Add(TestAccount.Project);
+            _outputPortMock.Setup(m => m.LinesWithSameTextsAreNotAllowed(It.IsAny<List<string>>()));
+            var addCompleteVersionInteractor = CreateInteractor();
+
+            // act
+            await addCompleteVersionInteractor.ExecuteAsync(_outputPortMock.Object, versionRequestModel);
+
+            // assert
+            _outputPortMock.Verify(m =>
+                m.LinesWithSameTextsAreNotAllowed(It.Is<List<string>>(x =>
+                    x.Count == 1 && x.Contains("Allow https only"))));
+        }
+
+        [Fact]
+        public async Task CreateCompleteVersion_DoNotReleaseVersionYet_ReleaseDateIsNull()
+        {
+            // arrange
+            var changeLogLines = new List<ChangeLogLineRequestModel>
+            {
+                new("Proxy bug resolved", new List<string> {"ProxyStrikesBack"}, new List<string> {"#123"}),
+                new("New feature added", new List<string> {"Feature"}, new List<string>())
             };
             var versionRequestModel = new CompleteVersionRequestModel(TestAccount.Project.Id, "1.23", changeLogLines);
 

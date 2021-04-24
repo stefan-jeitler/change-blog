@@ -46,7 +46,7 @@ namespace ChangeTracker.Domain.ChangeLog
                 return new ArgumentException("Whitespaces are not allowed.");
 
             if (c.Length > MaxLength)
-                return new ArgumentException("Issue number cannot have more than 50 characters.");
+                return new ArgumentException($"Issue number cannot have more than {MaxLength} characters.");
 
             issue = new Issue(c);
             return null;

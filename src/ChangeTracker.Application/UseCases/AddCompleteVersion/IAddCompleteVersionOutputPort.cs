@@ -1,5 +1,8 @@
 ﻿using System;
+using System.Collections.Generic;
+using System.Linq;
 using ChangeTracker.Application.Services.ChangeLogLineParsing;
+using ChangeTracker.Application.UseCases.AddCompleteVersion.Models;
 
 namespace ChangeTracker.Application.UseCases.AddCompleteVersion
 {
@@ -12,5 +15,6 @@ namespace ChangeTracker.Application.UseCases.AddCompleteVersion
         void Conflict(string reason);
         void VersionAlreadyExists(string version);
         void TooManyLines(int maxChangeLogLines);
+        void LinesWithSameTextsAreNotAllowed(IList<string> duplicates);
     }
 }

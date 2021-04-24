@@ -28,7 +28,7 @@ namespace ChangeTracker.Application.Tests.UseCaseTests.AddChangeLogLine
             _versionDaoStub = new VersionDaoStub();
             _changeLogDaoStub = new ChangeLogDaoStub();
             _outputPortMock = new Mock<IAddLineOutputPort>(MockBehavior.Strict);
-            _unitOfWorkMock = new Mock<IUnitOfWork>(MockBehavior.Strict);
+            _unitOfWorkMock = new Mock<IUnitOfWork>();
         }
 
         private AddChangeLogLineInteractor CreateInteractor() => new(_changeLogDaoStub, _changeLogDaoStub,
@@ -50,7 +50,6 @@ namespace ChangeTracker.Application.Tests.UseCaseTests.AddChangeLogLine
             var addLineInteractor = CreateInteractor();
 
             _outputPortMock.Setup(m => m.InvalidVersionFormat());
-            _unitOfWorkMock.Setup(m => m.Start());
 
             // act
             await addLineInteractor.ExecuteAsync(_outputPortMock.Object, changeLogLineRequestModel);
@@ -80,7 +79,6 @@ namespace ChangeTracker.Application.Tests.UseCaseTests.AddChangeLogLine
             var addLineInteractor = CreateInteractor();
 
             _outputPortMock.Setup(m => m.Conflict(It.IsAny<string>()));
-            _unitOfWorkMock.Setup(m => m.Start());
 
             // act
             await addLineInteractor.ExecuteAsync(_outputPortMock.Object, changeLogLineRequestModel);
@@ -88,6 +86,37 @@ namespace ChangeTracker.Application.Tests.UseCaseTests.AddChangeLogLine
             // assert
             _outputPortMock.Verify(m => m.Conflict(It.IsAny<string>()), Times.Once);
             _unitOfWorkMock.Verify(m => m.Start(), Times.Once);
+        }
+
+        [Fact]
+        public async Task AddChangeLogLine_LineWithSameTextExists_()
+        {
+            // arrange
+            const string changeLogLine = "Some Bug fixed";
+            var labels = new List<string> {"Bugfix", "ProxyIssue"};
+            var issues = new List<string> {"#1234", "#12345"};
+            var changeLogLineRequestModel =
+                new ChangeLogLineRequestModel(TestAccount.Project.Id, "1.2", changeLogLine, labels, issues);
+
+            _projectDaoStub.Projects.Add(new Project(TestAccount.Project.Id, TestAccount.Id, TestAccount.Project.Name,
+                TestAccount.CustomVersioningScheme, TestAccount.CreationDate, null));
+
+            var version = new ClVersion(TestAccount.Project.Id, ClVersionValue.Parse("1.2"));
+            _versionDaoStub.Versions.Add(version);
+
+            var existingLine = new ChangeLogLine(version.Id, TestAccount.Project.Id,
+                ChangeLogText.Parse(changeLogLine), 0);
+            _changeLogDaoStub.ChangeLogs.Add(existingLine);
+
+            var addLineInteractor = CreateInteractor();
+
+            _outputPortMock.Setup(m => m.LineWithSameTextAlreadyExists(It.IsAny<string>()));
+
+            // act
+            await addLineInteractor.ExecuteAsync(_outputPortMock.Object, changeLogLineRequestModel);
+
+            // assert
+            _outputPortMock.Verify(m => m.LineWithSameTextAlreadyExists(It.Is<string>(x => x == changeLogLine)), Times.Once);
         }
 
         [Fact]
@@ -106,7 +135,6 @@ namespace ChangeTracker.Application.Tests.UseCaseTests.AddChangeLogLine
             var addLineInteractor = CreateInteractor();
 
             _outputPortMock.Setup(m => m.VersionDoesNotExist(It.IsAny<string>()));
-            _unitOfWorkMock.Setup(m => m.Start());
 
             // act
             await addLineInteractor.ExecuteAsync(_outputPortMock.Object, changeLogLineRequestModel);
@@ -175,7 +203,6 @@ namespace ChangeTracker.Application.Tests.UseCaseTests.AddChangeLogLine
                     new ChangeLogLine(versionId, TestAccount.Project.Id, ChangeLogText.Parse($"{x:D5}"), (uint) x)));
 
             var addLineInteractor = CreateInteractor();
-            _unitOfWorkMock.Setup(m => m.Start());
             _outputPortMock.Setup(m => m.TooManyLines(It.IsAny<int>()));
 
             // act
@@ -211,8 +238,6 @@ namespace ChangeTracker.Application.Tests.UseCaseTests.AddChangeLogLine
             var addLineInteractor = CreateInteractor();
 
             _outputPortMock.Setup(m => m.Created(It.IsAny<Guid>()));
-            _unitOfWorkMock.Setup(m => m.Start());
-            _unitOfWorkMock.Setup(m => m.Commit());
 
             // act
             await addLineInteractor.ExecuteAsync(_outputPortMock.Object, changeLogLineRequestModel);

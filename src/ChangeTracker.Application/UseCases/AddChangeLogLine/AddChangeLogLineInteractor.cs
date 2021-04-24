@@ -1,8 +1,10 @@
 using System;
 using System.Threading.Tasks;
 using ChangeTracker.Application.DataAccess;
+using ChangeTracker.Application.DataAccess.ChangeLogs;
 using ChangeTracker.Application.DataAccess.Versions;
 using ChangeTracker.Application.Services.ChangeLogLineParsing;
+using ChangeTracker.Application.UseCases.AddChangeLogLine.Models;
 using ChangeTracker.Domain.ChangeLog;
 using ChangeTracker.Domain.Version;
 using CSharpFunctionalExtensions;
@@ -27,7 +29,7 @@ namespace ChangeTracker.Application.UseCases.AddChangeLogLine
             _changeLogCommands = changeLogCommands ?? throw new ArgumentNullException(nameof(changeLogCommands));
         }
 
-        public async Task ExecuteAsync(IAddLineOutputPort output, ChangeLogLineRequestModel requestModel)
+        public async Task ExecuteAsync(IAddLineOutputPort output, VersionChangeLogLineRequestModel requestModel)
         {
             if (!ClVersionValue.TryParse(requestModel.Version, out var versionValue))
             {
@@ -38,7 +40,7 @@ namespace ChangeTracker.Application.UseCases.AddChangeLogLine
             var version = await _versionDao.FindVersionAsync(requestModel.ProjectId, versionValue);
             if (version.HasNoValue)
             {
-                output.VersionDoesNotExist(versionValue.Value);
+                output.VersionDoesNotExist();
                 return;
             }
 
@@ -47,7 +49,21 @@ namespace ChangeTracker.Application.UseCases.AddChangeLogLine
             await AddLineAsync(output, requestModel, version.Value);
         }
 
-        private async Task AddLineAsync(IAddLineOutputPort output, ChangeLogLineRequestModel requestModel,
+        public async Task ExecuteAsync(IAddLineOutputPort output, VersionIdChangeLogLineRequestModel requestModel)
+        {
+            var version = await _versionDao.FindVersionAsync(requestModel.VersionId);
+            if (version.HasNoValue)
+            {
+                output.VersionDoesNotExist();
+                return;
+            }
+
+            _unitOfWork.Start();
+
+            await AddLineAsync(output, requestModel, version.Value);
+        }
+
+        private async Task AddLineAsync(IAddLineOutputPort output, IChangeLogLine requestModel,
             ClVersion clVersion)
         {
             var line = await CreateChangeLogLineAsync(output, requestModel, clVersion);
@@ -58,7 +74,7 @@ namespace ChangeTracker.Application.UseCases.AddChangeLogLine
         }
 
         private async Task<Maybe<ChangeLogLine>> CreateChangeLogLineAsync(IAddLineOutputPort output,
-            ChangeLogLineRequestModel requestModel, ClVersion version)
+            IChangeLogLine requestModel, ClVersion version)
         {
             var lineParsingRequestModel = new LineParserRequestModel(requestModel.Text,
                 requestModel.Labels, requestModel.Issues);
@@ -68,20 +84,22 @@ namespace ChangeTracker.Application.UseCases.AddChangeLogLine
                 return Maybe<ChangeLogLine>.None;
 
             var changeLogsMetadata = await GetChangeLogsMetadataAsync(output, version, parsedLine.Value.Text);
-            if(changeLogsMetadata.HasNoValue)
+            if (changeLogsMetadata.HasNoValue)
                 return Maybe<ChangeLogLine>.None;
-            
+
             var changeLogLine = new ChangeLogLine(Guid.NewGuid(),
-                version.Id, version.ProjectId, parsedLine.Value.Text, 
-                changeLogsMetadata.Value.NextFreePosition, DateTime.UtcNow, 
+                version.Id, version.ProjectId, parsedLine.Value.Text,
+                changeLogsMetadata.Value.NextFreePosition, DateTime.UtcNow,
                 parsedLine.Value.Labels, parsedLine.Value.Issues);
 
             return Maybe<ChangeLogLine>.From(changeLogLine);
         }
 
-        private async Task<Maybe<ChangeLogsMetadata>> GetChangeLogsMetadataAsync(IAddLineOutputPort output, ClVersion clVersion, ChangeLogText text)
+        private async Task<Maybe<ChangeLogsMetadata>> GetChangeLogsMetadataAsync(IAddLineOutputPort output,
+            ClVersion clVersion, ChangeLogText text)
         {
-            var changeLogsMetadata = await _changeLogQueries.GetChangeLogsMetadataAsync(clVersion.ProjectId, clVersion.Id);
+            var changeLogsMetadata =
+                await _changeLogQueries.GetChangeLogsMetadataAsync(clVersion.ProjectId, clVersion.Id);
             if (!changeLogsMetadata.IsPositionAvailable)
             {
                 output.TooManyLines(ChangeLogsMetadata.MaxChangeLogLines);

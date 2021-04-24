@@ -8,7 +8,7 @@ namespace ChangeTracker.Application.UseCases.AddChangeLogLine
         void InvalidVersionFormat();
         void Created(Guid changeLogLineId);
         void Conflict(string reason);
-        void VersionDoesNotExist(string version);
+        void VersionDoesNotExist();
         void TooManyLines(int maxChangeLogLines);
         void LineWithSameTextAlreadyExists(string text);
     }

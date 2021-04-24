@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Threading.Tasks;
 using ChangeTracker.Application.DataAccess;
+using ChangeTracker.Application.DataAccess.ChangeLogs;
 using ChangeTracker.Application.DataAccess.Versions;
 using ChangeTracker.Application.UseCases.AssignPendingLineToVersion.Models;
 using ChangeTracker.Domain.ChangeLog;

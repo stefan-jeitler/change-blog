@@ -3,7 +3,7 @@ using System.Threading.Tasks;
 using ChangeTracker.Domain.ChangeLog;
 using CSharpFunctionalExtensions;
 
-namespace ChangeTracker.Application.DataAccess.Versions
+namespace ChangeTracker.Application.DataAccess.ChangeLogs
 {
     public interface IChangeLogCommandsDao
     {

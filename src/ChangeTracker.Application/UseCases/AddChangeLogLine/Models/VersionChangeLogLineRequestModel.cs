@@ -1,11 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
 
-namespace ChangeTracker.Application.UseCases.AddChangeLogLine
+namespace ChangeTracker.Application.UseCases.AddChangeLogLine.Models
 {
-    public class ChangeLogLineRequestModel
+    public class VersionChangeLogLineRequestModel : IChangeLogLine
     {
-        public ChangeLogLineRequestModel(Guid projectId,
+        public VersionChangeLogLineRequestModel(Guid projectId,
             string version,
             string text,
             List<string> labels,

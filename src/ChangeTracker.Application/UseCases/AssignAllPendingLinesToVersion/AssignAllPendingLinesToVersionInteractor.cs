@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using ChangeTracker.Application.DataAccess;
+using ChangeTracker.Application.DataAccess.ChangeLogs;
 using ChangeTracker.Application.DataAccess.Versions;
 using ChangeTracker.Application.UseCases.AssignAllPendingLinesToVersion.Models;
 using ChangeTracker.Domain.ChangeLog;
@@ -109,8 +110,7 @@ namespace ChangeTracker.Application.UseCases.AssignAllPendingLinesToVersion
         }
 
         private async Task MoveLinesAsync(IAssignAllPendingLinesToVersionOutputPort output,
-            IEnumerable<ChangeLogLine> assignedLines,
-            ClVersion clVersion)
+            IEnumerable<ChangeLogLine> assignedLines, ClVersion clVersion)
         {
             await _changeLogCommands.MoveLinesAsync(assignedLines)
                 .Match(Finish, c => output.Conflict(c.Reason));

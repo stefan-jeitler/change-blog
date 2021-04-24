@@ -80,6 +80,31 @@ namespace ChangeTracker.Application.Tests.UseCaseTests.UpdateChangeLogLine
         }
 
         [Fact]
+        public async Task UpdateLine_WithTextThatAlreadyExist_Output()
+        {
+            // arrange
+            var lineId = Guid.Parse("0683e1e1-0e0d-405c-b77e-a6d0d5141b67");
+            const string text = "feature added";
+            var requestModel =
+                new ChangeLogLineRequestModel(lineId, text, Array.Empty<string>(), Array.Empty<string>());
+            var updateLineInteractor = CreateInteractor();
+
+            _changeLogDaoStub.ChangeLogs.Add(new ChangeLogLine(lineId, null, TestAccount.Project.Id,
+                ChangeLogText.Parse("some feature added"), 0, DateTime.Parse("2021-04-17"), Array.Empty<Label>(),
+                Array.Empty<Issue>()));
+            _changeLogDaoStub.ChangeLogs.Add(new ChangeLogLine(null, TestAccount.Project.Id,
+                ChangeLogText.Parse("feature added"), 0));
+
+            _outputPortMock.Setup(m => m.LineWithSameTextAlreadyExists(It.IsAny<string>()));
+
+            // act
+            await updateLineInteractor.ExecuteAsync(_outputPortMock.Object, requestModel);
+
+            // assert
+            _outputPortMock.Verify(m => m.LineWithSameTextAlreadyExists(It.Is<string>(x => x == text)), Times.Once);
+        }
+
+        [Fact]
         public async Task UpdateLine_NotExistingLine_ChangeLogLineDoesNotExistOutput()
         {
             // arrange

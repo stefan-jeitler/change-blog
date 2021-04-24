@@ -42,7 +42,22 @@ namespace ChangeTracker.Application.UseCases.UpdateChangeLogLine
             if (parsedNewLine.HasNoValue)
                 return;
 
+            var lineWithSameTextExists = await LineWithSameTextExists(existingLine, parsedNewLine);
+            if (lineWithSameTextExists)
+            {
+                output.LineWithSameTextAlreadyExists(requestModel.Text);
+                return;
+            }
+
             await UpdateLineAsync(output, existingLine.Value, parsedNewLine.Value);
+        }
+
+        private async Task<bool> LineWithSameTextExists(Maybe<ChangeLogLine> existingLine, Maybe<LineParserResponseModel> parsedNewLine)
+        {
+            var changeLogMetadata = await _changeLogQueries.GetChangeLogsMetadataAsync(existingLine.Value.ProjectId,
+                existingLine.Value.VersionId);
+
+            return changeLogMetadata.Texts.Contains(parsedNewLine.Value.Text);
         }
 
         private static Maybe<LineParserResponseModel> ParseLine(ILineParserOutput output,

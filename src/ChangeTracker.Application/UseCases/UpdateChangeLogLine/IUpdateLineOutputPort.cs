@@ -7,7 +7,7 @@ namespace ChangeTracker.Application.UseCases.UpdateChangeLogLine
     {
         void Updated(Guid lineId);
         void ChangeLogLineDoesNotExist();
-        void NotModified();
         void Conflict(string reason);
+        void LineWithSameTextAlreadyExists(string text);
     }
 }

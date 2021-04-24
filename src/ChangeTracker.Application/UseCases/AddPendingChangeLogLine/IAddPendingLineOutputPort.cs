@@ -9,5 +9,6 @@ namespace ChangeTracker.Application.UseCases.AddPendingChangeLogLine
         void Created(Guid changeLogLineId);
         void Conflict(string reason);
         void TooManyLines(int maxChangeLogLines);
+        void LineWithSameTextAlreadyExists(string text);
     }
 }

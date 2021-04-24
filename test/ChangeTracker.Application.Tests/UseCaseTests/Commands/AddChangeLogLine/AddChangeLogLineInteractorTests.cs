@@ -117,7 +117,8 @@ namespace ChangeTracker.Application.Tests.UseCaseTests.Commands.AddChangeLogLine
             await addLineInteractor.ExecuteAsync(_outputPortMock.Object, changeLogLineRequestModel);
 
             // assert
-            _outputPortMock.Verify(m => m.LineWithSameTextAlreadyExists(It.Is<string>(x => x == changeLogLine)), Times.Once);
+            _outputPortMock.Verify(m => m.LineWithSameTextAlreadyExists(It.Is<string>(x => x == changeLogLine)),
+                Times.Once);
         }
 
         [Fact]
@@ -175,8 +176,8 @@ namespace ChangeTracker.Application.Tests.UseCaseTests.Commands.AddChangeLogLine
         {
             // arrange
             const string changeLogLine = "Some Bug fixed";
-            var labels = new List<string> { "Bugfix", "ProxyIssue" };
-            var issues = new List<string> { "#1234", "#12345" };
+            var labels = new List<string> {"Bugfix", "ProxyIssue"};
+            var issues = new List<string> {"#1234", "#12345"};
             var versionId = Guid.Parse("1d7831d5-32fb-437f-a9d5-bf5a7dd34b10");
             var changeLogLineRequestModel =
                 new VersionIdChangeLogLineRequestModel(versionId, changeLogLine, labels, issues);

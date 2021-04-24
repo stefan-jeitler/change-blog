@@ -12,14 +12,14 @@ namespace ChangeTracker.Application.DataAccess.ChangeLogs
         Task<Result<int, Conflict>> AddLinesAsync(IEnumerable<ChangeLogLine> changeLogLines);
 
         /// <summary>
-        /// Move lines to a version or make lines pending if the version is null.
+        ///     Move lines to a version or make lines pending if the version is null.
         /// </summary>
         /// <param name="changeLogLines"></param>
         /// <returns></returns>
         Task<Result<int, Conflict>> MoveLinesAsync(IEnumerable<ChangeLogLine> changeLogLines);
 
         /// <summary>
-        /// Moves the line to a version or make it pending if the version is null.
+        ///     Moves the line to a version or make it pending if the version is null.
         /// </summary>
         /// <param name="changeLogLine"></param>
         /// <returns></returns>

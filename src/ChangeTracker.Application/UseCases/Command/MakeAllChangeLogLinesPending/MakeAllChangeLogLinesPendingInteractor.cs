@@ -7,6 +7,7 @@ using ChangeTracker.Application.DataAccess.Versions;
 using ChangeTracker.Domain.ChangeLog;
 using ChangeTracker.Domain.Version;
 using CSharpFunctionalExtensions;
+
 // ReSharper disable InvertIf
 
 namespace ChangeTracker.Application.UseCases.Command.MakeAllChangeLogLinesPending
@@ -15,9 +16,7 @@ namespace ChangeTracker.Application.UseCases.Command.MakeAllChangeLogLinesPendin
     {
         private readonly IChangeLogCommandsDao _changeLogCommands;
         private readonly IChangeLogQueriesDao _changeLogQueries;
-
         private readonly IUnitOfWork _unitOfWork;
-
         private readonly IVersionDao _versionDao;
 
         public MakeAllChangeLogLinesPendingInteractor(IVersionDao versionDao, IChangeLogQueriesDao changeLogQueries,

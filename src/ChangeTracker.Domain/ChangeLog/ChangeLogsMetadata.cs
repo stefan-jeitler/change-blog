@@ -9,7 +9,8 @@ namespace ChangeTracker.Domain.ChangeLog
     {
         public const int MaxChangeLogLines = 100;
 
-        private ChangeLogsMetadata(Guid projectId, Guid? versionId, ImmutableHashSet<ChangeLogText> changeLogTexts, uint count,
+        private ChangeLogsMetadata(Guid projectId, Guid? versionId, ImmutableHashSet<ChangeLogText> changeLogTexts,
+            uint count,
             int lastPosition)
         {
             if (projectId == Guid.Empty)
@@ -30,6 +31,16 @@ namespace ChangeTracker.Domain.ChangeLog
             LastPosition = count == 0 ? -1 : lastPosition;
         }
 
+        public Guid ProjectId { get; }
+        public Guid? VersionId { get; }
+        public IImmutableSet<ChangeLogText> Texts { get; }
+        public uint Count { get; }
+        public int LastPosition { get; }
+
+        public uint RemainingPositionsToAdd => MaxChangeLogLines - Count;
+        public uint NextFreePosition => (uint) (LastPosition + 1);
+        public bool IsPositionAvailable => RemainingPositionsToAdd > 0;
+
         public static ChangeLogsMetadata Create(Guid projectId, IReadOnlyCollection<ChangeLogLine> lines)
         {
             VerifyProjectId(projectId, lines);
@@ -40,7 +51,7 @@ namespace ChangeTracker.Domain.ChangeLog
             return new ChangeLogsMetadata(projectId,
                 versionId != Guid.Empty ? versionId : null,
                 changeLogTexts,
-                (uint)lines.Count, 
+                (uint) lines.Count,
                 lastPosition);
         }
 
@@ -87,15 +98,5 @@ namespace ChangeTracker.Domain.ChangeLog
                 .Distinct()
                 .Single();
         }
-
-        public Guid ProjectId { get; }
-        public Guid? VersionId { get; }
-        public IImmutableSet<ChangeLogText> Texts { get; }
-        public uint Count { get; }
-        public int LastPosition { get; }
-
-        public uint RemainingPositionsToAdd => MaxChangeLogLines - Count;
-        public uint NextFreePosition => (uint) (LastPosition + 1);
-        public bool IsPositionAvailable => RemainingPositionsToAdd > 0;
     }
 }

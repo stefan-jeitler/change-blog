@@ -104,7 +104,8 @@ namespace ChangeTracker.Application.Tests.UseCaseTests.Commands.MakeChangeLogLin
         public async Task MakeLinePending_VersionIsAlreadyReleased_VersionAlreadyReleasedOutput()
         {
             // arrange
-            var clVersion = new ClVersion(TestAccount.Project.Id, ClVersionValue.Parse("1.2.3"), DateTime.Parse("2021-04-18"));
+            var clVersion = new ClVersion(TestAccount.Project.Id, ClVersionValue.Parse("1.2.3"),
+                DateTime.Parse("2021-04-18"));
             _versionDaoStub.Versions.Add(clVersion);
 
             var changeLogLine = new ChangeLogLine(clVersion.Id, TestAccount.Project.Id,
@@ -127,7 +128,7 @@ namespace ChangeTracker.Application.Tests.UseCaseTests.Commands.MakeChangeLogLin
         {
             // arrange
             var clVersion = new ClVersion(Guid.NewGuid(), TestAccount.Project.Id,
-                ClVersionValue.Parse("1.2.3"), null, DateTime.Parse("2021-04-18"), 
+                ClVersionValue.Parse("1.2.3"), null, DateTime.Parse("2021-04-18"),
                 DateTime.Parse("2021-04-18"));
 
             _versionDaoStub.Versions.Add(clVersion);
@@ -146,7 +147,7 @@ namespace ChangeTracker.Application.Tests.UseCaseTests.Commands.MakeChangeLogLin
             // assert
             _outputPortMock.Verify(m => m.VersionDeleted(), Times.Once);
         }
-        
+
         [Fact]
         public async Task MakeLinePending_TooManyPendingLinesExists_TooManyPendingLinesOutput()
         {
@@ -206,7 +207,8 @@ namespace ChangeTracker.Application.Tests.UseCaseTests.Commands.MakeChangeLogLin
             var changeLogLine = new ChangeLogLine(clVersion.Id, TestAccount.Project.Id,
                 ChangeLogText.Parse("some text"), 0);
             _changeLogDaoStub.ChangeLogs.Add(changeLogLine);
-            _changeLogDaoStub.ChangeLogs.Add(new ChangeLogLine(null, TestAccount.Project.Id, ChangeLogText.Parse("some text"), 0));
+            _changeLogDaoStub.ChangeLogs.Add(new ChangeLogLine(null, TestAccount.Project.Id,
+                ChangeLogText.Parse("some text"), 0));
 
             var makeLinePendingInteractor = CreateInteractor();
             _changeLogDaoStub.ProduceConflict = true;
@@ -217,7 +219,8 @@ namespace ChangeTracker.Application.Tests.UseCaseTests.Commands.MakeChangeLogLin
             await makeLinePendingInteractor.ExecuteAsync(_outputPortMock.Object, changeLogLine.Id);
 
             // assert
-            _outputPortMock.Verify(m => m.LineWithSameTextAlreadyExists(It.Is<string>(x => x == "some text")), Times.Once);
+            _outputPortMock.Verify(m => m.LineWithSameTextAlreadyExists(It.Is<string>(x => x == "some text")),
+                Times.Once);
         }
     }
 }

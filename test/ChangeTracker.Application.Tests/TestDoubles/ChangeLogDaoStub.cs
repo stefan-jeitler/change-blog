@@ -4,7 +4,6 @@ using System.Linq;
 using System.Threading.Tasks;
 using ChangeTracker.Application.DataAccess;
 using ChangeTracker.Application.DataAccess.ChangeLogs;
-using ChangeTracker.Application.DataAccess.Versions;
 using ChangeTracker.Domain.ChangeLog;
 using CSharpFunctionalExtensions;
 
@@ -80,7 +79,7 @@ namespace ChangeTracker.Application.Tests.TestDoubles
             var versionChangeLogLines = ChangeLogs.Where(MatchRequestVersion);
 
             var pendingLines = versionChangeLogLines.Select(x => new ChangeLogLine(x.Id, null, x.ProjectId, x.Text,
-                x.Position, x.CreatedAt, x.Labels, x.Issues, x.DeletedAt))
+                    x.Position, x.CreatedAt, x.Labels, x.Issues, x.DeletedAt))
                 .ToList();
 
             ChangeLogs.RemoveAll(MatchRequestVersion);

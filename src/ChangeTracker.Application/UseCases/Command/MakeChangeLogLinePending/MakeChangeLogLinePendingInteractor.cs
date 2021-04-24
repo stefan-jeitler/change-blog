@@ -49,7 +49,8 @@ namespace ChangeTracker.Application.UseCases.Command.MakeChangeLogLinePending
             await MoveLineAsync(output, line, pendingChangeLogMetadata.Value);
         }
 
-        private async Task<Maybe<ChangeLogLine>> GetLineAsync(IMakeChangeLogLinePendingOutputPort output, Guid changeLogLineId)
+        private async Task<Maybe<ChangeLogLine>> GetLineAsync(IMakeChangeLogLinePendingOutputPort output,
+            Guid changeLogLineId)
         {
             var line = await _changeLogQueries.FindLineAsync(changeLogLineId);
             if (line.HasNoValue)
@@ -67,7 +68,8 @@ namespace ChangeTracker.Application.UseCases.Command.MakeChangeLogLinePending
             return line;
         }
 
-        private async Task<Maybe<ClVersion>> GetVersionAsync(IMakeChangeLogLinePendingOutputPort output, ChangeLogLine line)
+        private async Task<Maybe<ClVersion>> GetVersionAsync(IMakeChangeLogLinePendingOutputPort output,
+            ChangeLogLine line)
         {
             var versionId = line.VersionId!.Value;
             var clVersion = await _versionDao.GetVersionAsync(versionId);
@@ -87,7 +89,8 @@ namespace ChangeTracker.Application.UseCases.Command.MakeChangeLogLinePending
             return Maybe<ClVersion>.From(clVersion);
         }
 
-        private async Task<Maybe<ChangeLogsMetadata>> GetChangeLogsMetadataAsync(IMakeChangeLogLinePendingOutputPort output,
+        private async Task<Maybe<ChangeLogsMetadata>> GetChangeLogsMetadataAsync(
+            IMakeChangeLogLinePendingOutputPort output,
             ChangeLogLine line)
         {
             var pendingChangeLogMetadata = await _changeLogQueries.GetChangeLogsMetadataAsync(line.ProjectId);

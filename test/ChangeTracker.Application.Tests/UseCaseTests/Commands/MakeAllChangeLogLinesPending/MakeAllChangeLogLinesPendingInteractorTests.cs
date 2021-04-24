@@ -212,7 +212,8 @@ namespace ChangeTracker.Application.Tests.UseCaseTests.Commands.MakeAllChangeLog
 
             var clVersion = new ClVersion(TestAccount.Project.Id, ClVersionValue.Parse("1.2.3"));
 
-            var versionLine1 = new ChangeLogLine(clVersion.Id, TestAccount.Project.Id, ChangeLogText.Parse("some text"), 0);
+            var versionLine1 =
+                new ChangeLogLine(clVersion.Id, TestAccount.Project.Id, ChangeLogText.Parse("some text"), 0);
             _changeLogDaoStub.ChangeLogs.Add(versionLine1);
             _changeLogDaoStub.ProduceConflict = true;
             _versionDaoStub.Versions.Add(clVersion);
@@ -233,7 +234,8 @@ namespace ChangeTracker.Application.Tests.UseCaseTests.Commands.MakeAllChangeLog
 
             var clVersion = new ClVersion(TestAccount.Project.Id, ClVersionValue.Parse("1.2.3"));
 
-            var versionLine = new ChangeLogLine(clVersion.Id, TestAccount.Project.Id, ChangeLogText.Parse("some text"), 0);
+            var versionLine =
+                new ChangeLogLine(clVersion.Id, TestAccount.Project.Id, ChangeLogText.Parse("some text"), 0);
             _changeLogDaoStub.ChangeLogs.Add(versionLine);
             _versionDaoStub.Versions.Add(clVersion);
             _outputPortMock.Setup(m => m.MadePending(It.IsAny<int>()));

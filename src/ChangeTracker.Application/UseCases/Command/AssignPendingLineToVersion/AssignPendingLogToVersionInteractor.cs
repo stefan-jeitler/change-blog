@@ -91,7 +91,7 @@ namespace ChangeTracker.Application.UseCases.Command.AssignPendingLineToVersion
                 output.LineWithSameTextAlreadyExists(existingLine.Value.Text);
                 return;
             }
-            
+
             var assignedLine = existingLine.Value.AssignToVersion(version.Id, changeLogsMetadata.NextFreePosition);
 
             await MoveLineAsync(output, assignedLine);

@@ -14,9 +14,8 @@ using Microsoft.Extensions.Caching.Memory;
 
 namespace ChangeTracker.Application.Decorators
 {
-
     /// <summary>
-    /// Checks whether the target version is read-only
+    ///     Checks whether the target version is read-only
     /// </summary>
     public class VersionReadonlyCheckDecorator : IChangeLogCommandsDao
     {

@@ -5,8 +5,8 @@ namespace ChangeTracker.DataAccess.Postgres
 {
     public sealed class DbSession : IDbAccessor, IUnitOfWork
     {
-        private readonly object _lock = new();
         private readonly LazyDbConnection _dbConnection;
+        private readonly object _lock = new();
         private uint _startedUows;
         private IDbTransaction _transaction;
 

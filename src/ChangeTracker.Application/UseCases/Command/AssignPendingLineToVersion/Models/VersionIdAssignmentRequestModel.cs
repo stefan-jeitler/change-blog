@@ -16,7 +16,7 @@ namespace ChangeTracker.Application.UseCases.Command.AssignPendingLineToVersion.
 
             ChangeLogLineId = changeLogLineId;
         }
-        
+
         public Guid VersionId { get; }
         public Guid ChangeLogLineId { get; }
     }

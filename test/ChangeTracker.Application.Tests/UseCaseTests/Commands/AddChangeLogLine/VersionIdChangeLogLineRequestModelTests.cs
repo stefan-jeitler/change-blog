@@ -28,7 +28,7 @@ namespace ChangeTracker.Application.Tests.UseCaseTests.Commands.AddChangeLogLine
         public void Create_HappyPath_Successful()
         {
             var requestModel = CreateRequestModel();
-            
+
             requestModel.VersionId.Should().Be(_testVersionId);
             requestModel.Text.Should().Be(_testText);
             requestModel.Labels.Should().BeEmpty();

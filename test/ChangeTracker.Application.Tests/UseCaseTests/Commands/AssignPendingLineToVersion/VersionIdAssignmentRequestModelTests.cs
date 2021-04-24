@@ -24,7 +24,7 @@ namespace ChangeTracker.Application.Tests.UseCaseTests.Commands.AssignPendingLin
         public void Create_HappyPath_Successful()
         {
             var requestModel = CreateRequestModel();
-            
+
             requestModel.VersionId.Should().Be(_testVersionId);
             requestModel.ChangeLogLineId.Should().Be(_testLineId);
         }

@@ -18,7 +18,7 @@ namespace ChangeTracker.Application.UseCases.Command.AddChangeLogLine.Models
             Labels = labels ?? throw new ArgumentNullException(nameof(labels));
             Issues = issues ?? throw new ArgumentNullException(nameof(issues));
         }
-        
+
         public Guid VersionId { get; }
         public string Text { get; }
         public List<string> Labels { get; }

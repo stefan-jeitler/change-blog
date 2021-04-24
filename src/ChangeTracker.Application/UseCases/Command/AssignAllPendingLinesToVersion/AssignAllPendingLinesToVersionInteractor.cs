@@ -62,7 +62,8 @@ namespace ChangeTracker.Application.UseCases.Command.AssignAllPendingLinesToVers
             await AssignAllPendingLinesToVersionAsync(output, clVersion.Value);
         }
 
-        private async Task AssignAllPendingLinesToVersionAsync(IAssignAllPendingLinesToVersionOutputPort output, ClVersion clVersion)
+        private async Task AssignAllPendingLinesToVersionAsync(IAssignAllPendingLinesToVersionOutputPort output,
+            ClVersion clVersion)
         {
             _unitOfWork.Start();
 

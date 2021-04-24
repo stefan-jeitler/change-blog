@@ -111,7 +111,8 @@ namespace ChangeTracker.Application.Tests.UseCaseTests.Commands.AddPendingChange
             await addPendingLineInteractor.ExecuteAsync(_outputPortMock.Object, lineRequestModel);
 
             // assert
-            _outputPortMock.Verify(m => m.LineWithSameTextAlreadyExists(It.Is<string>(x => x == changeLogLine)), Times.Once);
+            _outputPortMock.Verify(m => m.LineWithSameTextAlreadyExists(It.Is<string>(x => x == changeLogLine)),
+                Times.Once);
         }
 
         [Fact]
@@ -128,7 +129,8 @@ namespace ChangeTracker.Application.Tests.UseCaseTests.Commands.AddPendingChange
                 TestAccount.CustomVersioningScheme, TestAccount.CreationDate, null));
 
             _changeLogDaoStub.ChangeLogs.AddRange(Enumerable.Range(0, 100)
-                .Select(x => new ChangeLogLine(null, TestAccount.Project.Id, ChangeLogText.Parse($"{x:D5}"), (uint) x)));
+                .Select(x =>
+                    new ChangeLogLine(null, TestAccount.Project.Id, ChangeLogText.Parse($"{x:D5}"), (uint) x)));
 
             var addPendingLineInteractor = CreateInteractor();
 

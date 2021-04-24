@@ -10,9 +10,8 @@ namespace ChangeTracker.DataAccess.Postgres.Tests
         public void DbConnection_NotInstantiated_NotDisposed()
         {
             var dbConnection = new Mock<IDbConnection>();
-            using(var lazyDbConnection = new LazyDbConnection(() => dbConnection.Object))
+            using (var lazyDbConnection = new LazyDbConnection(() => dbConnection.Object))
             {
-
             }
 
             dbConnection.Verify(x => x.Dispose(), Times.Never);

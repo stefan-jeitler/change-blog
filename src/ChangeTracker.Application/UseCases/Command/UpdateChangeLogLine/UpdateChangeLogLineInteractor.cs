@@ -49,7 +49,8 @@ namespace ChangeTracker.Application.UseCases.Command.UpdateChangeLogLine
             await UpdateLineAsync(output, existingLine.Value, parsedNewLine.Value);
         }
 
-        private async Task<bool> LineWithSameTextExists(Maybe<ChangeLogLine> existingLine, Maybe<LineParserResponseModel> parsedNewLine)
+        private async Task<bool> LineWithSameTextExists(Maybe<ChangeLogLine> existingLine,
+            Maybe<LineParserResponseModel> parsedNewLine)
         {
             var changeLogMetadata = await _changeLogQueries.GetChangeLogsMetadataAsync(existingLine.Value.ProjectId,
                 existingLine.Value.VersionId);

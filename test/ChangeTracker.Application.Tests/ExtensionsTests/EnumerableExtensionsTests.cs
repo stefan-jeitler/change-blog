@@ -26,5 +26,16 @@ namespace ChangeTracker.Application.Tests.ExtensionsTests
 
             act.Should().ThrowExactly<ArgumentNullException>();
         }
+
+        [Fact]
+        public void DistinctBy_StringWithTwoIdenticalEntries_DuplicatesRemoved()
+        {
+            var sequence = Enumerable.Range(0, 2).Select(x => "ab");
+
+            var unique = sequence.DistinctBy(x => x).ToList();
+
+            unique.Should().ContainSingle(x => x == "ab");
+            unique.Should().HaveCount(1);
+        }
     }
 }

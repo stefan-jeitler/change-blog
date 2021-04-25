@@ -210,7 +210,7 @@ namespace ChangeTracker.Application.Tests.DecoratorTests
             var decorator = new VersionReadonlyCheckDecorator(_changeLogDaoStub, _versionDaoStub, _memoryCache);
 
             // act
-            var result = await decorator.MoveLineAsync(lineAssigned);
+            var result = await decorator.AssignLineToVersionAsync(lineAssigned);
 
             // assert
             result.IsSuccess.Should().BeTrue();
@@ -244,7 +244,7 @@ namespace ChangeTracker.Application.Tests.DecoratorTests
             var decorator = new VersionReadonlyCheckDecorator(_changeLogDaoStub, _versionDaoStub, _memoryCache);
 
             // act
-            var result = await decorator.MoveLinesAsync(new List<ChangeLogLine>(2)
+            var result = await decorator.AssignLinesToVersionAsync(new List<ChangeLogLine>(2)
                 {firstLineAssigned, secondLineAssigned});
 
             // assert
@@ -279,7 +279,7 @@ namespace ChangeTracker.Application.Tests.DecoratorTests
             var decorator = new VersionReadonlyCheckDecorator(_changeLogDaoStub, _versionDaoStub, _memoryCache);
 
             // act
-            var result = await decorator.MoveLinesAsync(new List<ChangeLogLine>(2)
+            var result = await decorator.AssignLinesToVersionAsync(new List<ChangeLogLine>(2)
                 {firstLineAssigned, secondLineAssigned});
 
             // assert

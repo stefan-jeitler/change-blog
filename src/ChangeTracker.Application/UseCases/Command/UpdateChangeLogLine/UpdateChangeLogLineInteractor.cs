@@ -39,8 +39,7 @@ namespace ChangeTracker.Application.UseCases.Command.UpdateChangeLogLine
             if (parsedNewLine.HasNoValue)
                 return;
 
-            var lineWithSameTextExists = await LineWithSameTextExists(existingLine, parsedNewLine);
-            if (lineWithSameTextExists)
+            if (await LineWithSameTextExists(existingLine, parsedNewLine))
             {
                 output.LineWithSameTextAlreadyExists(requestModel.Text);
                 return;

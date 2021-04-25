@@ -94,12 +94,12 @@ namespace ChangeTracker.Application.UseCases.Command.AssignPendingLineToVersion
 
             var assignedLine = existingLine.Value.AssignToVersion(version.Id, changeLogsMetadata.NextFreePosition);
 
-            await MoveLineAsync(output, assignedLine);
+            await SaveAssignmentAsync(output, assignedLine);
         }
 
-        private async Task MoveLineAsync(IAssignPendingLineOutputPort output, ChangeLogLine assignedLine)
+        private async Task SaveAssignmentAsync(IAssignPendingLineOutputPort output, ChangeLogLine assignedLine)
         {
-            await _changeLogCommands.MoveLineAsync(assignedLine)
+            await _changeLogCommands.AssignLineToVersionAsync(assignedLine)
                 .Match(Finish, c => output.Conflict(c.Reason));
 
             void Finish(ChangeLogLine l)

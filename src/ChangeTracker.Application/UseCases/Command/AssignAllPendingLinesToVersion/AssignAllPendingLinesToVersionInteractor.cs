@@ -71,7 +71,7 @@ namespace ChangeTracker.Application.UseCases.Command.AssignAllPendingLinesToVers
             if (assignedLines.HasNoValue)
                 return;
 
-            await MoveLinesAsync(output, assignedLines.Value, clVersion);
+            await SaveAssignmentsAsync(output, assignedLines.Value, clVersion);
         }
 
         private async Task<Maybe<IEnumerable<ChangeLogLine>>> AssignLinesAsync(
@@ -109,10 +109,10 @@ namespace ChangeTracker.Application.UseCases.Command.AssignAllPendingLinesToVers
             return Maybe<IEnumerable<ChangeLogLine>>.From(assignedLines);
         }
 
-        private async Task MoveLinesAsync(IAssignAllPendingLinesToVersionOutputPort output,
+        private async Task SaveAssignmentsAsync(IAssignAllPendingLinesToVersionOutputPort output,
             IEnumerable<ChangeLogLine> assignedLines, ClVersion clVersion)
         {
-            await _changeLogCommands.MoveLinesAsync(assignedLines)
+            await _changeLogCommands.AssignLinesToVersionAsync(assignedLines)
                 .Match(Finish, c => output.Conflict(c.Reason));
 
             void Finish(int count)

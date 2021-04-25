@@ -92,9 +92,9 @@ namespace ChangeTracker.Application.UseCases.Command.MakeAllChangeLogLinesPendin
             _unitOfWork.Start();
 
             var projectId = clVersion.ProjectId;
-            var vId = clVersion.Id;
+            var versionId = clVersion.Id;
             var pendingChangeLogsMetadata = await _changeLogQueries.GetChangeLogsMetadataAsync(projectId);
-            var versionChangeLogsMetadata = await _changeLogQueries.GetChangeLogsMetadataAsync(projectId, vId);
+            var versionChangeLogsMetadata = await _changeLogQueries.GetChangeLogsMetadataAsync(projectId, versionId);
 
             if (versionChangeLogsMetadata.Count > pendingChangeLogsMetadata.RemainingPositionsToAdd)
             {
@@ -109,10 +109,10 @@ namespace ChangeTracker.Application.UseCases.Command.MakeAllChangeLogLinesPendin
                 return;
             }
 
-            await MoveAllLinesAsync(output, vId);
+            await SaveAssignmentsAsync(output, versionId);
         }
 
-        private async Task MoveAllLinesAsync(IMakeAllChangeLogLinesPendingOutputPort output, Guid vId)
+        private async Task SaveAssignmentsAsync(IMakeAllChangeLogLinesPendingOutputPort output, Guid vId)
         {
             await _changeLogCommands.MakeLinesPending(vId)
                 .Match(Finish, c => output.Conflict(c.Reason));

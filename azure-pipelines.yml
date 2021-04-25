@@ -64,14 +64,14 @@ stages:
   condition: and(succeeded(), startsWith(variables['Build.SourceBranch'], 'refs/tags/'))
 
   variables:
-    ImageName: ChangeTracker.api
+    ImageName: ChangeTracker.Api
 
   jobs:
     - job: publish_image
       displayName: Publish Image
       steps:
       - task: PowerShell@2
-        displayName: Publish Image
+        displayName: Build & Push Image
         inputs:
           targetType: filePath
           filePath: ./publish-image.ps1
@@ -99,7 +99,7 @@ stages:
             -p:Version=$(Version) 
             --output $(Build.SourcesDirectory)/dbUpdater
       - task: PublishPipelineArtifact@1
-        displayName: Publish Artifact
+        displayName: Publish DbUpdater Artifact
         inputs:
           targetPath: '$(Build.SourcesDirectory)/dbUpdater'
           artifact: 'DbUpdater'

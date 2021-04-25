@@ -50,7 +50,7 @@ namespace ChangeTracker.Application.Tests.DecoratorTests
         }
 
         [Fact]
-        public async Task AddLine_RelatedVersionDeleted_Conflict()
+        public async Task AddLine_RelatedVersionIsClosed_Conflict()
         {
             // arrange
             var versionId = Guid.Parse("1d7831d5-32fb-437f-a9d5-bf5a7dd34b10");
@@ -69,7 +69,7 @@ namespace ChangeTracker.Application.Tests.DecoratorTests
 
             // assert
             result.IsFailure.Should().BeTrue();
-            result.Error.Reason.Should().StartWith("The related version has been deleted.");
+            result.Error.Reason.Should().StartWith("The related version has been closed.");
             _changeLogDaoStub.ChangeLogs.Should().BeEmpty();
         }
 

@@ -128,7 +128,7 @@ namespace ChangeTracker.Application.Tests.UseCaseTests.Commands.MakeAllChangeLog
         }
 
         [Fact]
-        public async Task MakeAllLinesPending_DeletedVersion_VersionDeletedOutput()
+        public async Task MakeAllLinesPending_DeletedClosed_VersionDeletedOutput()
         {
             // arrange
             var makeAllLinesPendingInteractor = CreateInteractor();
@@ -137,17 +137,17 @@ namespace ChangeTracker.Application.Tests.UseCaseTests.Commands.MakeAllChangeLog
                 null, DateTime.Parse("2021-04-24"), DateTime.Parse("2021-04-24"));
 
             _versionDaoStub.Versions.Add(clVersion);
-            _outputPortMock.Setup(m => m.VersionDeleted());
+            _outputPortMock.Setup(m => m.VersionClosed());
 
             // act
             await makeAllLinesPendingInteractor.ExecuteAsync(_outputPortMock.Object, clVersion.Id);
 
             // assert
-            _outputPortMock.Verify(m => m.VersionDeleted(), Times.Once);
+            _outputPortMock.Verify(m => m.VersionClosed(), Times.Once);
         }
 
         [Fact]
-        public async Task MakeAllLinesPending_TooManyPendingLines_VersionDeletedOutput()
+        public async Task MakeAllLinesPending_TooManyPendingLines_TooManyPendingLinesOutput()
         {
             // arrange
             var makeAllLinesPendingInteractor = CreateInteractor();

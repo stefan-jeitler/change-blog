@@ -10,7 +10,7 @@ namespace ChangeTracker.Domain.Version
         }
 
         public ClVersion(Guid id, Guid projectId, ClVersionValue versionValue, DateTime? releasedAt, DateTime createdAt,
-            DateTime? deletedAt)
+            DateTime? closedAt)
         {
             if (id == Guid.Empty)
                 throw new ArgumentException("Id must not be empty.");
@@ -36,8 +36,8 @@ namespace ChangeTracker.Domain.Version
 
             CreatedAt = createdAt;
 
-            VerifyDeletedDate(releasedAt, deletedAt);
-            DeletedAt = deletedAt;
+            VerifyClosedAtDate(releasedAt, closedAt);
+            ClosedAt = closedAt;
         }
 
         public Guid Id { get; }
@@ -45,11 +45,11 @@ namespace ChangeTracker.Domain.Version
         public ClVersionValue Value { get; }
         public DateTime? ReleasedAt { get; }
         public DateTime CreatedAt { get; }
-        public DateTime? DeletedAt { get; }
+        public DateTime? ClosedAt { get; }
 
         public bool IsReleased => ReleasedAt.HasValue;
 
-        public bool IsDeleted => DeletedAt.HasValue;
+        public bool IsClosed => ClosedAt.HasValue;
 
         public bool Equals(ClVersion other)
         {
@@ -64,15 +64,15 @@ namespace ChangeTracker.Domain.Version
                    Equals(Value, other.Value);
         }
 
-        private static void VerifyDeletedDate(DateTime? releasedAt, DateTime? deletedAt)
+        private static void VerifyClosedAtDate(DateTime? releasedAt, DateTime? closedAt)
         {
-            if (deletedAt.HasValue &&
-                (deletedAt.Value == DateTime.MinValue || deletedAt.Value == DateTime.MaxValue))
+            if (closedAt.HasValue &&
+                (closedAt.Value == DateTime.MinValue || closedAt.Value == DateTime.MaxValue))
                 throw new ArgumentException("Invalid deletion date.");
 
-            if (deletedAt.HasValue && releasedAt.HasValue &&
-                deletedAt.Value < releasedAt.Value)
-                throw new InvalidOperationException("You cannot release a deleted version.");
+            if (closedAt.HasValue && releasedAt.HasValue &&
+                closedAt.Value < releasedAt.Value)
+                throw new InvalidOperationException("You cannot release a closed version.");
         }
 
         public override bool Equals(object obj)

@@ -12,7 +12,7 @@ namespace ChangeTracker.Domain
         }
 
         public Project(Guid id, Guid accountId, Name name, VersioningScheme versioningScheme, DateTime createdAt,
-            DateTime? deletedAt)
+            DateTime? closedAt)
         {
             if (id == Guid.Empty)
                 throw new ArgumentException("Id cannot be empty.");
@@ -31,11 +31,11 @@ namespace ChangeTracker.Domain
 
             CreatedAt = createdAt;
 
-            if (deletedAt.HasValue &&
-                (deletedAt == DateTime.MinValue || deletedAt == DateTime.MaxValue))
+            if (closedAt.HasValue &&
+                (closedAt == DateTime.MinValue || closedAt == DateTime.MaxValue))
                 throw new ArgumentException("Invalid creation date.");
 
-            DeletedAt = deletedAt;
+            ClosedAt = closedAt;
         }
 
         public Guid Id { get; }
@@ -43,6 +43,6 @@ namespace ChangeTracker.Domain
         public Name Name { get; }
         public VersioningScheme VersioningScheme { get; }
         public DateTime CreatedAt { get; }
-        public DateTime? DeletedAt { get; }
+        public DateTime? ClosedAt { get; }
     }
 }

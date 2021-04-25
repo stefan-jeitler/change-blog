@@ -124,7 +124,7 @@ namespace ChangeTracker.Application.Tests.UseCaseTests.Commands.MakeChangeLogLin
         }
 
         [Fact]
-        public async Task MakeLinePending_VersionIsDeleted_VersionIsDeletedOutput()
+        public async Task MakeLinePending_VersionIsClosed_VersionClosedOutput()
         {
             // arrange
             var clVersion = new ClVersion(Guid.NewGuid(), TestAccount.Project.Id,
@@ -139,13 +139,13 @@ namespace ChangeTracker.Application.Tests.UseCaseTests.Commands.MakeChangeLogLin
 
             var makeLinePendingInteractor = CreateInteractor();
 
-            _outputPortMock.Setup(m => m.VersionDeleted());
+            _outputPortMock.Setup(m => m.VersionClosed());
 
             // act
             await makeLinePendingInteractor.ExecuteAsync(_outputPortMock.Object, changeLogLine.Id);
 
             // assert
-            _outputPortMock.Verify(m => m.VersionDeleted(), Times.Once);
+            _outputPortMock.Verify(m => m.VersionClosed(), Times.Once);
         }
 
         [Fact]

@@ -75,9 +75,9 @@ namespace ChangeTracker.Application.UseCases.Command.MakeAllChangeLogLinesPendin
                 return true;
             }
 
-            if (clVersion.IsDeleted)
+            if (clVersion.IsClosed)
             {
-                output.VersionDeleted();
+                output.VersionClosed();
                 return true;
             }
 

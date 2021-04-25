@@ -19,7 +19,7 @@ namespace ChangeTracker.Application.Decorators
     /// </summary>
     public class VersionReadonlyCheckDecorator : IChangeLogCommandsDao
     {
-        private const string VersionDeletedMessage = "The related version has been deleted. ChangeLogLineId {0}";
+        private const string VersionClosedMessage = "The related version has been closed. ChangeLogLineId {0}";
 
         private const string VersionReleasedMessage =
             "The related version has already been released. ChangeLogLineId {0}";
@@ -93,10 +93,10 @@ namespace ChangeTracker.Application.Decorators
             }
 
             var version = await GetVersionAsync(line);
-            if (version.IsDeleted)
+            if (version.IsClosed)
             {
                 return Result.Failure<ChangeLogLine, Conflict>(
-                    new Conflict(string.Format(VersionDeletedMessage, line.Id)));
+                    new Conflict(string.Format(VersionClosedMessage, line.Id)));
             }
 
             if (version.IsReleased)

@@ -38,8 +38,8 @@ namespace ChangeTracker.Domain.Tests.VersionTests
             vs.Id.Should().Be(_testId);
             vs.Name.Should().Be(_testName);
             vs.RegexPattern.Should().Be(_testRegexPatter);
-            vs.AccountId.HasValue.Should().BeTrue();
-            vs.AccountId.Value.Should().Be(_testAccountId.Value);
+            vs.AccountId.Should().HaveValue();
+            vs.AccountId!.Value.Should().Be(_testAccountId!.Value);
             vs.Description.Should().Be(_testDescription);
             vs.CreatedAt.Should().Be(_testCreationDate);
             vs.DeletedAt.Should().BeNull();

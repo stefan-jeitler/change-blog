@@ -11,7 +11,7 @@ namespace ChangeTracker.Domain.Tests.ProjectTests
     {
         private Guid _testAccountId;
         private DateTime _testCreationDate;
-        private DateTime? _testDeletionDate;
+        private DateTime? _testClosedDate;
         private Guid _testId;
         private Name _testName;
         private VersioningScheme _testVersioningScheme;
@@ -23,11 +23,11 @@ namespace ChangeTracker.Domain.Tests.ProjectTests
             _testCreationDate = DateTime.Parse("2021-04-03");
             _testAccountId = TestAccount.Id;
             _testVersioningScheme = TestAccount.CustomVersioningScheme;
-            _testDeletionDate = null;
+            _testClosedDate = null;
         }
 
         private Project CreateProject() => new(_testId, _testAccountId, _testName, _testVersioningScheme,
-            _testCreationDate, _testDeletionDate);
+            _testCreationDate, _testClosedDate);
 
         [Fact]
         public void Create_WithValidArguments_Successful()
@@ -39,18 +39,18 @@ namespace ChangeTracker.Domain.Tests.ProjectTests
             project.Name.Should().Be(_testName);
             project.VersioningScheme.Should().Be(_testVersioningScheme);
             project.CreatedAt.Should().Be(_testCreationDate);
-            project.DeletedAt.HasValue.Should().BeFalse();
+            project.ClosedAt.HasValue.Should().BeFalse();
         }
 
         [Fact]
-        public void Create_WithDeletedAtDate_DateProperlySet()
+        public void Create_WithClosedAtDate_DateProperlySet()
         {
-            _testDeletionDate = DateTime.Parse("2021-04-16");
+            _testClosedDate = DateTime.Parse("2021-04-16");
 
             var project = CreateProject();
 
-            project.DeletedAt.HasValue.Should().BeTrue();
-            project.DeletedAt.Value.Should().Be(_testDeletionDate.Value);
+            project.ClosedAt.Should().HaveValue();
+            project.ClosedAt!.Value.Should().Be(_testClosedDate!.Value);
         }
 
         [Fact]
@@ -108,9 +108,9 @@ namespace ChangeTracker.Domain.Tests.ProjectTests
         [Theory]
         [InlineData("0001-01-01T00:00:00.0000000")]
         [InlineData("9999-12-31T23:59:59.9999999")]
-        public void Create_WithInvalidDeletedAtDate_ArgumentException(string invalidDate)
+        public void Create_WithInvalidClosedAtDate_ArgumentException(string invalidDate)
         {
-            _testDeletionDate = DateTime.Parse(invalidDate);
+            _testClosedDate = DateTime.Parse(invalidDate);
 
             Func<Project> act = CreateProject;
 

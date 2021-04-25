@@ -10,5 +10,6 @@ namespace ChangeTracker.Application.UseCases.Command.AddVersion
         void ProjectDoesNotExist();
         void Conflict(string reason);
         void VersionAlreadyExists(string version);
+        void ProjectClosed(Guid projectId);
     }
 }

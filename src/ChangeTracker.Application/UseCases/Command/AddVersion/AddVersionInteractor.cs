@@ -7,6 +7,8 @@ using ChangeTracker.Domain;
 using ChangeTracker.Domain.Version;
 using CSharpFunctionalExtensions;
 
+// ReSharper disable InvertIf
+
 namespace ChangeTracker.Application.UseCases.Command.AddVersion
 {
     public class AddVersionInteractor : IAddVersion
@@ -25,48 +27,69 @@ namespace ChangeTracker.Application.UseCases.Command.AddVersion
         public async Task ExecuteAsync(IAddVersionOutputPort output, VersionRequestModel versionRequestModel)
         {
             var (projectId, v) = versionRequestModel;
-            if (!ClVersionValue.TryParse(v, out var version))
+            if (!ClVersionValue.TryParse(v, out var versionValue))
             {
                 output.InvalidVersionFormat(v);
                 return;
             }
 
             _unitOfWork.Start();
+            var project = await GetProjectAsync(output, projectId);
+            if (project.HasNoValue)
+                return;
+
+            var clVersion = await CreateVersionAsync(output, project.Value, versionValue);
+            if (clVersion.HasNoValue)
+                return;
+
+            await SaveVersionAsync(output, clVersion.Value);
+        }
+
+        public async Task<Maybe<ClVersion>> CreateVersionAsync(IAddVersionOutputPort output, Project project,
+            ClVersionValue versionValue)
+        {
+            var existingClVersion = await _versionDao.FindVersionAsync(project.Id, versionValue);
+            if (existingClVersion.HasValue)
+            {
+                output.VersionAlreadyExists(versionValue);
+                return Maybe<ClVersion>.None;
+            }
+
+            if (!versionValue.Match(project.VersioningScheme))
+            {
+                output.VersionDoesNotMatchScheme(versionValue);
+                return Maybe<ClVersion>.None;
+            }
+
+            var clVersion = new ClVersion(Guid.NewGuid(),
+                project.Id, versionValue,
+                null, DateTime.UtcNow, null);
+
+            return Maybe<ClVersion>.From(clVersion);
+        }
+
+        private async Task<Maybe<Project>> GetProjectAsync(IAddVersionOutputPort output, Guid projectId)
+        {
             var project = await _projectDao.FindProjectAsync(projectId);
             if (project.HasNoValue)
             {
                 output.ProjectDoesNotExist();
-                return;
+                return Maybe<Project>.None;
             }
 
-            var clVersion = await _versionDao.FindVersionAsync(project.Value.Id, version);
-            if (clVersion.HasValue)
+            if (project.Value.ClosedAt.HasValue)
             {
-                output.VersionAlreadyExists(version.Value);
-                return;
+                output.ProjectClosed(project.Value.Id);
+                return Maybe<Project>.None;
             }
 
-            if (!version.Match(project.Value.VersioningScheme))
-            {
-                output.VersionDoesNotMatchScheme(version.Value);
-                return;
-            }
-
-            await SaveVersionAsync(output, project.Value, version);
+            return project;
         }
 
-        private async Task SaveVersionAsync(IAddVersionOutputPort output, Project project,
-            ClVersionValue versionValue)
+        private async Task SaveVersionAsync(IAddVersionOutputPort output, ClVersion clVersion)
         {
-            var version = new ClVersion(Guid.NewGuid(),
-                project.Id,
-                versionValue,
-                null,
-                DateTime.UtcNow,
-                null);
-
             await _versionDao
-                .AddVersionAsync(version)
+                .AddVersionAsync(clVersion)
                 .Match(Finish, c => output.Conflict(c));
 
             void Finish(ClVersion v)

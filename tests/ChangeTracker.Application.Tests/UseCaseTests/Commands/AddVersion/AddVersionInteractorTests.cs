@@ -79,11 +79,32 @@ namespace ChangeTracker.Application.Tests.UseCaseTests.Commands.AddVersion
         }
 
         [Fact]
+        public async Task CreateVersion_ProjectIsClosed_ClosedOutput()
+        {
+            // arrange
+
+            var project = new Project(TestAccount.Project.Id, TestAccount.Id, TestAccount.Project.Name,
+                TestAccount.CustomVersioningScheme, DateTime.Parse("2021-04-04"), DateTime.Parse("2021-04-05"));
+            _projectDaoStub.Projects.Add(project);
+
+            var versionRequestModel = new VersionRequestModel(TestAccount.Project.Id, "12*");
+            var createVersionInteractor = CreateInteractor();
+
+            _outputPortMock.Setup(m => m.ProjectClosed(It.IsAny<Guid>()));
+
+            // act
+            await createVersionInteractor.ExecuteAsync(_outputPortMock.Object, versionRequestModel);
+
+            // assert
+            _outputPortMock.Verify(m => m.ProjectClosed(It.Is<Guid>(x => x == project.Id)));
+        }
+
+        [Fact]
         public async Task CreateVersion_VersionSchemeMismatch_VersionDoesNotMatchSchemeOutput()
         {
             // arrange
             _projectDaoStub.Projects.Add(new Project(TestAccount.Project.Id, TestAccount.Id, TestAccount.Project.Name,
-                TestAccount.CustomVersioningScheme, DateTime.Parse("2021-04-04"), DateTime.Parse("2021-04-05")));
+                TestAccount.CustomVersioningScheme, DateTime.Parse("2021-04-04"), null));
 
             var versionRequestModel = new VersionRequestModel(TestAccount.Project.Id, "12*");
             var createVersionInteractor = CreateInteractor();
@@ -102,7 +123,7 @@ namespace ChangeTracker.Application.Tests.UseCaseTests.Commands.AddVersion
         {
             // arrange
             _projectDaoStub.Projects.Add(new Project(TestAccount.Project.Id, TestAccount.Id, TestAccount.Project.Name,
-                TestAccount.CustomVersioningScheme, DateTime.Parse("2021-04-04"), DateTime.Parse("2021-04-05")));
+                TestAccount.CustomVersioningScheme, DateTime.Parse("2021-04-04"), null));
 
             var versionId = Guid.Parse("1d7831d5-32fb-437f-a9d5-bf5a7dd34b10");
             var version = ClVersionValue.Parse("1.2");

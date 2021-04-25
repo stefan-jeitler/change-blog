@@ -81,7 +81,7 @@ namespace ChangeTracker.Application.UseCases.Command.MakeChangeLogLinePending
                 return Maybe<ClVersion>.None;
             }
 
-            if (clVersion.IsClosed)
+            if (clVersion.IsDeleted)
             {
                 output.VersionClosed();
                 return Maybe<ClVersion>.None;

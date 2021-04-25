@@ -93,7 +93,7 @@ namespace ChangeTracker.Application.Decorators
             }
 
             var version = await GetVersionAsync(line);
-            if (version.IsClosed)
+            if (version.IsDeleted)
             {
                 return Result.Failure<ChangeLogLine, Conflict>(
                     new Conflict(string.Format(VersionClosedMessage, line.Id)));

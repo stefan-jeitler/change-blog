@@ -8,7 +8,7 @@ namespace ChangeTracker.Domain.Tests.VersionTests
     public class ClVersionTests
     {
         private DateTime _testCreationDate;
-        private DateTime? _testClosedDate;
+        private DateTime? _testDeletedDate;
         private Guid _testId;
         private Guid _testProjectId;
         private DateTime? _testReleaseDate;
@@ -21,11 +21,11 @@ namespace ChangeTracker.Domain.Tests.VersionTests
             _testProjectId = Guid.Parse("d816fb67-f2c3-4d2a-8713-f93a432fbf41");
             _testReleaseDate = DateTime.Parse("2021-04-02T19:30");
             _testCreationDate = DateTime.Parse("2021-04-02T17:30");
-            _testClosedDate = null;
+            _testDeletedDate = null;
         }
 
         private ClVersion CreateVersion() => new(_testId, _testProjectId, _testVersionValue, _testReleaseDate,
-            _testCreationDate, _testClosedDate);
+            _testCreationDate, _testDeletedDate);
 
         [Fact]
         public void Create_WithValidArguments_Successful()
@@ -37,7 +37,7 @@ namespace ChangeTracker.Domain.Tests.VersionTests
             version.Value.Should().Be(_testVersionValue);
             version.ReleasedAt.Should().Be(_testReleaseDate);
             version.CreatedAt.Should().Be(_testCreationDate);
-            version.ClosedAt.Should().BeNull();
+            version.DeletedAt.Should().BeNull();
         }
 
         [Fact]
@@ -91,29 +91,29 @@ namespace ChangeTracker.Domain.Tests.VersionTests
         }
 
         [Fact]
-        public void IsClosed_ClosedAtIsNull_ReturnsFalse()
+        public void IsClosed_DeletedAtIsNull_ReturnsFalse()
         {
-            _testClosedDate = null;
+            _testDeletedDate = null;
 
             var version = CreateVersion();
 
-            version.IsClosed.Should().BeFalse();
+            version.IsDeleted.Should().BeFalse();
         }
 
         [Fact]
-        public void IsClosed_ClosedAtIsNotNull_ReturnsTrue()
+        public void IsClosed_DeletedAtIsNotNull_ReturnsTrue()
         {
-            _testClosedDate = DateTime.Parse("2021-04-16");
+            _testDeletedDate = DateTime.Parse("2021-04-16");
 
             var version = CreateVersion();
 
-            version.IsClosed.Should().BeTrue();
+            version.IsDeleted.Should().BeTrue();
         }
 
         [Fact]
-        public void Create_ReleasedAtAfterClosedDate_InvalidOperationException()
+        public void Create_ReleasedAtAfterDeletedDate_InvalidOperationException()
         {
-            _testClosedDate = DateTime.Parse("2021-04-16T18:30:00Z");
+            _testDeletedDate = DateTime.Parse("2021-04-16T18:30:00Z");
             _testReleaseDate = DateTime.Parse("2021-04-16T18:30:01Z");
 
             Func<ClVersion> act = CreateVersion;
@@ -148,9 +148,9 @@ namespace ChangeTracker.Domain.Tests.VersionTests
         [Theory]
         [InlineData("0001-01-01T00:00:00.0000000")]
         [InlineData("9999-12-31T23:59:59.9999999")]
-        public void Create_WithClosedAtTimeMinAndMaxValue_ArgumentException(string invalidDate)
+        public void Create_WithDeletedAtTimeMinAndMaxValue_ArgumentException(string invalidDate)
         {
-            _testClosedDate = DateTime.Parse(invalidDate);
+            _testDeletedDate = DateTime.Parse(invalidDate);
 
             Func<ClVersion> act = CreateVersion;
 

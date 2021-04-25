@@ -58,7 +58,7 @@ namespace ChangeTracker.Application.Tests.UseCaseTests.Commands.AddCompleteVersi
             _outputPortMock.Verify(m => m.Created(It.IsAny<Guid>()), Times.Once);
             var version = _versionDaoStub.Versions.Single(x => x.ProjectId == TestAccount.Project.Id);
             version.Value.Should().Be(ClVersionValue.Parse("1.23"));
-            version.IsClosed.Should().BeFalse();
+            version.IsDeleted.Should().BeFalse();
         }
 
         [Fact]

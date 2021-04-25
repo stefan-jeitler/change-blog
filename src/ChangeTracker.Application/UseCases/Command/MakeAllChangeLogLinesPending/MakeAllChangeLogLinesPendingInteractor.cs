@@ -93,16 +93,16 @@ namespace ChangeTracker.Application.UseCases.Command.MakeAllChangeLogLinesPendin
 
             var projectId = clVersion.ProjectId;
             var versionId = clVersion.Id;
-            var pendingChangeLogsMetadata = await _changeLogQueries.GetChangeLogsMetadataAsync(projectId);
-            var versionChangeLogsMetadata = await _changeLogQueries.GetChangeLogsMetadataAsync(projectId, versionId);
+            var pendingChangeLogs = await _changeLogQueries.GetChangeLogsMetadataAsync(projectId);
+            var versionChangeLogs = await _changeLogQueries.GetChangeLogsMetadataAsync(projectId, versionId);
 
-            if (versionChangeLogsMetadata.Count > pendingChangeLogsMetadata.RemainingPositionsToAdd)
+            if (versionChangeLogs.Count > pendingChangeLogs.RemainingPositionsToAdd)
             {
                 output.TooManyPendingLines(ChangeLogsMetadata.MaxChangeLogLines);
                 return;
             }
 
-            var duplicates = pendingChangeLogsMetadata.Texts.Intersect(versionChangeLogsMetadata.Texts);
+            var duplicates = pendingChangeLogs.Texts.Intersect(versionChangeLogs.Texts);
             if (duplicates.Any())
             {
                 output.LineWithSameTextAlreadyExists(duplicates.Select(x => x.Value).ToList());
@@ -112,9 +112,9 @@ namespace ChangeTracker.Application.UseCases.Command.MakeAllChangeLogLinesPendin
             await SaveAssignmentsAsync(output, versionId);
         }
 
-        private async Task SaveAssignmentsAsync(IMakeAllChangeLogLinesPendingOutputPort output, Guid vId)
+        private async Task SaveAssignmentsAsync(IMakeAllChangeLogLinesPendingOutputPort output, Guid versionId)
         {
-            await _changeLogCommands.MakeLinesPending(vId)
+            await _changeLogCommands.MakeLinesPending(versionId)
                 .Match(Finish, c => output.Conflict(c.Reason));
 
             void Finish(int count)

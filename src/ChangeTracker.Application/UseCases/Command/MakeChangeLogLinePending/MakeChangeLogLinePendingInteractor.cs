@@ -94,20 +94,20 @@ namespace ChangeTracker.Application.UseCases.Command.MakeChangeLogLinePending
             IMakeChangeLogLinePendingOutputPort output,
             ChangeLogLine line)
         {
-            var pendingChangeLogMetadata = await _changeLogQueries.GetChangeLogsMetadataAsync(line.ProjectId);
-            if (!pendingChangeLogMetadata.IsPositionAvailable)
+            var pendingChangeLogs = await _changeLogQueries.GetChangeLogsMetadataAsync(line.ProjectId);
+            if (!pendingChangeLogs.IsPositionAvailable)
             {
                 output.TooManyPendingLines(ChangeLogsMetadata.MaxChangeLogLines);
                 return Maybe<ChangeLogsMetadata>.None;
             }
 
-            if (pendingChangeLogMetadata.Texts.Contains(line.Text))
+            if (pendingChangeLogs.Texts.Contains(line.Text))
             {
                 output.LineWithSameTextAlreadyExists(line.Text);
                 return Maybe<ChangeLogsMetadata>.None;
             }
 
-            return Maybe<ChangeLogsMetadata>.From(pendingChangeLogMetadata);
+            return Maybe<ChangeLogsMetadata>.From(pendingChangeLogs);
         }
 
         private static ChangeLogLine MakeLinePending(ChangeLogLine line, ChangeLogsMetadata pendingChangeLogMetadata) =>

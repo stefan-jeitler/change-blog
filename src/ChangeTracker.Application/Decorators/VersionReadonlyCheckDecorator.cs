@@ -19,7 +19,7 @@ namespace ChangeTracker.Application.Decorators
     /// </summary>
     public class VersionReadonlyCheckDecorator : IChangeLogCommandsDao
     {
-        private const string VersionClosedMessage = "The related version has been closed. ChangeLogLineId {0}";
+        private const string VersionDeletedMessage = "The related version has been closed. ChangeLogLineId {0}";
 
         private const string VersionReleasedMessage =
             "The related version has already been released. ChangeLogLineId {0}";
@@ -96,7 +96,7 @@ namespace ChangeTracker.Application.Decorators
             if (version.IsDeleted)
             {
                 return Result.Failure<ChangeLogLine, Conflict>(
-                    new Conflict(string.Format(VersionClosedMessage, line.Id)));
+                    new Conflict(string.Format(VersionDeletedMessage, line.Id)));
             }
 
             if (version.IsReleased)

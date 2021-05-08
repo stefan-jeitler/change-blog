@@ -4,7 +4,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using ChangeTracker.Application.DataAccess;
 using ChangeTracker.Application.Tests.TestDoubles;
-using ChangeTracker.Application.UseCases.Command.AddPendingChangeLogLine;
+using ChangeTracker.Application.UseCases.Commands.AddPendingChangeLogLine;
 using ChangeTracker.Domain;
 using ChangeTracker.Domain.ChangeLog;
 using Moq;
@@ -140,7 +140,7 @@ namespace ChangeTracker.Application.Tests.UseCaseTests.Commands.AddPendingChange
             await addPendingLineInteractor.ExecuteAsync(_outputPortMock.Object, lineRequestModel);
 
             // assert
-            _outputPortMock.Verify(m => m.TooManyLines(It.Is<int>(x => x == ChangeLogsMetadata.MaxChangeLogLines)),
+            _outputPortMock.Verify(m => m.TooManyLines(It.Is<int>(x => x == ChangeLogs.MaxLines)),
                 Times.Once);
         }
 

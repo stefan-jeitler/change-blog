@@ -1,5 +1,5 @@
 ﻿using System;
-using ChangeTracker.Application.UseCases.Command.Issues.SharedModels;
+using ChangeTracker.Application.UseCases.Commands.Issues.SharedModels;
 using FluentAssertions;
 using Xunit;
 

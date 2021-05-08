@@ -65,7 +65,7 @@ namespace ChangeTracker.Application.Tests.TestDoubles
             return Result.Success<ChangeLogLine, Conflict>(changeLogLine);
         }
 
-        public async Task<Result<int, Conflict>> MakeLinesPending(Guid versionId)
+        public async Task<Result<int, Conflict>> MakeAllLinesPending(Guid versionId)
         {
             await Task.Yield();
 
@@ -106,7 +106,7 @@ namespace ChangeTracker.Application.Tests.TestDoubles
             return Task.FromResult(ChangeLogs.TryFirst(x => x.Id == changeLogLineId));
         }
 
-        public async Task<ChangeLogsMetadata> GetChangeLogsMetadataAsync(Guid projectId, Guid? versionId)
+        public async Task<ChangeLogs> GetChangeLogsAsync(Guid projectId, Guid? versionId)
         {
             await Task.Yield();
 
@@ -114,10 +114,10 @@ namespace ChangeTracker.Application.Tests.TestDoubles
                 ? ChangeLogs.Where(x => x.ProjectId == projectId && x.VersionId == versionId.Value).ToList()
                 : ChangeLogs.Where(x => x.ProjectId == projectId && !x.VersionId.HasValue).ToList();
 
-            return ChangeLogsMetadata.Create(projectId, changeLogLines);
+            return new ChangeLogs(changeLogLines);
         }
 
-        public async Task<IList<ChangeLogLine>> GetPendingLines(Guid projectId)
+        public async Task<IList<ChangeLogLine>> GetPendingLinesAsync(Guid projectId)
         {
             await Task.Yield();
 

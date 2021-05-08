@@ -7,7 +7,7 @@ using System.Linq;
 
 namespace ChangeTracker.Domain.ChangeLog
 {
-    public record ChangeLogLine
+    public class ChangeLogLine
     {
         public const int MaxIssues = 10;
         public const int MaxLabels = 5;

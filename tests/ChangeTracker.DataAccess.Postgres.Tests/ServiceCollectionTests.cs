@@ -1,4 +1,5 @@
 ﻿using ChangeTracker.Application.DataAccess;
+using Dapper;
 using Microsoft.Extensions.DependencyInjection;
 using Xunit;
 
@@ -11,7 +12,7 @@ namespace ChangeTracker.DataAccess.Postgres.Tests
         {
             // arrange
             var serviceCollection = new ServiceCollection();
-            serviceCollection.AddPostgresDbSession("connection-string");
+            serviceCollection.AddPostgresDbSession(Configuration.ConnectionString);
 
             using var serviceProvider = serviceCollection.BuildServiceProvider();
             using var scope = serviceProvider.CreateScope();

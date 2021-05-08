@@ -82,8 +82,8 @@ stages:
             -Tag $(Version) 
             -PushToRegistry
             -RegistryUrl $(AZ_ContainerRegistry_Url) 
-            -RegistryUsername $(AZ_SP_Deploy_Username) 
-            -RegistryPwd $(AZ_SP_Deploy_Password)
+            -RegistryUsername $(AZ_SP_Deploy_ClientId) 
+            -RegistryPwd $(AZ_SP_Deploy_Secret)
           pwsh: true
 
     - job: publish_dbUpdater

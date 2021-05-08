@@ -3,7 +3,7 @@ using ChangeTracker.Domain.Common;
 
 namespace ChangeTracker.Domain
 {
-    public record Account
+    public class Account
     {
         public Account(Guid id, Name name, Guid? defaultVersioningSchemeId, DateTime createdAt, DateTime? deletedAt)
         {

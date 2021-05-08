@@ -3,7 +3,7 @@ using ChangeTracker.Domain.Common;
 
 namespace ChangeTracker.Domain
 {
-    public record User
+    public class User
     {
         public User(Guid id, Email email, Name firstName, Name lastName, DateTime? deletedAt)
         {

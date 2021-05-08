@@ -1,5 +1,5 @@
 ﻿using System;
-using ChangeTracker.Application.UseCases.Command.AddVersion;
+using ChangeTracker.Application.UseCases.Commands.AddVersion;
 using FluentAssertions;
 using Xunit;
 

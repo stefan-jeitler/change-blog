@@ -1,6 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
-using ChangeTracker.Application.UseCases.Command.AddCompleteVersion.Models;
+using ChangeTracker.Application.UseCases.Commands.AddCompleteVersion.Models;
 using FluentAssertions;
 using Xunit;
 

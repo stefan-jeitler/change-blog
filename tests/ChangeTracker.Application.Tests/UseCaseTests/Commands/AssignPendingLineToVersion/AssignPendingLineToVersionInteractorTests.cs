@@ -3,8 +3,8 @@ using System.Linq;
 using System.Threading.Tasks;
 using ChangeTracker.Application.DataAccess;
 using ChangeTracker.Application.Tests.TestDoubles;
-using ChangeTracker.Application.UseCases.Command.AssignPendingLineToVersion;
-using ChangeTracker.Application.UseCases.Command.AssignPendingLineToVersion.Models;
+using ChangeTracker.Application.UseCases.Commands.AssignPendingLineToVersion;
+using ChangeTracker.Application.UseCases.Commands.AssignPendingLineToVersion.Models;
 using ChangeTracker.Domain;
 using ChangeTracker.Domain.ChangeLog;
 using ChangeTracker.Domain.Common;
@@ -204,7 +204,7 @@ namespace ChangeTracker.Application.Tests.UseCaseTests.Commands.AssignPendingLin
 
             // assert
             _outputPortMock.Verify(
-                m => m.MaxChangeLogLinesReached(It.Is<int>(x => x == ChangeLogsMetadata.MaxChangeLogLines)),
+                m => m.MaxChangeLogLinesReached(It.Is<int>(x => x == ChangeLogs.MaxLines)),
                 Times.Once);
         }
 

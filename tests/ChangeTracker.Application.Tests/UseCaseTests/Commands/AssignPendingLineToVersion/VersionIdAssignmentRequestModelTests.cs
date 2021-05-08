@@ -1,5 +1,5 @@
 ﻿using System;
-using ChangeTracker.Application.UseCases.Command.AssignPendingLineToVersion.Models;
+using ChangeTracker.Application.UseCases.Commands.AssignPendingLineToVersion.Models;
 using FluentAssertions;
 using Xunit;
 

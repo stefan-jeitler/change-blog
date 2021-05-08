@@ -1,5 +1,5 @@
 ﻿using System;
-using ChangeTracker.Application.UseCases.Command.AddProject;
+using ChangeTracker.Application.UseCases.Commands.AddProject;
 using FluentAssertions;
 using Xunit;
 

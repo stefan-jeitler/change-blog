@@ -2,7 +2,7 @@
 using System.Threading.Tasks;
 using ChangeTracker.Application.DataAccess;
 using ChangeTracker.Application.Tests.TestDoubles;
-using ChangeTracker.Application.UseCases.Command.UpdateChangeLogLine;
+using ChangeTracker.Application.UseCases.Commands.UpdateChangeLogLine;
 using ChangeTracker.Domain.ChangeLog;
 using Moq;
 using Xunit;

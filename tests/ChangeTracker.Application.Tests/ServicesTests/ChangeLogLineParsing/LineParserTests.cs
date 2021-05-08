@@ -177,7 +177,7 @@ namespace ChangeTracker.Application.Tests.ServicesTests.ChangeLogLineParsing
 
         //    // assert
         //    _outputPortMock.Verify(m => m.TooManyLines(
-        //        It.Is<int>(x => x == ChangeLogsMetadata.MaxChangeLogLines)), Times.Once);
+        //        It.Is<int>(x => x == ChangeLogs.MaxLines)), Times.Once);
         //    parseLine.HasValue.Should().BeFalse();
         //}
     }

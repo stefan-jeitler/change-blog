@@ -2,7 +2,7 @@
 using System.Threading.Tasks;
 using ChangeTracker.Application.DataAccess;
 using ChangeTracker.Application.Tests.TestDoubles;
-using ChangeTracker.Application.UseCases.Command.AddVersion;
+using ChangeTracker.Application.UseCases.Commands.AddVersion;
 using ChangeTracker.Domain;
 using ChangeTracker.Domain.Version;
 using Moq;

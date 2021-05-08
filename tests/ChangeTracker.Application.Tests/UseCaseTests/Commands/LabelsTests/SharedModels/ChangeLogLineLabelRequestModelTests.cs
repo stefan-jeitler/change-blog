@@ -1,5 +1,5 @@
 ﻿using System;
-using ChangeTracker.Application.UseCases.Command.Labels.SharedModels;
+using ChangeTracker.Application.UseCases.Commands.Labels.SharedModels;
 using FluentAssertions;
 using Xunit;
 

@@ -5,7 +5,7 @@ using System.Linq.Expressions;
 using System.Threading.Tasks;
 using ChangeTracker.Application.DataAccess;
 using ChangeTracker.Application.Tests.TestDoubles;
-using ChangeTracker.Application.UseCases.Command.MakeAllChangeLogLinesPending;
+using ChangeTracker.Application.UseCases.Commands.MakeAllChangeLogLinesPending;
 using ChangeTracker.Domain.ChangeLog;
 using ChangeTracker.Domain.Version;
 using FluentAssertions;
@@ -170,7 +170,7 @@ namespace ChangeTracker.Application.Tests.UseCaseTests.Commands.MakeAllChangeLog
 
             // assert
             _outputPortMock.Verify(
-                m => m.TooManyPendingLines(It.Is<int>(x => x == ChangeLogsMetadata.MaxChangeLogLines)),
+                m => m.TooManyPendingLines(It.Is<int>(x => x == ChangeLogs.MaxLines)),
                 Times.Once);
         }
 

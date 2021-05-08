@@ -26,7 +26,7 @@ namespace ChangeTracker.Domain.Version
             if (releasedAt.HasValue &&
                 (releasedAt.Value == DateTime.MinValue || releasedAt.Value == DateTime.MaxValue))
             {
-                throw new ArgumentException("Invalid release date", nameof(releasedAt));
+                throw new ArgumentException("Invalid release date.", nameof(releasedAt));
             }
 
             ReleasedAt = releasedAt;

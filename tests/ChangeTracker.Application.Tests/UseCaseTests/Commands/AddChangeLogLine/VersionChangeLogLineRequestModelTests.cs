@@ -1,6 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
-using ChangeTracker.Application.UseCases.Command.AddChangeLogLine.Models;
+using ChangeTracker.Application.UseCases.Commands.AddChangeLogLine.Models;
 using FluentAssertions;
 using Xunit;
 
@@ -23,7 +23,7 @@ namespace ChangeTracker.Application.Tests.UseCaseTests.Commands.AddChangeLogLine
             _testIssues = new List<string>(0);
         }
 
-        private VersionChangeLogLineRequestModel CreateRequestModel() =>
+        private VersionChangeLogLineRequestModelRequestModel CreateRequestModel() =>
             new(_testProjectId, _testVersion, _testText, _testLabels, _testIssues);
 
         [Fact]
@@ -43,7 +43,7 @@ namespace ChangeTracker.Application.Tests.UseCaseTests.Commands.AddChangeLogLine
         {
             _testProjectId = Guid.Empty;
 
-            Func<VersionChangeLogLineRequestModel> act = CreateRequestModel;
+            Func<VersionChangeLogLineRequestModelRequestModel> act = CreateRequestModel;
 
             act.Should().ThrowExactly<ArgumentException>();
         }
@@ -53,7 +53,7 @@ namespace ChangeTracker.Application.Tests.UseCaseTests.Commands.AddChangeLogLine
         {
             _testVersion = null;
 
-            Func<VersionChangeLogLineRequestModel> act = CreateRequestModel;
+            Func<VersionChangeLogLineRequestModelRequestModel> act = CreateRequestModel;
 
             act.Should().ThrowExactly<ArgumentNullException>();
         }
@@ -63,7 +63,7 @@ namespace ChangeTracker.Application.Tests.UseCaseTests.Commands.AddChangeLogLine
         {
             _testText = null;
 
-            Func<VersionChangeLogLineRequestModel> act = CreateRequestModel;
+            Func<VersionChangeLogLineRequestModelRequestModel> act = CreateRequestModel;
 
             act.Should().ThrowExactly<ArgumentNullException>();
         }
@@ -73,7 +73,7 @@ namespace ChangeTracker.Application.Tests.UseCaseTests.Commands.AddChangeLogLine
         {
             _testLabels = null;
 
-            Func<VersionChangeLogLineRequestModel> act = CreateRequestModel;
+            Func<VersionChangeLogLineRequestModelRequestModel> act = CreateRequestModel;
 
             act.Should().ThrowExactly<ArgumentNullException>();
         }
@@ -83,7 +83,7 @@ namespace ChangeTracker.Application.Tests.UseCaseTests.Commands.AddChangeLogLine
         {
             _testIssues = null;
 
-            Func<VersionChangeLogLineRequestModel> act = CreateRequestModel;
+            Func<VersionChangeLogLineRequestModelRequestModel> act = CreateRequestModel;
 
             act.Should().ThrowExactly<ArgumentNullException>();
         }

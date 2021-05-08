@@ -4,8 +4,8 @@ using System.Linq;
 using System.Threading.Tasks;
 using ChangeTracker.Application.DataAccess;
 using ChangeTracker.Application.Tests.TestDoubles;
-using ChangeTracker.Application.UseCases.Command.AddCompleteVersion;
-using ChangeTracker.Application.UseCases.Command.AddCompleteVersion.Models;
+using ChangeTracker.Application.UseCases.Commands.AddCompleteVersion;
+using ChangeTracker.Application.UseCases.Commands.AddCompleteVersion.Models;
 using ChangeTracker.Domain.ChangeLog;
 using ChangeTracker.Domain.Version;
 using FluentAssertions;
@@ -176,7 +176,7 @@ namespace ChangeTracker.Application.Tests.UseCaseTests.Commands.AddCompleteVersi
 
             // assert
             _outputPortMock.Verify(m =>
-                m.TooManyLines(It.Is<int>(x => x == ChangeLogsMetadata.MaxChangeLogLines)), Times.Once);
+                m.TooManyLines(It.Is<int>(x => x == ChangeLogs.MaxLines)), Times.Once);
         }
 
         [Fact]

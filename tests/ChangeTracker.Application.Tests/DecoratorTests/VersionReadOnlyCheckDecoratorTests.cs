@@ -304,7 +304,7 @@ namespace ChangeTracker.Application.Tests.DecoratorTests
             var decorator = new VersionReadonlyCheckDecorator(_changeLogDaoStub, _versionDaoStub, _memoryCache);
 
             // act
-            await decorator.MakeLinesPending(versionId);
+            await decorator.MakeAllLinesPending(versionId);
 
             // assert
             _changeLogDaoStub.ChangeLogs.Single().IsPending.Should().BeTrue();

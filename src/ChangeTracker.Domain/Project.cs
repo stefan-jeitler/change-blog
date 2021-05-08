@@ -4,7 +4,7 @@ using ChangeTracker.Domain.Version;
 
 namespace ChangeTracker.Domain
 {
-    public record Project
+    public class Project
     {
         public Project(Guid accountId, Name name, VersioningScheme versioningScheme, DateTime createdAt)
             : this(Guid.NewGuid(), accountId, name, versioningScheme, createdAt, null)

@@ -3,7 +3,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using ChangeTracker.Application.DataAccess;
 using ChangeTracker.Application.Tests.TestDoubles;
-using ChangeTracker.Application.UseCases.Command.MakeChangeLogLinePending;
+using ChangeTracker.Application.UseCases.Commands.MakeChangeLogLinePending;
 using ChangeTracker.Domain.ChangeLog;
 using ChangeTracker.Domain.Version;
 using FluentAssertions;

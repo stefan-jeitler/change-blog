@@ -1,6 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
-using ChangeTracker.Application.UseCases.Command.UpdateChangeLogLine;
+using ChangeTracker.Application.UseCases.Commands.UpdateChangeLogLine;
 using FluentAssertions;
 using Xunit;
 

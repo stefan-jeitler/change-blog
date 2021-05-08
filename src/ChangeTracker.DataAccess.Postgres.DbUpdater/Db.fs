@@ -6,19 +6,29 @@ module Db =
 
     let inline (=>) a b = a, box b
 
-    let tableExists (dbConnection: IDbConnection) (tableName: string) =
-        async {
+    let tableExists (dbConnection: IDbConnection) (tableName: string) = async {
             let tableExistsSql = """
               SELECT EXISTS (
                  SELECT FROM information_schema.tables
-                 WHERE  table_name = @tableName
+                 WHERE table_name = @tableName
               )"""
 
-            let param =
-                dict [ "tableName" => tableName.ToLower() ]
+            let parameters = dict [ "tableName" => tableName.ToLower() ]
 
-            return!
-                dbConnection.ExecuteScalarAsync<bool>(tableExistsSql, param)
+            return! dbConnection.ExecuteScalarAsync<bool>(tableExistsSql, parameters)
+                    |> Async.AwaitTask
+        }
+
+    let constraintExists (dbConnection: IDbConnection) (tableName: string) (constraintName: string) = async {
+        let constraintExistsSql = """
+                select CASE WHEN COUNT(*) = 1 THEN 'true' ELSE 'false' END
+                from information_schema.constraint_column_usage 
+                where TABLE_NAME = @tableName  and CONSTRAINT_NAME = @constraintName
+            """
+
+        let parameters = dict [ "tableName" => tableName.ToLower(); "constraintName" => constraintName.ToLower()]
+
+        return! dbConnection.ExecuteScalarAsync<bool>(constraintExistsSql, parameters)
                 |> Async.AwaitTask
         }
 
@@ -31,13 +41,11 @@ module Db =
             | true ->
                 let versionSql = "SELECT version FROM schema_version"
 
-                return!
-                    dbConnection.ExecuteScalarAsync<int>(versionSql)
-                    |> Async.AwaitTask
+                return! dbConnection.ExecuteScalarAsync<int>(versionSql)
+                        |> Async.AwaitTask
         }
 
-    let updateSchemaVersion (dbConnection: IDbConnection) (version: int) =
-        async {
+    let updateSchemaVersion (dbConnection: IDbConnection) (version: int) = async {
             let updateSchemaVersionSql =
                 "UPDATE schema_version SET version = @version, updated_at = now()"
 

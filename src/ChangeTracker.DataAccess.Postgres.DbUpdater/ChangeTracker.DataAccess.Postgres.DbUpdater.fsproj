@@ -15,8 +15,7 @@
     <Compile Include="Db.fs" />
     <Compile Include="DbUpdates/SchemaTable.fs" />
     <Compile Include="DbUpdates/AccountTable.fs" />
-    <Compile Include="DbUpdates/VersionTable.fs" />
-    <Compile Include="DbUpdates/ChangeLogLineTable.fs" />
+    <Compile Include="DbUpdates/VersioningSchemeTable.fs" />
     <Compile Include="DbUpdates.fs" />
     <Compile Include="Program.fs" />
   </ItemGroup>

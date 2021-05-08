@@ -19,13 +19,11 @@ module SchemaTable =
                       updated_at TIMESTAMP NOT NULL
                     )"""
 
-                do!
-                    dbConnection.ExecuteAsync(createSchemaTableSql)
+                do! dbConnection.ExecuteAsync(createSchemaTableSql)
                     |> Async.AwaitTask
                     |> Async.Ignore
 
-                do!
-                    dbConnection.ExecuteAsync("INSERT INTO schema_version VALUES(0, now())")
+                do! dbConnection.ExecuteAsync("INSERT INTO schema_version VALUES(0, now())")
                     |> Async.AwaitTask
                     |> Async.Ignore
         }

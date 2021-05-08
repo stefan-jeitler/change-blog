@@ -10,14 +10,14 @@ let private createApiKeySql = """
         	user_id UUID CONSTRAINT apikey_userid_nn NOT NULL,
         	"key" TEXT CONSTRAINT apikey_key_nn NOT NULL,
         	expires_at TIMESTAMP CONSTRAINT apikey_expiresat_nn NOT NULL,
-        	deleted_at TIMESTAMP, 
+        	deleted_at TIMESTAMP,
         	created_at TIMESTAMP CONSTRAINT apikey_createdat_nn NOT NULL,
         	CONSTRAINT apikey_userid_fkey FOREIGN KEY(user_id) REFERENCES "user"(id),
         	CONSTRAINT apikey_key_unique UNIQUE ("key")
         )
     """
 
-let create (dbConnection: IDbConnection) = 
+let create (dbConnection: IDbConnection) =
     dbConnection.ExecuteAsync(createApiKeySql)
     |> Async.AwaitTask
     |> Async.Ignore

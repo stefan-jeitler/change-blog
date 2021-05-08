@@ -17,7 +17,7 @@ let private createProjectUserRoleSql = """
         )
     """
 
-let create (dbConnection: IDbConnection) = 
+let create (dbConnection: IDbConnection) =
     dbConnection.ExecuteAsync(createProjectUserRoleSql)
     |> Async.AwaitTask
     |> Async.Ignore

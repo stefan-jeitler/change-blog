@@ -4,7 +4,7 @@ open System.Data
 open Dapper
 
 let private createAccountSql = """
-    CREATE TABLE IF NOT EXISTS account 
+    CREATE TABLE IF NOT EXISTS account
     (
         id UUID CONSTRAINT account_id_pkey PRIMARY KEY,
         "name" TEXT CONSTRAINT account_name_nn NOT NULL,

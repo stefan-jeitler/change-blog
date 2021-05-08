@@ -4,7 +4,7 @@ open System.Data
 open Dapper
 
 let private createProjectSql = """
-        CREATE TABLE IF NOT EXISTS project 
+        CREATE TABLE IF NOT EXISTS project
         (
         	id UUID CONSTRAINT project_id_pkey PRIMARY KEY,
         	account_id UUID CONSTRAINT project_accountid_nn NOT NULL,
@@ -19,7 +19,7 @@ let private createProjectSql = """
         )
     """
 
-let create (dbConnection: IDbConnection) = 
+let create (dbConnection: IDbConnection) =
     dbConnection.ExecuteAsync(createProjectSql)
     |> Async.AwaitTask
     |> Async.Ignore

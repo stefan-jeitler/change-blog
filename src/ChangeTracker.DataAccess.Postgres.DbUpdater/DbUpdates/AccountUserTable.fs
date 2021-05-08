@@ -16,7 +16,7 @@ let private createAccountUserSql = """
         )
     """
 
-let create (dbConnection: IDbConnection) = 
+let create (dbConnection: IDbConnection) =
     dbConnection.ExecuteAsync(createAccountUserSql)
     |> Async.AwaitTask
     |> Async.Ignore

@@ -16,16 +16,18 @@ let private createUserSql = """
         )
     """
 
-let private createLowerEmailIndexSql = """CREATE INDEX IF NOT EXISTS user_email_idx ON "user" (lower(email))"""
+let private createLowerEmailIndexSql =
+    """CREATE INDEX IF NOT EXISTS user_email_idx ON "user" (lower(email))"""
 
-let create (dbConnection: IDbConnection) = 
+let create (dbConnection: IDbConnection) =
     async {
-        do! 
+        do!
             dbConnection.ExecuteAsync(createUserSql)
             |> Async.AwaitTask
             |> Async.Ignore
 
-        do! dbConnection.ExecuteAsync(createLowerEmailIndexSql)
+        do!
+            dbConnection.ExecuteAsync(createLowerEmailIndexSql)
             |> Async.AwaitTask
             |> Async.Ignore
     }

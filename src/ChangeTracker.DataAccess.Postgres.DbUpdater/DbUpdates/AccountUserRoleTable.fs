@@ -15,7 +15,7 @@ let private createAccountUserRoleSql = """
         )
     """
 
-let create (dbConnection: IDbConnection) = 
+let create (dbConnection: IDbConnection) =
     dbConnection.ExecuteAsync(createAccountUserRoleSql)
     |> Async.AwaitTask
     |> Async.Ignore

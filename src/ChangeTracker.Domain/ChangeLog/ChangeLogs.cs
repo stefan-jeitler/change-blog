@@ -40,6 +40,21 @@ namespace ChangeTracker.Domain.ChangeLog
                 throw new ArgumentException("Lines with same text are not allowed");
         }
 
+        public ChangeLogLine FindDuplicateText(ChangeLogLine other)
+        {
+            return Lines
+                .FirstOrDefault(x => x.Text.Value.Equals(other.Text.Value, StringComparison.OrdinalIgnoreCase));
+        }
+
+        public IEnumerable<ChangeLogLine> FindDuplicateTexts(IImmutableList<ChangeLogLine> others)
+        {
+            var texts = others
+                .Select(x => x.Text.Value.ToLower())
+                .ToHashSet();
+
+            return Lines.Where(x => texts.Contains(x.Text.Value));
+        }
+
         private static Guid? GetVersionId(IReadOnlyCollection<ChangeLogLine> lines)
         {
             if (lines.Any(x => x.VersionId.HasValue && x.VersionId.Value == Guid.Empty))

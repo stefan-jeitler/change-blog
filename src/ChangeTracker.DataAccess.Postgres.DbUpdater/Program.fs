@@ -1,8 +1,6 @@
 open System
 open Microsoft.Extensions.Configuration
 open Npgsql
-
-open DbUpdater
 open DbUpdates
 
 let executeUpdate dbConnection dbUpdate =

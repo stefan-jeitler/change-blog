@@ -13,21 +13,35 @@
 
   <ItemGroup>
     <Compile Include="Db.fs" />
-    <Compile Include="DbUpdates/SchemaTable.fs" />
     <Compile Include="DbUpdates/AccountTable.fs" />
+    <Compile Include="DbUpdates\AccountUserTable.fs" />
+    <Compile Include="DbUpdates\AccountUserRoleTable.fs" />
+    <Compile Include="DbUpdates\ApiKeyTable.fs" />
+    <Compile Include="DbUpdates\ChangeLogLineTable.fs" />
+    <Compile Include="DbUpdates\ProjectTable.fs" />
+    <Compile Include="DbUpdates\RoleTable.fs" />
+    <Compile Include="DbUpdates\RolePermissionTable.fs" />
+    <Compile Include="DbUpdates\ProjectUserRole.fs" />
+    <Compile Include="DbUpdates/SchemaTable.fs" />
+    <Compile Include="DbUpdates\UserTable.fs" />
     <Compile Include="DbUpdates/VersioningSchemeTable.fs" />
+    <Compile Include="DbUpdates\VersionTable.fs" />
     <Compile Include="DbUpdates.fs" />
     <Compile Include="Program.fs" />
   </ItemGroup>
 
   <ItemGroup>
     <PackageReference Include="Npgsql" Version="6.0.0-preview2" />
-    <PackageReference Include="Dapper" Version="2.0.78" />
+    <PackageReference Include="Dapper" Version="2.0.90" />
     <PackageReference Include="Microsoft.Extensions.DependencyInjection" Version="5.0.1" />
     <PackageReference Include="Microsoft.Extensions.Configuration" Version="5.0.0" />
     <PackageReference Include="Microsoft.Extensions.Configuration.Json" Version="5.0.0" />
     <PackageReference Include="Microsoft.Extensions.Configuration.UserSecrets" Version="5.0.0" />
     <PackageReference Include="Microsoft.Extensions.Configuration.EnvironmentVariables" Version="5.0.0" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Update="FSharp.Core" Version="5.0.1" />
   </ItemGroup>
 
 </Project>

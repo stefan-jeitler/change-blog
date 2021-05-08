@@ -64,7 +64,7 @@ stages:
   condition: and(succeeded(), startsWith(variables['Build.SourceBranch'], 'refs/tags/'))
 
   variables:
-    ImageName: ChangeTracker.Api
+    ImageName: change-tracker-api
 
   jobs:
     - job: publish_image

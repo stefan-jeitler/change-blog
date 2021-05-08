@@ -3,6 +3,14 @@ open Microsoft.Extensions.Configuration
 open Npgsql
 open DbUpdates
 
+let findDuplicates (u: DbUpdate list) =
+    u
+    |> List.groupBy (fun x -> x.Version)
+    |> List.choose
+        (function
+        | v, u when u.Length > 1 -> Some v
+        | _ -> None)
+
 let executeUpdate dbConnection dbUpdate =
     async {
         let version = dbUpdate.Version
@@ -27,6 +35,14 @@ let runDbUpdates dbConnection =
 
 [<EntryPoint>]
 let main _ =
+
+    let duplicates =
+        findDuplicates dbUpdates |> List.map string
+
+    match duplicates with
+    | [] -> ()
+    | d -> failwith (sprintf "Duplicate updates exists. Version(s) %s" (d |> String.concat ", "))
+
     let config =
         (new ConfigurationBuilder())
             .SetBasePath(AppContext.BaseDirectory)

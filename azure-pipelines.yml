@@ -83,7 +83,7 @@ stages:
             -PushToRegistry
             -RegistryUrl $(AZ_ContainerRegistry_Url) 
             -RegistryUsername $(AZ_SP_Deploy_ClientId) 
-            -RegistryPwd $(AZ_SP_Deploy_Secret)
+            -RegistryPwd '$(AZ_SP_Deploy_Secret)'
           pwsh: true
 
     - job: publish_dbUpdater
@@ -93,7 +93,7 @@ stages:
         displayName: Build
         inputs:
           command: 'build'
-          projects: './src/ChangeTracker.DataAccess.Postgres.DbUpdater/ChangeTracker.DataAccess.Postgres.DbUpdater.csproj'
+          projects: './src/ChangeTracker.DataAccess.Postgres.DbUpdater/ChangeTracker.DataAccess.Postgres.DbUpdater.fsproj'
           arguments: >-
             --configuration Release 
             -p:Version=$(Version) 

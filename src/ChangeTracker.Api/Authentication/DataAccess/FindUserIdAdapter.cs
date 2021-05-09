@@ -2,7 +2,7 @@
 using System.Threading.Tasks;
 using ChangeTracker.DataAccess.Postgres;
 
-namespace ChangeTracker.Api.Authentication.AccountDaos
+namespace ChangeTracker.Api.Authentication.DataAccess
 {
     public class FindUserIdAdapter : IFindUserId
     {

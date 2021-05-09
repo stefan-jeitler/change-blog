@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Reflection;
 using ChangeTracker.Api.DTOs;
+using ChangeTracker.Api.Extensions;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Hosting;
@@ -18,6 +19,7 @@ namespace ChangeTracker.Api.Controllers
             {
                 var assembly = Assembly.GetEntryAssembly() ?? Assembly.GetExecutingAssembly();
                 var assemblyVersionAttribute = assembly.GetCustomAttribute<AssemblyInformationalVersionAttribute>();
+                
                 return assemblyVersionAttribute is null
                     ? assembly.GetName().Version?.ToString()
                     : assemblyVersionAttribute.InformationalVersion;

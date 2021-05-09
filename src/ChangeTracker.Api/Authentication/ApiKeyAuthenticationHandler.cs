@@ -1,10 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Net.Http.Headers;
 using System.Net.Mime;
 using System.Security.Claims;
-using System.Security.Permissions;
 using System.Text.Encodings.Web;
 using System.Text.Json;
 using System.Threading.Tasks;
@@ -21,7 +19,6 @@ namespace ChangeTracker.Api.Authentication
     public class ApiKeyAuthenticationHandler : AuthenticationHandler<ApiKeyAuthenticationOptions>
     {
         private const string ApiKeyHeaderName = "X-Api-Key";
-
         private readonly IFindUserId _findUserId;
 
         public ApiKeyAuthenticationHandler(IOptionsMonitor<ApiKeyAuthenticationOptions> options,
@@ -66,9 +63,9 @@ namespace ChangeTracker.Api.Authentication
         {
             Response.StatusCode = 401;
             Response.ContentType = MediaTypeNames.Application.Json;
-            var problemDetails = NonSuccessResponse.Create("Unauthorized", "You are not authorized. Please enter a valid api key.");
+            var responseBody = NonSuccessResponse.Create("You are not authorized. Please enter a valid api key.");
 
-            await Response.WriteAsync(JsonSerializer.Serialize(problemDetails));
+            await Response.WriteAsync(JsonSerializer.Serialize(responseBody));
         }
     }
 }

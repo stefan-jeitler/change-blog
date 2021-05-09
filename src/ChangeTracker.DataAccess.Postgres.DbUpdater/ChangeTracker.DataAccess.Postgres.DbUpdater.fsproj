@@ -18,6 +18,7 @@
     <Compile Include="DbUpdates\AccountUserRoleTable.fs" />
     <Compile Include="DbUpdates\ApiKeyTable.fs" />
     <Compile Include="DbUpdates\ChangeLogLineTable.fs" />
+    <Compile Include="DbUpdates\Functions.fs" />
     <Compile Include="DbUpdates\ProjectTable.fs" />
     <Compile Include="DbUpdates\RoleTable.fs" />
     <Compile Include="DbUpdates\RolePermissionTable.fs" />

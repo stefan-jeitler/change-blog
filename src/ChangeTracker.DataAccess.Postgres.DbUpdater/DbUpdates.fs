@@ -22,4 +22,5 @@ let dbUpdates: DbUpdate list = [
     { Version = 11; Update = ProjectTable.create }
     { Version = 12; Update = ProjectUserRole.create}
     { Version = 13; Update = VersionTable.create}
-    { Version = 14; Update = ChangeLogLineTable.create}]
+    { Version = 14; Update = ChangeLogLineTable.create}
+    { Version = 15; Update = Functions.createGuidFunction}]

@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Data;
 using System.Threading.Tasks;
 using Dapper;
 
@@ -6,11 +7,11 @@ namespace ChangeTracker.DataAccess.Postgres
 {
     public class UserDao
     {
-        private readonly IDbAccessor _dbAccessor;
+        private readonly Func<IDbConnection> _acquireDbConnection;
 
-        public UserDao(IDbAccessor dbAccessor)
+        public UserDao(Func<IDbConnection> acquireDbConnection)
         {
-            _dbAccessor = dbAccessor;
+            _acquireDbConnection = acquireDbConnection;
         }
 
         public async Task<Guid?> FindUserId(string apiKey)
@@ -21,14 +22,12 @@ namespace ChangeTracker.DataAccess.Postgres
             }
 
             const string getApiKeySql = @"
-                SELECT u.id
-                FROM api_key ak
-                JOIN ""user"" u ON ak.user_id = u.id
-                WHERE ak.key = @apiKey
-                ";
+                SELECT user_id
+                FROM api_key
+                WHERE key = @apiKey";
 
-
-            return await _dbAccessor.DbConnection
+            using var dbConnection = _acquireDbConnection();
+            return await dbConnection
                 .QuerySingleOrDefaultAsync<Guid?>(getApiKeySql, new {apiKey});
         }
     }

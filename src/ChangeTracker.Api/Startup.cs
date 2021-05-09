@@ -29,8 +29,7 @@ namespace ChangeTracker.Api
 
             services.AddApiKeyAuthentication();
 
-            var connectionString = _configuration?.GetConnectionString("ChangeTrackerDb") ??
-                                   _configuration?["POSTGRESQLCONNSTR_ChangeTrackerDb"];
+            var connectionString = _configuration.GetConnectionString("ChangeTrackerDb");
             services.AddPostgresDataAccess(connectionString);
         }
 

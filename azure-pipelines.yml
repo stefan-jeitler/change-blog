@@ -76,7 +76,7 @@ stages:
           targetType: filePath
           filePath: ./publish-image.ps1
           arguments: >-
-            -Dockerfile $(System.DefaultWorkingDirectory)/src/ChangeTracker.Api/Dockerfile 
+            -Dockerfile $(System.DefaultWorkingDirectory)/Dockerfile 
             -ImageName $(ImageName) 
             -Version $(Version) 
             -Tag $(Version) 

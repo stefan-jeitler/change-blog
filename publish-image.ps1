@@ -18,10 +18,11 @@ if ($Version -NotMatch $semVersionRegExPattern) {
   Exit -1
 }
 
-$ProjectDir = Split-Path -Path $Dockerfile
+$SourceDir = Split-Path -Parent $Dockerfile
+
 $LocalImageName = "$($ImageName):$Tag"
 
-docker build -t $LocalImageName -f $Dockerfile --build-arg Version=$version $ProjectDir
+docker build -t $LocalImageName -f $Dockerfile --build-arg Version=$version $SourceDir
 
 if ($LastExitCode -ne 0) {
   Exit $LastExitCode

@@ -25,6 +25,8 @@ namespace ChangeTracker.Api
             services.AddControllers();
             services.AddSwagger();
 
+            services.AddApplicationInsightsTelemetry();
+
             services.AddApiKeyAuthentication();
             services.AddPostgresDataAccess(_configuration.GetConnectionString("ChangeTrackerDb"));
         }

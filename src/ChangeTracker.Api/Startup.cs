@@ -28,7 +28,10 @@ namespace ChangeTracker.Api
             services.AddApplicationInsightsTelemetry();
 
             services.AddApiKeyAuthentication();
-            services.AddPostgresDataAccess(_configuration.GetConnectionString("ChangeTrackerDb"));
+
+            var connectionString = _configuration?.GetConnectionString("ChangeTrackerDb") ??
+                                   _configuration?["POSTGRESQLCONNSTR_ChangeTrackerDb"];
+            services.AddPostgresDataAccess(connectionString);
         }
 
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)

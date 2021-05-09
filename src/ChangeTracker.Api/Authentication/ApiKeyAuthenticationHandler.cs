@@ -1,9 +1,16 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
+using System.Net.Http.Headers;
+using System.Net.Mime;
 using System.Security.Claims;
+using System.Security.Permissions;
 using System.Text.Encodings.Web;
+using System.Text.Json;
 using System.Threading.Tasks;
+using ChangeTracker.Api.DTOs;
 using Microsoft.AspNetCore.Authentication;
+using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 
@@ -15,16 +22,16 @@ namespace ChangeTracker.Api.Authentication
     {
         private const string ApiKeyHeaderName = "X-Api-Key";
 
-        private readonly IAccountDao _accountDao;
+        private readonly IFindUserId _findUserId;
 
         public ApiKeyAuthenticationHandler(IOptionsMonitor<ApiKeyAuthenticationOptions> options,
             ILoggerFactory logger,
             UrlEncoder encoder,
             ISystemClock clock,
-            IAccountDao accountDao)
+            IFindUserId findUserId)
             : base(options, logger, encoder, clock)
         {
-            _accountDao = accountDao;
+            _findUserId = findUserId;
         }
 
         protected override async Task<AuthenticateResult> HandleAuthenticateAsync()
@@ -37,12 +44,12 @@ namespace ChangeTracker.Api.Authentication
             if (apiKeyInHeader is null)
                 return AuthenticateResult.NoResult();
 
-            var accountId = await _accountDao.FindAccountId(apiKeyInHeader);
-            if (accountId.HasValue)
+            var userId = await _findUserId.FindAsync(apiKeyInHeader);
+            if (userId.HasValue && userId.Value != Guid.Empty)
             {
                 var identity = new ClaimsIdentity(new List<Claim>
                 {
-                    new(ClaimTypes.NameIdentifier, accountId.ToString())
+                    new(ClaimTypes.NameIdentifier, userId.ToString())
                 }, Options.AuthenticationType);
 
                 var identities = new List<ClaimsIdentity> {identity};
@@ -53,6 +60,15 @@ namespace ChangeTracker.Api.Authentication
             }
 
             return AuthenticateResult.NoResult();
+        }
+
+        protected override async Task HandleChallengeAsync(AuthenticationProperties properties)
+        {
+            Response.StatusCode = 401;
+            Response.ContentType = MediaTypeNames.Application.Json;
+            var problemDetails = NonSuccessResponse.Create("Unauthorized", "You are not authorized. Please enter a valid api key.");
+
+            await Response.WriteAsync(JsonSerializer.Serialize(problemDetails));
         }
     }
 }

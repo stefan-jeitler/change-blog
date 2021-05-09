@@ -3,14 +3,6 @@ open Microsoft.Extensions.Configuration
 open Npgsql
 open DbUpdates
 
-let findDuplicates (u: DbUpdate list) =
-    u
-    |> List.groupBy (fun x -> x.Version)
-    |> List.choose
-        (function
-        | v, u when u.Length > 1 -> Some v
-        | _ -> None)
-
 let executeUpdate dbConnection dbUpdate =
     async {
         let version = dbUpdate.Version
@@ -25,13 +17,21 @@ let runDbUpdates dbConnection =
         let! dbName = Db.getDbName dbConnection
         printf "Selected database: %s\n" dbName
 
-        return
-            dbUpdates
-            |> Seq.skipWhile (fun x -> x.Version <= latestSchemaVersion)
-            |> Seq.map (executeUpdate dbConnection)
-            |> Async.Sequential
-            |> Async.RunSynchronously
+        dbUpdates
+        |> Seq.skipWhile (fun x -> x.Version <= latestSchemaVersion)
+        |> Seq.map (executeUpdate dbConnection)
+        |> Async.Sequential
+        |> Async.Ignore
+        |> Async.RunSynchronously
     }
+
+let findDuplicates (u: DbUpdate list) =
+    u
+    |> List.groupBy (fun x -> x.Version)
+    |> List.choose
+        (function
+        | v, u when u.Length > 1 -> Some v
+        | _ -> None)
 
 [<EntryPoint>]
 let main _ =

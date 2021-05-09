@@ -5,21 +5,9 @@ namespace ChangeTracker.Api.Authentication
 {
     public static class ServiceCollectionExtensions
     {
-        public static IServiceCollection AddApiKeyAuthentication(this IServiceCollection services,
-            bool useInMemoryApiKeys)
+        public static IServiceCollection AddApiKeyAuthentication(this IServiceCollection services)
         {
-            if (useInMemoryApiKeys)
-            {
-                services
-                    .AddSingleton<IAccountDao, InMemoryAccountDao>(
-                        _ => new InMemoryAccountDao("test-api-key"));
-            }
-            else
-            {
-                // TODO: replace it with production api keys stored in db
-                services.AddScoped<IAccountDao, InMemoryAccountDao>(_ => new InMemoryAccountDao("test-api-key"));
-            }
-
+            services.AddScoped<IFindUserId, FindUserIdAdapter>();
             services.AddAuthentication(options =>
                 {
                     options.DefaultAuthenticateScheme = ApiKeyAuthenticationOptions.DefaultScheme;

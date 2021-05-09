@@ -10,8 +10,7 @@ using Microsoft.Extensions.Hosting;
 namespace ChangeTracker.Api.Controllers
 {
     [ApiController]
-    [Route("")]
-    [ApiExplorerSettings(IgnoreApi = true)]
+    [Route("api")]
     public class HomeController : ControllerBase
     {
         private static readonly Lazy<string> AssemblyVersion =
@@ -34,42 +33,18 @@ namespace ChangeTracker.Api.Controllers
             _hostEnvironment = hostEnvironment;
         }
 
-        [HttpGet("")]
+        [HttpGet("info")]
         [AllowAnonymous]
-        public ActionResult Index()
+        public ActionResult Info()
         {
-            var swagger = CreateLinkTo("swagger");
-            var changeLog = CreateLinkTo("changeLog");
-
             var apiInfo = new ApiInfo(AssemblyName.Value,
                 AssemblyVersion.Value,
-                _hostEnvironment.EnvironmentName,
-                new[]
-                {
-                    swagger.AbsoluteUri,
-                    changeLog.AbsoluteUri
-                });
+                _hostEnvironment.EnvironmentName);
 
             return Ok(apiInfo);
         }
 
-        [HttpGet("changeLog")]
+        [HttpGet("changeLogs")]
         public ActionResult ChangeLog() => Ok("coming soon ...");
-
-        private Uri CreateLinkTo(string relativePath)
-        {
-            var request = HttpContext.Request;
-            var scheme = _hostEnvironment.IsDevelopment() ? request.Scheme : "https";
-
-            var uriBuilder = new UriBuilder
-            {
-                Scheme = scheme,
-                Host = request.Host.Host,
-                Path = relativePath,
-                Port = request.Host.Port ?? -1
-            };
-
-            return uriBuilder.Uri;
-        }
     }
 }

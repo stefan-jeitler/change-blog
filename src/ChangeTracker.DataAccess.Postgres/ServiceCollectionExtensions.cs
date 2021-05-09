@@ -8,7 +8,13 @@ namespace ChangeTracker.DataAccess.Postgres
 {
     public static class ServiceCollectionExtensions
     {
-        public static IServiceCollection AddPostgresDbSession(this IServiceCollection services, string connectionString)
+        public static IServiceCollection AddPostgresDataAccess(this IServiceCollection services,
+            string connectionString) =>
+            services
+                .AddDbSession(connectionString)
+                .AddScoped<UserDao>();
+
+        private static IServiceCollection AddDbSession(this IServiceCollection services, string connectionString)
         {
             services.AddSingleton<Func<IDbConnection>>(_ => () => new NpgsqlConnection(connectionString));
 

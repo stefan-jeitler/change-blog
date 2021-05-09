@@ -3,8 +3,8 @@ using System.Threading.Tasks;
 
 namespace ChangeTracker.Api.Authentication
 {
-    public interface IAccountDao
+    public interface IFindUserId
     {
-        Task<Guid?> FindAccountId(string apiKey);
+        Task<Guid?> FindAsync(string apiKey);
     }
 }

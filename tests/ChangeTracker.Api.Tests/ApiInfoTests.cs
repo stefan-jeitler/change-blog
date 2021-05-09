@@ -12,8 +12,7 @@ namespace ChangeTracker.Api.Tests
         {
             Func<ApiInfo> act = () => new ApiInfo(null,
                 "1.0.0",
-                "net5.0",
-                new[] {"/swagger"});
+                "net5.0");
 
             act.Should().ThrowExactly<ArgumentNullException>();
         }
@@ -23,8 +22,7 @@ namespace ChangeTracker.Api.Tests
         {
             Func<ApiInfo> act = () => new ApiInfo(string.Empty,
                 "1.0.0",
-                "net5.0",
-                new[] {"/swagger"});
+                "net5.0");
 
             act.Should().ThrowExactly<ArgumentException>();
         }
@@ -34,8 +32,7 @@ namespace ChangeTracker.Api.Tests
         {
             Func<ApiInfo> act = () => new ApiInfo("ChangeTracker.Api",
                 null,
-                "net5.0",
-                new[] {"/swagger"});
+                "net5.0");
 
             act.Should().ThrowExactly<ArgumentNullException>();
         }
@@ -45,8 +42,7 @@ namespace ChangeTracker.Api.Tests
         {
             Func<ApiInfo> act = () => new ApiInfo("ChangeTracker.Api",
                 "0.0.0",
-                null,
-                new[] {"/swagger"});
+                null);
 
             act.Should().ThrowExactly<ArgumentNullException>();
         }
@@ -56,32 +52,9 @@ namespace ChangeTracker.Api.Tests
         {
             Func<ApiInfo> act = () => new ApiInfo("ChangeTracker.Api",
                 "0.0.0",
-                string.Empty,
-                new[] {"/swagger"});
+                string.Empty);
 
             act.Should().ThrowExactly<ArgumentException>();
-        }
-
-        [Fact]
-        public void ApiInfo_ImportantLinksAreNull_ArgumentNullException()
-        {
-            Func<ApiInfo> act = () => new ApiInfo("ChangeTracker.Api",
-                "0.0.0",
-                "net5.0",
-                null);
-
-            act.Should().ThrowExactly<ArgumentNullException>();
-        }
-
-        [Fact]
-        public void ApiInfo_ImportantLinksContainsNullElement_ArgumentNullException()
-        {
-            Func<ApiInfo> act = () => new ApiInfo("ChangeTracker.Api",
-                "0.0.0",
-                "net5.0",
-                new[] {(string) null});
-
-            act.Should().ThrowExactly<ArgumentNullException>();
         }
     }
 }

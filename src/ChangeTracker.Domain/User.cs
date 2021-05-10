@@ -5,7 +5,7 @@ namespace ChangeTracker.Domain
 {
     public class User
     {
-        public User(Guid id, Email email, Name firstName, Name lastName, DateTime? deletedAt)
+        public User(Guid id, Email email, Name firstName, Name lastName, Text timeZone, DateTime? deletedAt)
         {
             if (id == Guid.Empty)
                 throw new ArgumentException("Id cannot be empty");
@@ -14,6 +14,7 @@ namespace ChangeTracker.Domain
             Email = email ?? throw new ArgumentNullException(nameof(email));
             FirstName = firstName ?? throw new ArgumentNullException(nameof(firstName));
             LastName = lastName ?? throw new ArgumentNullException(nameof(lastName));
+            TimeZone = timeZone ?? throw new ArgumentNullException(nameof(timeZone));
 
             if (deletedAt.HasValue &&
                 (deletedAt == DateTime.MinValue || deletedAt == DateTime.MaxValue))
@@ -28,6 +29,7 @@ namespace ChangeTracker.Domain
         public Email Email { get; }
         public Name FirstName { get; }
         public Name LastName { get; }
+        public Text TimeZone { get; }
         public DateTime? DeletedAt { get; }
     }
 }

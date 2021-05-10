@@ -3,7 +3,7 @@ using ChangeTracker.Domain.Common;
 using FluentAssertions;
 using Xunit;
 
-namespace ChangeTracker.Domain.Tests.AccountTests
+namespace ChangeTracker.Domain.Tests
 {
     public class UserTests
     {
@@ -11,6 +11,7 @@ namespace ChangeTracker.Domain.Tests.AccountTests
         private Email _testEmail;
         private Name _testFirstName;
         private Name _testLastName;
+        private Text _testTimeZone;
         private Guid _testUserId;
 
         public UserTests()
@@ -19,10 +20,11 @@ namespace ChangeTracker.Domain.Tests.AccountTests
             _testEmail = Email.Parse("stefan@changeLog");
             _testFirstName = Name.Parse("Stefan");
             _testLastName = Name.Parse("Jeitler");
+            _testTimeZone = Text.Parse("Europe/Berlin");
             _testDeletionDate = DateTime.Parse("2021-04-03");
         }
 
-        private User CreateUser() => new(_testUserId, _testEmail, _testFirstName, _testLastName, _testDeletionDate);
+        private User CreateUser() => new(_testUserId, _testEmail, _testFirstName, _testLastName, _testTimeZone, _testDeletionDate);
 
         [Fact]
         public void Create_WithValidArguments_Successful()
@@ -70,6 +72,16 @@ namespace ChangeTracker.Domain.Tests.AccountTests
         public void Create_WithNullLastName_ArgumentNullException()
         {
             _testLastName = null;
+
+            Func<User> act = CreateUser;
+
+            act.Should().ThrowExactly<ArgumentNullException>();
+        }
+
+        [Fact]
+        public void Create_WithNullTimeZone_ArgumentNullException()
+        {
+            _testTimeZone = null;
 
             Func<User> act = CreateUser;
 

@@ -3,7 +3,7 @@ using ChangeTracker.Domain.Common;
 using FluentAssertions;
 using Xunit;
 
-namespace ChangeTracker.Domain.Tests.AccountTests
+namespace ChangeTracker.Domain.Tests
 {
     public class AccountTests
     {

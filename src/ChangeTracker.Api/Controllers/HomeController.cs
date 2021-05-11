@@ -1,8 +1,10 @@
 ﻿using System;
 using System.Reflection;
 using System.Security.Policy;
+using ChangeTracker.Api.Authorization;
 using ChangeTracker.Api.DTOs;
 using ChangeTracker.Api.Extensions;
+using ChangeTracker.Application.UseCases;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Hosting;
@@ -48,6 +50,7 @@ namespace ChangeTracker.Api.Controllers
         }
 
         [HttpGet("changeLogs")]
-        public ActionResult ChangeLog() => Ok("coming soon ...");
+        [Requires(Permission.ViewChangeLogLines)]
+        public ActionResult ChangeLogs() => Ok("coming soon ...");
     }
 }

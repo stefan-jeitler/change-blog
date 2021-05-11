@@ -20,7 +20,7 @@ namespace ChangeTracker.Domain.Tests
             var schemeId = service.FindSchemeIdForProject(null);
 
             // assert
-            schemeId.Should().Be(Defaults.VersioningScheme.Id);
+            schemeId.Should().Be(Defaults.VersioningSchemeId);
         }
 
         [Fact]

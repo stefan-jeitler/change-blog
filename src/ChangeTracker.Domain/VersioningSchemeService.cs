@@ -17,7 +17,7 @@ namespace ChangeTracker.Domain
             if (customVersioningSchemeId.HasValue)
                 return customVersioningSchemeId.Value;
 
-            return _account.DefaultVersioningSchemeId ?? Defaults.VersioningScheme.Id;
+            return _account.DefaultVersioningSchemeId ?? Defaults.VersioningSchemeId;
         }
     }
 }

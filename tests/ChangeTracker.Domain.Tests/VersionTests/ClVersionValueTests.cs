@@ -1,4 +1,5 @@
 ﻿using System;
+using ChangeTracker.Domain.Tests.TestDoubles;
 using ChangeTracker.Domain.Version;
 using FluentAssertions;
 using Xunit;
@@ -106,7 +107,7 @@ namespace ChangeTracker.Domain.Tests.VersionTests
         {
             var version = ClVersionValue.Parse("1.2.3-dev.0");
 
-            var success = version.Match(Defaults.VersioningScheme);
+            var success = version.Match(TestAccount.DefaultVersioningScheme);
 
             success.Should().BeTrue();
         }
@@ -116,7 +117,7 @@ namespace ChangeTracker.Domain.Tests.VersionTests
         {
             var version = ClVersionValue.Parse("1.2.3.DEV");
 
-            var success = version.Match(Defaults.VersioningScheme);
+            var success = version.Match(TestAccount.DefaultVersioningScheme);
 
             success.Should().BeFalse();
         }

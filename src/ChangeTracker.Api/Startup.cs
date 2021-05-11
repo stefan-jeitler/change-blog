@@ -1,4 +1,6 @@
+using System.Text.Json;
 using ChangeTracker.Api.Authentication;
+using ChangeTracker.Api.Authorization;
 using ChangeTracker.Api.SwaggerUI;
 using ChangeTracker.DataAccess.Postgres;
 using Microsoft.AspNetCore.Builder;
@@ -6,6 +8,7 @@ using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using Newtonsoft.Json.Serialization;
 
 namespace ChangeTracker.Api
 {
@@ -22,12 +25,18 @@ namespace ChangeTracker.Api
 
         public void ConfigureServices(IServiceCollection services)
         {
-            services.AddControllers();
+            services.AddControllers(o => o.Filters.Add(new PermissionAuthorizationFilter()))
+                .AddJsonOptions(options =>
+                {
+                    options.JsonSerializerOptions.PropertyNameCaseInsensitive = true;
+                    options.JsonSerializerOptions.PropertyNamingPolicy = JsonNamingPolicy.CamelCase;
+                } );
             services.AddSwagger();
 
             services.AddApplicationInsightsTelemetry();
 
             services.AddApiKeyAuthentication();
+            services.AddCustomAuthorization();
 
             var connectionString = _configuration.GetConnectionString("ChangeTrackerDb");
             services.AddPostgresDataAccess(connectionString);

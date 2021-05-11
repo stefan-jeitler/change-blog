@@ -10,7 +10,7 @@ namespace ChangeTracker.DataAccess.Postgres
 {
     public class SchemaVersion
     {
-        public const int AppSchemaVersion = 15;
+        public const int AppSchemaVersion = 14;
 
         private readonly Func<IDbConnection> _acquireDbConnection;
 

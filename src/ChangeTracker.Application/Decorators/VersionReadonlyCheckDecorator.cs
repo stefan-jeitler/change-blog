@@ -56,7 +56,7 @@ namespace ChangeTracker.Application.Decorators
             return await _changeLogCommandsComponent.AddLinesAsync(lines);
         }
 
-        public async Task<Result<int, Conflict>> AssignLinesToVersionAsync(IEnumerable<ChangeLogLine> changeLogLines)
+        public async Task<Result<int, Conflict>> MoveLinesAsync(IEnumerable<ChangeLogLine> changeLogLines)
         {
             var lines = changeLogLines.ToList();
             foreach (var line in lines)
@@ -66,17 +66,14 @@ namespace ChangeTracker.Application.Decorators
                     return Result.Failure<int, Conflict>(result.Error);
             }
 
-            return await _changeLogCommandsComponent.AssignLinesToVersionAsync(lines);
+            return await _changeLogCommandsComponent.MoveLinesAsync(lines);
         }
 
-        public Task<Result<ChangeLogLine, Conflict>> AssignLineToVersionAsync(ChangeLogLine changeLogLine)
+        public Task<Result<ChangeLogLine, Conflict>> MoveLineAsync(ChangeLogLine changeLogLine)
         {
             return CheckVersionAsync(changeLogLine)
-                .Bind(_ => _changeLogCommandsComponent.AssignLineToVersionAsync(changeLogLine));
+                .Bind(_ => _changeLogCommandsComponent.MoveLineAsync(changeLogLine));
         }
-
-        public Task<Result<int, Conflict>> MakeAllLinesPending(Guid versionId) =>
-            _changeLogCommandsComponent.MakeAllLinesPending(versionId);
 
         public Task<Result<ChangeLogLine, Conflict>> UpdateLineAsync(ChangeLogLine changeLogLine)
         {

@@ -54,7 +54,7 @@ namespace ChangeTracker.DataAccess.Postgres.Tests
             var dbConnectionMock = new Mock<IDbConnection>();
             var dbTransactionMock = new Mock<IDbTransaction>();
 
-            dbConnectionMock.Setup(x => x.BeginTransaction()).Returns(dbTransactionMock.Object);
+            dbConnectionMock.Setup(x => x.BeginTransaction(It.IsAny<IsolationLevel>())).Returns(dbTransactionMock.Object);
 
             var lazyDbConnection = new LazyDbConnection(() => dbConnectionMock.Object);
             var dbSession = new DbSession(lazyDbConnection);

@@ -13,14 +13,14 @@ using CSharpFunctionalExtensions;
 
 namespace ChangeTracker.Application.UseCases.Commands.AssignPendingLineToVersion
 {
-    public class AssignPendingLogToVersionInteractor : IAssignPendingLogToVersion
+    public class AssignPendingLineToVersionInteractor : IAssignPendingLineToVersion
     {
         private readonly IChangeLogCommandsDao _changeLogCommands;
         private readonly IChangeLogQueriesDao _changeLogQueries;
         private readonly IUnitOfWork _unitOfWork;
         private readonly IVersionDao _versionDao;
 
-        public AssignPendingLogToVersionInteractor(IVersionDao versionDao, IChangeLogQueriesDao changeLogQueriesDao,
+        public AssignPendingLineToVersionInteractor(IVersionDao versionDao, IChangeLogQueriesDao changeLogQueriesDao,
             IChangeLogCommandsDao changeLogCommands, IUnitOfWork unitOfWork)
         {
             _versionDao = versionDao ?? throw new ArgumentNullException(nameof(versionDao));
@@ -87,7 +87,7 @@ namespace ChangeTracker.Application.UseCases.Commands.AssignPendingLineToVersion
                 return;
             }
 
-            if (changeLogs.Lines.Any(x => x.Text == pendingLine.Value.Text))
+            if (changeLogs.ContainsText(pendingLine.Value.Text))
             {
                 output.LineWithSameTextAlreadyExists(pendingLine.Value.Text);
                 return;
@@ -100,7 +100,7 @@ namespace ChangeTracker.Application.UseCases.Commands.AssignPendingLineToVersion
 
         private async Task SaveAssignmentAsync(IAssignPendingLineOutputPort output, ChangeLogLine assignedLine)
         {
-            await _changeLogCommands.AssignLineToVersionAsync(assignedLine)
+            await _changeLogCommands.MoveLineAsync(assignedLine)
                 .Match(Finish, c => output.Conflict(c.Reason));
 
             void Finish(ChangeLogLine l)

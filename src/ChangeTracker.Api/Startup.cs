@@ -1,4 +1,3 @@
-using System.Text.Json;
 using ChangeTracker.Api.Authentication;
 using ChangeTracker.Api.Authorization;
 using ChangeTracker.Api.SwaggerUI;
@@ -8,29 +7,21 @@ using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
-using Newtonsoft.Json.Serialization;
 
 namespace ChangeTracker.Api
 {
     public class Startup
     {
         private readonly IConfiguration _configuration;
-        private readonly IHostEnvironment _hostEnvironment;
 
-        public Startup(IConfiguration configuration, IHostEnvironment hostEnvironment)
+        public Startup(IConfiguration configuration)
         {
             _configuration = configuration;
-            _hostEnvironment = hostEnvironment;
         }
 
         public void ConfigureServices(IServiceCollection services)
         {
-            services.AddControllers(o => o.Filters.Add(new PermissionAuthorizationFilter()))
-                .AddJsonOptions(options =>
-                {
-                    options.JsonSerializerOptions.PropertyNameCaseInsensitive = true;
-                    options.JsonSerializerOptions.PropertyNamingPolicy = JsonNamingPolicy.CamelCase;
-                } );
+            services.AddControllers(o => o.Filters.Add(new PermissionAuthorizationFilter()));
             services.AddSwagger();
 
             services.AddApplicationInsightsTelemetry();

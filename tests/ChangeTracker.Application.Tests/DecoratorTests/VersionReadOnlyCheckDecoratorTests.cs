@@ -210,7 +210,7 @@ namespace ChangeTracker.Application.Tests.DecoratorTests
             var decorator = new VersionReadonlyCheckDecorator(_changeLogDaoStub, _versionDaoStub, _memoryCache);
 
             // act
-            var result = await decorator.AssignLineToVersionAsync(lineAssigned);
+            var result = await decorator.MoveLineAsync(lineAssigned);
 
             // assert
             result.IsSuccess.Should().BeTrue();
@@ -244,7 +244,7 @@ namespace ChangeTracker.Application.Tests.DecoratorTests
             var decorator = new VersionReadonlyCheckDecorator(_changeLogDaoStub, _versionDaoStub, _memoryCache);
 
             // act
-            var result = await decorator.AssignLinesToVersionAsync(new List<ChangeLogLine>(2)
+            var result = await decorator.MoveLinesAsync(new List<ChangeLogLine>(2)
                 {firstLineAssigned, secondLineAssigned});
 
             // assert
@@ -279,35 +279,11 @@ namespace ChangeTracker.Application.Tests.DecoratorTests
             var decorator = new VersionReadonlyCheckDecorator(_changeLogDaoStub, _versionDaoStub, _memoryCache);
 
             // act
-            var result = await decorator.AssignLinesToVersionAsync(new List<ChangeLogLine>(2)
+            var result = await decorator.MoveLinesAsync(new List<ChangeLogLine>(2)
                 {firstLineAssigned, secondLineAssigned});
 
             // assert
             result.IsSuccess.Should().BeFalse();
-        }
-
-        [Fact]
-        public async Task MakeLinesPending_HappyPath_Successful()
-        {
-            // arrange
-            var versionId = Guid.Parse("1d7831d5-32fb-437f-a9d5-bf5a7dd34b10");
-            var version = new ClVersion(versionId, TestAccount.Project.Id, ClVersionValue.Parse("1.2.3"),
-                DateTime.Parse("2021-04-17"), DateTime.Parse("2021-04-17"), null);
-            _versionDaoStub.Versions.Add(version);
-
-            var lineId = Guid.Parse("0683e1e1-0e0d-405c-b77e-a6d0d5141b67");
-            var line = new ChangeLogLine(lineId, versionId, TestAccount.Project.Id,
-                ChangeLogText.Parse("some text"),
-                0U, DateTime.Parse("2021-04-17"));
-            _changeLogDaoStub.ChangeLogs.Add(line);
-
-            var decorator = new VersionReadonlyCheckDecorator(_changeLogDaoStub, _versionDaoStub, _memoryCache);
-
-            // act
-            await decorator.MakeAllLinesPending(versionId);
-
-            // assert
-            _changeLogDaoStub.ChangeLogs.Single().IsPending.Should().BeTrue();
         }
     }
 }

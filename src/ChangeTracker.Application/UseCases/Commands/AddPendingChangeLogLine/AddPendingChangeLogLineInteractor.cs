@@ -62,9 +62,9 @@ namespace ChangeTracker.Application.UseCases.Commands.AddPendingChangeLogLine
                 return Maybe<ChangeLogLine>.None;
             }
 
-            if (changeLogs.Lines.Any(x => x.Text == parsedLine.Value.Text))
+            if (changeLogs.ContainsText(parsedLine.Value.Text))
             {
-                output.LineWithSameTextAlreadyExists(requestModel.Text);
+                output.LineWithSameTextAlreadyExists(parsedLine.Value.Text);
                 return Maybe<ChangeLogLine>.None;
             }
 

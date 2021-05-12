@@ -48,7 +48,7 @@ namespace ChangeTracker.Application.UseCases.Commands.MakeChangeLogLinePending
                 return;
 
             var pendingLine = MakeLinePending(line.Value, pendingChangeLogMetadata.Value);
-            await SaveAssignmentAsync(output, pendingLine);
+            await MoveLineAsyncAsync(output, pendingLine);
         }
 
         private async Task<Maybe<ChangeLogLine>> GetLineAsync(IMakeChangeLogLinePendingOutputPort output,
@@ -102,7 +102,7 @@ namespace ChangeTracker.Application.UseCases.Commands.MakeChangeLogLinePending
                 return Maybe<ChangeLogs>.None;
             }
 
-            if (pendingChangeLogs.Lines.Any(x => x.Text == line.Text))
+            if (pendingChangeLogs.ContainsText(line.Text))
             {
                 output.LineWithSameTextAlreadyExists(line.Text);
                 return Maybe<ChangeLogs>.None;
@@ -111,16 +111,16 @@ namespace ChangeTracker.Application.UseCases.Commands.MakeChangeLogLinePending
             return Maybe<ChangeLogs>.From(pendingChangeLogs);
         }
 
-        private static ChangeLogLine MakeLinePending(ChangeLogLine line, ChangeLogs pendingChangeLog) =>
+        private static ChangeLogLine MakeLinePending(ChangeLogLine line, ChangeLogs pendingChangeLogs) =>
             new(line.Id, null,
                 line.ProjectId, line.Text,
-                pendingChangeLog.NextFreePosition,
+                pendingChangeLogs.NextFreePosition,
                 line.CreatedAt, line.Labels,
                 line.Issues, line.DeletedAt);
 
-        private async Task SaveAssignmentAsync(IMakeChangeLogLinePendingOutputPort output, ChangeLogLine line)
+        private async Task MoveLineAsyncAsync(IMakeChangeLogLinePendingOutputPort output, ChangeLogLine line)
         {
-            await _changeLogCommands.AssignLineToVersionAsync(line)
+            await _changeLogCommands.MoveLineAsync(line)
                 .Match(Finish, c => output.Conflict(c.Reason));
 
             void Finish(ChangeLogLine m)

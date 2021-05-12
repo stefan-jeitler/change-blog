@@ -95,8 +95,8 @@ namespace ChangeTracker.Application.UseCases.Commands.AssignAllPendingLinesToVer
 
             var lines = await _changeLogQueries.GetPendingLinesAsync(projectId);
 
-            var duplicates = pendingChangeLogs.Lines
-                .Where(x => versionChangeLogs.Lines.Any(y => y.Text == x.Text))
+            var duplicates = versionChangeLogs
+                .FindDuplicateTexts(pendingChangeLogs.Lines)
                 .ToList();
 
             if (duplicates.Any())
@@ -115,7 +115,7 @@ namespace ChangeTracker.Application.UseCases.Commands.AssignAllPendingLinesToVer
         private async Task SaveAssignmentsAsync(IAssignAllPendingLinesToVersionOutputPort output,
             IEnumerable<ChangeLogLine> assignedLines, ClVersion clVersion)
         {
-            await _changeLogCommands.AssignLinesToVersionAsync(assignedLines)
+            await _changeLogCommands.MoveLinesAsync(assignedLines)
                 .Match(Finish, c => output.Conflict(c.Reason));
 
             void Finish(int count)

@@ -3,7 +3,7 @@ using ChangeTracker.Application.UseCases.Commands.AssignPendingLineToVersion.Mod
 
 namespace ChangeTracker.Application.UseCases.Commands.AssignPendingLineToVersion
 {
-    public interface IAssignPendingLogToVersion
+    public interface IAssignPendingLineToVersion
     {
         Task ExecuteAsync(IAssignPendingLineOutputPort output, VersionIdAssignmentRequestModel requestModel);
         Task ExecuteAsync(IAssignPendingLineOutputPort output, VersionAssignmentRequestModel requestModel);

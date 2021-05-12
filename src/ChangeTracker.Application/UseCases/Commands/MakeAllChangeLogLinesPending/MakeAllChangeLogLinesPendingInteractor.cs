@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using ChangeTracker.Application.DataAccess;
@@ -85,8 +86,8 @@ namespace ChangeTracker.Application.UseCases.Commands.MakeAllChangeLogLinesPendi
                 return;
             }
 
-            var duplicates = pendingChangeLogs.Lines
-                .Where(x => versionChangeLogs.Lines.Any(y => x.Text == y.Text))
+            var duplicates = pendingChangeLogs
+                .FindDuplicateTexts(versionChangeLogs.Lines)
                 .ToList();
 
             if (duplicates.Any())
@@ -95,7 +96,13 @@ namespace ChangeTracker.Application.UseCases.Commands.MakeAllChangeLogLinesPendi
                 return;
             }
 
-            await SaveAssignmentsAsync(output, versionId);
+            var nextFreePosition = pendingChangeLogs.NextFreePosition;
+            var lines = versionChangeLogs.Lines.Select((x, i) => new ChangeLogLine(x.Id,
+                null, x.ProjectId,
+                x.Text, nextFreePosition + (uint) i,
+                x.CreatedAt, x.Labels, x.Issues, x.DeletedAt));
+
+            await MoveLinesAsync(output, lines);
         }
 
         private static bool IsVersionReadOnly(IMakeAllChangeLogLinesPendingOutputPort output, ClVersion clVersion)
@@ -115,9 +122,10 @@ namespace ChangeTracker.Application.UseCases.Commands.MakeAllChangeLogLinesPendi
             return false;
         }
 
-        private async Task SaveAssignmentsAsync(IMakeAllChangeLogLinesPendingOutputPort output, Guid versionId)
+        private async Task MoveLinesAsync(IMakeAllChangeLogLinesPendingOutputPort output,
+            IEnumerable<ChangeLogLine> lines)
         {
-            await _changeLogCommands.MakeAllLinesPending(versionId)
+            await _changeLogCommands.MoveLinesAsync(lines)
                 .Match(Finish, c => output.Conflict(c.Reason));
 
             void Finish(int count)

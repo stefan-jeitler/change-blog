@@ -9,8 +9,5 @@ namespace ChangeTracker.Application.UseCases
     public enum Permission
     {
         ViewChangeLogLines,
-        OperateChangeLogLines,
-        ViewVersions,
-        OperateVersions
     }
 }

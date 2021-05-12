@@ -39,12 +39,12 @@ namespace ChangeTracker.Application.Tests.TestDoubles
             return Result.Success<int, Conflict>(lines.Count);
         }
 
-        public async Task<Result<int, Conflict>> AssignLinesToVersionAsync(IEnumerable<ChangeLogLine> changeLogLines)
+        public async Task<Result<int, Conflict>> MoveLinesAsync(IEnumerable<ChangeLogLine> changeLogLines)
         {
             var lines = changeLogLines.ToList();
             foreach (var line in lines)
             {
-                var movedLine = await AssignLineToVersionAsync(line);
+                var movedLine = await MoveLineAsync(line);
                 if (movedLine.IsFailure)
                     return Result.Failure<int, Conflict>(movedLine.Error);
             }
@@ -52,7 +52,7 @@ namespace ChangeTracker.Application.Tests.TestDoubles
             return Result.Success<int, Conflict>(lines.Count);
         }
 
-        public async Task<Result<ChangeLogLine, Conflict>> AssignLineToVersionAsync(ChangeLogLine changeLogLine)
+        public async Task<Result<ChangeLogLine, Conflict>> MoveLineAsync(ChangeLogLine changeLogLine)
         {
             await Task.Yield();
 

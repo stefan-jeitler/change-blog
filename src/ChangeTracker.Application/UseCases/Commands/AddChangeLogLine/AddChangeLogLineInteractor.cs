@@ -90,7 +90,7 @@ namespace ChangeTracker.Application.UseCases.Commands.AddChangeLogLine
                 return Maybe<ChangeLogLine>.None;
             }
 
-            if (changeLogs.Lines.Any(x => string.Equals(x.Text.Value, parsedLine.Value.Text.Value, StringComparison.CurrentCultureIgnoreCase)))
+            if (changeLogs.ContainsText(parsedLine.Value.Text))
             {
                 output.LineWithSameTextAlreadyExists(parsedLine.Value.Text);
                 return Maybe<ChangeLogLine>.None;

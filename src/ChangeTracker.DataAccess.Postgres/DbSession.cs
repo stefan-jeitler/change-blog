@@ -31,7 +31,7 @@ namespace ChangeTracker.DataAccess.Postgres
                     _dbConnection.Value.Open();
                 }
 
-                _transaction = _dbConnection.Value.BeginTransaction();
+                _transaction = _dbConnection.Value.BeginTransaction(IsolationLevel.RepeatableRead);
                 _startedUows++;
             }
         }

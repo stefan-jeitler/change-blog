@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Collections.Immutable;
 using System.Linq;
+using ChangeTracker.Domain.Common;
 
 namespace ChangeTracker.Domain.ChangeLog
 {
@@ -14,10 +15,12 @@ namespace ChangeTracker.Domain.ChangeLog
             VerifyNoDuplicatesExist(lines);
             Lines = lines?.ToImmutableList() ?? throw new ArgumentNullException(nameof(lines));
             VersionId = GetVersionId(lines);
+            AddedLines = ImmutableList<ChangeLogLine>.Empty;
         }
 
         public Guid? VersionId { get; }
         public IImmutableList<ChangeLogLine> Lines { get; }
+        public IImmutableList<ChangeLogLine> AddedLines { get; }
         public int Count => Lines.Count;
 
         public int LastPosition => Lines
@@ -32,7 +35,7 @@ namespace ChangeTracker.Domain.ChangeLog
         private static void VerifyNoDuplicatesExist(IEnumerable<ChangeLogLine> lines)
         {
             var duplicates = lines
-                .GroupBy(x => x.Text)
+                .GroupBy(x => x.Text.Value.ToLower())
                 .Where(x => x.Skip(1).Any())
                 .Select(x => x);
 
@@ -40,19 +43,19 @@ namespace ChangeTracker.Domain.ChangeLog
                 throw new ArgumentException("Lines with same text are not allowed");
         }
 
-        public ChangeLogLine FindDuplicateText(ChangeLogLine other)
+        public bool ContainsText(ChangeLogText other)
         {
             return Lines
-                .FirstOrDefault(x => x.Text.Value.Equals(other.Text.Value, StringComparison.OrdinalIgnoreCase));
+                .Any(x => x.Text.Value.Equals(other.Value, StringComparison.OrdinalIgnoreCase));
         }
 
-        public IEnumerable<ChangeLogLine> FindDuplicateTexts(IImmutableList<ChangeLogLine> others)
+        public IEnumerable<ChangeLogLine> FindDuplicateTexts(IEnumerable<ChangeLogLine> others)
         {
             var texts = others
                 .Select(x => x.Text.Value.ToLower())
                 .ToHashSet();
 
-            return Lines.Where(x => texts.Contains(x.Text.Value));
+            return Lines.Where(x => texts.Contains(x.Text.Value.ToLower()));
         }
 
         private static Guid? GetVersionId(IReadOnlyCollection<ChangeLogLine> lines)

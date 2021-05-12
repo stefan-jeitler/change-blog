@@ -74,10 +74,10 @@ namespace ChangeTracker.Domain.Tests.ChangeLogTests
         [Fact]
         public void Create_WithTestLines_VersionIdProperlyAssigned()
         {
-            var metadata = new ChangeLogs(CreateTestLines(1));
+            var changeLogs = new ChangeLogs(CreateTestLines(1));
 
-            metadata.VersionId.Should().HaveValue();
-            metadata.VersionId!.Value.Should().Be(_testVersionId);
+            changeLogs.VersionId.Should().HaveValue();
+            changeLogs.VersionId!.Value.Should().Be(_testVersionId);
         }
 
         [Fact]
@@ -122,10 +122,10 @@ namespace ChangeTracker.Domain.Tests.ChangeLogTests
             var testLines = CreateTestLines(10);
 
             // act
-            var metadata = new ChangeLogs(testLines);
+            var changeLogs = new ChangeLogs(testLines);
 
             // assert
-            metadata.RemainingPositionsToAdd.Should().Be(90);
+            changeLogs.RemainingPositionsToAdd.Should().Be(90);
         }
 
         [Fact]
@@ -135,10 +135,10 @@ namespace ChangeTracker.Domain.Tests.ChangeLogTests
             var testLines = CreateTestLines(10);
 
             // act
-            var metadata = new ChangeLogs(testLines);
+            var changeLogs = new ChangeLogs(testLines);
 
             // assert
-            metadata.NextFreePosition.Should().Be(10);
+            changeLogs.NextFreePosition.Should().Be(10);
         }
 
         [Fact]
@@ -152,10 +152,10 @@ namespace ChangeTracker.Domain.Tests.ChangeLogTests
             testLines.Add(lineWithHighPosition);
 
             // act
-            var metadata = new ChangeLogs(testLines);
+            var changeLogs = new ChangeLogs(testLines);
 
             // assert
-            metadata.NextFreePosition.Should().Be(125);
+            changeLogs.NextFreePosition.Should().Be(125);
         }
 
         [Fact]
@@ -165,10 +165,10 @@ namespace ChangeTracker.Domain.Tests.ChangeLogTests
             var testLines = CreateTestLines(10);
 
             // act
-            var metadata = new ChangeLogs(testLines);
+            var changeLogs = new ChangeLogs(testLines);
 
             // assert
-            metadata.Count.Should().Be(10);
+            changeLogs.Count.Should().Be(10);
         }
 
         [Fact]
@@ -178,10 +178,10 @@ namespace ChangeTracker.Domain.Tests.ChangeLogTests
             var testLines = CreateTestLines(100);
 
             // act
-            var metadata = new ChangeLogs(testLines);
+            var changeLogs = new ChangeLogs(testLines);
 
             // assert
-            metadata.IsPositionAvailable.Should().BeFalse();
+            changeLogs.IsPositionAvailable.Should().BeFalse();
         }
 
         [Fact]
@@ -191,10 +191,10 @@ namespace ChangeTracker.Domain.Tests.ChangeLogTests
             var testLines = CreateTestLines(90);
 
             // act
-            var metadata = new ChangeLogs(testLines);
+            var changeLogs = new ChangeLogs(testLines);
 
             // assert
-            metadata.IsPositionAvailable.Should().BeTrue();
+            changeLogs.IsPositionAvailable.Should().BeTrue();
         }
 
         [Fact]
@@ -217,9 +217,117 @@ namespace ChangeTracker.Domain.Tests.ChangeLogTests
         {
             var lines = CreateTestLines(10);
 
-            var metadata = new ChangeLogs(lines);
+            var changeLogs = new ChangeLogs(lines);
 
-            metadata.Count.Should().Be(10);
+            changeLogs.Count.Should().Be(10);
         }
+
+        [Fact]
+        public void ContainsText_SameTextExists_ReturnsTrue()
+        {
+            var lines = CreateTestLines(2);
+            var changeLogs = new ChangeLogs(lines);
+
+            var containsText = changeLogs.ContainsText(ChangeLogText.Parse("00000"));
+
+            containsText.Should().BeTrue();
+        }
+
+        [Fact]
+        public void ContainsText_SameTextDifferentCase_ReturnsTrue()
+        {
+            var line = new ChangeLogLine(_testVersionId, _testProjectId, ChangeLogText.Parse("new Feature"), 0);
+            var changeLogs = new ChangeLogs(new List<ChangeLogLine>(1) {line});
+
+            var containsText = changeLogs.ContainsText(ChangeLogText.Parse("New Feature"));
+
+            containsText.Should().BeTrue();
+        }
+
+        [Fact]
+        public void ContainsText_DifferentText_ReturnsFalse()
+        {
+            var line = new ChangeLogLine(_testVersionId, _testProjectId, ChangeLogText.Parse("new Feature"), 0);
+            var changeLogs = new ChangeLogs(new List<ChangeLogLine>(1) {line});
+
+            var containsText = changeLogs.ContainsText(ChangeLogText.Parse("Bugfix"));
+
+            containsText.Should().BeFalse();
+        }
+
+        [Fact]
+        public void FindDuplicateTexts_NoDuplicatesExists_ReturnsEmptySequence()
+        {
+            // arrange
+            var lines = new List<ChangeLogLine>
+            {
+                new(_testVersionId, _testProjectId, ChangeLogText.Parse("new Feature"), 0),
+                new(_testVersionId, _testProjectId, ChangeLogText.Parse("Bugfix"), 1)
+            };
+            var changeLogs = new ChangeLogs(lines);
+
+            var otherLines = new List<ChangeLogLine>
+            {
+                new(_testVersionId, _testProjectId, ChangeLogText.Parse("feature added"), 0),
+                new(_testVersionId, _testProjectId, ChangeLogText.Parse("Security fix"), 1)
+            };
+
+            // act
+            var duplicates = changeLogs.FindDuplicateTexts(otherLines);
+
+            // assert
+            duplicates.Should().BeEmpty();
+        }
+
+        [Fact]
+        public void FindDuplicateTexts_DuplicatesWithDifferentCasingExists_ReturnsDuplicate()
+        {
+            // arrange
+            var lines = new List<ChangeLogLine>
+            {
+                new(_testVersionId, _testProjectId, ChangeLogText.Parse("new Feature"), 0),
+                new(_testVersionId, _testProjectId, ChangeLogText.Parse("Bugfix"), 1)
+            };
+            var changeLogs = new ChangeLogs(lines);
+
+            var otherLines = new List<ChangeLogLine>
+            {
+                new(_testVersionId, _testProjectId, ChangeLogText.Parse("NEW feature"), 0),
+                new(_testVersionId, _testProjectId, ChangeLogText.Parse("Security fix"), 1)
+            };
+
+            // act
+            var duplicates = changeLogs.FindDuplicateTexts(otherLines).ToList();
+
+            // assert
+            duplicates.Should().HaveCount(1);
+            duplicates.Single().Text.Value.Should().Be("new Feature");
+        }
+
+        [Fact]
+        public void FindDuplicateTexts_DuplicatesWithSameCasingExists_ReturnsDuplicate()
+        {
+            // arrange
+            var lines = new List<ChangeLogLine>
+            {
+                new(_testVersionId, _testProjectId, ChangeLogText.Parse("new Feature"), 0),
+                new(_testVersionId, _testProjectId, ChangeLogText.Parse("Bugfix"), 1)
+            };
+            var changeLogs = new ChangeLogs(lines);
+
+            var otherLines = new List<ChangeLogLine>
+            {
+                new(_testVersionId, _testProjectId, ChangeLogText.Parse("new Feature"), 0),
+                new(_testVersionId, _testProjectId, ChangeLogText.Parse("Security fix"), 1)
+            };
+
+            // act
+            var duplicates = changeLogs.FindDuplicateTexts(otherLines).ToList();
+
+            // assert
+            duplicates.Should().HaveCount(1);
+            duplicates.Single().Text.Value.Should().Be("new Feature");
+        }
+
     }
 }

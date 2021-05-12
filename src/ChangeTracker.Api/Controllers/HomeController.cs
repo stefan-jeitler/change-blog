@@ -1,9 +1,7 @@
 ﻿using System;
 using System.Reflection;
-using System.Security.Policy;
 using ChangeTracker.Api.Authorization;
 using ChangeTracker.Api.DTOs;
-using ChangeTracker.Api.Extensions;
 using ChangeTracker.Application.UseCases;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -22,7 +20,7 @@ namespace ChangeTracker.Api.Controllers
             {
                 var assembly = Assembly.GetEntryAssembly() ?? Assembly.GetExecutingAssembly();
                 var assemblyVersionAttribute = assembly.GetCustomAttribute<AssemblyInformationalVersionAttribute>();
-                
+
                 return assemblyVersionAttribute is null
                     ? assembly.GetName().Version?.ToString()
                     : assemblyVersionAttribute.InformationalVersion;
@@ -50,7 +48,7 @@ namespace ChangeTracker.Api.Controllers
         }
 
         [HttpGet("changeLogs")]
-        [Requires(Permission.ViewChangeLogLines)]
+        [NeedsPermission(Permission.ViewChangeLogLines)]
         public ActionResult ChangeLogs() => Ok("coming soon ...");
     }
 }

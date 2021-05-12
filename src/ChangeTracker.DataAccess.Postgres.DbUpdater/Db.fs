@@ -24,9 +24,9 @@ let tableExists (dbConnection: IDbConnection) (tableName: string) =
 let constraintExists (dbConnection: IDbConnection) (constraintName: string) =
     async {
         let constraintExistsSql = """
-            select CASE WHEN COUNT(*) = 1 THEN 'true' ELSE 'false' END
-            from information_schema.constraint_column_usage
-            where CONSTRAINT_NAME = @constraintName
+            SELECT EXISTS(SELECT NULL
+            FROM information_schema.constraint_column_usage
+            WHERE CONSTRAINT_NAME = @constraintName)
         """
 
         let parameters =

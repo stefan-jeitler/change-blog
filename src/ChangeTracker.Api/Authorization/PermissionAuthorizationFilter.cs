@@ -1,5 +1,4 @@
 ﻿using System.Linq;
-using System.Net;
 using System.Threading.Tasks;
 using ChangeTracker.Api.DTOs;
 using ChangeTracker.Api.Extensions;
@@ -8,7 +7,6 @@ using CSharpFunctionalExtensions;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Filters;
-using Microsoft.AspNetCore.Mvc.Formatters;
 using Microsoft.Extensions.DependencyInjection;
 
 namespace ChangeTracker.Api.Authorization
@@ -17,14 +15,15 @@ namespace ChangeTracker.Api.Authorization
     {
         public async Task OnAuthorizationAsync(AuthorizationFilterContext context)
         {
-            var permission = context.ActionDescriptor.EndpointMetadata.OfType<RequiresAttribute>().TryFirst();
+            var allowAnonymous = context.ActionDescriptor.EndpointMetadata.OfType<AllowAnonymousAttribute>().Any();
+            var permission = context.ActionDescriptor.EndpointMetadata.OfType<NeedsPermissionAttribute>().TryFirst();
+
             if (permission.HasValue && await IsAuthorizedAsync(context, permission.Value.Permission))
             {
                 return;
             }
 
-            var allowAnonymous = context.ActionDescriptor.EndpointMetadata.OfType<AllowAnonymousAttribute>().Any();
-            if (allowAnonymous)
+            if (permission.HasNoValue && allowAnonymous)
             {
                 return;
             }
@@ -41,7 +40,7 @@ namespace ChangeTracker.Api.Authorization
             var userId = context.HttpContext.GetUserId();
             var permissionCheck = context
                 .HttpContext.RequestServices
-                .GetRequiredService<IPermissionCheck>();
+                .GetRequiredService<PermissionCheck>();
 
             return await permissionCheck.HasPermission(context.HttpContext, userId, permission);
         }

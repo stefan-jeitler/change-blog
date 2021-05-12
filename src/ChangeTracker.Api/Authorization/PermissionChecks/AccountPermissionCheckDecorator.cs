@@ -10,31 +10,26 @@ using Microsoft.AspNetCore.Http;
 
 namespace ChangeTracker.Api.Authorization.PermissionChecks
 {
-    public class AccountPermissionCheckDecorator : IPermissionCheck
+    public class AccountPermissionCheckDecorator : PermissionCheck
     {
-        private readonly IPermissionCheck _permissionCheckComponent;
-        private readonly UserDao _userDao;
+        private readonly PermissionCheck _permissionCheckComponent;
+        private readonly UserAccessDao _userAccessDao;
 
-        public AccountPermissionCheckDecorator(IPermissionCheck permissionCheckComponent, UserDao userDao)
+        public AccountPermissionCheckDecorator(PermissionCheck permissionCheckComponent, UserAccessDao userAccessDao)
         {
             _permissionCheckComponent = permissionCheckComponent;
-            _userDao = userDao;
+            _userAccessDao = userAccessDao;
         }
 
-        public async Task<bool> HasPermission(HttpContext httpContext, Guid userId, Permission permission)
+        public override async Task<bool> HasPermission(HttpContext httpContext, Guid userId, Permission permission)
         {
-            var accountId = ExtractAccountId(httpContext);
+            var accountId = TryFindIdInRouteValues(httpContext, "accountId");
             if (accountId.HasValue)
             {
-                return await _userDao.HasAccountPermission(userId, accountId.Value, permission);
+                return await _userAccessDao.HasAccountPermissionAsync(userId, accountId.Value, permission);
             }
             
             return await _permissionCheckComponent.HasPermission(httpContext, userId, permission);
-        }
-
-        private Guid? ExtractAccountId(HttpContext httpContext)
-        {
-            return Guid.Parse("8b41a1d3-5f56-4b76-bb4f-17a8bc304e7f");
         }
     }
 }

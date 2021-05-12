@@ -1,8 +1,5 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Data;
-using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
 using Dapper;
 
@@ -10,14 +7,14 @@ namespace ChangeTracker.DataAccess.Postgres
 {
     public class SchemaVersion
     {
-        public const int AppSchemaVersion = 14;
-
         private readonly Func<IDbConnection> _acquireDbConnection;
 
         public SchemaVersion(Func<IDbConnection> acquireDbConnection)
         {
             _acquireDbConnection = acquireDbConnection;
         }
+
+        public int AppSchemaVersion => 14;
 
         public async Task VerifySchemaVersionAsync()
         {

@@ -29,6 +29,9 @@ namespace ChangeTracker.Domain
         public Email Email { get; }
         public Name FirstName { get; }
         public Name LastName { get; }
+        /// <summary>
+        /// OlsonId
+        /// </summary>
         public Text TimeZone { get; }
         public DateTime? DeletedAt { get; }
     }

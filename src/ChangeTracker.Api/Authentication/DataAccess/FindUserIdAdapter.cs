@@ -6,13 +6,13 @@ namespace ChangeTracker.Api.Authentication.DataAccess
 {
     public class FindUserIdAdapter : IFindUserId
     {
-        private readonly UserDao _userDao;
+        private readonly UserAccessDao _userAccessDao;
 
-        public FindUserIdAdapter(UserDao userDao)
+        public FindUserIdAdapter(UserAccessDao userAccessDao)
         {
-            _userDao = userDao;
+            _userAccessDao = userAccessDao;
         }
 
-        public Task<Guid?> FindAsync(string apiKey) => _userDao.FindUserId(apiKey);
+        public Task<Guid?> FindAsync(string apiKey) => _userAccessDao.FindUserIdAsync(apiKey);
     }
 }

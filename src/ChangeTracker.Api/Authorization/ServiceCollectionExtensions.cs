@@ -5,11 +5,11 @@ namespace ChangeTracker.Api.Authorization
 {
     public static class ServiceCollectionExtensions
     {
-        public static IServiceCollection AddCustomAuthorization(this IServiceCollection services) =>
-            services.AddScoped<IPermissionCheck, NotAuthorized>()
-                .Decorate<IPermissionCheck, AccountPermissionCheckDecorator>()
-                .Decorate<IPermissionCheck, ProjectPermissionCheckDecorator>()
-                .Decorate<IPermissionCheck, VersionPermissionCheckDecorator>()
-                .Decorate<IPermissionCheck, ChangeLogLinePermissionCheckDecorator>();
+        public static IServiceCollection AddPermissionCheck(this IServiceCollection services) =>
+            services.AddScoped<PermissionCheck, NoPermission>()
+                .Decorate<PermissionCheck, ChangeLogLinePermissionCheckDecorator>()
+                .Decorate<PermissionCheck, VersionPermissionCheckDecorator>()
+                .Decorate<PermissionCheck, ProjectPermissionCheckDecorator>()
+                .Decorate<PermissionCheck, AccountPermissionCheckDecorator>();
     }
 }

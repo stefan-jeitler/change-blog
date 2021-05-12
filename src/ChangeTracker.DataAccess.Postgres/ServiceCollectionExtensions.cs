@@ -12,7 +12,7 @@ namespace ChangeTracker.DataAccess.Postgres
             string connectionString) =>
             services
                 .AddDbSession(connectionString)
-                .AddScoped<UserDao>()
+                .AddScoped<UserAccessDao>()
                 .AddScoped<SchemaVersion>();
 
         private static IServiceCollection AddDbSession(this IServiceCollection services, string connectionString)

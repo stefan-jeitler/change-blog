@@ -9,7 +9,7 @@ let private createRolePermissionSql = """
 			role_id UUID,
 			permission TEXT,
 			created_at TIMESTAMP CONSTRAINT rolepermission_createdat_nn NOT NULL,
-			CONSTRAINT rolepermission_id_name_pkey PRIMARY KEY (role_id, permission),
+			CONSTRAINT rolepermission_roleid_permission_pkey PRIMARY KEY (role_id, permission),
 			CONSTRAINT rolepermission_roleid_fkey FOREIGN KEY (role_id) REFERENCES "role"(id)
 		)
     """

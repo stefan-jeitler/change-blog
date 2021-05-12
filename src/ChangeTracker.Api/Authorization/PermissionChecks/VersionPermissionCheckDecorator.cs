@@ -1,20 +1,32 @@
 ﻿using System;
 using System.Threading.Tasks;
 using ChangeTracker.Application.UseCases;
+using ChangeTracker.DataAccess.Postgres;
 using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Mvc.Filters;
 
 namespace ChangeTracker.Api.Authorization.PermissionChecks
 {
-    public class VersionPermissionCheckDecorator : IPermissionCheck
+    public class VersionPermissionCheckDecorator : PermissionCheck
     {
-        private readonly IPermissionCheck _permissionCheckComponent;
+        private readonly PermissionCheck _permissionCheckComponent;
+        private readonly UserAccessDao _userAccessDao;
 
-        public VersionPermissionCheckDecorator(IPermissionCheck permissionCheckComponent)
+        public VersionPermissionCheckDecorator(PermissionCheck permissionCheckComponent, UserAccessDao userAccessDao)
         {
             _permissionCheckComponent = permissionCheckComponent;
+            _userAccessDao = userAccessDao;
         }
 
-        public Task<bool> HasPermission(HttpContext httpContext, Guid userId, Permission permission)
-            => _permissionCheckComponent.HasPermission(httpContext, userId, permission);
+        public override async Task<bool> HasPermission(HttpContext httpContext, Guid userId, Permission permission)
+        {
+            var versionId = TryFindIdInRouteValues(httpContext, "versionId");
+            if (versionId.HasValue)
+            {
+                return await _userAccessDao.HasVersionPermissionAsync(userId, versionId.Value, permission);
+            }
+
+            return await _permissionCheckComponent.HasPermission(httpContext, userId, permission);
+        }
     }
 }

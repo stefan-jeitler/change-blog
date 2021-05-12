@@ -6,11 +6,11 @@ using Microsoft.AspNetCore.Mvc;
 namespace ChangeTracker.Api.Authorization
 {
     [AttributeUsage(AttributeTargets.Method | AttributeTargets.Class, Inherited = false)]
-    public class RequiresAttribute : Attribute
+    public class NeedsPermissionAttribute : Attribute
     {
         public Permission Permission { get; }
 
-        public RequiresAttribute(Permission permission)
+        public NeedsPermissionAttribute(Permission permission)
         {
             Permission = permission;
         }

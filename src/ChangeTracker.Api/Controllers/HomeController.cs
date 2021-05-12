@@ -48,7 +48,6 @@ namespace ChangeTracker.Api.Controllers
         }
 
         [HttpGet("changeLogs")]
-        [NeedsPermission(Permission.ViewChangeLogLines)]
         public ActionResult ChangeLogs() => Ok("coming soon ...");
     }
 }

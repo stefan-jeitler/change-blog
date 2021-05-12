@@ -14,7 +14,60 @@ let private createRoleSql = """
         )
     """
 
+let private basicRolesInsertSql =
+    [ """
+        INSERT INTO "role"
+        VALUES ('8ec8ae99-83d7-4958-9df5-72eb8eaf002b', 'DefaultUser', 'default user', now())
+        ON CONFLICT (id) DO NOTHING
+    """
+      """
+        INSERT INTO "role"
+        VALUES ('21bdebe9-4647-4610-b976-d5ace4ba1a7e', 'Support', 'interested in changes', now())
+        ON CONFLICT (id) DO NOTHING
+    """
+      """
+        INSERT INTO "role"
+        VALUES ('55821c64-7991-48ea-bc68-bcb0574e4ad4', 'ScrumMaster', 'scrum master', now())
+        ON CONFLICT (id) DO NOTHING
+    """
+      """
+        INSERT INTO "role"
+        VALUES ('a1288586-26ac-43e1-a20e-6cd6f678ac85', 'ProductOwner', 'responsible for managing projects', now())
+        ON CONFLICT (id) DO NOTHING
+    """
+      """
+        INSERT INTO "role"
+        VALUES ('25298d8c-22b5-4ed4-92ba-13e46fe0561d', 'ProductManager', 'interested in releases and its changelogs', now())
+        ON CONFLICT (id) DO NOTHING
+    """
+      """
+        INSERT INTO "role"
+        VALUES ('446bceb2-0b9d-4899-934d-51be0576b7fa', 'PlatformManager', 'maintains the account', now())
+        ON CONFLICT (id) DO NOTHING
+    """
+      """
+        INSERT INTO "role"
+        VALUES ('ad7b83ed-8fce-4341-978b-8d1eae66f346', 'Developer', 'commits versions and changelogs', now())
+        ON CONFLICT (id) DO NOTHING
+    """ ]
+
 let create (dbConnection: IDbConnection) =
     dbConnection.ExecuteAsync(createRoleSql)
     |> Async.AwaitTask
     |> Async.Ignore
+
+let addBasicRoles (dbConnection: IDbConnection) =
+    let rec insertRoles (roles: string list) =
+        async {
+            match roles with
+            | [] -> ()
+            | head :: tail ->
+                do!
+                    dbConnection.ExecuteAsync(head)
+                    |> Async.AwaitTask
+                    |> Async.Ignore
+
+                do! insertRoles tail
+        }
+
+    insertRoles basicRolesInsertSql

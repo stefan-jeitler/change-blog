@@ -5,7 +5,7 @@ open Dapper
 
 let private createProjectUserRoleSql = """
         CREATE TABLE IF NOT EXISTS project_user
-        (  	
+        (
             user_id UUID,
         	project_id UUID,
         	role_id UUID,

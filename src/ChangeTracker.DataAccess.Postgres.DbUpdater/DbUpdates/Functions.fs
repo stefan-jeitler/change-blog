@@ -10,7 +10,7 @@ let private createGuidFunctionSql = """
         LANGUAGE SQL
     """
 
-let createGuidFunction (dbConnection: IDbConnection) = 
+let createGuidFunction (dbConnection: IDbConnection) =
     dbConnection.ExecuteAsync(createGuidFunctionSql)
     |> Async.AwaitTask
     |> Async.Ignore

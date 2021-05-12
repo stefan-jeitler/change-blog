@@ -52,9 +52,9 @@ namespace ChangeTracker.Application.UseCases.Commands.AddProject
             var versioningSchemeId = await GetVersioningSchemeIdAsync(output, projectRequestModel, account.Value);
             if (versioningSchemeId.HasNoValue)
             {
-                output.VersioningSchemeDoesNotExist();
                 return;
             }
+
 
             var project = new Project(account.Value.Id, name, versioningSchemeId.Value, DateTime.UtcNow);
             await SaveProjectAsync(output, project);
@@ -85,7 +85,26 @@ namespace ChangeTracker.Application.UseCases.Commands.AddProject
             var customSchemeId = projectRequestModel.VersioningSchemeId;
             var versioningSchemeId = versioningSchemeService.FindSchemeIdForProject(customSchemeId);
 
-            return await _versioningSchemeDao.FindAsync(versioningSchemeId);
+            var scheme = await _versioningSchemeDao.FindAsync(versioningSchemeId);
+
+            if (scheme.HasNoValue)
+            {
+                output.VersioningSchemeDoesNotExist();
+                return Maybe<VersioningScheme>.None;
+            }
+
+            var isCommonScheme = !scheme.Value.AccountId.HasValue;
+            if (isCommonScheme)
+                return scheme;
+
+            var schemeBelongsToAccount = scheme.Value.AccountId == account.Id;
+            if (!schemeBelongsToAccount)
+            {
+                output.VersioningSchemeDoesNotExist();
+                return Maybe<VersioningScheme>.None;
+            }
+
+            return scheme;
         }
 
         private async Task SaveProjectAsync(IAddProjectOutputPort output, Project newProject)

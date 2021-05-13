@@ -15,5 +15,20 @@ namespace ChangeTracker.Api.Extensions
                 ? userId
                 : Guid.Empty;
         }
+
+        public static Uri CreateLinkTo(this HttpContext ctx, string relativePath)
+        {
+            var request = ctx.Request;
+
+            var uriBuilder = new UriBuilder
+            {
+                //Scheme = scheme,
+                Host = request.Host.Host,
+                Path = relativePath,
+                Port = request.Host.Port ?? -1
+            };
+
+            return uriBuilder.Uri;
+        }
     }
 }

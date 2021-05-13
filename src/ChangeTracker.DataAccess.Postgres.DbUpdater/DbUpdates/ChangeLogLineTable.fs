@@ -20,7 +20,25 @@ let private createLineSql = """
         )
     """
 
+let private dropUniqueConstraintSql = "ALTER TABLE changelog_line DROP CONSTRAINT IF EXISTS changelogline_projectid_versionid_text"
+
+let private addUniqueIndexOnProjectIdVersionIdTextDeletedAtSql = """
+        CREATE UNIQUE INDEX IF NOT EXISTS changelogline_projectid_versionid_text_deletedat_unique
+        ON changelog_line (project_id, version_id, LOWER("text"), (deleted_at is null)) where deleted_at is null
+    """
+
 let create (dbConnection: IDbConnection) =
     dbConnection.ExecuteAsync(createLineSql)
     |> Async.AwaitTask
     |> Async.Ignore
+
+let fixUniqueIndexConstraint (dbConnection: IDbConnection) = 
+    async {
+        do! dbConnection.ExecuteAsync(dropUniqueConstraintSql)
+            |> Async.AwaitTask
+            |> Async.Ignore
+
+        do! dbConnection.ExecuteAsync(addUniqueIndexOnProjectIdVersionIdTextDeletedAtSql)
+            |> Async.AwaitTask
+            |> Async.Ignore
+    }

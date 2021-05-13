@@ -24,8 +24,12 @@ namespace ChangeTracker.DataAccess.Postgres
 
             const string getApiKeySql = @"
                 SELECT user_id
-                FROM api_key
-                WHERE key = @apiKey";
+                FROM api_key ak
+                JOIN ""user"" u ON u.id = ak.user_id
+                WHERE key = @apiKey
+                AND u.deleted_at IS NULL
+                AND ak.deleted_at IS NULL
+                AND ak.expires_at > now()";
 
             using var dbConnection = _acquireDbConnection();
             return await dbConnection
@@ -36,9 +40,10 @@ namespace ChangeTracker.DataAccess.Postgres
         {
             const string hasAccountPermissionSql = @"
                 SELECT EXISTS(SELECT NULL
-                FROM account_user au
+                FROM account a
+                JOIN account_user au ON au.account_id = a.id    
                 JOIN ""role"" r ON r.id = au.role_id
-                JOIN role_permission rp ON rp.role_id = r.id              
+                JOIN role_permission rp ON rp.role_id = r.id
                 WHERE au.account_id = @accountId
                 AND au.user_id = @userId
                 AND rp.permission = @permission)";

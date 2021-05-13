@@ -1,8 +1,13 @@
 ﻿using System;
+using System.IO;
+using System.Text;
+using System.Text.Json;
 using System.Threading.Tasks;
+using ChangeTracker.Api.Authorization.RequestBodIdentifiers;
 using ChangeTracker.Application.UseCases;
 using ChangeTracker.DataAccess.Postgres;
 using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Mvc.Filters;
 
 namespace ChangeTracker.Api.Authorization.PermissionChecks
 {
@@ -17,15 +22,21 @@ namespace ChangeTracker.Api.Authorization.PermissionChecks
             _userAccessDao = userAccessDao;
         }
 
-        public override async Task<bool> HasPermission(HttpContext httpContext, Guid userId, Permission permission)
+        public override async Task<bool> HasPermission(ActionExecutingContext context, Guid userId, Permission permission)
         {
-            var accountId = TryFindIdInRouteValues(httpContext, "accountId");
-            if (accountId.HasValue)
+            var accountIdInRoute = TryFindIdInRouteValues(context.HttpContext, "accountId");
+            if (accountIdInRoute.HasValue)
             {
-                return await _userAccessDao.HasAccountPermissionAsync(userId, accountId.Value, permission);
+                return await _userAccessDao.HasAccountPermissionAsync(userId, accountIdInRoute.Value, permission);
             }
 
-            return await _permissionCheckComponent.HasPermission(httpContext, userId, permission);
+            var accountIdInBody = TryFindInBody<IContainsAccountId>(context);
+            if (accountIdInBody != null)
+            {
+                return await _userAccessDao.HasAccountPermissionAsync(userId, accountIdInBody.AccountId, permission);
+            }
+
+            return await _permissionCheckComponent.HasPermission(context, userId, permission);
         }
     }
 }

@@ -19,7 +19,14 @@ let private createProjectSql = """
         )
     """
 
+let private addUniqeIndexOnAccountIdAndNameSql = "CREATE UNIQUE INDEX IF NOT EXISTS project_accountid_name_unique ON project (account_id, LOWER(name))"
+
 let create (dbConnection: IDbConnection) =
     dbConnection.ExecuteAsync(createProjectSql)
     |> Async.AwaitTask
     |> Async.Ignore
+
+let addUniqueIndexOnAccountIdAndName (dbConnection: IDbConnection) = 
+    dbConnection.ExecuteAsync(addUniqeIndexOnAccountIdAndNameSql)
+    |> Async.AwaitTask
+    |> Async.Ignore    

@@ -39,7 +39,7 @@ namespace ChangeTracker.Application.Tests.UseCaseTests.Commands.AddProject
             _accountDaoStub.Account = account;
             _versioningSchemeDaoStub.VersioningScheme = TestAccount.CustomVersioningScheme;
             var projectRequestModel = new ProjectRequestModel(TestAccount.Id, TestAccount.Name.Value,
-                TestAccount.CustomVersioningScheme.Id);
+                TestAccount.CustomVersioningScheme.Id, TestAccount.UserId);
             var createProjectInteractor = CreateInteractor();
 
             _outputPortMock.Setup(m => m.Created(It.IsAny<Guid>(), It.IsAny<Guid>()));
@@ -61,7 +61,7 @@ namespace ChangeTracker.Application.Tests.UseCaseTests.Commands.AddProject
         public async Task CreateProject_NotExistingAccount_AccountDoesNotExistsOutput()
         {
             // arrange
-            var projectRequestModel = new ProjectRequestModel(TestAccount.Id, TestAccount.Name.Value, null);
+            var projectRequestModel = new ProjectRequestModel(TestAccount.Id, TestAccount.Name.Value, null, TestAccount.UserId);
             var createProjectInteractor = CreateInteractor();
             _outputPortMock.Setup(m => m.AccountDoesNotExist());
 
@@ -80,7 +80,7 @@ namespace ChangeTracker.Application.Tests.UseCaseTests.Commands.AddProject
                 DateTime.Parse("2021-04-04"));
             _accountDaoStub.Account = deletedAccount;
 
-            var projectRequestModel = new ProjectRequestModel(TestAccount.Id, TestAccount.Name.Value, null);
+            var projectRequestModel = new ProjectRequestModel(TestAccount.Id, TestAccount.Name.Value, null, TestAccount.UserId);
             var createProjectInteractor = CreateInteractor();
 
             _outputPortMock.Setup(m => m.AccountDeleted(It.IsAny<Guid>()));
@@ -100,7 +100,7 @@ namespace ChangeTracker.Application.Tests.UseCaseTests.Commands.AddProject
             _accountDaoStub.Account =
                 new Account(TestAccount.Id, TestAccount.Name, null, TestAccount.CreationDate, null);
 
-            var projectRequestModel = new ProjectRequestModel(TestAccount.Id, "", null);
+            var projectRequestModel = new ProjectRequestModel(TestAccount.Id, "", null, TestAccount.UserId);
             var createProjectInteractor = CreateInteractor();
 
             _outputPortMock.Setup(m => m.InvalidName(It.IsAny<string>()));
@@ -119,10 +119,10 @@ namespace ChangeTracker.Application.Tests.UseCaseTests.Commands.AddProject
             _accountDaoStub.Account =
                 new Account(TestAccount.Id, TestAccount.Name, null, TestAccount.CreationDate, null);
             _projectDaoStub.Projects.Add(new Project(TestAccount.Id, TestAccount.Name,
-                TestAccount.Project.VersioningScheme,
+                TestAccount.Project.VersioningScheme, TestAccount.UserId,
                 DateTime.Parse("2021-04-04")));
 
-            var projectRequestModel = new ProjectRequestModel(TestAccount.Id, TestAccount.Name.Value, null);
+            var projectRequestModel = new ProjectRequestModel(TestAccount.Id, TestAccount.Name.Value, null, TestAccount.UserId);
             var createProjectInteractor = CreateInteractor();
 
             _outputPortMock.Setup(m => m.ProjectAlreadyExists());
@@ -143,7 +143,7 @@ namespace ChangeTracker.Application.Tests.UseCaseTests.Commands.AddProject
             var notExistingVersioningSchemeId = Guid.Parse("3984bcf2-9930-4d41-984e-b72ccc6d6c87");
 
             var projectRequestModel =
-                new ProjectRequestModel(TestAccount.Id, TestAccount.Name.Value, notExistingVersioningSchemeId);
+                new ProjectRequestModel(TestAccount.Id, TestAccount.Name.Value, notExistingVersioningSchemeId, TestAccount.UserId);
             var createProjectInteractor = CreateInteractor();
 
             _outputPortMock.Setup(m => m.VersioningSchemeDoesNotExist());
@@ -166,7 +166,7 @@ namespace ChangeTracker.Application.Tests.UseCaseTests.Commands.AddProject
             _projectDaoStub.ProduceConflict = true;
 
             var projectRequestModel = new ProjectRequestModel(TestAccount.Id, TestAccount.Name.Value,
-                TestAccount.CustomVersioningScheme.Id);
+                TestAccount.CustomVersioningScheme.Id, TestAccount.UserId);
             var createProjectInteractor = CreateInteractor();
 
             _outputPortMock.Setup(m => m.Conflict(It.IsAny<string>()));

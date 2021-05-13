@@ -19,9 +19,9 @@
     <Compile Include="DbUpdates\ChangeLogLineTable.fs" />
     <Compile Include="DbUpdates\Functions.fs" />
     <Compile Include="DbUpdates\ProjectTable.fs" />
+    <Compile Include="DbUpdates\ProjectUser.fs" />
     <Compile Include="DbUpdates\RoleTable.fs" />
     <Compile Include="DbUpdates\RolePermissionTable.fs" />
-    <Compile Include="DbUpdates\ProjectUser.fs" />
     <Compile Include="DbUpdates/SchemaTable.fs" />
     <Compile Include="DbUpdates\UserTable.fs" />
     <Compile Include="DbUpdates/VersioningSchemeTable.fs" />

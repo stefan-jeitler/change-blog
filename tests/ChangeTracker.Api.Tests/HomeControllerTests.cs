@@ -42,16 +42,6 @@ namespace ChangeTracker.Api.Tests
         }
 
         [Fact]
-        public async Task ChangeLogEndpoint_NoApiKeyProvided_Unauthorized()
-        {
-            var client = _factory.CreateClient();
-
-            var response = await client.GetAsync("api/changeLogs");
-
-            response.StatusCode.Should().Be(HttpStatusCode.Unauthorized);
-        }
-
-        [Fact]
         public async Task ChangeLogEndpoint_CorrectApiKeyIsPresent_Authorized()
         {
             // arrange

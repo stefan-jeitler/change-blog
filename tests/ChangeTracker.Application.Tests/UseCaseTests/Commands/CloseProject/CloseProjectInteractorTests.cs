@@ -41,7 +41,7 @@ namespace ChangeTracker.Application.Tests.UseCaseTests.Commands.CloseProject
         {
             // arrange
             var project = new Project(TestAccount.Project.Id, TestAccount.Id, TestAccount.Project.Name,
-                TestAccount.CustomVersioningScheme, TestAccount.Project.CreatedAt, DateTime.Parse("2021-05-13"));
+                TestAccount.CustomVersioningScheme, TestAccount.UserId, TestAccount.Project.CreatedAt, DateTime.Parse("2021-05-13"));
             _projectDaoStub.Projects.Add(project);
             _outputPortMock.Setup(m => m.ProjectAlreadyClosed());
             var interactor = CreateInteractor();
@@ -58,7 +58,7 @@ namespace ChangeTracker.Application.Tests.UseCaseTests.Commands.CloseProject
         {
             // arrange
             var project = new Project(TestAccount.Project.Id, TestAccount.Id, TestAccount.Project.Name,
-                TestAccount.CustomVersioningScheme, TestAccount.Project.CreatedAt, null);
+                TestAccount.CustomVersioningScheme, TestAccount.UserId, TestAccount.Project.CreatedAt, null);
             _projectDaoStub.Projects.Add(project);
             _projectDaoStub.ProduceConflict = true;
 
@@ -77,7 +77,7 @@ namespace ChangeTracker.Application.Tests.UseCaseTests.Commands.CloseProject
         {
             // arrange
             var project = new Project(TestAccount.Project.Id, TestAccount.Id, TestAccount.Project.Name,
-                TestAccount.CustomVersioningScheme, TestAccount.Project.CreatedAt, null);
+                TestAccount.CustomVersioningScheme, TestAccount.UserId, TestAccount.Project.CreatedAt, null);
             _projectDaoStub.Projects.Add(project);
 
             _outputPortMock.Setup(m => m.ProjectClosed(It.IsAny<Guid>()));

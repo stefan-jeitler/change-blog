@@ -42,6 +42,7 @@ namespace ChangeTracker.Application.Tests.UseCaseTests.Commands.AssignPendingLin
             _projectDaoStub.Projects.Add(new Project(TestAccount.Id,
                 Name.Parse("Test Project"),
                 TestAccount.CustomVersioningScheme,
+                TestAccount.UserId,
                 TestAccount.CreationDate));
 
             var clVersion = new ClVersion(TestAccount.Project.Id, ClVersionValue.Parse("1.2"));
@@ -74,7 +75,8 @@ namespace ChangeTracker.Application.Tests.UseCaseTests.Commands.AssignPendingLin
             // arrange
             _projectDaoStub.Projects.Add(new Project(TestAccount.Id,
                 Name.Parse("Test Project"),
-                TestAccount.CustomVersioningScheme,
+                TestAccount.CustomVersioningScheme, 
+                TestAccount.UserId,
                 TestAccount.CreationDate));
 
             var line = new ChangeLogLine(Guid.NewGuid(), null, TestAccount.Project.Id,
@@ -99,7 +101,8 @@ namespace ChangeTracker.Application.Tests.UseCaseTests.Commands.AssignPendingLin
             // arrange
             _projectDaoStub.Projects.Add(new Project(TestAccount.Id,
                 Name.Parse("Test Project"),
-                TestAccount.CustomVersioningScheme,
+                TestAccount.CustomVersioningScheme, 
+                TestAccount.UserId,
                 TestAccount.CreationDate));
 
             var clVersion = new ClVersion(TestAccount.Project.Id, ClVersionValue.Parse("1.2"));
@@ -127,7 +130,8 @@ namespace ChangeTracker.Application.Tests.UseCaseTests.Commands.AssignPendingLin
             // arrange
             _projectDaoStub.Projects.Add(new Project(TestAccount.Id,
                 Name.Parse("Test Project"),
-                TestAccount.CustomVersioningScheme,
+                TestAccount.CustomVersioningScheme, 
+                TestAccount.UserId,
                 TestAccount.CreationDate));
 
             var versionId = Guid.Parse("1d7831d5-32fb-437f-a9d5-bf5a7dd34b10");
@@ -156,6 +160,7 @@ namespace ChangeTracker.Application.Tests.UseCaseTests.Commands.AssignPendingLin
             _projectDaoStub.Projects.Add(new Project(TestAccount.Id,
                 Name.Parse("Test Project"),
                 TestAccount.CustomVersioningScheme,
+                TestAccount.UserId,
                 TestAccount.CreationDate));
 
             var clVersion = new ClVersion(TestAccount.Project.Id, ClVersionValue.Parse("1.2"));
@@ -183,6 +188,7 @@ namespace ChangeTracker.Application.Tests.UseCaseTests.Commands.AssignPendingLin
             _projectDaoStub.Projects.Add(new Project(TestAccount.Id,
                 Name.Parse("Test Project"),
                 TestAccount.CustomVersioningScheme,
+                TestAccount.UserId,
                 TestAccount.CreationDate));
 
             var clVersion = new ClVersion(TestAccount.Project.Id, ClVersionValue.Parse("1.2"));
@@ -215,6 +221,7 @@ namespace ChangeTracker.Application.Tests.UseCaseTests.Commands.AssignPendingLin
             _projectDaoStub.Projects.Add(new Project(TestAccount.Id,
                 Name.Parse("Test Project"),
                 TestAccount.CustomVersioningScheme,
+                TestAccount.UserId,
                 TestAccount.CreationDate));
 
             var clVersion = new ClVersion(TestAccount.Project.Id, ClVersionValue.Parse("1.2"));
@@ -246,6 +253,7 @@ namespace ChangeTracker.Application.Tests.UseCaseTests.Commands.AssignPendingLin
             _projectDaoStub.Projects.Add(new Project(TestAccount.Id,
                 Name.Parse("Test Project"),
                 TestAccount.CustomVersioningScheme,
+                TestAccount.UserId,
                 TestAccount.CreationDate));
 
             var clVersion = new ClVersion(TestAccount.Project.Id, ClVersionValue.Parse("1.2"));
@@ -275,6 +283,7 @@ namespace ChangeTracker.Application.Tests.UseCaseTests.Commands.AssignPendingLin
             _projectDaoStub.Projects.Add(new Project(TestAccount.Id,
                 Name.Parse("Test Project"),
                 TestAccount.CustomVersioningScheme,
+                TestAccount.UserId,
                 TestAccount.CreationDate));
 
             var clVersion = new ClVersion(TestAccount.Project.Id, ClVersionValue.Parse("1.2"));

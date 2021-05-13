@@ -11,6 +11,7 @@ namespace ChangeTracker.Application.Tests.TestDoubles
     {
         public static readonly Guid Id = Guid.Parse("c1b588ee-069d-453e-8f74-fc43b7ae0649");
         public static readonly Name Name = Name.Parse("Name");
+        public static readonly Guid UserId = Guid.Parse("a1b89f2d-d13f-4572-8522-8a92fb4fdb6a");
         public static readonly DateTime CreationDate = DateTime.Parse("2021-04-06");
 
         /// <summary>
@@ -30,6 +31,7 @@ namespace ChangeTracker.Application.Tests.TestDoubles
             Id,
             Name.Parse("Test Project"),
             CustomVersioningScheme,
+            UserId,
             DateTime.Parse("2021-04-04"),
             null);
     }

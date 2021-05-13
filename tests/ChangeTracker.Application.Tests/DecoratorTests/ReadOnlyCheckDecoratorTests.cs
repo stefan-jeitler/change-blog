@@ -116,7 +116,7 @@ namespace ChangeTracker.Application.Tests.DecoratorTests
             _versionDaoStub.Versions.Add(version);
 
             _projectDaoStub.Projects.Add(new Project(TestAccount.Project.Id, TestAccount.Id, Name.Parse("Test project"),
-                TestAccount.CustomVersioningScheme, DateTime.Parse("2021-05-13"), DateTime.Parse("2021-05-13")));
+                TestAccount.CustomVersioningScheme, TestAccount.UserId, DateTime.Parse("2021-05-13"), DateTime.Parse("2021-05-13")));
 
             var lineId = Guid.Parse("0683e1e1-0e0d-405c-b77e-a6d0d5141b67");
             var line = new ChangeLogLine(lineId, versionId, TestAccount.Project.Id, ChangeLogText.Parse("some text"),

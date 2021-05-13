@@ -1,5 +1,6 @@
 using ChangeTracker.Api.Authentication;
 using ChangeTracker.Api.Authorization;
+using ChangeTracker.Api.Extensions;
 using ChangeTracker.Api.SwaggerUI;
 using ChangeTracker.DataAccess.Postgres;
 using Microsoft.AspNetCore.Builder;
@@ -19,9 +20,14 @@ namespace ChangeTracker.Api
             _configuration = configuration;
         }
 
+        private static void AddUseCases(IServiceCollection services)
+        {
+            services.AddProjectUseCase();
+        }
+
         public void ConfigureServices(IServiceCollection services)
         {
-            services.AddControllers(o => o.Filters.Add(new PermissionAuthorizationFilter()));
+            services.AddControllers(o => o.Filters.Add(typeof(PermissionAuthorizationFilter)));
             services.AddSwagger();
 
             services.AddApplicationInsightsTelemetry();
@@ -31,6 +37,8 @@ namespace ChangeTracker.Api
 
             var connectionString = _configuration.GetConnectionString("ChangeTrackerDb");
             services.AddPostgresDataAccess(connectionString);
+
+            AddUseCases(services);
         }
 
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)

@@ -83,7 +83,7 @@ namespace ChangeTracker.Application.Tests.UseCaseTests.Commands.AddVersion
         {
             // arrange
             _projectDaoStub.Projects.Add(new Project(TestAccount.Project.Id, TestAccount.Id, TestAccount.Project.Name,
-                TestAccount.CustomVersioningScheme, DateTime.Parse("2021-04-04"), DateTime.Parse("2021-05-13")));
+                TestAccount.CustomVersioningScheme, TestAccount.UserId, DateTime.Parse("2021-04-04"), DateTime.Parse("2021-05-13")));
 
             var versionRequestModel = new VersionRequestModel(TestAccount.Project.Id, "12.1");
             var createVersionInteractor = CreateInteractor();
@@ -102,7 +102,7 @@ namespace ChangeTracker.Application.Tests.UseCaseTests.Commands.AddVersion
         {
             // arrange
             _projectDaoStub.Projects.Add(new Project(TestAccount.Project.Id, TestAccount.Id, TestAccount.Project.Name,
-                TestAccount.CustomVersioningScheme, DateTime.Parse("2021-04-04"), null));
+                TestAccount.CustomVersioningScheme, TestAccount.UserId, DateTime.Parse("2021-04-04"), null));
 
             var versionRequestModel = new VersionRequestModel(TestAccount.Project.Id, "12*");
             var createVersionInteractor = CreateInteractor();
@@ -121,7 +121,7 @@ namespace ChangeTracker.Application.Tests.UseCaseTests.Commands.AddVersion
         {
             // arrange
             _projectDaoStub.Projects.Add(new Project(TestAccount.Project.Id, TestAccount.Id, TestAccount.Project.Name,
-                TestAccount.CustomVersioningScheme, DateTime.Parse("2021-04-04"), null));
+                TestAccount.CustomVersioningScheme, TestAccount.UserId, DateTime.Parse("2021-04-04"), null));
 
             var versionId = Guid.Parse("1d7831d5-32fb-437f-a9d5-bf5a7dd34b10");
             var version = ClVersionValue.Parse("1.2");

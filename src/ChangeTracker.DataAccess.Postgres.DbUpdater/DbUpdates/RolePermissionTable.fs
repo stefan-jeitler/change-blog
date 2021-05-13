@@ -14,7 +14,29 @@ let private createRolePermissionSql = """
 		)
     """
 
+let private addPermissionAddProjectSql = """
+		INSERT INTO role_permission
+		SELECT id, 'AddProject', now() from role where name in ('ProductOwner', 'PlatformManager', 'Developer')
+		ON CONFLICT (role_id, permission) DO NOTHING
+	"""
+
+let private addPermissionViewChangeLogLinesSql = """
+		INSERT INTO role_permission
+		SELECT id, 'ViewChangeLogLines', now() FROM role
+		ON CONFLICT (role_id, permission) DO NOTHING
+	"""
+
 let create (dbConnection: IDbConnection) =
     dbConnection.ExecuteAsync(createRolePermissionSql)
+    |> Async.AwaitTask
+    |> Async.Ignore
+
+let addPermissionAddProject (dbConnection: IDbConnection) =
+    dbConnection.ExecuteAsync(addPermissionAddProjectSql)
+    |> Async.AwaitTask
+    |> Async.Ignore
+
+let addPermissionViewChangeLogLines (dbConnection: IDbConnection) =
+    dbConnection.ExecuteAsync(addPermissionViewChangeLogLinesSql)
     |> Async.AwaitTask
     |> Async.Ignore

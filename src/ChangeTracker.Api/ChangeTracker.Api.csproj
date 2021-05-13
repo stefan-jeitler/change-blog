@@ -12,6 +12,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\ChangeTracker.Application\ChangeTracker.Application.csproj" />
     <ProjectReference Include="..\ChangeTracker.DataAccess.Postgres\ChangeTracker.DataAccess.Postgres.csproj" />
   </ItemGroup>
 

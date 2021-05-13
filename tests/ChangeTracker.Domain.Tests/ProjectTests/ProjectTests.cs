@@ -14,19 +14,21 @@ namespace ChangeTracker.Domain.Tests.ProjectTests
         private DateTime _testCreationDate;
         private Guid _testId;
         private Name _testName;
+        private Guid _testUserId;
         private VersioningScheme _testVersioningScheme;
 
         public ProjectTests()
         {
             _testId = Guid.Parse("992b6432-b792-4f0d-87c2-786f24a5a564");
             _testName = Name.Parse("ProjectX");
+            _testUserId = Guid.Parse("a1b89f2d-d13f-4572-8522-8a92fb4fdb6a");
             _testCreationDate = DateTime.Parse("2021-04-03");
             _testAccountId = TestAccount.Id;
             _testVersioningScheme = TestAccount.CustomVersioningScheme;
             _testClosedDate = null;
         }
 
-        private Project CreateProject() => new(_testId, _testAccountId, _testName, _testVersioningScheme,
+        private Project CreateProject() => new(_testId, _testAccountId, _testName, _testVersioningScheme, _testUserId,
             _testCreationDate, _testClosedDate);
 
         [Fact]

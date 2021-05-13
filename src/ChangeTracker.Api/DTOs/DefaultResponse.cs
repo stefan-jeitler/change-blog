@@ -2,9 +2,9 @@
 
 namespace ChangeTracker.Api.DTOs
 {
-    public class NonSuccessResponse
+    public class DefaultResponse
     {
-        public NonSuccessResponse(string message)
+        public DefaultResponse(string message)
         {
             if (string.IsNullOrEmpty(message))
                 throw new ArgumentException("Message cannot be null or empty.");
@@ -13,6 +13,6 @@ namespace ChangeTracker.Api.DTOs
         }
 
         public string Message { get; }
-        public static NonSuccessResponse Create(string message) => new(message);
+        public static DefaultResponse Create(string message) => new(message);
     }
 }

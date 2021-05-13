@@ -62,7 +62,7 @@ namespace ChangeTracker.Application.Tests.UseCaseTests.Commands.AddPendingChange
                 new PendingLineRequestModel(TestAccount.Project.Id, changeLogLine, labels, issues);
 
             _projectDaoStub.Projects.Add(new Project(TestAccount.Project.Id, TestAccount.Id, TestAccount.Project.Name,
-                TestAccount.CustomVersioningScheme, TestAccount.CreationDate, null));
+                TestAccount.CustomVersioningScheme, TestAccount.UserId, TestAccount.CreationDate, null));
 
             _changeLogDaoStub.ProduceConflict = true;
             _changeLogDaoStub.ChangeLogs.Add(new ChangeLogLine(Guid.NewGuid(),
@@ -94,7 +94,7 @@ namespace ChangeTracker.Application.Tests.UseCaseTests.Commands.AddPendingChange
                 new PendingLineRequestModel(TestAccount.Project.Id, changeLogLine, labels, issues);
 
             _projectDaoStub.Projects.Add(new Project(TestAccount.Project.Id, TestAccount.Id, TestAccount.Project.Name,
-                TestAccount.CustomVersioningScheme, TestAccount.CreationDate, null));
+                TestAccount.CustomVersioningScheme, TestAccount.UserId, TestAccount.CreationDate, null));
 
             _changeLogDaoStub.ChangeLogs.Add(new ChangeLogLine(Guid.NewGuid(),
                 null,
@@ -126,7 +126,7 @@ namespace ChangeTracker.Application.Tests.UseCaseTests.Commands.AddPendingChange
                 new PendingLineRequestModel(TestAccount.Project.Id, changeLogLine, labels, issues);
 
             _projectDaoStub.Projects.Add(new Project(TestAccount.Project.Id, TestAccount.Id, TestAccount.Project.Name,
-                TestAccount.CustomVersioningScheme, TestAccount.CreationDate, null));
+                TestAccount.CustomVersioningScheme, TestAccount.UserId, TestAccount.CreationDate, null));
 
             _changeLogDaoStub.ChangeLogs.AddRange(Enumerable.Range(0, 100)
                 .Select(x =>
@@ -155,7 +155,7 @@ namespace ChangeTracker.Application.Tests.UseCaseTests.Commands.AddPendingChange
                 new PendingLineRequestModel(TestAccount.Project.Id, changeLogLine, labels, issues);
 
             _projectDaoStub.Projects.Add(new Project(TestAccount.Project.Id, TestAccount.Id, TestAccount.Project.Name,
-                TestAccount.CustomVersioningScheme, TestAccount.CreationDate, null));
+                TestAccount.CustomVersioningScheme, TestAccount.UserId, TestAccount.CreationDate, null));
 
             _changeLogDaoStub.ChangeLogs.Add(new ChangeLogLine(Guid.NewGuid(),
                 null,

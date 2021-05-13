@@ -47,7 +47,7 @@ namespace ChangeTracker.Application.Tests.UseCaseTests.Commands.AddChangeLogLine
                     issues);
 
             _projectDaoStub.Projects.Add(new Project(TestAccount.Project.Id, TestAccount.Id, TestAccount.Project.Name,
-                TestAccount.CustomVersioningScheme, TestAccount.CreationDate, null));
+                TestAccount.CustomVersioningScheme, TestAccount.UserId, TestAccount.CreationDate, null));
 
             var addLineInteractor = CreateInteractor();
 
@@ -72,7 +72,7 @@ namespace ChangeTracker.Application.Tests.UseCaseTests.Commands.AddChangeLogLine
                     issues);
 
             _projectDaoStub.Projects.Add(new Project(TestAccount.Project.Id, TestAccount.Id, TestAccount.Project.Name,
-                TestAccount.CustomVersioningScheme, TestAccount.CreationDate, null));
+                TestAccount.CustomVersioningScheme, TestAccount.UserId, TestAccount.CreationDate, null));
 
             var version = new ClVersion(TestAccount.Project.Id, ClVersionValue.Parse("1.2"));
             _versionDaoStub.Versions.Add(version);
@@ -103,7 +103,7 @@ namespace ChangeTracker.Application.Tests.UseCaseTests.Commands.AddChangeLogLine
                     issues);
 
             _projectDaoStub.Projects.Add(new Project(TestAccount.Project.Id, TestAccount.Id, TestAccount.Project.Name,
-                TestAccount.CustomVersioningScheme, TestAccount.CreationDate, null));
+                TestAccount.CustomVersioningScheme, TestAccount.UserId, TestAccount.CreationDate, null));
 
             var version = new ClVersion(TestAccount.Project.Id, ClVersionValue.Parse("1.2"));
             _versionDaoStub.Versions.Add(version);
@@ -136,7 +136,7 @@ namespace ChangeTracker.Application.Tests.UseCaseTests.Commands.AddChangeLogLine
                     issues);
 
             _projectDaoStub.Projects.Add(new Project(TestAccount.Project.Id, TestAccount.Id, TestAccount.Project.Name,
-                TestAccount.CustomVersioningScheme, TestAccount.CreationDate, null));
+                TestAccount.CustomVersioningScheme, TestAccount.UserId, TestAccount.CreationDate, null));
 
             var addLineInteractor = CreateInteractor();
 
@@ -161,7 +161,7 @@ namespace ChangeTracker.Application.Tests.UseCaseTests.Commands.AddChangeLogLine
                 new VersionIdChangeLogLineRequestModelRequestModel(notExistingVersionId, changeLogLine, labels, issues);
 
             _projectDaoStub.Projects.Add(new Project(TestAccount.Project.Id, TestAccount.Id, TestAccount.Project.Name,
-                TestAccount.CustomVersioningScheme, TestAccount.CreationDate, null));
+                TestAccount.CustomVersioningScheme, TestAccount.UserId, TestAccount.CreationDate, null));
 
             var addLineInteractor = CreateInteractor();
 
@@ -187,7 +187,7 @@ namespace ChangeTracker.Application.Tests.UseCaseTests.Commands.AddChangeLogLine
                 new VersionIdChangeLogLineRequestModelRequestModel(versionId, changeLogLine, labels, issues);
 
             _projectDaoStub.Projects.Add(new Project(TestAccount.Project.Id, TestAccount.Id, TestAccount.Project.Name,
-                TestAccount.CustomVersioningScheme, TestAccount.CreationDate, null));
+                TestAccount.CustomVersioningScheme, TestAccount.UserId, TestAccount.CreationDate, null));
 
             var version = new ClVersion(versionId,
                 TestAccount.Project.Id,
@@ -225,7 +225,7 @@ namespace ChangeTracker.Application.Tests.UseCaseTests.Commands.AddChangeLogLine
                     issues);
 
             _projectDaoStub.Projects.Add(new Project(TestAccount.Project.Id, TestAccount.Id, TestAccount.Project.Name,
-                TestAccount.CustomVersioningScheme, TestAccount.CreationDate, null));
+                TestAccount.CustomVersioningScheme, TestAccount.UserId, TestAccount.CreationDate, null));
 
             var versionId = Guid.Parse("1d7831d5-32fb-437f-a9d5-bf5a7dd34b10");
             var version = new ClVersion(versionId,
@@ -263,7 +263,7 @@ namespace ChangeTracker.Application.Tests.UseCaseTests.Commands.AddChangeLogLine
                     issues);
 
             _projectDaoStub.Projects.Add(new Project(TestAccount.Project.Id, TestAccount.Id, TestAccount.Project.Name,
-                TestAccount.CustomVersioningScheme, TestAccount.CreationDate, null));
+                TestAccount.CustomVersioningScheme, TestAccount.UserId, TestAccount.CreationDate, null));
 
             var versionId = Guid.Parse("1d7831d5-32fb-437f-a9d5-bf5a7dd34b10");
             var version = new ClVersion(versionId,
@@ -297,7 +297,7 @@ namespace ChangeTracker.Application.Tests.UseCaseTests.Commands.AddChangeLogLine
                     issues);
 
             _projectDaoStub.Projects.Add(new Project(TestAccount.Project.Id, TestAccount.Id, TestAccount.Project.Name,
-                TestAccount.CustomVersioningScheme, TestAccount.CreationDate, null));
+                TestAccount.CustomVersioningScheme, TestAccount.UserId, TestAccount.CreationDate, null));
 
             var versionId = Guid.Parse("1d7831d5-32fb-437f-a9d5-bf5a7dd34b10");
             var version = new ClVersion(versionId,

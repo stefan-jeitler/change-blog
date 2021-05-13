@@ -10,6 +10,7 @@ namespace ChangeTracker.Application.DataAccess.Projects
     {
         Task<Maybe<Project>> FindProjectAsync(Guid accountId, Name name);
         Task<Maybe<Project>> FindProjectAsync(Guid projectId);
+        Task<Project> GetProjectAsync(Guid projectId);
         Task<Result<Project, Conflict>> AddProjectAsync(Project newProject);
     }
 }

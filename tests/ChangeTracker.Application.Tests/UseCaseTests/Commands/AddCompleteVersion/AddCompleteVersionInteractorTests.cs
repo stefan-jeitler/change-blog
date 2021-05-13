@@ -6,7 +6,9 @@ using ChangeTracker.Application.DataAccess;
 using ChangeTracker.Application.Tests.TestDoubles;
 using ChangeTracker.Application.UseCases.Commands.AddCompleteVersion;
 using ChangeTracker.Application.UseCases.Commands.AddCompleteVersion.Models;
+using ChangeTracker.Domain;
 using ChangeTracker.Domain.ChangeLog;
+using ChangeTracker.Domain.Common;
 using ChangeTracker.Domain.Version;
 using FluentAssertions;
 using Moq;
@@ -84,6 +86,32 @@ namespace ChangeTracker.Application.Tests.UseCaseTests.Commands.AddCompleteVersi
             _outputPortMock.Verify(m => m.ProjectDoesNotExist(), Times.Once);
         }
 
+        [Fact]
+        public async Task AddCompleteVersion_ProjectIsClosed_ProjectClosedOutput()
+        {
+            // arrange
+            var changeLogLines = new List<ChangeLogLineRequestModel>
+            {
+                new("Proxy bug resolved", new List<string> {"ProxyStrikesBack"}, new List<string> {"#123"})
+            };
+            var versionRequestModel = new CompleteVersionRequestModel(TestAccount.Project.Id, "1.23", changeLogLines);
+
+            _projectDaoStub.Projects.Add(new Project(TestAccount.Project.Id,
+                TestAccount.Id,
+                Name.Parse("Test project"),
+                TestAccount.CustomVersioningScheme,
+                DateTime.Parse("2021-05-13"),
+                DateTime.Parse("2021-05-13")));
+
+            _outputPortMock.Setup(m => m.ProjectClosed());
+            var addCompleteVersionInteractor = CreateInteractor();
+
+            // act
+            await addCompleteVersionInteractor.ExecuteAsync(_outputPortMock.Object, versionRequestModel);
+
+            // assert
+            _outputPortMock.Verify(m => m.ProjectClosed(), Times.Once);
+        }
 
         [Fact]
         public async Task AddCompleteVersion_VersionExists_VersionAlreadyExistsOutput()

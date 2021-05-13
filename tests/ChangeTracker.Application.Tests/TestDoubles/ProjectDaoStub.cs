@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 using ChangeTracker.Application.DataAccess;
 using ChangeTracker.Application.DataAccess.Projects;
@@ -24,6 +25,12 @@ namespace ChangeTracker.Application.Tests.TestDoubles
 
         public Task<Maybe<Project>> FindProjectAsync(Guid projectId) =>
             Task.FromResult(Projects.TryFirst(x => x.Id == projectId));
+
+        public async Task<Project> GetProjectAsync(Guid projectId)
+        {
+            await Task.Yield();
+            return Projects.Single(x => x.Id == projectId);
+        }
 
         public Task<Result<Project, Conflict>> AddProjectAsync(Project newProject)
         {

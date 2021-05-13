@@ -4,7 +4,9 @@ using System.Linq;
 using System.Threading.Tasks;
 using ChangeTracker.Application.DataAccess;
 using ChangeTracker.Application.DataAccess.ChangeLogs;
+using ChangeTracker.Application.DataAccess.Projects;
 using ChangeTracker.Application.DataAccess.Versions;
+using ChangeTracker.Domain;
 using ChangeTracker.Domain.ChangeLog;
 using ChangeTracker.Domain.Version;
 using CSharpFunctionalExtensions;
@@ -15,31 +17,39 @@ using Microsoft.Extensions.Caching.Memory;
 namespace ChangeTracker.Application.Decorators
 {
     /// <summary>
-    ///     Checks whether the target version is read-only
+    ///     Checks whether the target version or project is read-only
     /// </summary>
-    public class VersionReadonlyCheckDecorator : IChangeLogCommandsDao
+    public class ChangeLogLineReadonlyCheckDecorator : IChangeLogCommandsDao
     {
-        private const string VersionDeletedMessage = "The related version has been closed. ChangeLogLineId {0}";
+        private const string LineDeletedMessage = "The requested change log line has been deleted. ChangeLogLineId {0}";
+
+        private const string VersionDeletedMessage = "The related version has been deleted. VersionId {0}";
 
         private const string VersionReleasedMessage =
-            "The related version has already been released. ChangeLogLineId {0}";
+            "The related version has already been released and can no longe be modified. VersionId {0}";
+
+        private const string ProjectClosedMessage =
+            "The requested project is closed and no longer be modified. ProjectId {0}";
 
         private readonly IChangeLogCommandsDao _changeLogCommandsComponent;
         private readonly IMemoryCache _memoryCache;
+        private readonly IProjectDao _projectDao;
         private readonly IVersionDao _versionDao;
 
 
-        public VersionReadonlyCheckDecorator(IChangeLogCommandsDao changeLogCommandsComponent, IVersionDao versionDao,
-            IMemoryCache memoryCache)
+        public ChangeLogLineReadonlyCheckDecorator(IChangeLogCommandsDao changeLogCommandsComponent,
+            IVersionDao versionDao,
+            IMemoryCache memoryCache, IProjectDao projectDao)
         {
             _changeLogCommandsComponent = changeLogCommandsComponent;
             _versionDao = versionDao;
             _memoryCache = memoryCache;
+            _projectDao = projectDao;
         }
 
         public Task<Result<ChangeLogLine, Conflict>> AddLineAsync(ChangeLogLine changeLogLine)
         {
-            return CheckVersionAsync(changeLogLine)
+            return IsReadOnlyAsync(changeLogLine)
                 .Bind(l => _changeLogCommandsComponent.AddLineAsync(l));
         }
 
@@ -48,7 +58,7 @@ namespace ChangeTracker.Application.Decorators
             var lines = changeLogLines.ToList();
             foreach (var line in lines)
             {
-                var result = await CheckVersionAsync(line);
+                var result = await IsReadOnlyAsync(line);
                 if (result.IsFailure)
                     return Result.Failure<int, Conflict>(result.Error);
             }
@@ -61,7 +71,7 @@ namespace ChangeTracker.Application.Decorators
             var lines = changeLogLines.ToList();
             foreach (var line in lines)
             {
-                var result = await CheckVersionAsync(line);
+                var result = await IsReadOnlyAsync(line);
                 if (result.IsFailure)
                     return Result.Failure<int, Conflict>(result.Error);
             }
@@ -71,47 +81,70 @@ namespace ChangeTracker.Application.Decorators
 
         public Task<Result<ChangeLogLine, Conflict>> MoveLineAsync(ChangeLogLine changeLogLine)
         {
-            return CheckVersionAsync(changeLogLine)
+            return IsReadOnlyAsync(changeLogLine)
                 .Bind(_ => _changeLogCommandsComponent.MoveLineAsync(changeLogLine));
         }
 
         public Task<Result<ChangeLogLine, Conflict>> UpdateLineAsync(ChangeLogLine changeLogLine)
         {
-            return CheckVersionAsync(changeLogLine)
+            return IsReadOnlyAsync(changeLogLine)
                 .Bind(_ => _changeLogCommandsComponent.UpdateLineAsync(changeLogLine));
         }
 
 
-        private async Task<Result<ChangeLogLine, Conflict>> CheckVersionAsync(ChangeLogLine line)
+        private async Task<Result<ChangeLogLine, Conflict>> IsReadOnlyAsync(ChangeLogLine line)
         {
+            if (line.DeletedAt.HasValue)
+            {
+                return Result.Failure<ChangeLogLine, Conflict>(
+                    new Conflict(string.Format(LineDeletedMessage, line.Id)));
+            }
+
             if (line.IsPending)
             {
                 return Result.Success<ChangeLogLine, Conflict>(line);
             }
 
-            var version = await GetVersionAsync(line);
+            var version = await GetVersionAsync(line.VersionId!.Value);
+
             if (version.IsDeleted)
             {
                 return Result.Failure<ChangeLogLine, Conflict>(
-                    new Conflict(string.Format(VersionDeletedMessage, line.Id)));
+                    new Conflict(string.Format(VersionDeletedMessage, version.Id)));
             }
 
             if (version.IsReleased)
             {
                 return Result.Failure<ChangeLogLine, Conflict>(
-                    new Conflict(string.Format(VersionReleasedMessage, line.Id)));
+                    new Conflict(string.Format(VersionReleasedMessage, version.Id)));
             }
+
+            var project = await GetProjectAsync(version.ProjectId);
+
+            if (project.IsClosed)
+                return Result.Failure<ChangeLogLine, Conflict>(
+                    new Conflict(string.Format(ProjectClosedMessage, project.Id)));
 
             return Result.Success<ChangeLogLine, Conflict>(line);
         }
 
-        private async Task<ClVersion> GetVersionAsync(ChangeLogLine line)
+        private async Task<ClVersion> GetVersionAsync(Guid versionId)
         {
-            return await _memoryCache.GetOrCreate($"VersionReadOnlyCheck:VersionId:{line.VersionId!.Value}",
+            return await _memoryCache.GetOrCreate($"ReadOnlyCheck:VersionId:{versionId}",
                 entry =>
                 {
-                    entry.AbsoluteExpirationRelativeToNow = TimeSpan.FromSeconds(3);
-                    return _versionDao.GetVersionAsync(line.VersionId!.Value);
+                    entry.AbsoluteExpirationRelativeToNow = TimeSpan.FromSeconds(5);
+                    return _versionDao.GetVersionAsync(versionId);
+                });
+        }
+
+        private async Task<Project> GetProjectAsync(Guid projectId)
+        {
+            return await _memoryCache.GetOrCreate($"ReadOnlyCheck:ProjectId:{projectId}",
+                entry =>
+                {
+                    entry.AbsoluteExpirationRelativeToNow = TimeSpan.FromSeconds(5);
+                    return _projectDao.GetProjectAsync(projectId);
                 });
         }
     }

@@ -7,6 +7,7 @@ namespace ChangeTracker.Application.UseCases.Commands.AddCompleteVersion
     public interface IAddCompleteVersionOutputPort : ILineParserOutput
     {
         void ProjectDoesNotExist();
+        void ProjectClosed();
         void InvalidVersionFormat(string version);
         void VersionDoesNotMatchScheme(string version);
         void Created(Guid versionId);

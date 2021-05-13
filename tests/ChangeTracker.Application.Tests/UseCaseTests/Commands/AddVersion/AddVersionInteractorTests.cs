@@ -79,24 +79,22 @@ namespace ChangeTracker.Application.Tests.UseCaseTests.Commands.AddVersion
         }
 
         [Fact]
-        public async Task CreateVersion_ProjectIsClosed_ClosedOutput()
+        public async Task CreateVersion_ProjectIsClosed_ProjectClosedOutput()
         {
             // arrange
+            _projectDaoStub.Projects.Add(new Project(TestAccount.Project.Id, TestAccount.Id, TestAccount.Project.Name,
+                TestAccount.CustomVersioningScheme, DateTime.Parse("2021-04-04"), DateTime.Parse("2021-05-13")));
 
-            var project = new Project(TestAccount.Project.Id, TestAccount.Id, TestAccount.Project.Name,
-                TestAccount.CustomVersioningScheme, DateTime.Parse("2021-04-04"), DateTime.Parse("2021-04-05"));
-            _projectDaoStub.Projects.Add(project);
-
-            var versionRequestModel = new VersionRequestModel(TestAccount.Project.Id, "12*");
+            var versionRequestModel = new VersionRequestModel(TestAccount.Project.Id, "12.1");
             var createVersionInteractor = CreateInteractor();
 
-            _outputPortMock.Setup(m => m.ProjectClosed(It.IsAny<Guid>()));
+            _outputPortMock.Setup(m => m.ProjectClosed());
 
             // act
             await createVersionInteractor.ExecuteAsync(_outputPortMock.Object, versionRequestModel);
 
             // assert
-            _outputPortMock.Verify(m => m.ProjectClosed(It.Is<Guid>(x => x == project.Id)));
+            _outputPortMock.Verify(m => m.ProjectClosed());
         }
 
         [Fact]

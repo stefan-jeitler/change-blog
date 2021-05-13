@@ -77,9 +77,9 @@ namespace ChangeTracker.Application.UseCases.Commands.AddVersion
                 return Maybe<Project>.None;
             }
 
-            if (project.Value.ClosedAt.HasValue)
+            if (project.Value.IsClosed)
             {
-                output.ProjectClosed(project.Value.Id);
+                output.ProjectClosed();
                 return Maybe<Project>.None;
             }
 

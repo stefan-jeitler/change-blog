@@ -55,7 +55,6 @@ namespace ChangeTracker.Application.UseCases.Commands.AddProject
                 return;
             }
 
-
             var project = new Project(account.Value.Id, name, versioningSchemeId.Value, DateTime.UtcNow);
             await SaveProjectAsync(output, project);
         }

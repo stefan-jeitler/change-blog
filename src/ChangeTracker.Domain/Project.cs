@@ -44,5 +44,7 @@ namespace ChangeTracker.Domain
         public VersioningScheme VersioningScheme { get; }
         public DateTime CreatedAt { get; }
         public DateTime? ClosedAt { get; }
+
+        public bool IsClosed => ClosedAt.HasValue;
     }
 }

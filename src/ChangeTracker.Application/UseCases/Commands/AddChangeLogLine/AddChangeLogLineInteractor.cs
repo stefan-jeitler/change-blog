@@ -39,6 +39,8 @@ namespace ChangeTracker.Application.UseCases.Commands.AddChangeLogLine
                 return;
             }
 
+            _unitOfWork.Start();
+
             var version = await _versionDao.FindVersionAsync(requestModelRequestModel.ProjectId, versionValue);
             if (version.HasNoValue)
             {
@@ -46,8 +48,6 @@ namespace ChangeTracker.Application.UseCases.Commands.AddChangeLogLine
                 return;
             }
 
-            _unitOfWork.Start();
-            
             await AddLineAsync(output, requestModelRequestModel, version.Value);
         }
 

@@ -30,14 +30,14 @@ namespace ChangeTracker.Application.UseCases.Commands.AddPendingChangeLogLine
         public async Task ExecuteAsync(IAddPendingLineOutputPort output,
             PendingLineRequestModel lineRequestModel)
         {
+            _unitOfWork.Start();
+
             var project = await _projectDao.FindProjectAsync(lineRequestModel.ProjectId);
             if (project.HasNoValue)
             {
                 output.ProjectDoesNotExist();
                 return;
             }
-
-            _unitOfWork.Start();
 
             var line = await CreateChangeLogLineAsync(output, lineRequestModel, project.Value);
             if (line.HasNoValue)

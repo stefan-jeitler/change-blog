@@ -4,7 +4,9 @@ using System.Linq;
 using System.Threading.Tasks;
 using ChangeTracker.Application.Decorators;
 using ChangeTracker.Application.Tests.TestDoubles;
+using ChangeTracker.Domain;
 using ChangeTracker.Domain.ChangeLog;
+using ChangeTracker.Domain.Common;
 using ChangeTracker.Domain.Version;
 using FluentAssertions;
 using Microsoft.Extensions.Caching.Memory;
@@ -12,18 +14,23 @@ using Xunit;
 
 namespace ChangeTracker.Application.Tests.DecoratorTests
 {
-    public class VersionReadOnlyCheckDecoratorTests
+    public class ReadOnlyCheckDecoratorTests
     {
         private readonly ChangeLogDaoStub _changeLogDaoStub;
         private readonly IMemoryCache _memoryCache;
+        private readonly ProjectDaoStub _projectDaoStub;
         private readonly VersionDaoStub _versionDaoStub;
 
-        public VersionReadOnlyCheckDecoratorTests()
+        public ReadOnlyCheckDecoratorTests()
         {
             _changeLogDaoStub = new ChangeLogDaoStub();
             _versionDaoStub = new VersionDaoStub();
+            _projectDaoStub = new ProjectDaoStub();
             _memoryCache = new MemoryCache(new MemoryCacheOptions());
         }
+
+        private ChangeLogLineReadonlyCheckDecorator CreateDecorator() =>
+            new(_changeLogDaoStub, _versionDaoStub, _memoryCache, _projectDaoStub);
 
         [Fact]
         public async Task AddLine_RelatedVersionAlreadyReleased_Conflict()
@@ -38,19 +45,44 @@ namespace ChangeTracker.Application.Tests.DecoratorTests
             var line = new ChangeLogLine(lineId, versionId, TestAccount.Project.Id, ChangeLogText.Parse("some text"),
                 0U, DateTime.Parse("2021-04-17"));
 
-            var decorator = new VersionReadonlyCheckDecorator(_changeLogDaoStub, _versionDaoStub, _memoryCache);
+            var decorator = CreateDecorator();
 
             // act
             var result = await decorator.AddLineAsync(line);
 
             // assert
             result.IsFailure.Should().BeTrue();
-            result.Error.Reason.Should().StartWith("The related version has already been released.");
+            result.Error.Reason.Should().StartWith("The related version has already been released");
+            _changeLogDaoStub.ChangeLogs.Should().BeEmpty();
+        }
+
+
+        [Fact]
+        public async Task AddLine_ChangeLogLineDeleted_Conflict()
+        {
+            // arrange
+            var versionId = Guid.Parse("1d7831d5-32fb-437f-a9d5-bf5a7dd34b10");
+            var version = new ClVersion(versionId, TestAccount.Project.Id, ClVersionValue.Parse("1.2.3"),
+                DateTime.Parse("2021-04-17"), DateTime.Parse("2021-04-17"), null);
+            _versionDaoStub.Versions.Add(version);
+
+            var lineId = Guid.Parse("0683e1e1-0e0d-405c-b77e-a6d0d5141b67");
+            var line = new ChangeLogLine(lineId, versionId, TestAccount.Project.Id, ChangeLogText.Parse("some text"),
+                0U, DateTime.Parse("2021-04-17"), DateTime.Parse("2021-04-17"));
+
+            var decorator = CreateDecorator();
+
+            // act
+            var result = await decorator.AddLineAsync(line);
+
+            // assert
+            result.IsFailure.Should().BeTrue();
+            result.Error.Reason.Should().StartWith("The requested change log line has been deleted");
             _changeLogDaoStub.ChangeLogs.Should().BeEmpty();
         }
 
         [Fact]
-        public async Task AddLine_RelatedVersionIsClosed_Conflict()
+        public async Task AddLine_RelatedVersionIsDeleted_Conflict()
         {
             // arrange
             var versionId = Guid.Parse("1d7831d5-32fb-437f-a9d5-bf5a7dd34b10");
@@ -62,14 +94,42 @@ namespace ChangeTracker.Application.Tests.DecoratorTests
             var line = new ChangeLogLine(lineId, versionId, TestAccount.Project.Id, ChangeLogText.Parse("some text"),
                 0U, DateTime.Parse("2021-04-17"));
 
-            var decorator = new VersionReadonlyCheckDecorator(_changeLogDaoStub, _versionDaoStub, _memoryCache);
+            var decorator = CreateDecorator();
 
             // act
             var result = await decorator.AddLineAsync(line);
 
             // assert
             result.IsFailure.Should().BeTrue();
-            result.Error.Reason.Should().StartWith("The related version has been closed.");
+            result.Error.Reason.Should().StartWith("The related version has been deleted");
+            _changeLogDaoStub.ChangeLogs.Should().BeEmpty();
+        }
+
+
+        [Fact]
+        public async Task AddLine_RelatedProjectIsClosed_Conflict()
+        {
+            // arrange
+            var versionId = Guid.Parse("1d7831d5-32fb-437f-a9d5-bf5a7dd34b10");
+            var version = new ClVersion(versionId, TestAccount.Project.Id, ClVersionValue.Parse("1.2.3"),
+                null, DateTime.Parse("2021-04-17"), null);
+            _versionDaoStub.Versions.Add(version);
+
+            _projectDaoStub.Projects.Add(new Project(TestAccount.Project.Id, TestAccount.Id, Name.Parse("Test project"),
+                TestAccount.CustomVersioningScheme, DateTime.Parse("2021-05-13"), DateTime.Parse("2021-05-13")));
+
+            var lineId = Guid.Parse("0683e1e1-0e0d-405c-b77e-a6d0d5141b67");
+            var line = new ChangeLogLine(lineId, versionId, TestAccount.Project.Id, ChangeLogText.Parse("some text"),
+                0U, DateTime.Parse("2021-04-17"));
+
+            var decorator = CreateDecorator();
+
+            // act
+            var result = await decorator.AddLineAsync(line);
+
+            // assert
+            result.IsFailure.Should().BeTrue();
+            result.Error.Reason.Should().StartWith("The requested project is closed and no longer be modified");
             _changeLogDaoStub.ChangeLogs.Should().BeEmpty();
         }
 
@@ -82,11 +142,13 @@ namespace ChangeTracker.Application.Tests.DecoratorTests
                 null, DateTime.Parse("2021-04-17"), null);
             _versionDaoStub.Versions.Add(version);
 
+            _projectDaoStub.Projects.Add(TestAccount.Project);
+
             var lineId = Guid.Parse("0683e1e1-0e0d-405c-b77e-a6d0d5141b67");
             var line = new ChangeLogLine(lineId, versionId, TestAccount.Project.Id, ChangeLogText.Parse("some text"),
                 0U, DateTime.Parse("2021-04-17"));
 
-            var decorator = new VersionReadonlyCheckDecorator(_changeLogDaoStub, _versionDaoStub, _memoryCache);
+            var decorator = CreateDecorator();
 
             // act
             var result = await decorator.AddLineAsync(line);
@@ -104,7 +166,7 @@ namespace ChangeTracker.Application.Tests.DecoratorTests
             var line = new ChangeLogLine(lineId, null, TestAccount.Project.Id, ChangeLogText.Parse("some text"),
                 0U, DateTime.Parse("2021-04-17"));
 
-            var decorator = new VersionReadonlyCheckDecorator(_changeLogDaoStub, _versionDaoStub, _memoryCache);
+            var decorator = CreateDecorator();
 
             // act
             var result = await decorator.AddLineAsync(line);
@@ -122,7 +184,7 @@ namespace ChangeTracker.Application.Tests.DecoratorTests
             var line = new ChangeLogLine(lineId, null, TestAccount.Project.Id, ChangeLogText.Parse("some text"),
                 0U, DateTime.Parse("2021-04-17"));
 
-            var decorator = new VersionReadonlyCheckDecorator(_changeLogDaoStub, _versionDaoStub, _memoryCache);
+            var decorator = CreateDecorator();
 
             // act
             var result = await decorator.UpdateLineAsync(line);
@@ -146,7 +208,7 @@ namespace ChangeTracker.Application.Tests.DecoratorTests
                 ChangeLogText.Parse("some other text"),
                 0U, DateTime.Parse("2021-04-17"));
 
-            var decorator = new VersionReadonlyCheckDecorator(_changeLogDaoStub, _versionDaoStub, _memoryCache);
+            var decorator = CreateDecorator();
 
             // act
             var result = await decorator.AddLinesAsync(new List<ChangeLogLine>(2) {firstLine, secondLine});
@@ -177,7 +239,7 @@ namespace ChangeTracker.Application.Tests.DecoratorTests
                 ChangeLogText.Parse("some other text"),
                 0U, DateTime.Parse("2021-04-17"));
 
-            var decorator = new VersionReadonlyCheckDecorator(_changeLogDaoStub, _versionDaoStub, _memoryCache);
+            var decorator = CreateDecorator();
 
             // act
             var result = await decorator.AddLinesAsync(new List<ChangeLogLine>(2) {firstLine, secondLine});
@@ -185,8 +247,8 @@ namespace ChangeTracker.Application.Tests.DecoratorTests
             // assert
             result.IsSuccess.Should().BeFalse();
             result.Error.Reason.Should()
-                .Be(
-                    "The related version has already been released. ChangeLogLineId 4d755355-b527-4a4d-afbe-ab00a025609e");
+                .StartWith(
+                    "The related version has already been released");
             _changeLogDaoStub.ChangeLogs.Should().BeEmpty();
         }
 
@@ -199,6 +261,8 @@ namespace ChangeTracker.Application.Tests.DecoratorTests
                 null, DateTime.Parse("2021-04-17"), null);
             _versionDaoStub.Versions.Add(version);
 
+            _projectDaoStub.Projects.Add(TestAccount.Project);
+
             var lineId = Guid.Parse("0683e1e1-0e0d-405c-b77e-a6d0d5141b67");
             var lineUnassigned = new ChangeLogLine(lineId, null, TestAccount.Project.Id,
                 ChangeLogText.Parse("some text"),
@@ -207,7 +271,7 @@ namespace ChangeTracker.Application.Tests.DecoratorTests
 
             var lineAssigned = lineUnassigned.AssignToVersion(versionId, 0);
 
-            var decorator = new VersionReadonlyCheckDecorator(_changeLogDaoStub, _versionDaoStub, _memoryCache);
+            var decorator = CreateDecorator();
 
             // act
             var result = await decorator.MoveLineAsync(lineAssigned);
@@ -226,6 +290,8 @@ namespace ChangeTracker.Application.Tests.DecoratorTests
                 null, DateTime.Parse("2021-04-17"), null);
             _versionDaoStub.Versions.Add(version);
 
+            _projectDaoStub.Projects.Add(TestAccount.Project);
+
             var firstLineId = Guid.Parse("0683e1e1-0e0d-405c-b77e-a6d0d5141b67");
             var firstLineUnassigned = new ChangeLogLine(firstLineId, null, TestAccount.Project.Id,
                 ChangeLogText.Parse("some text"),
@@ -241,7 +307,7 @@ namespace ChangeTracker.Application.Tests.DecoratorTests
             var firstLineAssigned = firstLineUnassigned.AssignToVersion(versionId, 0);
             var secondLineAssigned = secondLineUnassigned.AssignToVersion(versionId, 1);
 
-            var decorator = new VersionReadonlyCheckDecorator(_changeLogDaoStub, _versionDaoStub, _memoryCache);
+            var decorator = CreateDecorator();
 
             // act
             var result = await decorator.MoveLinesAsync(new List<ChangeLogLine>(2)
@@ -276,7 +342,7 @@ namespace ChangeTracker.Application.Tests.DecoratorTests
             var firstLineAssigned = firstLineUnassigned.AssignToVersion(versionId, 0);
             var secondLineAssigned = secondLineUnassigned.AssignToVersion(versionId, 1);
 
-            var decorator = new VersionReadonlyCheckDecorator(_changeLogDaoStub, _versionDaoStub, _memoryCache);
+            var decorator = CreateDecorator();
 
             // act
             var result = await decorator.MoveLinesAsync(new List<ChangeLogLine>(2)

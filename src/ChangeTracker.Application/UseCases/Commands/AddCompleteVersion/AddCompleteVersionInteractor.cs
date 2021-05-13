@@ -38,12 +38,9 @@ namespace ChangeTracker.Application.UseCases.Commands.AddCompleteVersion
         public async Task ExecuteAsync(IAddCompleteVersionOutputPort output,
             CompleteVersionRequestModel versionRequestModel)
         {
-            var project = await _projectDao.FindProjectAsync(versionRequestModel.ProjectId);
+            var project = await GetProjectAsync(output, versionRequestModel.ProjectId);
             if (project.HasNoValue)
-            {
-                output.ProjectDoesNotExist();
                 return;
-            }
 
             var newVersion = CreateNewVersion(output, project.Value, versionRequestModel.Version,
                 versionRequestModel.ReleaseImmediately);
@@ -62,6 +59,24 @@ namespace ChangeTracker.Application.UseCases.Commands.AddCompleteVersion
 
             _unitOfWork.Start();
             await SaveCompleteVersionAsync(output, newVersion.Value, lines.Value);
+        }
+
+        private async Task<Maybe<Project>> GetProjectAsync(IAddCompleteVersionOutputPort output, Guid projectId)
+        {
+            var project = await _projectDao.FindProjectAsync(projectId);
+            if (project.HasNoValue)
+            {
+                output.ProjectDoesNotExist();
+                return Maybe<Project>.None;
+            }
+
+            if (project.Value.IsClosed)
+            {
+                output.ProjectClosed();
+                return Maybe<Project>.None;
+            }
+
+            return project;
         }
 
         private static Maybe<ClVersion> CreateNewVersion(IAddCompleteVersionOutputPort output,

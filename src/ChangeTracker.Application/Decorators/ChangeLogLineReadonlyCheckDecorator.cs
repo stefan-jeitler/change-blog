@@ -91,6 +91,12 @@ namespace ChangeTracker.Application.Decorators
                 .Bind(_ => _changeLogCommandsComponent.UpdateLineAsync(changeLogLine));
         }
 
+        public Task<Result<ChangeLogLine, Conflict>> DeleteLineAsync(ChangeLogLine changeLogLine)
+        {
+            return IsReadOnlyAsync(changeLogLine)
+                .Bind(_ => _changeLogCommandsComponent.DeleteLineAsync(changeLogLine));
+        }
+
 
         private async Task<Result<ChangeLogLine, Conflict>> IsReadOnlyAsync(ChangeLogLine line)
         {

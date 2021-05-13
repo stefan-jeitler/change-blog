@@ -101,6 +101,17 @@ namespace ChangeTracker.Application.Tests.TestDoubles
             return Result.Success<ChangeLogLine, Conflict>(changeLogLine);
         }
 
+        public async Task<Result<ChangeLogLine, Conflict>> DeleteLineAsync(ChangeLogLine changeLogLine)
+        {
+            await Task.Yield();
+
+            if (ProduceConflict)
+                return Result.Failure<ChangeLogLine, Conflict>(new Conflict("some went badly wrong"));
+
+            ChangeLogs.RemoveAll(x => x.Id == changeLogLine.Id);
+            return Result.Success<ChangeLogLine, Conflict>(changeLogLine);
+        }
+
         public Task<Maybe<ChangeLogLine>> FindLineAsync(Guid changeLogLineId)
         {
             return Task.FromResult(ChangeLogs.TryFirst(x => x.Id == changeLogLineId));

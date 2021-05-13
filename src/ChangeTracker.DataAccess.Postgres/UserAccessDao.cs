@@ -61,13 +61,23 @@ namespace ChangeTracker.DataAccess.Postgres
         public async Task<bool> HasProjectPermissionAsync(Guid userId, Guid projectId, Permission permission)
         {
             const string hasProjectPermissionSql = @"
-                SELECT EXISTS(SELECT NULL
+                SELECT EXISTS(
+                (SELECT NULL
                 FROM project_user pu
                 JOIN ""role"" r ON r.id = pu.role_id
                 JOIN role_permission rp on rp.role_id = r.id
-                WHERE pu.user_id = @userId
-                AND pu.project_id = @projectId
-                AND rp.permission = @permission)";
+                WHERE pu.user_id = '8e983811-7d39-4fe2-9373-1c6b0e4eb360'
+                AND pu.project_id = '3034af99-6807-4759-abc8-fde6cca8b1a5'
+                AND rp.permission = 'CloseProject'
+                FETCH FIRST 1 ROW ONLY)
+                UNION ALL
+                (SELECT NULL
+                FROM account_user au
+                JOIN ""role"" r on au.role_id = r.id
+                JOIN role_permission rp on r.id = rp.role_id
+                WHERE au.user_id = '8e983811-7d39-4fe2-9373-1c6b0e4eb360'
+                AND rp.permission = 'CloseProject'
+                FETCH FIRST 1 ROW ONLY ))";
 
             var dbConnection = _acquireDbConnection();
 

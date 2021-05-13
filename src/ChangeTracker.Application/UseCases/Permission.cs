@@ -3,6 +3,8 @@
     public enum Permission
     {
         ViewChangeLogLines,
-        AddProject
+        AddProject,
+        CloseProject,
+        ViewProjects
     }
 }

@@ -1,10 +1,13 @@
+using System.Linq;
 using ChangeTracker.Api.Authentication;
 using ChangeTracker.Api.Authorization;
+using ChangeTracker.Api.DTOs;
 using ChangeTracker.Api.Extensions;
 using ChangeTracker.Api.SwaggerUI;
 using ChangeTracker.DataAccess.Postgres;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
@@ -25,9 +28,17 @@ namespace ChangeTracker.Api
             services.AddProjectUseCase();
         }
 
+        private static void ConfigureControllers(IServiceCollection services)
+        {
+            services
+                .AddControllers(o => o.Filters.Add(typeof(PermissionAuthorizationFilter)))
+                .ConfigureApiBehaviorOptions(o => o.InvalidModelStateResponseFactory = CustomErrorMessage);
+        }
+
         public void ConfigureServices(IServiceCollection services)
         {
-            services.AddControllers(o => o.Filters.Add(typeof(PermissionAuthorizationFilter)));
+            ConfigureControllers(services);
+
             services.AddSwagger();
 
             services.AddApplicationInsightsTelemetry();
@@ -61,6 +72,16 @@ namespace ChangeTracker.Api
                 endpoints
                     .MapControllers()
                     .RequireAuthorization());
+        }
+
+        private static ActionResult CustomErrorMessage(ActionContext context)
+        {
+            var firstError = context.ModelState
+                .FirstOrDefault(modelError => modelError.Value.Errors.Count > 0)
+                .Value.Errors.FirstOrDefault()?
+                .ErrorMessage ?? "Unknown";
+
+            return new BadRequestObjectResult(DefaultResponse.Create(firstError));
         }
     }
 }

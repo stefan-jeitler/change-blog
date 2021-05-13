@@ -7,7 +7,7 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace ChangeTracker.Api.Presenters.v1.Project
 {
-    public class AddProjectApiPresenter : IAddProjectOutputPort
+    public class AddProjectApiPresenter : BasePresenter, IAddProjectOutputPort
     {
         private readonly HttpContext _httpContext;
 
@@ -16,11 +16,9 @@ namespace ChangeTracker.Api.Presenters.v1.Project
             _httpContext = httpContext;
         }
 
-        public ActionResult Response { get; private set; } = new StatusCodeResult(500);
-
         public void AccountDoesNotExist()
         {
-            Response = new NotFoundObjectResult(DefaultResponse.Create("Account does not exist"));
+            Response = new NotFoundObjectResult(DefaultResponse.Create("Account not found."));
         }
 
         public void AccountDeleted(Guid accountId)
@@ -30,17 +28,17 @@ namespace ChangeTracker.Api.Presenters.v1.Project
 
         public void InvalidName(string name)
         {
-            Response = new BadRequestObjectResult(DefaultResponse.Create($"Invalid name {name}"));
+            Response = new BadRequestObjectResult(DefaultResponse.Create($"Invalid name {name}."));
         }
 
         public void ProjectAlreadyExists()
         {
-            Response = new ConflictObjectResult(DefaultResponse.Create("Project already exists"));
+            Response = new ConflictObjectResult(DefaultResponse.Create("Project already exists."));
         }
 
         public void VersioningSchemeDoesNotExist()
         {
-            Response = new NotFoundObjectResult(DefaultResponse.Create("VersioningScheme does not exist"));
+            Response = new NotFoundObjectResult(DefaultResponse.Create("VersioningScheme not found."));
         }
 
         public void Conflict(string reason)
@@ -51,7 +49,7 @@ namespace ChangeTracker.Api.Presenters.v1.Project
         public void Created(Guid accountId, Guid projectId)
         {
             var location = _httpContext.CreateLinkTo($"api/v1/projects/{projectId}");
-            Response = new CreatedResult(location, DefaultResponse.Create($"Project with id {projectId} added"));
+            Response = new CreatedResult(location, DefaultResponse.Create($"Project with id {projectId} added."));
         }
     }
 }

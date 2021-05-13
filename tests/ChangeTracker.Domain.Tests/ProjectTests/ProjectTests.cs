@@ -40,6 +40,7 @@ namespace ChangeTracker.Domain.Tests.ProjectTests
             project.AccountId.Should().Be(_testAccountId);
             project.Name.Should().Be(_testName);
             project.VersioningScheme.Should().Be(_testVersioningScheme);
+            project.CreatedByUser.Should().Be(_testUserId);
             project.CreatedAt.Should().Be(_testCreationDate);
             project.ClosedAt.HasValue.Should().BeFalse();
         }
@@ -53,6 +54,18 @@ namespace ChangeTracker.Domain.Tests.ProjectTests
 
             project.ClosedAt.Should().HaveValue();
             project.ClosedAt!.Value.Should().Be(_testClosedDate!.Value);
+        }
+
+        [Fact]
+        public void CloseProject_HappyPath_DateProperlySet()
+        {
+            _testClosedDate = null;
+            var project = CreateProject();
+
+            var closedProject = project.Close();
+
+            closedProject.ClosedAt.Should().HaveValue();
+            closedProject.IsClosed.Should().BeTrue();
         }
 
         [Fact]
@@ -93,6 +106,16 @@ namespace ChangeTracker.Domain.Tests.ProjectTests
             Func<Project> act = CreateProject;
 
             act.Should().ThrowExactly<ArgumentNullException>();
+        }
+
+        [Fact]
+        public void Create_WithEmptyUserId_ArgumentException()
+        {
+            _testUserId = Guid.Empty;
+
+            Func<Project> act = CreateProject;
+
+            act.Should().ThrowExactly<ArgumentException>();
         }
 
         [Theory]

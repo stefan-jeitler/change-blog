@@ -43,33 +43,14 @@ namespace ChangeTracker.Application.Tests.UseCaseTests.Commands.CloseProject
             var project = new Project(TestAccount.Project.Id, TestAccount.Id, TestAccount.Project.Name,
                 TestAccount.CustomVersioningScheme, TestAccount.UserId, TestAccount.Project.CreatedAt, DateTime.Parse("2021-05-13"));
             _projectDaoStub.Projects.Add(project);
-            _outputPortMock.Setup(m => m.ProjectAlreadyClosed());
+            _outputPortMock.Setup(m => m.ProjectAlreadyClosed(It.IsAny<Guid>()));
             var interactor = CreateInteractor();
 
             // act
             await interactor.ExecuteAsync(_outputPortMock.Object, project.Id);
 
             // assert
-            _outputPortMock.Verify(m => m.ProjectAlreadyClosed(), Times.Once);
-        }
-
-        [Fact]
-        public async Task CloseProject_ConflictWhileDeleting_ConflictOutput()
-        {
-            // arrange
-            var project = new Project(TestAccount.Project.Id, TestAccount.Id, TestAccount.Project.Name,
-                TestAccount.CustomVersioningScheme, TestAccount.UserId, TestAccount.Project.CreatedAt, null);
-            _projectDaoStub.Projects.Add(project);
-            _projectDaoStub.ProduceConflict = true;
-
-            _outputPortMock.Setup(m => m.Conflict(It.IsAny<string>()));
-            var interactor = CreateInteractor();
-
-            // act
-            await interactor.ExecuteAsync(_outputPortMock.Object, project.Id);
-
-            // assert
-            _outputPortMock.Verify(m => m.Conflict(It.IsAny<string>()), Times.Once);
+            _outputPortMock.Verify(m => m.ProjectAlreadyClosed(It.Is<Guid>(x => x == project.Id)), Times.Once);
         }
 
         [Fact]

@@ -21,15 +21,15 @@ namespace ChangeTracker.Application.Decorators
     /// </summary>
     public class ChangeLogLineReadonlyCheckDecorator : IChangeLogCommandsDao
     {
-        private const string LineDeletedMessage = "The requested change log line has been deleted. ChangeLogLineId {0}";
+        private const string LineDeletedMessage = "The requested change log line has been deleted. ChangeLogLineId {0}.";
 
-        private const string VersionDeletedMessage = "The related version has been deleted. VersionId {0}";
+        private const string VersionDeletedMessage = "The related version has been deleted. VersionId {0}.";
 
         private const string VersionReleasedMessage =
-            "The related version has already been released and can no longe be modified. VersionId {0}";
+            "The related version has already been released and can no longe be modified. VersionId {0}.";
 
         private const string ProjectClosedMessage =
-            "The requested project is closed and no longer be modified. ProjectId {0}";
+            "The requested project is closed and no longer be modified. ProjectId {0}.";
 
         private readonly IChangeLogCommandsDao _changeLogCommandsComponent;
         private readonly IMemoryCache _memoryCache;

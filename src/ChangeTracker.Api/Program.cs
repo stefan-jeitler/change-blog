@@ -33,10 +33,7 @@ namespace ChangeTracker.Api
         {
             return Host.CreateDefaultBuilder(args)
                 .ConfigureWebHostDefaults(webBuilder => { webBuilder.UseStartup<Startup>(); })
-                .ConfigureAppConfiguration((_, config) =>
-                {
-                    config.AddEnvironmentVariables("POSTGRESQLCONNSTR_");
-                });
+                .ConfigureAppConfiguration((_, config) => { config.AddEnvironmentVariables("POSTGRESQLCONNSTR_"); });
         }
     }
 }

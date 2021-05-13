@@ -328,6 +328,5 @@ namespace ChangeTracker.Domain.Tests.ChangeLogTests
             duplicates.Should().HaveCount(1);
             duplicates.Single().Text.Value.Should().Be("new Feature");
         }
-
     }
 }

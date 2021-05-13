@@ -96,7 +96,8 @@ namespace ChangeTracker.DataAccess.Postgres
             });
         }
 
-        public async Task<bool> HasChangeLogLinePermissionAsync(Guid userId, Guid changeLogLineId, Permission permission)
+        public async Task<bool> HasChangeLogLinePermissionAsync(Guid userId, Guid changeLogLineId,
+            Permission permission)
         {
             const string hasChangeLogLinePermissionSql = @"
                 SELECT EXISTS(SELECT NULL

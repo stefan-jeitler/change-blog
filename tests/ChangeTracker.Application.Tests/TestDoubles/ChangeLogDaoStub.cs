@@ -65,29 +65,6 @@ namespace ChangeTracker.Application.Tests.TestDoubles
             return Result.Success<ChangeLogLine, Conflict>(changeLogLine);
         }
 
-        public async Task<Result<int, Conflict>> MakeAllLinesPending(Guid versionId)
-        {
-            await Task.Yield();
-
-            if (ProduceConflict)
-            {
-                return Result.Failure<int, Conflict>(new Conflict("some conflict"));
-            }
-
-            bool MatchRequestVersion(ChangeLogLine l) => l.VersionId.HasValue && l.VersionId.Value == versionId;
-
-            var versionChangeLogLines = ChangeLogs.Where(MatchRequestVersion);
-
-            var pendingLines = versionChangeLogLines.Select(x => new ChangeLogLine(x.Id, null, x.ProjectId, x.Text,
-                    x.Position, x.CreatedAt, x.Labels, x.Issues, x.DeletedAt))
-                .ToList();
-
-            ChangeLogs.RemoveAll(MatchRequestVersion);
-            ChangeLogs.AddRange(pendingLines);
-
-            return Result.Success<int, Conflict>(pendingLines.Count);
-        }
-
         public async Task<Result<ChangeLogLine, Conflict>> UpdateLineAsync(ChangeLogLine changeLogLine)
         {
             await Task.Yield();
@@ -135,6 +112,29 @@ namespace ChangeTracker.Application.Tests.TestDoubles
             return ChangeLogs
                 .Where(x => x.IsPending)
                 .ToList();
+        }
+
+        public async Task<Result<int, Conflict>> MakeAllLinesPending(Guid versionId)
+        {
+            await Task.Yield();
+
+            if (ProduceConflict)
+            {
+                return Result.Failure<int, Conflict>(new Conflict("some conflict"));
+            }
+
+            bool MatchRequestVersion(ChangeLogLine l) => l.VersionId.HasValue && l.VersionId.Value == versionId;
+
+            var versionChangeLogLines = ChangeLogs.Where(MatchRequestVersion);
+
+            var pendingLines = versionChangeLogLines.Select(x => new ChangeLogLine(x.Id, null, x.ProjectId, x.Text,
+                    x.Position, x.CreatedAt, x.Labels, x.Issues, x.DeletedAt))
+                .ToList();
+
+            ChangeLogs.RemoveAll(MatchRequestVersion);
+            ChangeLogs.AddRange(pendingLines);
+
+            return Result.Success<int, Conflict>(pendingLines.Count);
         }
     }
 }

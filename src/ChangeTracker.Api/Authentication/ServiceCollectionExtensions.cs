@@ -1,5 +1,4 @@
-﻿using ChangeTracker.Api.Authentication.AccountDaos;
-using ChangeTracker.Api.Authentication.DataAccess;
+﻿using ChangeTracker.Api.Authentication.DataAccess;
 using Microsoft.Extensions.DependencyInjection;
 
 namespace ChangeTracker.Api.Authentication

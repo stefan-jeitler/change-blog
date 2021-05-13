@@ -104,7 +104,7 @@ namespace ChangeTracker.Application.Tests.UseCaseTests.Commands.ReleaseVersion
             _versionDaoStub.Versions.Add(version);
             _versionDaoStub.ProduceConflict = true;
             _projectDaoStub.Projects.Add(project);
-            
+
             // act
             await interactor.ExecuteAsync(_outputPortMock.Object, version.Id);
 
@@ -123,7 +123,7 @@ namespace ChangeTracker.Application.Tests.UseCaseTests.Commands.ReleaseVersion
             _outputPortMock.Setup(m => m.VersionReleased(It.IsAny<Guid>()));
             _versionDaoStub.Versions.Add(version);
             _projectDaoStub.Projects.Add(project);
-            
+
             // act
             await interactor.ExecuteAsync(_outputPortMock.Object, version.Id);
 

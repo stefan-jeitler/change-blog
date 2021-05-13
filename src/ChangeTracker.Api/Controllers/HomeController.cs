@@ -1,8 +1,6 @@
 ﻿using System;
 using System.Reflection;
-using ChangeTracker.Api.Authorization;
 using ChangeTracker.Api.DTOs;
-using ChangeTracker.Application.UseCases;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Hosting;
@@ -13,6 +11,7 @@ namespace ChangeTracker.Api.Controllers
 {
     [ApiController]
     [Route("api")]
+    [AllowAnonymous]
     public class HomeController : ControllerBase
     {
         private static readonly Lazy<string> AssemblyVersion =
@@ -37,7 +36,6 @@ namespace ChangeTracker.Api.Controllers
         }
 
         [HttpGet("info")]
-        [AllowAnonymous]
         public ActionResult Info()
         {
             var apiInfo = new ApiInfo(AssemblyName.Value,

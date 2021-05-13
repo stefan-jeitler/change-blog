@@ -64,7 +64,7 @@ namespace ChangeTracker.Api.Authentication
             Response.StatusCode = 401;
             Response.ContentType = MediaTypeNames.Application.Json;
             var responseBody = NonSuccessResponse.Create("You are not authorized. Please enter a valid api key.");
-            
+
             await Response.WriteAsync(JsonSerializer.Serialize(responseBody, new JsonSerializerOptions
             {
                 PropertyNamingPolicy = JsonNamingPolicy.CamelCase

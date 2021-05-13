@@ -1,7 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
 using ChangeTracker.Application.UseCases;
 using ChangeTracker.DataAccess.Postgres;
@@ -14,7 +11,8 @@ namespace ChangeTracker.Api.Authorization.PermissionChecks
         private readonly PermissionCheck _permissionCheckComponent;
         private readonly UserAccessDao _userAccessDao;
 
-        public ChangeLogLinePermissionCheckDecorator(PermissionCheck permissionCheckComponent, UserAccessDao userAccessDao)
+        public ChangeLogLinePermissionCheckDecorator(PermissionCheck permissionCheckComponent,
+            UserAccessDao userAccessDao)
         {
             _permissionCheckComponent = permissionCheckComponent;
             _userAccessDao = userAccessDao;

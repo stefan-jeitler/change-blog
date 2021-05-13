@@ -31,9 +31,9 @@ namespace ChangeTracker.Application.UseCases.Commands.CloseProject
 
             var closedProject = project.Value.Close();
             await _projectDao.CloseProjectAsync(closedProject)
-                    .Match(
-                        p => output.ProjectClosed(p.Id),
-                        c => output.Conflict(c.Reason));
+                .Match(
+                    p => output.ProjectClosed(p.Id),
+                    c => output.Conflict(c.Reason));
         }
     }
 }

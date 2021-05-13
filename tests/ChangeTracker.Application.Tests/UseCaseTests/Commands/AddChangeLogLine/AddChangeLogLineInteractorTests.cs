@@ -43,7 +43,8 @@ namespace ChangeTracker.Application.Tests.UseCaseTests.Commands.AddChangeLogLine
             var labels = new List<string> {"Bugfix", "ProxyIssue"};
             var issues = new List<string> {"#1234", "#12345"};
             var changeLogLineRequestModel =
-                new VersionChangeLogLineRequestModelRequestModel(TestAccount.Project.Id, "1. .3", changeLogLine, labels, issues);
+                new VersionChangeLogLineRequestModelRequestModel(TestAccount.Project.Id, "1. .3", changeLogLine, labels,
+                    issues);
 
             _projectDaoStub.Projects.Add(new Project(TestAccount.Project.Id, TestAccount.Id, TestAccount.Project.Name,
                 TestAccount.CustomVersioningScheme, TestAccount.CreationDate, null));
@@ -67,7 +68,8 @@ namespace ChangeTracker.Application.Tests.UseCaseTests.Commands.AddChangeLogLine
             var labels = new List<string> {"Bugfix", "ProxyIssue"};
             var issues = new List<string> {"#1234", "#12345"};
             var changeLogLineRequestModel =
-                new VersionChangeLogLineRequestModelRequestModel(TestAccount.Project.Id, "1.2", changeLogLine, labels, issues);
+                new VersionChangeLogLineRequestModelRequestModel(TestAccount.Project.Id, "1.2", changeLogLine, labels,
+                    issues);
 
             _projectDaoStub.Projects.Add(new Project(TestAccount.Project.Id, TestAccount.Id, TestAccount.Project.Name,
                 TestAccount.CustomVersioningScheme, TestAccount.CreationDate, null));
@@ -97,7 +99,8 @@ namespace ChangeTracker.Application.Tests.UseCaseTests.Commands.AddChangeLogLine
             var labels = new List<string> {"Bugfix", "ProxyIssue"};
             var issues = new List<string> {"#1234", "#12345"};
             var changeLogLineRequestModel =
-                new VersionChangeLogLineRequestModelRequestModel(TestAccount.Project.Id, "1.2", changeLogLine, labels, issues);
+                new VersionChangeLogLineRequestModelRequestModel(TestAccount.Project.Id, "1.2", changeLogLine, labels,
+                    issues);
 
             _projectDaoStub.Projects.Add(new Project(TestAccount.Project.Id, TestAccount.Id, TestAccount.Project.Name,
                 TestAccount.CustomVersioningScheme, TestAccount.CreationDate, null));
@@ -129,7 +132,8 @@ namespace ChangeTracker.Application.Tests.UseCaseTests.Commands.AddChangeLogLine
             var labels = new List<string> {"Bugfix", "ProxyIssue"};
             var issues = new List<string> {"#1234", "#12345"};
             var changeLogLineRequestModel =
-                new VersionChangeLogLineRequestModelRequestModel(TestAccount.Project.Id, "1.2", changeLogLine, labels, issues);
+                new VersionChangeLogLineRequestModelRequestModel(TestAccount.Project.Id, "1.2", changeLogLine, labels,
+                    issues);
 
             _projectDaoStub.Projects.Add(new Project(TestAccount.Project.Id, TestAccount.Id, TestAccount.Project.Name,
                 TestAccount.CustomVersioningScheme, TestAccount.CreationDate, null));
@@ -217,7 +221,8 @@ namespace ChangeTracker.Application.Tests.UseCaseTests.Commands.AddChangeLogLine
             var labels = new List<string> {"Bugfix", "ProxyIssue"};
             var issues = new List<string> {"#1234", "#12345"};
             var changeLogLineRequestModel =
-                new VersionChangeLogLineRequestModelRequestModel(TestAccount.Project.Id, "1.2", changeLogLine, labels, issues);
+                new VersionChangeLogLineRequestModelRequestModel(TestAccount.Project.Id, "1.2", changeLogLine, labels,
+                    issues);
 
             _projectDaoStub.Projects.Add(new Project(TestAccount.Project.Id, TestAccount.Id, TestAccount.Project.Name,
                 TestAccount.CustomVersioningScheme, TestAccount.CreationDate, null));
@@ -254,7 +259,8 @@ namespace ChangeTracker.Application.Tests.UseCaseTests.Commands.AddChangeLogLine
             var labels = new List<string> {"Bugfix", "ProxyIssue"};
             var issues = new List<string> {"#1234", "#12345"};
             var changeLogLineRequestModel =
-                new VersionChangeLogLineRequestModelRequestModel(TestAccount.Project.Id, "1.2", changeLogLine, labels, issues);
+                new VersionChangeLogLineRequestModelRequestModel(TestAccount.Project.Id, "1.2", changeLogLine, labels,
+                    issues);
 
             _projectDaoStub.Projects.Add(new Project(TestAccount.Project.Id, TestAccount.Id, TestAccount.Project.Name,
                 TestAccount.CustomVersioningScheme, TestAccount.CreationDate, null));
@@ -287,7 +293,8 @@ namespace ChangeTracker.Application.Tests.UseCaseTests.Commands.AddChangeLogLine
             var labels = new List<string> {"Bugfix"};
             var issues = new List<string> {"#1234", "#12345"};
             var changeLogLineRequestModel =
-                new VersionChangeLogLineRequestModelRequestModel(TestAccount.Project.Id, "1.2", changeLogLine, labels, issues);
+                new VersionChangeLogLineRequestModelRequestModel(TestAccount.Project.Id, "1.2", changeLogLine, labels,
+                    issues);
 
             _projectDaoStub.Projects.Add(new Project(TestAccount.Project.Id, TestAccount.Id, TestAccount.Project.Name,
                 TestAccount.CustomVersioningScheme, TestAccount.CreationDate, null));

@@ -4,7 +4,8 @@ namespace ChangeTracker.Domain.Version
 {
     public class ClVersion : IEquatable<ClVersion>
     {
-        public ClVersion(Guid projectId, ClVersionValue versionValue, DateTime? releasedAt = null, DateTime? deletedAt = null)
+        public ClVersion(Guid projectId, ClVersionValue versionValue, DateTime? releasedAt = null,
+            DateTime? deletedAt = null)
             : this(Guid.NewGuid(), projectId, versionValue, releasedAt, DateTime.UtcNow, deletedAt)
         {
         }
@@ -51,8 +52,6 @@ namespace ChangeTracker.Domain.Version
 
         public bool IsDeleted => DeletedAt.HasValue;
 
-        public ClVersion Release() => new(Id, ProjectId, Value, DateTime.UtcNow, CreatedAt, DeletedAt);
-
         public bool Equals(ClVersion other)
         {
             if (other is null)
@@ -65,6 +64,8 @@ namespace ChangeTracker.Domain.Version
                    ProjectId.Equals(other.ProjectId) &&
                    Equals(Value, other.Value);
         }
+
+        public ClVersion Release() => new(Id, ProjectId, Value, DateTime.UtcNow, CreatedAt, DeletedAt);
 
         private static void VerifyDeletedAtDate(DateTime? releasedAt, DateTime? deletedAt)
         {

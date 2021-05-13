@@ -1,5 +1,5 @@
 ﻿using System;
-using System.Linq;
+
 // ReSharper disable ConvertIfStatementToSwitchStatement
 
 namespace ChangeTracker.Api.DTOs

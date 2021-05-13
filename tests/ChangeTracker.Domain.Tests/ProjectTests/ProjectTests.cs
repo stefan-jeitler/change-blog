@@ -10,8 +10,8 @@ namespace ChangeTracker.Domain.Tests.ProjectTests
     public class ProjectTests
     {
         private Guid _testAccountId;
-        private DateTime _testCreationDate;
         private DateTime? _testClosedDate;
+        private DateTime _testCreationDate;
         private Guid _testId;
         private Name _testName;
         private VersioningScheme _testVersioningScheme;

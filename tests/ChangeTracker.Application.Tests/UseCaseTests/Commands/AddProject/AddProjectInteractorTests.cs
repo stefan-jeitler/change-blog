@@ -4,7 +4,6 @@ using ChangeTracker.Application.DataAccess;
 using ChangeTracker.Application.Tests.TestDoubles;
 using ChangeTracker.Application.UseCases.Commands.AddProject;
 using ChangeTracker.Domain;
-using ChangeTracker.Domain.Version;
 using Moq;
 using Xunit;
 
@@ -119,7 +118,8 @@ namespace ChangeTracker.Application.Tests.UseCaseTests.Commands.AddProject
             // arrange
             _accountDaoStub.Account =
                 new Account(TestAccount.Id, TestAccount.Name, null, TestAccount.CreationDate, null);
-            _projectDaoStub.Projects.Add(new Project(TestAccount.Id, TestAccount.Name, TestAccount.Project.VersioningScheme,
+            _projectDaoStub.Projects.Add(new Project(TestAccount.Id, TestAccount.Name,
+                TestAccount.Project.VersioningScheme,
                 DateTime.Parse("2021-04-04")));
 
             var projectRequestModel = new ProjectRequestModel(TestAccount.Id, TestAccount.Name.Value, null);

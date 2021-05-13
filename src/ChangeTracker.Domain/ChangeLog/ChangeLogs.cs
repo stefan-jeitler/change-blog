@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.Collections.Immutable;
 using System.Linq;
-using ChangeTracker.Domain.Common;
 
 namespace ChangeTracker.Domain.ChangeLog
 {

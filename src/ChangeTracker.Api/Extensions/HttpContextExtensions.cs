@@ -11,8 +11,8 @@ namespace ChangeTracker.Api.Extensions
             var userIdValue = httpContext
                 .User.FindFirstValue(ClaimTypes.NameIdentifier);
 
-            return Guid.TryParse(userIdValue, out var userId) 
-                ? userId 
+            return Guid.TryParse(userIdValue, out var userId)
+                ? userId
                 : Guid.Empty;
         }
     }

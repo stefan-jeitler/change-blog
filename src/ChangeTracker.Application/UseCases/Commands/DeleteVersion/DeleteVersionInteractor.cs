@@ -4,6 +4,7 @@ using ChangeTracker.Application.DataAccess.Projects;
 using ChangeTracker.Application.DataAccess.Versions;
 using ChangeTracker.Domain.Version;
 using CSharpFunctionalExtensions;
+
 // ReSharper disable InvertIf
 
 namespace ChangeTracker.Application.UseCases.Commands.DeleteVersion

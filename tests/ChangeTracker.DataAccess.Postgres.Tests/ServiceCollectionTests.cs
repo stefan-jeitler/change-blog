@@ -1,5 +1,4 @@
 ﻿using ChangeTracker.Application.DataAccess;
-using Dapper;
 using Microsoft.Extensions.DependencyInjection;
 using Xunit;
 

@@ -4,7 +4,6 @@ using System.Linq;
 using System.Threading.Tasks;
 using ChangeTracker.Application.DataAccess;
 using ChangeTracker.Application.DataAccess.Versions;
-using ChangeTracker.Domain.ChangeLog;
 using ChangeTracker.Domain.Version;
 using CSharpFunctionalExtensions;
 
@@ -59,7 +58,7 @@ namespace ChangeTracker.Application.Tests.TestDoubles
         {
             await Task.Yield();
 
-            if(ProduceConflict)
+            if (ProduceConflict)
                 return Result.Failure<ClVersion, Conflict>(new Conflict("something went wrong"));
 
             Versions.RemoveAll(x => x.Id == version.Id);

@@ -1,8 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Reflection.Metadata.Ecma335;
-using System.Text;
 using System.Threading.Tasks;
 using ChangeTracker.Application.UseCases;
 using ChangeTracker.DataAccess.Postgres;
@@ -28,7 +24,7 @@ namespace ChangeTracker.Api.Authorization.PermissionChecks
             {
                 return await _userAccessDao.HasAccountPermissionAsync(userId, accountId.Value, permission);
             }
-            
+
             return await _permissionCheckComponent.HasPermission(httpContext, userId, permission);
         }
     }

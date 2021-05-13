@@ -44,7 +44,8 @@ namespace ChangeTracker.Application.Tests.UseCaseTests.Commands.DeleteVersion
         public async Task DeleteVersion_DeletedVersion_VersionAlreadyDeletedOutput()
         {
             // arrange
-            var version = new ClVersion(TestAccount.Project.Id, ClVersionValue.Parse("1.23"), null, DateTime.Parse("2021-05-13"));
+            var version = new ClVersion(TestAccount.Project.Id, ClVersionValue.Parse("1.23"), null,
+                DateTime.Parse("2021-05-13"));
             var interactor = CreateInteractor();
             _outputPortMock.Setup(m => m.VersionAlreadyDeleted());
             _versionDaoStub.Versions.Add(version);
@@ -60,7 +61,8 @@ namespace ChangeTracker.Application.Tests.UseCaseTests.Commands.DeleteVersion
         public async Task DeleteVersion_ReleasedVersion_VersionAlreadyReleasedOutput()
         {
             // arrange
-            var version = new ClVersion(TestAccount.Project.Id, ClVersionValue.Parse("1.23"), DateTime.Parse("2021-05-13"), null);
+            var version = new ClVersion(TestAccount.Project.Id, ClVersionValue.Parse("1.23"),
+                DateTime.Parse("2021-05-13"));
             var interactor = CreateInteractor();
             _outputPortMock.Setup(m => m.VersionAlreadyReleased());
             _versionDaoStub.Versions.Add(version);

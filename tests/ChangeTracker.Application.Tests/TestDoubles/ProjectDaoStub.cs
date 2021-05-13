@@ -43,5 +43,18 @@ namespace ChangeTracker.Application.Tests.TestDoubles
             Projects.Add(newProject);
             return Task.FromResult(Result.Success<Project, Conflict>(newProject));
         }
+
+        public async Task<Result<Project, Conflict>> DeleteProjectAsync(Project project)
+        {
+            await Task.Yield();
+
+            if (ProduceConflict)
+            {
+                return Result.Failure<Project, Conflict>(new Conflict("something went badly wrong."));
+            }
+
+            Projects.RemoveAll(x => x.Id == project.Id);
+            return Result.Success<Project, Conflict>(project);
+        }
     }
 }

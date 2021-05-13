@@ -14,7 +14,7 @@ namespace ChangeTracker.DataAccess.Postgres
             _acquireDbConnection = acquireDbConnection;
         }
 
-        public int AppSchemaVersion => 14;
+        public int AppSchemaVersion => 15;
 
         public async Task VerifySchemaVersionAsync()
         {

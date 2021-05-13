@@ -23,4 +23,5 @@ let dbUpdates: DbUpdate list = [
     { Version = 12; Update = VersionTable.create}
     { Version = 13; Update = ChangeLogLineTable.create}
     { Version = 14; Update = Functions.createGuidFunction}
-    { Version = 15; Update = RoleTable.addBasicRoles}]
+    { Version = 15; Update = RoleTable.addBasicRoles}
+    { Version = 16; Update = VersionTable.modifyUniqueConstraint}]

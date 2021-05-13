@@ -19,12 +19,6 @@ namespace ChangeTracker.Api
         private static async Task VerifyDbSchemaVersionAsync(IHost host)
         {
             using var scope = host.Services.CreateScope();
-            var config = scope.ServiceProvider.GetRequiredService<IConfiguration>();
-            var skip = config.GetValue<bool>("AppSettings:SkipSchemaVersionCheck");
-
-            if (skip)
-                return;
-
             var schemaVersion = scope.ServiceProvider.GetRequiredService<SchemaVersion>();
             await schemaVersion.VerifySchemaVersionAsync();
         }

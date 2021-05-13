@@ -17,7 +17,26 @@ let private createVersionSql = """
         )
     """
 
+let private dropProjectIdValueUniqueConstraintSql = """ALTER TABLE "version" DROP CONSTRAINT IF EXISTS version_projectid_value_unique"""
+
+let private createProjectIdValueDeletedAtUniqueConstraintSql = """
+        CREATE UNIQUE INDEX IF NOT EXISTS version_projectid_value_deletedatnull_unique
+        ON "version" (project_id, value, (deleted_at IS NULL)) WHERE deleted_at is null
+    """
+
 let create (dbConnection: IDbConnection) =
     dbConnection.ExecuteAsync(createVersionSql)
     |> Async.AwaitTask
     |> Async.Ignore
+
+let modifyUniqueConstraint (dbConnection: IDbConnection) =
+    async {
+        do! dbConnection.ExecuteAsync(dropProjectIdValueUniqueConstraintSql)
+            |> Async.AwaitTask
+            |> Async.Ignore
+
+        do! dbConnection.ExecuteAsync(createProjectIdValueDeletedAtUniqueConstraintSql)
+            |> Async.AwaitTask
+            |> Async.Ignore
+    }
+

@@ -2,19 +2,22 @@
 using System.Data;
 using System.Threading.Tasks;
 using Dapper;
+using Microsoft.Extensions.Logging;
 
 namespace ChangeTracker.DataAccess.Postgres
 {
     public class SchemaVersion
     {
         private readonly Func<IDbConnection> _acquireDbConnection;
+        private readonly ILogger<SchemaVersion> _logger;
 
-        public SchemaVersion(Func<IDbConnection> acquireDbConnection)
+        public SchemaVersion(Func<IDbConnection> acquireDbConnection, ILogger<SchemaVersion> logger)
         {
             _acquireDbConnection = acquireDbConnection;
+            _logger = logger;
         }
 
-        public int AppSchemaVersion => 15;
+        public int AppSchemaVersion => 16;
 
         public async Task VerifySchemaVersionAsync()
         {
@@ -24,7 +27,7 @@ namespace ChangeTracker.DataAccess.Postgres
 
             if (AppSchemaVersion != dbSchemaVersion)
             {
-                throw new Exception($"Schema version mismatch: App {AppSchemaVersion}; Database {dbSchemaVersion}");
+                _logger.LogWarning("Schema version mismatch: App {AppSchemaVersion}; Database {dbSchemaVersion}", AppSchemaVersion, dbSchemaVersion);
             }
         }
     }

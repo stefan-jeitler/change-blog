@@ -11,5 +11,6 @@ namespace ChangeTracker.Application.DataAccess.Versions
         Task<Maybe<ClVersion>> FindVersionAsync(Guid versionId);
         Task<ClVersion> GetVersionAsync(Guid versionId);
         Task<Result<ClVersion, Conflict>> AddVersionAsync(ClVersion version);
+        Task<Result<ClVersion, Conflict>> DeleteVersionAsync(ClVersion version);
     }
 }

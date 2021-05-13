@@ -4,8 +4,8 @@ namespace ChangeTracker.Domain.Version
 {
     public class ClVersion : IEquatable<ClVersion>
     {
-        public ClVersion(Guid projectId, ClVersionValue versionValue, DateTime? releasedAt = null)
-            : this(Guid.NewGuid(), projectId, versionValue, releasedAt, DateTime.UtcNow, null)
+        public ClVersion(Guid projectId, ClVersionValue versionValue, DateTime? releasedAt = null, DateTime? deletedAt = null)
+            : this(Guid.NewGuid(), projectId, versionValue, releasedAt, DateTime.UtcNow, deletedAt)
         {
         }
 

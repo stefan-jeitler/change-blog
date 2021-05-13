@@ -27,6 +27,7 @@ namespace ChangeTracker.Application.UseCases.Commands.DeleteChangeLogLine
                 return;
             }
 
+            var deletedLine = existingLine.Value.Delete();
             await _changeLogCommands.DeleteLineAsync(existingLine.Value)
                 .Match(
                     l => output.LineDeleted(l.Id),

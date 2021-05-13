@@ -54,5 +54,17 @@ namespace ChangeTracker.Application.Tests.TestDoubles
             Versions.RemoveAll(x => x.Id == version.Id);
             return Result.Success<ClVersion, Conflict>(version);
         }
+
+        public async Task<Result<ClVersion, Conflict>> ReleaseVersionAsync(ClVersion version)
+        {
+            await Task.Yield();
+
+            if(ProduceConflict)
+                return Result.Failure<ClVersion, Conflict>(new Conflict("something went wrong"));
+
+            Versions.RemoveAll(x => x.Id == version.Id);
+            Versions.Add(version);
+            return Result.Success<ClVersion, Conflict>(version);
+        }
     }
 }

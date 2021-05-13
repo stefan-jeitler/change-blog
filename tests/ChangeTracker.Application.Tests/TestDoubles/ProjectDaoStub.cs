@@ -44,7 +44,7 @@ namespace ChangeTracker.Application.Tests.TestDoubles
             return Task.FromResult(Result.Success<Project, Conflict>(newProject));
         }
 
-        public async Task<Result<Project, Conflict>> DeleteProjectAsync(Project project)
+        public async Task<Result<Project, Conflict>> CloseProjectAsync(Project project)
         {
             await Task.Yield();
 

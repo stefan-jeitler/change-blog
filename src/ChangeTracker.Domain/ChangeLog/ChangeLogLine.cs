@@ -119,6 +119,8 @@ namespace ChangeTracker.Domain.ChangeLog
             return new ChangeLogLine(Id, versionId, ProjectId, Text, position, CreatedAt, Labels, Issues, DeletedAt);
         }
 
+        public ChangeLogLine Delete() => new(Id, VersionId, ProjectId, Text, Position, CreatedAt, DateTime.UtcNow);
+
         private static ImmutableHashSet<T> Populate<T>(IEnumerable<T> items, ushort maxCount)
         {
             var itemsSet = items.ToImmutableHashSet();

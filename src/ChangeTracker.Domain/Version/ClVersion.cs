@@ -51,6 +51,8 @@ namespace ChangeTracker.Domain.Version
 
         public bool IsDeleted => DeletedAt.HasValue;
 
+        public ClVersion Release() => new(Id, ProjectId, Value, DateTime.UtcNow, CreatedAt, DeletedAt);
+
         public bool Equals(ClVersion other)
         {
             if (other is null)

@@ -5,6 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using ChangeTracker.Application.UseCases.Commands.AddProject;
 using ChangeTracker.Application.UseCases.Commands.CloseProject;
+using ChangeTracker.Application.UseCases.Queries.GetProjects;
 using Microsoft.Extensions.DependencyInjection;
 
 namespace ChangeTracker.Api.Extensions
@@ -14,6 +15,7 @@ namespace ChangeTracker.Api.Extensions
         public static IServiceCollection AddProjectUseCase(this IServiceCollection services) =>
             services
                 .AddScoped<IAddProject, AddProjectInteractor>()
-                .AddScoped<ICloseProject, CloseProjectInteractor>();
+                .AddScoped<ICloseProject, CloseProjectInteractor>()
+                .AddScoped<IGetProjects, GetProjectsInteractor>();
     }
 }

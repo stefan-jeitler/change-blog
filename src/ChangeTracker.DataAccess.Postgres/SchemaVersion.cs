@@ -17,7 +17,7 @@ namespace ChangeTracker.DataAccess.Postgres
             _logger = logger;
         }
 
-        public int AppSchemaVersion => 16;
+        public static int AppSchemaVersion => 22;
 
         public async Task VerifySchemaVersionAsync()
         {

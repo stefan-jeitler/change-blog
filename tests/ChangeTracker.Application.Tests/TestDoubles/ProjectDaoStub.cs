@@ -32,6 +32,18 @@ namespace ChangeTracker.Application.Tests.TestDoubles
             return Projects.Single(x => x.Id == projectId);
         }
 
+        public async Task<IList<Project>> GetAccountProjectsAsync(Guid accountId, ushort count, Guid? lastProjectId = null)
+        {
+            await Task.Yield();
+
+            return Projects.Where(x => x.AccountId == accountId)
+                .OrderBy(x => x.Name)
+                .SkipWhile(x => x.Id != (lastProjectId ?? Guid.Empty))
+                .Skip(1)
+                .Take(count)
+                .ToList();
+        }
+
         public Task<Result<Project, Conflict>> AddProjectAsync(Project newProject)
         {
             if (ProduceConflict)

@@ -8,6 +8,7 @@ namespace ChangeTracker.Domain.Tests
     public class UserTests
     {
         private DateTime _testDeletionDate;
+        private DateTime _testCreationDate;
         private Email _testEmail;
         private Name _testFirstName;
         private Name _testLastName;
@@ -22,10 +23,11 @@ namespace ChangeTracker.Domain.Tests
             _testLastName = Name.Parse("Jeitler");
             _testTimeZone = Text.Parse("Europe/Berlin");
             _testDeletionDate = DateTime.Parse("2021-04-03");
+            _testCreationDate = DateTime.Parse("2021-04-03");
         }
 
         private User CreateUser() => new(_testUserId, _testEmail, _testFirstName, _testLastName, _testTimeZone,
-            _testDeletionDate);
+            _testDeletionDate, _testCreationDate);
 
         [Fact]
         public void Create_WithValidArguments_Successful()
@@ -37,6 +39,7 @@ namespace ChangeTracker.Domain.Tests
             user.FirstName.Should().Be(_testFirstName);
             user.LastName.Should().Be(_testLastName);
             user.DeletedAt.Should().Be(_testDeletionDate);
+            user.CreatedAt.Should().Be(_testCreationDate);
         }
 
         [Fact]
@@ -95,6 +98,18 @@ namespace ChangeTracker.Domain.Tests
         public void Create_WithInvalidDeletionDate_ArgumentException(string invalidDate)
         {
             _testDeletionDate = DateTime.Parse(invalidDate);
+
+            Func<User> act = CreateUser;
+
+            act.Should().ThrowExactly<ArgumentException>();
+        }
+
+        [Theory]
+        [InlineData("0001-01-01T00:00:00.0000000")]
+        [InlineData("9999-12-31T23:59:59.9999999")]
+        public void Create_WithInvalidCreationDate_ArgumentException(string invalidDate)
+        {
+            _testCreationDate = DateTime.Parse(invalidDate);
 
             Func<User> act = CreateUser;
 

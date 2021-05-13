@@ -1,0 +1,27 @@
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+using NodaTime;
+
+namespace ChangeTracker.Application.Extensions
+{
+    public static class DateTimeExtensions
+    {
+        public static DateTime ToLocal(this DateTime dateTime, string olsonId)
+        {
+            if (olsonId is null)
+                throw new ArgumentNullException(nameof(olsonId));
+
+            var timeZone = DateTimeZoneProviders.Tzdb.GetZoneOrNull(olsonId);
+
+            if (timeZone is null)
+                throw new Exception($"TimeZone could not be found: {olsonId}");
+
+            var instant = Instant.FromDateTimeUtc(DateTime.SpecifyKind(dateTime, DateTimeKind.Utc));
+
+            return instant.InZone(timeZone).ToDateTimeUnspecified();
+        }
+    }
+}

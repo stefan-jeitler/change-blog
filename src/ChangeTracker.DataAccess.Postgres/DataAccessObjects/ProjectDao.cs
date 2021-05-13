@@ -1,4 +1,6 @@
 ﻿using System;
+using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 using ChangeTracker.Application.DataAccess;
 using ChangeTracker.Application.DataAccess.Projects;
@@ -95,6 +97,76 @@ namespace ChangeTracker.DataAccess.Postgres.DataAccessObjects
             }
 
             return project.Value;
+        }
+
+        public async Task<IList<Project>> GetAccountProjectsAsync(Guid accountId, ushort count, Guid? lastProjectId = null)
+        {
+            var getProjectsSql = @$"
+                SELECT p.* FROM
+                    (SELECT p.id,
+                           p.account_id AS accountId,
+                           p.name,
+                           vs.id AS versioningSchemeId,
+                           vs.name AS versioningSchemeName,
+                           vs.regex_pattern AS regexPattern,
+                           vs.description,
+                           vs.created_at AS versioningSchemeCreatedAt,
+                           vs.deleted_at AS versioningSchemeDeletedAt,
+                           p.created_by_user AS createdByUser,
+                           p.created_at AS createdAt,
+                           p.closed_at AS closedAt
+                    FROM project p
+                    JOIN versioning_scheme vs on p.versioning_scheme_id = vs.id
+                    WHERE p.account_id = @accountId
+                    AND p.closed_at is null
+                    ORDER BY name) p
+                WHERE p.id > @lastProjectId
+                FETCH FIRST {count} ROWS ONLY";
+
+            var projects = await _dbAccessor.DbConnection
+                .QueryAsync<Project>(getProjectsSql, new
+                {
+                    accountId,
+                    lastProjectId = lastProjectId ?? Guid.Empty
+                });
+
+            return projects.ToList();
+        }
+
+        public async Task<IList<Project>> GetUserProjects(Guid userId, ushort count, Guid? lastProjectId = null)
+        {
+            var getProjectsSql = @$"
+                SELECT p.* FROM
+                    (SELECT p.id,
+                           p.account_id AS accountId,
+                           p.name,
+                           vs.id AS versioningSchemeId,
+                           vs.name AS versioningSchemeName,
+                           vs.regex_pattern AS regexPattern,
+                           vs.description,
+                           vs.created_at AS versioningSchemeCreatedAt,
+                           vs.deleted_at AS versioningSchemeDeletedAt,
+                           p.created_by_user AS createdByUser,
+                           p.created_at AS createdAt,
+                           p.closed_at AS closedAt
+                    FROM project p
+                    JOIN versioning_scheme vs on p.versioning_scheme_id = vs.id
+                    JOIN account a on p.account_id = a.id
+                    JOIN account_user au on a.id = au.account_id
+                    WHERE au.user_id = @userId
+                    AND p.closed_at is null
+                    ORDER BY name) p
+                WHERE p.id > @lastProjectId
+                FETCH FIRST {count} ROWS ONLY";
+
+            var projects = await _dbAccessor.DbConnection
+                .QueryAsync<Project>(getProjectsSql, new
+                {
+                    userId,
+                    lastProjectId = lastProjectId ?? Guid.Empty
+                });
+
+            return projects.ToList();
         }
 
         public async Task<Result<Project, Conflict>> AddProjectAsync(Project newProject)

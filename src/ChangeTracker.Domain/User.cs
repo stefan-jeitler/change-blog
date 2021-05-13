@@ -5,7 +5,7 @@ namespace ChangeTracker.Domain
 {
     public class User
     {
-        public User(Guid id, Email email, Name firstName, Name lastName, Text timeZone, DateTime? deletedAt)
+        public User(Guid id, Email email, Name firstName, Name lastName, Text timeZone, DateTime? deletedAt, DateTime createdAt)
         {
             if (id == Guid.Empty)
                 throw new ArgumentException("Id cannot be empty");
@@ -23,6 +23,13 @@ namespace ChangeTracker.Domain
             }
 
             DeletedAt = deletedAt;
+
+            if (createdAt == DateTime.MinValue || createdAt == DateTime.MaxValue)
+            {
+                throw new ArgumentException("Invalid creation date.");
+            }
+
+            CreatedAt = createdAt;
         }
 
         public Guid Id { get; }
@@ -36,5 +43,7 @@ namespace ChangeTracker.Domain
         public Text TimeZone { get; }
 
         public DateTime? DeletedAt { get; }
+
+        public DateTime CreatedAt { get; }
     }
 }

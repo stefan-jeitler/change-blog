@@ -49,7 +49,7 @@ namespace ChangeTracker.Api.Presenters.v1.Project
         public void Created(Guid accountId, Guid projectId)
         {
             var location = _httpContext.CreateLinkTo($"api/v1/projects/{projectId}");
-            Response = new CreatedResult(location, DefaultResponse.Create($"Project with id {projectId} added."));
+            Response = new CreatedResult(location, DefaultResponse.Create($"Project with id {projectId} created."));
         }
     }
 }

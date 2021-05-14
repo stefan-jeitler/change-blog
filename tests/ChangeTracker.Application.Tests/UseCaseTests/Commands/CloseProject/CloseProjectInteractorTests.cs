@@ -41,7 +41,8 @@ namespace ChangeTracker.Application.Tests.UseCaseTests.Commands.CloseProject
         {
             // arrange
             var project = new Project(TestAccount.Project.Id, TestAccount.Id, TestAccount.Project.Name,
-                TestAccount.CustomVersioningScheme, TestAccount.UserId, TestAccount.Project.CreatedAt, DateTime.Parse("2021-05-13"));
+                TestAccount.CustomVersioningScheme, TestAccount.UserId, TestAccount.Project.CreatedAt,
+                DateTime.Parse("2021-05-13"));
             _projectDaoStub.Projects.Add(project);
             _outputPortMock.Setup(m => m.ProjectAlreadyClosed(It.IsAny<Guid>()));
             var interactor = CreateInteractor();

@@ -1,19 +1,15 @@
 ﻿using System;
-using System.Linq;
 using System.Threading.Tasks;
 using ChangeTracker.Api.Authorization;
 using ChangeTracker.Api.DTOs;
 using ChangeTracker.Api.DTOs.v1.Project;
 using ChangeTracker.Api.Extensions;
 using ChangeTracker.Api.Presenters.v1.Project;
-using ChangeTracker.Application.UseCases;
 using ChangeTracker.Application.UseCases.Commands.AddProject;
 using ChangeTracker.Application.UseCases.Commands.CloseProject;
 using ChangeTracker.Application.UseCases.Queries.GetProjects;
 using ChangeTracker.Domain;
-using CSharpFunctionalExtensions;
 using Microsoft.AspNetCore.Mvc;
-using ProjectRequestModel = ChangeTracker.Application.UseCases.Commands.AddProject.ProjectRequestModel;
 
 namespace ChangeTracker.Api.Controllers.v1
 {

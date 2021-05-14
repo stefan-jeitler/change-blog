@@ -27,7 +27,8 @@ namespace ChangeTracker.DataAccess.Postgres
 
             if (AppSchemaVersion != dbSchemaVersion)
             {
-                _logger.LogWarning("Schema version mismatch: App {AppSchemaVersion}; Database {dbSchemaVersion}", AppSchemaVersion, dbSchemaVersion);
+                _logger.LogWarning("Schema version mismatch: App {AppSchemaVersion}; Database {dbSchemaVersion}",
+                    AppSchemaVersion, dbSchemaVersion);
             }
         }
     }

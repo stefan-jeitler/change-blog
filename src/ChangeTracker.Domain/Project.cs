@@ -6,7 +6,8 @@ namespace ChangeTracker.Domain
 {
     public class Project
     {
-        public Project(Guid accountId, Name name, VersioningScheme versioningScheme, Guid createdByUser, DateTime createdAt)
+        public Project(Guid accountId, Name name, VersioningScheme versioningScheme, Guid createdByUser,
+            DateTime createdAt)
             : this(Guid.NewGuid(), accountId, name, versioningScheme, createdByUser, createdAt, null)
         {
         }
@@ -21,7 +22,8 @@ namespace ChangeTracker.Domain
         {
         }
 
-        public Project(Guid id, Guid accountId, Name name, VersioningScheme versioningScheme, Guid createdByUser, DateTime createdAt,
+        public Project(Guid id, Guid accountId, Name name, VersioningScheme versioningScheme, Guid createdByUser,
+            DateTime createdAt,
             DateTime? closedAt)
         {
             if (id == Guid.Empty)

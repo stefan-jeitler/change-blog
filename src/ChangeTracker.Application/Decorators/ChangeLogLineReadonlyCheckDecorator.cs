@@ -21,7 +21,8 @@ namespace ChangeTracker.Application.Decorators
     /// </summary>
     public class ChangeLogLineReadonlyCheckDecorator : IChangeLogCommandsDao
     {
-        private const string LineDeletedMessage = "The requested change log line has been deleted. ChangeLogLineId {0}.";
+        private const string LineDeletedMessage =
+            "The requested change log line has been deleted. ChangeLogLineId {0}.";
 
         private const string VersionDeletedMessage = "The related version has been deleted. VersionId {0}.";
 

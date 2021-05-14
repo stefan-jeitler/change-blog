@@ -75,7 +75,7 @@ namespace ChangeTracker.Application.Tests.UseCaseTests.Commands.AssignPendingLin
             // arrange
             _projectDaoStub.Projects.Add(new Project(TestAccount.Id,
                 Name.Parse("Test Project"),
-                TestAccount.CustomVersioningScheme, 
+                TestAccount.CustomVersioningScheme,
                 TestAccount.UserId,
                 TestAccount.CreationDate));
 
@@ -101,7 +101,7 @@ namespace ChangeTracker.Application.Tests.UseCaseTests.Commands.AssignPendingLin
             // arrange
             _projectDaoStub.Projects.Add(new Project(TestAccount.Id,
                 Name.Parse("Test Project"),
-                TestAccount.CustomVersioningScheme, 
+                TestAccount.CustomVersioningScheme,
                 TestAccount.UserId,
                 TestAccount.CreationDate));
 
@@ -130,7 +130,7 @@ namespace ChangeTracker.Application.Tests.UseCaseTests.Commands.AssignPendingLin
             // arrange
             _projectDaoStub.Projects.Add(new Project(TestAccount.Id,
                 Name.Parse("Test Project"),
-                TestAccount.CustomVersioningScheme, 
+                TestAccount.CustomVersioningScheme,
                 TestAccount.UserId,
                 TestAccount.CreationDate));
 

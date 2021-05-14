@@ -1,5 +1,4 @@
 ﻿using System;
-using ChangeTracker.Application.UseCases;
 using ChangeTracker.Domain;
 
 namespace ChangeTracker.Api.Authorization

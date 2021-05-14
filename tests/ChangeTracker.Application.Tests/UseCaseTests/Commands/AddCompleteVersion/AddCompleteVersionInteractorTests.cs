@@ -99,7 +99,7 @@ namespace ChangeTracker.Application.Tests.UseCaseTests.Commands.AddCompleteVersi
             _projectDaoStub.Projects.Add(new Project(TestAccount.Project.Id,
                 TestAccount.Id,
                 Name.Parse("Test project"),
-                TestAccount.CustomVersioningScheme, 
+                TestAccount.CustomVersioningScheme,
                 TestAccount.UserId,
                 DateTime.Parse("2021-05-13"),
                 DateTime.Parse("2021-05-13")));

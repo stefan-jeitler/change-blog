@@ -1,5 +1,4 @@
 ﻿using System;
-using ChangeTracker.Application.Tests.TestDoubles;
 using ChangeTracker.Application.UseCases.Commands.AddProject;
 using FluentAssertions;
 using Xunit;

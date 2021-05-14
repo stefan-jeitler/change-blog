@@ -7,8 +7,8 @@ namespace ChangeTracker.Domain.Tests
 {
     public class UserTests
     {
-        private DateTime _testDeletionDate;
         private DateTime _testCreationDate;
+        private DateTime _testDeletionDate;
         private Email _testEmail;
         private Name _testFirstName;
         private Name _testLastName;

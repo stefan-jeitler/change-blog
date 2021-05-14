@@ -1,8 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using ChangeTracker.Application.UseCases.Queries.GetRoles;
 
 namespace ChangeTracker.Api.DTOs
@@ -15,10 +12,10 @@ namespace ChangeTracker.Api.DTOs
 
         public static RoleDto FromResponseModel(RoleResponseModel m, bool includePermission)
         {
-            var response =  new RoleDto
+            var response = new RoleDto
             {
                 Name = m.Name,
-                Description = m.Description,
+                Description = m.Description
             };
 
             if (includePermission)

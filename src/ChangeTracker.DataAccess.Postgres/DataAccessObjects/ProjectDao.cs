@@ -109,7 +109,7 @@ namespace ChangeTracker.DataAccess.Postgres.DataAccessObjects
         {
             if (!project.ClosedAt.HasValue)
                 throw new Exception("The given project has no closed date.");
-            
+
             const string closeProjectSql = "UPDATE project SET closed_at = @closedAt WHERE id = @projectId";
 
             await _dbAccessor.DbConnection.ExecuteScalarAsync(closeProjectSql, new

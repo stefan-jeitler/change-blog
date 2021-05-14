@@ -83,7 +83,8 @@ namespace ChangeTracker.Application.Tests.UseCaseTests.Commands.AddVersion
         {
             // arrange
             _projectDaoStub.Projects.Add(new Project(TestAccount.Project.Id, TestAccount.Id, TestAccount.Project.Name,
-                TestAccount.CustomVersioningScheme, TestAccount.UserId, DateTime.Parse("2021-04-04"), DateTime.Parse("2021-05-13")));
+                TestAccount.CustomVersioningScheme, TestAccount.UserId, DateTime.Parse("2021-04-04"),
+                DateTime.Parse("2021-05-13")));
 
             var versionRequestModel = new VersionRequestModel(TestAccount.Project.Id, "12.1");
             var createVersionInteractor = CreateInteractor();

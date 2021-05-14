@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Threading.Tasks;
 using ChangeTracker.Application.DataAccess.Projects;
-using CSharpFunctionalExtensions;
 
 namespace ChangeTracker.Application.UseCases.Commands.CloseProject
 {

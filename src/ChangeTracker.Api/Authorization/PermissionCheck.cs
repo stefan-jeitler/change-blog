@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Linq;
 using System.Threading.Tasks;
-using ChangeTracker.Application.UseCases;
 using ChangeTracker.Domain;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc.Filters;
@@ -34,7 +33,7 @@ namespace ChangeTracker.Api.Authorization
             var id = context.ActionArguments
                 .Values.SingleOrDefault(x => x is T);
 
-            return (T)id;
+            return (T) id;
         }
     }
 }

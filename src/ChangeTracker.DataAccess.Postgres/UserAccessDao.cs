@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Data;
 using System.Threading.Tasks;
-using ChangeTracker.Application.UseCases;
 using ChangeTracker.Domain;
 using Dapper;
 

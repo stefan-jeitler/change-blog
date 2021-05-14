@@ -1,14 +1,10 @@
-﻿using System.IO;
-using System.Linq;
-using System.Text;
+﻿using System.Linq;
 using System.Threading.Tasks;
 using ChangeTracker.Api.DTOs;
 using ChangeTracker.Api.Extensions;
-using ChangeTracker.Application.UseCases;
 using ChangeTracker.Domain;
 using CSharpFunctionalExtensions;
 using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Filters;
 using Microsoft.Extensions.DependencyInjection;

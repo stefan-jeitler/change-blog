@@ -5,7 +5,8 @@ namespace ChangeTracker.Domain
 {
     public class User
     {
-        public User(Guid id, Email email, Name firstName, Name lastName, Text timeZone, DateTime? deletedAt, DateTime createdAt)
+        public User(Guid id, Email email, Name firstName, Name lastName, Text timeZone, DateTime? deletedAt,
+            DateTime createdAt)
         {
             if (id == Guid.Empty)
                 throw new ArgumentException("Id cannot be empty");

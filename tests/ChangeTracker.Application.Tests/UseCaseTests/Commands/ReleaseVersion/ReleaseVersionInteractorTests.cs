@@ -79,7 +79,8 @@ namespace ChangeTracker.Application.Tests.UseCaseTests.Commands.ReleaseVersion
             // arrange
             var version = new ClVersion(TestAccount.Project.Id, ClVersionValue.Parse("1.23"));
             var project = new Project(TestAccount.Project.Id, TestAccount.Id, TestAccount.Project.Name,
-                TestAccount.CustomVersioningScheme, TestAccount.UserId, TestAccount.Project.CreatedAt, DateTime.Parse("2021-05-13"));
+                TestAccount.CustomVersioningScheme, TestAccount.UserId, TestAccount.Project.CreatedAt,
+                DateTime.Parse("2021-05-13"));
             var interactor = CreateInteractor();
             _outputPortMock.Setup(m => m.RelatedProjectClosed(It.IsAny<Guid>()));
             _versionDaoStub.Versions.Add(version);

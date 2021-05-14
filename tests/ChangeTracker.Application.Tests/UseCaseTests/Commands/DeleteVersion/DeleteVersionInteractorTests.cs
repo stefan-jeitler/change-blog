@@ -83,7 +83,8 @@ namespace ChangeTracker.Application.Tests.UseCaseTests.Commands.DeleteVersion
             _outputPortMock.Setup(m => m.ProjectClosed(It.IsAny<Guid>()));
 
             _projectDaoStub.Projects.Add(new Project(TestAccount.Project.Id, TestAccount.Id, Name.Parse("test project"),
-                TestAccount.CustomVersioningScheme, TestAccount.UserId, DateTime.Parse("2021-05-13"), DateTime.Parse("2021-05-13")));
+                TestAccount.CustomVersioningScheme, TestAccount.UserId, DateTime.Parse("2021-05-13"),
+                DateTime.Parse("2021-05-13")));
             _versionDaoStub.Versions.Add(version);
 
             // act

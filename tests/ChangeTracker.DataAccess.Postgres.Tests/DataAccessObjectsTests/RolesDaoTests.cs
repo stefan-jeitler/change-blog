@@ -1,7 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
 using ChangeTracker.DataAccess.Postgres.DataAccessObjects;
 using FluentAssertions;
@@ -12,12 +9,16 @@ namespace ChangeTracker.DataAccess.Postgres.Tests.DataAccessObjectsTests
 {
     public class RolesDaoTests : IDisposable
     {
-
         private readonly LazyDbConnection _lazyDbConnection;
 
         public RolesDaoTests()
         {
             _lazyDbConnection = new LazyDbConnection(() => new NpgsqlConnection(Configuration.ConnectionString));
+        }
+
+        public void Dispose()
+        {
+            _lazyDbConnection?.Dispose();
         }
 
         [Fact]
@@ -29,11 +30,6 @@ namespace ChangeTracker.DataAccess.Postgres.Tests.DataAccessObjectsTests
             var roles = await rolesDao.GetRolesAsync();
 
             roles.Should().NotBeEmpty();
-        }
-
-        public void Dispose()
-        {
-            _lazyDbConnection?.Dispose();
         }
     }
 }

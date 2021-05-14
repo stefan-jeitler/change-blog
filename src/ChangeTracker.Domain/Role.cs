@@ -1,9 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Collections.Immutable;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using ChangeTracker.Domain.Common;
 
 namespace ChangeTracker.Domain
@@ -27,13 +24,13 @@ namespace ChangeTracker.Domain
             Id = id;
             Name = name ?? throw new ArgumentNullException(nameof(name));
             Description = description ?? throw new ArgumentNullException(nameof(description));
-            Permissions = new List<Name>(0){permission}.ToImmutableList();
+            Permissions = new List<Name>(0) {permission}.ToImmutableList();
             CreatedAt = createdAt;
         }
 
 
         public Guid Id { get; }
-        public Name Name { get;  }
+        public Name Name { get; }
         public Text Description { get; }
         public IImmutableList<Name> Permissions { get; set; }
         public DateTime CreatedAt { get; }

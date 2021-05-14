@@ -51,8 +51,8 @@ stages:
             -p:MergeWith=$(Agent.TempDirectory)/TestResults/coverage.json
             --logger trx --no-build -nologo
           publishTestResults: true
-          env: 
-            ConnectionStrings__ChangeTrackerDb: $(ConnectionStringChangeTrackerDb)
+        env: 
+          ConnectionStrings__ChangeTrackerDb: $(ConnectionStringChangeTrackerDb)
 
       - task: PublishCodeCoverageResults@1
         displayName: 'Publish code coverage'

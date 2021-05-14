@@ -20,10 +20,8 @@ namespace ChangeTracker.Application.DataAccess.Projects
         /// <param name="count">Loads max count projects</param>
         /// <param name="lastProjectId"></param>
         /// <returns>List of projects ordered by name</returns>
-        Task<IList<Project>> GetAccountProjectsAsync(Guid accountId, ushort count, Guid? lastProjectId = null);
-
-        Task<IList<Project>> GetUserProjects(Guid userId, ushort count, Guid? lastProjectId = null);
-
+        Task<IList<Project>> GetProjectsAsync(Guid accountId, ushort count, Guid? lastProjectId = null);
+        
         Task<Result<Project, Conflict>> AddProjectAsync(Project newProject);
         Task CloseProjectAsync(Project project);
     }

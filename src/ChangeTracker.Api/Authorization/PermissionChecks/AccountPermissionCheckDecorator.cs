@@ -3,7 +3,7 @@ using System.IO;
 using System.Text;
 using System.Text.Json;
 using System.Threading.Tasks;
-using ChangeTracker.Api.Authorization.RequestBodIdentifiers;
+using ChangeTracker.Api.Authorization.RequestBodyIdentifiers;
 using ChangeTracker.Application.UseCases;
 using ChangeTracker.DataAccess.Postgres;
 using Microsoft.AspNetCore.Http;
@@ -24,7 +24,7 @@ namespace ChangeTracker.Api.Authorization.PermissionChecks
 
         public override async Task<bool> HasPermission(ActionExecutingContext context, Guid userId, Permission permission)
         {
-            var accountIdInRoute = TryFindIdInRouteValues(context.HttpContext, "accountId");
+            var accountIdInRoute = TryFindIdInHeader(context.HttpContext, "accountId");
             if (accountIdInRoute.HasValue)
             {
                 return await _userAccessDao.HasAccountPermissionAsync(userId, accountIdInRoute.Value, permission);

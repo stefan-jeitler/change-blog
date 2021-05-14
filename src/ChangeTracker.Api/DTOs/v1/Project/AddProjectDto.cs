@@ -4,7 +4,7 @@ using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using ChangeTracker.Api.Authorization.RequestBodIdentifiers;
+using ChangeTracker.Api.Authorization.RequestBodyIdentifiers;
 
 namespace ChangeTracker.Api.DTOs.v1.Project
 {

@@ -3,11 +3,14 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using CSharpFunctionalExtensions;
 
 namespace ChangeTracker.Application.UseCases.Queries.GetProjects
 {
     public interface IGetProjects
     {
-        Task<IEnumerable<ProjectsQueryResponseModel>> ExecuteAsync(ProjectsQueryRequestModel queryRequestModel);
+        Task<IEnumerable<ProjectResponseModel>> ExecuteAsync(ProjectsQueryRequestModel queryRequestModel);
+
+        Task<Maybe<ProjectResponseModel>> ExecuteAsync(Guid userId, Guid projectId);
     }
 }

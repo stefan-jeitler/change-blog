@@ -22,7 +22,7 @@ let private addPermissionAddProjectSql = """
 
 let private addPermissionViewChangeLogLinesSql = """
 		INSERT INTO role_permission
-		SELECT id, 'ViewChangeLogLines', now() FROM role
+		SELECT id, 'ViewChangeLogLines', now() FROM role where name <> 'DefaultUser'
 		ON CONFLICT (role_id, permission) DO NOTHING
 	"""
 

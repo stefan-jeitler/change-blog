@@ -11,12 +11,18 @@ namespace ChangeTracker.Api.Authorization
     {
         public abstract Task<bool> HasPermission(ActionExecutingContext httpContext, Guid userId, Permission permission);
 
-        protected Guid? TryFindIdInRouteValues(HttpContext httpContext, string routeValueKey)
+        protected Guid? TryFindIdInHeader(HttpContext httpContext, string key)
         {
-            if (httpContext.Request.RouteValues.TryGetValue(routeValueKey, out var routeValue) &&
-                Guid.TryParse(routeValue?.ToString(), out var id))
+            if (httpContext.Request.RouteValues.TryGetValue(key, out var routeValue) &&
+                Guid.TryParse(routeValue?.ToString(), out var idInRoute))
             {
-                return id;
+                return idInRoute;
+            }
+
+            if (httpContext.Request.Query.TryGetValue(key, out var queryParameter) &&
+                Guid.TryParse(queryParameter, out var idInQueryString))
+            {
+                return idInQueryString;
             }
 
             return null;

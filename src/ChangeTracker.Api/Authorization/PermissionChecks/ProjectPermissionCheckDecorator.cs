@@ -20,7 +20,7 @@ namespace ChangeTracker.Api.Authorization.PermissionChecks
 
         public override async Task<bool> HasPermission(ActionExecutingContext context, Guid userId, Permission permission)
         {
-            var projectId = TryFindIdInRouteValues(context.HttpContext, "projectId");
+            var projectId = TryFindIdInHeader(context.HttpContext, "projectId");
             if (projectId.HasValue)
             {
                 return await _userAccessDao.HasProjectPermissionAsync(userId, projectId.Value, permission);

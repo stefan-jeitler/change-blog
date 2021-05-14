@@ -6,6 +6,7 @@ using ChangeTracker.Application.DataAccess.Projects;
 using ChangeTracker.Application.DataAccess.Users;
 using ChangeTracker.Application.Extensions;
 using ChangeTracker.Domain;
+using CSharpFunctionalExtensions;
 
 namespace ChangeTracker.Application.UseCases.Queries.GetProjects
 {
@@ -20,15 +21,12 @@ namespace ChangeTracker.Application.UseCases.Queries.GetProjects
             _userDao = userDao;
         }
 
-        public async Task<IEnumerable<ProjectsQueryResponseModel>> ExecuteAsync(
+        public async Task<IEnumerable<ProjectResponseModel>> ExecuteAsync(
             ProjectsQueryRequestModel queryRequestModel)
         {
-            var projects = queryRequestModel.AccountId.HasValue
-                ? await _projectDao.GetAccountProjectsAsync(queryRequestModel.AccountId.Value,
-                    queryRequestModel.Count,
-                    queryRequestModel.LastProjectId)
-                : await _projectDao.GetUserProjects(queryRequestModel.UserId, queryRequestModel.Count,
-                    queryRequestModel.LastProjectId);
+            var projects = await _projectDao.GetProjectsAsync(queryRequestModel.AccountId,
+                queryRequestModel.Count,
+                queryRequestModel.LastProjectId);
 
             var currentUser = await _userDao.GetUserAsync(queryRequestModel.UserId);
 
@@ -44,15 +42,31 @@ namespace ChangeTracker.Application.UseCases.Queries.GetProjects
                 .Select(x => CreateResponse(x, userById, currentUser.TimeZone));
         }
 
-        private static ProjectsQueryResponseModel CreateResponse(Project project,
+        public async Task<Maybe<ProjectResponseModel>> ExecuteAsync(Guid userId, Guid projectId)
+        {
+            var project = await _projectDao.FindProjectAsync(projectId);
+            var currentUser = await _userDao.GetUserAsync(userId);
+
+            return await project
+                .Map(async p => new {User = await _userDao.GetUserAsync(p.CreatedByUser), Project = p})
+                .Map(x => CreateResponse(x.Project, x.User, currentUser.TimeZone));
+        }
+
+        private static ProjectResponseModel CreateResponse(Project project,
             IReadOnlyDictionary<Guid, User> userById,
             string timeZone)
         {
             var user = userById[project.CreatedByUser];
+            return CreateResponse(project, user, timeZone);
+        }
+
+        private static ProjectResponseModel CreateResponse(Project project, User user,
+            string timeZone)
+        {
             var userName = user.Email;
             var createdAtLocal = project.CreatedAt.ToLocal(timeZone);
 
-            return new ProjectsQueryResponseModel(project.Id, project.AccountId, project.Name.Value,
+            return new ProjectResponseModel(project.Id, project.AccountId, project.Name.Value,
                 project.VersioningScheme.Id,
                 project.VersioningScheme.Name, userName, createdAtLocal);
         }

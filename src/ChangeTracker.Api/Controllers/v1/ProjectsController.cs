@@ -10,6 +10,7 @@ using ChangeTracker.Application.UseCases;
 using ChangeTracker.Application.UseCases.Commands.AddProject;
 using ChangeTracker.Application.UseCases.Commands.CloseProject;
 using ChangeTracker.Application.UseCases.Queries.GetProjects;
+using CSharpFunctionalExtensions;
 using Microsoft.AspNetCore.Mvc;
 using ProjectRequestModel = ChangeTracker.Application.UseCases.Commands.AddProject.ProjectRequestModel;
 
@@ -30,26 +31,23 @@ namespace ChangeTracker.Api.Controllers.v1
             _getProjects = getProjects;
         }
 
-        [HttpGet]
+        [HttpGet("{projectId:Guid}")]
         [NeedsPermission(Permission.ViewProjects)]
-        public async Task<ActionResult> GetProjectsAsync(Guid? accountId = null,
-            ushort count = ProjectsQueryRequestModel.MaxChunkCount, 
-            Guid? lastProjectId = null)
+        public async Task<ActionResult> GetProjectAsync(Guid projectId)
         {
-            var requestModel = new ProjectsQueryRequestModel(HttpContext.GetUserId(),
-                accountId,
-                lastProjectId,
-                count
-            );
+            var project = await _getProjects.ExecuteAsync(HttpContext.GetUserId(), projectId);
 
-            var projects = await _getProjects.ExecuteAsync(requestModel);
+            if (project.HasNoValue)
+            {
+                return NotFound(DefaultResponse.Create("Project not found"));
+            }
 
-            return Ok(projects.Select(ProjectDto.FromResponseModel));
+            return Ok(ProjectDto.FromResponseModel(project.Value));
         }
 
         [HttpPost]
         [NeedsPermission(Permission.AddProject)]
-        public async Task<ActionResult> AddProjectAsync([FromBody] AddProjectDto addProjectDto)
+        public async Task<ActionResult> CreateProjectAsync([FromBody] AddProjectDto addProjectDto)
         {
             if (addProjectDto.VersioningSchemeId == Guid.Empty)
             {

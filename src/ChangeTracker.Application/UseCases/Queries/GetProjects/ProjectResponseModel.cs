@@ -6,9 +6,9 @@ using System.Threading.Tasks;
 
 namespace ChangeTracker.Application.UseCases.Queries.GetProjects
 {
-    public class ProjectsQueryResponseModel
+    public class ProjectResponseModel
     {
-        public ProjectsQueryResponseModel(Guid id, Guid accountId, string name, Guid versioningSchemeId,
+        public ProjectResponseModel(Guid id, Guid accountId, string name, Guid versioningSchemeId,
             string versioningScheme, string createdByUser, DateTime createdAt)
         {
             Id = id;

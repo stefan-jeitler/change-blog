@@ -17,7 +17,7 @@ namespace ChangeTracker.Api.DTOs.v1.Project
         public string CreatedByUser { get; set; }
         public DateTime CreatedAt { get; set; }
 
-        public static ProjectDto FromResponseModel(ProjectsQueryResponseModel m) =>
+        public static ProjectDto FromResponseModel(ProjectResponseModel m) =>
             new()
             {
                 Id = m.Id,

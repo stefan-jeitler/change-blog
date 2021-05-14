@@ -32,7 +32,7 @@ namespace ChangeTracker.Application.Tests.TestDoubles
             return Projects.Single(x => x.Id == projectId);
         }
 
-        public async Task<IList<Project>> GetAccountProjectsAsync(Guid accountId, ushort count, Guid? lastProjectId = null)
+        public async Task<IList<Project>> GetProjectsAsync(Guid accountId, ushort count, Guid? lastProjectId = null)
         {
             await Task.Yield();
 

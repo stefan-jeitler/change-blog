@@ -62,22 +62,26 @@ namespace ChangeTracker.DataAccess.Postgres
         {
             const string hasProjectPermissionSql = @"
                 SELECT EXISTS(
-                (SELECT NULL
-                FROM project_user pu
-                JOIN ""role"" r ON r.id = pu.role_id
-                JOIN role_permission rp on rp.role_id = r.id
-                WHERE pu.user_id = '8e983811-7d39-4fe2-9373-1c6b0e4eb360'
-                AND pu.project_id = '3034af99-6807-4759-abc8-fde6cca8b1a5'
-                AND rp.permission = 'CloseProject'
-                FETCH FIRST 1 ROW ONLY)
-                UNION ALL
-                (SELECT NULL
-                FROM account_user au
-                JOIN ""role"" r on au.role_id = r.id
-                JOIN role_permission rp on r.id = rp.role_id
-                WHERE au.user_id = '8e983811-7d39-4fe2-9373-1c6b0e4eb360'
-                AND rp.permission = 'CloseProject'
-                FETCH FIRST 1 ROW ONLY ))";
+                   (SELECT NULL
+                    FROM project_user pu
+                             JOIN ""role"" r
+                                  ON r.id = pu.role_id
+                             JOIN role_permission rp on rp.role_id = r.id
+                    WHERE pu.user_id = @userId
+                      AND pu.project_id = @projectId
+                      AND rp.permission = @permission
+                        FETCH FIRST 1 ROW ONLY)
+                   UNION ALL
+                   (SELECT NULL
+                    FROM project p
+                             JOIN account a on p.account_id = a.id
+                             JOIN account_user au on a.id = au.account_id
+                             JOIN ""role"" r on au.role_id = r.id
+                             JOIN role_permission rp on r.id = rp.role_id
+                    WHERE au.user_id = @userId
+                      AND p.id = @projectId
+                      AND rp.permission = @permission
+                        FETCH FIRST 1 ROW ONLY))";
 
             var dbConnection = _acquireDbConnection();
 

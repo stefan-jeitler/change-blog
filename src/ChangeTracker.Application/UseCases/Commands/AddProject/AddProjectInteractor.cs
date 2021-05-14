@@ -85,7 +85,7 @@ namespace ChangeTracker.Application.UseCases.Commands.AddProject
             var customSchemeId = projectRequestModel.VersioningSchemeId;
             var versioningSchemeId = versioningSchemeService.FindSchemeIdForProject(customSchemeId);
 
-            var scheme = await _versioningSchemeDao.FindAsync(versioningSchemeId);
+            var scheme = await _versioningSchemeDao.FindSchemeAsync(versioningSchemeId);
 
             if (scheme.HasNoValue)
             {

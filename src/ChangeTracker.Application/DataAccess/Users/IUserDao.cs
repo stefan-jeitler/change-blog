@@ -9,5 +9,6 @@ namespace ChangeTracker.Application.DataAccess.Users
     {
         Task<User> GetUserAsync(Guid userId);
         Task<IList<User>> GetUsersAsync(IList<Guid> userIds);
+        Task<IList<User>> GetUsersAsync(Guid accountId, ushort count, Guid? lastUserId);
     }
 }

@@ -6,6 +6,8 @@
         AddProject,
         CloseProject,
         ViewProjects,
-        ViewRoles
+        ViewRoles,
+        ViewAccountInfo,
+        ViewUsers
     }
 }

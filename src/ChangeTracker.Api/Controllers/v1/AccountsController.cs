@@ -2,9 +2,12 @@
 using System.Linq;
 using System.Threading.Tasks;
 using ChangeTracker.Api.Authorization;
+using ChangeTracker.Api.DTOs.v1.Account;
 using ChangeTracker.Api.DTOs.v1.Project;
 using ChangeTracker.Api.Extensions;
+using ChangeTracker.Application.UseCases.Queries.GetAccounts;
 using ChangeTracker.Application.UseCases.Queries.GetProjects;
+using ChangeTracker.Application.UseCases.Queries.GetUsers;
 using ChangeTracker.Domain;
 using Microsoft.AspNetCore.Mvc;
 
@@ -14,16 +17,57 @@ namespace ChangeTracker.Api.Controllers.v1
     [Route("api/v1/accounts")]
     public class AccountsController : ControllerBase
     {
+        private readonly IGetAccounts _getAccounts;
         private readonly IGetProjects _getProjects;
+        private readonly IGetUsers _getUsers;
 
-        public AccountsController(IGetProjects getProjects)
+        public AccountsController(IGetProjects getProjects, IGetAccounts getAccounts, IGetUsers getUsers)
         {
             _getProjects = getProjects;
+            _getAccounts = getAccounts;
+            _getUsers = getUsers;
+        }
+
+        [HttpGet]
+        [NeedsPermission(Permission.ViewAccountInfo)]
+        public async Task<ActionResult> GetAccountsAsync()
+        {
+            var userId = HttpContext.GetUserId();
+            var accounts = await _getAccounts.ExecuteAsync(userId);
+
+            return Ok(accounts.Select(AccountDto.FromResponseModel));
+        }
+
+        [HttpGet("{accountId:Guid}")]
+        [NeedsPermission(Permission.ViewAccountInfo)]
+        public async Task<ActionResult> GetAccountAsync(Guid accountId)
+        {
+            var userId = HttpContext.GetUserId();
+            var account = await _getAccounts.ExecuteAsync(userId, accountId);
+
+            return Ok(AccountDto.FromResponseModel(account));
+        }
+
+        [HttpGet("{accountId:Guid}/users")]
+        [NeedsPermission(Permission.ViewUsers)]
+        public async Task<ActionResult> GetUsersAsync(Guid accountId,
+            ushort count = UsersRequestModel.MaxChunkCount,
+            Guid? lastUserId = null)
+        {
+            var requestModel = new UsersRequestModel(HttpContext.GetUserId(),
+                accountId,
+                lastUserId,
+                count
+            );
+
+            var projects = await _getUsers.ExecuteAsync(requestModel);
+
+            return Ok(projects.Select(UserDto.FromResponseModel));
         }
 
         [HttpGet("{accountId:Guid}/projects")]
         [NeedsPermission(Permission.ViewProjects)]
-        public async Task<ActionResult> GetProjectAsync(Guid accountId,
+        public async Task<ActionResult> GetProjectsAsync(Guid accountId,
             ushort count = ProjectsQueryRequestModel.MaxChunkCount,
             Guid? lastProjectId = null)
         {

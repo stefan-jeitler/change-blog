@@ -56,7 +56,7 @@ namespace ChangeTracker.Api.Controllers
 
         [HttpGet("roles")]
         [NeedsPermission(Permission.ViewRoles)]
-        public async Task<ActionResult> GetRoles([FromServices] IGetRoles getRoles,
+        public async Task<ActionResult> GetRolesAsync([FromServices] IGetRoles getRoles,
             string role = null,
             bool includePermissions = false)
         {

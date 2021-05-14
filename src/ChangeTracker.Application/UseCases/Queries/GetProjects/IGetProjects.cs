@@ -7,7 +7,7 @@ namespace ChangeTracker.Application.UseCases.Queries.GetProjects
 {
     public interface IGetProjects
     {
-        Task<IEnumerable<ProjectResponseModel>> ExecuteAsync(ProjectsQueryRequestModel queryRequestModel);
+        Task<IEnumerable<ProjectResponseModel>> ExecuteAsync(ProjectsQueryRequestModel requestModel);
 
         Task<Maybe<ProjectResponseModel>> ExecuteAsync(Guid userId, Guid projectId);
     }

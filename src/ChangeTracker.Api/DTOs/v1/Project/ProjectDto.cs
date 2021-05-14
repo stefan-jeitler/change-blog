@@ -12,6 +12,7 @@ namespace ChangeTracker.Api.DTOs.v1.Project
         public string VersioningScheme { get; set; }
         public string CreatedByUser { get; set; }
         public DateTime CreatedAt { get; set; }
+        public bool IsClosed { get; set; }
 
         public static ProjectDto FromResponseModel(ProjectResponseModel m) =>
             new()
@@ -22,7 +23,8 @@ namespace ChangeTracker.Api.DTOs.v1.Project
                 VersioningSchemeId = m.VersioningSchemeId,
                 VersioningScheme = m.VersioningScheme,
                 CreatedByUser = m.CreatedByUser,
-                CreatedAt = m.CreatedAt
+                CreatedAt = m.CreatedAt,
+                IsClosed = m.ClosedAt.HasValue
             };
     }
 }

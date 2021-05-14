@@ -64,13 +64,14 @@ namespace ChangeTracker.DataAccess.Postgres.DataAccessObjects
             return project.Value;
         }
 
-        public async Task<IList<Project>> GetProjectsAsync(Guid accountId, ushort count, Guid? lastProjectId = null)
+        public async Task<IList<Project>> GetProjectsAsync(Guid accountId, Guid userId, ushort count, Guid? lastProjectId = null)
         {
             var projects = await _dbAccessor.DbConnection
-                .QueryAsync<Project>(GetProjectsForAccountSql(count), new
+                .QueryAsync<Project>(GetProjectsForAccountSql(count, lastProjectId.HasValue), new
                 {
                     accountId,
-                    lastProjectId = lastProjectId ?? Guid.Empty
+                    userId,
+                    lastProjectId
                 });
 
             return projects.ToList();

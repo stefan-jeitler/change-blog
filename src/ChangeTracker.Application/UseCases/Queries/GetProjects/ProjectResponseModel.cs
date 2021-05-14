@@ -5,7 +5,7 @@ namespace ChangeTracker.Application.UseCases.Queries.GetProjects
     public class ProjectResponseModel
     {
         public ProjectResponseModel(Guid id, Guid accountId, string name, Guid versioningSchemeId,
-            string versioningScheme, string createdByUser, DateTime createdAt)
+            string versioningScheme, string createdByUser, DateTime createdAt, DateTime? closedAt)
         {
             Id = id;
             AccountId = accountId;
@@ -14,6 +14,7 @@ namespace ChangeTracker.Application.UseCases.Queries.GetProjects
             VersioningScheme = versioningScheme ?? throw new ArgumentNullException(nameof(versioningScheme));
             CreatedByUser = createdByUser ?? throw new ArgumentNullException(nameof(createdByUser));
             CreatedAt = createdAt;
+            ClosedAt = closedAt;
         }
 
         public Guid Id { get; }
@@ -23,5 +24,6 @@ namespace ChangeTracker.Application.UseCases.Queries.GetProjects
         public string VersioningScheme { get; }
         public string CreatedByUser { get; }
         public DateTime CreatedAt { get; }
+        public DateTime? ClosedAt { get; }
     }
 }

@@ -37,7 +37,7 @@ namespace ChangeTracker.Application.Tests.UseCaseTests.Commands.AddProject
             // arrange
             var account = new Account(TestAccount.Id, TestAccount.Name, null, TestAccount.CreationDate, null);
             _accountDaoStub.Account = account;
-            _versioningSchemeDaoStub.VersioningScheme = TestAccount.CustomVersioningScheme;
+            _versioningSchemeDaoStub.VersioningSchemes.Add(TestAccount.CustomVersioningScheme);
             var projectRequestModel = new ProjectRequestModel(TestAccount.Id, TestAccount.Name.Value,
                 TestAccount.CustomVersioningScheme.Id, TestAccount.UserId);
             var createProjectInteractor = CreateInteractor();
@@ -166,7 +166,7 @@ namespace ChangeTracker.Application.Tests.UseCaseTests.Commands.AddProject
             _accountDaoStub.Account =
                 new Account(TestAccount.Id, TestAccount.Name, null, TestAccount.CreationDate, null);
 
-            _versioningSchemeDaoStub.VersioningScheme = TestAccount.CustomVersioningScheme;
+            _versioningSchemeDaoStub.VersioningSchemes.Add(TestAccount.CustomVersioningScheme);
             _projectDaoStub.ProduceConflict = true;
 
             var projectRequestModel = new ProjectRequestModel(TestAccount.Id, TestAccount.Name.Value,

@@ -22,13 +22,14 @@ namespace ChangeTracker.Application.UseCases.Queries.GetProjects
         }
 
         public async Task<IEnumerable<ProjectResponseModel>> ExecuteAsync(
-            ProjectsQueryRequestModel queryRequestModel)
+            ProjectsQueryRequestModel requestModel)
         {
-            var projects = await _projectDao.GetProjectsAsync(queryRequestModel.AccountId,
-                queryRequestModel.Count,
-                queryRequestModel.LastProjectId);
+            var projects = await _projectDao.GetProjectsAsync(requestModel.AccountId,
+                requestModel.UserId,
+                requestModel.Count,
+                requestModel.LastProjectId);
 
-            var currentUser = await _userDao.GetUserAsync(queryRequestModel.UserId);
+            var currentUser = await _userDao.GetUserAsync(requestModel.UserId);
 
             var userIds = projects
                 .Select(x => x.CreatedByUser)
@@ -66,9 +67,14 @@ namespace ChangeTracker.Application.UseCases.Queries.GetProjects
             var userName = user.Email;
             var createdAtLocal = project.CreatedAt.ToLocal(timeZone);
 
-            return new ProjectResponseModel(project.Id, project.AccountId, project.Name.Value,
+            return new ProjectResponseModel(project.Id, 
+                project.AccountId,
+                project.Name.Value,
                 project.VersioningScheme.Id,
-                project.VersioningScheme.Name, userName, createdAtLocal);
+                project.VersioningScheme.Name, 
+                userName,
+                createdAtLocal,
+                project.ClosedAt);
         }
     }
 }

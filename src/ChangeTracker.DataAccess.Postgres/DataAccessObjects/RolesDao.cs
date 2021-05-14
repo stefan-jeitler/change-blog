@@ -25,7 +25,7 @@ namespace ChangeTracker.DataAccess.Postgres.DataAccessObjects
                        rp.permission,
                        r.created_at AS createdAt
                 from role r
-                join role_permission rp on r.id = rp.role_id
+                         left join role_permission rp on r.id = rp.role_id
                 order by r.name";
 
             var roles = await _dbAccessor.DbConnection.QueryAsync<Role>(getRolePermissionsSql);
@@ -34,7 +34,12 @@ namespace ChangeTracker.DataAccess.Postgres.DataAccessObjects
                 .Select(x =>
                 {
                     var f = x.First();
-                    return new Role(x.Key, f.Name, f.Description, f.CreatedAt, x.SelectMany(p => p.Permissions));
+                    return new Role(x.Key,
+                        f.Name,
+                        f.Description,
+                        f.CreatedAt,
+                        x.SelectMany(p => p.Permissions)
+                            .Where(p => p != null));
                 })
                 .ToList();
         }

@@ -10,6 +10,7 @@ using ChangeTracker.Application.UseCases;
 using ChangeTracker.Application.UseCases.Commands.AddProject;
 using ChangeTracker.Application.UseCases.Commands.CloseProject;
 using ChangeTracker.Application.UseCases.Queries.GetProjects;
+using ChangeTracker.Domain;
 using CSharpFunctionalExtensions;
 using Microsoft.AspNetCore.Mvc;
 using ProjectRequestModel = ChangeTracker.Application.UseCases.Commands.AddProject.ProjectRequestModel;

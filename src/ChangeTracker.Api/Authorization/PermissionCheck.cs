@@ -2,6 +2,7 @@
 using System.Linq;
 using System.Threading.Tasks;
 using ChangeTracker.Application.UseCases;
+using ChangeTracker.Domain;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc.Filters;
 
@@ -9,7 +10,7 @@ namespace ChangeTracker.Api.Authorization
 {
     public abstract class PermissionCheck
     {
-        public abstract Task<bool> HasPermission(ActionExecutingContext httpContext, Guid userId, Permission permission);
+        public abstract Task<bool> HasPermission(ActionExecutingContext context, Guid userId, Permission permission);
 
         protected Guid? TryFindIdInHeader(HttpContext httpContext, string key)
         {

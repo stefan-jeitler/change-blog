@@ -1,6 +1,12 @@
 ﻿using System;
+using System.Linq;
 using System.Reflection;
+using System.Threading.Tasks;
+using ChangeTracker.Api.Authorization;
 using ChangeTracker.Api.DTOs;
+using ChangeTracker.Application.UseCases;
+using ChangeTracker.Application.UseCases.Queries.GetRoles;
+using ChangeTracker.Domain;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Hosting;
@@ -11,7 +17,6 @@ namespace ChangeTracker.Api.Controllers
 {
     [ApiController]
     [Route("api")]
-    [AllowAnonymous]
     public class HomeController : ControllerBase
     {
         private static readonly Lazy<string> AssemblyVersion =
@@ -36,6 +41,7 @@ namespace ChangeTracker.Api.Controllers
         }
 
         [HttpGet("info")]
+        [AllowAnonymous]
         public ActionResult Info()
         {
             var apiInfo = new ApiInfo(AssemblyName.Value,
@@ -46,6 +52,18 @@ namespace ChangeTracker.Api.Controllers
         }
 
         [HttpGet("changeLogs")]
+        [AllowAnonymous]
         public ActionResult ChangeLogs() => Ok("coming soon ...");
+
+        [HttpGet("roles")]
+        [NeedsPermission(Permission.ViewRoles)]
+        public async Task<ActionResult> GetRoles([FromServices] IGetRoles getRoles, 
+            string role = null,
+            bool includePermissions = false)
+        {
+            var roles = await getRoles.ExecuteAsync(role);
+
+            return Ok(roles.Select(x => RoleDto.FromResponseModel(x, includePermissions)));
+        }
     }
 }

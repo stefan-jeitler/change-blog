@@ -2,6 +2,7 @@
 using System.Threading.Tasks;
 using ChangeTracker.Application.UseCases;
 using ChangeTracker.DataAccess.Postgres;
+using ChangeTracker.Domain;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc.Filters;
 

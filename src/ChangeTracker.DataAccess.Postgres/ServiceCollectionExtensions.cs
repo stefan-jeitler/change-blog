@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Data;
+using System.Runtime.CompilerServices;
 using ChangeTracker.Application.DataAccess;
 using ChangeTracker.Application.DataAccess.Accounts;
 using ChangeTracker.Application.DataAccess.Projects;
@@ -15,19 +16,21 @@ namespace ChangeTracker.DataAccess.Postgres
     public static class ServiceCollectionExtensions
     {
         public static IServiceCollection AddPostgresDataAccess(this IServiceCollection services,
-            string connectionString)
+            string connectionString) =>
+            services
+                .AddDbSession(connectionString)
+                .AddScoped<UserAccessDao>()
+                .AddScoped<SchemaVersion>()
+                .AddDataAccessObjects();
+
+        [ModuleInitializer]
+        public static void RegisterTypeHandler()
         {
             SqlMapper.AddTypeHandler(new NameTypeHandler());
             SqlMapper.AddTypeHandler(new TextTypeHandler());
             SqlMapper.AddTypeHandler(new EmailTypeHandler());
             SqlMapper.AddTypeHandler(new ChangeLogTextTypeHandler());
             SqlMapper.AddTypeHandler(new ClVersionValueTypeHandler());
-
-            return services
-                .AddDbSession(connectionString)
-                .AddScoped<UserAccessDao>()
-                .AddScoped<SchemaVersion>()
-                .AddDataAccessObjects();
         }
 
         private static IServiceCollection AddDbSession(this IServiceCollection services, string connectionString)
@@ -48,6 +51,7 @@ namespace ChangeTracker.DataAccess.Postgres
                 .AddScoped<IAccountDao, AccountDao>()
                 .AddScoped<IProjectDao, ProjectDao>()
                 .AddScoped<IVersioningSchemeDao, VersioningSchemeDao>()
-                .AddScoped<IUserDao, UserDao>();
+                .AddScoped<IUserDao, UserDao>()
+                .AddScoped<IRolesDao, RolesDao>();
     }
 }

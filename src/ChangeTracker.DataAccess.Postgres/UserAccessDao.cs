@@ -2,6 +2,7 @@
 using System.Data;
 using System.Threading.Tasks;
 using ChangeTracker.Application.UseCases;
+using ChangeTracker.Domain;
 using Dapper;
 
 namespace ChangeTracker.DataAccess.Postgres
@@ -135,6 +136,26 @@ namespace ChangeTracker.DataAccess.Postgres
             {
                 userId,
                 changeLogLineId,
+                permission = permission.ToString()
+            });
+        }
+
+        public async Task<bool> HasUserPermissionAsync(Guid userId, Permission permission)
+        {
+            const string hasUserAccountPermissionSql = @"
+                SELECT EXISTS(SELECT null from ""user"" u
+                join account_user au on u.id = au.user_id
+                join role r on au.role_id = r.id
+                join role_permission rp on r.id = rp.role_id
+                where u.id = @userId
+                and rp.permission = @permission
+                fetch first 1 row only)";
+
+            var dbConnection = _acquireDbConnection();
+
+            return await dbConnection.ExecuteScalarAsync<bool>(hasUserAccountPermissionSql, new
+            {
+                userId,
                 permission = permission.ToString()
             });
         }

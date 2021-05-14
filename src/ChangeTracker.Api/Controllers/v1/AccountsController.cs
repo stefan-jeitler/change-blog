@@ -8,6 +8,7 @@ using ChangeTracker.Api.DTOs.v1.Project;
 using ChangeTracker.Api.Extensions;
 using ChangeTracker.Application.UseCases;
 using ChangeTracker.Application.UseCases.Queries.GetProjects;
+using ChangeTracker.Domain;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 

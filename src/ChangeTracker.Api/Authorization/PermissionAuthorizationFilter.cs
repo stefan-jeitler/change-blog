@@ -5,6 +5,7 @@ using System.Threading.Tasks;
 using ChangeTracker.Api.DTOs;
 using ChangeTracker.Api.Extensions;
 using ChangeTracker.Application.UseCases;
+using ChangeTracker.Domain;
 using CSharpFunctionalExtensions;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;

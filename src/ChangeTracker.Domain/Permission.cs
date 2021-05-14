@@ -1,11 +1,11 @@
-﻿namespace ChangeTracker.Application.UseCases
+﻿namespace ChangeTracker.Domain
 {
     public enum Permission
     {
         ViewChangeLogLines,
         AddProject,
         CloseProject,
-        ViewProjects
-
+        ViewProjects,
+        ViewRoles
     }
 }

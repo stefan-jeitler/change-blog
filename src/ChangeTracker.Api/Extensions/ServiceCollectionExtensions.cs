@@ -1,11 +1,7 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using ChangeTracker.Application.UseCases.Commands.AddProject;
+﻿using ChangeTracker.Application.UseCases.Commands.AddProject;
 using ChangeTracker.Application.UseCases.Commands.CloseProject;
 using ChangeTracker.Application.UseCases.Queries.GetProjects;
+using ChangeTracker.Application.UseCases.Queries.GetRoles;
 using Microsoft.Extensions.DependencyInjection;
 
 namespace ChangeTracker.Api.Extensions
@@ -16,6 +12,7 @@ namespace ChangeTracker.Api.Extensions
             services
                 .AddScoped<IAddProject, AddProjectInteractor>()
                 .AddScoped<ICloseProject, CloseProjectInteractor>()
-                .AddScoped<IGetProjects, GetProjectsInteractor>();
+                .AddScoped<IGetProjects, GetProjectsInteractor>()
+                .AddScoped<IGetRoles, GetRolesInteractor>();
     }
 }

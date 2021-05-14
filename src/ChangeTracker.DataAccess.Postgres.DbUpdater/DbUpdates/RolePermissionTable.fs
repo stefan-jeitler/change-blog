@@ -26,6 +26,33 @@ let private addPermissionViewChangeLogLinesSql = """
 		ON CONFLICT (role_id, permission) DO NOTHING
 	"""
 
+let private addSomeViewPermissionsSql =
+    [ """
+      INSERT INTO role_permission
+      SELECT id, 'CloseProject', now() from role where name in ('ProductOwner', 'PlatformManager', 'Developer')
+      ON CONFLICT (role_id, permission) DO NOTHING
+    """
+      """
+      INSERT INTO role_permission
+      SELECT id, 'ViewProjects', now() from role where name in ('Support', 'ScrumMaster', 'ProductOwner', 'ProductManager', 'PlatformManager', 'Developer')
+      ON CONFLICT (role_id, permission) DO NOTHING
+    """
+      """
+      INSERT INTO role_permission
+      SELECT id, 'ViewRoles', now() from role where name in ('ScrumMaster', 'ProductOwner', 'ProductManager', 'PlatformManager', 'Developer')
+      ON CONFLICT (role_id, permission) DO NOTHING
+    """
+      """
+      INSERT INTO role_permission
+      SELECT id, 'ViewAccountInfo', now() from role where name in ('ProductOwner', 'PlatformManager', 'Developer')
+      ON CONFLICT (role_id, permission) DO NOTHING
+    """
+      """
+      INSERT INTO role_permission
+      SELECT id, 'ViewUsers', now() from role where name in ('PlatformManager')
+      ON CONFLICT (role_id, permission) DO NOTHING
+    """ ]
+
 let create (dbConnection: IDbConnection) =
     dbConnection.ExecuteAsync(createRolePermissionSql)
     |> Async.AwaitTask
@@ -40,3 +67,19 @@ let addPermissionViewChangeLogLines (dbConnection: IDbConnection) =
     dbConnection.ExecuteAsync(addPermissionViewChangeLogLinesSql)
     |> Async.AwaitTask
     |> Async.Ignore
+
+let addSomeViewPermissions (dbConnection: IDbConnection) =
+    let rec insertPermissions (permissions: string list) =
+        async {
+            match permissions with
+            | [] -> ()
+            | head :: tail ->
+                do!
+                    dbConnection.ExecuteAsync(head)
+                    |> Async.AwaitTask
+                    |> Async.Ignore
+
+                do! insertPermissions tail
+        }
+
+    insertPermissions addSomeViewPermissionsSql

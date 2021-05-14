@@ -30,4 +30,5 @@ let dbUpdates: DbUpdate list = [
     { Version = 19; Update = ChangeLogLineTable.fixUniqueIndexConstraint}
     { Version = 20; Update = VersioningSchemeTable.addUniquIndex}
     { Version = 21; Update = RolePermissionTable.addPermissionAddProject}
-    { Version = 22; Update = RolePermissionTable.addPermissionViewChangeLogLines}]
+    { Version = 22; Update = RolePermissionTable.addPermissionViewChangeLogLines}
+    { Version = 23; Update = RolePermissionTable.addSomeViewPermissions}]

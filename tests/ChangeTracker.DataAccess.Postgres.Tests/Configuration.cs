@@ -13,6 +13,7 @@ namespace ChangeTracker.DataAccess.Postgres.Tests
             new ConfigurationBuilder()
                 .AddJsonFile("appsettings.json", false)
                 .AddUserSecrets<Configuration>()
+                .AddEnvironmentVariables()
                 .Build();
     }
 }

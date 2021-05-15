@@ -38,11 +38,15 @@
                      JOIN versioning_scheme vs on p.versioning_scheme_id = vs.id
             WHERE p.id = @projectId";
 
-        public static string GetProjectsForAccountSql(ushort count, bool usePaging)
+        public static string GetProjectsForAccountSql(bool usePaging, bool includeClosedProjects)
         {
             var pagingFilter = usePaging
                 ? "AND LOWER(p.name) > (Select LOWER(ps.name) from project ps where ps.id = @lastProjectId)"
                 : string.Empty;
+
+            var onlyOpenedProjects = includeClosedProjects 
+                ? string.Empty 
+                : "AND p.closed_at IS NULL";
 
             return @$"
             SELECT p.id,
@@ -66,19 +70,20 @@
                           JOIN role r ON au.role_id = r.id
                           JOIN role_permission rp on r.id = rp.role_id
                  WHERE au.user_id = @userId
-                   AND rp.permission = 'ViewProjects'
+                   AND rp.permission = @permission
                  UNION ALL
                  SELECT NULL
                  FROM project_user pu
                           JOIN role r on pu.role_id = r.id
                           JOIN role_permission rp on r.id = rp.role_id
                  WHERE pu.user_id = @userId
-                   AND rp.permission = 'ViewProjects'
+                   AND rp.permission = @permission
                 )
               AND p.account_id = @accountId
               {pagingFilter}
+              {onlyOpenedProjects}
             ORDER BY name
-            FETCH FIRST {count} ROWS ONLY";
+            FETCH FIRST (@count) ROWS ONLY";
         }
     }
 }

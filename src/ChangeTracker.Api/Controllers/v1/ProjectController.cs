@@ -15,13 +15,13 @@ namespace ChangeTracker.Api.Controllers.v1
 {
     [ApiController]
     [Route("api/v1/projects")]
-    public class ProjectsController : ControllerBase
+    public class ProjectController : ControllerBase
     {
         private readonly IAddProject _addProject;
         private readonly ICloseProject _closeProject;
         private readonly IGetProjects _getProjects;
 
-        public ProjectsController(IAddProject addProject, ICloseProject closeProject, IGetProjects getProjects)
+        public ProjectController(IAddProject addProject, ICloseProject closeProject, IGetProjects getProjects)
         {
             _addProject = addProject;
             _closeProject = closeProject;
@@ -32,7 +32,8 @@ namespace ChangeTracker.Api.Controllers.v1
         [NeedsPermission(Permission.ViewProjects)]
         public async Task<ActionResult> GetProjectAsync(Guid projectId)
         {
-            var project = await _getProjects.ExecuteAsync(HttpContext.GetUserId(), projectId);
+            var userId = HttpContext.GetUserId();
+            var project = await _getProjects.ExecuteAsync(userId, projectId);
 
             if (project.HasNoValue)
             {
@@ -52,8 +53,10 @@ namespace ChangeTracker.Api.Controllers.v1
             }
 
             var presenter = new AddProjectApiPresenter(HttpContext);
+            var userId = HttpContext.GetUserId();
+
             var requestModel = new ProjectRequestModel(addProjectDto.AccountId, addProjectDto.Name,
-                addProjectDto.VersioningSchemeId, HttpContext.GetUserId());
+                addProjectDto.VersioningSchemeId, userId);
 
             await _addProject.ExecuteAsync(presenter, requestModel);
 

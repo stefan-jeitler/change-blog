@@ -38,6 +38,7 @@ namespace ChangeTracker.Domain.Tests
             account.DefaultVersioningSchemeId.Should().HaveValue();
             account.DefaultVersioningSchemeId!.Value.Should().Be(_defaultVersioningSchemeId!.Value);
             account.CreatedAt.Should().Be(_testCreationDate);
+            account.DeletedAt.Should().Be(_testDeletionDate);
         }
 
         [Fact]

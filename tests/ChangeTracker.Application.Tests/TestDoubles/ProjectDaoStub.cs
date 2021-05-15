@@ -32,17 +32,17 @@ namespace ChangeTracker.Application.Tests.TestDoubles
             return Projects.Single(x => x.Id == projectId);
         }
 
-        public async Task<IList<Project>> GetProjectsAsync(Guid accountId, Guid userId, ushort count, Guid? lastProjectId = null)
+        public async Task<IList<Project>> GetProjectsAsync(ProjectQuerySettings querySettings)
         {
             await Task.Yield();
 
-            var lastEmail = Projects.FirstOrDefault(x => x.Id == lastProjectId);
+            var lastEmail = Projects.FirstOrDefault(x => x.Id == querySettings.LastProjectId);
 
             return Projects
-                .Where(x => x.AccountId == accountId)
+                .Where(x => x.AccountId == querySettings.AccountId)
                 .OrderBy(x => x.Name.Value)
                 .Where(x => lastEmail is null || string.Compare(x.Name, lastEmail.Name) > 0 )
-                .Take(count)
+                .Take(querySettings.Count)
                 .ToList();
         }
 

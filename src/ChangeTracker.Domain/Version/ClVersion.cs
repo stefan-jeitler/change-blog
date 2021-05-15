@@ -65,7 +65,15 @@ namespace ChangeTracker.Domain.Version
                    Equals(Value, other.Value);
         }
 
-        public ClVersion Release() => new(Id, ProjectId, Value, DateTime.UtcNow, CreatedAt, DeletedAt);
+        public ClVersion Release()
+        {
+            if (IsReleased)
+            {
+                throw new InvalidOperationException("An already released version cannot released.");
+            }
+
+            return new ClVersion(Id, ProjectId, Value, DateTime.UtcNow, CreatedAt, DeletedAt);
+        }
 
         private static void VerifyDeletedAtDate(DateTime? releasedAt, DateTime? deletedAt)
         {

@@ -9,23 +9,23 @@ namespace ChangeTracker.Domain
     {
         public Role(Guid id, Name name, Text description, DateTime createdAt, IEnumerable<Name> permissions)
         {
-            Id = id;
-            Name = name;
-            Description = description;
-            Permissions = permissions.ToImmutableList();
-            CreatedAt = createdAt;
-        }
-
-        public Role(Guid id, Name name, Text description, Name permission, DateTime createdAt)
-        {
             if (id == Guid.Empty)
                 throw new ArgumentException("Id cannot be empty.");
 
             Id = id;
             Name = name ?? throw new ArgumentNullException(nameof(name));
             Description = description ?? throw new ArgumentNullException(nameof(description));
-            Permissions = new List<Name>(0) {permission}.ToImmutableList();
+            Permissions = permissions?.ToImmutableList() ?? throw new ArgumentNullException(nameof(permissions));
+
+            if (createdAt == DateTime.MinValue || createdAt == DateTime.MaxValue)
+                throw new ArgumentException("Invalid createdAt.");
+
             CreatedAt = createdAt;
+        }
+
+        public Role(Guid id, Name name, Text description, Name permission, DateTime createdAt)
+            : this(id, name, description, createdAt, new List<Name>(0) {permission})
+        {
         }
 
 

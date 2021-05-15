@@ -62,13 +62,17 @@ namespace ChangeTracker.DataAccess.Postgres.DataAccessObjects
                                 a.created_at                   AS createdAt,
                                 a.deleted_at                   AS deletedAt
                 FROM account a
-                JOIN account_user au on a.id = au.account_id
-                WHERE au.user_id = @userId";
+                         JOIN account_user au on a.id = au.account_id
+                         JOIN role r on au.role_id = r.id
+                         JOIN role_permission rp on r.id = rp.role_id
+                WHERE au.user_id = (select id from ""user"" where lower(email) = 'stefan.jeitler@outlook.com')
+                AND rp.permission = @permission";
 
             var accounts = await _dbAccessor.DbConnection
                 .QueryAsync<Account>(getAllUserAccountsSql, new
                 {
-                    userId
+                    userId,
+                    permission = Permission.ViewAccounts.ToString()
                 });
 
             return accounts.ToList();

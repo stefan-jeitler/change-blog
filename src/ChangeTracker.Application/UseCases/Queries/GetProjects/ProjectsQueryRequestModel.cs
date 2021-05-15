@@ -6,7 +6,8 @@ namespace ChangeTracker.Application.UseCases.Queries.GetProjects
     {
         public const ushort MaxChunkCount = 100;
 
-        public ProjectsQueryRequestModel(Guid userId, Guid accountId, Guid? lastProjectId, ushort count)
+        public ProjectsQueryRequestModel(Guid userId, Guid accountId, Guid? lastProjectId, ushort count,
+            bool includeClosedProjects)
         {
             if (userId == Guid.Empty)
                 throw new ArgumentException("UserId cannot be empty.");
@@ -15,11 +16,13 @@ namespace ChangeTracker.Application.UseCases.Queries.GetProjects
             AccountId = accountId;
             LastProjectId = lastProjectId;
             Count = Math.Min(count, MaxChunkCount);
+            IncludeClosedProjects = includeClosedProjects;
         }
 
         public Guid UserId { get; }
         public Guid AccountId { get; }
         public Guid? LastProjectId { get; }
         public ushort Count { get; }
+        public bool IncludeClosedProjects { get; }
     }
 }

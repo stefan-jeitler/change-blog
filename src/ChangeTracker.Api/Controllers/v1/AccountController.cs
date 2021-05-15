@@ -15,13 +15,13 @@ namespace ChangeTracker.Api.Controllers.v1
 {
     [ApiController]
     [Route("api/v1/accounts")]
-    public class AccountsController : ControllerBase
+    public class AccountController : ControllerBase
     {
         private readonly IGetAccounts _getAccounts;
         private readonly IGetProjects _getProjects;
         private readonly IGetUsers _getUsers;
 
-        public AccountsController(IGetProjects getProjects, IGetAccounts getAccounts, IGetUsers getUsers)
+        public AccountController(IGetProjects getProjects, IGetAccounts getAccounts, IGetUsers getUsers)
         {
             _getProjects = getProjects;
             _getAccounts = getAccounts;
@@ -29,7 +29,7 @@ namespace ChangeTracker.Api.Controllers.v1
         }
 
         [HttpGet]
-        [NeedsPermission(Permission.ViewAccountInfo)]
+        [NeedsPermission(Permission.ViewAccounts)]
         public async Task<ActionResult> GetAccountsAsync()
         {
             var userId = HttpContext.GetUserId();
@@ -69,12 +69,14 @@ namespace ChangeTracker.Api.Controllers.v1
         [NeedsPermission(Permission.ViewProjects)]
         public async Task<ActionResult> GetProjectsAsync(Guid accountId,
             ushort count = ProjectsQueryRequestModel.MaxChunkCount,
-            Guid? lastProjectId = null)
+            Guid? lastProjectId = null,
+            bool includeClosedProjects = false)
         {
             var requestModel = new ProjectsQueryRequestModel(HttpContext.GetUserId(),
                 accountId,
                 lastProjectId,
-                count
+                count,
+                includeClosedProjects
             );
 
             var projects = await _getProjects.ExecuteAsync(requestModel);

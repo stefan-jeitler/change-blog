@@ -158,6 +158,41 @@ namespace ChangeTracker.Domain.Tests.VersionTests
         }
 
         [Fact]
+        public void Release_NotYetReleasedVersion_Successful()
+        {
+            _testReleaseDate = null;
+            var version = CreateVersion();
+
+            var releasedVersion = version.Release();
+
+            version.IsReleased.Should().BeFalse();
+            releasedVersion.IsReleased.Should().BeTrue();
+        }
+
+        [Fact]
+        public void Release_VersionAlreadyReleased_InvalidOperationException()
+        {
+            _testReleaseDate = DateTime.Parse("2021-05-14");
+            var version = CreateVersion();
+
+            Func<ClVersion> act = () => version.Release();
+
+            act.Should().ThrowExactly<InvalidOperationException>();
+        }
+
+        [Fact]
+        public void Release_VersionDeleted_InvalidOperationException()
+        {
+            _testDeletedDate = DateTime.Parse("2021-05-14");
+            _testReleaseDate = null;
+            var version = CreateVersion();
+
+            Func<ClVersion> act = () => version.Release();
+
+            act.Should().ThrowExactly<InvalidOperationException>();
+        }
+
+        [Fact]
         public void Equals_TwoDifferentObjectsWithSameProperties_IsEqual()
         {
             var version1 = CreateVersion();

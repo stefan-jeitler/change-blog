@@ -40,6 +40,7 @@ namespace ChangeTracker.Domain.Tests
             user.LastName.Should().Be(_testLastName);
             user.DeletedAt.Should().Be(_testDeletionDate);
             user.CreatedAt.Should().Be(_testCreationDate);
+            user.TimeZone.Should().Be(_testTimeZone);
         }
 
         [Fact]

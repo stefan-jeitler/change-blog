@@ -24,23 +24,30 @@ namespace ChangeTracker.Application.UseCases.Queries.GetProjects
         public async Task<IEnumerable<ProjectResponseModel>> ExecuteAsync(
             ProjectsQueryRequestModel requestModel)
         {
-            var projects = await _projectDao.GetProjectsAsync(requestModel.AccountId,
+            var projectQuerySettings = new ProjectQuerySettings(requestModel.AccountId,
                 requestModel.UserId,
+                requestModel.LastProjectId,
                 requestModel.Count,
-                requestModel.LastProjectId);
+                requestModel.IncludeClosedProjects);
 
+            var projects = await _projectDao.GetProjectsAsync(projectQuerySettings);
             var currentUser = await _userDao.GetUserAsync(requestModel.UserId);
 
+            var users = await GetProjectUsersAsync(projects);
+            var userById = users.ToDictionary(x => x.Id, x => x);
+
+            return projects
+                .Select(x => CreateResponse(x, userById, currentUser.TimeZone));
+        }
+
+        private async Task<IList<User>> GetProjectUsersAsync(IEnumerable<Project> projects)
+        {
             var userIds = projects
                 .Select(x => x.CreatedByUser)
                 .Distinct()
                 .ToList();
 
-            var users = await _userDao.GetUsersAsync(userIds);
-            var userById = users.ToDictionary(x => x.Id, x => x);
-
-            return projects
-                .Select(x => CreateResponse(x, userById, currentUser.TimeZone));
+            return await _userDao.GetUsersAsync(userIds);
         }
 
         public async Task<Maybe<ProjectResponseModel>> ExecuteAsync(Guid userId, Guid projectId)

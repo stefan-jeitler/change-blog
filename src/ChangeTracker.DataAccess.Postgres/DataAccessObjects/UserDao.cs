@@ -78,13 +78,14 @@ namespace ChangeTracker.DataAccess.Postgres.DataAccessObjects
                 WHERE au.account_id = @accountId
                   {pagingFilter}
                 ORDER BY u.email
-                    FETCH FIRST {count} ROWS ONLY";
+                    FETCH FIRST (@count) ROWS ONLY";
 
             var users = await _dbAccessor.DbConnection
                 .QueryAsync<User>(getAccountUsersSql, new
                 {
                     accountId,
-                    lastUserId
+                    lastUserId,
+                    count = (int)count
                 });
 
             return users.ToList();

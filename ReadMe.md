@@ -18,8 +18,40 @@ both should dependend on a web service.
 
 ![Dependencies](./docs/assets/ChangeTracker.png)  
 
-The development team pushes their changes automatically during the deployment with all information needed by the management team.  
+The development team automatically pushes its changes during deployment with all the information the management team needs.
 
 ## Disclaimer
 
 This is a side-project and should not be used in a prodcutive environment.  
+
+## Environments
+
+### Testing
+
+This environment consists of a database only that is used by integration tests.  
+
+### Staging
+
+Is a replica of the production environment.  
+Uses the same Docker registry and App Service Plan as the production system.  
+
+[Staging](https://app-change-tracker-staging.azurewebsites.net/)
+
+### Production
+
+Actual app
+
+[Production](https://app-change-tracker.azurewebsites.net/)
+
+## Architecture
+
+The architecture of the app is mainly influenced by:
+
+* Robert C. Martin's book Clean Architecture
+* Plainionist's article series [Implementing-Clean-Architecture](http://www.plainionist.net/Implementing-Clean-Architecture-Overview/)
+* [CandiedOrange's](https://softwareengineering.stackexchange.com/users/131624/candied-orange) [answers](https://softwareengineering.stackexchange.com/search?q=user:131624+[clean-architecture]) on softwareengineering.stackexchange
+
+## Key Feature
+
+* Multi-tenancy capabilities
+* Role-base access control

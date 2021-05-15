@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Threading.Tasks;
 
-namespace ChangeTracker.Api.Authentication.AccountDaos
+namespace ChangeTracker.Api.Authentication.DataAccess
 {
     public class FindUserIdInMemory : IFindUserId
     {

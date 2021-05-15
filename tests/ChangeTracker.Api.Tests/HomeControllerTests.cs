@@ -1,7 +1,7 @@
 using System.Net;
 using System.Threading.Tasks;
 using ChangeTracker.Api.Authentication;
-using ChangeTracker.Api.Authentication.AccountDaos;
+using ChangeTracker.Api.Authentication.DataAccess;
 using ChangeTracker.Api.DTOs;
 using FluentAssertions;
 using Microsoft.AspNetCore.Mvc.Testing;

@@ -73,6 +73,7 @@ namespace ChangeTracker.Application.UseCases.Queries.GetProjects
         {
             var userName = user.Email;
             var createdAtLocal = project.CreatedAt.ToLocal(timeZone);
+            var closedAtLocal = project.ClosedAt?.ToLocal(timeZone);
 
             return new ProjectResponseModel(project.Id, 
                 project.AccountId,
@@ -81,7 +82,7 @@ namespace ChangeTracker.Application.UseCases.Queries.GetProjects
                 project.VersioningScheme.Name, 
                 userName,
                 createdAtLocal,
-                project.ClosedAt);
+                closedAtLocal);
         }
     }
 }

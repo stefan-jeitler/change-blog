@@ -45,7 +45,7 @@ namespace ChangeTracker.Application.UseCases.Commands.AddProject
             var existingProject = await _projectDao.FindProjectAsync(account.Value.Id, name);
             if (existingProject.HasValue)
             {
-                output.ProjectAlreadyExists();
+                output.ProjectAlreadyExists(existingProject.Value.Id);
                 return;
             }
 

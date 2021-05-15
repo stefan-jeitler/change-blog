@@ -31,9 +31,9 @@ namespace ChangeTracker.Api.Presenters.v1.Project
             Response = new BadRequestObjectResult(DefaultResponse.Create($"Invalid name {name}."));
         }
 
-        public void ProjectAlreadyExists()
+        public void ProjectAlreadyExists(Guid projectId)
         {
-            Response = new ConflictObjectResult(DefaultResponse.Create("Project already exists."));
+            Response = new ConflictObjectResult(DefaultResponse.Create($"Project already exists. ProjectId {projectId}"));
         }
 
         public void VersioningSchemeDoesNotExist()

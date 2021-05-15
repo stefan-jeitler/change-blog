@@ -128,13 +128,13 @@ namespace ChangeTracker.Application.Tests.UseCaseTests.Commands.AddProject
                 new ProjectRequestModel(TestAccount.Id, TestAccount.Name.Value, null, TestAccount.UserId);
             var createProjectInteractor = CreateInteractor();
 
-            _outputPortMock.Setup(m => m.ProjectAlreadyExists());
+            _outputPortMock.Setup(m => m.ProjectAlreadyExists(It.IsAny<Guid>()));
 
             // act
             await createProjectInteractor.ExecuteAsync(_outputPortMock.Object, projectRequestModel);
 
             // assert
-            _outputPortMock.Verify(m => m.ProjectAlreadyExists(), Times.Once);
+            _outputPortMock.Verify(m => m.ProjectAlreadyExists(It.IsAny<Guid>()), Times.Once);
         }
 
         [Fact]

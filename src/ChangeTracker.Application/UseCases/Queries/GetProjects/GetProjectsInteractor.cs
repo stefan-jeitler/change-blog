@@ -17,8 +17,8 @@ namespace ChangeTracker.Application.UseCases.Queries.GetProjects
 
         public GetProjectsInteractor(IProjectDao projectDao, IUserDao userDao)
         {
-            _projectDao = projectDao;
-            _userDao = userDao;
+            _projectDao = projectDao ?? throw new ArgumentNullException(nameof(projectDao));
+            _userDao = userDao ?? throw new ArgumentNullException(nameof(userDao));
         }
 
         public async Task<IEnumerable<ProjectResponseModel>> ExecuteAsync(

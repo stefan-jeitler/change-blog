@@ -17,7 +17,7 @@ namespace ChangeTracker.Application.UseCases.Commands.ReleaseVersion
         public ReleaseVersionInteractor(IVersionDao versionDao, IProjectDao project)
         {
             _versionDao = versionDao ?? throw new ArgumentNullException(nameof(versionDao));
-            _project = project;
+            _project = project ?? throw new ArgumentNullException(nameof(project));
         }
 
         public async Task ExecuteAsync(IReleaseVersionOutputPort output, Guid versionId)

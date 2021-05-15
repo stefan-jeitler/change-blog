@@ -13,8 +13,8 @@ namespace ChangeTracker.Application.UseCases.Commands.DeleteChangeLogLine
         public DeleteChangeLogLineInteractor(IChangeLogCommandsDao changeLogCommands,
             IChangeLogQueriesDao changeLogQueries)
         {
-            _changeLogCommands = changeLogCommands;
-            _changeLogQueries = changeLogQueries;
+            _changeLogCommands = changeLogCommands ?? throw new ArgumentNullException(nameof(changeLogCommands));
+            _changeLogQueries = changeLogQueries ?? throw new ArgumentNullException(nameof(changeLogQueries));
         }
 
         public async Task ExecuteAsync(IDeleteChangeLogLineOutputPort output, Guid changeLogLineId)

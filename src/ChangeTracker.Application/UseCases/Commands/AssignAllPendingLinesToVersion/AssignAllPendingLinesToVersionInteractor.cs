@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using ChangeTracker.Application.DataAccess;
@@ -21,10 +22,10 @@ namespace ChangeTracker.Application.UseCases.Commands.AssignAllPendingLinesToVer
         public AssignAllPendingLinesToVersionInteractor(IVersionDao versionDao, IUnitOfWork unitOfWork,
             IChangeLogCommandsDao changeLogCommands, IChangeLogQueriesDao changeLogQueries)
         {
-            _versionDao = versionDao;
-            _unitOfWork = unitOfWork;
-            _changeLogCommands = changeLogCommands;
-            _changeLogQueries = changeLogQueries;
+            _versionDao = versionDao ?? throw new ArgumentNullException(nameof(versionDao));
+            _unitOfWork = unitOfWork ?? throw new ArgumentNullException(nameof(unitOfWork));
+            _changeLogCommands = changeLogCommands ?? throw new ArgumentNullException(nameof(changeLogCommands));
+            _changeLogQueries = changeLogQueries ?? throw new ArgumentNullException(nameof(changeLogQueries));
         }
 
         public async Task ExecuteAsync(IAssignAllPendingLinesToVersionOutputPort output,

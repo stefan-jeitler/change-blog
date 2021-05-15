@@ -16,8 +16,8 @@ namespace ChangeTracker.Application.UseCases.Commands.DeleteVersion
 
         public DeleteVersionInteractor(IVersionDao versionDao, IProjectDao projectDao)
         {
-            _versionDao = versionDao;
-            _projectDao = projectDao;
+            _versionDao = versionDao ?? throw new ArgumentNullException(nameof(versionDao));
+            _projectDao = projectDao ?? throw new ArgumentNullException(nameof(projectDao));
         }
 
         public async Task ExecuteAsync(IDeleteVersionOutputPort output, Guid versionId)

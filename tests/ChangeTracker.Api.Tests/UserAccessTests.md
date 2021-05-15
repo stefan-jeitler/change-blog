@@ -69,22 +69,6 @@ Usernames will start with the account name followed by `_user_<number>`.
 ]
 ```
 
-## Users in multiple accounts
-
-The user `t_ua_account_02_user_02` got invited to the first account `t_ua_account_01`  
-and has the following account roles.
-
-```json
-[ 
- {
-    "t_ua_account_02_user_02": [
-      "DefaultUser",
-      "Support"
-    ]
-  }
-]
-```
-
 ## Projects
 
 Projects starts with the account name followed by `_proj_<number>`.  
@@ -266,21 +250,6 @@ on conflict (account_id, user_id, role_id) do nothing ;
 
 insert into account_user values ((select id from account where name = 't_ua_account_02'),
                                  (select id from "user" where email = 't_ua_account_02_user_03@change-tracker.com'),
-                                 (select id from role where name = 'Support'),
-                                 now()
-                                )
-on conflict (account_id, user_id, role_id) do nothing ;
-
-
-insert into account_user values ((select id from account where name = 't_ua_account_01'),
-                                 (select id from "user" where email = 't_ua_account_02_user_02@change-tracker.com'),
-                                 (select id from role where name = 'DefaultUser'),
-                                 now()
-                                )
-on conflict (account_id, user_id, role_id) do nothing ;
-
-insert into account_user values ((select id from account where name = 't_ua_account_01'),
-                                 (select id from "user" where email = 't_ua_account_02_user_02@change-tracker.com'),
                                  (select id from role where name = 'Support'),
                                  now()
                                 )

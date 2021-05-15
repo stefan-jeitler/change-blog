@@ -18,9 +18,9 @@ namespace ChangeTracker.Application.UseCases.Queries.GetAccounts
 
         public GetAccountsInteractor(IAccountDao accountDao, IUserDao userDao, IVersioningSchemeDao versioningSchemeDao)
         {
-            _accountDao = accountDao;
-            _userDao = userDao;
-            _versioningSchemeDao = versioningSchemeDao;
+            _accountDao = accountDao ?? throw new ArgumentNullException(nameof(accountDao));
+            _userDao = userDao ?? throw new ArgumentNullException(nameof(userDao));
+            _versioningSchemeDao = versioningSchemeDao ?? throw new ArgumentNullException(nameof(versioningSchemeDao));
         }
 
         public async Task<IList<AccountResponseModel>> ExecuteAsync(Guid userId)

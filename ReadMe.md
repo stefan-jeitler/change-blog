@@ -51,7 +51,7 @@ The architecture of the app is mainly influenced by:
 * Plainionist's article series [Implementing-Clean-Architecture](http://www.plainionist.net/Implementing-Clean-Architecture-Overview/)
 * [CandiedOrange's](https://softwareengineering.stackexchange.com/users/131624/candied-orange) [answers](https://softwareengineering.stackexchange.com/search?q=user:131624+[clean-architecture]) on softwareengineering.stackexchange
 
-## Key Feature
+## Key Features
 
 * Multi-tenancy capabilities
-* Role-base access control
+* Role-based access control

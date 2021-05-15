@@ -3,6 +3,7 @@ using System.Threading.Tasks;
 using ChangeTracker.Api.Authorization.RequestBodyIdentifiers;
 using ChangeTracker.Application.UseCases;
 using ChangeTracker.DataAccess.Postgres;
+using ChangeTracker.DataAccess.Postgres.DataAccessObjects;
 using ChangeTracker.Domain;
 using Microsoft.AspNetCore.Mvc.Filters;
 
@@ -29,7 +30,7 @@ namespace ChangeTracker.Api.Authorization.PermissionChecks
             }
 
             var accountIdInBody = TryFindInBody<IContainsAccountId>(context);
-            if (accountIdInBody != null)
+            if (accountIdInBody is not null)
             {
                 return await _userAccessDao.HasAccountPermissionAsync(userId, accountIdInBody.AccountId, permission);
             }

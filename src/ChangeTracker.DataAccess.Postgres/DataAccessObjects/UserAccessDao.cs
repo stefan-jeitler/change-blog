@@ -2,10 +2,9 @@
 using System.Data;
 using System.Threading.Tasks;
 using ChangeTracker.Application.UseCases;
-using ChangeTracker.Domain;
 using Dapper;
 
-namespace ChangeTracker.DataAccess.Postgres
+namespace ChangeTracker.DataAccess.Postgres.DataAccessObjects
 {
     public class UserAccessDao
     {
@@ -23,7 +22,7 @@ namespace ChangeTracker.DataAccess.Postgres
                 return null;
             }
 
-            const string getApiKeySql = @"
+            const string getUserIdSql = @"
                 SELECT user_id
                 FROM api_key ak
                          JOIN ""user"" u
@@ -35,7 +34,7 @@ namespace ChangeTracker.DataAccess.Postgres
 
             using var dbConnection = _acquireDbConnection();
             return await dbConnection
-                .QueryFirstOrDefaultAsync<Guid?>(getApiKeySql, new {apiKey});
+                .QueryFirstOrDefaultAsync<Guid?>(getUserIdSql, new {apiKey});
         }
 
         public async Task<bool> HasAccountPermissionAsync(Guid userId, Guid accountId, Permission permission)
@@ -64,26 +63,35 @@ namespace ChangeTracker.DataAccess.Postgres
         {
             const string hasProjectPermissionSql = @"
                 SELECT EXISTS(
-                   (SELECT NULL
-                    FROM project_user pu
-                             JOIN ""role"" r
-                                  ON r.id = pu.role_id
-                             JOIN role_permission rp on rp.role_id = r.id
-                    WHERE pu.user_id = @userId
-                      AND pu.project_id = @projectId
-                      AND rp.permission = @permission
-                        FETCH FIRST 1 ROW ONLY)
-                   UNION ALL
-                   (SELECT NULL
-                    FROM project p
-                             JOIN account a on p.account_id = a.id
-                             JOIN account_user au on a.id = au.account_id
-                             JOIN ""role"" r on au.role_id = r.id
-                             JOIN role_permission rp on r.id = rp.role_id
-                    WHERE au.user_id = @userId
-                      AND p.id = @projectId
-                      AND rp.permission = @permission
-                        FETCH FIRST 1 ROW ONLY))";
+                               (SELECT NULL
+                                FROM project_user pu
+                                         JOIN ""role"" r ON r.id = pu.role_id
+                                         JOIN role_permission rp on rp.role_id = r.id
+                                WHERE pu.user_id = @userId
+                                  AND pu.project_id = @projectId
+                                  AND rp.permission = @permission
+                                  AND EXISTS(
+                                      SELECT NULL
+                                      FROM project p1
+                                      JOIN account a1 on p1.account_id = a1.id
+                                      JOIN account_user au1 on a1.id = au1.account_id
+                                      JOIN role r1 on au1.role_id = r1.id
+                                      WHERE p1.id = @projectId
+                                      AND au1.user_id = @userId
+                                      AND r1.name = 'DefaultUser'
+                                      )
+                                    FETCH FIRST 1 ROW ONLY)
+                               UNION ALL
+                               (SELECT NULL
+                                FROM project p
+                                         JOIN account a on p.account_id = a.id
+                                         JOIN account_user au on a.id = au.account_id
+                                         JOIN ""role"" r on au.role_id = r.id
+                                         JOIN role_permission rp on r.id = rp.role_id
+                                WHERE au.user_id = @userId
+                                  AND p.id = @projectId
+                                  AND rp.permission = @permission
+                                    FETCH FIRST 1 ROW ONLY))";
 
             var dbConnection = _acquireDbConnection();
 
@@ -134,12 +142,13 @@ namespace ChangeTracker.DataAccess.Postgres
 
             var dbConnection = _acquireDbConnection();
 
-            return await dbConnection.ExecuteScalarAsync<bool>(hasChangeLogLinePermissionSql, new
-            {
-                userId,
-                changeLogLineId,
-                permission = permission.ToString()
-            });
+            return await dbConnection
+                .ExecuteScalarAsync<bool>(hasChangeLogLinePermissionSql, new
+                {
+                    userId,
+                    changeLogLineId,
+                    permission = permission.ToString()
+                });
         }
 
         public async Task<bool> HasUserPermissionAsync(Guid userId, Permission permission)

@@ -13,7 +13,7 @@ namespace ChangeTracker.Application.UseCases.Queries.GetUsers
 
         public GetUsersInteractor(IUserDao userDao)
         {
-            _userDao = userDao;
+            _userDao = userDao ?? throw new ArgumentNullException(nameof(userDao));
         }
 
         public async Task<IList<UserResponseModel>> ExecuteAsync(UsersRequestModel requestModel)

@@ -23,10 +23,10 @@ namespace ChangeTracker.Application.UseCases.Commands.MakeAllChangeLogLinesPendi
         public MakeAllChangeLogLinesPendingInteractor(IVersionDao versionDao, IChangeLogQueriesDao changeLogQueries,
             IChangeLogCommandsDao changeLogCommands, IUnitOfWork unitOfWork)
         {
-            _versionDao = versionDao;
-            _changeLogQueries = changeLogQueries;
-            _changeLogCommands = changeLogCommands;
-            _unitOfWork = unitOfWork;
+            _versionDao = versionDao ?? throw new ArgumentNullException(nameof(versionDao));
+            _changeLogQueries = changeLogQueries ?? throw new ArgumentNullException(nameof(changeLogQueries));
+            _changeLogCommands = changeLogCommands ?? throw new ArgumentNullException(nameof(changeLogCommands));
+            _unitOfWork = unitOfWork ?? throw new ArgumentNullException(nameof(unitOfWork));
         }
 
         public async Task ExecuteAsync(IMakeAllChangeLogLinesPendingOutputPort output, Guid projectId, string version)

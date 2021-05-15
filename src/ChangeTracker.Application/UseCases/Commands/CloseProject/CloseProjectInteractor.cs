@@ -10,7 +10,7 @@ namespace ChangeTracker.Application.UseCases.Commands.CloseProject
 
         public CloseProjectInteractor(IProjectDao projectDao)
         {
-            _projectDao = projectDao;
+            _projectDao = projectDao ?? throw new ArgumentNullException(nameof(projectDao));
         }
 
         public async Task ExecuteAsync(ICloseProjectOutputPort output, Guid projectId)

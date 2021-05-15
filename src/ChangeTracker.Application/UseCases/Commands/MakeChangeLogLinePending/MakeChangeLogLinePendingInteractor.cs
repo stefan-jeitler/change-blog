@@ -21,10 +21,10 @@ namespace ChangeTracker.Application.UseCases.Commands.MakeChangeLogLinePending
         public MakeChangeLogLinePendingInteractor(IVersionDao versionDao, IChangeLogQueriesDao changeLogQueries,
             IChangeLogCommandsDao changeLogCommands, IUnitOfWork unitOfWork)
         {
-            _versionDao = versionDao;
-            _changeLogQueries = changeLogQueries;
-            _unitOfWork = unitOfWork;
-            _changeLogCommands = changeLogCommands;
+            _versionDao = versionDao ?? throw new ArgumentNullException(nameof(versionDao));
+            _changeLogQueries = changeLogQueries ?? throw new ArgumentNullException(nameof(changeLogQueries));
+            _unitOfWork = unitOfWork ?? throw new ArgumentNullException(nameof(unitOfWork));
+            _changeLogCommands = changeLogCommands ?? throw new ArgumentNullException(nameof(changeLogCommands));
         }
 
         public async Task ExecuteAsync(IMakeChangeLogLinePendingOutputPort output, Guid changeLogLineId)

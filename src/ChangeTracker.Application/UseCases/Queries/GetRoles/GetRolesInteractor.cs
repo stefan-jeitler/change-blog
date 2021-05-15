@@ -12,7 +12,7 @@ namespace ChangeTracker.Application.UseCases.Queries.GetRoles
 
         public GetRolesInteractor(IRolesDao rolesDao)
         {
-            _rolesDao = rolesDao;
+            _rolesDao = rolesDao ?? throw new ArgumentNullException(nameof(rolesDao));
         }
 
         public async Task<IList<RoleResponseModel>> ExecuteAsync(string role)

@@ -74,7 +74,7 @@ namespace ChangeTracker.Api.Tests
             var content = await response.Content.ReadFromJsonAsync<List<UserDto>>();
 
             response.StatusCode.Should().Be(StatusCodes.Status200OK);
-            content.Should().HaveCount(3);
+            content.Should().HaveCount(2);
         }
     }
 }

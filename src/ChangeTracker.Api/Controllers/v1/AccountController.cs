@@ -5,6 +5,7 @@ using ChangeTracker.Api.Authorization;
 using ChangeTracker.Api.DTOs.v1.Account;
 using ChangeTracker.Api.DTOs.v1.Project;
 using ChangeTracker.Api.Extensions;
+using ChangeTracker.Application.UseCases;
 using ChangeTracker.Application.UseCases.Queries.GetAccounts;
 using ChangeTracker.Application.UseCases.Queries.GetProjects;
 using ChangeTracker.Application.UseCases.Queries.GetUsers;
@@ -39,7 +40,7 @@ namespace ChangeTracker.Api.Controllers.v1
         }
 
         [HttpGet("{accountId:Guid}")]
-        [NeedsPermission(Permission.ViewAccountInfo)]
+        [NeedsPermission(Permission.ViewAccount)]
         public async Task<ActionResult> GetAccountAsync(Guid accountId)
         {
             var userId = HttpContext.GetUserId();

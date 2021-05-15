@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using ChangeTracker.Application.DataAccess.Accounts;
+using ChangeTracker.Application.UseCases;
 using ChangeTracker.Domain;
 using CSharpFunctionalExtensions;
 using Dapper;
@@ -65,7 +66,7 @@ namespace ChangeTracker.DataAccess.Postgres.DataAccessObjects
                          JOIN account_user au on a.id = au.account_id
                          JOIN role r on au.role_id = r.id
                          JOIN role_permission rp on r.id = rp.role_id
-                WHERE au.user_id = (select id from ""user"" where lower(email) = 'stefan.jeitler@outlook.com')
+                WHERE au.user_id = @userId
                 AND rp.permission = @permission";
 
             var accounts = await _dbAccessor.DbConnection

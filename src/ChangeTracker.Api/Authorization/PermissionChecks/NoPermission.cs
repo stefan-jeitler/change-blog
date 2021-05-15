@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Threading.Tasks;
+using ChangeTracker.Application.UseCases;
 using ChangeTracker.Domain;
 using Microsoft.AspNetCore.Mvc.Filters;
 

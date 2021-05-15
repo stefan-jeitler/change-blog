@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Data;
 using System.Threading.Tasks;
+using ChangeTracker.Application.UseCases;
 using ChangeTracker.Domain;
 using Dapper;
 
@@ -34,7 +35,7 @@ namespace ChangeTracker.DataAccess.Postgres
 
             using var dbConnection = _acquireDbConnection();
             return await dbConnection
-                .QuerySingleOrDefaultAsync<Guid?>(getApiKeySql, new {apiKey});
+                .QueryFirstOrDefaultAsync<Guid?>(getApiKeySql, new {apiKey});
         }
 
         public async Task<bool> HasAccountPermissionAsync(Guid userId, Guid accountId, Permission permission)
@@ -96,15 +97,16 @@ namespace ChangeTracker.DataAccess.Postgres
 
         public async Task<bool> HasVersionPermissionAsync(Guid userId, Guid versionId, Permission permission)
         {
-            const string hasVersionPermissionSql = @"SELECT EXISTS(SELECT NULL
-                FROM version v
-                JOIN project p on v.project_id = p.id
-                JOIN project_user pu on p.id = pu.project_id
-                JOIN role r on pu.role_id = r.id
-                JOIN role_permission rp on r.id = rp.role_id
-                WHERE v.id = @versionId
-                AND pu.user_id = @userId
-                AND rp.permission = @permission)";
+            const string hasVersionPermissionSql = @"
+                SELECT EXISTS(SELECT NULL
+                              FROM version v
+                                       JOIN project p on v.project_id = p.id
+                                       JOIN project_user pu on p.id = pu.project_id
+                                       JOIN role r on pu.role_id = r.id
+                                       JOIN role_permission rp on r.id = rp.role_id
+                              WHERE v.id = @versionId
+                                AND pu.user_id = @userId
+                                AND rp.permission = @permission)";
 
             var dbConnection = _acquireDbConnection();
 
@@ -121,14 +123,14 @@ namespace ChangeTracker.DataAccess.Postgres
         {
             const string hasChangeLogLinePermissionSql = @"
                 SELECT EXISTS(SELECT NULL
-                FROM changelog_line chl
-                JOIN project p on chl.project_id = p.id
-                JOIN project_user pu on p.id = pu.project_id
-                JOIN role r on pu.role_id = r.id
-                JOIN role_permission rp on r.id = rp.role_id
-                WHERE chl.id = @changeLogLineId
-                AND pu.user_id = @userId
-                AND rp.permission = @permission)";
+                              FROM changelog_line chl
+                                       JOIN project p on chl.project_id = p.id
+                                       JOIN project_user pu on p.id = pu.project_id
+                                       JOIN role r on pu.role_id = r.id
+                                       JOIN role_permission rp on r.id = rp.role_id
+                              WHERE chl.id = @changeLogLineId
+                                AND pu.user_id = @userId
+                                AND rp.permission = @permission)";
 
             var dbConnection = _acquireDbConnection();
 
@@ -144,12 +146,11 @@ namespace ChangeTracker.DataAccess.Postgres
         {
             const string hasUserAccountPermissionSql = @"
                 SELECT EXISTS(SELECT null from ""user"" u
-                join account_user au on u.id = au.user_id
-                join role r on au.role_id = r.id
-                join role_permission rp on r.id = rp.role_id
-                where u.id = @userId
-                and rp.permission = @permission
-                fetch first 1 row only)";
+                              join account_user au on u.id = au.user_id
+                              join role r on au.role_id = r.id
+                              join role_permission rp on r.id = rp.role_id
+                              where u.id = @userId
+                                  and rp.permission = @permission)";
 
             var dbConnection = _acquireDbConnection();
 

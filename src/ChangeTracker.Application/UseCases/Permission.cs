@@ -1,4 +1,4 @@
-﻿namespace ChangeTracker.Domain
+﻿namespace ChangeTracker.Application.UseCases
 {
     public enum Permission
     {
@@ -8,7 +8,7 @@
         ViewProjects,
         ViewRoles,
         ViewAccounts,
-        ViewAccountInfo,
+        ViewAccount,
         ViewUsers
     }
 }

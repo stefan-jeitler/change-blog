@@ -4,6 +4,7 @@ using System.Reflection;
 using System.Threading.Tasks;
 using ChangeTracker.Api.Authorization;
 using ChangeTracker.Api.DTOs;
+using ChangeTracker.Application.UseCases;
 using ChangeTracker.Application.UseCases.Queries.GetRoles;
 using ChangeTracker.Domain;
 using Microsoft.AspNetCore.Authorization;

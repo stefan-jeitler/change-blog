@@ -44,7 +44,7 @@ let private addSomeViewPermissionsSql =
     """
       """
       INSERT INTO role_permission
-      SELECT id, 'ViewAccountInfo', now() from role where name in ('ProductOwner', 'PlatformManager', 'Developer')
+      SELECT id, 'ViewAccount', now() from role where name in ('ProductOwner', 'PlatformManager', 'Developer')
       ON CONFLICT (role_id, permission) DO NOTHING
     """
       """
@@ -90,7 +90,7 @@ let addSomeViewPermissions (dbConnection: IDbConnection) =
 
     insertPermissions addSomeViewPermissionsSql
 
-let addViewAccountsPermission (dbConnection: IDbConnection) = 
+let addViewAccountsPermission (dbConnection: IDbConnection) =
     dbConnection.ExecuteAsync(addViewAccountPermissionSql)
     |> Async.AwaitTask
     |> Async.Ignore

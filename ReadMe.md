@@ -18,7 +18,7 @@ both should dependend on a web service.
 
 ![Dependencies](./docs/assets/ChangeTracker.png)  
 
-The development team automatically pushes its changes during deployment with all the information the management team needs.
+The development team automatically pushes its changes during deployment with all the information the management team needs.  
 
 ## Disclaimer
 
@@ -50,6 +50,15 @@ The architecture of the app is mainly influenced by:
 * Robert C. Martin's book Clean Architecture
 * Plainionist's article series [Implementing-Clean-Architecture](http://www.plainionist.net/Implementing-Clean-Architecture-Overview/)
 * [CandiedOrange's](https://softwareengineering.stackexchange.com/users/131624/candied-orange) [answers](https://softwareengineering.stackexchange.com/search?q=user:131624+[clean-architecture]) on softwareengineering.stackexchange
+
+## Database
+
+I decided to use a sql databse rather than a nosql db,  
+because relational databases are a mature technology that fullfils all my requirements.  
+
+### Schema
+
+[DatabaseSchema](./docs/assets/ChangeTrackerDbSchema.png)
 
 ## Key Features
 

@@ -196,6 +196,48 @@ namespace ChangeTracker.Application.Tests.DecoratorTests
         }
 
         [Fact]
+        public async Task DeleteLine_ChangeLogLineIsPending_SuccessfullyDeleted()
+        {
+            // arrange
+            var lineId = Guid.Parse("0683e1e1-0e0d-405c-b77e-a6d0d5141b67");
+            var line = new ChangeLogLine(lineId, null, TestAccount.Project.Id, ChangeLogText.Parse("some text"),
+                0U, DateTime.Parse("2021-04-17"));
+            _changeLogDaoStub.ChangeLogs.Add(line);
+            var decorator = CreateDecorator();
+
+            // act
+            var result = await decorator.DeleteLineAsync(line);
+
+            // assert
+            result.IsSuccess.Should().BeTrue();
+            _changeLogDaoStub.ChangeLogs.Should().HaveCount(0);
+        }
+
+        [Fact]
+        public async Task DeleteLine_RelatedVersionAlreadyReleased_NotDeleted()
+        {
+            // arrange
+            var versionId = Guid.Parse("1d7831d5-32fb-437f-a9d5-bf5a7dd34b10");
+            var lineId = Guid.Parse("0683e1e1-0e0d-405c-b77e-a6d0d5141b67");
+            var line = new ChangeLogLine(lineId, versionId, TestAccount.Project.Id, ChangeLogText.Parse("some text"),
+                0U, DateTime.Parse("2021-04-17"));
+            _changeLogDaoStub.ChangeLogs.Add(line);
+
+            var version = new ClVersion(versionId, TestAccount.Project.Id, ClVersionValue.Parse("1.2.3"),
+                DateTime.Parse("2021-05-15"), DateTime.Parse("2021-04-17"), null);
+            _versionDaoStub.Versions.Add(version);
+
+            var decorator = CreateDecorator();
+
+            // act
+            var result = await decorator.DeleteLineAsync(line);
+
+            // assert
+            result.IsSuccess.Should().BeFalse();
+            _changeLogDaoStub.ChangeLogs.Should().HaveCount(1);
+        }
+
+        [Fact]
         public async Task AddLines_ChangeLogLinesArePending_SuccessfullyAdded()
         {
             // arrange

@@ -75,7 +75,7 @@ namespace ChangeTracker.DataAccess.Postgres.DataAccessObjects
                 {
                     querySettings.AccountId,
                     querySettings.UserId,
-                    permission = Permission.ViewProjects.ToString(),
+                    permission = Permission.ViewAccountProjects.ToString(),
                     querySettings.LastProjectId,
                     count = (int)querySettings.Count
                 });

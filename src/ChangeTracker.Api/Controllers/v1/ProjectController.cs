@@ -30,7 +30,7 @@ namespace ChangeTracker.Api.Controllers.v1
         }
 
         [HttpGet("{projectId:Guid}")]
-        [NeedsPermission(Permission.ViewProjects)]
+        [NeedsPermission(Permission.ViewAccountProjects)]
         public async Task<ActionResult> GetProjectAsync(Guid projectId)
         {
             var userId = HttpContext.GetUserId();

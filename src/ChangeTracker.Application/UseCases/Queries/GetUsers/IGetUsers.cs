@@ -6,7 +6,7 @@ namespace ChangeTracker.Application.UseCases.Queries.GetUsers
 {
     public interface IGetUsers
     {
-        Task<IList<UserResponseModel>> ExecuteAsync(UsersRequestModel requestModel);
+        Task<IList<UserResponseModel>> ExecuteAsync(UsersQueryRequestModel queryRequestModel);
         Task<UserResponseModel> ExecuteAsync(Guid userId);
     }
 }

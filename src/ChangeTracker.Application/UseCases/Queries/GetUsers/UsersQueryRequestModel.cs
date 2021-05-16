@@ -6,11 +6,11 @@ using System.Threading.Tasks;
 
 namespace ChangeTracker.Application.UseCases.Queries.GetUsers
 {
-    public class UsersRequestModel
+    public class UsersQueryRequestModel
     {
         public const ushort MaxChunkCount = 200;
 
-        public UsersRequestModel(Guid userId, Guid accountId, Guid? lastUserId, ushort count)
+        public UsersQueryRequestModel(Guid userId, Guid accountId, Guid? lastUserId = null, ushort count = MaxChunkCount)
         {
             if (accountId == Guid.Empty)
                 throw new ArgumentException("AccountId cannot be empty.");

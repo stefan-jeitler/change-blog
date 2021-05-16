@@ -16,13 +16,13 @@ namespace ChangeTracker.Application.UseCases.Queries.GetUsers
             _userDao = userDao ?? throw new ArgumentNullException(nameof(userDao));
         }
 
-        public async Task<IList<UserResponseModel>> ExecuteAsync(UsersRequestModel requestModel)
+        public async Task<IList<UserResponseModel>> ExecuteAsync(UsersQueryRequestModel queryRequestModel)
         {
-            var currentUser = await _userDao.GetUserAsync(requestModel.UserId);
+            var currentUser = await _userDao.GetUserAsync(queryRequestModel.UserId);
 
-            var users = await _userDao.GetUsersAsync(requestModel.AccountId,
-                requestModel.Count,
-                requestModel.LastUserId);
+            var users = await _userDao.GetUsersAsync(queryRequestModel.AccountId,
+                queryRequestModel.Count,
+                queryRequestModel.LastUserId);
 
             return users.Select(x => new UserResponseModel(x.Id,
                     x.Email,

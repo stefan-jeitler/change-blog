@@ -5,7 +5,7 @@
         ViewChangeLogLines,
         AddProject,
         CloseProject,
-        ViewProjects,
+        ViewAccountProjects,
         ViewRoles,
         ViewAccounts,
         ViewAccount,

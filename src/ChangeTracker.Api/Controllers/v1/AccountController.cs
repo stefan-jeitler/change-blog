@@ -54,10 +54,10 @@ namespace ChangeTracker.Api.Controllers.v1
         [HttpGet("{accountId:Guid}/users")]
         [NeedsPermission(Permission.ViewUsers)]
         public async Task<ActionResult> GetUsersAsync(Guid accountId,
-            ushort count = UsersRequestModel.MaxChunkCount,
+            ushort count = UsersQueryRequestModel.MaxChunkCount,
             Guid? lastUserId = null)
         {
-            var requestModel = new UsersRequestModel(HttpContext.GetUserId(),
+            var requestModel = new UsersQueryRequestModel(HttpContext.GetUserId(),
                 accountId,
                 lastUserId,
                 count
@@ -69,7 +69,7 @@ namespace ChangeTracker.Api.Controllers.v1
         }
 
         [HttpGet("{accountId:Guid}/projects")]
-        [NeedsPermission(Permission.ViewProjects)]
+        [NeedsPermission(Permission.ViewAccountProjects)]
         public async Task<ActionResult> GetProjectsAsync(Guid accountId,
             ushort count = ProjectsQueryRequestModel.MaxChunkCount,
             Guid? lastProjectId = null,

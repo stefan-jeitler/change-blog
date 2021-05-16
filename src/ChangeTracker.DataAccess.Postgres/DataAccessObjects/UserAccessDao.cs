@@ -93,7 +93,7 @@ namespace ChangeTracker.DataAccess.Postgres.DataAccessObjects
                                   AND rp.permission = @permission
                                     FETCH FIRST 1 ROW ONLY))";
 
-            var dbConnection = _acquireDbConnection();
+            using var dbConnection = _acquireDbConnection();
 
             return await dbConnection.ExecuteScalarAsync<bool>(hasProjectPermissionSql, new
             {
@@ -116,7 +116,7 @@ namespace ChangeTracker.DataAccess.Postgres.DataAccessObjects
                                 AND pu.user_id = @userId
                                 AND rp.permission = @permission)";
 
-            var dbConnection = _acquireDbConnection();
+            using var dbConnection = _acquireDbConnection();
 
             return await dbConnection.ExecuteScalarAsync<bool>(hasVersionPermissionSql, new
             {
@@ -140,7 +140,7 @@ namespace ChangeTracker.DataAccess.Postgres.DataAccessObjects
                                 AND pu.user_id = @userId
                                 AND rp.permission = @permission)";
 
-            var dbConnection = _acquireDbConnection();
+            using var dbConnection = _acquireDbConnection();
 
             return await dbConnection
                 .ExecuteScalarAsync<bool>(hasChangeLogLinePermissionSql, new
@@ -161,7 +161,7 @@ namespace ChangeTracker.DataAccess.Postgres.DataAccessObjects
                               where u.id = @userId
                                   and rp.permission = @permission)";
 
-            var dbConnection = _acquireDbConnection();
+            using var dbConnection = _acquireDbConnection();
 
             return await dbConnection.ExecuteScalarAsync<bool>(hasUserAccountPermissionSql, new
             {

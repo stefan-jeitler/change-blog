@@ -55,8 +55,8 @@ let private addSomeViewPermissionsSql =
 
 let private addViewAccountsPermissionSql = """
         INSERT INTO role_permission
-        SELECT id, 'ViewAccounts', now() from role where name in ('PlatformManager', 'ProductOwner')
-        ON CONFLICT (role_id, permission) DO NOTHING ;
+        SELECT id, 'ViewAccounts', now() from role where name in ('Support', 'ScrumMaster', 'ProductOwner', 'ProductManager', 'PlatformManager', 'Developer')
+        ON CONFLICT (role_id, permission) DO NOTHING
     """
 
 let create (dbConnection: IDbConnection) =

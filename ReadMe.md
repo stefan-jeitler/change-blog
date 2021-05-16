@@ -24,7 +24,7 @@ The development team automatically pushes its changes during deployment with all
 
 This is a side-project and should not be used in a prodcutive environment.  
 
-## Environments
+## Deployment Environments
 
 ### Testing
 
@@ -53,12 +53,12 @@ The architecture of the app is mainly influenced by:
 
 ## Database
 
-I decided to use a sql database rather than a nosql db,  
+I decided to use a SQL database rather than a NoSQL db,  
 because relational databases are a mature technology that fullfils all my requirements.  
 
 [DatabaseSchema](./docs/assets/ChangeTrackerDbSchema.png)
 
 ## Key Features
 
-* Multi-tenant capabilities
+* Multitenant capabilities
 * Role-based access control

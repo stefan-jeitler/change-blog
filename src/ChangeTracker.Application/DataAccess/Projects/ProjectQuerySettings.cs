@@ -4,7 +4,7 @@ namespace ChangeTracker.Application.DataAccess.Projects
 {
     public class ProjectQuerySettings
     {
-        public ProjectQuerySettings(Guid accountId, Guid userId, Guid? lastProjectId, ushort count,
+        public ProjectQuerySettings(Guid accountId, Guid userId, Guid? lastProjectId = null, ushort count = 100,
             bool includeClosedProjects = false)
         {
             AccountId = accountId;

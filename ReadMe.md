@@ -56,8 +56,6 @@ The architecture of the app is mainly influenced by:
 I decided to use a sql databse rather than a nosql db,  
 because relational databases are a mature technology that fullfils all my requirements.  
 
-### Schema
-
 [DatabaseSchema](./docs/assets/ChangeTrackerDbSchema.png)
 
 ## Key Features

@@ -7,6 +7,7 @@ using ChangeTracker.Application.DataAccess.Projects;
 using ChangeTracker.Application.DataAccess.Users;
 using ChangeTracker.Application.Extensions;
 using ChangeTracker.Domain;
+using ChangeTracker.Domain.Version;
 
 namespace ChangeTracker.Application.UseCases.Queries.GetAccounts
 {
@@ -41,11 +42,7 @@ namespace ChangeTracker.Application.UseCases.Queries.GetAccounts
             return accounts.Select(x =>
                 {
                     var scheme = schemeById.GetValueOrDefault(x.DefaultVersioningSchemeId ?? Guid.Empty, defaultScheme);
-                    return new AccountResponseModel(x.Id,
-                        x.Name,
-                        scheme.Name,
-                        scheme.Id,
-                        x.CreatedAt.ToLocal(user.TimeZone));
+                    return CreateResponseModel(x, scheme, user);
                 })
                 .ToList();
         }
@@ -60,11 +57,14 @@ namespace ChangeTracker.Application.UseCases.Queries.GetAccounts
                 ? await _versioningSchemeDao.GetSchemeAsync(schemeId.Value)
                 : await _versioningSchemeDao.GetSchemeAsync(Defaults.VersioningSchemeId);
 
-            return new AccountResponseModel(account.Id,
+            return CreateResponseModel(account, scheme, user);
+        }
+
+        private static AccountResponseModel CreateResponseModel(Account account, VersioningScheme scheme, User user) =>
+            new(account.Id,
                 account.Name,
                 scheme.Name,
                 scheme.Id,
                 account.CreatedAt.ToLocal(user.TimeZone));
-        }
     }
 }

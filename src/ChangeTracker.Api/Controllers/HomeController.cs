@@ -54,16 +54,5 @@ namespace ChangeTracker.Api.Controllers
         [HttpGet("changeLogs")]
         [AllowAnonymous]
         public ActionResult ChangeLogs() => Ok("coming soon ...");
-
-        [HttpGet("roles")]
-        [NeedsPermission(Permission.ViewRoles)]
-        public async Task<ActionResult> GetRolesAsync([FromServices] IGetRoles getRoles,
-            string role = null,
-            bool includePermissions = false)
-        {
-            var roles = await getRoles.ExecuteAsync(role);
-
-            return Ok(roles.Select(x => RoleDto.FromResponseModel(x, includePermissions)));
-        }
     }
 }

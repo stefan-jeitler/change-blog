@@ -21,7 +21,7 @@ namespace ChangeTracker.Application.UseCases.Queries.GetProjects
             _userDao = userDao ?? throw new ArgumentNullException(nameof(userDao));
         }
 
-        public async Task<IEnumerable<ProjectResponseModel>> ExecuteAsync(
+        public async Task<IList<ProjectResponseModel>> ExecuteAsync(
             ProjectsQueryRequestModel requestModel)
         {
             var projectQuerySettings = new ProjectQuerySettings(requestModel.AccountId,
@@ -37,7 +37,8 @@ namespace ChangeTracker.Application.UseCases.Queries.GetProjects
             var userById = users.ToDictionary(x => x.Id, x => x);
 
             return projects
-                .Select(x => CreateResponse(x, userById, currentUser.TimeZone));
+                .Select(x => CreateResponse(x, userById, currentUser.TimeZone))
+                .ToList();
         }
 
         private async Task<IList<User>> GetProjectUsersAsync(IEnumerable<Project> projects)

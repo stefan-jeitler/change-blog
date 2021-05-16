@@ -2,12 +2,14 @@
 using System.Linq;
 using System.Threading.Tasks;
 using ChangeTracker.Api.Authorization;
+using ChangeTracker.Api.DTOs;
 using ChangeTracker.Api.DTOs.v1.Account;
 using ChangeTracker.Api.DTOs.v1.Project;
 using ChangeTracker.Api.Extensions;
 using ChangeTracker.Application.UseCases;
 using ChangeTracker.Application.UseCases.Queries.GetAccounts;
 using ChangeTracker.Application.UseCases.Queries.GetProjects;
+using ChangeTracker.Application.UseCases.Queries.GetRoles;
 using ChangeTracker.Application.UseCases.Queries.GetUsers;
 using ChangeTracker.Domain;
 using Microsoft.AspNetCore.Mvc;
@@ -83,6 +85,17 @@ namespace ChangeTracker.Api.Controllers.v1
             var projects = await _getProjects.ExecuteAsync(requestModel);
 
             return Ok(projects.Select(ProjectDto.FromResponseModel));
+        }
+
+        [HttpGet("roles")]
+        [NeedsPermission(Permission.ViewRoles)]
+        public async Task<ActionResult> GetRolesAsync([FromServices] IGetRoles getRoles,
+            string role = null,
+            bool includePermissions = false)
+        {
+            var roles = await getRoles.ExecuteAsync(role);
+
+            return Ok(roles.Select(x => RoleDto.FromResponseModel(x, includePermissions)));
         }
     }
 }

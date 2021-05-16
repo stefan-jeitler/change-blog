@@ -27,6 +27,17 @@ namespace ChangeTracker.Application.Tests.TestDoubles
             DateTime.Parse("2021-04-05T15:00:00"),
             null);
 
+        public static readonly VersioningScheme DefaultScheme = new(
+            Guid.Parse("4091b948-9bc5-43ee-9f98-df3d27853565"),
+            Name.Parse("SemVer 2.0.0"),
+            Text.Parse(@"^(0|[1-9]\d*)\.(0|[1-9]\d*)\.(0|[1-9]\d*)(?:-((?:0|[1-9]\d*|\d*[a-zA-Z-][0-9a-zA-Z-]*)(?:\.(?:0|[1-9]\d*|\d*[a-zA-Z-][0-9a-zA-Z-]*))*))?(?:\+([0-9a-zA-Z-]+(?:\.[0-9a-zA-Z-]+)*))?$"),
+            null,
+            Text.Parse("Semantic Versioning 2.0.0 - see https://semver.org/ for more info"),
+            DateTime.Parse("2021-04-05T15:00:00"),
+            null);
+
+        public static readonly Account Account = new(Id, Name, CustomVersioningScheme.Id, CreationDate, null);
+
         public static readonly Project Project = new(Guid.Parse("ab9f36eb-0cc5-4855-bddb-a3d5d8ad0117"),
             Id,
             Name.Parse("Test Project"),
@@ -34,5 +45,12 @@ namespace ChangeTracker.Application.Tests.TestDoubles
             UserId,
             DateTime.Parse("2021-04-04"),
             null);
+
+        public static readonly User User = new(UserId,
+            Email.Parse("test@change-tracker.com"),
+            Name.Parse("test"),
+            Name.Parse("user"),
+            Text.Parse("Europe/Berlin"),
+            null, DateTime.Parse("2021-05-16"));
     }
 }

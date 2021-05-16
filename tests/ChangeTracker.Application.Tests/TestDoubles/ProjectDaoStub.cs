@@ -12,7 +12,7 @@ namespace ChangeTracker.Application.Tests.TestDoubles
 {
     public class ProjectDaoStub : IProjectDao
     {
-        public List<Project> Projects { get; set; } = new();
+        public List<Project> Projects { get; } = new();
         public bool ProduceConflict { get; set; }
 
         public Task<Maybe<Project>> FindProjectAsync(Guid accountId, Name name)
@@ -73,6 +73,7 @@ namespace ChangeTracker.Application.Tests.TestDoubles
         public Task CloseProjectAsync(Project project)
         {
             Projects.RemoveAll(x => x.Id == project.Id);
+            Projects.Add(project);
             return Task.CompletedTask;
         }
     }

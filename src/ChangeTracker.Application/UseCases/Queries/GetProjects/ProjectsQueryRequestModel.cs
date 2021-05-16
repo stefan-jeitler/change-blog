@@ -13,6 +13,10 @@ namespace ChangeTracker.Application.UseCases.Queries.GetProjects
                 throw new ArgumentException("UserId cannot be empty.");
 
             UserId = userId;
+
+            if (accountId == Guid.Empty)
+                throw new ArgumentException("AccountId cannot be empty.");
+
             AccountId = accountId;
             LastProjectId = lastProjectId;
             Count = Math.Min(count, MaxChunkCount);

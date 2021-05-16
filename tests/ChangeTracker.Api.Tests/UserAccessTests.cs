@@ -26,7 +26,7 @@ namespace ChangeTracker.Api.Tests
             var client = _factory.CreateClient();
             client.DefaultRequestHeaders.Add("X-API-KEY", new[] { "acc01usr02" });
 
-            var response = await client.GetAsync("/api/roles?includePermissions=false");
+            var response = await client.GetAsync("/api/v1/accounts/roles?includePermissions=false");
 
             response.StatusCode.Should().Be(StatusCodes.Status200OK);
         }
@@ -37,7 +37,7 @@ namespace ChangeTracker.Api.Tests
             var client = _factory.CreateClient();
             client.DefaultRequestHeaders.Add("X-API-KEY", new[] { "acc01usr01" });
 
-            var response = await client.GetAsync("/api/roles?includePermissions=false");
+            var response = await client.GetAsync("/api/v1/accounts/roles?includePermissions=false");
 
             response.StatusCode.Should().Be(StatusCodes.Status403Forbidden);
         }
@@ -48,7 +48,7 @@ namespace ChangeTracker.Api.Tests
             var client = _factory.CreateClient();
             client.DefaultRequestHeaders.Add("X-API-KEY", new[] { "some-random-api-key" });
 
-            var response = await client.GetAsync("/api/roles");
+            var response = await client.GetAsync("/api/v1/accounts/roles");
 
             response.StatusCode.Should().Be(StatusCodes.Status401Unauthorized);
         }
@@ -58,7 +58,7 @@ namespace ChangeTracker.Api.Tests
         {
             var client = _factory.CreateClient();
 
-            var response = await client.GetAsync("/api/roles");
+            var response = await client.GetAsync("/api/v1/accounts/roles");
 
             response.StatusCode.Should().Be(StatusCodes.Status401Unauthorized);
         }

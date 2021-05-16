@@ -53,12 +53,12 @@ The architecture of the app is mainly influenced by:
 
 ## Database
 
-I decided to use a sql databse rather than a nosql db,  
+I decided to use a sql database rather than a nosql db,  
 because relational databases are a mature technology that fullfils all my requirements.  
 
 [DatabaseSchema](./docs/assets/ChangeTrackerDbSchema.png)
 
 ## Key Features
 
-* Multi-tenancy capabilities
+* Multi-tenant capabilities
 * Role-based access control

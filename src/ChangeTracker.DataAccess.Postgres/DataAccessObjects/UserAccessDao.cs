@@ -17,41 +17,19 @@ namespace ChangeTracker.DataAccess.Postgres.DataAccessObjects
 
         public async Task<Guid?> FindUserIdAsync(string apiKey)
         {
-            if (string.IsNullOrEmpty(apiKey))
-            {
-                return null;
-            }
-
-            const string getUserIdSql = @"
-                SELECT user_id
-                FROM api_key ak
-                         JOIN ""user"" u
-                ON u.id = ak.user_id
-                WHERE key = @apiKey
-                  AND u.deleted_at IS NULL
-                  AND ak.deleted_at IS NULL
-                  AND ak.expires_at > now()";
+            if (string.IsNullOrEmpty(apiKey)) return null;
 
             using var dbConnection = _acquireDbConnection();
             return await dbConnection
-                .QueryFirstOrDefaultAsync<Guid?>(getUserIdSql, new {apiKey});
+                .QueryFirstOrDefaultAsync<Guid?>(UserAccessDaoSqlStatements.FindUserIdByApiKeySql,
+                    new {apiKey});
         }
 
         public async Task<bool> HasAccountPermissionAsync(Guid userId, Guid accountId, Permission permission)
         {
-            const string hasAccountPermissionSql = @"
-                SELECT EXISTS(SELECT NULL
-                              FROM account a
-                                       JOIN account_user au ON au.account_id = a.id
-                                       JOIN ""role"" r ON r.id = au.role_id
-                              JOIN role_permission rp ON rp.role_id = r.id
-                              WHERE au.account_id = @accountId
-                                  AND au.user_id = @userId
-                                  AND rp.permission = @permission)";
-
             using var dbConnection = _acquireDbConnection();
 
-            return await dbConnection.ExecuteScalarAsync<bool>(hasAccountPermissionSql, new
+            return await dbConnection.ExecuteScalarAsync<bool>(UserAccessDaoSqlStatements.AccountPermissionSql, new
             {
                 accountId,
                 userId,
@@ -61,41 +39,10 @@ namespace ChangeTracker.DataAccess.Postgres.DataAccessObjects
 
         public async Task<bool> HasProjectPermissionAsync(Guid userId, Guid projectId, Permission permission)
         {
-            const string hasProjectPermissionSql = @"
-                SELECT EXISTS(
-                               (SELECT NULL
-                                FROM project_user pu
-                                         JOIN ""role"" r ON r.id = pu.role_id
-                                         JOIN role_permission rp on rp.role_id = r.id
-                                WHERE pu.user_id = @userId
-                                  AND pu.project_id = @projectId
-                                  AND rp.permission = @permission
-                                  AND EXISTS(
-                                      SELECT NULL
-                                      FROM project p1
-                                      JOIN account a1 on p1.account_id = a1.id
-                                      JOIN account_user au1 on a1.id = au1.account_id
-                                      JOIN role r1 on au1.role_id = r1.id
-                                      WHERE p1.id = @projectId
-                                      AND au1.user_id = @userId
-                                      AND r1.name = 'DefaultUser'
-                                      )
-                                    FETCH FIRST 1 ROW ONLY)
-                               UNION ALL
-                               (SELECT NULL
-                                FROM project p
-                                         JOIN account a on p.account_id = a.id
-                                         JOIN account_user au on a.id = au.account_id
-                                         JOIN ""role"" r on au.role_id = r.id
-                                         JOIN role_permission rp on r.id = rp.role_id
-                                WHERE au.user_id = @userId
-                                  AND p.id = @projectId
-                                  AND rp.permission = @permission
-                                    FETCH FIRST 1 ROW ONLY))";
-
+            var query = UserAccessDaoSqlStatements.ProjectPermissionsSql;
             using var dbConnection = _acquireDbConnection();
 
-            return await dbConnection.ExecuteScalarAsync<bool>(hasProjectPermissionSql, new
+            return await dbConnection.ExecuteScalarAsync<bool>(query, new
             {
                 projectId,
                 userId,
@@ -105,20 +52,10 @@ namespace ChangeTracker.DataAccess.Postgres.DataAccessObjects
 
         public async Task<bool> HasVersionPermissionAsync(Guid userId, Guid versionId, Permission permission)
         {
-            const string hasVersionPermissionSql = @"
-                SELECT EXISTS(SELECT NULL
-                              FROM version v
-                                       JOIN project p on v.project_id = p.id
-                                       JOIN project_user pu on p.id = pu.project_id
-                                       JOIN role r on pu.role_id = r.id
-                                       JOIN role_permission rp on r.id = rp.role_id
-                              WHERE v.id = @versionId
-                                AND pu.user_id = @userId
-                                AND rp.permission = @permission)";
-
+            var query = UserAccessDaoSqlStatements.VersionPermissionSql;
             using var dbConnection = _acquireDbConnection();
 
-            return await dbConnection.ExecuteScalarAsync<bool>(hasVersionPermissionSql, new
+            return await dbConnection.ExecuteScalarAsync<bool>(query, new
             {
                 userId,
                 versionId,
@@ -129,21 +66,11 @@ namespace ChangeTracker.DataAccess.Postgres.DataAccessObjects
         public async Task<bool> HasChangeLogLinePermissionAsync(Guid userId, Guid changeLogLineId,
             Permission permission)
         {
-            const string hasChangeLogLinePermissionSql = @"
-                SELECT EXISTS(SELECT NULL
-                              FROM changelog_line chl
-                                       JOIN project p on chl.project_id = p.id
-                                       JOIN project_user pu on p.id = pu.project_id
-                                       JOIN role r on pu.role_id = r.id
-                                       JOIN role_permission rp on r.id = rp.role_id
-                              WHERE chl.id = @changeLogLineId
-                                AND pu.user_id = @userId
-                                AND rp.permission = @permission)";
-
+            var query = UserAccessDaoSqlStatements.ChangeLogLinePermissionSql;
             using var dbConnection = _acquireDbConnection();
 
             return await dbConnection
-                .ExecuteScalarAsync<bool>(hasChangeLogLinePermissionSql, new
+                .ExecuteScalarAsync<bool>(query, new
                 {
                     userId,
                     changeLogLineId,
@@ -153,17 +80,9 @@ namespace ChangeTracker.DataAccess.Postgres.DataAccessObjects
 
         public async Task<bool> HasUserPermissionAsync(Guid userId, Permission permission)
         {
-            const string hasUserAccountPermissionSql = @"
-                SELECT EXISTS(SELECT null from ""user"" u
-                              join account_user au on u.id = au.user_id
-                              join role r on au.role_id = r.id
-                              join role_permission rp on r.id = rp.role_id
-                              where u.id = @userId
-                                  and rp.permission = @permission)";
-
             using var dbConnection = _acquireDbConnection();
 
-            return await dbConnection.ExecuteScalarAsync<bool>(hasUserAccountPermissionSql, new
+            return await dbConnection.ExecuteScalarAsync<bool>(UserAccessDaoSqlStatements.AccountUserPermission, new
             {
                 userId,
                 permission = permission.ToString()

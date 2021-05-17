@@ -46,7 +46,7 @@ namespace ChangeTracker.Api.Controllers.v1
 
         [HttpPost]
         [NeedsPermission(Permission.AddProject)]
-        public async Task<ActionResult> CreateProjectAsync([FromBody] AddProjectDto addProjectDto)
+        public async Task<ActionResult> AddProjectAsync([FromBody] AddProjectDto addProjectDto)
         {
             if (addProjectDto.VersioningSchemeId == Guid.Empty)
             {

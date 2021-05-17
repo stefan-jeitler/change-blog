@@ -23,7 +23,7 @@ namespace ChangeTracker.Api.Presenters.v1.Project
 
         public void AccountDeleted(Guid accountId)
         {
-            Response = new StatusCodeResult(410);
+            Response = new NotFoundObjectResult(DefaultResponse.Create("The requested account has been deleted."));
         }
 
         public void InvalidName(string name)
@@ -49,7 +49,7 @@ namespace ChangeTracker.Api.Presenters.v1.Project
         public void Created(Guid accountId, Guid projectId)
         {
             var location = _httpContext.CreateLinkTo($"api/v1/projects/{projectId}");
-            Response = new CreatedResult(location, DefaultResponse.Create($"Project with id {projectId} created."));
+            Response = new CreatedResult(location, DefaultResponse.Create($"Project with id {projectId} added."));
         }
     }
 }

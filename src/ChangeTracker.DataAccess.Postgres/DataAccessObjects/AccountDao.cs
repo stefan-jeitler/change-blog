@@ -48,7 +48,7 @@ namespace ChangeTracker.DataAccess.Postgres.DataAccessObjects
             if (account.HasNoValue)
             {
                 throw new Exception(
-                    "The requested account does not exist. If you are not sure whether the account exists use 'FindProject' otherwise file an issue.");
+                    "The requested account does not exist. If you are not sure whether the account exists use 'FindAccount' otherwise file an issue.");
             }
 
             return account.Value;

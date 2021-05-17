@@ -12,7 +12,8 @@ namespace ChangeTracker.Application.UseCases.Queries.GetAccounts
 
             Id = id;
             Name = name ?? throw new ArgumentNullException(nameof(name));
-            DefaultVersioningScheme = defaultVersioningScheme ?? throw new ArgumentNullException(nameof(defaultVersioningScheme));
+            DefaultVersioningScheme = defaultVersioningScheme ??
+                                      throw new ArgumentNullException(nameof(defaultVersioningScheme));
 
             if (defaultVersioningSchemeId == Guid.Empty)
                 throw new ArgumentException("VersioningSchemeId cannot be empty.");

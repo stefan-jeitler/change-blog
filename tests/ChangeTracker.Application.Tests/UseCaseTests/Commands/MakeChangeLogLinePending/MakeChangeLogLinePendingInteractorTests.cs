@@ -27,8 +27,11 @@ namespace ChangeTracker.Application.Tests.UseCaseTests.Commands.MakeChangeLogLin
             _outputPortMock = new Mock<IMakeChangeLogLinePendingOutputPort>(MockBehavior.Strict);
         }
 
-        private MakeChangeLogLinePendingInteractor CreateInteractor() => new(_versionDaoStub, _changeLogDaoStub,
-            _changeLogDaoStub, _unitOfWorkMock.Object);
+        private MakeChangeLogLinePendingInteractor CreateInteractor()
+        {
+            return new(_versionDaoStub, _changeLogDaoStub,
+                _changeLogDaoStub, _unitOfWorkMock.Object);
+        }
 
         [Fact]
         public async Task MakeLinePending_HappyPath_SuccessfullyAndUowStartedAndCommitted()

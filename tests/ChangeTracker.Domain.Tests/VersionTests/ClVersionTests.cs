@@ -24,8 +24,11 @@ namespace ChangeTracker.Domain.Tests.VersionTests
             _testDeletedDate = null;
         }
 
-        private ClVersion CreateVersion() => new(_testId, _testProjectId, _testVersionValue, _testReleaseDate,
-            _testCreationDate, _testDeletedDate);
+        private ClVersion CreateVersion()
+        {
+            return new(_testId, _testProjectId, _testVersionValue, _testReleaseDate,
+                _testCreationDate, _testDeletedDate);
+        }
 
         [Fact]
         public void Create_WithValidArguments_Successful()

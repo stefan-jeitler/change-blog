@@ -14,8 +14,9 @@ namespace ChangeTracker.Api.DTOs.v1.Project
         public DateTime CreatedAt { get; set; }
         public bool IsClosed { get; set; }
 
-        public static ProjectDto FromResponseModel(ProjectResponseModel m) =>
-            new()
+        public static ProjectDto FromResponseModel(ProjectResponseModel m)
+        {
+            return new()
             {
                 Id = m.Id,
                 AccountId = m.AccountId,
@@ -26,5 +27,6 @@ namespace ChangeTracker.Api.DTOs.v1.Project
                 CreatedAt = m.CreatedAt,
                 IsClosed = m.ClosedAt.HasValue
             };
+        }
     }
 }

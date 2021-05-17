@@ -28,8 +28,11 @@ namespace ChangeTracker.Domain.Tests.ProjectTests
             _testClosedDate = null;
         }
 
-        private Project CreateProject() => new(_testId, _testAccountId, _testName, _testVersioningScheme, _testUserId,
-            _testCreationDate, _testClosedDate);
+        private Project CreateProject()
+        {
+            return new(_testId, _testAccountId, _testName, _testVersioningScheme, _testUserId,
+                _testCreationDate, _testClosedDate);
+        }
 
         [Fact]
         public void Create_WithValidArguments_Successful()

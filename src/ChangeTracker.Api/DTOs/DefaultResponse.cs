@@ -1,4 +1,5 @@
 ﻿using System;
+
 // ReSharper disable MemberCanBePrivate.Global
 // ReSharper disable UnusedAutoPropertyAccessor.Global
 
@@ -15,6 +16,10 @@ namespace ChangeTracker.Api.DTOs
         }
 
         public string Message { get; }
-        public static DefaultResponse Create(string message) => new(message);
+
+        public static DefaultResponse Create(string message)
+        {
+            return new(message);
+        }
     }
 }

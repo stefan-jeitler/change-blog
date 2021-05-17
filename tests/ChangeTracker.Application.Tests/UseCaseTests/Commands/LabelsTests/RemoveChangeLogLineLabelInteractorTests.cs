@@ -26,8 +26,10 @@ namespace ChangeTracker.Application.Tests.UseCaseTests.Commands.LabelsTests
             _changeLogDaoStub = new ChangeLogDaoStub();
         }
 
-        private RemoveChangeLogLineLabelInteractor CreateInteractor() =>
-            new(_unitOfWorkMock.Object, _changeLogDaoStub, _changeLogDaoStub);
+        private RemoveChangeLogLineLabelInteractor CreateInteractor()
+        {
+            return new(_unitOfWorkMock.Object, _changeLogDaoStub, _changeLogDaoStub);
+        }
 
         [Fact]
         public async Task RemoveLabel_HappyPath_LabelRemovedAndUowCommitted()

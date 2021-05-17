@@ -10,13 +10,15 @@ namespace ChangeTracker.Api.Extensions
 {
     public static class ServiceCollectionExtensions
     {
-        public static IServiceCollection AddProjectUseCase(this IServiceCollection services) =>
-            services
+        public static IServiceCollection AddProjectUseCase(this IServiceCollection services)
+        {
+            return services
                 .AddScoped<IAddProject, AddProjectInteractor>()
                 .AddScoped<ICloseProject, CloseProjectInteractor>()
                 .AddScoped<IGetProjects, GetProjectsInteractor>()
                 .AddScoped<IGetRoles, GetRolesInteractor>()
                 .AddScoped<IGetAccounts, GetAccountsInteractor>()
                 .AddScoped<IGetUsers, GetUsersInteractor>();
+        }
     }
 }

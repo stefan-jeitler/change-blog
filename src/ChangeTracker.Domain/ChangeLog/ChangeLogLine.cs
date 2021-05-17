@@ -74,7 +74,10 @@ namespace ChangeTracker.Domain.ChangeLog
 
         public int AvailableIssuePlaces => MaxIssues - Issues.Count;
 
-        public void AddLabel(Label label) => AddLabels(new List<Label>(1) {label});
+        public void AddLabel(Label label)
+        {
+            AddLabels(new List<Label>(1) {label});
+        }
 
         public void AddLabels(IReadOnlyCollection<Label> labels)
         {
@@ -84,14 +87,20 @@ namespace ChangeTracker.Domain.ChangeLog
             Labels = Labels.Union(labels);
         }
 
-        public void RemoveLabel(Label label) => RemoveLabels(new List<Label>(1) {label});
+        public void RemoveLabel(Label label)
+        {
+            RemoveLabels(new List<Label>(1) {label});
+        }
 
         public void RemoveLabels(IReadOnlyCollection<Label> labels)
         {
             Labels = Labels.Except(labels);
         }
 
-        public void AddIssue(Issue issue) => AddIssues(new List<Issue>(1) {issue});
+        public void AddIssue(Issue issue)
+        {
+            AddIssues(new List<Issue>(1) {issue});
+        }
 
         public void AddIssues(IReadOnlyCollection<Issue> issues)
         {
@@ -101,7 +110,10 @@ namespace ChangeTracker.Domain.ChangeLog
             Issues = Issues.Union(issues);
         }
 
-        public void RemoveIssue(Issue issue) => RemoveIssues(new List<Issue>(1) {issue});
+        public void RemoveIssue(Issue issue)
+        {
+            RemoveIssues(new List<Issue>(1) {issue});
+        }
 
         public void RemoveIssues(IReadOnlyCollection<Issue> issues)
         {
@@ -119,7 +131,10 @@ namespace ChangeTracker.Domain.ChangeLog
             return new ChangeLogLine(Id, versionId, ProjectId, Text, position, CreatedAt, Labels, Issues, DeletedAt);
         }
 
-        public ChangeLogLine Delete() => new(Id, VersionId, ProjectId, Text, Position, CreatedAt, DateTime.UtcNow);
+        public ChangeLogLine Delete()
+        {
+            return new(Id, VersionId, ProjectId, Text, Position, CreatedAt, DateTime.UtcNow);
+        }
 
         private static ImmutableHashSet<T> Populate<T>(IEnumerable<T> items, ushort maxCount)
         {

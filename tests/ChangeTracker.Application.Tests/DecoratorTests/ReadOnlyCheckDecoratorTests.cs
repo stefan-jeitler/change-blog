@@ -29,8 +29,10 @@ namespace ChangeTracker.Application.Tests.DecoratorTests
             _memoryCache = new MemoryCache(new MemoryCacheOptions());
         }
 
-        private ChangeLogLineReadonlyCheckDecorator CreateDecorator() =>
-            new(_changeLogDaoStub, _versionDaoStub, _memoryCache, _projectDaoStub);
+        private ChangeLogLineReadonlyCheckDecorator CreateDecorator()
+        {
+            return new(_changeLogDaoStub, _versionDaoStub, _memoryCache, _projectDaoStub);
+        }
 
         [Fact]
         public async Task AddLine_RelatedVersionAlreadyReleased_Conflict()

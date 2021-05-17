@@ -32,8 +32,10 @@ namespace ChangeTracker.Application.Tests.UseCaseTests.Commands.AssignPendingLin
             _unitOfWorkMock = new Mock<IUnitOfWork>();
         }
 
-        private AssignPendingLineToVersionInteractor CreateInteractor() =>
-            new(_versionDaoStub, _changeLogDaoStub, _changeLogDaoStub, _unitOfWorkMock.Object);
+        private AssignPendingLineToVersionInteractor CreateInteractor()
+        {
+            return new(_versionDaoStub, _changeLogDaoStub, _changeLogDaoStub, _unitOfWorkMock.Object);
+        }
 
         [Fact]
         public async Task AssignPendingLineByVersionId_HappyPath_AssignedAndUowCommitted()

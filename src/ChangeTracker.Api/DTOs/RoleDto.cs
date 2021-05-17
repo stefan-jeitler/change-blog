@@ -13,13 +13,10 @@ namespace ChangeTracker.Api.DTOs
         {
             var response = new RoleDto
             {
-                Name = m.Name,
+                Name = m.Name
             };
 
-            if (includePermission)
-            {
-                response.Permissions = m.Permissions.ToList();
-            }
+            if (includePermission) response.Permissions = m.Permissions.ToList();
 
             return response;
         }

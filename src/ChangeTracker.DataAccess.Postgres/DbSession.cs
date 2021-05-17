@@ -21,15 +21,9 @@ namespace ChangeTracker.DataAccess.Postgres
         {
             lock (_lock)
             {
-                if (_startedUows >= 1)
-                {
-                    return;
-                }
+                if (_startedUows >= 1) return;
 
-                if (_dbConnection.Value.State != ConnectionState.Open)
-                {
-                    _dbConnection.Value.Open();
-                }
+                if (_dbConnection.Value.State != ConnectionState.Open) _dbConnection.Value.Open();
 
                 _transaction = _dbConnection.Value.BeginTransaction(IsolationLevel.RepeatableRead);
                 _startedUows++;

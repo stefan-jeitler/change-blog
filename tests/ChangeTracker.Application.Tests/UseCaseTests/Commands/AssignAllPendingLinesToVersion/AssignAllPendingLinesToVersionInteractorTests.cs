@@ -29,8 +29,11 @@ namespace ChangeTracker.Application.Tests.UseCaseTests.Commands.AssignAllPending
             _changeLogDaoStub = new ChangeLogDaoStub();
         }
 
-        private AssignAllPendingLinesToVersionInteractor CreateInteractor() => new(_versionDaoStub, _unitOfWork.Object,
-            _changeLogDaoStub, _changeLogDaoStub);
+        private AssignAllPendingLinesToVersionInteractor CreateInteractor()
+        {
+            return new(_versionDaoStub, _unitOfWork.Object,
+                _changeLogDaoStub, _changeLogDaoStub);
+        }
 
         [Fact]
         public async Task AssignAllPendingLines_HappyPath_AssignAndUowCommitted()

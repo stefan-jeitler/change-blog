@@ -21,8 +21,10 @@ namespace ChangeTracker.Application.Tests.UseCaseTests.Commands.AddCompleteVersi
             _testLines = new List<ChangeLogLineRequestModel>(1) {testLine};
         }
 
-        private CompleteVersionRequestModel CreateRequestModel() =>
-            new(_testProjectId, _testVersion, _testLines, _testReleaseImmediately);
+        private CompleteVersionRequestModel CreateRequestModel()
+        {
+            return new(_testProjectId, _testVersion, _testLines, _testReleaseImmediately);
+        }
 
         [Fact]
         public void Create_HappyPath_Successful()

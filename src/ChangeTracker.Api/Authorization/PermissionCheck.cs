@@ -15,15 +15,11 @@ namespace ChangeTracker.Api.Authorization
         {
             if (httpContext.Request.RouteValues.TryGetValue(key, out var routeValue) &&
                 Guid.TryParse(routeValue?.ToString(), out var idInRoute))
-            {
                 return idInRoute;
-            }
 
             if (httpContext.Request.Query.TryGetValue(key, out var queryParameter) &&
                 Guid.TryParse(queryParameter, out var idInQueryString))
-            {
                 return idInQueryString;
-            }
 
             return null;
         }

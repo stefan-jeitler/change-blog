@@ -26,9 +26,7 @@ namespace ChangeTracker.Domain.Version
 
             if (releasedAt.HasValue &&
                 (releasedAt.Value == DateTime.MinValue || releasedAt.Value == DateTime.MaxValue))
-            {
                 throw new ArgumentException("Invalid release date.", nameof(releasedAt));
-            }
 
             ReleasedAt = releasedAt;
 
@@ -67,10 +65,7 @@ namespace ChangeTracker.Domain.Version
 
         public ClVersion Release()
         {
-            if (IsReleased)
-            {
-                throw new InvalidOperationException("An already released version cannot released.");
-            }
+            if (IsReleased) throw new InvalidOperationException("An already released version cannot released.");
 
             return new ClVersion(Id, ProjectId, Value, DateTime.UtcNow, CreatedAt, DeletedAt);
         }
@@ -98,6 +93,9 @@ namespace ChangeTracker.Domain.Version
                    Equals((ClVersion) obj);
         }
 
-        public override int GetHashCode() => HashCode.Combine(Id, ProjectId, Value);
+        public override int GetHashCode()
+        {
+            return HashCode.Combine(Id, ProjectId, Value);
+        }
     }
 }

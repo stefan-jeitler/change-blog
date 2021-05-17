@@ -29,8 +29,10 @@ namespace ChangeTracker.Application.Tests.UseCaseTests.Commands.MakeAllChangeLog
             _changeLogDaoStub = new ChangeLogDaoStub();
         }
 
-        private MakeAllChangeLogLinesPendingInteractor CreateInteractor() =>
-            new(_versionDaoStub, _changeLogDaoStub, _changeLogDaoStub, _unitOfWorkMock.Object);
+        private MakeAllChangeLogLinesPendingInteractor CreateInteractor()
+        {
+            return new(_versionDaoStub, _changeLogDaoStub, _changeLogDaoStub, _unitOfWorkMock.Object);
+        }
 
         [Fact]
         public void MakeAllLinesPending_EmptyVersionId_ArgumentException()

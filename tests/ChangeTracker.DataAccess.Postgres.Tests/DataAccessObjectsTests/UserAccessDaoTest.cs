@@ -1,20 +1,21 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
 using ChangeTracker.Application.UseCases;
 using ChangeTracker.DataAccess.Postgres.DataAccessObjects;
 using FluentAssertions;
 using Npgsql;
 using Xunit;
+
 // ReSharper disable InconsistentNaming
 
 namespace ChangeTracker.DataAccess.Postgres.Tests.DataAccessObjectsTests
 {
-    public class UserAccessDaoTest 
+    public class UserAccessDaoTest
     {
-        private static UserAccessDao CreateDao() => new(() => new NpgsqlConnection(Configuration.ConnectionString));
+        private static UserAccessDao CreateDao()
+        {
+            return new(() => new NpgsqlConnection(Configuration.ConnectionString));
+        }
 
         [Fact]
         public async Task FindUserId_ExistingUser_ReturnsUserId()

@@ -11,6 +11,5 @@ namespace ChangeTracker.Application.DataAccess.Projects
         Task<Maybe<VersioningScheme>> FindSchemeAsync(Guid versioningSchemeId);
         Task<VersioningScheme> GetSchemeAsync(Guid versioningSchemeId);
         Task<IList<VersioningScheme>> GetSchemesAsync(IList<Guid> versioningSchemeIds);
-
     }
 }

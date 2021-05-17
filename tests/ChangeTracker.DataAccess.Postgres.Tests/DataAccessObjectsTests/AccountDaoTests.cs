@@ -1,13 +1,11 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
 using ChangeTracker.DataAccess.Postgres.DataAccessObjects;
 using ChangeTracker.Domain;
 using FluentAssertions;
 using Npgsql;
 using Xunit;
+
 // ReSharper disable InconsistentNaming
 
 namespace ChangeTracker.DataAccess.Postgres.Tests.DataAccessObjectsTests
@@ -21,7 +19,15 @@ namespace ChangeTracker.DataAccess.Postgres.Tests.DataAccessObjectsTests
             _lazyDbConnection = new LazyDbConnection(() => new NpgsqlConnection(Configuration.ConnectionString));
         }
 
-        private AccountDao CreateDao() => new(new DbSession(_lazyDbConnection));
+        public void Dispose()
+        {
+            _lazyDbConnection?.Dispose();
+        }
+
+        private AccountDao CreateDao()
+        {
+            return new(new DbSession(_lazyDbConnection));
+        }
 
         [Fact]
         public async Task FindAccount_ExistingAccount_ResultHasValue()
@@ -88,11 +94,6 @@ namespace ChangeTracker.DataAccess.Postgres.Tests.DataAccessObjectsTests
             var accounts = await accountDao.GetAccountsAsync(t_ua_account_01_user_01);
 
             accounts.Should().BeEmpty();
-        }
-
-        public void Dispose()
-        {
-            _lazyDbConnection?.Dispose();
         }
     }
 }

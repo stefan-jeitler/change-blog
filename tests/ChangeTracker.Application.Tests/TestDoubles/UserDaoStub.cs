@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
 using ChangeTracker.Application.DataAccess.Users;
 using ChangeTracker.Domain;
@@ -29,8 +28,8 @@ namespace ChangeTracker.Application.Tests.TestDoubles
         }
 
         /// <summary>
-        /// Not properly implemented, but should be enough for the use-case tests
-        /// The actual implementation of IUserDao is tested separately.
+        ///     Not properly implemented, but should be enough for the use-case tests
+        ///     The actual implementation of IUserDao is tested separately.
         /// </summary>
         /// <param name="accountId"></param>
         /// <param name="count"></param>

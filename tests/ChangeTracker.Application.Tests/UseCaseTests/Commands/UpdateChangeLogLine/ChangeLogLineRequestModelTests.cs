@@ -21,7 +21,10 @@ namespace ChangeTracker.Application.Tests.UseCaseTests.Commands.UpdateChangeLogL
             _testIssues = Array.Empty<string>();
         }
 
-        private ChangeLogLineRequestModel CreateRequestModel() => new(_testLineId, _testText, _testLabels, _testIssues);
+        private ChangeLogLineRequestModel CreateRequestModel()
+        {
+            return new(_testLineId, _testText, _testLabels, _testIssues);
+        }
 
         [Fact]
         public void Create_HappyPath_Successful()

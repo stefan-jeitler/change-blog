@@ -46,10 +46,8 @@ namespace ChangeTracker.DataAccess.Postgres.DataAccessObjects
             var account = await FindAccountAsync(accountId);
 
             if (account.HasNoValue)
-            {
                 throw new Exception(
                     "The requested account does not exist. If you are not sure whether the account exists use 'FindAccount' otherwise file an issue.");
-            }
 
             return account.Value;
         }

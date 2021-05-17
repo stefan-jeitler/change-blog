@@ -1,8 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace ChangeTracker.Application.UseCases.Queries.GetUsers
 {
@@ -10,7 +6,8 @@ namespace ChangeTracker.Application.UseCases.Queries.GetUsers
     {
         public const ushort MaxChunkCount = 200;
 
-        public UsersQueryRequestModel(Guid userId, Guid accountId, Guid? lastUserId = null, ushort count = MaxChunkCount)
+        public UsersQueryRequestModel(Guid userId, Guid accountId, Guid? lastUserId = null,
+            ushort count = MaxChunkCount)
         {
             if (accountId == Guid.Empty)
                 throw new ArgumentException("AccountId cannot be empty.");

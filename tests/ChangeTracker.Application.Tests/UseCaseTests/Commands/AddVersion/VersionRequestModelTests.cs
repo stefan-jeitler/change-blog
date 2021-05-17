@@ -16,7 +16,10 @@ namespace ChangeTracker.Application.Tests.UseCaseTests.Commands.AddVersion
             _testVersion = "1.2.3";
         }
 
-        private VersionRequestModel CreateRequestModel() => new(_testProjectId, _testVersion);
+        private VersionRequestModel CreateRequestModel()
+        {
+            return new(_testProjectId, _testVersion);
+        }
 
         [Fact]
         public void Create_WithEmptyProjectId_ArgumentException()

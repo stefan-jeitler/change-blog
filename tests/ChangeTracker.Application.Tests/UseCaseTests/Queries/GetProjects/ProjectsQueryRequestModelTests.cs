@@ -1,8 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using ChangeTracker.Application.Tests.TestDoubles;
 using ChangeTracker.Application.UseCases.Queries.GetProjects;
 using FluentAssertions;
@@ -12,11 +8,11 @@ namespace ChangeTracker.Application.Tests.UseCaseTests.Queries.GetProjects
 {
     public class ProjectsQueryRequestModelTests
     {
+        private readonly Guid? _testLastProjectId;
+        private Guid _testAccountId;
+        private ushort _testCount;
 
         private Guid _testUserId;
-        private Guid _testAccountId;
-        private readonly Guid? _testLastProjectId;
-        private ushort _testCount;
 
 
         public ProjectsQueryRequestModelTests()
@@ -27,8 +23,10 @@ namespace ChangeTracker.Application.Tests.UseCaseTests.Queries.GetProjects
             _testCount = 100;
         }
 
-        private ProjectsQueryRequestModel CreateRequestModel() =>
-            new(_testUserId, _testAccountId, _testLastProjectId, _testCount, true); 
+        private ProjectsQueryRequestModel CreateRequestModel()
+        {
+            return new(_testUserId, _testAccountId, _testLastProjectId, _testCount, true);
+        }
 
         [Fact]
         public void Create_HappyPath_Successful()

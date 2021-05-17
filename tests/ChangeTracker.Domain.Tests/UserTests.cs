@@ -26,8 +26,11 @@ namespace ChangeTracker.Domain.Tests
             _testCreationDate = DateTime.Parse("2021-04-03");
         }
 
-        private User CreateUser() => new(_testUserId, _testEmail, _testFirstName, _testLastName, _testTimeZone,
-            _testDeletionDate, _testCreationDate);
+        private User CreateUser()
+        {
+            return new(_testUserId, _testEmail, _testFirstName, _testLastName, _testTimeZone,
+                _testDeletionDate, _testCreationDate);
+        }
 
         [Fact]
         public void Create_WithValidArguments_Successful()

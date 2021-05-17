@@ -26,8 +26,10 @@ namespace ChangeTracker.Application.Tests.UseCaseTests.Commands.IssuesTests
             _unitOfWorkMock = new Mock<IUnitOfWork>();
         }
 
-        private RemoveChangeLogLineIssueInteractor CreateInteractor() =>
-            new(_changeLogDaoStub, _changeLogDaoStub, _unitOfWorkMock.Object);
+        private RemoveChangeLogLineIssueInteractor CreateInteractor()
+        {
+            return new(_changeLogDaoStub, _changeLogDaoStub, _unitOfWorkMock.Object);
+        }
 
         [Fact]
         public async Task RemoveIssue_HappyPath_IssueAddedAndUowCommitted()

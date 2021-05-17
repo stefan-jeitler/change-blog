@@ -64,6 +64,10 @@ namespace ChangeTracker.Domain
         public DateTime? ClosedAt { get; }
 
         public bool IsClosed => ClosedAt.HasValue;
-        public Project Close() => new(Id, AccountId, Name, VersioningScheme, CreatedByUser, CreatedAt, DateTime.UtcNow);
+
+        public Project Close()
+        {
+            return new(Id, AccountId, Name, VersioningScheme, CreatedByUser, CreatedAt, DateTime.UtcNow);
+        }
     }
 }

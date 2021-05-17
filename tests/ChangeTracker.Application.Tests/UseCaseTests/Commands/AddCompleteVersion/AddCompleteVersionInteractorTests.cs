@@ -33,8 +33,11 @@ namespace ChangeTracker.Application.Tests.UseCaseTests.Commands.AddCompleteVersi
             _outputPortMock = new Mock<IAddCompleteVersionOutputPort>(MockBehavior.Strict);
         }
 
-        private AddCompleteVersionInteractor CreateInteractor() => new(_projectDaoStub, _versionDaoStub,
-            _unitOfWorkMock.Object, _changeLogDaoStub);
+        private AddCompleteVersionInteractor CreateInteractor()
+        {
+            return new(_projectDaoStub, _versionDaoStub,
+                _unitOfWorkMock.Object, _changeLogDaoStub);
+        }
 
         [Fact]
         public async Task AddCompleteVersion_ValidVersion_Successful()
@@ -300,9 +303,7 @@ namespace ChangeTracker.Application.Tests.UseCaseTests.Commands.AddCompleteVersi
 
             // assert
             foreach (var (lineRequestModel, i) in changeLogLines.Select((x, i) => (x, i)))
-            {
                 _changeLogDaoStub.ChangeLogs[i].Position.Should().Be(uint.Parse(lineRequestModel.Text));
-            }
         }
 
         [Fact]

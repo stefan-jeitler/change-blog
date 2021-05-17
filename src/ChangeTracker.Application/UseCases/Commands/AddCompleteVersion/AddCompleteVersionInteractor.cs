@@ -141,10 +141,7 @@ namespace ChangeTracker.Application.UseCases.Commands.AddCompleteVersion
             {
                 var line = CreateLine(output, lineRequestModel, newVersion, (uint) i);
 
-                if (line.HasNoValue)
-                {
-                    return Maybe<IEnumerable<ChangeLogLine>>.None;
-                }
+                if (line.HasNoValue) return Maybe<IEnumerable<ChangeLogLine>>.None;
 
                 lines.Add(line.Value);
             }
@@ -159,10 +156,7 @@ namespace ChangeTracker.Application.UseCases.Commands.AddCompleteVersion
                 new LineParserRequestModel(requestModel.Text, requestModel.Labels, requestModel.Issues);
 
             var parsedLine = LineParser.Parse(output, lineParsingRequestModel);
-            if (parsedLine.HasNoValue)
-            {
-                return Maybe<ChangeLogLine>.None;
-            }
+            if (parsedLine.HasNoValue) return Maybe<ChangeLogLine>.None;
 
             var changeLogLine = new ChangeLogLine(Guid.NewGuid(),
                 clVersion.Id, clVersion.ProjectId,

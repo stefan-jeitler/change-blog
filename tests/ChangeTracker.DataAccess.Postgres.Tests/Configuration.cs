@@ -9,11 +9,13 @@ namespace ChangeTracker.DataAccess.Postgres.Tests
 
         public static string ConnectionString => Instance.Value.GetConnectionString("ChangeTrackerDb");
 
-        private static IConfiguration BuildConfiguration() =>
-            new ConfigurationBuilder()
+        private static IConfiguration BuildConfiguration()
+        {
+            return new ConfigurationBuilder()
                 .AddJsonFile("appsettings.json", false)
                 .AddUserSecrets<Configuration>()
                 .AddEnvironmentVariables()
                 .Build();
+        }
     }
 }

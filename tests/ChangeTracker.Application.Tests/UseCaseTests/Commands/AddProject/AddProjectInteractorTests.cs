@@ -26,10 +26,13 @@ namespace ChangeTracker.Application.Tests.UseCaseTests.Commands.AddProject
             _outputPortMock = new Mock<IAddProjectOutputPort>(MockBehavior.Strict);
         }
 
-        private AddProjectInteractor CreateInteractor() => new(_accountDaoStub,
-            _versioningSchemeDaoStub,
-            _projectDaoStub,
-            _unitOfWorkMock.Object);
+        private AddProjectInteractor CreateInteractor()
+        {
+            return new(_accountDaoStub,
+                _versioningSchemeDaoStub,
+                _projectDaoStub,
+                _unitOfWorkMock.Object);
+        }
 
         [Fact]
         public async Task CreateProject_Successful()
@@ -99,7 +102,8 @@ namespace ChangeTracker.Application.Tests.UseCaseTests.Commands.AddProject
         public async Task CreateProject_InvalidName_InvalidNameOutput()
         {
             // arrange
-            _accountDaoStub.Accounts.Add(new Account(TestAccount.Id, TestAccount.Name, null, TestAccount.CreationDate, null));
+            _accountDaoStub.Accounts.Add(new Account(TestAccount.Id, TestAccount.Name, null, TestAccount.CreationDate,
+                null));
 
             var projectRequestModel = new ProjectRequestModel(TestAccount.Id, "", null, TestAccount.UserId);
             var createProjectInteractor = CreateInteractor();
@@ -117,7 +121,8 @@ namespace ChangeTracker.Application.Tests.UseCaseTests.Commands.AddProject
         public async Task CreateProject_ProjectExists_ProjectAlreadyExistsOutput()
         {
             // arrange
-            _accountDaoStub.Accounts.Add(new Account(TestAccount.Id, TestAccount.Name, null, TestAccount.CreationDate, null));
+            _accountDaoStub.Accounts.Add(new Account(TestAccount.Id, TestAccount.Name, null, TestAccount.CreationDate,
+                null));
             _projectDaoStub.Projects.Add(new Project(TestAccount.Id, TestAccount.Name,
                 TestAccount.Project.VersioningScheme, TestAccount.UserId,
                 DateTime.Parse("2021-04-04")));
@@ -139,7 +144,8 @@ namespace ChangeTracker.Application.Tests.UseCaseTests.Commands.AddProject
         public async Task CreateProject_NotExistingVersioningScheme_VersioningSchemeDoesNotExistOutput()
         {
             // arrange
-            _accountDaoStub.Accounts.Add(new Account(TestAccount.Id, TestAccount.Name, null, TestAccount.CreationDate, null));
+            _accountDaoStub.Accounts.Add(new Account(TestAccount.Id, TestAccount.Name, null, TestAccount.CreationDate,
+                null));
             var notExistingVersioningSchemeId = Guid.Parse("3984bcf2-9930-4d41-984e-b72ccc6d6c87");
 
             var projectRequestModel =
@@ -160,7 +166,8 @@ namespace ChangeTracker.Application.Tests.UseCaseTests.Commands.AddProject
         public async Task CreateProject_ConflictWhenSaving_ConflictOutput()
         {
             // arrange
-            _accountDaoStub.Accounts.Add(new Account(TestAccount.Id, TestAccount.Name, null, TestAccount.CreationDate, null));
+            _accountDaoStub.Accounts.Add(new Account(TestAccount.Id, TestAccount.Name, null, TestAccount.CreationDate,
+                null));
 
             _versioningSchemeDaoStub.VersioningSchemes.Add(TestAccount.CustomVersioningScheme);
             _projectDaoStub.ProduceConflict = true;

@@ -20,7 +20,10 @@ namespace ChangeTracker.Application.Tests.UseCaseTests.Commands.AddProject
             _testUserId = Guid.Parse("a1b89f2d-d13f-4572-8522-8a92fb4fdb6a");
         }
 
-        private ProjectRequestModel CreateRequestModel() => new(_testAccountId, _testName, _testSchemeId, _testUserId);
+        private ProjectRequestModel CreateRequestModel()
+        {
+            return new(_testAccountId, _testName, _testSchemeId, _testUserId);
+        }
 
         [Fact]
         public void Create_HappyPath_Successful()

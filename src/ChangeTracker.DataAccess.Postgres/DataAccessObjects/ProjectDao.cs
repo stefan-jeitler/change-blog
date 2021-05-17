@@ -57,10 +57,8 @@ namespace ChangeTracker.DataAccess.Postgres.DataAccessObjects
             var project = await FindProjectAsync(projectId);
 
             if (project.HasNoValue)
-            {
                 throw new Exception(
                     "The requested project does not exist. If you are not sure whether the project exists use 'FindProject' otherwise file an issue.");
-            }
 
             return project.Value;
         }
@@ -77,7 +75,7 @@ namespace ChangeTracker.DataAccess.Postgres.DataAccessObjects
                     querySettings.UserId,
                     permission = Permission.ViewAccountProjects.ToString(),
                     querySettings.LastProjectId,
-                    count = (int)querySettings.Count
+                    count = (int) querySettings.Count
                 });
 
             return projects.ToList();

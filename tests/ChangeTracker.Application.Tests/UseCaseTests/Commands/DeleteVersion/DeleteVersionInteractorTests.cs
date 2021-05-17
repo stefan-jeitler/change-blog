@@ -23,7 +23,10 @@ namespace ChangeTracker.Application.Tests.UseCaseTests.Commands.DeleteVersion
             _outputPortMock = new Mock<IDeleteVersionOutputPort>(MockBehavior.Strict);
         }
 
-        private DeleteVersionInteractor CreateInteractor() => new(_versionDaoStub, _projectDaoStub);
+        private DeleteVersionInteractor CreateInteractor()
+        {
+            return new(_versionDaoStub, _projectDaoStub);
+        }
 
         [Fact]
         public async Task DeleteVersion_VersionDoesNotExist_VersionDoesNotExistOutput()

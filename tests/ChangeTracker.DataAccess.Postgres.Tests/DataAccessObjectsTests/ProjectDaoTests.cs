@@ -1,7 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
 using ChangeTracker.Application.DataAccess.Projects;
 using ChangeTracker.DataAccess.Postgres.DataAccessObjects;
@@ -11,6 +8,7 @@ using FluentAssertions;
 using Microsoft.Extensions.Logging.Abstractions;
 using Npgsql;
 using Xunit;
+
 // ReSharper disable InconsistentNaming
 
 namespace ChangeTracker.DataAccess.Postgres.Tests.DataAccessObjectsTests
@@ -24,8 +22,15 @@ namespace ChangeTracker.DataAccess.Postgres.Tests.DataAccessObjectsTests
             _lazyDbConnection = new LazyDbConnection(() => new NpgsqlConnection(Configuration.ConnectionString));
         }
 
-        private ProjectDao CreateDao() =>
-            new(new DbSession(_lazyDbConnection), NullLogger<ProjectDao>.Instance);
+        public void Dispose()
+        {
+            _lazyDbConnection?.Dispose();
+        }
+
+        private ProjectDao CreateDao()
+        {
+            return new(new DbSession(_lazyDbConnection), NullLogger<ProjectDao>.Instance);
+        }
 
         [Fact]
         public async Task FindProject_ByAccountIdAndName_ReturnsProject()
@@ -75,7 +80,7 @@ namespace ChangeTracker.DataAccess.Postgres.Tests.DataAccessObjectsTests
 
             act.Should().ThrowExactly<Exception>();
         }
-        
+
         [Fact]
         public async Task GetProjects_HappyPath_ReturnsProjects()
         {
@@ -88,7 +93,7 @@ namespace ChangeTracker.DataAccess.Postgres.Tests.DataAccessObjectsTests
 
             projects.Should().HaveCount(2);
         }
-        
+
         [Fact]
         public async Task GetProjects_LimitResultBy1_ReturnsOnlyOneProject()
         {
@@ -101,7 +106,7 @@ namespace ChangeTracker.DataAccess.Postgres.Tests.DataAccessObjectsTests
 
             projects.Should().HaveCount(1);
         }
-                
+
         [Fact]
         public async Task GetProjects_SkipFirstProject_ReturnsSecond()
         {
@@ -115,11 +120,6 @@ namespace ChangeTracker.DataAccess.Postgres.Tests.DataAccessObjectsTests
 
             projects.Should().HaveCount(1);
             projects.Should().Contain(x => x.Id == Guid.Parse("0614f8d6-8895-4c74-bcbe-8a3c26076e1b"));
-        }
-        
-        public void Dispose()
-        {
-            _lazyDbConnection?.Dispose();
         }
     }
 }

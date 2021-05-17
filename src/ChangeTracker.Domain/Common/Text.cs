@@ -49,6 +49,9 @@ namespace ChangeTracker.Domain.Common
             return null;
         }
 
-        public static implicit operator string(Text text) => text.Value;
+        public static implicit operator string(Text text)
+        {
+            return text.Value;
+        }
     }
 }

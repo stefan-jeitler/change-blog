@@ -16,7 +16,10 @@ namespace ChangeTracker.Application.Tests.UseCaseTests.Commands.AssignAllPending
             _testVersion = "1.2.3";
         }
 
-        private VersionAssignmentRequestModel CreateRequestModel() => new(_testProjectId, _testVersion);
+        private VersionAssignmentRequestModel CreateRequestModel()
+        {
+            return new(_testProjectId, _testVersion);
+        }
 
         [Fact]
         public void Create_HappyPath_Successful()

@@ -44,8 +44,8 @@
                 ? "AND LOWER(p.name) > (Select LOWER(ps.name) from project ps where ps.id = @lastProjectId)"
                 : string.Empty;
 
-            var includeClosedProjectsFilter = includeClosedProjects 
-                ? string.Empty 
+            var includeClosedProjectsFilter = includeClosedProjects
+                ? string.Empty
                 : "AND p.closed_at IS NULL";
 
             return @$"

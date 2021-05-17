@@ -23,8 +23,10 @@ namespace ChangeTracker.Application.Tests.UseCaseTests.Commands.AddChangeLogLine
             _testIssues = new List<string>(0);
         }
 
-        private VersionChangeLogLineRequestModelRequestModel CreateRequestModel() =>
-            new(_testProjectId, _testVersion, _testText, _testLabels, _testIssues);
+        private VersionChangeLogLineRequestModelRequestModel CreateRequestModel()
+        {
+            return new(_testProjectId, _testVersion, _testText, _testLabels, _testIssues);
+        }
 
         [Fact]
         public void Create_HappyPath_Successful()

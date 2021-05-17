@@ -16,7 +16,10 @@ namespace ChangeTracker.Application.Tests.UseCaseTests.Commands.AssignAllPending
             _testVersionId = Guid.Parse("30027f7d-91e4-4d08-afdc-a21d19656bb6");
         }
 
-        public VersionIdAssignmentRequestModel CreateRequestModel() => new(_testProjectId, _testVersionId);
+        public VersionIdAssignmentRequestModel CreateRequestModel()
+        {
+            return new(_testProjectId, _testVersionId);
+        }
 
         [Fact]
         public void Create_HappyPath_Successful()

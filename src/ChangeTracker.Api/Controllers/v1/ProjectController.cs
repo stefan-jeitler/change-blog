@@ -9,7 +9,6 @@ using ChangeTracker.Application.UseCases;
 using ChangeTracker.Application.UseCases.Commands.AddProject;
 using ChangeTracker.Application.UseCases.Commands.CloseProject;
 using ChangeTracker.Application.UseCases.Queries.GetProjects;
-using ChangeTracker.Domain;
 using Microsoft.AspNetCore.Mvc;
 
 namespace ChangeTracker.Api.Controllers.v1
@@ -36,10 +35,7 @@ namespace ChangeTracker.Api.Controllers.v1
             var userId = HttpContext.GetUserId();
             var project = await _getProjects.ExecuteAsync(userId, projectId);
 
-            if (project.HasNoValue)
-            {
-                return NotFound(DefaultResponse.Create("Project not found"));
-            }
+            if (project.HasNoValue) return NotFound(DefaultResponse.Create("Project not found"));
 
             return Ok(ProjectDto.FromResponseModel(project.Value));
         }
@@ -49,9 +45,7 @@ namespace ChangeTracker.Api.Controllers.v1
         public async Task<ActionResult> AddProjectAsync([FromBody] AddProjectDto addProjectDto)
         {
             if (addProjectDto.VersioningSchemeId == Guid.Empty)
-            {
                 return BadRequest(DefaultResponse.Create("VersioningSchemeId cannot be empty."));
-            }
 
             var presenter = new AddProjectApiPresenter(HttpContext);
             var userId = HttpContext.GetUserId();

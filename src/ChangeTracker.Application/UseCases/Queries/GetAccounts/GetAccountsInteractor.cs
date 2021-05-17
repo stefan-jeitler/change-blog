@@ -60,11 +60,13 @@ namespace ChangeTracker.Application.UseCases.Queries.GetAccounts
             return CreateResponseModel(account, scheme, user);
         }
 
-        private static AccountResponseModel CreateResponseModel(Account account, VersioningScheme scheme, User user) =>
-            new(account.Id,
+        private static AccountResponseModel CreateResponseModel(Account account, VersioningScheme scheme, User user)
+        {
+            return new(account.Id,
                 account.Name,
                 scheme.Name,
                 scheme.Id,
                 account.CreatedAt.ToLocal(user.TimeZone));
+        }
     }
 }

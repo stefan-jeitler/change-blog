@@ -22,7 +22,10 @@ namespace ChangeTracker.Application.Tests.UseCaseTests.Commands.ReleaseVersion
             _outputPortMock = new Mock<IReleaseVersionOutputPort>(MockBehavior.Strict);
         }
 
-        private ReleaseVersionInteractor CreateInteractor() => new(_versionDaoStub, _projectDaoStub);
+        private ReleaseVersionInteractor CreateInteractor()
+        {
+            return new(_versionDaoStub, _projectDaoStub);
+        }
 
         [Fact]
         public async Task ReleaseVersion_NotExistingVersion_VersionDoesNotExistOutput()

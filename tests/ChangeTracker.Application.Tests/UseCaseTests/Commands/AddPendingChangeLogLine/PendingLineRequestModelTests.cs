@@ -22,8 +22,10 @@ namespace ChangeTracker.Application.Tests.UseCaseTests.Commands.AddPendingChange
             _testIssues = new List<string>(0);
         }
 
-        private PendingLineRequestModel CreateRequestModel() =>
-            new(_testProjectId, _testText, _testLabels, _testIssues);
+        private PendingLineRequestModel CreateRequestModel()
+        {
+            return new(_testProjectId, _testText, _testLabels, _testIssues);
+        }
 
         [Fact]
         public void Create_HappyPath_Successful()

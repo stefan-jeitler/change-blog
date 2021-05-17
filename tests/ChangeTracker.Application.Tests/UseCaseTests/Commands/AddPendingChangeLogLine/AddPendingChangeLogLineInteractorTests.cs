@@ -27,8 +27,10 @@ namespace ChangeTracker.Application.Tests.UseCaseTests.Commands.AddPendingChange
             _unitOfWorkMock = new Mock<IUnitOfWork>();
         }
 
-        private AddPendingChangeLogLineInteractor CreateInteractor() =>
-            new(_projectDaoStub, _changeLogDaoStub, _changeLogDaoStub, _unitOfWorkMock.Object);
+        private AddPendingChangeLogLineInteractor CreateInteractor()
+        {
+            return new(_projectDaoStub, _changeLogDaoStub, _changeLogDaoStub, _unitOfWorkMock.Object);
+        }
 
         [Fact]
         public async Task AddPendingLine_NotExistingProject_ProjectDoesNotExistOutput()

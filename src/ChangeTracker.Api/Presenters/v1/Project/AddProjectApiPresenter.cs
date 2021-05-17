@@ -33,7 +33,8 @@ namespace ChangeTracker.Api.Presenters.v1.Project
 
         public void ProjectAlreadyExists(Guid projectId)
         {
-            Response = new ConflictObjectResult(DefaultResponse.Create($"Project already exists. ProjectId {projectId}"));
+            Response = new ConflictObjectResult(
+                DefaultResponse.Create($"Project already exists. ProjectId {projectId}"));
         }
 
         public void VersioningSchemeDoesNotExist()

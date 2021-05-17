@@ -32,8 +32,11 @@ namespace ChangeTracker.Application.Tests.UseCaseTests.Commands.AddChangeLogLine
             _unitOfWorkMock = new Mock<IUnitOfWork>();
         }
 
-        private AddChangeLogLineInteractor CreateInteractor() => new(_changeLogDaoStub, _changeLogDaoStub,
-            _unitOfWorkMock.Object, _versionDaoStub);
+        private AddChangeLogLineInteractor CreateInteractor()
+        {
+            return new(_changeLogDaoStub, _changeLogDaoStub,
+                _unitOfWorkMock.Object, _versionDaoStub);
+        }
 
         [Fact]
         public async Task AddChangeLogLine_InvalidVersion_InvalidVersionFormatOutput()

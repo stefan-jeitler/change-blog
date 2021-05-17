@@ -18,10 +18,7 @@ namespace ChangeTracker.Application.Tests.TestDoubles
         {
             await Task.Yield();
 
-            if (ProduceConflict)
-            {
-                return new Conflict("some conflict");
-            }
+            if (ProduceConflict) return new Conflict("some conflict");
 
             ChangeLogs.Add(changeLogLine);
             return changeLogLine;
@@ -118,12 +115,12 @@ namespace ChangeTracker.Application.Tests.TestDoubles
         {
             await Task.Yield();
 
-            if (ProduceConflict)
-            {
-                return Result.Failure<int, Conflict>(new Conflict("some conflict"));
-            }
+            if (ProduceConflict) return Result.Failure<int, Conflict>(new Conflict("some conflict"));
 
-            bool MatchRequestVersion(ChangeLogLine l) => l.VersionId.HasValue && l.VersionId.Value == versionId;
+            bool MatchRequestVersion(ChangeLogLine l)
+            {
+                return l.VersionId.HasValue && l.VersionId.Value == versionId;
+            }
 
             var versionChangeLogLines = ChangeLogs.Where(MatchRequestVersion);
 

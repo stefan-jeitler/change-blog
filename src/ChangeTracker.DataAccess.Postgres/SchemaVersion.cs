@@ -26,10 +26,8 @@ namespace ChangeTracker.DataAccess.Postgres
             var dbSchemaVersion = await dbConnection.ExecuteScalarAsync<int>(schemaVersionSql);
 
             if (AppSchemaVersion != dbSchemaVersion)
-            {
                 _logger.LogWarning("Schema version mismatch: App {AppSchemaVersion}; Database {dbSchemaVersion}",
                     AppSchemaVersion, dbSchemaVersion);
-            }
         }
     }
 }

@@ -27,8 +27,11 @@ namespace ChangeTracker.Domain.Tests.VersionTests
             _testDeletionDate = null;
         }
 
-        private VersioningScheme CreateScheme() => new(_testId, _testName, _testRegexPatter,
-            _testAccountId, _testDescription, _testCreationDate, _testDeletionDate);
+        private VersioningScheme CreateScheme()
+        {
+            return new(_testId, _testName, _testRegexPatter,
+                _testAccountId, _testDescription, _testCreationDate, _testDeletionDate);
+        }
 
         [Fact]
         public void Create_WithValidArguments_Successful()

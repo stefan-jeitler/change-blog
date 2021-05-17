@@ -102,29 +102,20 @@ namespace ChangeTracker.Application.Decorators
         private async Task<Result<ChangeLogLine, Conflict>> IsReadOnlyAsync(ChangeLogLine line)
         {
             if (line.DeletedAt.HasValue)
-            {
                 return Result.Failure<ChangeLogLine, Conflict>(
                     new Conflict(string.Format(LineDeletedMessage, line.Id)));
-            }
 
-            if (line.IsPending)
-            {
-                return Result.Success<ChangeLogLine, Conflict>(line);
-            }
+            if (line.IsPending) return Result.Success<ChangeLogLine, Conflict>(line);
 
             var version = await GetVersionAsync(line.VersionId!.Value);
 
             if (version.IsDeleted)
-            {
                 return Result.Failure<ChangeLogLine, Conflict>(
                     new Conflict(string.Format(VersionDeletedMessage, version.Id)));
-            }
 
             if (version.IsReleased)
-            {
                 return Result.Failure<ChangeLogLine, Conflict>(
                     new Conflict(string.Format(VersionReleasedMessage, version.Id)));
-            }
 
             var project = await GetProjectAsync(version.ProjectId);
 

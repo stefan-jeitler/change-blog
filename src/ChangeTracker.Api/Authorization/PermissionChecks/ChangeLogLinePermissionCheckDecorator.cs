@@ -1,9 +1,7 @@
 ﻿using System;
 using System.Threading.Tasks;
 using ChangeTracker.Application.UseCases;
-using ChangeTracker.DataAccess.Postgres;
 using ChangeTracker.DataAccess.Postgres.DataAccessObjects;
-using ChangeTracker.Domain;
 using Microsoft.AspNetCore.Mvc.Filters;
 
 namespace ChangeTracker.Api.Authorization.PermissionChecks
@@ -25,9 +23,7 @@ namespace ChangeTracker.Api.Authorization.PermissionChecks
         {
             var changeLogLineId = TryFindIdInHeader(context.HttpContext, KnownIdentifiers.ChangeLogLineId);
             if (changeLogLineId.HasValue)
-            {
                 return await _userAccessDao.HasChangeLogLinePermissionAsync(userId, changeLogLineId.Value, permission);
-            }
 
             return await _permissionCheckComponent.HasPermission(context, userId, permission);
         }

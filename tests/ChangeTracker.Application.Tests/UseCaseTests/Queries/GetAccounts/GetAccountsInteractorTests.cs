@@ -1,13 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.Threading.Tasks;
 using ChangeTracker.Application.Extensions;
 using ChangeTracker.Application.Tests.TestDoubles;
 using ChangeTracker.Application.UseCases.Queries.GetAccounts;
 using ChangeTracker.Domain;
-using ChangeTracker.Domain.Common;
 using FluentAssertions;
 using Xunit;
 
@@ -15,7 +10,6 @@ namespace ChangeTracker.Application.Tests.UseCaseTests.Queries.GetAccounts
 {
     public class GetAccountsInteractorTests
     {
-
         private readonly AccountDaoStub _accountDaoStub;
         private readonly UserDaoStub _userDaoStub;
         private readonly VersioningSchemeDaoStub _versioningSchemeDaoStub;
@@ -27,8 +21,10 @@ namespace ChangeTracker.Application.Tests.UseCaseTests.Queries.GetAccounts
             _versioningSchemeDaoStub = new VersioningSchemeDaoStub();
         }
 
-        private GetAccountsInteractor CreateInteractor() =>
-            new(_accountDaoStub, _userDaoStub, _versioningSchemeDaoStub);
+        private GetAccountsInteractor CreateInteractor()
+        {
+            return new(_accountDaoStub, _userDaoStub, _versioningSchemeDaoStub);
+        }
 
         [Fact]
         public async Task GetAccounts_HappyPath_Successful()
@@ -89,7 +85,8 @@ namespace ChangeTracker.Application.Tests.UseCaseTests.Queries.GetAccounts
         {
             // arrange
             _userDaoStub.Users.Add(TestAccount.User);
-            _accountDaoStub.Accounts.Add(new Account(TestAccount.Id, TestAccount.Name, null, TestAccount.CreationDate, null));
+            _accountDaoStub.Accounts.Add(new Account(TestAccount.Id, TestAccount.Name, null, TestAccount.CreationDate,
+                null));
             _versioningSchemeDaoStub.VersioningSchemes.Add(TestAccount.DefaultScheme);
             var interactor = CreateInteractor();
 

@@ -13,9 +13,11 @@ namespace ChangeTracker.Api.Authentication.DataAccess
             _apiKey = apiKey;
         }
 
-        public Task<Guid?> FindAsync(string apiKey) =>
-            _apiKey.Equals(apiKey, StringComparison.Ordinal)
+        public Task<Guid?> FindAsync(string apiKey)
+        {
+            return _apiKey.Equals(apiKey, StringComparison.Ordinal)
                 ? Task.FromResult((Guid?) TestUserId)
                 : Task.FromResult((Guid?) null);
+        }
     }
 }

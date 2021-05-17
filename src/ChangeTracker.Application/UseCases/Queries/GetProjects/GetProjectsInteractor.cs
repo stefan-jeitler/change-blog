@@ -41,16 +41,6 @@ namespace ChangeTracker.Application.UseCases.Queries.GetProjects
                 .ToList();
         }
 
-        private async Task<IList<User>> GetProjectUsersAsync(IEnumerable<Project> projects)
-        {
-            var userIds = projects
-                .Select(x => x.CreatedByUser)
-                .Distinct()
-                .ToList();
-
-            return await _userDao.GetUsersAsync(userIds);
-        }
-
         public async Task<Maybe<ProjectResponseModel>> ExecuteAsync(Guid userId, Guid projectId)
         {
             var project = await _projectDao.FindProjectAsync(projectId);
@@ -59,6 +49,16 @@ namespace ChangeTracker.Application.UseCases.Queries.GetProjects
             return await project
                 .Map(async p => new {User = await _userDao.GetUserAsync(p.CreatedByUser), Project = p})
                 .Map(x => CreateResponse(x.Project, x.User, currentUser.TimeZone));
+        }
+
+        private async Task<IList<User>> GetProjectUsersAsync(IEnumerable<Project> projects)
+        {
+            var userIds = projects
+                .Select(x => x.CreatedByUser)
+                .Distinct()
+                .ToList();
+
+            return await _userDao.GetUsersAsync(userIds);
         }
 
         private static ProjectResponseModel CreateResponse(Project project,
@@ -76,11 +76,11 @@ namespace ChangeTracker.Application.UseCases.Queries.GetProjects
             var createdAtLocal = project.CreatedAt.ToLocal(timeZone);
             var closedAtLocal = project.ClosedAt?.ToLocal(timeZone);
 
-            return new ProjectResponseModel(project.Id, 
+            return new ProjectResponseModel(project.Id,
                 project.AccountId,
                 project.Name.Value,
                 project.VersioningScheme.Id,
-                project.VersioningScheme.Name, 
+                project.VersioningScheme.Name,
                 userName,
                 createdAtLocal,
                 closedAtLocal);

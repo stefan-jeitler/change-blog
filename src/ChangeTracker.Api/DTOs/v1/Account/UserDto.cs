@@ -12,8 +12,9 @@ namespace ChangeTracker.Api.DTOs.v1.Account
         public string TimeZone { get; set; }
         public DateTime CreatedAt { get; set; }
 
-        public static UserDto FromResponseModel(UserResponseModel m) =>
-            new()
+        public static UserDto FromResponseModel(UserResponseModel m)
+        {
+            return new()
             {
                 Id = m.Id,
                 Email = m.Email,
@@ -22,5 +23,6 @@ namespace ChangeTracker.Api.DTOs.v1.Account
                 TimeZone = m.TimeZone,
                 CreatedAt = m.CreatedAt
             };
+        }
     }
 }

@@ -11,7 +11,6 @@ using ChangeTracker.Application.UseCases.Queries.GetAccounts;
 using ChangeTracker.Application.UseCases.Queries.GetProjects;
 using ChangeTracker.Application.UseCases.Queries.GetRoles;
 using ChangeTracker.Application.UseCases.Queries.GetUsers;
-using ChangeTracker.Domain;
 using Microsoft.AspNetCore.Mvc;
 
 namespace ChangeTracker.Api.Controllers.v1

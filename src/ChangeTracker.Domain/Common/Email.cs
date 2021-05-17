@@ -52,6 +52,9 @@ namespace ChangeTracker.Domain.Common
             return null;
         }
 
-        public static implicit operator string(Email email) => email.Value;
+        public static implicit operator string(Email email)
+        {
+            return email.Value;
+        }
     }
 }

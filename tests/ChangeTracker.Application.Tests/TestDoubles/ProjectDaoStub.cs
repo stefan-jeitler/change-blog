@@ -23,8 +23,10 @@ namespace ChangeTracker.Application.Tests.TestDoubles
             return Task.FromResult(project);
         }
 
-        public Task<Maybe<Project>> FindProjectAsync(Guid projectId) =>
-            Task.FromResult(Projects.TryFirst(x => x.Id == projectId));
+        public Task<Maybe<Project>> FindProjectAsync(Guid projectId)
+        {
+            return Task.FromResult(Projects.TryFirst(x => x.Id == projectId));
+        }
 
         public async Task<Project> GetProjectAsync(Guid projectId)
         {
@@ -41,20 +43,8 @@ namespace ChangeTracker.Application.Tests.TestDoubles
             return Projects
                 .Where(x => x.AccountId == querySettings.AccountId)
                 .OrderBy(x => x.Name.Value)
-                .Where(x => lastEmail is null || string.Compare(x.Name, lastEmail.Name) > 0 )
+                .Where(x => lastEmail is null || string.Compare(x.Name, lastEmail.Name) > 0)
                 .Take(querySettings.Count)
-                .ToList();
-        }
-
-        public async Task<IList<Project>> GetProjectsAsync(Guid accountId, ushort count, Guid? lastProjectId = null)
-        {
-            await Task.Yield();
-
-            return Projects.Where(x => x.AccountId == accountId)
-                .OrderBy(x => x.Name)
-                .SkipWhile(x => x.Id != (lastProjectId ?? Guid.Empty))
-                .Skip(1)
-                .Take(count)
                 .ToList();
         }
 
@@ -75,6 +65,18 @@ namespace ChangeTracker.Application.Tests.TestDoubles
             Projects.RemoveAll(x => x.Id == project.Id);
             Projects.Add(project);
             return Task.CompletedTask;
+        }
+
+        public async Task<IList<Project>> GetProjectsAsync(Guid accountId, ushort count, Guid? lastProjectId = null)
+        {
+            await Task.Yield();
+
+            return Projects.Where(x => x.AccountId == accountId)
+                .OrderBy(x => x.Name)
+                .SkipWhile(x => x.Id != (lastProjectId ?? Guid.Empty))
+                .Skip(1)
+                .Take(count)
+                .ToList();
         }
     }
 }

@@ -33,15 +33,18 @@ namespace ChangeTracker.Domain.Tests.ChangeLogTests
             _testDeletionDate = null;
         }
 
-        private ChangeLogLine CreateChangeLogLine() => new(_testId,
-            _testVersionId,
-            _testProjectId,
-            _testText,
-            _testPosition,
-            _testCreationDate,
-            _testLabels,
-            _testIssues,
-            _testDeletionDate);
+        private ChangeLogLine CreateChangeLogLine()
+        {
+            return new(_testId,
+                _testVersionId,
+                _testProjectId,
+                _testText,
+                _testPosition,
+                _testCreationDate,
+                _testLabels,
+                _testIssues,
+                _testDeletionDate);
+        }
 
         [Fact]
         public void Create_WithValidArguments_Successful()

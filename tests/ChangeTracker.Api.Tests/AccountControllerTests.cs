@@ -1,8 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Net.Http.Json;
-using System.Text;
 using System.Threading.Tasks;
 using ChangeTracker.Api.DTOs;
 using ChangeTracker.Api.DTOs.v1.Account;
@@ -10,8 +8,6 @@ using ChangeTracker.Api.DTOs.v1.Project;
 using FluentAssertions;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc.Testing;
-using Newtonsoft.Json;
-using NodaTime;
 using Xunit;
 
 namespace ChangeTracker.Api.Tests
@@ -30,7 +26,7 @@ namespace ChangeTracker.Api.Tests
         {
             // arrange
             var client = _factory.CreateClient();
-            client.DefaultRequestHeaders.Add("X-API-KEY", new[] { "acc01usr02" });
+            client.DefaultRequestHeaders.Add("X-API-KEY", new[] {"acc01usr02"});
 
             // act
             var response = await client.GetAsync("/api/v1/accounts/");
@@ -47,7 +43,7 @@ namespace ChangeTracker.Api.Tests
         {
             // arrange
             var client = _factory.CreateClient();
-            client.DefaultRequestHeaders.Add("X-API-KEY", new[] { "acc01usr02" });
+            client.DefaultRequestHeaders.Add("X-API-KEY", new[] {"acc01usr02"});
 
             // act
             var response = await client.GetAsync("/api/v1/accounts/ec3a44cc-0ba4-4c97-ad7f-911e9f6a73bc");
@@ -63,7 +59,7 @@ namespace ChangeTracker.Api.Tests
         {
             // arrange
             var client = _factory.CreateClient();
-            client.DefaultRequestHeaders.Add("X-API-KEY", new[] { "acc01usr02" });
+            client.DefaultRequestHeaders.Add("X-API-KEY", new[] {"acc01usr02"});
 
             // act
             var response = await client.GetAsync("/api/v1/accounts/ec3a44cc-0ba4-4c97-ad7f-911e9f6a73bc/projects");
@@ -79,8 +75,8 @@ namespace ChangeTracker.Api.Tests
         {
             // arrange
             var client = _factory.CreateClient();
-            client.DefaultRequestHeaders.Add("X-API-KEY", new[] { "acc01usr02" });
-            
+            client.DefaultRequestHeaders.Add("X-API-KEY", new[] {"acc01usr02"});
+
             // act
             var response = await client.GetAsync("/api/v1/accounts/ec3a44cc-0ba4-4c97-ad7f-911e9f6a73bc/users");
             var content = await response.Content.ReadFromJsonAsync<List<UserDto>>();
@@ -95,8 +91,8 @@ namespace ChangeTracker.Api.Tests
         {
             // arrange
             var client = _factory.CreateClient();
-            client.DefaultRequestHeaders.Add("X-API-KEY", new[] { "acc01usr02" });
-            
+            client.DefaultRequestHeaders.Add("X-API-KEY", new[] {"acc01usr02"});
+
             // act
             var response = await client.GetAsync("/api/v1/accounts/roles");
             var content = await response.Content.ReadFromJsonAsync<List<RoleDto>>();

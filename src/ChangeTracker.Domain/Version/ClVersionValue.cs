@@ -60,6 +60,9 @@ namespace ChangeTracker.Domain.Version
             return null;
         }
 
-        public static implicit operator string(ClVersionValue versionValue) => versionValue.Value;
+        public static implicit operator string(ClVersionValue versionValue)
+        {
+            return versionValue.Value;
+        }
     }
 }

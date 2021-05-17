@@ -19,7 +19,10 @@ namespace ChangeTracker.Application.Tests.UseCaseTests.Commands.CloseProject
             _outputPortMock = new Mock<ICloseProjectOutputPort>(MockBehavior.Strict);
         }
 
-        private CloseProjectInteractor CreateInteractor() => new(_projectDaoStub);
+        private CloseProjectInteractor CreateInteractor()
+        {
+            return new(_projectDaoStub);
+        }
 
         [Fact]
         public async Task CloseProject_ProjectDoesNotExist_ProjectDoesNotExistOutput()

@@ -18,10 +18,14 @@ namespace ChangeTracker.Domain.Tests.ChangeLogTests
             _testProjectId = Guid.Parse("b43326f8-83de-44bf-83f4-b62961d71c03");
         }
 
-        private static List<ChangeLogLine> CreateTestLines(int count) => Enumerable
-            .Range(0, count)
-            .Select(x => new ChangeLogLine(_testVersionId, _testProjectId, ChangeLogText.Parse($"{x:D5}"), (uint) x))
-            .ToList();
+        private static List<ChangeLogLine> CreateTestLines(int count)
+        {
+            return Enumerable
+                .Range(0, count)
+                .Select(x =>
+                    new ChangeLogLine(_testVersionId, _testProjectId, ChangeLogText.Parse($"{x:D5}"), (uint) x))
+                .ToList();
+        }
 
         [Fact]
         public void Create_WithEmptyLines_VersionIsNull()

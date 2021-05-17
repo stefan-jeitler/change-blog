@@ -16,12 +16,14 @@ namespace ChangeTracker.DataAccess.Postgres
     public static class ServiceCollectionExtensions
     {
         public static IServiceCollection AddPostgresDataAccess(this IServiceCollection services,
-            string connectionString) =>
-            services
+            string connectionString)
+        {
+            return services
                 .AddDbSession(connectionString)
                 .AddScoped<UserAccessDao>()
                 .AddScoped<SchemaVersion>()
                 .AddDataAccessObjects();
+        }
 
         [ModuleInitializer]
         public static void RegisterTypeHandler()
@@ -46,12 +48,14 @@ namespace ChangeTracker.DataAccess.Postgres
             return services;
         }
 
-        private static IServiceCollection AddDataAccessObjects(this IServiceCollection services) =>
-            services
+        private static IServiceCollection AddDataAccessObjects(this IServiceCollection services)
+        {
+            return services
                 .AddScoped<IAccountDao, AccountDao>()
                 .AddScoped<IProjectDao, ProjectDao>()
                 .AddScoped<IVersioningSchemeDao, VersioningSchemeDao>()
                 .AddScoped<IUserDao, UserDao>()
                 .AddScoped<IRolesDao, RolesDao>();
+        }
     }
 }

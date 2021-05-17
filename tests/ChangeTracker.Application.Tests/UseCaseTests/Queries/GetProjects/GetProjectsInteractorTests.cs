@@ -1,8 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Diagnostics;
-using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
 using ChangeTracker.Application.Extensions;
 using ChangeTracker.Application.Tests.TestDoubles;
@@ -14,7 +10,6 @@ namespace ChangeTracker.Application.Tests.UseCaseTests.Queries.GetProjects
 {
     public class GetProjectsInteractorTests
     {
-
         private readonly ProjectDaoStub _projectDaoStub;
         private readonly UserDaoStub _userDaoStub;
 
@@ -24,7 +19,10 @@ namespace ChangeTracker.Application.Tests.UseCaseTests.Queries.GetProjects
             _userDaoStub = new UserDaoStub();
         }
 
-        private GetProjectsInteractor CreateInteractor() => new(_projectDaoStub, _userDaoStub);
+        private GetProjectsInteractor CreateInteractor()
+        {
+            return new(_projectDaoStub, _userDaoStub);
+        }
 
         [Fact]
         public async Task GetProjects_HappyPath_Successful()

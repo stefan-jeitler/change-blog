@@ -18,7 +18,10 @@ namespace ChangeTracker.Application.Tests.UseCaseTests.Commands.AssignPendingLin
             _testLineId = Guid.Parse("1763b2e7-9835-4992-8f73-8c2026530b2c");
         }
 
-        private VersionAssignmentRequestModel CreateRequestModel() => new(_testProjectId, _testVersion, _testLineId);
+        private VersionAssignmentRequestModel CreateRequestModel()
+        {
+            return new(_testProjectId, _testVersion, _testLineId);
+        }
 
         [Fact]
         public void Create_HappyPath_Successful()

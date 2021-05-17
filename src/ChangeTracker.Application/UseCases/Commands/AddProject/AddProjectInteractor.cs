@@ -50,10 +50,7 @@ namespace ChangeTracker.Application.UseCases.Commands.AddProject
             }
 
             var versioningSchemeId = await GetVersioningSchemeIdAsync(output, projectRequestModel, account.Value);
-            if (versioningSchemeId.HasNoValue)
-            {
-                return;
-            }
+            if (versioningSchemeId.HasNoValue) return;
 
             var project = new Project(account.Value.Id, name, versioningSchemeId.Value, projectRequestModel.UserId,
                 DateTime.UtcNow);

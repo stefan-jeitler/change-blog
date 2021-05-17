@@ -19,16 +19,12 @@ namespace ChangeTracker.Domain
 
             if (deletedAt.HasValue &&
                 (deletedAt == DateTime.MinValue || deletedAt == DateTime.MaxValue))
-            {
                 throw new ArgumentException("Invalid creation date.");
-            }
 
             DeletedAt = deletedAt;
 
             if (createdAt == DateTime.MinValue || createdAt == DateTime.MaxValue)
-            {
                 throw new ArgumentException("Invalid creation date.");
-            }
 
             CreatedAt = createdAt;
         }

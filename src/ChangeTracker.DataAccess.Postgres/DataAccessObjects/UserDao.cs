@@ -85,7 +85,7 @@ namespace ChangeTracker.DataAccess.Postgres.DataAccessObjects
                 {
                     accountId,
                     lastUserId,
-                    count = (int)count
+                    count = (int) count
                 });
 
             return users.ToList();

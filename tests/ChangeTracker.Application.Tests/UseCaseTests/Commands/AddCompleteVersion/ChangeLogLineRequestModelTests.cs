@@ -19,7 +19,10 @@ namespace ChangeTracker.Application.Tests.UseCaseTests.Commands.AddCompleteVersi
             _testIssues = new List<string>(0);
         }
 
-        private ChangeLogLineRequestModel CreateRequestModel() => new(_testText, _testLabels, _testIssues);
+        private ChangeLogLineRequestModel CreateRequestModel()
+        {
+            return new(_testText, _testLabels, _testIssues);
+        }
 
         [Fact]
         public void Create_HappyPath_Successful()

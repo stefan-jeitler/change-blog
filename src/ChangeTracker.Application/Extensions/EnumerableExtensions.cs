@@ -20,12 +20,8 @@ namespace ChangeTracker.Application.Extensions
             {
                 var knownKeys = new HashSet<TKey>();
                 foreach (var element in source)
-                {
                     if (knownKeys.Add(keySelector(element)))
-                    {
                         yield return element;
-                    }
-                }
             }
         }
     }

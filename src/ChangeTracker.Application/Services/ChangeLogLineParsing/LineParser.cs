@@ -54,16 +54,10 @@ namespace ChangeTracker.Application.Services.ChangeLogLineParsing
             var parsedIssues = new List<Issue>();
 
             foreach (var i in issues)
-            {
                 if (Issue.TryParse(i, out var issue))
-                {
                     parsedIssues.Add(issue);
-                }
                 else
-                {
                     return Result.Failure<List<Issue>, string>(i);
-                }
-            }
 
             return Result.Success<List<Issue>, string>(parsedIssues);
         }
@@ -92,16 +86,10 @@ namespace ChangeTracker.Application.Services.ChangeLogLineParsing
         {
             var parsedLabels = new List<Label>();
             foreach (var l in labels)
-            {
                 if (Label.TryParse(l, out var label))
-                {
                     parsedLabels.Add(label);
-                }
                 else
-                {
                     return Result.Failure<List<Label>, string>(l);
-                }
-            }
 
             return Result.Success<List<Label>, string>(parsedLabels);
         }

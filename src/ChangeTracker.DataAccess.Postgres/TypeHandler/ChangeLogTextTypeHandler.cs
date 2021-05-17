@@ -11,6 +11,9 @@ namespace ChangeTracker.DataAccess.Postgres.TypeHandler
             parameter.Value = value.Value;
         }
 
-        public override ChangeLogText Parse(object value) => ChangeLogText.Parse(value.ToString());
+        public override ChangeLogText Parse(object value)
+        {
+            return ChangeLogText.Parse(value.ToString());
+        }
     }
 }

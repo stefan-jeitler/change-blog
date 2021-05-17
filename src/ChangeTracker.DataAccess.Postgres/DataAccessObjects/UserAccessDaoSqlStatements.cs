@@ -2,7 +2,7 @@ namespace ChangeTracker.DataAccess.Postgres.DataAccessObjects
 {
     public static class UserAccessDaoSqlStatements
     {
-        public static string FindUserIdByApiKeySql = @"
+        public const string FindUserIdByApiKeySql = @"
             SELECT u.id
                 FROM api_key ak
                          JOIN ""user"" u
@@ -12,7 +12,7 @@ namespace ChangeTracker.DataAccess.Postgres.DataAccessObjects
                                 AND ak.deleted_at IS NULL
                                 AND ak.expires_at > now()";
 
-        public static string AccountPermissionSql = @"
+        public const string AccountPermissionSql = @"
             SELECT EXISTS(SELECT NULL
                           FROM account a
                                    JOIN account_user au ON au.account_id = a.id
@@ -22,7 +22,7 @@ namespace ChangeTracker.DataAccess.Postgres.DataAccessObjects
                               AND au.user_id = @userId
                               AND rp.permission = @permission)";
 
-        public static string AccountUserPermission = @"
+        public const string AccountUserPermission = @"
             SELECT EXISTS(SELECT null from ""user"" u
                           join account_user au on u.id = au.user_id
                           join role r on au.role_id = r.id

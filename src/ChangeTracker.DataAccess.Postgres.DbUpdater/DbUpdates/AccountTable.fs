@@ -43,7 +43,7 @@ let addVersioningSchemeForeignKey (dbConnection: IDbConnection) =
                 |> Async.Ignore
     }
 
-let fixUniqeNameConstraint (dbConnection: IDbConnection) =
+let fixUniqueNameConstraint (dbConnection: IDbConnection) =
     async {
         do! 
             dbConnection.ExecuteAsync(removeUniqueNameConstraintSql)

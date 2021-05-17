@@ -26,7 +26,7 @@ let dbUpdates: DbUpdate list = [
     { Version = 15; Update = RoleTable.addBasicRoles}
     { Version = 16; Update = VersionTable.modifyUniqueConstraint}
     { Version = 17; Update = ProjectTable.addUniqueIndexOnAccountIdAndName}
-    { Version = 18; Update = AccountTable.fixUniqeNameConstraint}
+    { Version = 18; Update = AccountTable.fixUniqueNameConstraint}
     { Version = 19; Update = ChangeLogLineTable.fixUniqueIndexConstraint}
     { Version = 20; Update = VersioningSchemeTable.addUniquIndex}
     { Version = 21; Update = RolePermissionTable.addPermissionAddProject}

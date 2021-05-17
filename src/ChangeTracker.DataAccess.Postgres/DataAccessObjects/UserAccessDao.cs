@@ -3,6 +3,7 @@ using System.Data;
 using System.Threading.Tasks;
 using ChangeTracker.Application.UseCases;
 using Dapper;
+using static ChangeTracker.DataAccess.Postgres.DataAccessObjects.UserAccessDaoSqlStatements;
 
 namespace ChangeTracker.DataAccess.Postgres.DataAccessObjects
 {
@@ -21,7 +22,7 @@ namespace ChangeTracker.DataAccess.Postgres.DataAccessObjects
 
             using var dbConnection = _acquireDbConnection();
             return await dbConnection
-                .QueryFirstOrDefaultAsync<Guid?>(UserAccessDaoSqlStatements.FindUserIdByApiKeySql,
+                .QueryFirstOrDefaultAsync<Guid?>(FindUserIdByApiKeySql,
                     new {apiKey});
         }
 
@@ -29,7 +30,7 @@ namespace ChangeTracker.DataAccess.Postgres.DataAccessObjects
         {
             using var dbConnection = _acquireDbConnection();
 
-            return await dbConnection.ExecuteScalarAsync<bool>(UserAccessDaoSqlStatements.AccountPermissionSql, new
+            return await dbConnection.ExecuteScalarAsync<bool>(AccountPermissionSql, new
             {
                 accountId,
                 userId,
@@ -39,10 +40,9 @@ namespace ChangeTracker.DataAccess.Postgres.DataAccessObjects
 
         public async Task<bool> HasProjectPermissionAsync(Guid userId, Guid projectId, Permission permission)
         {
-            var query = UserAccessDaoSqlStatements.ProjectPermissionsSql;
             using var dbConnection = _acquireDbConnection();
 
-            return await dbConnection.ExecuteScalarAsync<bool>(query, new
+            return await dbConnection.ExecuteScalarAsync<bool>(ProjectPermissionsSql, new
             {
                 projectId,
                 userId,
@@ -52,10 +52,9 @@ namespace ChangeTracker.DataAccess.Postgres.DataAccessObjects
 
         public async Task<bool> HasVersionPermissionAsync(Guid userId, Guid versionId, Permission permission)
         {
-            var query = UserAccessDaoSqlStatements.VersionPermissionSql;
             using var dbConnection = _acquireDbConnection();
 
-            return await dbConnection.ExecuteScalarAsync<bool>(query, new
+            return await dbConnection.ExecuteScalarAsync<bool>(VersionPermissionSql, new
             {
                 userId,
                 versionId,
@@ -66,11 +65,10 @@ namespace ChangeTracker.DataAccess.Postgres.DataAccessObjects
         public async Task<bool> HasChangeLogLinePermissionAsync(Guid userId, Guid changeLogLineId,
             Permission permission)
         {
-            var query = UserAccessDaoSqlStatements.ChangeLogLinePermissionSql;
             using var dbConnection = _acquireDbConnection();
 
             return await dbConnection
-                .ExecuteScalarAsync<bool>(query, new
+                .ExecuteScalarAsync<bool>(ChangeLogLinePermissionSql, new
                 {
                     userId,
                     changeLogLineId,
@@ -82,7 +80,7 @@ namespace ChangeTracker.DataAccess.Postgres.DataAccessObjects
         {
             using var dbConnection = _acquireDbConnection();
 
-            return await dbConnection.ExecuteScalarAsync<bool>(UserAccessDaoSqlStatements.AccountUserPermission, new
+            return await dbConnection.ExecuteScalarAsync<bool>(AccountUserPermission, new
             {
                 userId,
                 permission = permission.ToString()

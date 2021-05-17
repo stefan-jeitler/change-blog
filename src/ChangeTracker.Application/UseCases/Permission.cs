@@ -9,6 +9,7 @@
         ViewRoles,
         ViewAccounts,
         ViewAccount,
-        ViewUsers
+        ViewUsers,
+        ViewUserProjects
     }
 }

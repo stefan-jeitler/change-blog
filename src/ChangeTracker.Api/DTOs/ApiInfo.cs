@@ -1,5 +1,6 @@
 ﻿using System;
-
+// ReSharper disable MemberCanBePrivate.Global
+// ReSharper disable UnusedAutoPropertyAccessor.Global
 // ReSharper disable ConvertIfStatementToSwitchStatement
 
 namespace ChangeTracker.Api.DTOs

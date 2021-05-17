@@ -2,7 +2,6 @@
 using System.Linq;
 using System.Threading.Tasks;
 using ChangeTracker.Application.UseCases;
-using ChangeTracker.Domain;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc.Filters;
 
@@ -12,7 +11,7 @@ namespace ChangeTracker.Api.Authorization
     {
         public abstract Task<bool> HasPermission(ActionExecutingContext context, Guid userId, Permission permission);
 
-        protected Guid? TryFindIdInHeader(HttpContext httpContext, string key)
+        protected static Guid? TryFindIdInHeader(HttpContext httpContext, string key)
         {
             if (httpContext.Request.RouteValues.TryGetValue(key, out var routeValue) &&
                 Guid.TryParse(routeValue?.ToString(), out var idInRoute))
@@ -29,7 +28,7 @@ namespace ChangeTracker.Api.Authorization
             return null;
         }
 
-        protected T TryFindInBody<T>(ActionExecutingContext context)
+        protected static T TryFindInBody<T>(ActionExecutingContext context)
         {
             var id = context.ActionArguments
                 .Values.SingleOrDefault(x => x is T);

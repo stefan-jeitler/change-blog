@@ -6,6 +6,7 @@ using ChangeTracker.DataAccess.Postgres;
 using ChangeTracker.DataAccess.Postgres.DataAccessObjects;
 using ChangeTracker.Domain;
 using Microsoft.AspNetCore.Mvc.Filters;
+// ReSharper disable ClassNeverInstantiated.Global
 
 namespace ChangeTracker.Api.Authorization.PermissionChecks
 {
@@ -23,7 +24,7 @@ namespace ChangeTracker.Api.Authorization.PermissionChecks
         public override async Task<bool> HasPermission(ActionExecutingContext context, Guid userId,
             Permission permission)
         {
-            var accountIdInRoute = TryFindIdInHeader(context.HttpContext, "accountId");
+            var accountIdInRoute = TryFindIdInHeader(context.HttpContext, KnownIdentifiers.AccountId);
             if (accountIdInRoute.HasValue)
             {
                 return await _userAccessDao.HasAccountPermissionAsync(userId, accountIdInRoute.Value, permission);

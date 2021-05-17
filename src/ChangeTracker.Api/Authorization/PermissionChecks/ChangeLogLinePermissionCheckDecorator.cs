@@ -23,7 +23,7 @@ namespace ChangeTracker.Api.Authorization.PermissionChecks
         public override async Task<bool> HasPermission(ActionExecutingContext context, Guid userId,
             Permission permission)
         {
-            var changeLogLineId = TryFindIdInHeader(context.HttpContext, "changeLogLineId");
+            var changeLogLineId = TryFindIdInHeader(context.HttpContext, KnownIdentifiers.ChangeLogLineId);
             if (changeLogLineId.HasValue)
             {
                 return await _userAccessDao.HasChangeLogLinePermissionAsync(userId, changeLogLineId.Value, permission);

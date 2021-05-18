@@ -8,7 +8,7 @@
         ViewAccountProjects,
         ViewRoles,
         ViewAccount,
-        ViewUsers,
+        ViewAccountUsers,
         ViewUserProjects
     }
 }

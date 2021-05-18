@@ -48,7 +48,7 @@ namespace ChangeTracker.DataAccess.Postgres.Tests.DataAccessObjectsTests
 
             var hasPermission =
                 await userAccessDao.HasAccountPermissionAsync(t_ua_account_01_user_01, t_ua_account_01,
-                    Permission.ViewUsers);
+                    Permission.ViewAccountUsers);
 
             hasPermission.Should().BeFalse();
         }
@@ -62,7 +62,7 @@ namespace ChangeTracker.DataAccess.Postgres.Tests.DataAccessObjectsTests
 
             var hasPermission =
                 await userAccessDao.HasAccountPermissionAsync(t_ua_account_01_user_02, t_ua_account_01,
-                    Permission.ViewUsers);
+                    Permission.ViewAccountUsers);
 
             hasPermission.Should().BeTrue();
         }

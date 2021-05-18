@@ -49,7 +49,7 @@ let private addSomeViewPermissionsSql =
     """
       """
       INSERT INTO role_permission
-      SELECT id, 'ViewUsers', now() from role where name in ('PlatformManager')
+      SELECT id, 'ViewAccountUsers', now() from role where name in ('PlatformManager', 'ProductOwner')
       ON CONFLICT (role_id, permission) DO NOTHING
     """ ]
 

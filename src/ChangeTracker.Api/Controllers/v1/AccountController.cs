@@ -51,7 +51,7 @@ namespace ChangeTracker.Api.Controllers.v1
         }
 
         [HttpGet("{accountId:Guid}/users")]
-        [NeedsPermission(Permission.ViewUsers)]
+        [NeedsPermission(Permission.ViewAccountUsers)]
         public async Task<ActionResult> GetUsersAsync(Guid accountId,
             ushort limit = UsersQueryRequestModel.MaxChunkCount,
             Guid? lastUserId = null)

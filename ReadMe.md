@@ -18,7 +18,7 @@ both should depend on a web service.
 
 ![Dependencies](./docs/assets/ChangeTracker.png)  
 
-The development team automatically pushes its changes during deployment with all the information the management team needs.  
+The development team automatically pushes its changes during deployment with all the information that the management team needs.
 
 ## Disclaimer
 
@@ -53,10 +53,10 @@ The architecture of the app is mainly influenced by:
 
 ## Database
 
-I decided to use a SQL database rather than a NoSQL db,  
-because relational databases are a mature technology that fulfills all my requirements.  
+I decided to use an SQL database rather than a NoSQL db,  
+because relational databases are a mature technology that meets most of my requirements.
 
-[DatabaseSchema](./docs/assets/ChangeTrackerDbSchema.png)
+[Database Schema](./docs/assets/ChangeTrackerDbSchema.png)
 
 ## Key Features
 

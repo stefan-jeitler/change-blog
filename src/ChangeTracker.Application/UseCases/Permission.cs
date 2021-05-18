@@ -7,7 +7,6 @@
         CloseProject,
         ViewAccountProjects,
         ViewRoles,
-        ViewAccounts,
         ViewAccount,
         ViewUsers,
         ViewUserProjects

@@ -74,26 +74,14 @@ namespace ChangeTracker.DataAccess.Postgres.Tests.DataAccessObjectsTests
         }
 
         [Fact]
-        public async Task GetAccounts_ForUser_ReturnsUserAccounts()
-        {
-            var accountDao = CreateDao();
-            var t_ua_account_01_user_02 = Guid.Parse("7aa9004b-ed6f-4862-8307-579030c860be");
-
-            var accounts = await accountDao.GetAccountsAsync(t_ua_account_01_user_02);
-
-            accounts.Should().HaveCount(1);
-            accounts.Should().Contain(x => x.Id == Guid.Parse("ec3a44cc-0ba4-4c97-ad7f-911e9f6a73bc"));
-        }
-
-        [Fact]
-        public async Task GetAccounts_ForUserWithOnlyDefaultUserRole_ReturnNoAccount()
+        public async Task GetAccounts_ForUserWithOnlyDefaultUserRole_ReturnsAccount()
         {
             var accountDao = CreateDao();
             var t_ua_account_01_user_01 = Guid.Parse("f575503e-4eee-4d6d-b2c1-f11d8fc3da76");
 
             var accounts = await accountDao.GetAccountsAsync(t_ua_account_01_user_01);
 
-            accounts.Should().BeEmpty();
+            accounts.Should().HaveCount(1);
         }
     }
 }

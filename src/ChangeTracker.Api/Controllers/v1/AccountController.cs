@@ -31,7 +31,7 @@ namespace ChangeTracker.Api.Controllers.v1
         }
 
         [HttpGet]
-        [NeedsPermission(Permission.ViewAccounts)]
+        [NeedsPermission(Permission.ViewAccount)]
         public async Task<ActionResult> GetAccountsAsync()
         {
             var userId = HttpContext.GetUserId();

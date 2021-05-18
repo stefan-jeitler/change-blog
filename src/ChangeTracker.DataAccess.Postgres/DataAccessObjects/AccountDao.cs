@@ -71,7 +71,7 @@ namespace ChangeTracker.DataAccess.Postgres.DataAccessObjects
                 .QueryAsync<Account>(getAllUserAccountsSql, new
                 {
                     userId,
-                    permission = Permission.ViewAccounts.ToString()
+                    permission = Permission.ViewAccount.ToString()
                 });
 
             return accounts.ToList();

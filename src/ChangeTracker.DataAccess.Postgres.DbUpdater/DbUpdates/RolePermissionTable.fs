@@ -29,7 +29,7 @@ let private addPermissionViewChangeLogLinesSql = """
 let private addSomeViewPermissionsSql =
     [ """
       INSERT INTO role_permission
-      SELECT id, 'CloseProject', now() from role where name in ('ProductOwner', 'PlatformManager', 'Developer')
+      SELECT id, 'CloseProject', now() from role where name in ('ProductOwner', 'PlatformManager')
       ON CONFLICT (role_id, permission) DO NOTHING
     """
       """
@@ -44,7 +44,7 @@ let private addSomeViewPermissionsSql =
     """
       """
       INSERT INTO role_permission
-      SELECT id, 'ViewAccount', now() from role where name in ('ProductOwner', 'PlatformManager', 'Developer')
+      SELECT id, 'ViewAccount', now() from role where name in ('DefaultUser', 'Support', 'ScrumMaster', 'ProductOwner', 'ProductManager', 'PlatformManager', 'Developer')
       ON CONFLICT (role_id, permission) DO NOTHING
     """
       """
@@ -52,12 +52,6 @@ let private addSomeViewPermissionsSql =
       SELECT id, 'ViewUsers', now() from role where name in ('PlatformManager')
       ON CONFLICT (role_id, permission) DO NOTHING
     """ ]
-
-let private addViewAccountsPermissionSql = """
-        INSERT INTO role_permission
-        SELECT id, 'ViewAccounts', now() from role where name in ('Support', 'ScrumMaster', 'ProductOwner', 'ProductManager', 'PlatformManager', 'Developer')
-        ON CONFLICT (role_id, permission) DO NOTHING
-    """
 
 let create (dbConnection: IDbConnection) =
     dbConnection.ExecuteAsync(createRolePermissionSql)
@@ -89,8 +83,3 @@ let addSomeViewPermissions (dbConnection: IDbConnection) =
         }
 
     insertPermissions addSomeViewPermissionsSql
-
-let addViewAccountsPermission (dbConnection: IDbConnection) =
-    dbConnection.ExecuteAsync(addViewAccountsPermissionSql)
-    |> Async.AwaitTask
-    |> Async.Ignore

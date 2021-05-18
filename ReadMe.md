@@ -3,7 +3,7 @@
 ChangeTracker is web service that enables you to keep track of your releases and changes.  
 
 Due to the continuous movement towards microservices releases are harder to track.  
-Often, monoliths gets subdivided into many micro/nano services, each of them are deployed independently with its own versioning.  
+Often monoliths gets subdivided into many micro/nano services, each of them are deployed independently with its own versioning.  
 
 Imagine you're a product owner who is responsible for many products.  
 In order to communicate the changes to the customer you need to be up-to-date about the releases.  
@@ -14,7 +14,7 @@ This can be quite cumbersome with an increasing number of products.
 
 A possible solution is to invert the dependencies.  
 The management team where the product owner belongs to should not depend on developers,  
-both should dependend on a web service.  
+both should depend on a web service.  
 
 ![Dependencies](./docs/assets/ChangeTracker.png)  
 
@@ -22,7 +22,7 @@ The development team automatically pushes its changes during deployment with all
 
 ## Disclaimer
 
-This is a side-project and should not be used in a prodcutive environment.  
+This is a side project and should not be used in a productive environment.  
 
 ## Deployment Environments
 
@@ -54,11 +54,11 @@ The architecture of the app is mainly influenced by:
 ## Database
 
 I decided to use a SQL database rather than a NoSQL db,  
-because relational databases are a mature technology that fullfils all my requirements.  
+because relational databases are a mature technology that fulfills all my requirements.  
 
 [DatabaseSchema](./docs/assets/ChangeTrackerDbSchema.png)
 
 ## Key Features
 
-* Multitenant capabilities
+* Multi-tenant capabilities
 * Role-based access control

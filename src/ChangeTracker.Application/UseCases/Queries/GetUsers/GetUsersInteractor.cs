@@ -21,7 +21,7 @@ namespace ChangeTracker.Application.UseCases.Queries.GetUsers
             var currentUser = await _userDao.GetUserAsync(queryRequestModel.UserId);
 
             var users = await _userDao.GetUsersAsync(queryRequestModel.AccountId,
-                queryRequestModel.Count,
+                queryRequestModel.Limit,
                 queryRequestModel.LastUserId);
 
             return users.Select(x => new UserResponseModel(x.Id,

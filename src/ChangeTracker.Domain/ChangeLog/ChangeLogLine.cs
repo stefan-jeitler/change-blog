@@ -92,7 +92,7 @@ namespace ChangeTracker.Domain.ChangeLog
             RemoveLabels(new List<Label>(1) {label});
         }
 
-        public void RemoveLabels(IReadOnlyCollection<Label> labels)
+        public void RemoveLabels(IEnumerable<Label> labels)
         {
             Labels = Labels.Except(labels);
         }
@@ -115,7 +115,7 @@ namespace ChangeTracker.Domain.ChangeLog
             RemoveIssues(new List<Issue>(1) {issue});
         }
 
-        public void RemoveIssues(IReadOnlyCollection<Issue> issues)
+        public void RemoveIssues(IEnumerable<Issue> issues)
         {
             Issues = Issues.Except(issues);
         }

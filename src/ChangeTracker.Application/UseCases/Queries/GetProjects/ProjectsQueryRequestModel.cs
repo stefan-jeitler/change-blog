@@ -4,9 +4,9 @@ namespace ChangeTracker.Application.UseCases.Queries.GetProjects
 {
     public class ProjectsQueryRequestModel
     {
-        public const ushort MaxChunkCount = 100;
+        public const ushort MaxLimit = 100;
 
-        public ProjectsQueryRequestModel(Guid userId, Guid accountId, Guid? lastProjectId, ushort count,
+        public ProjectsQueryRequestModel(Guid userId, Guid accountId, Guid? lastProjectId, ushort limit,
             bool includeClosedProjects)
         {
             if (userId == Guid.Empty)
@@ -19,14 +19,14 @@ namespace ChangeTracker.Application.UseCases.Queries.GetProjects
 
             AccountId = accountId;
             LastProjectId = lastProjectId;
-            Count = Math.Min(count, MaxChunkCount);
+            Limit = Math.Min(limit, MaxLimit);
             IncludeClosedProjects = includeClosedProjects;
         }
 
         public Guid UserId { get; }
         public Guid AccountId { get; }
         public Guid? LastProjectId { get; }
-        public ushort Count { get; }
+        public ushort Limit { get; }
         public bool IncludeClosedProjects { get; }
     }
 }

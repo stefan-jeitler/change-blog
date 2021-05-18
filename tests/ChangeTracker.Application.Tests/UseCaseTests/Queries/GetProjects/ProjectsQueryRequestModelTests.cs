@@ -36,7 +36,7 @@ namespace ChangeTracker.Application.Tests.UseCaseTests.Queries.GetProjects
             requestModel.UserId.Should().Be(_testUserId);
             requestModel.AccountId.Should().Be(_testAccountId);
             requestModel.LastProjectId.Should().Be(_testLastProjectId);
-            requestModel.Count.Should().Be(_testCount);
+            requestModel.Limit.Should().Be(_testCount);
             requestModel.IncludeClosedProjects.Should().Be(true);
         }
 
@@ -76,7 +76,7 @@ namespace ChangeTracker.Application.Tests.UseCaseTests.Queries.GetProjects
             var requestModel = CreateRequestModel();
 
             // assert
-            requestModel.Count.Should().Be(ProjectsQueryRequestModel.MaxChunkCount);
+            requestModel.Limit.Should().Be(ProjectsQueryRequestModel.MaxLimit);
         }
     }
 }

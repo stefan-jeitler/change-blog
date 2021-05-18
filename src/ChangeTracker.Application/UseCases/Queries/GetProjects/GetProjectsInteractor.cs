@@ -27,7 +27,7 @@ namespace ChangeTracker.Application.UseCases.Queries.GetProjects
             var projectQuerySettings = new ProjectQuerySettings(requestModel.AccountId,
                 requestModel.UserId,
                 requestModel.LastProjectId,
-                requestModel.Count,
+                requestModel.Limit,
                 requestModel.IncludeClosedProjects);
 
             var projects = await _projectDao.GetProjectsAsync(projectQuerySettings);

@@ -22,7 +22,7 @@ namespace ChangeTracker.Api.Extensions
 
             var uriBuilder = new UriBuilder
             {
-                //Scheme = scheme,
+                Scheme = "https",
                 Host = request.Host.Host,
                 Path = relativePath,
                 Port = request.Host.Port ?? -1

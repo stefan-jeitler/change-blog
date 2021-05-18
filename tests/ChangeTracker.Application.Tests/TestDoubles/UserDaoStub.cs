@@ -32,10 +32,10 @@ namespace ChangeTracker.Application.Tests.TestDoubles
         ///     The actual implementation of IUserDao is tested separately.
         /// </summary>
         /// <param name="accountId"></param>
-        /// <param name="count"></param>
+        /// <param name="limit"></param>
         /// <param name="lastUserId"></param>
         /// <returns></returns>
-        public async Task<IList<User>> GetUsersAsync(Guid accountId, ushort count, Guid? lastUserId)
+        public async Task<IList<User>> GetUsersAsync(Guid accountId, ushort limit, Guid? lastUserId)
         {
             await Task.Yield();
 

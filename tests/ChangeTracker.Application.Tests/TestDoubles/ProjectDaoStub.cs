@@ -44,7 +44,7 @@ namespace ChangeTracker.Application.Tests.TestDoubles
                 .Where(x => x.AccountId == querySettings.AccountId)
                 .OrderBy(x => x.Name.Value)
                 .Where(x => lastEmail is null || string.Compare(x.Name, lastEmail.Name) > 0)
-                .Take(querySettings.Count)
+                .Take(querySettings.Limit)
                 .ToList();
         }
 

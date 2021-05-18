@@ -36,7 +36,7 @@ namespace ChangeTracker.Application.Tests.UseCaseTests.Queries.GetUsers
             requestModel.UserId.Should().Be(_testUserId);
             requestModel.AccountId.Should().Be(_testAccountId);
             requestModel.LastUserId.Should().Be(_testLastUserId);
-            requestModel.Count.Should().Be(_testCount);
+            requestModel.Limit.Should().Be(_testCount);
         }
 
         [Fact]
@@ -75,7 +75,7 @@ namespace ChangeTracker.Application.Tests.UseCaseTests.Queries.GetUsers
             var requestModel = CreateRequestModel();
 
             // assert
-            requestModel.Count.Should().Be(UsersQueryRequestModel.MaxChunkCount);
+            requestModel.Limit.Should().Be(UsersQueryRequestModel.MaxChunkCount);
         }
     }
 }

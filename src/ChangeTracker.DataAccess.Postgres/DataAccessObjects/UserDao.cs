@@ -59,7 +59,7 @@ namespace ChangeTracker.DataAccess.Postgres.DataAccessObjects
             return users.ToList();
         }
 
-        public async Task<IList<User>> GetUsersAsync(Guid accountId, ushort count, Guid? lastUserId)
+        public async Task<IList<User>> GetUsersAsync(Guid accountId, ushort limit, Guid? lastUserId)
         {
             var pagingFilter = lastUserId.HasValue
                 ? "AND u.email > (SELECT us.email FROM \"user\" us where us.id = @lastUserId)"
@@ -78,14 +78,14 @@ namespace ChangeTracker.DataAccess.Postgres.DataAccessObjects
                 WHERE au.account_id = @accountId
                   {pagingFilter}
                 ORDER BY u.email
-                    FETCH FIRST (@count) ROWS ONLY";
+                    FETCH FIRST (@limit) ROWS ONLY";
 
             var users = await _dbAccessor.DbConnection
                 .QueryAsync<User>(getAccountUsersSql, new
                 {
                     accountId,
                     lastUserId,
-                    count = (int) count
+                    limit = (int) limit
                 });
 
             return users.ToList();

@@ -106,7 +106,7 @@
               {pagingFilter}
               {includeClosedProjectsFilter}
             ORDER BY name
-                FETCH FIRST (@count) ROWS ONLY";
+                FETCH FIRST (@limit) ROWS ONLY";
         }
     }
 }

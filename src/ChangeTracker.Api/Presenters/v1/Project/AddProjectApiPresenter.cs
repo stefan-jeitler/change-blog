@@ -1,17 +1,17 @@
 ﻿using System;
 using ChangeTracker.Api.DTOs;
 using ChangeTracker.Api.Extensions;
-using ChangeTracker.Application.UseCases.Commands.AddProject;
+using ChangeTracker.Application.UseCases.Commands.AddProduct;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
 namespace ChangeTracker.Api.Presenters.v1.Project
 {
-    public class AddProjectApiPresenter : BasePresenter, IAddProjectOutputPort
+    public class AddProductApiPresenter : BasePresenter, IAddProductOutputPort
     {
         private readonly HttpContext _httpContext;
 
-        public AddProjectApiPresenter(HttpContext httpContext)
+        public AddProductApiPresenter(HttpContext httpContext)
         {
             _httpContext = httpContext;
         }
@@ -31,10 +31,10 @@ namespace ChangeTracker.Api.Presenters.v1.Project
             Response = new BadRequestObjectResult(DefaultResponse.Create($"Invalid name {name}."));
         }
 
-        public void ProjectAlreadyExists(Guid projectId)
+        public void ProductAlreadyExists(Guid productId)
         {
             Response = new ConflictObjectResult(
-                DefaultResponse.Create($"Project already exists. ProjectId {projectId}"));
+                DefaultResponse.Create($"Product already exists. ProductId {productId}"));
         }
 
         public void VersioningSchemeDoesNotExist()
@@ -47,10 +47,10 @@ namespace ChangeTracker.Api.Presenters.v1.Project
             Response = new ConflictObjectResult(DefaultResponse.Create(reason));
         }
 
-        public void Created(Guid accountId, Guid projectId)
+        public void Created(Guid accountId, Guid productId)
         {
-            var location = _httpContext.CreateLinkTo($"api/v1/projects/{projectId}");
-            Response = new CreatedResult(location, DefaultResponse.Create($"Project with id {projectId} added."));
+            var location = _httpContext.CreateLinkTo($"api/v1/products/{productId}");
+            Response = new CreatedResult(location, DefaultResponse.Create($"Product with id {productId} added."));
         }
     }
 }

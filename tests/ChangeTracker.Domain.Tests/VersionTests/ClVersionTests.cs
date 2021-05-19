@@ -10,7 +10,7 @@ namespace ChangeTracker.Domain.Tests.VersionTests
         private DateTime _testCreationDate;
         private DateTime? _testDeletedDate;
         private Guid _testId;
-        private Guid _testProjectId;
+        private Guid _testProductId;
         private DateTime? _testReleaseDate;
         private ClVersionValue _testVersionValue;
 
@@ -18,7 +18,7 @@ namespace ChangeTracker.Domain.Tests.VersionTests
         {
             _testVersionValue = ClVersionValue.Parse("1.2.3-dev.0");
             _testId = Guid.Parse("4eaa1f8e-46d4-4cdd-92d4-6a2fe6f5ac10");
-            _testProjectId = Guid.Parse("d816fb67-f2c3-4d2a-8713-f93a432fbf41");
+            _testProductId = Guid.Parse("d816fb67-f2c3-4d2a-8713-f93a432fbf41");
             _testReleaseDate = DateTime.Parse("2021-04-02T19:30");
             _testCreationDate = DateTime.Parse("2021-04-02T17:30");
             _testDeletedDate = null;
@@ -26,7 +26,7 @@ namespace ChangeTracker.Domain.Tests.VersionTests
 
         private ClVersion CreateVersion()
         {
-            return new(_testId, _testProjectId, _testVersionValue, _testReleaseDate,
+            return new(_testId, _testProductId, _testVersionValue, _testReleaseDate,
                 _testCreationDate, _testDeletedDate);
         }
 
@@ -36,7 +36,7 @@ namespace ChangeTracker.Domain.Tests.VersionTests
             var version = CreateVersion();
 
             version.Id.Should().Be(_testId);
-            version.ProjectId.Should().Be(_testProjectId);
+            version.ProductId.Should().Be(_testProductId);
             version.Value.Should().Be(_testVersionValue);
             version.ReleasedAt.Should().Be(_testReleaseDate);
             version.CreatedAt.Should().Be(_testCreationDate);
@@ -54,9 +54,9 @@ namespace ChangeTracker.Domain.Tests.VersionTests
         }
 
         [Fact]
-        public void Create_WithEmptyProjectId_ArgumentException()
+        public void Create_WithEmptyProductId_ArgumentException()
         {
-            _testProjectId = Guid.Empty;
+            _testProductId = Guid.Empty;
 
             Func<ClVersion> act = CreateVersion;
 
@@ -213,7 +213,7 @@ namespace ChangeTracker.Domain.Tests.VersionTests
             var version1 = CreateVersion();
 
             _testId = Guid.Parse("379b912d-34da-4377-8eef-dcaade0d0e09");
-            _testProjectId = Guid.Parse("c00141a4-da01-4511-9af2-71847858424a");
+            _testProductId = Guid.Parse("c00141a4-da01-4511-9af2-71847858424a");
             var version2 = CreateVersion();
 
             // act
@@ -243,7 +243,7 @@ namespace ChangeTracker.Domain.Tests.VersionTests
             var version1 = CreateVersion();
 
             _testId = Guid.Parse("379b912d-34da-4377-8eef-dcaade0d0e09");
-            _testProjectId = Guid.Parse("c00141a4-da01-4511-9af2-71847858424a");
+            _testProductId = Guid.Parse("c00141a4-da01-4511-9af2-71847858424a");
             var version2 = CreateVersion();
 
             // act

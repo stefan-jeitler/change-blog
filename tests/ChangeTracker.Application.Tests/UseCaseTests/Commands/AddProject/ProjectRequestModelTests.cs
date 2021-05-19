@@ -1,26 +1,26 @@
 ﻿using System;
-using ChangeTracker.Application.UseCases.Commands.AddProject;
+using ChangeTracker.Application.UseCases.Commands.AddProduct;
 using FluentAssertions;
 using Xunit;
 
-namespace ChangeTracker.Application.Tests.UseCaseTests.Commands.AddProject
+namespace ChangeTracker.Application.Tests.UseCaseTests.Commands.AddProduct
 {
-    public class ProjectRequestModelTests
+    public class ProductRequestModelTests
     {
         private Guid _testAccountId;
         private string _testName;
         private Guid? _testSchemeId;
         private Guid _testUserId;
 
-        public ProjectRequestModelTests()
+        public ProductRequestModelTests()
         {
             _testAccountId = Guid.Parse("c1b588ee-069d-453e-8f74-fc43b7ae0649");
-            _testName = "Project X";
+            _testName = "Product X";
             _testSchemeId = Guid.Parse("76a96500-6446-42b3-bb3d-5e318b338b0d");
             _testUserId = Guid.Parse("a1b89f2d-d13f-4572-8522-8a92fb4fdb6a");
         }
 
-        private ProjectRequestModel CreateRequestModel()
+        private ProductRequestModel CreateRequestModel()
         {
             return new(_testAccountId, _testName, _testSchemeId, _testUserId);
         }
@@ -42,7 +42,7 @@ namespace ChangeTracker.Application.Tests.UseCaseTests.Commands.AddProject
         {
             _testAccountId = Guid.Empty;
 
-            Func<ProjectRequestModel> act = CreateRequestModel;
+            Func<ProductRequestModel> act = CreateRequestModel;
 
             act.Should().ThrowExactly<ArgumentException>();
         }
@@ -52,7 +52,7 @@ namespace ChangeTracker.Application.Tests.UseCaseTests.Commands.AddProject
         {
             _testName = null;
 
-            Func<ProjectRequestModel> act = CreateRequestModel;
+            Func<ProductRequestModel> act = CreateRequestModel;
 
             act.Should().ThrowExactly<ArgumentNullException>();
         }
@@ -62,7 +62,7 @@ namespace ChangeTracker.Application.Tests.UseCaseTests.Commands.AddProject
         {
             _testSchemeId = Guid.Empty;
 
-            Func<ProjectRequestModel> act = CreateRequestModel;
+            Func<ProductRequestModel> act = CreateRequestModel;
 
             act.Should().ThrowExactly<ArgumentException>();
         }
@@ -72,7 +72,7 @@ namespace ChangeTracker.Application.Tests.UseCaseTests.Commands.AddProject
         {
             _testUserId = Guid.Empty;
 
-            Func<ProjectRequestModel> act = CreateRequestModel;
+            Func<ProductRequestModel> act = CreateRequestModel;
 
             act.Should().ThrowExactly<ArgumentException>();
         }

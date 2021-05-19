@@ -39,7 +39,7 @@ namespace ChangeTracker.Application.Tests.UseCaseTests.Commands.IssuesTests
             var requestModel = new ChangeLogLineIssueRequestModel(lineId, issue.Value);
             var addLabelInteractor = CreateInteractor();
 
-            _changeLogDaoStub.ChangeLogs.Add(new ChangeLogLine(lineId, null, TestAccount.Project.Id,
+            _changeLogDaoStub.ChangeLogs.Add(new ChangeLogLine(lineId, null, TestAccount.Product.Id,
                 ChangeLogText.Parse("Some text"), 0U, DateTime.Parse("2021-04-17")));
             _outputPortMock.Setup(m => m.Added(It.IsAny<Guid>()));
 
@@ -61,7 +61,7 @@ namespace ChangeTracker.Application.Tests.UseCaseTests.Commands.IssuesTests
             var requestModel = new ChangeLogLineIssueRequestModel(lineId, "# 234");
             var addLabelInteractor = CreateInteractor();
 
-            _changeLogDaoStub.ChangeLogs.Add(new ChangeLogLine(lineId, null, TestAccount.Project.Id,
+            _changeLogDaoStub.ChangeLogs.Add(new ChangeLogLine(lineId, null, TestAccount.Product.Id,
                 ChangeLogText.Parse("Some text"), 0U, DateTime.Parse("2021-04-17")));
             _outputPortMock.Setup(m => m.InvalidIssue(It.IsAny<string>()));
 
@@ -80,7 +80,7 @@ namespace ChangeTracker.Application.Tests.UseCaseTests.Commands.IssuesTests
             var requestModel = new ChangeLogLineIssueRequestModel(lineId, "#1234");
             var addLabelInteractor = CreateInteractor();
 
-            _changeLogDaoStub.ChangeLogs.Add(new ChangeLogLine(lineId, null, TestAccount.Project.Id,
+            _changeLogDaoStub.ChangeLogs.Add(new ChangeLogLine(lineId, null, TestAccount.Product.Id,
                 ChangeLogText.Parse("Some text"), 0U, DateTime.Parse("2021-04-17")));
             _outputPortMock.Setup(m => m.Conflict(It.IsAny<string>()));
 
@@ -102,7 +102,7 @@ namespace ChangeTracker.Application.Tests.UseCaseTests.Commands.IssuesTests
             var addLabelInteractor = CreateInteractor();
 
             var existingIssues = Enumerable.Range(0, 10).Select(x => $"{x:D5}").Select(Issue.Parse);
-            _changeLogDaoStub.ChangeLogs.Add(new ChangeLogLine(lineId, null, TestAccount.Project.Id,
+            _changeLogDaoStub.ChangeLogs.Add(new ChangeLogLine(lineId, null, TestAccount.Product.Id,
                 ChangeLogText.Parse("Some text"), 0U, DateTime.Parse("2021-04-17"), Array.Empty<Label>(),
                 existingIssues));
             _outputPortMock.Setup(m => m.MaxIssuesReached(It.IsAny<int>()));

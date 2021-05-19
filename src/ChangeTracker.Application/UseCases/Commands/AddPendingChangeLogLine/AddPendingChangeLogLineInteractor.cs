@@ -2,7 +2,7 @@
 using System.Threading.Tasks;
 using ChangeTracker.Application.DataAccess;
 using ChangeTracker.Application.DataAccess.ChangeLogs;
-using ChangeTracker.Application.DataAccess.Projects;
+using ChangeTracker.Application.DataAccess.Products;
 using ChangeTracker.Application.Services.ChangeLogLineParsing;
 using ChangeTracker.Domain;
 using ChangeTracker.Domain.ChangeLog;
@@ -14,13 +14,13 @@ namespace ChangeTracker.Application.UseCases.Commands.AddPendingChangeLogLine
     {
         private readonly IChangeLogCommandsDao _changeLogCommands;
         private readonly IChangeLogQueriesDao _changeLogQueries;
-        private readonly IProjectDao _projectDao;
+        private readonly IProductDao _productDao;
         private readonly IUnitOfWork _unitOfWork;
 
-        public AddPendingChangeLogLineInteractor(IProjectDao projectDao, IChangeLogQueriesDao changeLogQueriesDao,
+        public AddPendingChangeLogLineInteractor(IProductDao productDao, IChangeLogQueriesDao changeLogQueriesDao,
             IChangeLogCommandsDao changeLogCommands, IUnitOfWork unitOfWork)
         {
-            _projectDao = projectDao ?? throw new ArgumentNullException(nameof(projectDao));
+            _productDao = productDao ?? throw new ArgumentNullException(nameof(productDao));
             _changeLogQueries = changeLogQueriesDao ?? throw new ArgumentNullException(nameof(changeLogQueriesDao));
             _unitOfWork = unitOfWork ?? throw new ArgumentNullException(nameof(unitOfWork));
             _changeLogCommands = changeLogCommands ?? throw new ArgumentNullException(nameof(changeLogCommands));
@@ -31,14 +31,14 @@ namespace ChangeTracker.Application.UseCases.Commands.AddPendingChangeLogLine
         {
             _unitOfWork.Start();
 
-            var project = await _projectDao.FindProjectAsync(lineRequestModel.ProjectId);
-            if (project.HasNoValue)
+            var product = await _productDao.FindProductAsync(lineRequestModel.ProductId);
+            if (product.HasNoValue)
             {
-                output.ProjectDoesNotExist();
+                output.ProductDoesNotExist();
                 return;
             }
 
-            var line = await CreateChangeLogLineAsync(output, lineRequestModel, project.Value);
+            var line = await CreateChangeLogLineAsync(output, lineRequestModel, product.Value);
             if (line.HasNoValue)
                 return;
 
@@ -47,13 +47,13 @@ namespace ChangeTracker.Application.UseCases.Commands.AddPendingChangeLogLine
 
         private async Task<Maybe<ChangeLogLine>> CreateChangeLogLineAsync(IAddPendingLineOutputPort output,
             PendingLineRequestModel requestModel,
-            Project project)
+            Product product)
         {
             var parsedLine = ParseLine(output, requestModel);
             if (parsedLine.HasNoValue)
                 return Maybe<ChangeLogLine>.None;
 
-            var changeLogs = await _changeLogQueries.GetChangeLogsAsync(project.Id);
+            var changeLogs = await _changeLogQueries.GetChangeLogsAsync(product.Id);
 
             if (!changeLogs.IsPositionAvailable)
             {
@@ -68,7 +68,7 @@ namespace ChangeTracker.Application.UseCases.Commands.AddPendingChangeLogLine
             }
 
             var changeLogLine = new ChangeLogLine(Guid.NewGuid(),
-                null, project.Id,
+                null, product.Id,
                 parsedLine.Value.Text, changeLogs.NextFreePosition, DateTime.UtcNow,
                 parsedLine.Value.Labels, parsedLine.Value.Issues);
 

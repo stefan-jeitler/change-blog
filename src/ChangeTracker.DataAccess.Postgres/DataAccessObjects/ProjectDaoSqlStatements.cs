@@ -1,8 +1,8 @@
 ﻿namespace ChangeTracker.DataAccess.Postgres.DataAccessObjects
 {
-    public static class ProjectDaoSqlStatements
+    public static class ProductDaoSqlStatements
     {
-        public const string FindProjectByAccountAndNameSql = @"
+        public const string FindProductByAccountAndNameSql = @"
             SELECT p.id,
                    p.account_id      AS accountId,
                    p.name,
@@ -15,13 +15,13 @@
                    p.created_by_user AS createdByUser,
                    p.created_at      AS createdAt,
                    p.closed_at       AS closedAt
-            FROM project p
+            FROM product p
                      JOIN account a on p.account_id = a.id
                      JOIN versioning_scheme vs on p.versioning_scheme_id = vs.id
             WHERE a.id = @accountId
               AND LOWER(p.name) = @name";
 
-        public const string FindProjectByProjectIdSql = @"
+        public const string FindProductByProductIdSql = @"
             SELECT p.id,
                    p.account_id      AS accountId,
                    p.name,
@@ -34,17 +34,17 @@
                    p.created_by_user AS createdByUser,
                    p.created_at      AS createdAt,
                    p.closed_at       AS closedAt
-            FROM project p
+            FROM product p
                      JOIN versioning_scheme vs on p.versioning_scheme_id = vs.id
-            WHERE p.id = @projectId";
+            WHERE p.id = @productId";
 
-        public static string GetProjectsForAccountSql(bool usePaging, bool includeClosedProjects)
+        public static string GetProductsForAccountSql(bool usePaging, bool includeClosedProducts)
         {
             var pagingFilter = usePaging
-                ? "AND LOWER(p.name) > (Select LOWER(ps.name) from project ps where ps.id = @lastProjectId)"
+                ? "AND LOWER(p.name) > (Select LOWER(ps.name) from product ps where ps.id = @lastProductId)"
                 : string.Empty;
 
-            var includeClosedProjectsFilter = includeClosedProjects
+            var includeClosedProductsFilter = includeClosedProducts
                 ? string.Empty
                 : "AND p.closed_at IS NULL";
 
@@ -61,20 +61,20 @@
                    p.created_by_user AS createdByUser,
                    p.created_at      AS createdAt,
                    p.closed_at       AS closedAt
-            FROM project p
+            FROM product p
                      JOIN versioning_scheme vs on p.versioning_scheme_id = vs.id
             WHERE EXISTS
                 (select null
-                 from project p
+                 from product p
                  where p.id = p.id
                    and (
-                     -- permission on project level
+                     -- permission on product level
                          (exists(select null
-                                 from project_user pu
-                                 where pu.project_id = p.id
+                                 from product_user pu
+                                 where pu.product_id = p.id
                                    and pu.user_id = @userId)
                              and exists(select null
-                                        from project_user pu1
+                                        from product_user pu1
                                                  join role r on pu1.role_id = r.id and
                                                                 pu1.user_id = @userId
                                                  join role_permission rp
@@ -90,8 +90,8 @@
                          -- permission on account level
                          or (
                                  not exists(select null
-                                            from project_user pu
-                                            where pu.project_id = p.id
+                                            from product_user pu
+                                            where pu.product_id = p.id
                                               and pu.user_id = @userId)
                                  and exists(select null
                                             from account_user au
@@ -104,7 +104,7 @@
                              )))
               AND p.account_id = @accountId
               {pagingFilter}
-              {includeClosedProjectsFilter}
+              {includeClosedProductsFilter}
             ORDER BY name
                 FETCH FIRST (@limit) ROWS ONLY";
         }

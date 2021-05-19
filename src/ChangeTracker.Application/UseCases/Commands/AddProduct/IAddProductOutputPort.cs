@@ -1,15 +1,15 @@
 ﻿using System;
 
-namespace ChangeTracker.Application.UseCases.Commands.AddProject
+namespace ChangeTracker.Application.UseCases.Commands.AddProduct
 {
-    public interface IAddProjectOutputPort
+    public interface IAddProductOutputPort
     {
         void AccountDoesNotExist();
         void AccountDeleted(Guid accountId);
         void InvalidName(string name);
-        void ProjectAlreadyExists(Guid projectId);
+        void ProductAlreadyExists(Guid productId);
         void VersioningSchemeDoesNotExist();
         void Conflict(string reason);
-        void Created(Guid accountId, Guid projectId);
+        void Created(Guid accountId, Guid productId);
     }
 }

@@ -3,12 +3,12 @@
     public enum Permission
     {
         ViewChangeLogLines,
-        AddProject,
-        CloseProject,
-        ViewAccountProjects,
+        AddProduct,
+        CloseProduct,
+        ViewAccountProducts,
         ViewRoles,
         ViewAccount,
         ViewAccountUsers,
-        ViewUserProjects
+        ViewUserProducts
     }
 }

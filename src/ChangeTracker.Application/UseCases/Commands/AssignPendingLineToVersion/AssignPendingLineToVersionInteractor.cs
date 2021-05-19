@@ -53,7 +53,7 @@ namespace ChangeTracker.Application.UseCases.Commands.AssignPendingLineToVersion
 
             _unitOfWork.Start();
 
-            var version = await _versionDao.FindVersionAsync(requestModel.ProjectId, versionValue);
+            var version = await _versionDao.FindVersionAsync(requestModel.ProductId, versionValue);
             if (version.HasNoValue)
             {
                 output.VersionDoesNotExist();
@@ -66,7 +66,7 @@ namespace ChangeTracker.Application.UseCases.Commands.AssignPendingLineToVersion
         private async Task AssignToVersionAsync(IAssignPendingLineOutputPort output, ClVersion version,
             Guid pendingLineId)
         {
-            var changeLogs = await _changeLogQueries.GetChangeLogsAsync(version.ProjectId, version.Id);
+            var changeLogs = await _changeLogQueries.GetChangeLogsAsync(version.ProductId, version.Id);
             if (!changeLogs.IsPositionAvailable)
             {
                 output.MaxChangeLogLinesReached(ChangeLogs.MaxLines);

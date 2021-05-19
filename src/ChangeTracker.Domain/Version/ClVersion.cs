@@ -4,13 +4,13 @@ namespace ChangeTracker.Domain.Version
 {
     public class ClVersion : IEquatable<ClVersion>
     {
-        public ClVersion(Guid projectId, ClVersionValue versionValue, DateTime? releasedAt = null,
+        public ClVersion(Guid productId, ClVersionValue versionValue, DateTime? releasedAt = null,
             DateTime? deletedAt = null)
-            : this(Guid.NewGuid(), projectId, versionValue, releasedAt, DateTime.UtcNow, deletedAt)
+            : this(Guid.NewGuid(), productId, versionValue, releasedAt, DateTime.UtcNow, deletedAt)
         {
         }
 
-        public ClVersion(Guid id, Guid projectId, ClVersionValue versionValue, DateTime? releasedAt, DateTime createdAt,
+        public ClVersion(Guid id, Guid productId, ClVersionValue versionValue, DateTime? releasedAt, DateTime createdAt,
             DateTime? deletedAt)
         {
             if (id == Guid.Empty)
@@ -18,10 +18,10 @@ namespace ChangeTracker.Domain.Version
 
             Id = id;
 
-            if (projectId == Guid.Empty)
-                throw new ArgumentException("ProjectId must not be empty.");
+            if (productId == Guid.Empty)
+                throw new ArgumentException("ProductId must not be empty.");
 
-            ProjectId = projectId;
+            ProductId = productId;
             Value = versionValue ?? throw new ArgumentNullException(nameof(versionValue));
 
             if (releasedAt.HasValue &&
@@ -40,7 +40,7 @@ namespace ChangeTracker.Domain.Version
         }
 
         public Guid Id { get; }
-        public Guid ProjectId { get; }
+        public Guid ProductId { get; }
         public ClVersionValue Value { get; }
         public DateTime? ReleasedAt { get; }
         public DateTime CreatedAt { get; }
@@ -59,7 +59,7 @@ namespace ChangeTracker.Domain.Version
                 return true;
 
             return Id.Equals(other.Id) &&
-                   ProjectId.Equals(other.ProjectId) &&
+                   ProductId.Equals(other.ProductId) &&
                    Equals(Value, other.Value);
         }
 
@@ -67,7 +67,7 @@ namespace ChangeTracker.Domain.Version
         {
             if (IsReleased) throw new InvalidOperationException("An already released version cannot released.");
 
-            return new ClVersion(Id, ProjectId, Value, DateTime.UtcNow, CreatedAt, DeletedAt);
+            return new ClVersion(Id, ProductId, Value, DateTime.UtcNow, CreatedAt, DeletedAt);
         }
 
         private static void VerifyDeletedAtDate(DateTime? releasedAt, DateTime? deletedAt)
@@ -95,7 +95,7 @@ namespace ChangeTracker.Domain.Version
 
         public override int GetHashCode()
         {
-            return HashCode.Combine(Id, ProjectId, Value);
+            return HashCode.Combine(Id, ProductId, Value);
         }
     }
 }

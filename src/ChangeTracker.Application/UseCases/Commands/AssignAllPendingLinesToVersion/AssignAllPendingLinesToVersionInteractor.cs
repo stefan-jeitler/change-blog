@@ -45,7 +45,7 @@ namespace ChangeTracker.Application.UseCases.Commands.AssignAllPendingLinesToVer
         public async Task ExecuteAsync(IAssignAllPendingLinesToVersionOutputPort output,
             VersionAssignmentRequestModel requestModel)
         {
-            var projectId = requestModel.ProjectId;
+            var productId = requestModel.ProductId;
 
             if (!ClVersionValue.TryParse(requestModel.Version, out var version))
             {
@@ -53,7 +53,7 @@ namespace ChangeTracker.Application.UseCases.Commands.AssignAllPendingLinesToVer
                 return;
             }
 
-            var clVersion = await _versionDao.FindVersionAsync(projectId, version);
+            var clVersion = await _versionDao.FindVersionAsync(productId, version);
             if (clVersion.HasNoValue)
             {
                 output.VersionDoesNotExist();
@@ -78,9 +78,9 @@ namespace ChangeTracker.Application.UseCases.Commands.AssignAllPendingLinesToVer
         private async Task<Maybe<IEnumerable<ChangeLogLine>>> AssignLinesAsync(
             IAssignAllPendingLinesToVersionOutputPort output, ClVersion clVersion)
         {
-            var projectId = clVersion.ProjectId;
-            var versionChangeLogs = await _changeLogQueries.GetChangeLogsAsync(projectId, clVersion.Id);
-            var pendingChangeLogs = await _changeLogQueries.GetChangeLogsAsync(projectId);
+            var productId = clVersion.ProductId;
+            var versionChangeLogs = await _changeLogQueries.GetChangeLogsAsync(productId, clVersion.Id);
+            var pendingChangeLogs = await _changeLogQueries.GetChangeLogsAsync(productId);
 
             if (pendingChangeLogs.Count == 0)
             {
@@ -94,7 +94,7 @@ namespace ChangeTracker.Application.UseCases.Commands.AssignAllPendingLinesToVer
                 return Maybe<IEnumerable<ChangeLogLine>>.None;
             }
 
-            var lines = await _changeLogQueries.GetPendingLinesAsync(projectId);
+            var lines = await _changeLogQueries.GetPendingLinesAsync(productId);
 
             var duplicates = versionChangeLogs
                 .FindDuplicateTexts(pendingChangeLogs.Lines)

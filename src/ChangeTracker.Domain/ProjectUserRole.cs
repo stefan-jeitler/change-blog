@@ -2,19 +2,19 @@
 
 namespace ChangeTracker.Domain
 {
-    public record ProjectUserRole
+    public record ProductUserRole
     {
-        public ProjectUserRole(Guid userId, Guid projectId, Guid roleId)
+        public ProductUserRole(Guid userId, Guid productId, Guid roleId)
         {
             if (userId == Guid.Empty)
                 throw new ArgumentException("Id cannot be empty.");
 
             UserId = userId;
 
-            if (projectId == Guid.Empty)
-                throw new ArgumentException("ProjectId cannot be empty.");
+            if (productId == Guid.Empty)
+                throw new ArgumentException("ProductId cannot be empty.");
 
-            ProjectId = projectId;
+            ProductId = productId;
 
             if (roleId == Guid.Empty)
                 throw new ArgumentException("RoleId cannot be empty.");
@@ -23,7 +23,7 @@ namespace ChangeTracker.Domain
         }
 
         public Guid UserId { get; }
-        public Guid ProjectId { get; }
+        public Guid ProductId { get; }
         public Guid RoleId { get; }
     }
 }

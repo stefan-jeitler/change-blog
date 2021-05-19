@@ -4,7 +4,7 @@ using System.Threading.Tasks;
 using ChangeTracker.Domain.Version;
 using CSharpFunctionalExtensions;
 
-namespace ChangeTracker.Application.DataAccess.Projects
+namespace ChangeTracker.Application.DataAccess.Products
 {
     public interface IVersioningSchemeDao
     {

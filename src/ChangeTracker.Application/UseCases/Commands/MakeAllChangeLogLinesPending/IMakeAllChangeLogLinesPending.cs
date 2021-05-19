@@ -6,6 +6,6 @@ namespace ChangeTracker.Application.UseCases.Commands.MakeAllChangeLogLinesPendi
     public interface IMakeAllChangeLogLinesPending
     {
         Task ExecuteAsync(IMakeAllChangeLogLinesPendingOutputPort output, Guid versionId);
-        Task ExecuteAsync(IMakeAllChangeLogLinesPendingOutputPort output, Guid projectId, string version);
+        Task ExecuteAsync(IMakeAllChangeLogLinesPendingOutputPort output, Guid productId, string version);
     }
 }

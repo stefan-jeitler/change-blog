@@ -3,105 +3,105 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using ChangeTracker.Application.DataAccess;
-using ChangeTracker.Application.DataAccess.Projects;
+using ChangeTracker.Application.DataAccess.Products;
 using ChangeTracker.Application.UseCases;
 using ChangeTracker.Domain;
 using ChangeTracker.Domain.Common;
 using CSharpFunctionalExtensions;
 using Dapper;
 using Microsoft.Extensions.Logging;
-using static ChangeTracker.DataAccess.Postgres.DataAccessObjects.ProjectDaoSqlStatements;
+using static ChangeTracker.DataAccess.Postgres.DataAccessObjects.ProductDaoSqlStatements;
 
 namespace ChangeTracker.DataAccess.Postgres.DataAccessObjects
 {
-    public class ProjectDao : IProjectDao
+    public class ProductDao : IProductDao
     {
         private readonly IDbAccessor _dbAccessor;
-        private readonly ILogger<ProjectDao> _logger;
+        private readonly ILogger<ProductDao> _logger;
 
-        public ProjectDao(IDbAccessor dbAccessor, ILogger<ProjectDao> logger)
+        public ProductDao(IDbAccessor dbAccessor, ILogger<ProductDao> logger)
         {
             _dbAccessor = dbAccessor;
             _logger = logger;
         }
 
-        public async Task<Maybe<Project>> FindProjectAsync(Guid accountId, Name name)
+        public async Task<Maybe<Product>> FindProductAsync(Guid accountId, Name name)
         {
-            var project = await _dbAccessor.DbConnection
-                .QueryFirstOrDefaultAsync<Project>(FindProjectByAccountAndNameSql, new
+            var product = await _dbAccessor.DbConnection
+                .QueryFirstOrDefaultAsync<Product>(FindProductByAccountAndNameSql, new
                 {
                     accountId,
                     name = name.Value.ToLower()
                 });
 
-            return project == default
-                ? Maybe<Project>.None
-                : Maybe<Project>.From(project);
+            return product == default
+                ? Maybe<Product>.None
+                : Maybe<Product>.From(product);
         }
 
-        public async Task<Maybe<Project>> FindProjectAsync(Guid projectId)
+        public async Task<Maybe<Product>> FindProductAsync(Guid productId)
         {
-            var project = await _dbAccessor.DbConnection
-                .QueryFirstOrDefaultAsync<Project>(FindProjectByProjectIdSql, new
+            var product = await _dbAccessor.DbConnection
+                .QueryFirstOrDefaultAsync<Product>(FindProductByProductIdSql, new
                 {
-                    projectId
+                    productId
                 });
 
-            return project == default
-                ? Maybe<Project>.None
-                : Maybe<Project>.From(project);
+            return product == default
+                ? Maybe<Product>.None
+                : Maybe<Product>.From(product);
         }
 
-        public async Task<Project> GetProjectAsync(Guid projectId)
+        public async Task<Product> GetProductAsync(Guid productId)
         {
-            var project = await FindProjectAsync(projectId);
+            var product = await FindProductAsync(productId);
 
-            if (project.HasNoValue)
+            if (product.HasNoValue)
                 throw new Exception(
-                    "The requested project does not exist. If you are not sure whether the project exists use 'FindProject' otherwise file an issue.");
+                    "The requested product does not exist. If you are not sure whether the product exists use 'FindProduct' otherwise file an issue.");
 
-            return project.Value;
+            return product.Value;
         }
 
-        public async Task<IList<Project>> GetProjectsAsync(ProjectQuerySettings querySettings)
+        public async Task<IList<Product>> GetProductsAsync(ProductQuerySettings querySettings)
         {
-            var sql = GetProjectsForAccountSql(querySettings.LastProjectId.HasValue,
-                querySettings.IncludeClosedProjects);
+            var sql = GetProductsForAccountSql(querySettings.LastProductId.HasValue,
+                querySettings.IncludeClosedProducts);
 
-            var projects = await _dbAccessor.DbConnection
-                .QueryAsync<Project>(sql, new
+            var products = await _dbAccessor.DbConnection
+                .QueryAsync<Product>(sql, new
                 {
                     querySettings.AccountId,
                     querySettings.UserId,
-                    permission = Permission.ViewAccountProjects.ToString(),
-                    querySettings.LastProjectId,
+                    permission = Permission.ViewAccountProducts.ToString(),
+                    querySettings.LastProductId,
                     limit = (int) querySettings.Limit
                 });
 
-            return projects.ToList();
+            return products.ToList();
         }
 
-        public async Task<Result<Project, Conflict>> AddProjectAsync(Project newProject)
+        public async Task<Result<Product, Conflict>> AddProductAsync(Product newProduct)
         {
-            const string insertProjectSql = @"
-                    INSERT INTO project (id, account_id, versioning_scheme_id, name, created_by_user, closed_at, created_at)
+            const string insertProductSql = @"
+                    INSERT INTO product (id, account_id, versioning_scheme_id, name, created_by_user, closed_at, created_at)
                     VALUES (@id, @accountId, @versioningSchemeId, @name, @user, @closedAt, @createdAt)";
 
             try
             {
                 await _dbAccessor.DbConnection
-                    .ExecuteAsync(insertProjectSql, new
+                    .ExecuteAsync(insertProductSql, new
                     {
-                        id = newProject.Id,
-                        accountId = newProject.AccountId,
-                        versioningSchemeId = newProject.VersioningScheme.Id,
-                        name = newProject.Name,
-                        user = newProject.CreatedByUser,
-                        closedAt = newProject.ClosedAt,
-                        createdAt = newProject.CreatedAt
+                        id = newProduct.Id,
+                        accountId = newProduct.AccountId,
+                        versioningSchemeId = newProduct.VersioningScheme.Id,
+                        name = newProduct.Name,
+                        user = newProduct.CreatedByUser,
+                        closedAt = newProduct.ClosedAt,
+                        createdAt = newProduct.CreatedAt
                     });
 
-                return Result.Success<Project, Conflict>(newProject);
+                return Result.Success<Product, Conflict>(newProduct);
             }
             catch (Exception e)
             {
@@ -110,17 +110,17 @@ namespace ChangeTracker.DataAccess.Postgres.DataAccessObjects
             }
         }
 
-        public async Task CloseProjectAsync(Project project)
+        public async Task CloseProductAsync(Product product)
         {
-            if (!project.ClosedAt.HasValue)
-                throw new Exception("The given project has no closed date.");
+            if (!product.ClosedAt.HasValue)
+                throw new Exception("The given product has no closed date.");
 
-            const string closeProjectSql = "UPDATE project SET closed_at = @closedAt WHERE id = @projectId";
+            const string closeProductSql = "UPDATE product SET closed_at = @closedAt WHERE id = @productId";
 
-            await _dbAccessor.DbConnection.ExecuteScalarAsync(closeProjectSql, new
+            await _dbAccessor.DbConnection.ExecuteScalarAsync(closeProductSql, new
             {
-                closedAt = project.ClosedAt,
-                projectId = project.Id
+                closedAt = product.ClosedAt,
+                productId = product.Id
             });
         }
     }

@@ -59,37 +59,37 @@ namespace ChangeTracker.Api.Tests
         }
 
         [Fact]
-        public async Task UserAccess_GetProjectWithinAccountButNoPermission_Unauthorized()
+        public async Task UserAccess_GetProductWithinAccountButNoPermission_Unauthorized()
         {
             var client = _factory.CreateClient();
             client.DefaultRequestHeaders.Add("X-API-KEY", new[] {"acc01usr01"});
 
-            // project: t_ua_account_01_proj_02
-            var response = await client.GetAsync("/api/v1/projects/0614f8d6-8895-4c74-bcbe-8a3c26076e1b");
+            // product: t_ua_account_01_proj_02
+            var response = await client.GetAsync("/api/v1/products/0614f8d6-8895-4c74-bcbe-8a3c26076e1b");
 
             response.StatusCode.Should().Be(StatusCodes.Status403Forbidden);
         }
 
         [Fact]
-        public async Task UserAccess_GetProjectWithinAccountWithProjectPermission_Authorized()
+        public async Task UserAccess_GetProductWithinAccountWithProductPermission_Authorized()
         {
             var client = _factory.CreateClient();
             client.DefaultRequestHeaders.Add("X-API-KEY", new[] {"acc01usr01"});
 
-            // project: t_ua_account_01_proj_01
-            var response = await client.GetAsync("/api/v1/projects/139a2e54-e9be-4168-98b4-2839d9b3db04");
+            // product: t_ua_account_01_proj_01
+            var response = await client.GetAsync("/api/v1/products/139a2e54-e9be-4168-98b4-2839d9b3db04");
 
             response.StatusCode.Should().Be(StatusCodes.Status200OK);
         }
 
         [Fact]
-        public async Task UserAccess_GetProjectWithExplicitlyGrantedPermission_Authorized()
+        public async Task UserAccess_GetProductWithExplicitlyGrantedPermission_Authorized()
         {
             var client = _factory.CreateClient();
             client.DefaultRequestHeaders.Add("X-API-KEY", new[] {"acc02usr03"});
 
-            // project: t_ua_account_01_proj_01
-            var response = await client.GetAsync("/api/v1/projects/35c5df1a-079e-4b8c-87c5-09b30e52a82f");
+            // product: t_ua_account_01_proj_01
+            var response = await client.GetAsync("/api/v1/products/35c5df1a-079e-4b8c-87c5-09b30e52a82f");
 
             response.StatusCode.Should().Be(StatusCodes.Status200OK);
         }

@@ -16,12 +16,12 @@ namespace ChangeTracker.Application.Tests.UseCaseTests.Commands.AddPendingChange
     {
         private readonly ChangeLogDaoStub _changeLogDaoStub;
         private readonly Mock<IAddPendingLineOutputPort> _outputPortMock;
-        private readonly ProjectDaoStub _projectDaoStub;
+        private readonly ProductDaoStub _productDaoStub;
         private readonly Mock<IUnitOfWork> _unitOfWorkMock;
 
         public AddPendingChangeLogLineInteractorTests()
         {
-            _projectDaoStub = new ProjectDaoStub();
+            _productDaoStub = new ProductDaoStub();
             _changeLogDaoStub = new ChangeLogDaoStub();
             _outputPortMock = new Mock<IAddPendingLineOutputPort>(MockBehavior.Strict);
             _unitOfWorkMock = new Mock<IUnitOfWork>();
@@ -29,28 +29,28 @@ namespace ChangeTracker.Application.Tests.UseCaseTests.Commands.AddPendingChange
 
         private AddPendingChangeLogLineInteractor CreateInteractor()
         {
-            return new(_projectDaoStub, _changeLogDaoStub, _changeLogDaoStub, _unitOfWorkMock.Object);
+            return new(_productDaoStub, _changeLogDaoStub, _changeLogDaoStub, _unitOfWorkMock.Object);
         }
 
         [Fact]
-        public async Task AddPendingLine_NotExistingProject_ProjectDoesNotExistOutput()
+        public async Task AddPendingLine_NotExistingProduct_ProductDoesNotExistOutput()
         {
             // arrange
             const string changeLogLine = "Some Bug fixed";
             var labels = new List<string> {"Bugfix", "ProxyIssue"};
             var issues = new List<string> {"#1234", "#12345"};
             var lineRequestModel =
-                new PendingLineRequestModel(TestAccount.Project.Id, changeLogLine, labels, issues);
+                new PendingLineRequestModel(TestAccount.Product.Id, changeLogLine, labels, issues);
 
             var addPendingLineInteractor = CreateInteractor();
 
-            _outputPortMock.Setup(m => m.ProjectDoesNotExist());
+            _outputPortMock.Setup(m => m.ProductDoesNotExist());
 
             // act
             await addPendingLineInteractor.ExecuteAsync(_outputPortMock.Object, lineRequestModel);
 
             // assert
-            _outputPortMock.Verify(m => m.ProjectDoesNotExist(), Times.Once);
+            _outputPortMock.Verify(m => m.ProductDoesNotExist(), Times.Once);
         }
 
         [Fact]
@@ -61,15 +61,15 @@ namespace ChangeTracker.Application.Tests.UseCaseTests.Commands.AddPendingChange
             var labels = new List<string> {"Bugfix", "ProxyIssue"};
             var issues = new List<string> {"#1234", "#12345"};
             var lineRequestModel =
-                new PendingLineRequestModel(TestAccount.Project.Id, changeLogLine, labels, issues);
+                new PendingLineRequestModel(TestAccount.Product.Id, changeLogLine, labels, issues);
 
-            _projectDaoStub.Projects.Add(new Project(TestAccount.Project.Id, TestAccount.Id, TestAccount.Project.Name,
+            _productDaoStub.Products.Add(new Product(TestAccount.Product.Id, TestAccount.Id, TestAccount.Product.Name,
                 TestAccount.CustomVersioningScheme, TestAccount.UserId, TestAccount.CreationDate, null));
 
             _changeLogDaoStub.ProduceConflict = true;
             _changeLogDaoStub.ChangeLogs.Add(new ChangeLogLine(Guid.NewGuid(),
                 null,
-                TestAccount.Project.Id,
+                TestAccount.Product.Id,
                 ChangeLogText.Parse("some-release"),
                 0,
                 DateTime.Parse("2021-04-09")));
@@ -93,14 +93,14 @@ namespace ChangeTracker.Application.Tests.UseCaseTests.Commands.AddPendingChange
             var labels = new List<string> {"Bugfix", "ProxyIssue"};
             var issues = new List<string> {"#1234", "#12345"};
             var lineRequestModel =
-                new PendingLineRequestModel(TestAccount.Project.Id, changeLogLine, labels, issues);
+                new PendingLineRequestModel(TestAccount.Product.Id, changeLogLine, labels, issues);
 
-            _projectDaoStub.Projects.Add(new Project(TestAccount.Project.Id, TestAccount.Id, TestAccount.Project.Name,
+            _productDaoStub.Products.Add(new Product(TestAccount.Product.Id, TestAccount.Id, TestAccount.Product.Name,
                 TestAccount.CustomVersioningScheme, TestAccount.UserId, TestAccount.CreationDate, null));
 
             _changeLogDaoStub.ChangeLogs.Add(new ChangeLogLine(Guid.NewGuid(),
                 null,
-                TestAccount.Project.Id,
+                TestAccount.Product.Id,
                 ChangeLogText.Parse("some changes"),
                 0,
                 DateTime.Parse("2021-04-09")));
@@ -125,14 +125,14 @@ namespace ChangeTracker.Application.Tests.UseCaseTests.Commands.AddPendingChange
             var labels = new List<string> {"Bugfix", "ProxyIssue"};
             var issues = new List<string> {"#1234", "#12345"};
             var lineRequestModel =
-                new PendingLineRequestModel(TestAccount.Project.Id, changeLogLine, labels, issues);
+                new PendingLineRequestModel(TestAccount.Product.Id, changeLogLine, labels, issues);
 
-            _projectDaoStub.Projects.Add(new Project(TestAccount.Project.Id, TestAccount.Id, TestAccount.Project.Name,
+            _productDaoStub.Products.Add(new Product(TestAccount.Product.Id, TestAccount.Id, TestAccount.Product.Name,
                 TestAccount.CustomVersioningScheme, TestAccount.UserId, TestAccount.CreationDate, null));
 
             _changeLogDaoStub.ChangeLogs.AddRange(Enumerable.Range(0, 100)
                 .Select(x =>
-                    new ChangeLogLine(null, TestAccount.Project.Id, ChangeLogText.Parse($"{x:D5}"), (uint) x)));
+                    new ChangeLogLine(null, TestAccount.Product.Id, ChangeLogText.Parse($"{x:D5}"), (uint) x)));
 
             var addPendingLineInteractor = CreateInteractor();
 
@@ -154,14 +154,14 @@ namespace ChangeTracker.Application.Tests.UseCaseTests.Commands.AddPendingChange
             var labels = new List<string> {"Bugfix", "ProxyIssue"};
             var issues = new List<string> {"#1234", "#12345"};
             var lineRequestModel =
-                new PendingLineRequestModel(TestAccount.Project.Id, changeLogLine, labels, issues);
+                new PendingLineRequestModel(TestAccount.Product.Id, changeLogLine, labels, issues);
 
-            _projectDaoStub.Projects.Add(new Project(TestAccount.Project.Id, TestAccount.Id, TestAccount.Project.Name,
+            _productDaoStub.Products.Add(new Product(TestAccount.Product.Id, TestAccount.Id, TestAccount.Product.Name,
                 TestAccount.CustomVersioningScheme, TestAccount.UserId, TestAccount.CreationDate, null));
 
             _changeLogDaoStub.ChangeLogs.Add(new ChangeLogLine(Guid.NewGuid(),
                 null,
-                TestAccount.Project.Id,
+                TestAccount.Product.Id,
                 ChangeLogText.Parse("some-release"),
                 0,
                 DateTime.Parse("2021-04-09")));

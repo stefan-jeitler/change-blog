@@ -16,7 +16,7 @@ namespace ChangeTracker.Domain.Tests.ChangeLogTests
         private DateTime _testCreationDate;
         private DateTime? _testDeletionDate;
         private Guid _testId;
-        private Guid _testProjectId;
+        private Guid _testProductId;
         private ChangeLogText _testText;
         private Guid? _testVersionId;
 
@@ -27,7 +27,7 @@ namespace ChangeTracker.Domain.Tests.ChangeLogTests
             _testLabels = new List<Label>(1) {Label.Parse("Feature")};
             _testId = Guid.Parse("51d89265-52c2-4a38-a0fe-b99bdc5523d0");
             _testVersionId = Guid.Parse("66845d0a-45bc-4834-96d0-b48c2c403628");
-            _testProjectId = Guid.Parse("ef5656e5-15f0-418d-b3a4-b69f1c3abac5");
+            _testProductId = Guid.Parse("ef5656e5-15f0-418d-b3a4-b69f1c3abac5");
             _testText = ChangeLogText.Parse("New feature added");
             _testCreationDate = DateTime.Parse("2021-04-02T18:28");
             _testDeletionDate = null;
@@ -37,7 +37,7 @@ namespace ChangeTracker.Domain.Tests.ChangeLogTests
         {
             return new(_testId,
                 _testVersionId,
-                _testProjectId,
+                _testProductId,
                 _testText,
                 _testPosition,
                 _testCreationDate,
@@ -53,7 +53,7 @@ namespace ChangeTracker.Domain.Tests.ChangeLogTests
 
             line.Id.Should().Be(_testId);
             line.VersionId.Should().Be(_testVersionId);
-            line.ProjectId.Should().Be(_testProjectId);
+            line.ProductId.Should().Be(_testProductId);
             line.Text.Should().Be(_testText);
             line.Position.Should().Be(_testPosition);
             line.CreatedAt.Should().Be(_testCreationDate);
@@ -65,7 +65,7 @@ namespace ChangeTracker.Domain.Tests.ChangeLogTests
         [Fact]
         public void Create_WithOverloadedConstructor_IdIsGenerated()
         {
-            var line = new ChangeLogLine(_testVersionId, _testProjectId, _testText, _testPosition);
+            var line = new ChangeLogLine(_testVersionId, _testProductId, _testText, _testPosition);
 
             line.Id.Should().NotBe(Guid.Empty);
         }
@@ -84,7 +84,7 @@ namespace ChangeTracker.Domain.Tests.ChangeLogTests
         [Fact]
         public void Create_WithOverloadedConstructor_IdAndCreatedAtDatetimeGenerated()
         {
-            var line = new ChangeLogLine(_testVersionId, _testProjectId, _testText, _testPosition);
+            var line = new ChangeLogLine(_testVersionId, _testProductId, _testText, _testPosition);
 
             line.Id.Should().NotBe(Guid.Empty);
             line.CreatedAt.Should().BeAfter(DateTime.UtcNow.AddMinutes(-1));
@@ -122,9 +122,9 @@ namespace ChangeTracker.Domain.Tests.ChangeLogTests
         }
 
         [Fact]
-        public void Create_WithEmptyProjectId_ArgumentException()
+        public void Create_WithEmptyProductId_ArgumentException()
         {
-            _testProjectId = Guid.Empty;
+            _testProductId = Guid.Empty;
 
             Func<ChangeLogLine> act = CreateChangeLogLine;
 

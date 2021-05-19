@@ -29,10 +29,10 @@ namespace ChangeTracker.Application.UseCases.Commands.MakeAllChangeLogLinesPendi
             _unitOfWork = unitOfWork ?? throw new ArgumentNullException(nameof(unitOfWork));
         }
 
-        public async Task ExecuteAsync(IMakeAllChangeLogLinesPendingOutputPort output, Guid projectId, string version)
+        public async Task ExecuteAsync(IMakeAllChangeLogLinesPendingOutputPort output, Guid productId, string version)
         {
-            if (projectId == Guid.Empty)
-                throw new ArgumentException("projectId cannot be empty.");
+            if (productId == Guid.Empty)
+                throw new ArgumentException("productId cannot be empty.");
 
             if (version is null)
                 throw new ArgumentNullException(nameof(version));
@@ -43,7 +43,7 @@ namespace ChangeTracker.Application.UseCases.Commands.MakeAllChangeLogLinesPendi
                 return;
             }
 
-            var clVersion = await _versionDao.FindVersionAsync(projectId, clVersionValue);
+            var clVersion = await _versionDao.FindVersionAsync(productId, clVersionValue);
             if (clVersion.HasNoValue)
             {
                 output.VersionDoesNotExist();
@@ -75,10 +75,10 @@ namespace ChangeTracker.Application.UseCases.Commands.MakeAllChangeLogLinesPendi
 
             _unitOfWork.Start();
 
-            var projectId = clVersion.ProjectId;
+            var productId = clVersion.ProductId;
             var versionId = clVersion.Id;
-            var pendingChangeLogs = await _changeLogQueries.GetChangeLogsAsync(projectId);
-            var versionChangeLogs = await _changeLogQueries.GetChangeLogsAsync(projectId, versionId);
+            var pendingChangeLogs = await _changeLogQueries.GetChangeLogsAsync(productId);
+            var versionChangeLogs = await _changeLogQueries.GetChangeLogsAsync(productId, versionId);
 
             if (versionChangeLogs.Count > pendingChangeLogs.RemainingPositionsToAdd)
             {
@@ -98,7 +98,7 @@ namespace ChangeTracker.Application.UseCases.Commands.MakeAllChangeLogLinesPendi
 
             var nextFreePosition = pendingChangeLogs.NextFreePosition;
             var lines = versionChangeLogs.Lines.Select((x, i) => new ChangeLogLine(x.Id,
-                null, x.ProjectId,
+                null, x.ProductId,
                 x.Text, nextFreePosition + (uint) i,
                 x.CreatedAt, x.Labels, x.Issues, x.DeletedAt));
 

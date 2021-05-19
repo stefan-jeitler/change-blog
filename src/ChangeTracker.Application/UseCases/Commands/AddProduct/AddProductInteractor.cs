@@ -2,7 +2,7 @@
 using System.Threading.Tasks;
 using ChangeTracker.Application.DataAccess;
 using ChangeTracker.Application.DataAccess.Accounts;
-using ChangeTracker.Application.DataAccess.Projects;
+using ChangeTracker.Application.DataAccess.Products;
 using ChangeTracker.Domain;
 using ChangeTracker.Domain.Common;
 using ChangeTracker.Domain.Version;
@@ -10,54 +10,54 @@ using CSharpFunctionalExtensions;
 
 // ReSharper disable InvertIf
 
-namespace ChangeTracker.Application.UseCases.Commands.AddProject
+namespace ChangeTracker.Application.UseCases.Commands.AddProduct
 {
-    public class AddProjectInteractor : IAddProject
+    public class AddProductInteractor : IAddProduct
     {
         private readonly IAccountDao _accountDao;
-        private readonly IProjectDao _projectDao;
+        private readonly IProductDao _productDao;
         private readonly IUnitOfWork _unitOfWork;
         private readonly IVersioningSchemeDao _versioningSchemeDao;
 
-        public AddProjectInteractor(IAccountDao accountDao, IVersioningSchemeDao versioningSchemeDao,
-            IProjectDao projectDao, IUnitOfWork unitOfWork)
+        public AddProductInteractor(IAccountDao accountDao, IVersioningSchemeDao versioningSchemeDao,
+            IProductDao productDao, IUnitOfWork unitOfWork)
         {
             _accountDao = accountDao ?? throw new ArgumentNullException(nameof(accountDao));
             _versioningSchemeDao = versioningSchemeDao ?? throw new ArgumentNullException(nameof(versioningSchemeDao));
-            _projectDao = projectDao ?? throw new ArgumentNullException(nameof(projectDao));
+            _productDao = productDao ?? throw new ArgumentNullException(nameof(productDao));
             _unitOfWork = unitOfWork ?? throw new ArgumentNullException(nameof(unitOfWork));
         }
 
-        public async Task ExecuteAsync(IAddProjectOutputPort output, ProjectRequestModel projectRequestModel)
+        public async Task ExecuteAsync(IAddProductOutputPort output, ProductRequestModel productRequestModel)
         {
             _unitOfWork.Start();
 
-            var account = await GetAccountAsync(output, projectRequestModel.AccountId);
+            var account = await GetAccountAsync(output, productRequestModel.AccountId);
             if (account.HasNoValue)
                 return;
 
-            if (!Name.TryParse(projectRequestModel.Name, out var name))
+            if (!Name.TryParse(productRequestModel.Name, out var name))
             {
-                output.InvalidName(projectRequestModel.Name);
+                output.InvalidName(productRequestModel.Name);
                 return;
             }
 
-            var existingProject = await _projectDao.FindProjectAsync(account.Value.Id, name);
-            if (existingProject.HasValue)
+            var existingProduct = await _productDao.FindProductAsync(account.Value.Id, name);
+            if (existingProduct.HasValue)
             {
-                output.ProjectAlreadyExists(existingProject.Value.Id);
+                output.ProductAlreadyExists(existingProduct.Value.Id);
                 return;
             }
 
-            var versioningSchemeId = await GetVersioningSchemeIdAsync(output, projectRequestModel, account.Value);
+            var versioningSchemeId = await GetVersioningSchemeIdAsync(output, productRequestModel, account.Value);
             if (versioningSchemeId.HasNoValue) return;
 
-            var project = new Project(account.Value.Id, name, versioningSchemeId.Value, projectRequestModel.UserId,
+            var product = new Product(account.Value.Id, name, versioningSchemeId.Value, productRequestModel.UserId,
                 DateTime.UtcNow);
-            await SaveProjectAsync(output, project);
+            await SaveProductAsync(output, product);
         }
 
-        private async Task<Maybe<Account>> GetAccountAsync(IAddProjectOutputPort output, Guid accountId)
+        private async Task<Maybe<Account>> GetAccountAsync(IAddProductOutputPort output, Guid accountId)
         {
             var account = await _accountDao.FindAccountAsync(accountId);
             if (account.HasNoValue)
@@ -75,12 +75,12 @@ namespace ChangeTracker.Application.UseCases.Commands.AddProject
             return account;
         }
 
-        private async Task<Maybe<VersioningScheme>> GetVersioningSchemeIdAsync(IAddProjectOutputPort output,
-            ProjectRequestModel projectRequestModel, Account account)
+        private async Task<Maybe<VersioningScheme>> GetVersioningSchemeIdAsync(IAddProductOutputPort output,
+            ProductRequestModel productRequestModel, Account account)
         {
             var versioningSchemeService = new VersioningSchemeService(account);
-            var customSchemeId = projectRequestModel.VersioningSchemeId;
-            var versioningSchemeId = versioningSchemeService.FindSchemeIdForProject(customSchemeId);
+            var customSchemeId = productRequestModel.VersioningSchemeId;
+            var versioningSchemeId = versioningSchemeService.FindSchemeIdForProduct(customSchemeId);
 
             var scheme = await _versioningSchemeDao.FindSchemeAsync(versioningSchemeId);
 
@@ -104,13 +104,13 @@ namespace ChangeTracker.Application.UseCases.Commands.AddProject
             return scheme;
         }
 
-        private async Task SaveProjectAsync(IAddProjectOutputPort output, Project newProject)
+        private async Task SaveProductAsync(IAddProductOutputPort output, Product newProduct)
         {
-            await _projectDao
-                .AddProjectAsync(newProject)
+            await _productDao
+                .AddProductAsync(newProduct)
                 .Match(Finish, c => output.Conflict(c));
 
-            void Finish(Project x)
+            void Finish(Product x)
             {
                 _unitOfWork.Commit();
                 output.Created(x.AccountId, x.Id);

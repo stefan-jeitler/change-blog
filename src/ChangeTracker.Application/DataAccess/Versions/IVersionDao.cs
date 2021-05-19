@@ -7,7 +7,7 @@ namespace ChangeTracker.Application.DataAccess.Versions
 {
     public interface IVersionDao
     {
-        Task<Maybe<ClVersion>> FindVersionAsync(Guid projectId, ClVersionValue versionValue);
+        Task<Maybe<ClVersion>> FindVersionAsync(Guid productId, ClVersionValue versionValue);
         Task<Maybe<ClVersion>> FindVersionAsync(Guid versionId);
         Task<ClVersion> GetVersionAsync(Guid versionId);
         Task<Result<ClVersion, Conflict>> AddVersionAsync(ClVersion version);

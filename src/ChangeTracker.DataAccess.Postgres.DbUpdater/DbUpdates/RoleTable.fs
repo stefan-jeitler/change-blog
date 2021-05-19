@@ -17,37 +17,37 @@ let private createRoleSql = """
 let private basicRolesInsertSql =
     [ """
         INSERT INTO "role"
-        VALUES ('8ec8ae99-83d7-4958-9df5-72eb8eaf002b', 'DefaultUser', 'default user', now())
+        VALUES ('8ec8ae99-83d7-4958-9df5-72eb8eaf002b', 'DefaultUser', 'Basic user ', now())
         ON CONFLICT (id) DO NOTHING
     """
       """
         INSERT INTO "role"
-        VALUES ('21bdebe9-4647-4610-b976-d5ace4ba1a7e', 'Support', 'interested in changes', now())
+        VALUES ('21bdebe9-4647-4610-b976-d5ace4ba1a7e', 'Support', 'Interested in changes', now())
         ON CONFLICT (id) DO NOTHING
     """
       """
         INSERT INTO "role"
-        VALUES ('55821c64-7991-48ea-bc68-bcb0574e4ad4', 'ScrumMaster', 'scrum master', now())
+        VALUES ('55821c64-7991-48ea-bc68-bcb0574e4ad4', 'ScrumMaster', 'Scrum master', now())
         ON CONFLICT (id) DO NOTHING
     """
       """
         INSERT INTO "role"
-        VALUES ('a1288586-26ac-43e1-a20e-6cd6f678ac85', 'ProductOwner', 'responsible for managing projects', now())
+        VALUES ('a1288586-26ac-43e1-a20e-6cd6f678ac85', 'ProductOwner', 'Responsible for products', now())
         ON CONFLICT (id) DO NOTHING
     """
       """
         INSERT INTO "role"
-        VALUES ('25298d8c-22b5-4ed4-92ba-13e46fe0561d', 'ProductManager', 'interested in releases and its changelogs', now())
+        VALUES ('25298d8c-22b5-4ed4-92ba-13e46fe0561d', 'ProductManager', 'Interested in releases and its changelogs', now())
         ON CONFLICT (id) DO NOTHING
     """
       """
         INSERT INTO "role"
-        VALUES ('446bceb2-0b9d-4899-934d-51be0576b7fa', 'PlatformManager', 'maintains the account', now())
+        VALUES ('446bceb2-0b9d-4899-934d-51be0576b7fa', 'PlatformManager', 'Maintains the account', now())
         ON CONFLICT (id) DO NOTHING
     """
       """
         INSERT INTO "role"
-        VALUES ('ad7b83ed-8fce-4341-978b-8d1eae66f346', 'Developer', 'commits versions and changelogs', now())
+        VALUES ('ad7b83ed-8fce-4341-978b-8d1eae66f346', 'Developer', 'Commits versions and changelogs', now())
         ON CONFLICT (id) DO NOTHING
     """ ]
 

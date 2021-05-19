@@ -3,7 +3,7 @@ using System.Data;
 using System.Runtime.CompilerServices;
 using ChangeTracker.Application.DataAccess;
 using ChangeTracker.Application.DataAccess.Accounts;
-using ChangeTracker.Application.DataAccess.Projects;
+using ChangeTracker.Application.DataAccess.Products;
 using ChangeTracker.Application.DataAccess.Users;
 using ChangeTracker.DataAccess.Postgres.DataAccessObjects;
 using ChangeTracker.DataAccess.Postgres.TypeHandler;
@@ -52,7 +52,7 @@ namespace ChangeTracker.DataAccess.Postgres
         {
             return services
                 .AddScoped<IAccountDao, AccountDao>()
-                .AddScoped<IProjectDao, ProjectDao>()
+                .AddScoped<IProductDao, ProductDao>()
                 .AddScoped<IVersioningSchemeDao, VersioningSchemeDao>()
                 .AddScoped<IUserDao, UserDao>()
                 .AddScoped<IRolesDao, RolesDao>();

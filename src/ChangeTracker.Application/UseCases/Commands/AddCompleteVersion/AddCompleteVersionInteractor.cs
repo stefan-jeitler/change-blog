@@ -4,7 +4,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using ChangeTracker.Application.DataAccess;
 using ChangeTracker.Application.DataAccess.ChangeLogs;
-using ChangeTracker.Application.DataAccess.Projects;
+using ChangeTracker.Application.DataAccess.Products;
 using ChangeTracker.Application.DataAccess.Versions;
 using ChangeTracker.Application.Services.ChangeLogLineParsing;
 using ChangeTracker.Application.UseCases.Commands.AddCompleteVersion.Models;
@@ -22,14 +22,14 @@ namespace ChangeTracker.Application.UseCases.Commands.AddCompleteVersion
     public class AddCompleteVersionInteractor : IAddCompleteVersion
     {
         private readonly IChangeLogCommandsDao _changeLogCommands;
-        private readonly IProjectDao _projectDao;
+        private readonly IProductDao _productDao;
         private readonly IUnitOfWork _unitOfWork;
         private readonly IVersionDao _versionDao;
 
-        public AddCompleteVersionInteractor(IProjectDao projectDao, IVersionDao versionDao,
+        public AddCompleteVersionInteractor(IProductDao productDao, IVersionDao versionDao,
             IUnitOfWork unitOfWork, IChangeLogCommandsDao changeLogCommands)
         {
-            _projectDao = projectDao ?? throw new ArgumentNullException(nameof(projectDao));
+            _productDao = productDao ?? throw new ArgumentNullException(nameof(productDao));
             _versionDao = versionDao ?? throw new ArgumentNullException(nameof(versionDao));
             _unitOfWork = unitOfWork ?? throw new ArgumentNullException(nameof(unitOfWork));
             _changeLogCommands = changeLogCommands ?? throw new ArgumentNullException(nameof(changeLogCommands));
@@ -38,16 +38,16 @@ namespace ChangeTracker.Application.UseCases.Commands.AddCompleteVersion
         public async Task ExecuteAsync(IAddCompleteVersionOutputPort output,
             CompleteVersionRequestModel versionRequestModel)
         {
-            var project = await GetProjectAsync(output, versionRequestModel.ProjectId);
-            if (project.HasNoValue)
+            var product = await GetProductAsync(output, versionRequestModel.ProductId);
+            if (product.HasNoValue)
                 return;
 
-            var newVersion = CreateNewVersion(output, project.Value, versionRequestModel.Version,
+            var newVersion = CreateNewVersion(output, product.Value, versionRequestModel.Version,
                 versionRequestModel.ReleaseImmediately);
             if (newVersion.HasNoValue)
                 return;
 
-            if ((await _versionDao.FindVersionAsync(project.Value.Id, newVersion.Value.Value)).HasValue)
+            if ((await _versionDao.FindVersionAsync(product.Value.Id, newVersion.Value.Value)).HasValue)
             {
                 output.VersionAlreadyExists(newVersion.Value.Value);
                 return;
@@ -61,26 +61,26 @@ namespace ChangeTracker.Application.UseCases.Commands.AddCompleteVersion
             await SaveCompleteVersionAsync(output, newVersion.Value, lines.Value);
         }
 
-        private async Task<Maybe<Project>> GetProjectAsync(IAddCompleteVersionOutputPort output, Guid projectId)
+        private async Task<Maybe<Product>> GetProductAsync(IAddCompleteVersionOutputPort output, Guid productId)
         {
-            var project = await _projectDao.FindProjectAsync(projectId);
-            if (project.HasNoValue)
+            var product = await _productDao.FindProductAsync(productId);
+            if (product.HasNoValue)
             {
-                output.ProjectDoesNotExist();
-                return Maybe<Project>.None;
+                output.ProductDoesNotExist();
+                return Maybe<Product>.None;
             }
 
-            if (project.Value.IsClosed)
+            if (product.Value.IsClosed)
             {
-                output.ProjectClosed();
-                return Maybe<Project>.None;
+                output.ProductClosed();
+                return Maybe<Product>.None;
             }
 
-            return project;
+            return product;
         }
 
         private static Maybe<ClVersion> CreateNewVersion(IAddCompleteVersionOutputPort output,
-            Project project, string versionCandidate, bool releaseImmediately)
+            Product product, string versionCandidate, bool releaseImmediately)
         {
             if (!ClVersionValue.TryParse(versionCandidate, out var clVersion))
             {
@@ -88,7 +88,7 @@ namespace ChangeTracker.Application.UseCases.Commands.AddCompleteVersion
                 return Maybe<ClVersion>.None;
             }
 
-            if (!clVersion.Match(project.VersioningScheme))
+            if (!clVersion.Match(product.VersioningScheme))
             {
                 output.VersionDoesNotMatchScheme(clVersion.Value);
                 return Maybe<ClVersion>.None;
@@ -97,7 +97,7 @@ namespace ChangeTracker.Application.UseCases.Commands.AddCompleteVersion
             var utcNow = DateTime.UtcNow;
             DateTime? releaseDate = releaseImmediately ? utcNow : null;
             var version = new ClVersion(Guid.NewGuid(),
-                project.Id,
+                product.Id,
                 clVersion,
                 releaseDate,
                 utcNow,
@@ -159,7 +159,7 @@ namespace ChangeTracker.Application.UseCases.Commands.AddCompleteVersion
             if (parsedLine.HasNoValue) return Maybe<ChangeLogLine>.None;
 
             var changeLogLine = new ChangeLogLine(Guid.NewGuid(),
-                clVersion.Id, clVersion.ProjectId,
+                clVersion.Id, clVersion.ProductId,
                 parsedLine.Value.Text, position, DateTime.UtcNow,
                 parsedLine.Value.Labels, parsedLine.Value.Issues);
 

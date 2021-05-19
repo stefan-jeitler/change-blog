@@ -4,7 +4,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using ChangeTracker.Application.DataAccess;
 using ChangeTracker.Application.DataAccess.ChangeLogs;
-using ChangeTracker.Application.DataAccess.Projects;
+using ChangeTracker.Application.DataAccess.Products;
 using ChangeTracker.Application.DataAccess.Versions;
 using ChangeTracker.Domain;
 using ChangeTracker.Domain.ChangeLog;
@@ -17,7 +17,7 @@ using Microsoft.Extensions.Caching.Memory;
 namespace ChangeTracker.Application.Decorators
 {
     /// <summary>
-    ///     Checks whether the target version or project is read-only
+    ///     Checks whether the target version or product is read-only
     /// </summary>
     public class ChangeLogLineReadonlyCheckDecorator : IChangeLogCommandsDao
     {
@@ -29,23 +29,23 @@ namespace ChangeTracker.Application.Decorators
         private const string VersionReleasedMessage =
             "The related version has already been released and can no longe be modified. VersionId {0}.";
 
-        private const string ProjectClosedMessage =
-            "The requested project is closed and no longer be modified. ProjectId {0}.";
+        private const string ProductClosedMessage =
+            "The requested product is closed and no longer be modified. ProductId {0}.";
 
         private readonly IChangeLogCommandsDao _changeLogCommandsComponent;
         private readonly IMemoryCache _memoryCache;
-        private readonly IProjectDao _projectDao;
+        private readonly IProductDao _productDao;
         private readonly IVersionDao _versionDao;
 
 
         public ChangeLogLineReadonlyCheckDecorator(IChangeLogCommandsDao changeLogCommandsComponent,
             IVersionDao versionDao,
-            IMemoryCache memoryCache, IProjectDao projectDao)
+            IMemoryCache memoryCache, IProductDao productDao)
         {
             _changeLogCommandsComponent = changeLogCommandsComponent;
             _versionDao = versionDao;
             _memoryCache = memoryCache;
-            _projectDao = projectDao;
+            _productDao = productDao;
         }
 
         public Task<Result<ChangeLogLine, Conflict>> AddLineAsync(ChangeLogLine changeLogLine)
@@ -117,11 +117,11 @@ namespace ChangeTracker.Application.Decorators
                 return Result.Failure<ChangeLogLine, Conflict>(
                     new Conflict(string.Format(VersionReleasedMessage, version.Id)));
 
-            var project = await GetProjectAsync(version.ProjectId);
+            var product = await GetProductAsync(version.ProductId);
 
-            if (project.IsClosed)
+            if (product.IsClosed)
                 return Result.Failure<ChangeLogLine, Conflict>(
-                    new Conflict(string.Format(ProjectClosedMessage, project.Id)));
+                    new Conflict(string.Format(ProductClosedMessage, product.Id)));
 
             return Result.Success<ChangeLogLine, Conflict>(line);
         }
@@ -136,13 +136,13 @@ namespace ChangeTracker.Application.Decorators
                 });
         }
 
-        private async Task<Project> GetProjectAsync(Guid projectId)
+        private async Task<Product> GetProductAsync(Guid productId)
         {
-            return await _memoryCache.GetOrCreate($"ReadOnlyCheck:ProjectId:{projectId}",
+            return await _memoryCache.GetOrCreate($"ReadOnlyCheck:ProductId:{productId}",
                 entry =>
                 {
                     entry.AbsoluteExpirationRelativeToNow = TimeSpan.FromSeconds(5);
-                    return _projectDao.GetProjectAsync(projectId);
+                    return _productDao.GetProductAsync(productId);
                 });
         }
     }

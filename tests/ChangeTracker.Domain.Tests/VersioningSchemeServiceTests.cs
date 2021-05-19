@@ -8,7 +8,7 @@ namespace ChangeTracker.Domain.Tests
     public class VersioningSchemeServiceTests
     {
         [Fact]
-        public void FindSchemeIdForProject_NoCustomSchemeIdPresentAndNoAccountDefaultScheme_ReturnsDefaultSchemeId()
+        public void FindSchemeIdForProduct_NoCustomSchemeIdPresentAndNoAccountDefaultScheme_ReturnsDefaultSchemeId()
         {
             // arrange
             var testAccount = new Account(TestAccount.Id, TestAccount.Name, null, TestAccount.CreationDate, null);
@@ -16,7 +16,7 @@ namespace ChangeTracker.Domain.Tests
             var service = new VersioningSchemeService(testAccount);
 
             // act
-            var schemeId = service.FindSchemeIdForProject(null);
+            var schemeId = service.FindSchemeIdForProduct(null);
 
             // assert
             schemeId.Should().Be(Defaults.VersioningSchemeId);
@@ -24,7 +24,7 @@ namespace ChangeTracker.Domain.Tests
 
         [Fact]
         public void
-            FindSchemeIdForProject_NoCustomSchemeIdPresentAndAccountHasDefaultScheme_ReturnsAccountDefaultSchemeId()
+            FindSchemeIdForProduct_NoCustomSchemeIdPresentAndAccountHasDefaultScheme_ReturnsAccountDefaultSchemeId()
         {
             // arrange
             var testAccount = new Account(TestAccount.Id, TestAccount.Name, TestAccount.CustomVersioningScheme.Id,
@@ -34,7 +34,7 @@ namespace ChangeTracker.Domain.Tests
             var service = new VersioningSchemeService(testAccount);
 
             // act
-            var schemeId = service.FindSchemeIdForProject(customSchemeId);
+            var schemeId = service.FindSchemeIdForProduct(customSchemeId);
 
             // assert
             schemeId.Should().Be(TestAccount.CustomVersioningScheme.Id);
@@ -42,7 +42,7 @@ namespace ChangeTracker.Domain.Tests
 
         [Fact]
         public void
-            FindSchemeIdForProject_CustomSchemeIdPresentAndAccountHasDefaultSchemeId_ReturnsCustomDefaultSchemeId()
+            FindSchemeIdForProduct_CustomSchemeIdPresentAndAccountHasDefaultSchemeId_ReturnsCustomDefaultSchemeId()
         {
             // arrange
             var testAccount = new Account(TestAccount.Id, TestAccount.Name, TestAccount.CustomVersioningScheme.Id,
@@ -52,7 +52,7 @@ namespace ChangeTracker.Domain.Tests
             var service = new VersioningSchemeService(testAccount);
 
             // act
-            var schemeId = service.FindSchemeIdForProject(customSchemeId);
+            var schemeId = service.FindSchemeIdForProduct(customSchemeId);
 
             // assert
             schemeId.Should().Be(customSchemeId);

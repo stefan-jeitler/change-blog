@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using ChangeTracker.Application.DataAccess.Accounts;
-using ChangeTracker.Application.DataAccess.Projects;
+using ChangeTracker.Application.DataAccess.Products;
 using ChangeTracker.Application.DataAccess.Users;
 using ChangeTracker.Application.Extensions;
 using ChangeTracker.Domain;

@@ -5,17 +5,17 @@ using ChangeTracker.Domain;
 using ChangeTracker.Domain.Common;
 using CSharpFunctionalExtensions;
 
-namespace ChangeTracker.Application.DataAccess.Projects
+namespace ChangeTracker.Application.DataAccess.Products
 {
-    public interface IProjectDao
+    public interface IProductDao
     {
-        Task<Maybe<Project>> FindProjectAsync(Guid accountId, Name name);
-        Task<Maybe<Project>> FindProjectAsync(Guid projectId);
+        Task<Maybe<Product>> FindProductAsync(Guid accountId, Name name);
+        Task<Maybe<Product>> FindProductAsync(Guid productId);
 
-        Task<Project> GetProjectAsync(Guid projectId);
-        Task<IList<Project>> GetProjectsAsync(ProjectQuerySettings querySettings);
+        Task<Product> GetProductAsync(Guid productId);
+        Task<IList<Product>> GetProductsAsync(ProductQuerySettings querySettings);
 
-        Task<Result<Project, Conflict>> AddProjectAsync(Project newProject);
-        Task CloseProjectAsync(Project project);
+        Task<Result<Product, Conflict>> AddProductAsync(Product newProduct);
+        Task CloseProductAsync(Product product);
     }
 }

@@ -10,13 +10,13 @@ namespace ChangeTracker.Application.Tests.UseCaseTests.Commands.AddChangeLogLine
     {
         private List<string> _testIssues;
         private List<string> _testLabels;
-        private Guid _testProjectId;
+        private Guid _testProductId;
         private string _testText;
         private string _testVersion;
 
         public VersionChangeLogLineRequestModelTests()
         {
-            _testProjectId = Guid.Parse("f02cf1c7-d8a7-492f-b46d-a2ba916770d0");
+            _testProductId = Guid.Parse("f02cf1c7-d8a7-492f-b46d-a2ba916770d0");
             _testVersion = "1.2.3";
             _testText = "some bug fixes";
             _testLabels = new List<string>(0);
@@ -25,7 +25,7 @@ namespace ChangeTracker.Application.Tests.UseCaseTests.Commands.AddChangeLogLine
 
         private VersionChangeLogLineRequestModelRequestModel CreateRequestModel()
         {
-            return new(_testProjectId, _testVersion, _testText, _testLabels, _testIssues);
+            return new(_testProductId, _testVersion, _testText, _testLabels, _testIssues);
         }
 
         [Fact]
@@ -33,7 +33,7 @@ namespace ChangeTracker.Application.Tests.UseCaseTests.Commands.AddChangeLogLine
         {
             var requestModel = CreateRequestModel();
 
-            requestModel.ProjectId.Should().Be(_testProjectId);
+            requestModel.ProductId.Should().Be(_testProductId);
             requestModel.Version.Should().Be(_testVersion);
             requestModel.Text.Should().Be(_testText);
             requestModel.Labels.Should().BeEmpty();
@@ -41,9 +41,9 @@ namespace ChangeTracker.Application.Tests.UseCaseTests.Commands.AddChangeLogLine
         }
 
         [Fact]
-        public void Create_WithEmptyProjectId_ArgumentException()
+        public void Create_WithEmptyProductId_ArgumentException()
         {
-            _testProjectId = Guid.Empty;
+            _testProductId = Guid.Empty;
 
             Func<VersionChangeLogLineRequestModelRequestModel> act = CreateRequestModel;
 

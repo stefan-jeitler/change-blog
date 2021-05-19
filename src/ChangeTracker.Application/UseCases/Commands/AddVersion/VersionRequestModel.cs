@@ -4,21 +4,21 @@ namespace ChangeTracker.Application.UseCases.Commands.AddVersion
 {
     public class VersionRequestModel
     {
-        public VersionRequestModel(Guid projectId, string version)
+        public VersionRequestModel(Guid productId, string version)
         {
-            if (projectId == Guid.Empty)
-                throw new ArgumentException("ProjectId cannot be empty.");
+            if (productId == Guid.Empty)
+                throw new ArgumentException("ProductId cannot be empty.");
 
-            ProjectId = projectId;
+            ProductId = productId;
             Version = version ?? throw new ArgumentNullException(nameof(version));
         }
 
-        public Guid ProjectId { get; }
+        public Guid ProductId { get; }
         public string Version { get; }
 
-        public void Deconstruct(out Guid projectId, out string version)
+        public void Deconstruct(out Guid productId, out string version)
         {
-            (projectId, version) = (ProjectId, Version);
+            (productId, version) = (ProductId, Version);
         }
     }
 }

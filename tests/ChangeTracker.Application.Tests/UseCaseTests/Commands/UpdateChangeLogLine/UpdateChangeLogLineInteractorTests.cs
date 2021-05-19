@@ -37,7 +37,7 @@ namespace ChangeTracker.Application.Tests.UseCaseTests.Commands.UpdateChangeLogL
                 new ChangeLogLineRequestModel(lineId, text, Array.Empty<string>(), Array.Empty<string>());
             var updateLineInteractor = CreateInteractor();
 
-            _changeLogDaoStub.ChangeLogs.Add(new ChangeLogLine(lineId, null, TestAccount.Project.Id,
+            _changeLogDaoStub.ChangeLogs.Add(new ChangeLogLine(lineId, null, TestAccount.Product.Id,
                 ChangeLogText.Parse("some feature added"), 0, DateTime.Parse("2021-04-17"), Array.Empty<Label>(),
                 Array.Empty<Issue>()));
 
@@ -64,7 +64,7 @@ namespace ChangeTracker.Application.Tests.UseCaseTests.Commands.UpdateChangeLogL
                 new ChangeLogLineRequestModel(lineId, text, Array.Empty<string>(), Array.Empty<string>());
             var updateLineInteractor = CreateInteractor();
 
-            _changeLogDaoStub.ChangeLogs.Add(new ChangeLogLine(lineId, null, TestAccount.Project.Id,
+            _changeLogDaoStub.ChangeLogs.Add(new ChangeLogLine(lineId, null, TestAccount.Product.Id,
                 ChangeLogText.Parse("some feature added"), 0, DateTime.Parse("2021-04-17"), Array.Empty<Label>(),
                 Array.Empty<Issue>()));
 
@@ -89,10 +89,10 @@ namespace ChangeTracker.Application.Tests.UseCaseTests.Commands.UpdateChangeLogL
                 new ChangeLogLineRequestModel(lineId, text, Array.Empty<string>(), Array.Empty<string>());
             var updateLineInteractor = CreateInteractor();
 
-            _changeLogDaoStub.ChangeLogs.Add(new ChangeLogLine(lineId, null, TestAccount.Project.Id,
+            _changeLogDaoStub.ChangeLogs.Add(new ChangeLogLine(lineId, null, TestAccount.Product.Id,
                 ChangeLogText.Parse("some feature added"), 0, DateTime.Parse("2021-04-17"), Array.Empty<Label>(),
                 Array.Empty<Issue>()));
-            _changeLogDaoStub.ChangeLogs.Add(new ChangeLogLine(null, TestAccount.Project.Id,
+            _changeLogDaoStub.ChangeLogs.Add(new ChangeLogLine(null, TestAccount.Product.Id,
                 ChangeLogText.Parse("feature added"), 0));
 
             _outputPortMock.Setup(m => m.LineWithSameTextAlreadyExists(It.IsAny<string>()));

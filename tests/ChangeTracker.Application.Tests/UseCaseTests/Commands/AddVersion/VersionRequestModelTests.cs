@@ -7,24 +7,24 @@ namespace ChangeTracker.Application.Tests.UseCaseTests.Commands.AddVersion
 {
     public class VersionRequestModelTests
     {
-        private Guid _testProjectId;
+        private Guid _testProductId;
         private string _testVersion;
 
         public VersionRequestModelTests()
         {
-            _testProjectId = Guid.Parse("f02cf1c7-d8a7-492f-b46d-a2ba916770d0");
+            _testProductId = Guid.Parse("f02cf1c7-d8a7-492f-b46d-a2ba916770d0");
             _testVersion = "1.2.3";
         }
 
         private VersionRequestModel CreateRequestModel()
         {
-            return new(_testProjectId, _testVersion);
+            return new(_testProductId, _testVersion);
         }
 
         [Fact]
-        public void Create_WithEmptyProjectId_ArgumentException()
+        public void Create_WithEmptyProductId_ArgumentException()
         {
-            _testProjectId = Guid.Empty;
+            _testProductId = Guid.Empty;
 
             Func<VersionRequestModel> act = CreateRequestModel;
 

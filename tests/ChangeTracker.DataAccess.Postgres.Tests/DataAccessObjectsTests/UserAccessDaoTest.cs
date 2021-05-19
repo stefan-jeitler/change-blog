@@ -68,28 +68,28 @@ namespace ChangeTracker.DataAccess.Postgres.Tests.DataAccessObjectsTests
         }
 
         [Fact]
-        public async Task HasProjectPermission_PlatformManager_ReturnsTrue()
+        public async Task HasProductPermission_PlatformManager_ReturnsTrue()
         {
             var userAccessDao = CreateDao();
             var t_ua_account_01_user_02 = Guid.Parse("7aa9004b-ed6f-4862-8307-579030c860be");
             var t_ua_account_01_proj_02 = Guid.Parse("0614f8d6-8895-4c74-bcbe-8a3c26076e1b");
 
             var hasPermission =
-                await userAccessDao.HasProjectPermissionAsync(t_ua_account_01_user_02, t_ua_account_01_proj_02,
+                await userAccessDao.HasProductPermissionAsync(t_ua_account_01_user_02, t_ua_account_01_proj_02,
                     Permission.ViewChangeLogLines);
 
             hasPermission.Should().BeTrue();
         }
 
         [Fact]
-        public async Task HasProjectPermission_DefaultUser_ReturnsFalse()
+        public async Task HasProductPermission_DefaultUser_ReturnsFalse()
         {
             var userAccessDao = CreateDao();
             var t_ua_account_01_user_01 = Guid.Parse("f575503e-4eee-4d6d-b2c1-f11d8fc3da76");
             var t_ua_account_01_proj_02 = Guid.Parse("0614f8d6-8895-4c74-bcbe-8a3c26076e1b");
 
             var hasPermission =
-                await userAccessDao.HasProjectPermissionAsync(t_ua_account_01_user_01, t_ua_account_01_proj_02,
+                await userAccessDao.HasProductPermissionAsync(t_ua_account_01_user_01, t_ua_account_01_proj_02,
                     Permission.ViewChangeLogLines);
 
             hasPermission.Should().BeFalse();

@@ -10,9 +10,9 @@ namespace ChangeTracker.Domain.Tests
         [Fact]
         public void Parse_WithValidName_Successful()
         {
-            var name = Name.Parse("e.g. project name");
+            var name = Name.Parse("e.g. product name");
 
-            name.Value.Should().Be("e.g. project name");
+            name.Value.Should().Be("e.g. product name");
         }
 
         [Fact]

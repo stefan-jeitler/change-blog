@@ -1,6 +1,6 @@
 ﻿using System;
 using System.Threading.Tasks;
-using ChangeTracker.Application.DataAccess.Projects;
+using ChangeTracker.Application.DataAccess.Products;
 using ChangeTracker.Application.DataAccess.Versions;
 using ChangeTracker.Domain.Version;
 using CSharpFunctionalExtensions;
@@ -11,13 +11,13 @@ namespace ChangeTracker.Application.UseCases.Commands.DeleteVersion
 {
     public class DeleteVersionInteractor : IDeleteVersion
     {
-        private readonly IProjectDao _projectDao;
+        private readonly IProductDao _productDao;
         private readonly IVersionDao _versionDao;
 
-        public DeleteVersionInteractor(IVersionDao versionDao, IProjectDao projectDao)
+        public DeleteVersionInteractor(IVersionDao versionDao, IProductDao productDao)
         {
             _versionDao = versionDao ?? throw new ArgumentNullException(nameof(versionDao));
-            _projectDao = projectDao ?? throw new ArgumentNullException(nameof(projectDao));
+            _productDao = productDao ?? throw new ArgumentNullException(nameof(productDao));
         }
 
         public async Task ExecuteAsync(IDeleteVersionOutputPort output, Guid versionId)
@@ -26,10 +26,10 @@ namespace ChangeTracker.Application.UseCases.Commands.DeleteVersion
             if (clVersion.HasNoValue)
                 return;
 
-            var project = await _projectDao.GetProjectAsync(clVersion.Value.ProjectId);
-            if (project.IsClosed)
+            var product = await _productDao.GetProductAsync(clVersion.Value.ProductId);
+            if (product.IsClosed)
             {
-                output.ProjectClosed(project.Id);
+                output.ProductClosed(product.Id);
                 return;
             }
 

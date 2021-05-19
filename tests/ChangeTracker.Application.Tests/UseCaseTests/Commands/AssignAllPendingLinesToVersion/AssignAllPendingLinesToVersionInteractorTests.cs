@@ -39,14 +39,14 @@ namespace ChangeTracker.Application.Tests.UseCaseTests.Commands.AssignAllPending
         public async Task AssignAllPendingLines_HappyPath_AssignAndUowCommitted()
         {
             // arrange
-            var requestModel = new VersionAssignmentRequestModel(TestAccount.Project.Id, "1.2.3");
+            var requestModel = new VersionAssignmentRequestModel(TestAccount.Product.Id, "1.2.3");
             var assignAllPendingLinesInteractor = CreateInteractor();
 
             var pendingLines = Enumerable.Range(0, 3)
-                .Select(x => new ChangeLogLine(null, TestAccount.Project.Id, ChangeLogText.Parse($"{x:D5}"), (uint) x));
+                .Select(x => new ChangeLogLine(null, TestAccount.Product.Id, ChangeLogText.Parse($"{x:D5}"), (uint) x));
             _changeLogDaoStub.ChangeLogs.AddRange(pendingLines);
 
-            var clVersion = new ClVersion(TestAccount.Project.Id, ClVersionValue.Parse("1.2.3"));
+            var clVersion = new ClVersion(TestAccount.Product.Id, ClVersionValue.Parse("1.2.3"));
             _versionDaoStub.Versions.Add(clVersion);
 
             _outputPortMock.Setup(m => m.Assigned(It.IsAny<Guid>()));
@@ -67,7 +67,7 @@ namespace ChangeTracker.Application.Tests.UseCaseTests.Commands.AssignAllPending
         {
             // arrange
             var versionId = Guid.Parse("1d7831d5-32fb-437f-a9d5-bf5a7dd34b10");
-            var requestModel = new VersionIdAssignmentRequestModel(TestAccount.Project.Id, versionId);
+            var requestModel = new VersionIdAssignmentRequestModel(TestAccount.Product.Id, versionId);
             var assignAllPendingLinesInteractor = CreateInteractor();
 
             _outputPortMock.Setup(m => m.VersionDoesNotExist());
@@ -83,7 +83,7 @@ namespace ChangeTracker.Application.Tests.UseCaseTests.Commands.AssignAllPending
         public async Task AssignAllPendingLines_InvalidVersionFormat_InvalidVersionFormatOutput()
         {
             // arrange
-            var requestModel = new VersionAssignmentRequestModel(TestAccount.Project.Id, "1. .3");
+            var requestModel = new VersionAssignmentRequestModel(TestAccount.Product.Id, "1. .3");
             var assignAllPendingLinesInteractor = CreateInteractor();
 
             _outputPortMock.Setup(m => m.InvalidVersionFormat(It.IsAny<string>()));
@@ -100,7 +100,7 @@ namespace ChangeTracker.Application.Tests.UseCaseTests.Commands.AssignAllPending
         public async Task AssignAllPendingLines_NotExistingVersion_VersionDoesNotExistOutput()
         {
             // arrange
-            var requestModel = new VersionAssignmentRequestModel(TestAccount.Project.Id, "1.2.3");
+            var requestModel = new VersionAssignmentRequestModel(TestAccount.Product.Id, "1.2.3");
             var assignAllPendingLinesInteractor = CreateInteractor();
 
             _outputPortMock.Setup(m => m.VersionDoesNotExist());
@@ -116,10 +116,10 @@ namespace ChangeTracker.Application.Tests.UseCaseTests.Commands.AssignAllPending
         public async Task AssignAllPendingLines_NoPendingLines_NoPendingChangeLogLinesOutput()
         {
             // arrange
-            var requestModel = new VersionAssignmentRequestModel(TestAccount.Project.Id, "1.2.3");
+            var requestModel = new VersionAssignmentRequestModel(TestAccount.Product.Id, "1.2.3");
             var assignAllPendingLinesInteractor = CreateInteractor();
 
-            var clVersion = new ClVersion(TestAccount.Project.Id, ClVersionValue.Parse("1.2.3"));
+            var clVersion = new ClVersion(TestAccount.Product.Id, ClVersionValue.Parse("1.2.3"));
             _versionDaoStub.Versions.Add(clVersion);
 
             _outputPortMock.Setup(m => m.NoPendingChangeLogLines());
@@ -135,19 +135,19 @@ namespace ChangeTracker.Application.Tests.UseCaseTests.Commands.AssignAllPending
         public async Task AssignAllPendingLines_NotEnoughLinePlacesAvailable_TooManyLinesToAddOutput()
         {
             // arrange
-            var requestModel = new VersionAssignmentRequestModel(TestAccount.Project.Id, "1.2.3");
+            var requestModel = new VersionAssignmentRequestModel(TestAccount.Product.Id, "1.2.3");
             var assignAllPendingLinesInteractor = CreateInteractor();
 
             var pendingLines = Enumerable.Range(0, 60)
-                .Select(x => new ChangeLogLine(null, TestAccount.Project.Id, ChangeLogText.Parse($"{x:D5}"), (uint) x));
+                .Select(x => new ChangeLogLine(null, TestAccount.Product.Id, ChangeLogText.Parse($"{x:D5}"), (uint) x));
             _changeLogDaoStub.ChangeLogs.AddRange(pendingLines);
 
-            var clVersion = new ClVersion(TestAccount.Project.Id, ClVersionValue.Parse("1.2.3"));
+            var clVersion = new ClVersion(TestAccount.Product.Id, ClVersionValue.Parse("1.2.3"));
             _versionDaoStub.Versions.Add(clVersion);
 
             var assignedLines = Enumerable.Range(0, 60)
                 .Select(x =>
-                    new ChangeLogLine(clVersion.Id, TestAccount.Project.Id, ChangeLogText.Parse($"{x:D5}"), (uint) x));
+                    new ChangeLogLine(clVersion.Id, TestAccount.Product.Id, ChangeLogText.Parse($"{x:D5}"), (uint) x));
             _changeLogDaoStub.ChangeLogs.AddRange(assignedLines);
 
             _outputPortMock.Setup(m => m.TooManyLinesToAdd(It.IsAny<uint>()));
@@ -164,17 +164,17 @@ namespace ChangeTracker.Application.Tests.UseCaseTests.Commands.AssignAllPending
             AssignAllPendingLines_PendingLinesContainsTextsThatExistsAlreadyInVersion_LinesWithSameTextAlreadyExistsOutput()
         {
             // arrange
-            var requestModel = new VersionAssignmentRequestModel(TestAccount.Project.Id, "1.2.3");
+            var requestModel = new VersionAssignmentRequestModel(TestAccount.Product.Id, "1.2.3");
             var assignAllPendingLinesInteractor = CreateInteractor();
 
             var pendingLines = Enumerable.Range(0, 10)
-                .Select(x => new ChangeLogLine(null, TestAccount.Project.Id, ChangeLogText.Parse($"{x:D5}"), (uint) x));
+                .Select(x => new ChangeLogLine(null, TestAccount.Product.Id, ChangeLogText.Parse($"{x:D5}"), (uint) x));
             _changeLogDaoStub.ChangeLogs.AddRange(pendingLines);
 
-            var clVersion = new ClVersion(TestAccount.Project.Id, ClVersionValue.Parse("1.2.3"));
+            var clVersion = new ClVersion(TestAccount.Product.Id, ClVersionValue.Parse("1.2.3"));
             _versionDaoStub.Versions.Add(clVersion);
 
-            var assignedLine = new ChangeLogLine(clVersion.Id, TestAccount.Project.Id, ChangeLogText.Parse("00000"), 0);
+            var assignedLine = new ChangeLogLine(clVersion.Id, TestAccount.Product.Id, ChangeLogText.Parse("00000"), 0);
             _changeLogDaoStub.ChangeLogs.Add(assignedLine);
 
             _outputPortMock.Setup(m => m.LineWithSameTextAlreadyExists(It.IsAny<List<string>>()));
@@ -191,14 +191,14 @@ namespace ChangeTracker.Application.Tests.UseCaseTests.Commands.AssignAllPending
         public async Task AssignAllPendingLines_ConflictWhileSaving_ConflictOutput()
         {
             // arrange
-            var requestModel = new VersionAssignmentRequestModel(TestAccount.Project.Id, "1.2.3");
+            var requestModel = new VersionAssignmentRequestModel(TestAccount.Product.Id, "1.2.3");
             var assignAllPendingLinesInteractor = CreateInteractor();
 
             var pendingLines = Enumerable.Range(0, 60)
-                .Select(x => new ChangeLogLine(null, TestAccount.Project.Id, ChangeLogText.Parse($"{x:D5}"), (uint) x));
+                .Select(x => new ChangeLogLine(null, TestAccount.Product.Id, ChangeLogText.Parse($"{x:D5}"), (uint) x));
             _changeLogDaoStub.ChangeLogs.AddRange(pendingLines);
 
-            var clVersion = new ClVersion(TestAccount.Project.Id, ClVersionValue.Parse("1.2.3"));
+            var clVersion = new ClVersion(TestAccount.Product.Id, ClVersionValue.Parse("1.2.3"));
             _versionDaoStub.Versions.Add(clVersion);
 
             _changeLogDaoStub.ProduceConflict = true;

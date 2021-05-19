@@ -1,31 +1,31 @@
 ﻿using System;
 using ChangeTracker.Application.Tests.TestDoubles;
-using ChangeTracker.Application.UseCases.Queries.GetProjects;
+using ChangeTracker.Application.UseCases.Queries.GetProducts;
 using FluentAssertions;
 using Xunit;
 
-namespace ChangeTracker.Application.Tests.UseCaseTests.Queries.GetProjects
+namespace ChangeTracker.Application.Tests.UseCaseTests.Queries.GetProducts
 {
-    public class ProjectsQueryRequestModelTests
+    public class ProductsQueryRequestModelTests
     {
-        private readonly Guid? _testLastProjectId;
+        private readonly Guid? _testLastProductId;
         private Guid _testAccountId;
         private ushort _testCount;
 
         private Guid _testUserId;
 
 
-        public ProjectsQueryRequestModelTests()
+        public ProductsQueryRequestModelTests()
         {
             _testUserId = TestAccount.UserId;
             _testAccountId = TestAccount.Id;
-            _testLastProjectId = Guid.Parse("33f9a7a4-5a0b-4ac8-b074-d97e13e8596c");
+            _testLastProductId = Guid.Parse("33f9a7a4-5a0b-4ac8-b074-d97e13e8596c");
             _testCount = 100;
         }
 
-        private ProjectsQueryRequestModel CreateRequestModel()
+        private ProductsQueryRequestModel CreateRequestModel()
         {
-            return new(_testUserId, _testAccountId, _testLastProjectId, _testCount, true);
+            return new(_testUserId, _testAccountId, _testLastProductId, _testCount, true);
         }
 
         [Fact]
@@ -35,9 +35,9 @@ namespace ChangeTracker.Application.Tests.UseCaseTests.Queries.GetProjects
 
             requestModel.UserId.Should().Be(_testUserId);
             requestModel.AccountId.Should().Be(_testAccountId);
-            requestModel.LastProjectId.Should().Be(_testLastProjectId);
+            requestModel.LastProductId.Should().Be(_testLastProductId);
             requestModel.Limit.Should().Be(_testCount);
-            requestModel.IncludeClosedProjects.Should().Be(true);
+            requestModel.IncludeClosedProducts.Should().Be(true);
         }
 
         [Fact]
@@ -47,7 +47,7 @@ namespace ChangeTracker.Application.Tests.UseCaseTests.Queries.GetProjects
             _testUserId = Guid.Empty;
 
             // act
-            Func<ProjectsQueryRequestModel> act = CreateRequestModel;
+            Func<ProductsQueryRequestModel> act = CreateRequestModel;
 
             // assert
             act.Should().ThrowExactly<ArgumentException>();
@@ -60,7 +60,7 @@ namespace ChangeTracker.Application.Tests.UseCaseTests.Queries.GetProjects
             _testAccountId = Guid.Empty;
 
             // act
-            Func<ProjectsQueryRequestModel> act = CreateRequestModel;
+            Func<ProductsQueryRequestModel> act = CreateRequestModel;
 
             // assert
             act.Should().ThrowExactly<ArgumentException>();
@@ -76,7 +76,7 @@ namespace ChangeTracker.Application.Tests.UseCaseTests.Queries.GetProjects
             var requestModel = CreateRequestModel();
 
             // assert
-            requestModel.Limit.Should().Be(ProjectsQueryRequestModel.MaxLimit);
+            requestModel.Limit.Should().Be(ProductsQueryRequestModel.MaxLimit);
         }
     }
 }

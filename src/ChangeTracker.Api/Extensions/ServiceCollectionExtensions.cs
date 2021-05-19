@@ -1,7 +1,7 @@
-﻿using ChangeTracker.Application.UseCases.Commands.AddProject;
-using ChangeTracker.Application.UseCases.Commands.CloseProject;
+﻿using ChangeTracker.Application.UseCases.Commands.AddProduct;
+using ChangeTracker.Application.UseCases.Commands.CloseProduct;
 using ChangeTracker.Application.UseCases.Queries.GetAccounts;
-using ChangeTracker.Application.UseCases.Queries.GetProjects;
+using ChangeTracker.Application.UseCases.Queries.GetProducts;
 using ChangeTracker.Application.UseCases.Queries.GetRoles;
 using ChangeTracker.Application.UseCases.Queries.GetUsers;
 using Microsoft.Extensions.DependencyInjection;
@@ -10,12 +10,12 @@ namespace ChangeTracker.Api.Extensions
 {
     public static class ServiceCollectionExtensions
     {
-        public static IServiceCollection AddProjectUseCase(this IServiceCollection services)
+        public static IServiceCollection AddProductUseCase(this IServiceCollection services)
         {
             return services
-                .AddScoped<IAddProject, AddProjectInteractor>()
-                .AddScoped<ICloseProject, CloseProjectInteractor>()
-                .AddScoped<IGetProjects, GetProjectsInteractor>()
+                .AddScoped<IAddProduct, AddProductInteractor>()
+                .AddScoped<ICloseProduct, CloseProductInteractor>()
+                .AddScoped<IGetProducts, GetProductsInteractor>()
                 .AddScoped<IGetRoles, GetRolesInteractor>()
                 .AddScoped<IGetAccounts, GetAccountsInteractor>()
                 .AddScoped<IGetUsers, GetUsersInteractor>();

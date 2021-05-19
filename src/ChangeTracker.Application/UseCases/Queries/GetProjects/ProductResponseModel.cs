@@ -1,10 +1,10 @@
 ﻿using System;
 
-namespace ChangeTracker.Application.UseCases.Queries.GetProjects
+namespace ChangeTracker.Application.UseCases.Queries.GetProducts
 {
-    public class ProjectResponseModel
+    public class ProductResponseModel
     {
-        public ProjectResponseModel(Guid id, Guid accountId, string name, Guid versioningSchemeId,
+        public ProductResponseModel(Guid id, Guid accountId, string name, Guid versioningSchemeId,
             string versioningScheme, string createdByUser, DateTime createdAt, DateTime? closedAt)
         {
             Id = id;

@@ -14,9 +14,9 @@ namespace ChangeTracker.Application.Tests.TestDoubles
         public List<ClVersion> Versions { get; } = new();
         public bool ProduceConflict { get; set; }
 
-        public Task<Maybe<ClVersion>> FindVersionAsync(Guid projectId, ClVersionValue versionValue)
+        public Task<Maybe<ClVersion>> FindVersionAsync(Guid productId, ClVersionValue versionValue)
         {
-            var version = Versions.TryFirst(x => x.ProjectId == projectId && x.Value == versionValue);
+            var version = Versions.TryFirst(x => x.ProductId == productId && x.Value == versionValue);
 
             return Task.FromResult(version);
         }

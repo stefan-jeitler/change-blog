@@ -5,7 +5,7 @@ namespace ChangeTracker.Application.UseCases.Commands.DeleteVersion
     public interface IDeleteVersionOutputPort
     {
         void VersionDoesNotExist();
-        void ProjectClosed(Guid projectId);
+        void ProductClosed(Guid productId);
         void VersionAlreadyDeleted();
         void VersionAlreadyReleased();
         void VersionDeleted(Guid versionId);

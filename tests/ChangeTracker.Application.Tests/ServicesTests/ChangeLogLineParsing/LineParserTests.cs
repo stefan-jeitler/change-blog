@@ -159,13 +159,13 @@ namespace ChangeTracker.Application.Tests.ServicesTests.ChangeLogLineParsing
         //    // arrange
         //    const string text = "Some Bug fixed";
         //    var service = new LineParser(_changeLogDaoStub);
-        //    var lineParsingRequestModel = new LineParserRequestModel(TestAccount.Project.Id,
+        //    var lineParsingRequestModel = new LineParserRequestModel(TestAccount.Product.Id,
         //        null, text, Array.Empty<string>(), Array.Empty<string>());
 
         //    _changeLogDaoStub.ChangeLogs.AddRange(Enumerable.Range(0, 100)
         //        .Select(x => new ChangeLogLine(Guid.NewGuid(),
         //            null,
-        //            TestAccount.Project.Id,
+        //            TestAccount.Product.Id,
         //            ChangeLogText.Parse($"{x:D5}"),
         //            (uint) x,
         //            DateTime.Parse("2021-04-09"))));

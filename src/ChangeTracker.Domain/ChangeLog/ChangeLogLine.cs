@@ -12,15 +12,15 @@ namespace ChangeTracker.Domain.ChangeLog
         public const int MaxIssues = 10;
         public const int MaxLabels = 5;
 
-        public ChangeLogLine(Guid id, Guid? versionId, Guid projectId, ChangeLogText text, uint position,
+        public ChangeLogLine(Guid id, Guid? versionId, Guid productId, ChangeLogText text, uint position,
             DateTime createdAt, DateTime? deletedAt = null)
-            : this(id, versionId, projectId, text, position, createdAt, Enumerable.Empty<Label>(),
+            : this(id, versionId, productId, text, position, createdAt, Enumerable.Empty<Label>(),
                 Enumerable.Empty<Issue>(),
                 deletedAt)
         {
         }
 
-        public ChangeLogLine(Guid id, Guid? versionId, Guid projectId, ChangeLogText text, uint position,
+        public ChangeLogLine(Guid id, Guid? versionId, Guid productId, ChangeLogText text, uint position,
             DateTime createdAt, IEnumerable<Label> labels, IEnumerable<Issue> issues, DateTime? deletedAt = null)
         {
             if (id == Guid.Empty)
@@ -33,10 +33,10 @@ namespace ChangeTracker.Domain.ChangeLog
 
             VersionId = versionId;
 
-            if (projectId == Guid.Empty)
-                throw new ArgumentException("ProjectId must not be empty.", nameof(projectId));
+            if (productId == Guid.Empty)
+                throw new ArgumentException("ProductId must not be empty.", nameof(productId));
 
-            ProjectId = projectId;
+            ProductId = productId;
             Text = text ?? throw new ArgumentNullException(nameof(text));
             Position = position;
             Labels = Populate(labels ?? throw new ArgumentNullException(nameof(labels)), MaxLabels);
@@ -53,14 +53,14 @@ namespace ChangeTracker.Domain.ChangeLog
             DeletedAt = deletedAt;
         }
 
-        public ChangeLogLine(Guid? versionId, Guid projectId, ChangeLogText text, uint position)
-            : this(Guid.NewGuid(), versionId, projectId, text, position, DateTime.UtcNow)
+        public ChangeLogLine(Guid? versionId, Guid productId, ChangeLogText text, uint position)
+            : this(Guid.NewGuid(), versionId, productId, text, position, DateTime.UtcNow)
         {
         }
 
         public Guid Id { get; }
         public Guid? VersionId { get; }
-        public Guid ProjectId { get; }
+        public Guid ProductId { get; }
         public ChangeLogText Text { get; }
         public uint Position { get; }
         public IImmutableSet<Label> Labels { get; private set; }
@@ -128,12 +128,12 @@ namespace ChangeTracker.Domain.ChangeLog
             if (versionId == Guid.Empty)
                 throw new ArgumentException("VersionId cannot be empty.");
 
-            return new ChangeLogLine(Id, versionId, ProjectId, Text, position, CreatedAt, Labels, Issues, DeletedAt);
+            return new ChangeLogLine(Id, versionId, ProductId, Text, position, CreatedAt, Labels, Issues, DeletedAt);
         }
 
         public ChangeLogLine Delete()
         {
-            return new(Id, VersionId, ProjectId, Text, Position, CreatedAt, DateTime.UtcNow);
+            return new(Id, VersionId, ProductId, Text, Position, CreatedAt, DateTime.UtcNow);
         }
 
         private static ImmutableHashSet<T> Populate<T>(IEnumerable<T> items, ushort maxCount)

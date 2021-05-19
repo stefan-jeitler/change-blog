@@ -9,13 +9,13 @@ namespace ChangeTracker.Application.Tests.UseCaseTests.Commands.AddCompleteVersi
     public class CompleteVersionRequestModelTests
     {
         private List<ChangeLogLineRequestModel> _testLines;
-        private Guid _testProjectId;
+        private Guid _testProductId;
         private bool _testReleaseImmediately;
         private string _testVersion;
 
         public CompleteVersionRequestModelTests()
         {
-            _testProjectId = Guid.Parse("f02cf1c7-d8a7-492f-b46d-a2ba916770d0");
+            _testProductId = Guid.Parse("f02cf1c7-d8a7-492f-b46d-a2ba916770d0");
             _testVersion = "1.2.3";
             var testLine = new ChangeLogLineRequestModel("some text", new List<string>(0), new List<string>(0));
             _testLines = new List<ChangeLogLineRequestModel>(1) {testLine};
@@ -23,7 +23,7 @@ namespace ChangeTracker.Application.Tests.UseCaseTests.Commands.AddCompleteVersi
 
         private CompleteVersionRequestModel CreateRequestModel()
         {
-            return new(_testProjectId, _testVersion, _testLines, _testReleaseImmediately);
+            return new(_testProductId, _testVersion, _testLines, _testReleaseImmediately);
         }
 
         [Fact]
@@ -32,15 +32,15 @@ namespace ChangeTracker.Application.Tests.UseCaseTests.Commands.AddCompleteVersi
             var requestModel = CreateRequestModel();
 
             requestModel.Version.Should().Be(_testVersion);
-            requestModel.ProjectId.Should().Be(_testProjectId);
+            requestModel.ProductId.Should().Be(_testProductId);
             requestModel.Lines.Count.Should().Be(1);
             requestModel.ReleaseImmediately.Should().BeFalse();
         }
 
         [Fact]
-        public void Create_WithEmptyProjectId_ArgumentException()
+        public void Create_WithEmptyProductId_ArgumentException()
         {
-            _testProjectId = Guid.Empty;
+            _testProductId = Guid.Empty;
 
             Func<CompleteVersionRequestModel> act = CreateRequestModel;
 

@@ -20,13 +20,13 @@ namespace ChangeTracker.Application.Tests.UseCaseTests.Commands.AddCompleteVersi
     {
         private readonly ChangeLogDaoStub _changeLogDaoStub;
         private readonly Mock<IAddCompleteVersionOutputPort> _outputPortMock;
-        private readonly ProjectDaoStub _projectDaoStub;
+        private readonly ProductDaoStub _productDaoStub;
         private readonly Mock<IUnitOfWork> _unitOfWorkMock;
         private readonly VersionDaoStub _versionDaoStub;
 
         public AddCompleteVersionInteractorTests()
         {
-            _projectDaoStub = new ProjectDaoStub();
+            _productDaoStub = new ProductDaoStub();
             _versionDaoStub = new VersionDaoStub();
             _changeLogDaoStub = new ChangeLogDaoStub();
             _unitOfWorkMock = new Mock<IUnitOfWork>();
@@ -35,7 +35,7 @@ namespace ChangeTracker.Application.Tests.UseCaseTests.Commands.AddCompleteVersi
 
         private AddCompleteVersionInteractor CreateInteractor()
         {
-            return new(_projectDaoStub, _versionDaoStub,
+            return new(_productDaoStub, _versionDaoStub,
                 _unitOfWorkMock.Object, _changeLogDaoStub);
         }
 
@@ -49,9 +49,9 @@ namespace ChangeTracker.Application.Tests.UseCaseTests.Commands.AddCompleteVersi
                 new("New feature added", new List<string> {"Feature"}, new List<string>()),
                 new("Allow https only", new List<string> {"Security"}, new List<string>())
             };
-            var versionRequestModel = new CompleteVersionRequestModel(TestAccount.Project.Id, "1.23", changeLogLines);
+            var versionRequestModel = new CompleteVersionRequestModel(TestAccount.Product.Id, "1.23", changeLogLines);
 
-            _projectDaoStub.Projects.Add(TestAccount.Project);
+            _productDaoStub.Products.Add(TestAccount.Product);
 
             _outputPortMock.Setup(m => m.Created(It.IsAny<Guid>()));
             var addCompleteVersionInteractor = CreateInteractor();
@@ -61,13 +61,13 @@ namespace ChangeTracker.Application.Tests.UseCaseTests.Commands.AddCompleteVersi
 
             // assert
             _outputPortMock.Verify(m => m.Created(It.IsAny<Guid>()), Times.Once);
-            var version = _versionDaoStub.Versions.Single(x => x.ProjectId == TestAccount.Project.Id);
+            var version = _versionDaoStub.Versions.Single(x => x.ProductId == TestAccount.Product.Id);
             version.Value.Should().Be(ClVersionValue.Parse("1.23"));
             version.IsDeleted.Should().BeFalse();
         }
 
         [Fact]
-        public async Task AddCompleteVersion_NotExistingProject_ProjectDoesNotExistOutput()
+        public async Task AddCompleteVersion_NotExistingProduct_ProductDoesNotExistOutput()
         {
             // arrange
             var changeLogLines = new List<ChangeLogLineRequestModel>
@@ -76,45 +76,45 @@ namespace ChangeTracker.Application.Tests.UseCaseTests.Commands.AddCompleteVersi
                 new("New feature added", new List<string> {"Feature"}, new List<string>()),
                 new("Allow https only", new List<string> {"Security"}, new List<string>())
             };
-            var versionRequestModel = new CompleteVersionRequestModel(TestAccount.Project.Id, "1.23", changeLogLines);
+            var versionRequestModel = new CompleteVersionRequestModel(TestAccount.Product.Id, "1.23", changeLogLines);
 
 
-            _outputPortMock.Setup(m => m.ProjectDoesNotExist());
+            _outputPortMock.Setup(m => m.ProductDoesNotExist());
             var addCompleteVersionInteractor = CreateInteractor();
 
             // act
             await addCompleteVersionInteractor.ExecuteAsync(_outputPortMock.Object, versionRequestModel);
 
             // assert
-            _outputPortMock.Verify(m => m.ProjectDoesNotExist(), Times.Once);
+            _outputPortMock.Verify(m => m.ProductDoesNotExist(), Times.Once);
         }
 
         [Fact]
-        public async Task AddCompleteVersion_ProjectIsClosed_ProjectClosedOutput()
+        public async Task AddCompleteVersion_ProductIsClosed_ProductClosedOutput()
         {
             // arrange
             var changeLogLines = new List<ChangeLogLineRequestModel>
             {
                 new("Proxy bug resolved", new List<string> {"ProxyStrikesBack"}, new List<string> {"#123"})
             };
-            var versionRequestModel = new CompleteVersionRequestModel(TestAccount.Project.Id, "1.23", changeLogLines);
+            var versionRequestModel = new CompleteVersionRequestModel(TestAccount.Product.Id, "1.23", changeLogLines);
 
-            _projectDaoStub.Projects.Add(new Project(TestAccount.Project.Id,
+            _productDaoStub.Products.Add(new Product(TestAccount.Product.Id,
                 TestAccount.Id,
-                Name.Parse("Test project"),
+                Name.Parse("Test product"),
                 TestAccount.CustomVersioningScheme,
                 TestAccount.UserId,
                 DateTime.Parse("2021-05-13"),
                 DateTime.Parse("2021-05-13")));
 
-            _outputPortMock.Setup(m => m.ProjectClosed());
+            _outputPortMock.Setup(m => m.ProductClosed());
             var addCompleteVersionInteractor = CreateInteractor();
 
             // act
             await addCompleteVersionInteractor.ExecuteAsync(_outputPortMock.Object, versionRequestModel);
 
             // assert
-            _outputPortMock.Verify(m => m.ProjectClosed(), Times.Once);
+            _outputPortMock.Verify(m => m.ProductClosed(), Times.Once);
         }
 
         [Fact]
@@ -125,10 +125,10 @@ namespace ChangeTracker.Application.Tests.UseCaseTests.Commands.AddCompleteVersi
             {
                 new("Proxy bug resolved", new List<string> {"ProxyStrikesBack"}, new List<string> {"#123"})
             };
-            var versionRequestModel = new CompleteVersionRequestModel(TestAccount.Project.Id, "1.23", changeLogLines);
+            var versionRequestModel = new CompleteVersionRequestModel(TestAccount.Product.Id, "1.23", changeLogLines);
 
-            _projectDaoStub.Projects.Add(TestAccount.Project);
-            _versionDaoStub.Versions.Add(new ClVersion(TestAccount.Project.Id, ClVersionValue.Parse("1.23")));
+            _productDaoStub.Products.Add(TestAccount.Product);
+            _versionDaoStub.Versions.Add(new ClVersion(TestAccount.Product.Id, ClVersionValue.Parse("1.23")));
 
             _outputPortMock.Setup(m => m.VersionAlreadyExists(It.IsAny<string>()));
             var addCompleteVersionInteractor = CreateInteractor();
@@ -150,9 +150,9 @@ namespace ChangeTracker.Application.Tests.UseCaseTests.Commands.AddCompleteVersi
                 new("New feature added", new List<string> {"Feature"}, new List<string>()),
                 new("Allow https only", new List<string> {"Security"}, new List<string>())
             };
-            var versionRequestModel = new CompleteVersionRequestModel(TestAccount.Project.Id, "1. .2", changeLogLines);
+            var versionRequestModel = new CompleteVersionRequestModel(TestAccount.Product.Id, "1. .2", changeLogLines);
 
-            _projectDaoStub.Projects.Add(TestAccount.Project);
+            _productDaoStub.Products.Add(TestAccount.Product);
             _outputPortMock.Setup(m => m.InvalidVersionFormat(It.IsAny<string>()));
             var addCompleteVersionInteractor = CreateInteractor();
 
@@ -174,9 +174,9 @@ namespace ChangeTracker.Application.Tests.UseCaseTests.Commands.AddCompleteVersi
                 new("New feature added", new List<string> {"Feature"}, new List<string>()),
                 new("Allow https only", new List<string> {"Security"}, new List<string>())
             };
-            var versionRequestModel = new CompleteVersionRequestModel(TestAccount.Project.Id, "*.23", changeLogLines);
+            var versionRequestModel = new CompleteVersionRequestModel(TestAccount.Product.Id, "*.23", changeLogLines);
 
-            _projectDaoStub.Projects.Add(TestAccount.Project);
+            _productDaoStub.Products.Add(TestAccount.Product);
             _outputPortMock.Setup(m => m.VersionDoesNotMatchScheme(It.IsAny<string>()));
             var addCompleteVersionInteractor = CreateInteractor();
 
@@ -197,9 +197,9 @@ namespace ChangeTracker.Application.Tests.UseCaseTests.Commands.AddCompleteVersi
                     new ChangeLogLineRequestModel($"{x:D5}", new List<string> {"Security"}, new List<string>()))
                 .ToList();
 
-            var versionRequestModel = new CompleteVersionRequestModel(TestAccount.Project.Id, "1.23", changeLogLines);
+            var versionRequestModel = new CompleteVersionRequestModel(TestAccount.Product.Id, "1.23", changeLogLines);
 
-            _projectDaoStub.Projects.Add(TestAccount.Project);
+            _productDaoStub.Products.Add(TestAccount.Product);
             _outputPortMock.Setup(m => m.TooManyLines(It.IsAny<int>()));
             var addCompleteVersionInteractor = CreateInteractor();
 
@@ -222,9 +222,9 @@ namespace ChangeTracker.Application.Tests.UseCaseTests.Commands.AddCompleteVersi
                 new("Allow https only", new List<string> {"Security"}, new List<string>())
             };
             var versionRequestModel =
-                new CompleteVersionRequestModel(TestAccount.Project.Id, "1.23", changeLogLines, true);
+                new CompleteVersionRequestModel(TestAccount.Product.Id, "1.23", changeLogLines, true);
 
-            _projectDaoStub.Projects.Add(TestAccount.Project);
+            _productDaoStub.Products.Add(TestAccount.Product);
             _outputPortMock.Setup(m => m.Created(It.IsAny<Guid>()));
             var addCompleteVersionInteractor = CreateInteractor();
 
@@ -246,9 +246,9 @@ namespace ChangeTracker.Application.Tests.UseCaseTests.Commands.AddCompleteVersi
                 new("Allow https only", new List<string> {"Security"}, new List<string>()),
                 new("Allow https only", new List<string> {"Security"}, new List<string> {"#1234"})
             };
-            var versionRequestModel = new CompleteVersionRequestModel(TestAccount.Project.Id, "1.23", changeLogLines);
+            var versionRequestModel = new CompleteVersionRequestModel(TestAccount.Product.Id, "1.23", changeLogLines);
 
-            _projectDaoStub.Projects.Add(TestAccount.Project);
+            _productDaoStub.Products.Add(TestAccount.Product);
             _outputPortMock.Setup(m => m.LinesWithSameTextsAreNotAllowed(It.IsAny<List<string>>()));
             var addCompleteVersionInteractor = CreateInteractor();
 
@@ -270,9 +270,9 @@ namespace ChangeTracker.Application.Tests.UseCaseTests.Commands.AddCompleteVersi
                 new("Proxy bug resolved", new List<string> {"ProxyStrikesBack"}, new List<string> {"#123"}),
                 new("New feature added", new List<string> {"Feature"}, new List<string>())
             };
-            var versionRequestModel = new CompleteVersionRequestModel(TestAccount.Project.Id, "1.23", changeLogLines);
+            var versionRequestModel = new CompleteVersionRequestModel(TestAccount.Product.Id, "1.23", changeLogLines);
 
-            _projectDaoStub.Projects.Add(TestAccount.Project);
+            _productDaoStub.Products.Add(TestAccount.Product);
             _outputPortMock.Setup(m => m.Created(It.IsAny<Guid>()));
             var addCompleteVersionInteractor = CreateInteractor();
 
@@ -292,9 +292,9 @@ namespace ChangeTracker.Application.Tests.UseCaseTests.Commands.AddCompleteVersi
                     new ChangeLogLineRequestModel($"{x:D5}", new List<string> {"Security"}, new List<string>()))
                 .ToList();
 
-            var versionRequestModel = new CompleteVersionRequestModel(TestAccount.Project.Id, "1.23", changeLogLines);
+            var versionRequestModel = new CompleteVersionRequestModel(TestAccount.Product.Id, "1.23", changeLogLines);
 
-            _projectDaoStub.Projects.Add(TestAccount.Project);
+            _productDaoStub.Products.Add(TestAccount.Product);
             _outputPortMock.Setup(m => m.Created(It.IsAny<Guid>()));
             var addCompleteVersionInteractor = CreateInteractor();
 
@@ -316,9 +316,9 @@ namespace ChangeTracker.Application.Tests.UseCaseTests.Commands.AddCompleteVersi
                 new("New feature added", new List<string> {"Feature"}, new List<string>()),
                 new("Allow https only", new List<string> {"Security"}, new List<string>())
             };
-            var versionRequestModel = new CompleteVersionRequestModel(TestAccount.Project.Id, "1.23", changeLogLines);
+            var versionRequestModel = new CompleteVersionRequestModel(TestAccount.Product.Id, "1.23", changeLogLines);
 
-            _projectDaoStub.Projects.Add(TestAccount.Project);
+            _productDaoStub.Products.Add(TestAccount.Product);
             _outputPortMock.Setup(m => m.Created(It.IsAny<Guid>()));
             var addCompleteVersionInteractor = CreateInteractor();
 
@@ -340,10 +340,10 @@ namespace ChangeTracker.Application.Tests.UseCaseTests.Commands.AddCompleteVersi
                 new("New feature added", new List<string> {"Feature"}, new List<string>()),
                 new("Allow https only", new List<string> {"Security"}, new List<string>())
             };
-            var versionRequestModel = new CompleteVersionRequestModel(TestAccount.Project.Id, "1.23", changeLogLines);
+            var versionRequestModel = new CompleteVersionRequestModel(TestAccount.Product.Id, "1.23", changeLogLines);
 
             _changeLogDaoStub.ProduceConflict = true;
-            _projectDaoStub.Projects.Add(TestAccount.Project);
+            _productDaoStub.Products.Add(TestAccount.Product);
             _outputPortMock.Setup(m => m.Conflict(It.IsAny<string>()));
             _unitOfWorkMock.Setup(m => m.Start());
 

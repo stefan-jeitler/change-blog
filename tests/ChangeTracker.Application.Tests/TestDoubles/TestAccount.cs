@@ -23,7 +23,7 @@ namespace ChangeTracker.Application.Tests.TestDoubles
             Name.Parse("My custom scheme"),
             Text.Parse(@"^(\d+\.)?(\d+\.)?(\*|\d+)$"),
             Id,
-            Text.Parse("a custom scheme for my project"),
+            Text.Parse("a custom scheme for my product"),
             DateTime.Parse("2021-04-05T15:00:00"),
             null);
 
@@ -40,9 +40,9 @@ namespace ChangeTracker.Application.Tests.TestDoubles
 
         public static readonly Account Account = new(Id, Name, CustomVersioningScheme.Id, CreationDate, null);
 
-        public static readonly Project Project = new(Guid.Parse("ab9f36eb-0cc5-4855-bddb-a3d5d8ad0117"),
+        public static readonly Product Product = new(Guid.Parse("ab9f36eb-0cc5-4855-bddb-a3d5d8ad0117"),
             Id,
-            Name.Parse("Test Project"),
+            Name.Parse("Test Product"),
             CustomVersioningScheme,
             UserId,
             DateTime.Parse("2021-04-04"),

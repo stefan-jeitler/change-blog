@@ -1,6 +1,6 @@
 ﻿using System;
 using System.Threading.Tasks;
-using ChangeTracker.Application.DataAccess.Projects;
+using ChangeTracker.Application.DataAccess.Products;
 using ChangeTracker.Application.DataAccess.Versions;
 using ChangeTracker.Domain.Version;
 using CSharpFunctionalExtensions;
@@ -11,13 +11,13 @@ namespace ChangeTracker.Application.UseCases.Commands.ReleaseVersion
 {
     public class ReleaseVersionInteractor : IReleaseVersion
     {
-        private readonly IProjectDao _project;
+        private readonly IProductDao _product;
         private readonly IVersionDao _versionDao;
 
-        public ReleaseVersionInteractor(IVersionDao versionDao, IProjectDao project)
+        public ReleaseVersionInteractor(IVersionDao versionDao, IProductDao product)
         {
             _versionDao = versionDao ?? throw new ArgumentNullException(nameof(versionDao));
-            _project = project ?? throw new ArgumentNullException(nameof(project));
+            _product = product ?? throw new ArgumentNullException(nameof(product));
         }
 
         public async Task ExecuteAsync(IReleaseVersionOutputPort output, Guid versionId)
@@ -26,10 +26,10 @@ namespace ChangeTracker.Application.UseCases.Commands.ReleaseVersion
             if (clVersion.HasNoValue)
                 return;
 
-            var project = await _project.GetProjectAsync(clVersion.Value.ProjectId);
-            if (project.IsClosed)
+            var product = await _product.GetProductAsync(clVersion.Value.ProductId);
+            if (product.IsClosed)
             {
-                output.RelatedProjectClosed(project.Id);
+                output.RelatedProductClosed(product.Id);
                 return;
             }
 

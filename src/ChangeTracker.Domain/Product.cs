@@ -4,15 +4,15 @@ using ChangeTracker.Domain.Version;
 
 namespace ChangeTracker.Domain
 {
-    public class Project
+    public class Product
     {
-        public Project(Guid accountId, Name name, VersioningScheme versioningScheme, Guid createdByUser,
+        public Product(Guid accountId, Name name, VersioningScheme versioningScheme, Guid createdByUser,
             DateTime createdAt)
             : this(Guid.NewGuid(), accountId, name, versioningScheme, createdByUser, createdAt, null)
         {
         }
 
-        public Project(Guid id, Guid accountId, Name name,
+        public Product(Guid id, Guid accountId, Name name,
             Guid versioningSchemeId, Name versioningSchemeName, Text regexPattern, Text description,
             DateTime versioningSchemeCreatedAt, DateTime? versioningSchemeDeletedAt, Guid createdByUser,
             DateTime createdAt, DateTime? closedAt)
@@ -22,7 +22,7 @@ namespace ChangeTracker.Domain
         {
         }
 
-        public Project(Guid id, Guid accountId, Name name, VersioningScheme versioningScheme, Guid createdByUser,
+        public Product(Guid id, Guid accountId, Name name, VersioningScheme versioningScheme, Guid createdByUser,
             DateTime createdAt,
             DateTime? closedAt)
         {
@@ -65,7 +65,7 @@ namespace ChangeTracker.Domain
 
         public bool IsClosed => ClosedAt.HasValue;
 
-        public Project Close()
+        public Product Close()
         {
             return new(Id, AccountId, Name, VersioningScheme, CreatedByUser, CreatedAt, DateTime.UtcNow);
         }

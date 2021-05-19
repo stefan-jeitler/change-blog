@@ -10,12 +10,12 @@ namespace ChangeTracker.Domain.Tests.ChangeLogTests
     public class ChangeLogsTests
     {
         private static Guid _testVersionId;
-        private static Guid _testProjectId;
+        private static Guid _testProductId;
 
         public ChangeLogsTests()
         {
             _testVersionId = Guid.Parse("4eaa1f8e-46d4-4cdd-92d4-6a2fe6f5ac10");
-            _testProjectId = Guid.Parse("b43326f8-83de-44bf-83f4-b62961d71c03");
+            _testProductId = Guid.Parse("b43326f8-83de-44bf-83f4-b62961d71c03");
         }
 
         private static List<ChangeLogLine> CreateTestLines(int count)
@@ -23,7 +23,7 @@ namespace ChangeTracker.Domain.Tests.ChangeLogTests
             return Enumerable
                 .Range(0, count)
                 .Select(x =>
-                    new ChangeLogLine(_testVersionId, _testProjectId, ChangeLogText.Parse($"{x:D5}"), (uint) x))
+                    new ChangeLogLine(_testVersionId, _testProductId, ChangeLogText.Parse($"{x:D5}"), (uint) x))
                 .ToList();
         }
 
@@ -90,7 +90,7 @@ namespace ChangeTracker.Domain.Tests.ChangeLogTests
             // arrange
             var differentVersion = Guid.Parse("267fd0d6-678c-4796-b354-27d82a15687b");
             var lineFromDifferentVersion =
-                new ChangeLogLine(differentVersion, _testProjectId, ChangeLogText.Parse("some text"), 1);
+                new ChangeLogLine(differentVersion, _testProductId, ChangeLogText.Parse("some text"), 1);
 
             var testLines = CreateTestLines(1);
             testLines.Add(lineFromDifferentVersion);
@@ -107,7 +107,7 @@ namespace ChangeTracker.Domain.Tests.ChangeLogTests
         {
             // arrange
             var pendingLine =
-                new ChangeLogLine(null, _testProjectId, ChangeLogText.Parse("some text"), 1);
+                new ChangeLogLine(null, _testProductId, ChangeLogText.Parse("some text"), 1);
 
             var testLines = CreateTestLines(1);
             testLines.Add(pendingLine);
@@ -150,7 +150,7 @@ namespace ChangeTracker.Domain.Tests.ChangeLogTests
         {
             // arrange
             var lineWithHighPosition = new ChangeLogLine(_testVersionId,
-                _testProjectId, ChangeLogText.Parse("some text"), 124);
+                _testProductId, ChangeLogText.Parse("some text"), 124);
 
             var testLines = CreateTestLines(10);
             testLines.Add(lineWithHighPosition);
@@ -240,7 +240,7 @@ namespace ChangeTracker.Domain.Tests.ChangeLogTests
         [Fact]
         public void ContainsText_SameTextDifferentCase_ReturnsTrue()
         {
-            var line = new ChangeLogLine(_testVersionId, _testProjectId, ChangeLogText.Parse("new Feature"), 0);
+            var line = new ChangeLogLine(_testVersionId, _testProductId, ChangeLogText.Parse("new Feature"), 0);
             var changeLogs = new ChangeLogs(new List<ChangeLogLine>(1) {line});
 
             var containsText = changeLogs.ContainsText(ChangeLogText.Parse("New Feature"));
@@ -251,7 +251,7 @@ namespace ChangeTracker.Domain.Tests.ChangeLogTests
         [Fact]
         public void ContainsText_DifferentText_ReturnsFalse()
         {
-            var line = new ChangeLogLine(_testVersionId, _testProjectId, ChangeLogText.Parse("new Feature"), 0);
+            var line = new ChangeLogLine(_testVersionId, _testProductId, ChangeLogText.Parse("new Feature"), 0);
             var changeLogs = new ChangeLogs(new List<ChangeLogLine>(1) {line});
 
             var containsText = changeLogs.ContainsText(ChangeLogText.Parse("Bugfix"));
@@ -265,15 +265,15 @@ namespace ChangeTracker.Domain.Tests.ChangeLogTests
             // arrange
             var lines = new List<ChangeLogLine>
             {
-                new(_testVersionId, _testProjectId, ChangeLogText.Parse("new Feature"), 0),
-                new(_testVersionId, _testProjectId, ChangeLogText.Parse("Bugfix"), 1)
+                new(_testVersionId, _testProductId, ChangeLogText.Parse("new Feature"), 0),
+                new(_testVersionId, _testProductId, ChangeLogText.Parse("Bugfix"), 1)
             };
             var changeLogs = new ChangeLogs(lines);
 
             var otherLines = new List<ChangeLogLine>
             {
-                new(_testVersionId, _testProjectId, ChangeLogText.Parse("feature added"), 0),
-                new(_testVersionId, _testProjectId, ChangeLogText.Parse("Security fix"), 1)
+                new(_testVersionId, _testProductId, ChangeLogText.Parse("feature added"), 0),
+                new(_testVersionId, _testProductId, ChangeLogText.Parse("Security fix"), 1)
             };
 
             // act
@@ -289,15 +289,15 @@ namespace ChangeTracker.Domain.Tests.ChangeLogTests
             // arrange
             var lines = new List<ChangeLogLine>
             {
-                new(_testVersionId, _testProjectId, ChangeLogText.Parse("new Feature"), 0),
-                new(_testVersionId, _testProjectId, ChangeLogText.Parse("Bugfix"), 1)
+                new(_testVersionId, _testProductId, ChangeLogText.Parse("new Feature"), 0),
+                new(_testVersionId, _testProductId, ChangeLogText.Parse("Bugfix"), 1)
             };
             var changeLogs = new ChangeLogs(lines);
 
             var otherLines = new List<ChangeLogLine>
             {
-                new(_testVersionId, _testProjectId, ChangeLogText.Parse("NEW feature"), 0),
-                new(_testVersionId, _testProjectId, ChangeLogText.Parse("Security fix"), 1)
+                new(_testVersionId, _testProductId, ChangeLogText.Parse("NEW feature"), 0),
+                new(_testVersionId, _testProductId, ChangeLogText.Parse("Security fix"), 1)
             };
 
             // act
@@ -314,15 +314,15 @@ namespace ChangeTracker.Domain.Tests.ChangeLogTests
             // arrange
             var lines = new List<ChangeLogLine>
             {
-                new(_testVersionId, _testProjectId, ChangeLogText.Parse("new Feature"), 0),
-                new(_testVersionId, _testProjectId, ChangeLogText.Parse("Bugfix"), 1)
+                new(_testVersionId, _testProductId, ChangeLogText.Parse("new Feature"), 0),
+                new(_testVersionId, _testProductId, ChangeLogText.Parse("Bugfix"), 1)
             };
             var changeLogs = new ChangeLogs(lines);
 
             var otherLines = new List<ChangeLogLine>
             {
-                new(_testVersionId, _testProjectId, ChangeLogText.Parse("new Feature"), 0),
-                new(_testVersionId, _testProjectId, ChangeLogText.Parse("Security fix"), 1)
+                new(_testVersionId, _testProductId, ChangeLogText.Parse("new Feature"), 0),
+                new(_testVersionId, _testProductId, ChangeLogText.Parse("Security fix"), 1)
             };
 
             // act

@@ -1,10 +1,10 @@
 ﻿using System;
 
-namespace ChangeTracker.Application.UseCases.Commands.AddProject
+namespace ChangeTracker.Application.UseCases.Commands.AddProduct
 {
-    public class ProjectRequestModel
+    public class ProductRequestModel
     {
-        public ProjectRequestModel(Guid accountId, string name, Guid? versioningSchemeId, Guid userId)
+        public ProductRequestModel(Guid accountId, string name, Guid? versioningSchemeId, Guid userId)
         {
             if (accountId == Guid.Empty)
                 throw new ArgumentException("AccountId cannot be empty.");

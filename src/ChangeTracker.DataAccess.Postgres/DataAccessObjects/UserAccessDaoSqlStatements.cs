@@ -30,28 +30,28 @@ namespace ChangeTracker.DataAccess.Postgres.DataAccessObjects
                           where u.id = @userId
                               and rp.permission = @permission)";
 
-        public static string ProjectPermissionsSql => BaseQuery("@projectId");
+        public static string ProductPermissionsSql => BaseQuery("@productId");
 
         public static string VersionPermissionSql =>
-            BaseQuery("(select p.id from version v join project p on v.project_id = p.id where v.id = @versionId)");
+            BaseQuery("(select p.id from version v join product p on v.product_id = p.id where v.id = @versionId)");
 
         public static string ChangeLogLinePermissionSql => BaseQuery(
-            "(select p.id from changelog_line chl join project p on chl.project_id = p.id where chl.id = @changeLogLineId)");
+            "(select p.id from changelog_line chl join product p on chl.product_id = p.id where chl.id = @changeLogLineId)");
 
-        private static string BaseQuery(string selectProjectId)
+        private static string BaseQuery(string selectProductId)
         {
             return $@"
                 select exists(select null
-                              from project p
-                              where p.id = {selectProjectId}
+                              from product p
+                              where p.id = {selectProductId}
                                 and (
-                                  -- permission on project level overrides account permissions
+                                  -- permission on product level overrides account permissions
                                       (exists(select null
-                                              from project_user pu
-                                              where pu.project_id = p.id
+                                              from product_user pu
+                                              where pu.product_id = p.id
                                                 and pu.user_id = @userId)
                                           and exists(select null
-                                                     from project_user pu1
+                                                     from product_user pu1
                                                               join role r on pu1.role_id = r.id and
                                                                              pu1.user_id = @userId
                                                               join role_permission rp
@@ -67,8 +67,8 @@ namespace ChangeTracker.DataAccess.Postgres.DataAccessObjects
                                       -- permission on account level
                                       or (
                                               not exists(select null
-                                                         from project_user pu
-                                                         where pu.project_id = p.id
+                                                         from product_user pu
+                                                         where pu.product_id = p.id
                                                            and pu.user_id = @userId)
                                               and exists(select null
                                                          from account_user au

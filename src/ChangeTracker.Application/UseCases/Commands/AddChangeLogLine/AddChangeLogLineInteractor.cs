@@ -40,7 +40,7 @@ namespace ChangeTracker.Application.UseCases.Commands.AddChangeLogLine
 
             _unitOfWork.Start();
 
-            var version = await _versionDao.FindVersionAsync(requestModelRequestModel.ProjectId, versionValue);
+            var version = await _versionDao.FindVersionAsync(requestModelRequestModel.ProductId, versionValue);
             if (version.HasNoValue)
             {
                 output.VersionDoesNotExist();
@@ -82,7 +82,7 @@ namespace ChangeTracker.Application.UseCases.Commands.AddChangeLogLine
             if (parsedLine.HasNoValue)
                 return Maybe<ChangeLogLine>.None;
 
-            var changeLogs = await _changeLogQueries.GetChangeLogsAsync(clVersion.ProjectId, clVersion.Id);
+            var changeLogs = await _changeLogQueries.GetChangeLogsAsync(clVersion.ProductId, clVersion.Id);
             if (!changeLogs.IsPositionAvailable)
             {
                 output.TooManyLines(ChangeLogs.MaxLines);
@@ -96,7 +96,7 @@ namespace ChangeTracker.Application.UseCases.Commands.AddChangeLogLine
             }
 
             var changeLogLine = new ChangeLogLine(Guid.NewGuid(),
-                clVersion.Id, clVersion.ProjectId, parsedLine.Value.Text,
+                clVersion.Id, clVersion.ProductId, parsedLine.Value.Text,
                 changeLogs.NextFreePosition, DateTime.UtcNow,
                 parsedLine.Value.Labels, parsedLine.Value.Issues);
 

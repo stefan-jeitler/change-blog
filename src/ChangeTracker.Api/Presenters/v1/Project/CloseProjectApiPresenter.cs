@@ -1,25 +1,25 @@
 ﻿using System;
 using ChangeTracker.Api.DTOs;
-using ChangeTracker.Application.UseCases.Commands.CloseProject;
+using ChangeTracker.Application.UseCases.Commands.CloseProduct;
 using Microsoft.AspNetCore.Mvc;
 
 namespace ChangeTracker.Api.Presenters.v1.Project
 {
-    public class CloseProjectApiPresenter : BasePresenter, ICloseProjectOutputPort
+    public class CloseProductApiPresenter : BasePresenter, ICloseProductOutputPort
     {
-        public void ProjectAlreadyClosed(Guid projectId)
+        public void ProductAlreadyClosed(Guid productId)
         {
-            Response = new OkObjectResult(DefaultResponse.Create($"Project with Id {projectId} closed."));
+            Response = new OkObjectResult(DefaultResponse.Create($"Product with Id {productId} closed."));
         }
 
-        public void ProjectDoesNotExist()
+        public void ProductDoesNotExist()
         {
-            Response = new NotFoundObjectResult(DefaultResponse.Create("Project not found."));
+            Response = new NotFoundObjectResult(DefaultResponse.Create("Product not found."));
         }
 
-        public void ProjectClosed(Guid projectId)
+        public void ProductClosed(Guid productId)
         {
-            Response = new OkObjectResult(DefaultResponse.Create($"Project with Id {projectId} closed."));
+            Response = new OkObjectResult(DefaultResponse.Create($"Product with Id {productId} closed."));
         }
 
         public void Conflict(string reason)

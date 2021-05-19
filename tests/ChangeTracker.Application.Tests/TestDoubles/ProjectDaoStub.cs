@@ -3,44 +3,44 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using ChangeTracker.Application.DataAccess;
-using ChangeTracker.Application.DataAccess.Projects;
+using ChangeTracker.Application.DataAccess.Products;
 using ChangeTracker.Domain;
 using ChangeTracker.Domain.Common;
 using CSharpFunctionalExtensions;
 
 namespace ChangeTracker.Application.Tests.TestDoubles
 {
-    public class ProjectDaoStub : IProjectDao
+    public class ProductDaoStub : IProductDao
     {
-        public List<Project> Projects { get; } = new();
+        public List<Product> Products { get; } = new();
         public bool ProduceConflict { get; set; }
 
-        public Task<Maybe<Project>> FindProjectAsync(Guid accountId, Name name)
+        public Task<Maybe<Product>> FindProductAsync(Guid accountId, Name name)
         {
-            var project = Projects.TryFirst(x => x.AccountId == accountId
+            var product = Products.TryFirst(x => x.AccountId == accountId
                                                  && x.Name == name);
 
-            return Task.FromResult(project);
+            return Task.FromResult(product);
         }
 
-        public Task<Maybe<Project>> FindProjectAsync(Guid projectId)
+        public Task<Maybe<Product>> FindProductAsync(Guid productId)
         {
-            return Task.FromResult(Projects.TryFirst(x => x.Id == projectId));
+            return Task.FromResult(Products.TryFirst(x => x.Id == productId));
         }
 
-        public async Task<Project> GetProjectAsync(Guid projectId)
-        {
-            await Task.Yield();
-            return Projects.Single(x => x.Id == projectId);
-        }
-
-        public async Task<IList<Project>> GetProjectsAsync(ProjectQuerySettings querySettings)
+        public async Task<Product> GetProductAsync(Guid productId)
         {
             await Task.Yield();
+            return Products.Single(x => x.Id == productId);
+        }
 
-            var lastEmail = Projects.FirstOrDefault(x => x.Id == querySettings.LastProjectId);
+        public async Task<IList<Product>> GetProductsAsync(ProductQuerySettings querySettings)
+        {
+            await Task.Yield();
 
-            return Projects
+            var lastEmail = Products.FirstOrDefault(x => x.Id == querySettings.LastProductId);
+
+            return Products
                 .Where(x => x.AccountId == querySettings.AccountId)
                 .OrderBy(x => x.Name.Value)
                 .Where(x => lastEmail is null || string.Compare(x.Name, lastEmail.Name) > 0)
@@ -48,32 +48,32 @@ namespace ChangeTracker.Application.Tests.TestDoubles
                 .ToList();
         }
 
-        public Task<Result<Project, Conflict>> AddProjectAsync(Project newProject)
+        public Task<Result<Product, Conflict>> AddProductAsync(Product newProduct)
         {
             if (ProduceConflict)
             {
                 var conflict = new Conflict("some conflict");
-                return Task.FromResult(Result.Failure<Project, Conflict>(conflict));
+                return Task.FromResult(Result.Failure<Product, Conflict>(conflict));
             }
 
-            Projects.Add(newProject);
-            return Task.FromResult(Result.Success<Project, Conflict>(newProject));
+            Products.Add(newProduct);
+            return Task.FromResult(Result.Success<Product, Conflict>(newProduct));
         }
 
-        public Task CloseProjectAsync(Project project)
+        public Task CloseProductAsync(Product product)
         {
-            Projects.RemoveAll(x => x.Id == project.Id);
-            Projects.Add(project);
+            Products.RemoveAll(x => x.Id == product.Id);
+            Products.Add(product);
             return Task.CompletedTask;
         }
 
-        public async Task<IList<Project>> GetProjectsAsync(Guid accountId, ushort count, Guid? lastProjectId = null)
+        public async Task<IList<Product>> GetProductsAsync(Guid accountId, ushort count, Guid? lastProductId = null)
         {
             await Task.Yield();
 
-            return Projects.Where(x => x.AccountId == accountId)
+            return Products.Where(x => x.AccountId == accountId)
                 .OrderBy(x => x.Name)
-                .SkipWhile(x => x.Id != (lastProjectId ?? Guid.Empty))
+                .SkipWhile(x => x.Id != (lastProductId ?? Guid.Empty))
                 .Skip(1)
                 .Take(count)
                 .ToList();

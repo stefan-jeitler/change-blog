@@ -5,9 +5,9 @@ using ChangeTracker.Domain.Version;
 using FluentAssertions;
 using Xunit;
 
-namespace ChangeTracker.Domain.Tests.ProjectTests
+namespace ChangeTracker.Domain.Tests.ProductTests
 {
-    public class ProjectTests
+    public class ProductTests
     {
         private Guid _testAccountId;
         private DateTime? _testClosedDate;
@@ -17,10 +17,10 @@ namespace ChangeTracker.Domain.Tests.ProjectTests
         private Guid _testUserId;
         private VersioningScheme _testVersioningScheme;
 
-        public ProjectTests()
+        public ProductTests()
         {
             _testId = Guid.Parse("992b6432-b792-4f0d-87c2-786f24a5a564");
-            _testName = Name.Parse("ProjectX");
+            _testName = Name.Parse("ProductX");
             _testUserId = Guid.Parse("a1b89f2d-d13f-4572-8522-8a92fb4fdb6a");
             _testCreationDate = DateTime.Parse("2021-04-03");
             _testAccountId = TestAccount.Id;
@@ -28,7 +28,7 @@ namespace ChangeTracker.Domain.Tests.ProjectTests
             _testClosedDate = null;
         }
 
-        private Project CreateProject()
+        private Product CreateProduct()
         {
             return new(_testId, _testAccountId, _testName, _testVersioningScheme, _testUserId,
                 _testCreationDate, _testClosedDate);
@@ -37,15 +37,15 @@ namespace ChangeTracker.Domain.Tests.ProjectTests
         [Fact]
         public void Create_WithValidArguments_Successful()
         {
-            var project = CreateProject();
+            var product = CreateProduct();
 
-            project.Id.Should().Be(_testId);
-            project.AccountId.Should().Be(_testAccountId);
-            project.Name.Should().Be(_testName);
-            project.VersioningScheme.Should().Be(_testVersioningScheme);
-            project.CreatedByUser.Should().Be(_testUserId);
-            project.CreatedAt.Should().Be(_testCreationDate);
-            project.ClosedAt.HasValue.Should().BeFalse();
+            product.Id.Should().Be(_testId);
+            product.AccountId.Should().Be(_testAccountId);
+            product.Name.Should().Be(_testName);
+            product.VersioningScheme.Should().Be(_testVersioningScheme);
+            product.CreatedByUser.Should().Be(_testUserId);
+            product.CreatedAt.Should().Be(_testCreationDate);
+            product.ClosedAt.HasValue.Should().BeFalse();
         }
 
         [Fact]
@@ -53,22 +53,22 @@ namespace ChangeTracker.Domain.Tests.ProjectTests
         {
             _testClosedDate = DateTime.Parse("2021-04-16");
 
-            var project = CreateProject();
+            var product = CreateProduct();
 
-            project.ClosedAt.Should().HaveValue();
-            project.ClosedAt!.Value.Should().Be(_testClosedDate!.Value);
+            product.ClosedAt.Should().HaveValue();
+            product.ClosedAt!.Value.Should().Be(_testClosedDate!.Value);
         }
 
         [Fact]
-        public void CloseProject_HappyPath_DateProperlySet()
+        public void CloseProduct_HappyPath_DateProperlySet()
         {
             _testClosedDate = null;
-            var project = CreateProject();
+            var product = CreateProduct();
 
-            var closedProject = project.Close();
+            var closedProduct = product.Close();
 
-            closedProject.ClosedAt.Should().HaveValue();
-            closedProject.IsClosed.Should().BeTrue();
+            closedProduct.ClosedAt.Should().HaveValue();
+            closedProduct.IsClosed.Should().BeTrue();
         }
 
         [Fact]
@@ -76,7 +76,7 @@ namespace ChangeTracker.Domain.Tests.ProjectTests
         {
             _testId = Guid.Empty;
 
-            Func<Project> act = CreateProject;
+            Func<Product> act = CreateProduct;
 
             act.Should().ThrowExactly<ArgumentException>();
         }
@@ -86,7 +86,7 @@ namespace ChangeTracker.Domain.Tests.ProjectTests
         {
             _testAccountId = Guid.Empty;
 
-            Func<Project> act = CreateProject;
+            Func<Product> act = CreateProduct;
 
             act.Should().ThrowExactly<ArgumentException>();
         }
@@ -96,7 +96,7 @@ namespace ChangeTracker.Domain.Tests.ProjectTests
         {
             _testName = null;
 
-            Func<Project> act = CreateProject;
+            Func<Product> act = CreateProduct;
 
             act.Should().ThrowExactly<ArgumentNullException>();
         }
@@ -106,7 +106,7 @@ namespace ChangeTracker.Domain.Tests.ProjectTests
         {
             _testVersioningScheme = null;
 
-            Func<Project> act = CreateProject;
+            Func<Product> act = CreateProduct;
 
             act.Should().ThrowExactly<ArgumentNullException>();
         }
@@ -116,7 +116,7 @@ namespace ChangeTracker.Domain.Tests.ProjectTests
         {
             _testUserId = Guid.Empty;
 
-            Func<Project> act = CreateProject;
+            Func<Product> act = CreateProduct;
 
             act.Should().ThrowExactly<ArgumentException>();
         }
@@ -128,7 +128,7 @@ namespace ChangeTracker.Domain.Tests.ProjectTests
         {
             _testCreationDate = DateTime.Parse(invalidDate);
 
-            Func<Project> act = CreateProject;
+            Func<Product> act = CreateProduct;
 
             act.Should().ThrowExactly<ArgumentException>();
         }
@@ -140,7 +140,7 @@ namespace ChangeTracker.Domain.Tests.ProjectTests
         {
             _testClosedDate = DateTime.Parse(invalidDate);
 
-            Func<Project> act = CreateProject;
+            Func<Product> act = CreateProduct;
 
             act.Should().ThrowExactly<ArgumentException>();
         }

@@ -1,6 +1,6 @@
 ﻿using System;
 using System.Threading.Tasks;
-using ChangeTracker.Application.DataAccess.Projects;
+using ChangeTracker.Application.DataAccess.Products;
 using ChangeTracker.DataAccess.Postgres.DataAccessObjects;
 using ChangeTracker.Domain;
 using ChangeTracker.Domain.Common;
@@ -13,11 +13,11 @@ using Xunit;
 
 namespace ChangeTracker.DataAccess.Postgres.Tests.DataAccessObjectsTests
 {
-    public class ProjectDaoTests : IDisposable
+    public class ProductDaoTests : IDisposable
     {
         private readonly LazyDbConnection _lazyDbConnection;
 
-        public ProjectDaoTests()
+        public ProductDaoTests()
         {
             _lazyDbConnection = new LazyDbConnection(() => new NpgsqlConnection(Configuration.ConnectionString));
         }
@@ -27,99 +27,99 @@ namespace ChangeTracker.DataAccess.Postgres.Tests.DataAccessObjectsTests
             _lazyDbConnection?.Dispose();
         }
 
-        private ProjectDao CreateDao()
+        private ProductDao CreateDao()
         {
-            return new(new DbSession(_lazyDbConnection), NullLogger<ProjectDao>.Instance);
+            return new(new DbSession(_lazyDbConnection), NullLogger<ProductDao>.Instance);
         }
 
         [Fact]
-        public async Task FindProject_ByAccountIdAndName_ReturnsProject()
+        public async Task FindProduct_ByAccountIdAndName_ReturnsProduct()
         {
-            var projectDao = CreateDao();
+            var productDao = CreateDao();
             var t_ua_account_01_proj_02 = Guid.Parse("0614f8d6-8895-4c74-bcbe-8a3c26076e1b");
             var t_ua_account_01 = Guid.Parse("ec3a44cc-0ba4-4c97-ad7f-911e9f6a73bc");
 
-            var project =
-                await projectDao.FindProjectAsync(t_ua_account_01, Name.Parse(nameof(t_ua_account_01_proj_02)));
+            var product =
+                await productDao.FindProductAsync(t_ua_account_01, Name.Parse(nameof(t_ua_account_01_proj_02)));
 
-            project.HasValue.Should().BeTrue();
-            project.Value.Id.Should().Be(t_ua_account_01_proj_02);
+            product.HasValue.Should().BeTrue();
+            product.Value.Id.Should().Be(t_ua_account_01_proj_02);
         }
 
         [Fact]
-        public async Task FindProject_ByProjectId_ReturnsProject()
+        public async Task FindProduct_ByProductId_ReturnsProduct()
         {
-            var projectDao = CreateDao();
+            var productDao = CreateDao();
             var t_ua_account_01_proj_02 = Guid.Parse("0614f8d6-8895-4c74-bcbe-8a3c26076e1b");
 
-            var project =
-                await projectDao.FindProjectAsync(t_ua_account_01_proj_02);
+            var product =
+                await productDao.FindProductAsync(t_ua_account_01_proj_02);
 
-            project.HasValue.Should().BeTrue();
-            project.Value.Id.Should().Be(t_ua_account_01_proj_02);
+            product.HasValue.Should().BeTrue();
+            product.Value.Id.Should().Be(t_ua_account_01_proj_02);
         }
 
         [Fact]
-        public async Task GetProject_ExistingProject_ReturnsProject()
+        public async Task GetProduct_ExistingProduct_ReturnsProduct()
         {
-            var projectDao = CreateDao();
+            var productDao = CreateDao();
             var t_ua_account_01_proj_02 = Guid.Parse("0614f8d6-8895-4c74-bcbe-8a3c26076e1b");
 
-            var project = await projectDao.GetProjectAsync(t_ua_account_01_proj_02);
+            var product = await productDao.GetProductAsync(t_ua_account_01_proj_02);
 
-            project.Id.Should().Be(t_ua_account_01_proj_02);
+            product.Id.Should().Be(t_ua_account_01_proj_02);
         }
 
         [Fact]
-        public void GetProject_NotExistingProject_Exception()
+        public void GetProduct_NotExistingProduct_Exception()
         {
-            var projectDao = CreateDao();
-            var notExistingProjectId = Guid.Parse("21f05095-c016-4f60-b98a-03c037b6cc8c");
+            var productDao = CreateDao();
+            var notExistingProductId = Guid.Parse("21f05095-c016-4f60-b98a-03c037b6cc8c");
 
-            Func<Task<Project>> act = () => projectDao.GetProjectAsync(notExistingProjectId);
+            Func<Task<Product>> act = () => productDao.GetProductAsync(notExistingProductId);
 
             act.Should().ThrowExactly<Exception>();
         }
 
         [Fact]
-        public async Task GetProjects_HappyPath_ReturnsProjects()
+        public async Task GetProducts_HappyPath_ReturnsProducts()
         {
-            var projectDao = CreateDao();
+            var productDao = CreateDao();
             var t_ua_account_01 = Guid.Parse("ec3a44cc-0ba4-4c97-ad7f-911e9f6a73bc");
             var t_ua_account_01_user_02 = Guid.Parse("7aa9004b-ed6f-4862-8307-579030c860be");
-            var querySettings = new ProjectQuerySettings(t_ua_account_01, t_ua_account_01_user_02);
+            var querySettings = new ProductQuerySettings(t_ua_account_01, t_ua_account_01_user_02);
 
-            var projects = await projectDao.GetProjectsAsync(querySettings);
+            var products = await productDao.GetProductsAsync(querySettings);
 
-            projects.Should().HaveCount(2);
+            products.Should().HaveCount(2);
         }
 
         [Fact]
-        public async Task GetProjects_LimitResultBy1_ReturnsOnlyOneProject()
+        public async Task GetProducts_LimitResultBy1_ReturnsOnlyOneProduct()
         {
-            var projectDao = CreateDao();
+            var productDao = CreateDao();
             var t_ua_account_01 = Guid.Parse("ec3a44cc-0ba4-4c97-ad7f-911e9f6a73bc");
             var t_ua_account_01_user_02 = Guid.Parse("7aa9004b-ed6f-4862-8307-579030c860be");
-            var querySettings = new ProjectQuerySettings(t_ua_account_01, t_ua_account_01_user_02, null, 1);
+            var querySettings = new ProductQuerySettings(t_ua_account_01, t_ua_account_01_user_02, null, 1);
 
-            var projects = await projectDao.GetProjectsAsync(querySettings);
+            var products = await productDao.GetProductsAsync(querySettings);
 
-            projects.Should().HaveCount(1);
+            products.Should().HaveCount(1);
         }
 
         [Fact]
-        public async Task GetProjects_SkipFirstProject_ReturnsSecond()
+        public async Task GetProducts_SkipFirstProduct_ReturnsSecond()
         {
-            var projectDao = CreateDao();
+            var productDao = CreateDao();
             var t_ua_account_01 = Guid.Parse("ec3a44cc-0ba4-4c97-ad7f-911e9f6a73bc");
             var t_ua_account_01_user_02 = Guid.Parse("7aa9004b-ed6f-4862-8307-579030c860be");
-            var lastProjectId = Guid.Parse("139a2e54-e9be-4168-98b4-2839d9b3db04");
-            var querySettings = new ProjectQuerySettings(t_ua_account_01, t_ua_account_01_user_02, lastProjectId);
+            var lastProductId = Guid.Parse("139a2e54-e9be-4168-98b4-2839d9b3db04");
+            var querySettings = new ProductQuerySettings(t_ua_account_01, t_ua_account_01_user_02, lastProductId);
 
-            var projects = await projectDao.GetProjectsAsync(querySettings);
+            var products = await productDao.GetProductsAsync(querySettings);
 
-            projects.Should().HaveCount(1);
-            projects.Should().Contain(x => x.Id == Guid.Parse("0614f8d6-8895-4c74-bcbe-8a3c26076e1b"));
+            products.Should().HaveCount(1);
+            products.Should().Contain(x => x.Id == Guid.Parse("0614f8d6-8895-4c74-bcbe-8a3c26076e1b"));
         }
     }
 }

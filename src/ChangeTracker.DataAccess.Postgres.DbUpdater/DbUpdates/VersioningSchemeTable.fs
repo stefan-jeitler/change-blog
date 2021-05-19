@@ -42,7 +42,7 @@ let addSemVer2DefaultScheme (dbConnection: IDbConnection) =
     |> Async.AwaitTask
     |> Async.Ignore
 
-let addUniquIndex (dbConnection: IDbConnection) = 
+let addUniqueIndexOnNameAccountIdDeletedAt (dbConnection: IDbConnection) = 
     dbConnection.ExecuteAsync(addUniqueIndexOnNameAccountIdDeletedAtSql)
     |> Async.AwaitTask
     |> Async.Ignore

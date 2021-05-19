@@ -8,19 +8,19 @@ namespace ChangeTracker.Application.Tests.UseCaseTests.Commands.AssignPendingLin
     public class VersionAssignmentRequestModelTests
     {
         private Guid _testLineId;
-        private Guid _testProjectId;
+        private Guid _testProductId;
         private string _testVersion;
 
         public VersionAssignmentRequestModelTests()
         {
-            _testProjectId = Guid.Parse("f02cf1c7-d8a7-492f-b46d-a2ba916770d0");
+            _testProductId = Guid.Parse("f02cf1c7-d8a7-492f-b46d-a2ba916770d0");
             _testVersion = "1.2.3";
             _testLineId = Guid.Parse("1763b2e7-9835-4992-8f73-8c2026530b2c");
         }
 
         private VersionAssignmentRequestModel CreateRequestModel()
         {
-            return new(_testProjectId, _testVersion, _testLineId);
+            return new(_testProductId, _testVersion, _testLineId);
         }
 
         [Fact]
@@ -28,15 +28,15 @@ namespace ChangeTracker.Application.Tests.UseCaseTests.Commands.AssignPendingLin
         {
             var requestModel = CreateRequestModel();
 
-            requestModel.ProjectId.Should().Be(_testProjectId);
+            requestModel.ProductId.Should().Be(_testProductId);
             requestModel.Version.Should().Be(_testVersion);
             requestModel.ChangeLogLineId.Should().Be(_testLineId);
         }
 
         [Fact]
-        public void Create_WithEmptyProjectId_ArgumentException()
+        public void Create_WithEmptyProductId_ArgumentException()
         {
-            _testProjectId = Guid.Empty;
+            _testProductId = Guid.Empty;
 
             Func<VersionAssignmentRequestModel> act = CreateRequestModel;
 

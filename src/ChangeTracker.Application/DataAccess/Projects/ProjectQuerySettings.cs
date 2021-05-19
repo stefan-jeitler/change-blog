@@ -1,23 +1,23 @@
 ﻿using System;
 
-namespace ChangeTracker.Application.DataAccess.Projects
+namespace ChangeTracker.Application.DataAccess.Products
 {
-    public class ProjectQuerySettings
+    public class ProductQuerySettings
     {
-        public ProjectQuerySettings(Guid accountId, Guid userId, Guid? lastProjectId = null, ushort limit = 100,
-            bool includeClosedProjects = false)
+        public ProductQuerySettings(Guid accountId, Guid userId, Guid? lastProductId = null, ushort limit = 100,
+            bool includeClosedProducts = false)
         {
             AccountId = accountId;
             UserId = userId;
-            LastProjectId = lastProjectId;
+            LastProductId = lastProductId;
             Limit = limit;
-            IncludeClosedProjects = includeClosedProjects;
+            IncludeClosedProducts = includeClosedProducts;
         }
 
         public Guid UserId { get; }
         public Guid AccountId { get; }
-        public Guid? LastProjectId { get; }
+        public Guid? LastProductId { get; }
         public ushort Limit { get; }
-        public bool IncludeClosedProjects { get; }
+        public bool IncludeClosedProducts { get; }
     }
 }

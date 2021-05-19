@@ -38,13 +38,13 @@ namespace ChangeTracker.DataAccess.Postgres.DataAccessObjects
             });
         }
 
-        public async Task<bool> HasProjectPermissionAsync(Guid userId, Guid projectId, Permission permission)
+        public async Task<bool> HasProductPermissionAsync(Guid userId, Guid productId, Permission permission)
         {
             using var dbConnection = _acquireDbConnection();
 
-            return await dbConnection.ExecuteScalarAsync<bool>(ProjectPermissionsSql, new
+            return await dbConnection.ExecuteScalarAsync<bool>(ProductPermissionsSql, new
             {
-                projectId,
+                productId,
                 userId,
                 permission = permission.ToString()
             });

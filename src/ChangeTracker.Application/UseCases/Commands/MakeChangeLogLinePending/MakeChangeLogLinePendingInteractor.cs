@@ -94,7 +94,7 @@ namespace ChangeTracker.Application.UseCases.Commands.MakeChangeLogLinePending
             IMakeChangeLogLinePendingOutputPort output,
             ChangeLogLine line)
         {
-            var pendingChangeLogs = await _changeLogQueries.GetChangeLogsAsync(line.ProjectId);
+            var pendingChangeLogs = await _changeLogQueries.GetChangeLogsAsync(line.ProductId);
             if (!pendingChangeLogs.IsPositionAvailable)
             {
                 output.TooManyPendingLines(ChangeLogs.MaxLines);
@@ -113,7 +113,7 @@ namespace ChangeTracker.Application.UseCases.Commands.MakeChangeLogLinePending
         private static ChangeLogLine MakeLinePending(ChangeLogLine line, ChangeLogs pendingChangeLogs)
         {
             return new(line.Id, null,
-                line.ProjectId, line.Text,
+                line.ProductId, line.Text,
                 pendingChangeLogs.NextFreePosition,
                 line.CreatedAt, line.Labels,
                 line.Issues, line.DeletedAt);

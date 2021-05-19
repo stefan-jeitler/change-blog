@@ -40,7 +40,7 @@ namespace ChangeTracker.Application.Tests.UseCaseTests.Commands.LabelsTests
             var requestModel = new ChangeLogLineLabelRequestModel(lineId, label.Value);
             var addLabelInteractor = CreateInteractor();
 
-            _changeLogDaoStub.ChangeLogs.Add(new ChangeLogLine(lineId, null, TestAccount.Project.Id,
+            _changeLogDaoStub.ChangeLogs.Add(new ChangeLogLine(lineId, null, TestAccount.Product.Id,
                 ChangeLogText.Parse("Some text"), 0U, DateTime.Parse("2021-04-17")));
             _outputPortMock.Setup(m => m.Added(It.IsAny<Guid>()));
 
@@ -62,7 +62,7 @@ namespace ChangeTracker.Application.Tests.UseCaseTests.Commands.LabelsTests
             var requestModel = new ChangeLogLineLabelRequestModel(lineId, "Some Label");
             var addLabelInteractor = CreateInteractor();
 
-            _changeLogDaoStub.ChangeLogs.Add(new ChangeLogLine(lineId, null, TestAccount.Project.Id,
+            _changeLogDaoStub.ChangeLogs.Add(new ChangeLogLine(lineId, null, TestAccount.Product.Id,
                 ChangeLogText.Parse("Some text"), 0U, DateTime.Parse("2021-04-17")));
             _outputPortMock.Setup(m => m.InvalidLabel(It.IsAny<string>()));
 
@@ -81,7 +81,7 @@ namespace ChangeTracker.Application.Tests.UseCaseTests.Commands.LabelsTests
             var requestModel = new ChangeLogLineLabelRequestModel(lineId, "SomeLabel");
             var addLabelInteractor = CreateInteractor();
 
-            _changeLogDaoStub.ChangeLogs.Add(new ChangeLogLine(lineId, null, TestAccount.Project.Id,
+            _changeLogDaoStub.ChangeLogs.Add(new ChangeLogLine(lineId, null, TestAccount.Product.Id,
                 ChangeLogText.Parse("Some text"), 0U, DateTime.Parse("2021-04-17")));
             _outputPortMock.Setup(m => m.Conflict(It.IsAny<string>()));
 
@@ -104,7 +104,7 @@ namespace ChangeTracker.Application.Tests.UseCaseTests.Commands.LabelsTests
 
             var existingLabels =
                 new List<string> {"Feature", "Bug", "Security", "Deprecated", "Added"}.Select(Label.Parse);
-            _changeLogDaoStub.ChangeLogs.Add(new ChangeLogLine(lineId, null, TestAccount.Project.Id,
+            _changeLogDaoStub.ChangeLogs.Add(new ChangeLogLine(lineId, null, TestAccount.Product.Id,
                 ChangeLogText.Parse("Some text"), 0U, DateTime.Parse("2021-04-17"), existingLabels,
                 Array.Empty<Issue>()));
             _outputPortMock.Setup(m => m.MaxLabelsReached(It.IsAny<int>()));

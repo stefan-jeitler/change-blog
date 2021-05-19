@@ -4,11 +4,11 @@ using System.Threading.Tasks;
 using ChangeTracker.Api.Authorization;
 using ChangeTracker.Api.DTOs;
 using ChangeTracker.Api.DTOs.v1.Account;
-using ChangeTracker.Api.DTOs.v1.Project;
+using ChangeTracker.Api.DTOs.v1.Product;
 using ChangeTracker.Api.Extensions;
 using ChangeTracker.Application.UseCases;
 using ChangeTracker.Application.UseCases.Queries.GetAccounts;
-using ChangeTracker.Application.UseCases.Queries.GetProjects;
+using ChangeTracker.Application.UseCases.Queries.GetProducts;
 using ChangeTracker.Application.UseCases.Queries.GetRoles;
 using ChangeTracker.Application.UseCases.Queries.GetUsers;
 using Microsoft.AspNetCore.Mvc;
@@ -20,12 +20,12 @@ namespace ChangeTracker.Api.Controllers.v1
     public class AccountController : ControllerBase
     {
         private readonly IGetAccounts _getAccounts;
-        private readonly IGetProjects _getProjects;
+        private readonly IGetProducts _getProducts;
         private readonly IGetUsers _getUsers;
 
-        public AccountController(IGetProjects getProjects, IGetAccounts getAccounts, IGetUsers getUsers)
+        public AccountController(IGetProducts getProducts, IGetAccounts getAccounts, IGetUsers getUsers)
         {
-            _getProjects = getProjects;
+            _getProducts = getProducts;
             _getAccounts = getAccounts;
             _getUsers = getUsers;
         }
@@ -62,28 +62,28 @@ namespace ChangeTracker.Api.Controllers.v1
                 limit
             );
 
-            var projects = await _getUsers.ExecuteAsync(requestModel);
+            var products = await _getUsers.ExecuteAsync(requestModel);
 
-            return Ok(projects.Select(UserDto.FromResponseModel));
+            return Ok(products.Select(UserDto.FromResponseModel));
         }
 
-        [HttpGet("{accountId:Guid}/projects")]
-        [NeedsPermission(Permission.ViewAccountProjects)]
-        public async Task<ActionResult> GetProjectsAsync(Guid accountId,
-            ushort limit = ProjectsQueryRequestModel.MaxLimit,
-            Guid? lastProjectId = null,
-            bool includeClosedProjects = false)
+        [HttpGet("{accountId:Guid}/products")]
+        [NeedsPermission(Permission.ViewAccountProducts)]
+        public async Task<ActionResult> GetProductsAsync(Guid accountId,
+            ushort limit = ProductsQueryRequestModel.MaxLimit,
+            Guid? lastProductId = null,
+            bool includeClosedProducts = false)
         {
-            var requestModel = new ProjectsQueryRequestModel(HttpContext.GetUserId(),
+            var requestModel = new ProductsQueryRequestModel(HttpContext.GetUserId(),
                 accountId,
-                lastProjectId,
+                lastProductId,
                 limit,
-                includeClosedProjects
+                includeClosedProducts
             );
 
-            var projects = await _getProjects.ExecuteAsync(requestModel);
+            var products = await _getProducts.ExecuteAsync(requestModel);
 
-            return Ok(projects.Select(ProjectDto.FromResponseModel));
+            return Ok(products.Select(ProductDto.FromResponseModel));
         }
 
         [HttpGet("roles")]

@@ -19,7 +19,7 @@ namespace ChangeTracker.Domain.Tests.TestDoubles
             Name.Parse("My custom scheme"),
             Text.Parse(@"^(\d+\.)?(\d+\.)?(\*|\d+)$"),
             Id,
-            Text.Parse("a custom scheme for my project"),
+            Text.Parse("a custom scheme for my product"),
             DateTime.Parse("2021-04-05T15:00:00"),
             null);
 

@@ -9,6 +9,6 @@ namespace ChangeTracker.Application.UseCases.Commands.ReleaseVersion
         void VersionReleased(Guid versionId);
         void Conflict(string reason);
         void VersionDoesNotExist();
-        void RelatedProjectClosed(Guid projectId);
+        void RelatedProductClosed(Guid productId);
     }
 }

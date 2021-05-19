@@ -40,7 +40,7 @@ namespace ChangeTracker.Application.Tests.UseCaseTests.Commands.LabelsTests
             var requestModel = new ChangeLogLineLabelRequestModel(lineId, label.Value);
             var removeLabelInteractor = CreateInteractor();
 
-            var line = new ChangeLogLine(lineId, null, TestAccount.Project.Id, ChangeLogText.Parse("some valid text"),
+            var line = new ChangeLogLine(lineId, null, TestAccount.Product.Id, ChangeLogText.Parse("some valid text"),
                 0U, DateTime.Parse("2021-04-19"), new List<Label> {label}, Array.Empty<Issue>());
             _changeLogDaoStub.ChangeLogs.Add(line);
             _outputPortMock.Setup(m => m.Removed(It.IsAny<Guid>()));
@@ -97,7 +97,7 @@ namespace ChangeTracker.Application.Tests.UseCaseTests.Commands.LabelsTests
             var requestModel = new ChangeLogLineLabelRequestModel(lineId, "SomeLabel");
             var addLabelInteractor = CreateInteractor();
 
-            _changeLogDaoStub.ChangeLogs.Add(new ChangeLogLine(lineId, null, TestAccount.Project.Id,
+            _changeLogDaoStub.ChangeLogs.Add(new ChangeLogLine(lineId, null, TestAccount.Product.Id,
                 ChangeLogText.Parse("Some text"), 0U, DateTime.Parse("2021-04-17")));
             _outputPortMock.Setup(m => m.Conflict(It.IsAny<string>()));
 

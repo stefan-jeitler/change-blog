@@ -14,7 +14,7 @@ namespace ChangeTracker.Domain.Tests.ChangeLogTests
         private const uint TestPosition = 5;
         private static readonly Guid TestId = Guid.Parse("51d89265-52c2-4a38-a0fe-b99bdc5523d0");
         private static readonly Guid TestVersionId = Guid.Parse("66845d0a-45bc-4834-96d0-b48c2c403628");
-        private static readonly Guid TestProjectId = Guid.Parse("ef5656e5-15f0-418d-b3a4-b69f1c3abac5");
+        private static readonly Guid TestProductId = Guid.Parse("ef5656e5-15f0-418d-b3a4-b69f1c3abac5");
         private static readonly ChangeLogText TestText = ChangeLogText.Parse("New feature added");
         private static readonly DateTime TestCreationDate = DateTime.Parse("2021-04.02T18:28");
 
@@ -32,7 +32,7 @@ namespace ChangeTracker.Domain.Tests.ChangeLogTests
 
             // act
             var line = new ChangeLogLine(TestId, TestVersionId,
-                TestProjectId, TestText, TestPosition,
+                TestProductId, TestText, TestPosition,
                 TestCreationDate, labels, Array.Empty<Issue>());
 
             // assert
@@ -46,7 +46,7 @@ namespace ChangeTracker.Domain.Tests.ChangeLogTests
         {
             Func<ChangeLogLine> act = () => new ChangeLogLine(TestId,
                 TestVersionId,
-                TestProjectId,
+                TestProductId,
                 TestText,
                 TestPosition,
                 TestCreationDate,
@@ -67,7 +67,7 @@ namespace ChangeTracker.Domain.Tests.ChangeLogTests
             };
 
             Func<ChangeLogLine> act = () => new ChangeLogLine(TestId, TestVersionId,
-                TestProjectId, TestText, TestPosition,
+                TestProductId, TestText, TestPosition,
                 TestCreationDate, labels, Array.Empty<Issue>());
 
             act.Should().ThrowExactly<ArgumentException>();
@@ -77,7 +77,7 @@ namespace ChangeTracker.Domain.Tests.ChangeLogTests
         public void Create_WithoutLabels_Empty()
         {
             var line = new ChangeLogLine(TestId, TestVersionId,
-                TestProjectId, TestText, TestPosition,
+                TestProductId, TestText, TestPosition,
                 TestCreationDate);
 
             line.Labels.Should().BeEmpty();
@@ -88,7 +88,7 @@ namespace ChangeTracker.Domain.Tests.ChangeLogTests
         {
             var featureLabel = Label.Parse("Feature");
             var line = new ChangeLogLine(TestId, null,
-                TestProjectId, TestText, TestPosition,
+                TestProductId, TestText, TestPosition,
                 TestCreationDate);
 
             line.AddLabel(featureLabel);
@@ -108,7 +108,7 @@ namespace ChangeTracker.Domain.Tests.ChangeLogTests
             };
 
             var line = new ChangeLogLine(TestId, null,
-                TestProjectId, TestText, TestPosition,
+                TestProductId, TestText, TestPosition,
                 TestCreationDate, labels, Array.Empty<Issue>());
 
             var newLabel = Label.Parse("Security");
@@ -130,7 +130,7 @@ namespace ChangeTracker.Domain.Tests.ChangeLogTests
             var existingLabels = new List<Label> {featureLabel, bugLabel};
 
             var line = new ChangeLogLine(TestId, null,
-                TestProjectId, TestText, TestPosition,
+                TestProductId, TestText, TestPosition,
                 TestCreationDate, existingLabels, Array.Empty<Issue>());
 
             // act
@@ -152,7 +152,7 @@ namespace ChangeTracker.Domain.Tests.ChangeLogTests
 
             // act
             var line = new ChangeLogLine(TestId, TestVersionId,
-                TestProjectId, TestText, TestPosition,
+                TestProductId, TestText, TestPosition,
                 TestCreationDate, existingLabels, Array.Empty<Issue>());
 
             // assert
@@ -165,7 +165,7 @@ namespace ChangeTracker.Domain.Tests.ChangeLogTests
         {
             // arrange
             var line = new ChangeLogLine(TestId, TestVersionId,
-                TestProjectId, TestText, TestPosition,
+                TestProductId, TestText, TestPosition,
                 TestCreationDate, Enumerable.Empty<Label>(), Enumerable.Empty<Issue>());
 
             // act
@@ -183,7 +183,7 @@ namespace ChangeTracker.Domain.Tests.ChangeLogTests
             var existingLabels = new List<Label> {featureLabel};
 
             var line = new ChangeLogLine(TestId, TestVersionId,
-                TestProjectId, TestText, TestPosition,
+                TestProductId, TestText, TestPosition,
                 TestCreationDate, existingLabels, Array.Empty<Issue>());
 
             // act
@@ -207,7 +207,7 @@ namespace ChangeTracker.Domain.Tests.ChangeLogTests
             };
 
             var line = new ChangeLogLine(TestId, TestVersionId,
-                TestProjectId, TestText, TestPosition,
+                TestProductId, TestText, TestPosition,
                 TestCreationDate, existingLabels, Array.Empty<Issue>());
 
             // act
@@ -225,7 +225,7 @@ namespace ChangeTracker.Domain.Tests.ChangeLogTests
             var existingLabels = new List<Label> {featureLabel};
 
             var line = new ChangeLogLine(TestId, null,
-                TestProjectId, TestText, TestPosition,
+                TestProductId, TestText, TestPosition,
                 TestCreationDate, existingLabels, Array.Empty<Issue>());
 
             // act
@@ -244,7 +244,7 @@ namespace ChangeTracker.Domain.Tests.ChangeLogTests
             var existingLabels = new List<Label> {featureLabel};
 
             var line = new ChangeLogLine(TestId, null,
-                TestProjectId, TestText, TestPosition,
+                TestProductId, TestText, TestPosition,
                 TestCreationDate, existingLabels, Array.Empty<Issue>());
 
             // act
@@ -259,7 +259,7 @@ namespace ChangeTracker.Domain.Tests.ChangeLogTests
         {
             // arrange
             var line = new ChangeLogLine(TestId, null,
-                TestProjectId, TestText, TestPosition,
+                TestProductId, TestText, TestPosition,
                 TestCreationDate);
 
             // act

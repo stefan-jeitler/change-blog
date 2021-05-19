@@ -10,8 +10,7 @@ let private createAccountSql = """
         "name" TEXT CONSTRAINT account_name_nn NOT NULL,
         default_versioning_scheme_id UUID,
         deleted_at timestamp,
-        created_at timestamp CONSTRAINT account_createdat_nn NOT NULL,
-        CONSTRAINT account_name_unique UNIQUE ("name")
+        created_at timestamp CONSTRAINT account_createdat_nn NOT NULL
     )"""
 
 let private createConstraintSql = """
@@ -20,9 +19,7 @@ let private createConstraintSql = """
     		REFERENCES versioning_scheme(id)
     """
 
-let private removeUniqueNameConstraintSql = "ALTER TABLE account DROP CONSTRAINT IF EXISTS account_name_unique"
-
-let private addUniqeLowerNameConstraintSql = "CREATE UNIQUE INDEX IF NOT EXISTS account_name_deletedat_unique ON account (LOWER(name), (deleted_at is null)) where deleted_at is null"
+let private addUniqueIndexOnNameAndDeletedAtSql = "CREATE UNIQUE INDEX IF NOT EXISTS account_name_deletedat_unique ON account (LOWER(name), (deleted_at is null)) where deleted_at is null"
 
 let create (dbConnection: IDbConnection) =
     dbConnection.ExecuteAsync(createAccountSql)
@@ -43,15 +40,10 @@ let addVersioningSchemeForeignKey (dbConnection: IDbConnection) =
                 |> Async.Ignore
     }
 
-let fixUniqueNameConstraint (dbConnection: IDbConnection) =
+let addPartialUniqueIndexOnNameAndDeletedAt (dbConnection: IDbConnection) =
     async {
         do! 
-            dbConnection.ExecuteAsync(removeUniqueNameConstraintSql)
-            |> Async.AwaitTask
-            |> Async.Ignore
-
-        do! 
-            dbConnection.ExecuteAsync(addUniqeLowerNameConstraintSql)
+            dbConnection.ExecuteAsync(addUniqueIndexOnNameAndDeletedAtSql)
             |> Async.AwaitTask
             |> Async.Ignore
     }

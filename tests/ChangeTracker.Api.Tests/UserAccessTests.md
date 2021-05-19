@@ -69,16 +69,16 @@ Usernames will start with the account name followed by `_user_<number>`.
 ]
 ```
 
-## Projects
+## Products
 
-Projects starts with the account name followed by `_proj_<number>`.  
+Products starts with the account name followed by `_proj_<number>`.  
 
 * `t_ua_account_01_proj_01`
 * `t_ua_account_01_proj_02`
 * `t_ua_account_02_proj_01`
 * `t_ua_account_02_proj_02`
 
-## Project Userroles
+## Product Userroles
 
 ```json
 [
@@ -125,7 +125,7 @@ values ('f575503e-4eee-4d6d-b2c1-f11d8fc3da76',
         't_ua_account_01_user_01@change-tracker.com',
         't_ua_account_01', 'user_01',
         'Europe/Berlin', null, now())
-on conflict (id) do nothing
+on conflict (id) do nothing;
 
 insert into "user"
 values ('7aa9004b-ed6f-4862-8307-579030c860be',
@@ -255,9 +255,9 @@ insert into account_user values ((select id from account where name = 't_ua_acco
                                 )
 on conflict (account_id, user_id, role_id) do nothing ;
 
--- projects
+-- products
 
-insert into project values ('139a2e54-e9be-4168-98b4-2839d9b3db04',
+insert into product values ('139a2e54-e9be-4168-98b4-2839d9b3db04',
                             (select id from account where name = 't_ua_account_01'),
                             '4091b948-9bc5-43ee-9f98-df3d27853565',
                             't_ua_account_01_proj_01',
@@ -265,7 +265,7 @@ insert into project values ('139a2e54-e9be-4168-98b4-2839d9b3db04',
                             null, now()
                            ) on conflict (id) do nothing ;
 
-insert into project values ('0614f8d6-8895-4c74-bcbe-8a3c26076e1b',
+insert into product values ('0614f8d6-8895-4c74-bcbe-8a3c26076e1b',
                             (select id from account where name = 't_ua_account_01'),
                             '4091b948-9bc5-43ee-9f98-df3d27853565',
                             't_ua_account_01_proj_02',
@@ -274,7 +274,7 @@ insert into project values ('0614f8d6-8895-4c74-bcbe-8a3c26076e1b',
                            ) on conflict (id) do nothing ;
 
                            
-insert into project values ('04482211-eda1-4748-9818-9f74c105609c',
+insert into product values ('04482211-eda1-4748-9818-9f74c105609c',
                             (select id from account where name = 't_ua_account_02'),
                             '4091b948-9bc5-43ee-9f98-df3d27853565',
                             't_ua_account_02_proj_01',
@@ -282,7 +282,7 @@ insert into project values ('04482211-eda1-4748-9818-9f74c105609c',
                             null, now()
                            ) on conflict (id) do nothing ;
 
-insert into project values ('35c5df1a-079e-4b8c-87c5-09b30e52a82f',
+insert into product values ('35c5df1a-079e-4b8c-87c5-09b30e52a82f',
                             (select id from account where name = 't_ua_account_02'),
                             '4091b948-9bc5-43ee-9f98-df3d27853565',
                             't_ua_account_02_proj_02',
@@ -290,18 +290,18 @@ insert into project values ('35c5df1a-079e-4b8c-87c5-09b30e52a82f',
                             null, now()
                            ) on conflict (id) do nothing ;
 
-insert into project_user values (
+insert into product_user values (
                                  (select id from "user" where email = 't_ua_account_01_user_01@change-tracker.com'),
                                  '139a2e54-e9be-4168-98b4-2839d9b3db04',
                                  (select id from role where name = 'ProductManager'),
                                  now()
-                                ) on conflict (project_id, user_id, role_id) do nothing ;
+                                ) on conflict (product_id, user_id, role_id) do nothing ;
 
-insert into project_user values (
+insert into product_user values (
                                  (select id from "user" where email = 't_ua_account_02_user_03@change-tracker.com'),
                                  '35c5df1a-079e-4b8c-87c5-09b30e52a82f',
                                  (select id from role where name = 'Developer'),
                                  now()
-                                ) on conflict (project_id, user_id, role_id) do nothing ;
+                                ) on conflict (product_id, user_id, role_id) do nothing ;
                                 
 ```

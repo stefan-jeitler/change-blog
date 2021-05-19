@@ -11,12 +11,12 @@ namespace ChangeTracker.Application.Tests.UseCaseTests.Commands.AddPendingChange
         private List<string> _testIssues;
         private List<string> _testLabels;
 
-        private Guid _testProjectId;
+        private Guid _testProductId;
         private string _testText;
 
         public PendingLineRequestModelTests()
         {
-            _testProjectId = Guid.Parse("f02cf1c7-d8a7-492f-b46d-a2ba916770d0");
+            _testProductId = Guid.Parse("f02cf1c7-d8a7-492f-b46d-a2ba916770d0");
             _testText = "some bug fixes";
             _testLabels = new List<string>(0);
             _testIssues = new List<string>(0);
@@ -24,7 +24,7 @@ namespace ChangeTracker.Application.Tests.UseCaseTests.Commands.AddPendingChange
 
         private PendingLineRequestModel CreateRequestModel()
         {
-            return new(_testProjectId, _testText, _testLabels, _testIssues);
+            return new(_testProductId, _testText, _testLabels, _testIssues);
         }
 
         [Fact]
@@ -32,16 +32,16 @@ namespace ChangeTracker.Application.Tests.UseCaseTests.Commands.AddPendingChange
         {
             var requestModel = CreateRequestModel();
 
-            requestModel.ProjectId.Should().Be(_testProjectId);
+            requestModel.ProductId.Should().Be(_testProductId);
             requestModel.Text.Should().Be(_testText);
             requestModel.Labels.Should().BeEmpty();
             requestModel.Issues.Should().BeEmpty();
         }
 
         [Fact]
-        public void Create_WithEmptyProjectId_ArgumentException()
+        public void Create_WithEmptyProductId_ArgumentException()
         {
-            _testProjectId = Guid.Empty;
+            _testProductId = Guid.Empty;
 
             Func<PendingLineRequestModel> act = CreateRequestModel;
 

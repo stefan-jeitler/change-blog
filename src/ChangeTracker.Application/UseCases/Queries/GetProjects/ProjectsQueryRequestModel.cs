@@ -1,13 +1,13 @@
 ﻿using System;
 
-namespace ChangeTracker.Application.UseCases.Queries.GetProjects
+namespace ChangeTracker.Application.UseCases.Queries.GetProducts
 {
-    public class ProjectsQueryRequestModel
+    public class ProductsQueryRequestModel
     {
         public const ushort MaxLimit = 100;
 
-        public ProjectsQueryRequestModel(Guid userId, Guid accountId, Guid? lastProjectId, ushort limit,
-            bool includeClosedProjects)
+        public ProductsQueryRequestModel(Guid userId, Guid accountId, Guid? lastProductId, ushort limit,
+            bool includeClosedProducts)
         {
             if (userId == Guid.Empty)
                 throw new ArgumentException("UserId cannot be empty.");
@@ -18,15 +18,15 @@ namespace ChangeTracker.Application.UseCases.Queries.GetProjects
                 throw new ArgumentException("AccountId cannot be empty.");
 
             AccountId = accountId;
-            LastProjectId = lastProjectId;
+            LastProductId = lastProductId;
             Limit = Math.Min(limit, MaxLimit);
-            IncludeClosedProjects = includeClosedProjects;
+            IncludeClosedProducts = includeClosedProducts;
         }
 
         public Guid UserId { get; }
         public Guid AccountId { get; }
-        public Guid? LastProjectId { get; }
+        public Guid? LastProductId { get; }
         public ushort Limit { get; }
-        public bool IncludeClosedProjects { get; }
+        public bool IncludeClosedProducts { get; }
     }
 }

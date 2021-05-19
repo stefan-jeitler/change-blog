@@ -11,7 +11,7 @@ namespace ChangeTracker.Domain
             _account = account;
         }
 
-        public Guid FindSchemeIdForProject(Guid? customVersioningSchemeId)
+        public Guid FindSchemeIdForProduct(Guid? customVersioningSchemeId)
         {
             if (customVersioningSchemeId.HasValue)
                 return customVersioningSchemeId.Value;

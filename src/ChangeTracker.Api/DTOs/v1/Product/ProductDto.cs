@@ -1,9 +1,9 @@
 ﻿using System;
-using ChangeTracker.Application.UseCases.Queries.GetProjects;
+using ChangeTracker.Application.UseCases.Queries.GetProducts;
 
-namespace ChangeTracker.Api.DTOs.v1.Project
+namespace ChangeTracker.Api.DTOs.v1.Product
 {
-    public class ProjectDto
+    public class ProductDto
     {
         public Guid Id { get; set; }
         public Guid AccountId { get; set; }
@@ -14,7 +14,7 @@ namespace ChangeTracker.Api.DTOs.v1.Project
         public DateTime CreatedAt { get; set; }
         public bool IsClosed { get; set; }
 
-        public static ProjectDto FromResponseModel(ProjectResponseModel m)
+        public static ProductDto FromResponseModel(ProductResponseModel m)
         {
             return new()
             {

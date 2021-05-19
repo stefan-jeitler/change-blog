@@ -2,7 +2,7 @@
 using System.ComponentModel.DataAnnotations;
 using ChangeTracker.Api.Authorization.RequestBodyIdentifiers;
 
-namespace ChangeTracker.Api.DTOs.v1.Project
+namespace ChangeTracker.Api.DTOs.v1.Product
 {
     public class AddProjectDto : IContainsAccountId
     {

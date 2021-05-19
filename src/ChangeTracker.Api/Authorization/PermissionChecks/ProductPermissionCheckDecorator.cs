@@ -6,12 +6,12 @@ using Microsoft.AspNetCore.Mvc.Filters;
 
 namespace ChangeTracker.Api.Authorization.PermissionChecks
 {
-    public class ProjectPermissionCheckDecorator : PermissionCheck
+    public class ProductPermissionCheckDecorator : PermissionCheck
     {
         private readonly PermissionCheck _permissionCheckComponent;
         private readonly UserAccessDao _userAccessDao;
 
-        public ProjectPermissionCheckDecorator(PermissionCheck permissionCheckComponent, UserAccessDao userAccessDao)
+        public ProductPermissionCheckDecorator(PermissionCheck permissionCheckComponent, UserAccessDao userAccessDao)
         {
             _permissionCheckComponent = permissionCheckComponent;
             _userAccessDao = userAccessDao;
@@ -20,9 +20,9 @@ namespace ChangeTracker.Api.Authorization.PermissionChecks
         public override async Task<bool> HasPermission(ActionExecutingContext context, Guid userId,
             Permission permission)
         {
-            var projectId = TryFindIdInHeader(context.HttpContext, KnownIdentifiers.ProjectId);
-            if (projectId.HasValue)
-                return await _userAccessDao.HasProjectPermissionAsync(userId, projectId.Value, permission);
+            var productId = TryFindIdInHeader(context.HttpContext, KnownIdentifiers.ProductId);
+            if (productId.HasValue)
+                return await _userAccessDao.HasProductPermissionAsync(userId, productId.Value, permission);
 
             return await _permissionCheckComponent.HasPermission(context, userId, permission);
         }

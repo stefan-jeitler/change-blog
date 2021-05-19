@@ -91,18 +91,18 @@ namespace ChangeTracker.Application.Tests.TestDoubles
             return Task.FromResult(ChangeLogs.TryFirst(x => x.Id == changeLogLineId));
         }
 
-        public async Task<ChangeLogs> GetChangeLogsAsync(Guid projectId, Guid? versionId)
+        public async Task<ChangeLogs> GetChangeLogsAsync(Guid productId, Guid? versionId)
         {
             await Task.Yield();
 
             var changeLogLines = versionId.HasValue
-                ? ChangeLogs.Where(x => x.ProjectId == projectId && x.VersionId == versionId.Value).ToList()
-                : ChangeLogs.Where(x => x.ProjectId == projectId && !x.VersionId.HasValue).ToList();
+                ? ChangeLogs.Where(x => x.ProductId == productId && x.VersionId == versionId.Value).ToList()
+                : ChangeLogs.Where(x => x.ProductId == productId && !x.VersionId.HasValue).ToList();
 
             return new ChangeLogs(changeLogLines);
         }
 
-        public async Task<IList<ChangeLogLine>> GetPendingLinesAsync(Guid projectId)
+        public async Task<IList<ChangeLogLine>> GetPendingLinesAsync(Guid productId)
         {
             await Task.Yield();
 
@@ -124,7 +124,7 @@ namespace ChangeTracker.Application.Tests.TestDoubles
 
             var versionChangeLogLines = ChangeLogs.Where(MatchRequestVersion);
 
-            var pendingLines = versionChangeLogLines.Select(x => new ChangeLogLine(x.Id, null, x.ProjectId, x.Text,
+            var pendingLines = versionChangeLogLines.Select(x => new ChangeLogLine(x.Id, null, x.ProductId, x.Text,
                     x.Position, x.CreatedAt, x.Labels, x.Issues, x.DeletedAt))
                 .ToList();
 

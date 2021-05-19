@@ -39,7 +39,7 @@ namespace ChangeTracker.Application.UseCases.Commands.UpdateChangeLogLine
             if (parsedNewLine.HasNoValue)
                 return;
 
-            var changeLogs = await _changeLogQueries.GetChangeLogsAsync(existingLine.Value.ProjectId,
+            var changeLogs = await _changeLogQueries.GetChangeLogsAsync(existingLine.Value.ProductId,
                 existingLine.Value.VersionId);
 
             if (changeLogs.ContainsText(parsedNewLine.Value.Text))
@@ -63,7 +63,7 @@ namespace ChangeTracker.Application.UseCases.Commands.UpdateChangeLogLine
         private async Task UpdateLineAsync(IUpdateLineOutputPort output, ChangeLogLine existingLine,
             LineParserResponseModel updatedValues)
         {
-            var line = new ChangeLogLine(existingLine.Id, existingLine.VersionId, existingLine.ProjectId,
+            var line = new ChangeLogLine(existingLine.Id, existingLine.VersionId, existingLine.ProductId,
                 updatedValues.Text, existingLine.Position, existingLine.CreatedAt, updatedValues.Labels,
                 updatedValues.Issues, existingLine.DeletedAt);
 

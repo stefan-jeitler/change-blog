@@ -5,18 +5,18 @@ namespace ChangeTracker.Application.UseCases.Commands.AddPendingChangeLogLine
 {
     public class PendingLineRequestModel
     {
-        public PendingLineRequestModel(Guid projectId, string text, List<string> labels, List<string> issues)
+        public PendingLineRequestModel(Guid productId, string text, List<string> labels, List<string> issues)
         {
-            if (projectId == Guid.Empty)
-                throw new ArgumentException("ProjectId cannot be empty.");
+            if (productId == Guid.Empty)
+                throw new ArgumentException("ProductId cannot be empty.");
 
-            ProjectId = projectId;
+            ProductId = productId;
             Text = text ?? throw new ArgumentNullException(nameof(text));
             Labels = labels ?? throw new ArgumentNullException(nameof(labels));
             Issues = issues ?? throw new ArgumentNullException(nameof(issues));
         }
 
-        public Guid ProjectId { get; }
+        public Guid ProductId { get; }
         public string Text { get; }
         public List<string> Labels { get; }
         public List<string> Issues { get; }

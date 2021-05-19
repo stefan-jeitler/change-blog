@@ -40,7 +40,7 @@ namespace ChangeTracker.Application.Tests.UseCaseTests.Commands.IssuesTests
             var requestModel = new ChangeLogLineIssueRequestModel(lineId, issue.Value);
             var removeIssueInteractor = CreateInteractor();
 
-            var line = new ChangeLogLine(lineId, null, TestAccount.Project.Id, ChangeLogText.Parse("some valid text"),
+            var line = new ChangeLogLine(lineId, null, TestAccount.Product.Id, ChangeLogText.Parse("some valid text"),
                 0U, DateTime.Parse("2021-04-19"), Array.Empty<Label>(), new List<Issue>(1) {issue});
             _changeLogDaoStub.ChangeLogs.Add(line);
 
@@ -65,7 +65,7 @@ namespace ChangeTracker.Application.Tests.UseCaseTests.Commands.IssuesTests
             var requestModel = new ChangeLogLineIssueRequestModel(lineId, issue.Value);
             var removeIssueInteractor = CreateInteractor();
 
-            var line = new ChangeLogLine(lineId, null, TestAccount.Project.Id, ChangeLogText.Parse("some valid text"),
+            var line = new ChangeLogLine(lineId, null, TestAccount.Product.Id, ChangeLogText.Parse("some valid text"),
                 0U, DateTime.Parse("2021-04-19"), Array.Empty<Label>(), new List<Issue>(1) {issue});
             _changeLogDaoStub.ChangeLogs.Add(line);
             _changeLogDaoStub.ProduceConflict = true;

@@ -24,9 +24,20 @@ The development team automatically pushes its changes during deployment with all
 
 This is a side project and should not be used in a productive environment.  
 
-## CI/CD
+## Architecture
 
-![CICD](./docs/assets/CI_CD.png)
+The architecture of the app is mainly influenced by:
+
+* Robert C. Martin's book Clean Architecture
+* Plainionist's article series [Implementing-Clean-Architecture](http://www.plainionist.net/Implementing-Clean-Architecture-Overview/)
+* [CandiedOrange's](https://softwareengineering.stackexchange.com/users/131624/candied-orange) [answers](https://softwareengineering.stackexchange.com/search?q=user:131624+[clean-architecture]) on softwareengineering.stackexchange
+
+## Key Features
+
+* Multi-tenant capabilities
+* Role-based access control**
+
+## CI/CD
 
 ### Continuous Integration
 
@@ -40,7 +51,9 @@ The message must consists of a valid SemVer 2.0.
 This will build the docker image and pushes it to the registry.  
 The DbUpdater will also built and uploaded as artifact.  
 
-In the future I would like to move to `Continuous Deployment`.  
+![CICD](./docs/assets/CI_CD.png)
+
+Maybe I move to `Continuous Deployment` in the future.
 
 ## Deployment Environments
 
@@ -61,14 +74,6 @@ Actual app
 
 [Production](https://app-change-tracker.azurewebsites.net/)
 
-## Architecture
-
-The architecture of the app is mainly influenced by:
-
-* Robert C. Martin's book Clean Architecture
-* Plainionist's article series [Implementing-Clean-Architecture](http://www.plainionist.net/Implementing-Clean-Architecture-Overview/)
-* [CandiedOrange's](https://softwareengineering.stackexchange.com/users/131624/candied-orange) [answers](https://softwareengineering.stackexchange.com/search?q=user:131624+[clean-architecture]) on softwareengineering.stackexchange
-
 ## Database
 
 I decided to use an SQL database rather than a NoSQL db,  
@@ -76,7 +81,17 @@ because relational databases are a mature technology that meets most of my requi
 
 [Database Schema](./docs/assets/ChangeTrackerDbSchema.png)
 
-## Key Features
+## DbConnection
 
-* Multi-tenant capabilities
-* Role-based access control
+There are two rules of thumb concerning db connections
+
+* Open it as late as possible
+* Keep it open as short as possible
+
+How to access a db connection?
+
+Two types are designed to work with db connections.
+
+### `Func<IDbConnection>`
+
+### `IDbAccessor`

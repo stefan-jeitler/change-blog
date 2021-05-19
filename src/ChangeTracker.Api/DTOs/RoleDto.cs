@@ -17,8 +17,8 @@ namespace ChangeTracker.Api.DTOs
 
         public static RoleDto FromResponseModel(RoleResponseModel m, bool includePermission)
         {
-            return includePermission 
-                ? new RoleDto(m.Name, m.Permissions) 
+            return includePermission
+                ? new RoleDto(m.Name, m.Permissions)
                 : new RoleDto(m.Name, Array.Empty<string>());
         }
     }

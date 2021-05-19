@@ -58,7 +58,6 @@ namespace ChangeTracker.Application.Tests.DecoratorTests
             _changeLogDaoStub.ChangeLogs.Should().BeEmpty();
         }
 
-
         [Fact]
         public async Task AddLine_ChangeLogLineDeleted_Conflict()
         {

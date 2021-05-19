@@ -24,6 +24,24 @@ The development team automatically pushes its changes during deployment with all
 
 This is a side project and should not be used in a productive environment.  
 
+## CI/CD
+
+![CICD](./docs/assets/CI_CD.png)
+
+### Continuous Integration
+
+Every push to the remote repo triggers the `Continuous Integration` stage.  
+This stage builds the app and execute all tests including the integration tests against the testing db.  
+
+### Continuous Delivery
+
+A deployment is triggered by a git tag.  
+The message must consists of a valid SemVer 2.0.  
+This will build the docker image and pushes it to the registry.  
+The DbUpdater will also built and uploaded as artifact.  
+
+In the future I would like to move to `Continuous Deployment`.  
+
 ## Deployment Environments
 
 ### Testing

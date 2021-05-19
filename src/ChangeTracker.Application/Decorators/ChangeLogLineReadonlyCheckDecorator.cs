@@ -30,7 +30,7 @@ namespace ChangeTracker.Application.Decorators
             "The related version has already been released and can no longe be modified. VersionId {0}.";
 
         private const string ProductClosedMessage =
-            "The requested product is closed and no longer be modified. ProductId {0}.";
+            "The requested product has been closed. ProductId {0}.";
 
         private readonly IChangeLogCommandsDao _changeLogCommandsComponent;
         private readonly IMemoryCache _memoryCache;

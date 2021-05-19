@@ -132,7 +132,7 @@ namespace ChangeTracker.Application.Tests.DecoratorTests
 
             // assert
             result.IsFailure.Should().BeTrue();
-            result.Error.Reason.Should().StartWith("The requested product is closed and no longer be modified");
+            result.Error.Reason.Should().StartWith("The requested product has been closed");
             _changeLogDaoStub.ChangeLogs.Should().BeEmpty();
         }
 

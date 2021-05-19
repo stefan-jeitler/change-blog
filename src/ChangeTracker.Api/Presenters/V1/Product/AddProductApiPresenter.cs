@@ -5,7 +5,7 @@ using ChangeTracker.Application.UseCases.Commands.AddProduct;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
-namespace ChangeTracker.Api.Presenters.v1.Project
+namespace ChangeTracker.Api.Presenters.V1.Product
 {
     public class AddProductApiPresenter : BasePresenter, IAddProductOutputPort
     {

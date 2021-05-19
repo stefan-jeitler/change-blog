@@ -3,11 +3,11 @@ using System.Collections.Generic;
 using System.Threading.Tasks;
 using CSharpFunctionalExtensions;
 
-namespace ChangeTracker.Application.UseCases.Queries.GetProducts
+namespace ChangeTracker.Application.UseCases.Queries.GetProjects
 {
     public interface IGetProducts
     {
-        Task<IList<ProductResponseModel>> ExecuteAsync(ProductsQueryRequestModel requestModel);
+        Task<IList<ProductResponseModel>> ExecuteAsync(ProductQueryRequestModel requestModel);
 
         Task<Maybe<ProductResponseModel>> ExecuteAsync(Guid userId, Guid productId);
     }

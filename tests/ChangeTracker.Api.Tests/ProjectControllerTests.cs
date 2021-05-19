@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Net.Http.Json;
 using System.Threading.Tasks;
-using ChangeTracker.Api.DTOs.v1.Product;
+using ChangeTracker.Api.DTOs.V1.Product;
 using FluentAssertions;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc.Testing;

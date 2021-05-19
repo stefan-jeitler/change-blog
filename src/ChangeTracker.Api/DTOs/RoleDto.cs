@@ -1,24 +1,25 @@
-﻿using System.Collections.Generic;
-using System.Linq;
+﻿using System;
+using System.Collections.Generic;
 using ChangeTracker.Application.UseCases.Queries.GetRoles;
 
 namespace ChangeTracker.Api.DTOs
 {
     public class RoleDto
     {
-        public string Name { get; set; }
-        public List<string> Permissions { get; set; }
+        public RoleDto(string name, IList<string> permissions)
+        {
+            Name = name;
+            Permissions = permissions;
+        }
+
+        public string Name { get; }
+        public IList<string> Permissions { get; }
 
         public static RoleDto FromResponseModel(RoleResponseModel m, bool includePermission)
         {
-            var response = new RoleDto
-            {
-                Name = m.Name
-            };
-
-            if (includePermission) response.Permissions = m.Permissions.ToList();
-
-            return response;
+            return includePermission 
+                ? new RoleDto(m.Name, m.Permissions) 
+                : new RoleDto(m.Name, Array.Empty<string>());
         }
     }
 }

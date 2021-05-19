@@ -7,7 +7,7 @@ using ChangeTracker.Domain;
 using Moq;
 using Xunit;
 
-namespace ChangeTracker.Application.Tests.UseCaseTests.Commands.AddProduct
+namespace ChangeTracker.Application.Tests.UseCaseTests.Commands.AddProject
 {
     public class AddProductInteractorTests
     {

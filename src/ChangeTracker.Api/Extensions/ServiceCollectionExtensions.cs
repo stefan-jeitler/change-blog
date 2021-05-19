@@ -1,7 +1,7 @@
 ﻿using ChangeTracker.Application.UseCases.Commands.AddProduct;
 using ChangeTracker.Application.UseCases.Commands.CloseProduct;
 using ChangeTracker.Application.UseCases.Queries.GetAccounts;
-using ChangeTracker.Application.UseCases.Queries.GetProducts;
+using ChangeTracker.Application.UseCases.Queries.GetProjects;
 using ChangeTracker.Application.UseCases.Queries.GetRoles;
 using ChangeTracker.Application.UseCases.Queries.GetUsers;
 using Microsoft.Extensions.DependencyInjection;

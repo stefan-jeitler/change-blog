@@ -3,12 +3,12 @@ using System.Linq;
 using System.Threading.Tasks;
 using ChangeTracker.Api.Authorization;
 using ChangeTracker.Api.DTOs;
-using ChangeTracker.Api.DTOs.v1.Account;
-using ChangeTracker.Api.DTOs.v1.Product;
+using ChangeTracker.Api.DTOs.V1.Account;
+using ChangeTracker.Api.DTOs.V1.Product;
 using ChangeTracker.Api.Extensions;
 using ChangeTracker.Application.UseCases;
 using ChangeTracker.Application.UseCases.Queries.GetAccounts;
-using ChangeTracker.Application.UseCases.Queries.GetProducts;
+using ChangeTracker.Application.UseCases.Queries.GetProjects;
 using ChangeTracker.Application.UseCases.Queries.GetRoles;
 using ChangeTracker.Application.UseCases.Queries.GetUsers;
 using Microsoft.AspNetCore.Mvc;
@@ -70,11 +70,11 @@ namespace ChangeTracker.Api.Controllers.v1
         [HttpGet("{accountId:Guid}/products")]
         [NeedsPermission(Permission.ViewAccountProducts)]
         public async Task<ActionResult> GetProductsAsync(Guid accountId,
-            ushort limit = ProductsQueryRequestModel.MaxLimit,
+            ushort limit = ProductQueryRequestModel.MaxLimit,
             Guid? lastProductId = null,
             bool includeClosedProducts = false)
         {
-            var requestModel = new ProductsQueryRequestModel(HttpContext.GetUserId(),
+            var requestModel = new ProductQueryRequestModel(HttpContext.GetUserId(),
                 accountId,
                 lastProductId,
                 limit,

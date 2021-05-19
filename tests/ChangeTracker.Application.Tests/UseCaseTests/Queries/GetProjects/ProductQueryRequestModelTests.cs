@@ -1,10 +1,10 @@
 ﻿using System;
 using ChangeTracker.Application.Tests.TestDoubles;
-using ChangeTracker.Application.UseCases.Queries.GetProducts;
+using ChangeTracker.Application.UseCases.Queries.GetProjects;
 using FluentAssertions;
 using Xunit;
 
-namespace ChangeTracker.Application.Tests.UseCaseTests.Queries.GetProducts
+namespace ChangeTracker.Application.Tests.UseCaseTests.Queries.GetProjects
 {
     public class ProductsQueryRequestModelTests
     {
@@ -23,7 +23,7 @@ namespace ChangeTracker.Application.Tests.UseCaseTests.Queries.GetProducts
             _testCount = 100;
         }
 
-        private ProductsQueryRequestModel CreateRequestModel()
+        private ProductQueryRequestModel CreateRequestModel()
         {
             return new(_testUserId, _testAccountId, _testLastProductId, _testCount, true);
         }
@@ -47,7 +47,7 @@ namespace ChangeTracker.Application.Tests.UseCaseTests.Queries.GetProducts
             _testUserId = Guid.Empty;
 
             // act
-            Func<ProductsQueryRequestModel> act = CreateRequestModel;
+            Func<ProductQueryRequestModel> act = CreateRequestModel;
 
             // assert
             act.Should().ThrowExactly<ArgumentException>();
@@ -60,7 +60,7 @@ namespace ChangeTracker.Application.Tests.UseCaseTests.Queries.GetProducts
             _testAccountId = Guid.Empty;
 
             // act
-            Func<ProductsQueryRequestModel> act = CreateRequestModel;
+            Func<ProductQueryRequestModel> act = CreateRequestModel;
 
             // assert
             act.Should().ThrowExactly<ArgumentException>();
@@ -76,7 +76,7 @@ namespace ChangeTracker.Application.Tests.UseCaseTests.Queries.GetProducts
             var requestModel = CreateRequestModel();
 
             // assert
-            requestModel.Limit.Should().Be(ProductsQueryRequestModel.MaxLimit);
+            requestModel.Limit.Should().Be(ProductQueryRequestModel.MaxLimit);
         }
     }
 }

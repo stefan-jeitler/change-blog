@@ -2,13 +2,13 @@
 using System.Threading.Tasks;
 using ChangeTracker.Api.Authorization;
 using ChangeTracker.Api.DTOs;
-using ChangeTracker.Api.DTOs.v1.Product;
+using ChangeTracker.Api.DTOs.V1.Product;
 using ChangeTracker.Api.Extensions;
-using ChangeTracker.Api.Presenters.v1.Project;
+using ChangeTracker.Api.Presenters.V1.Product;
 using ChangeTracker.Application.UseCases;
 using ChangeTracker.Application.UseCases.Commands.AddProduct;
 using ChangeTracker.Application.UseCases.Commands.CloseProduct;
-using ChangeTracker.Application.UseCases.Queries.GetProducts;
+using ChangeTracker.Application.UseCases.Queries.GetProjects;
 using Microsoft.AspNetCore.Mvc;
 
 namespace ChangeTracker.Api.Controllers.v1

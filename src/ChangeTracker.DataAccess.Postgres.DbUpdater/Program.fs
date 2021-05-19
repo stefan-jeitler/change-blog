@@ -44,7 +44,7 @@ let main _ =
     | d -> failwith (sprintf "Duplicate updates exists. Version(s) %s" (d |> String.concat ", "))
 
     let config =
-        (new ConfigurationBuilder())
+        ConfigurationBuilder()
             .SetBasePath(AppContext.BaseDirectory)
             .AddJsonFile("appsettings.json")
             .AddUserSecrets("ChangeTracker.DataAccess.Postgres.DbUpdater")

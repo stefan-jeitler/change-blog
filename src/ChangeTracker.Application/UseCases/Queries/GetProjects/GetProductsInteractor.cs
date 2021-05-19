@@ -8,7 +8,7 @@ using ChangeTracker.Application.Extensions;
 using ChangeTracker.Domain;
 using CSharpFunctionalExtensions;
 
-namespace ChangeTracker.Application.UseCases.Queries.GetProducts
+namespace ChangeTracker.Application.UseCases.Queries.GetProjects
 {
     public class GetProductsInteractor : IGetProducts
     {
@@ -22,7 +22,7 @@ namespace ChangeTracker.Application.UseCases.Queries.GetProducts
         }
 
         public async Task<IList<ProductResponseModel>> ExecuteAsync(
-            ProductsQueryRequestModel requestModel)
+            ProductQueryRequestModel requestModel)
         {
             var productQuerySettings = new ProductQuerySettings(requestModel.AccountId,
                 requestModel.UserId,

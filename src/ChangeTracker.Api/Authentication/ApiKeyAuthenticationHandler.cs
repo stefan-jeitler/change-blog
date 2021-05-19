@@ -47,11 +47,11 @@ namespace ChangeTracker.Api.Authentication
                 var identity = new ClaimsIdentity(new List<Claim>
                 {
                     new(ClaimTypes.NameIdentifier, userId.ToString())
-                }, Options.AuthenticationType);
+                }, ApiKeyAuthenticationOptions.AuthenticationType);
 
                 var identities = new List<ClaimsIdentity> {identity};
                 var principal = new ClaimsPrincipal(identities);
-                var ticket = new AuthenticationTicket(principal, Options.Scheme);
+                var ticket = new AuthenticationTicket(principal, ApiKeyAuthenticationOptions.Scheme);
 
                 return AuthenticateResult.Success(ticket);
             }

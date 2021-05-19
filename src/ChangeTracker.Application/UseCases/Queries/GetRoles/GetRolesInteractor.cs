@@ -25,7 +25,6 @@ namespace ChangeTracker.Application.UseCases.Queries.GetRoles
 
             return filtered.Select(x =>
                     new RoleResponseModel(x.Name,
-                        x.Description,
                         x.Permissions.Select(v => v.Value)
                             .ToList()))
                 .ToList();

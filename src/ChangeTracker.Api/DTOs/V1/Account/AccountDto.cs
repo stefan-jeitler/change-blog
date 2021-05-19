@@ -1,7 +1,7 @@
 ﻿using System;
 using ChangeTracker.Application.UseCases.Queries.GetAccounts;
 
-namespace ChangeTracker.Api.DTOs.v1.Account
+namespace ChangeTracker.Api.DTOs.V1.Account
 {
     public class AccountDto
     {

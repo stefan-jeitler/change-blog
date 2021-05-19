@@ -3,7 +3,7 @@ using ChangeTracker.Api.DTOs;
 using ChangeTracker.Application.UseCases.Commands.CloseProduct;
 using Microsoft.AspNetCore.Mvc;
 
-namespace ChangeTracker.Api.Presenters.v1.Project
+namespace ChangeTracker.Api.Presenters.V1.Product
 {
     public class CloseProductApiPresenter : BasePresenter, ICloseProductOutputPort
     {
@@ -20,11 +20,6 @@ namespace ChangeTracker.Api.Presenters.v1.Project
         public void ProductClosed(Guid productId)
         {
             Response = new OkObjectResult(DefaultResponse.Create($"Product with Id {productId} closed."));
-        }
-
-        public void Conflict(string reason)
-        {
-            Response = new ConflictObjectResult(DefaultResponse.Create(reason));
         }
     }
 }

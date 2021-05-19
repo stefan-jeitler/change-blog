@@ -45,7 +45,7 @@ namespace ChangeTracker.Application.UseCases.Commands.AddVersion
             await SaveVersionAsync(output, clVersion.Value);
         }
 
-        public async Task<Maybe<ClVersion>> CreateVersionAsync(IAddVersionOutputPort output, Product product,
+        private async Task<Maybe<ClVersion>> CreateVersionAsync(IAddVersionOutputPort output, Product product,
             ClVersionValue versionValue)
         {
             var existingClVersion = await _versionDao.FindVersionAsync(product.Id, versionValue);

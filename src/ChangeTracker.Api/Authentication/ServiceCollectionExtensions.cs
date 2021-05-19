@@ -14,7 +14,7 @@ namespace ChangeTracker.Api.Authentication
                     options.DefaultChallengeScheme = ApiKeyAuthenticationOptions.DefaultScheme;
                 })
                 .AddScheme<ApiKeyAuthenticationOptions, ApiKeyAuthenticationHandler>(
-                    ApiKeyAuthenticationOptions.DefaultScheme, o => { });
+                    ApiKeyAuthenticationOptions.DefaultScheme, _ => { });
 
             return services;
         }

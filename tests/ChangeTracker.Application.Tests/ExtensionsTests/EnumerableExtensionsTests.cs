@@ -30,7 +30,7 @@ namespace ChangeTracker.Application.Tests.ExtensionsTests
         [Fact]
         public void DistinctBy_StringWithTwoIdenticalEntries_DuplicatesRemoved()
         {
-            var sequence = Enumerable.Range(0, 2).Select(x => "ab");
+            var sequence = Enumerable.Range(0, 2).Select(_ => "ab");
 
             var unique = sequence.DistinctBy(x => x).ToList();
 

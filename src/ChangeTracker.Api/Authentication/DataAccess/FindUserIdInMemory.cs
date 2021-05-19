@@ -6,7 +6,7 @@ namespace ChangeTracker.Api.Authentication.DataAccess
     public class FindUserIdInMemory : IFindUserId
     {
         private readonly string _apiKey;
-        public readonly Guid TestUserId = Guid.Parse("3e7ff9f5-954a-4953-8fe2-618f6b4a6e11");
+        public readonly Guid UserId = Guid.Parse("3e7ff9f5-954a-4953-8fe2-618f6b4a6e11");
 
         public FindUserIdInMemory(string apiKey)
         {
@@ -16,7 +16,7 @@ namespace ChangeTracker.Api.Authentication.DataAccess
         public Task<Guid?> FindAsync(string apiKey)
         {
             return _apiKey.Equals(apiKey, StringComparison.Ordinal)
-                ? Task.FromResult((Guid?) TestUserId)
+                ? Task.FromResult((Guid?) UserId)
                 : Task.FromResult((Guid?) null);
         }
     }

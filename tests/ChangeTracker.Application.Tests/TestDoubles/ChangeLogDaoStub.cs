@@ -107,7 +107,7 @@ namespace ChangeTracker.Application.Tests.TestDoubles
             await Task.Yield();
 
             return ChangeLogs
-                .Where(x => x.IsPending)
+                .Where(x => x.ProductId == productId && x.IsPending)
                 .ToList();
         }
 

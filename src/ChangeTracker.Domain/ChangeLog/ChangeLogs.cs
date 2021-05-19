@@ -14,12 +14,10 @@ namespace ChangeTracker.Domain.ChangeLog
             VerifyNoDuplicatesExist(lines);
             Lines = lines?.ToImmutableList() ?? throw new ArgumentNullException(nameof(lines));
             VersionId = GetVersionId(lines);
-            AddedLines = ImmutableList<ChangeLogLine>.Empty;
         }
 
         public Guid? VersionId { get; }
         public IImmutableList<ChangeLogLine> Lines { get; }
-        public IImmutableList<ChangeLogLine> AddedLines { get; }
         public int Count => Lines.Count;
 
         public int LastPosition => Lines

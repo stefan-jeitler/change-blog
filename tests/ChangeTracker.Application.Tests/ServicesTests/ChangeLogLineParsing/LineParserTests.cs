@@ -12,12 +12,10 @@ namespace ChangeTracker.Application.Tests.ServicesTests.ChangeLogLineParsing
 {
     public class LineParserTests
     {
-        private readonly ChangeLogDaoStub _changeLogDaoStub;
         private readonly Mock<ILineParserOutput> _outputPortMock;
 
         public LineParserTests()
         {
-            _changeLogDaoStub = new ChangeLogDaoStub();
             _outputPortMock = new Mock<ILineParserOutput>(MockBehavior.Strict);
         }
 

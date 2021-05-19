@@ -1,12 +1,12 @@
 ﻿using System;
 
-namespace ChangeTracker.Application.UseCases.Queries.GetProducts
+namespace ChangeTracker.Application.UseCases.Queries.GetProjects
 {
-    public class ProductsQueryRequestModel
+    public class ProductQueryRequestModel
     {
         public const ushort MaxLimit = 100;
 
-        public ProductsQueryRequestModel(Guid userId, Guid accountId, Guid? lastProductId, ushort limit,
+        public ProductQueryRequestModel(Guid userId, Guid accountId, Guid? lastProductId, ushort limit,
             bool includeClosedProducts)
         {
             if (userId == Guid.Empty)

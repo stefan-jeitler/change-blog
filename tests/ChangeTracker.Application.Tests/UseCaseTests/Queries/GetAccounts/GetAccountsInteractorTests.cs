@@ -71,7 +71,6 @@ namespace ChangeTracker.Application.Tests.UseCaseTests.Queries.GetAccounts
             _accountDaoStub.Accounts.Add(TestAccount.Account);
             _versioningSchemeDaoStub.VersioningSchemes.Add(TestAccount.CustomVersioningScheme);
             var interactor = CreateInteractor();
-            var createdAtLocal = TestAccount.CreationDate.ToLocal(TestAccount.User.TimeZone);
 
             // act 
             var account = await interactor.ExecuteAsync(TestAccount.UserId, TestAccount.Id);

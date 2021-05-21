@@ -12,7 +12,8 @@ namespace ChangeTracker.DataAccess.Postgres
 
         public void Dispose()
         {
-            if (!IsValueCreated) return;
+            if (!IsValueCreated)
+                return;
 
             Value?.Dispose();
         }

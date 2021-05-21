@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace ChangeTracker.Application.UseCases.Queries.GetProjects
+namespace ChangeTracker.Application.UseCases.Queries.GetProducts
 {
     public class ProductResponseModel
     {

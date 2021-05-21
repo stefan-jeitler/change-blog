@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Threading.Tasks;
 using CSharpFunctionalExtensions;
 
-namespace ChangeTracker.Application.UseCases.Queries.GetProjects
+namespace ChangeTracker.Application.UseCases.Queries.GetProducts
 {
     public interface IGetProducts
     {

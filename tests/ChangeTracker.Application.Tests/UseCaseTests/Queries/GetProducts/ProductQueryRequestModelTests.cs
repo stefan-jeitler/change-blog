@@ -1,10 +1,10 @@
 ﻿using System;
 using ChangeTracker.Application.Tests.TestDoubles;
-using ChangeTracker.Application.UseCases.Queries.GetProjects;
+using ChangeTracker.Application.UseCases.Queries.GetProducts;
 using FluentAssertions;
 using Xunit;
 
-namespace ChangeTracker.Application.Tests.UseCaseTests.Queries.GetProjects
+namespace ChangeTracker.Application.Tests.UseCaseTests.Queries.GetProducts
 {
     public class ProductsQueryRequestModelTests
     {

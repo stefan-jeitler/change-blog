@@ -8,7 +8,7 @@ using ChangeTracker.Api.DTOs.V1.Product;
 using ChangeTracker.Api.Extensions;
 using ChangeTracker.Application.UseCases;
 using ChangeTracker.Application.UseCases.Queries.GetAccounts;
-using ChangeTracker.Application.UseCases.Queries.GetProjects;
+using ChangeTracker.Application.UseCases.Queries.GetProducts;
 using ChangeTracker.Application.UseCases.Queries.GetRoles;
 using ChangeTracker.Application.UseCases.Queries.GetUsers;
 using Microsoft.AspNetCore.Mvc;

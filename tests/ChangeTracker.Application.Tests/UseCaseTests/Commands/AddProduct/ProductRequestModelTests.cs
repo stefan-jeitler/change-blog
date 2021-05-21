@@ -3,7 +3,7 @@ using ChangeTracker.Application.UseCases.Commands.AddProduct;
 using FluentAssertions;
 using Xunit;
 
-namespace ChangeTracker.Application.Tests.UseCaseTests.Commands.AddProject
+namespace ChangeTracker.Application.Tests.UseCaseTests.Commands.AddProduct
 {
     public class ProductRequestModelTests
     {

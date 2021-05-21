@@ -6,7 +6,7 @@ using ChangeTracker.Domain;
 using Moq;
 using Xunit;
 
-namespace ChangeTracker.Application.Tests.UseCaseTests.Commands.CloseProject
+namespace ChangeTracker.Application.Tests.UseCaseTests.Commands.CloseProduct
 {
     public class CloseProductInteractorTests
     {

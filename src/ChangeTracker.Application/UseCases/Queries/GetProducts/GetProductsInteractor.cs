@@ -8,7 +8,7 @@ using ChangeTracker.Application.Extensions;
 using ChangeTracker.Domain;
 using CSharpFunctionalExtensions;
 
-namespace ChangeTracker.Application.UseCases.Queries.GetProjects
+namespace ChangeTracker.Application.UseCases.Queries.GetProducts
 {
     public class GetProductsInteractor : IGetProducts
     {

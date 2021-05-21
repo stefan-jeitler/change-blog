@@ -1,5 +1,5 @@
 ﻿using System;
-using ChangeTracker.Application.UseCases.Queries.GetProjects;
+using ChangeTracker.Application.UseCases.Queries.GetProducts;
 
 namespace ChangeTracker.Api.DTOs.V1.Product
 {

@@ -2,9 +2,9 @@
 
 namespace ChangeTracker.Application.DataAccess.Products
 {
-    public class ProductQuerySettings
+    public class AccountProductsQuerySettings
     {
-        public ProductQuerySettings(Guid accountId, Guid userId, Guid? lastProductId = null, ushort limit = 100,
+        public AccountProductsQuerySettings(Guid accountId, Guid userId, Guid? lastProductId = null, ushort limit = 100,
             bool includeClosedProducts = false)
         {
             AccountId = accountId;

@@ -63,7 +63,7 @@ namespace ChangeTracker.DataAccess.Postgres.DataAccessObjects
             return product.Value;
         }
 
-        public async Task<IList<Product>> GetProductsAsync(ProductQuerySettings querySettings)
+        public async Task<IList<Product>> GetAccountProductsAsync(AccountProductsQuerySettings querySettings)
         {
             var sql = GetProductsForAccountSql(querySettings.LastProductId.HasValue,
                 querySettings.IncludeClosedProducts);
@@ -74,6 +74,23 @@ namespace ChangeTracker.DataAccess.Postgres.DataAccessObjects
                     querySettings.AccountId,
                     querySettings.UserId,
                     permission = Permission.ViewAccountProducts.ToString(),
+                    querySettings.LastProductId,
+                    limit = (int) querySettings.Limit
+                });
+
+            return products.ToList();
+        }
+
+        public async Task<IList<Product>> GetUserProductsAsync(UserProductsQuerySettings querySettings)
+        {
+            var sql = GetProductsForUserSql(querySettings.LastProductId.HasValue,
+                querySettings.IncludeClosedProducts);
+
+            var products = await _dbAccessor.DbConnection
+                .QueryAsync<Product>(sql, new
+                {
+                    querySettings.UserId,
+                    permission = Permission.ViewUserProducts.ToString(),
                     querySettings.LastProductId,
                     limit = (int) querySettings.Limit
                 });

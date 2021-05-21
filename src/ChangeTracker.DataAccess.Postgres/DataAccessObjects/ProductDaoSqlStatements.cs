@@ -48,6 +48,34 @@
                 ? string.Empty
                 : "AND p.closed_at IS NULL";
 
+            const string accountFilter = "AND p.account_id = @accountId";
+            
+            return CreateProductsQuerySql(accountFilter, pagingFilter, includeClosedProductsFilter);
+        }
+
+        public static string GetProductsForUserSql(bool usePaging, bool includeClosedProducts)
+        {
+            var pagingFilter = usePaging
+                ? "AND LOWER(p.name) > (Select LOWER(ps.name) from product ps where ps.id = @lastProductId)"
+                : string.Empty;
+
+            var includeClosedProductsFilter = includeClosedProducts
+                ? string.Empty
+                : "AND p.closed_at IS NULL";
+
+            const string accountFilter = @"
+                AND p.account_id IN (select a.id
+                                   from account a
+                                            join account_user au on a.id = au.account_id
+                                            join role r on au.role_id = r.id
+                                   where au.user_id = @userId
+                                    and r.name = 'DefaultUser')";
+
+            return CreateProductsQuerySql(accountFilter, pagingFilter, includeClosedProductsFilter);
+        }
+
+        private static string CreateProductsQuerySql(string accountFilter, string pagingFilter, string includeClosedProductsFilter)
+        {
             return @$"
                 SELECT p.id,
                    p.account_id      AS accountId,
@@ -102,10 +130,10 @@
                                             where au.account_id = p.account_id
                                               and rp2.permission = @permission)
                              )))
-              AND p.account_id = @accountId
+              {accountFilter}
               {pagingFilter}
               {includeClosedProductsFilter}
-            ORDER BY name
+            ORDER BY p.name
                 FETCH FIRST (@limit) ROWS ONLY";
         }
     }

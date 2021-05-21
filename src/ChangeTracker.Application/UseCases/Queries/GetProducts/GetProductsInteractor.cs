@@ -10,7 +10,7 @@ using CSharpFunctionalExtensions;
 
 namespace ChangeTracker.Application.UseCases.Queries.GetProducts
 {
-    public class GetProductsInteractor : IGetProducts
+    public class GetProductsInteractor : IGetAccountProducts, IGetUserProducts, IGetProduct
     {
         private readonly IProductDao _productDao;
         private readonly IUserDao _userDao;
@@ -22,22 +22,36 @@ namespace ChangeTracker.Application.UseCases.Queries.GetProducts
         }
 
         public async Task<IList<ProductResponseModel>> ExecuteAsync(
-            ProductQueryRequestModel requestModel)
+            AccountProductQueryRequestModel requestModel)
         {
-            var productQuerySettings = new ProductQuerySettings(requestModel.AccountId,
+            var productQuerySettings = new AccountProductsQuerySettings(requestModel.AccountId,
                 requestModel.UserId,
                 requestModel.LastProductId,
                 requestModel.Limit,
                 requestModel.IncludeClosedProducts);
 
-            var products = await _productDao.GetProductsAsync(productQuerySettings);
+            var products = await _productDao.GetAccountProductsAsync(productQuerySettings);
             var currentUser = await _userDao.GetUserAsync(requestModel.UserId);
-
-            var users = await GetProductUsersAsync(products);
-            var userById = users.ToDictionary(x => x.Id, x => x);
+            var creatorById = await GetProductCreatorsAsync(products);
 
             return products
-                .Select(x => CreateResponse(x, userById, currentUser.TimeZone))
+                .Select(x => CreateResponse(x, creatorById, currentUser.TimeZone))
+                .ToList();
+        }
+
+        public async Task<IList<ProductResponseModel>> ExecuteAsync(UserProductQueryRequestModel requestModel)
+        {
+            var querySettings = new UserProductsQuerySettings(requestModel.UserId,
+                requestModel.LastProductId,
+                requestModel.Limit,
+                requestModel.IncludeClosedProducts);
+
+            var products = await _productDao.GetUserProductsAsync(querySettings);
+            var currentUser = await _userDao.GetUserAsync(requestModel.UserId);
+            var creatorById = await GetProductCreatorsAsync(products);
+
+            return products
+                .Select(x => CreateResponse(x, creatorById, currentUser.TimeZone))
                 .ToList();
         }
 
@@ -51,28 +65,30 @@ namespace ChangeTracker.Application.UseCases.Queries.GetProducts
                 .Map(x => CreateResponse(x.Product, x.User, currentUser.TimeZone));
         }
 
-        private async Task<IList<User>> GetProductUsersAsync(IEnumerable<Product> products)
+        private async Task<IReadOnlyDictionary<Guid, User>> GetProductCreatorsAsync(IEnumerable<Product> products)
         {
             var userIds = products
                 .Select(x => x.CreatedByUser)
                 .Distinct()
                 .ToList();
 
-            return await _userDao.GetUsersAsync(userIds);
+            var creators =  await _userDao.GetUsersAsync(userIds);
+
+            return creators.ToDictionary(x => x.Id, x => x);
         }
 
         private static ProductResponseModel CreateResponse(Product product,
             IReadOnlyDictionary<Guid, User> userById,
             string timeZone)
         {
-            var user = userById[product.CreatedByUser];
-            return CreateResponse(product, user, timeZone);
+            var creator = userById[product.CreatedByUser];
+            return CreateResponse(product, creator, timeZone);
         }
 
-        private static ProductResponseModel CreateResponse(Product product, User user,
+        private static ProductResponseModel CreateResponse(Product product, User creator,
             string timeZone)
         {
-            var userName = user.Email;
+            var userName = creator.Email;
             var createdAtLocal = product.CreatedAt.ToLocal(timeZone);
             var closedAtLocal = product.ClosedAt?.ToLocal(timeZone);
 

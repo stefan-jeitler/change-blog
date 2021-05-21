@@ -4,10 +4,10 @@ namespace ChangeTracker.Application.UseCases.Queries.GetUsers
 {
     public class UsersQueryRequestModel
     {
-        public const ushort MaxChunkCount = 200;
+        public const ushort MaxLimit = 200;
 
         public UsersQueryRequestModel(Guid userId, Guid accountId, Guid? lastUserId = null,
-            ushort limit = MaxChunkCount)
+            ushort limit = MaxLimit)
         {
             if (accountId == Guid.Empty)
                 throw new ArgumentException("AccountId cannot be empty.");
@@ -19,7 +19,7 @@ namespace ChangeTracker.Application.UseCases.Queries.GetUsers
 
             UserId = userId;
 
-            Limit = Math.Min(MaxChunkCount, limit);
+            Limit = Math.Min(MaxLimit, limit);
             LastUserId = lastUserId;
         }
 

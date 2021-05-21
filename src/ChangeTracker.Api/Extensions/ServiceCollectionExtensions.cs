@@ -15,10 +15,13 @@ namespace ChangeTracker.Api.Extensions
             return services
                 .AddScoped<IAddProduct, AddProductInteractor>()
                 .AddScoped<ICloseProduct, CloseProductInteractor>()
-                .AddScoped<IGetProducts, GetProductsInteractor>()
+                .AddScoped<IGetAccountProducts, GetProductsInteractor>()
                 .AddScoped<IGetRoles, GetRolesInteractor>()
                 .AddScoped<IGetAccounts, GetAccountsInteractor>()
-                .AddScoped<IGetUsers, GetUsersInteractor>();
+                .AddScoped<IGetUsers, GetUsersInteractor>()
+                .AddScoped<IGetUserProducts, GetProductsInteractor>()
+                .AddScoped<IGetProduct, GetProductsInteractor>()
+                .AddScoped<IGetAccountProducts, GetProductsInteractor>();
         }
     }
 }

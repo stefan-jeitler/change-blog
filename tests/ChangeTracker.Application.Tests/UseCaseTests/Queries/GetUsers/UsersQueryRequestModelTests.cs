@@ -75,7 +75,7 @@ namespace ChangeTracker.Application.Tests.UseCaseTests.Queries.GetUsers
             var requestModel = CreateRequestModel();
 
             // assert
-            requestModel.Limit.Should().Be(UsersQueryRequestModel.MaxChunkCount);
+            requestModel.Limit.Should().Be(UsersQueryRequestModel.MaxLimit);
         }
     }
 }

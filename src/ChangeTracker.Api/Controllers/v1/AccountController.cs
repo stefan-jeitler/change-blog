@@ -20,12 +20,12 @@ namespace ChangeTracker.Api.Controllers.v1
     public class AccountController : ControllerBase
     {
         private readonly IGetAccounts _getAccounts;
-        private readonly IGetProducts _getProducts;
+        private readonly IGetAccountProducts _getAccountProducts;
         private readonly IGetUsers _getUsers;
 
-        public AccountController(IGetProducts getProducts, IGetAccounts getAccounts, IGetUsers getUsers)
+        public AccountController(IGetAccountProducts getAccountProducts, IGetAccounts getAccounts, IGetUsers getUsers)
         {
-            _getProducts = getProducts;
+            _getAccountProducts = getAccountProducts;
             _getAccounts = getAccounts;
             _getUsers = getUsers;
         }
@@ -53,7 +53,7 @@ namespace ChangeTracker.Api.Controllers.v1
         [HttpGet("{accountId:Guid}/users")]
         [NeedsPermission(Permission.ViewAccountUsers)]
         public async Task<ActionResult> GetUsersAsync(Guid accountId,
-            ushort limit = UsersQueryRequestModel.MaxChunkCount,
+            ushort limit = UsersQueryRequestModel.MaxLimit,
             Guid? lastUserId = null)
         {
             var requestModel = new UsersQueryRequestModel(HttpContext.GetUserId(),
@@ -70,18 +70,18 @@ namespace ChangeTracker.Api.Controllers.v1
         [HttpGet("{accountId:Guid}/products")]
         [NeedsPermission(Permission.ViewAccountProducts)]
         public async Task<ActionResult> GetProductsAsync(Guid accountId,
-            ushort limit = ProductQueryRequestModel.MaxLimit,
+            ushort limit = AccountProductQueryRequestModel.MaxLimit,
             Guid? lastProductId = null,
             bool includeClosedProducts = false)
         {
-            var requestModel = new ProductQueryRequestModel(HttpContext.GetUserId(),
+            var requestModel = new AccountProductQueryRequestModel(HttpContext.GetUserId(),
                 accountId,
                 lastProductId,
                 limit,
                 includeClosedProducts
             );
 
-            var products = await _getProducts.ExecuteAsync(requestModel);
+            var products = await _getAccountProducts.ExecuteAsync(requestModel);
 
             return Ok(products.Select(ProductDto.FromResponseModel));
         }

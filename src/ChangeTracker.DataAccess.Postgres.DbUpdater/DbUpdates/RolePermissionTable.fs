@@ -51,7 +51,17 @@ let private addSomeViewPermissionsSql =
       INSERT INTO role_permission
       SELECT id, 'ViewAccountUsers', now() from role where name in ('PlatformManager', 'ProductOwner')
       ON CONFLICT (role_id, permission) DO NOTHING
-    """ ]
+    """ 
+      """
+	  INSERT INTO role_permission
+	  SELECT id, 'ViewUserProducts', now() from role where name in ('Support', 'ScrumMaster', 'ProductOwner', 'ProductManager', 'PlatformManager', 'Developer')
+	  ON CONFLICT (role_id, permission) DO NOTHING
+	"""  
+      """
+	  INSERT INTO role_permission
+	  SELECT id, 'ViewUserInfo', now() from role where name in ('DefaultUser', 'Support', 'ScrumMaster', 'ProductOwner', 'ProductManager', 'PlatformManager', 'Developer')
+	  ON CONFLICT (role_id, permission) DO NOTHING
+	""" ]
 
 let create (dbConnection: IDbConnection) =
     dbConnection.ExecuteAsync(createRolePermissionSql)

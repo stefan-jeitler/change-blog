@@ -19,13 +19,13 @@ namespace ChangeTracker.Api.Controllers.v1
     {
         private readonly IAddProduct _addProduct;
         private readonly ICloseProduct _closeProduct;
-        private readonly IGetProducts _getProducts;
+        private readonly IGetProduct _getProduct;
 
-        public ProductController(IAddProduct addProduct, ICloseProduct closeProduct, IGetProducts getProducts)
+        public ProductController(IAddProduct addProduct, ICloseProduct closeProduct, IGetProduct getProduct)
         {
             _addProduct = addProduct;
             _closeProduct = closeProduct;
-            _getProducts = getProducts;
+            _getProduct = getProduct;
         }
 
         [HttpGet("{productId:Guid}")]
@@ -33,7 +33,7 @@ namespace ChangeTracker.Api.Controllers.v1
         public async Task<ActionResult> GetProductAsync(Guid productId)
         {
             var userId = HttpContext.GetUserId();
-            var product = await _getProducts.ExecuteAsync(userId, productId);
+            var product = await _getProduct.ExecuteAsync(userId, productId);
 
             if (product.HasNoValue) return NotFound(DefaultResponse.Create("Product not found"));
 
@@ -58,7 +58,7 @@ namespace ChangeTracker.Api.Controllers.v1
             return presenter.Response;
         }
 
-        [HttpPut("{productId:Guid}/close")]
+        [HttpPost("{productId:Guid}/close")]
         [NeedsPermission(Permission.CloseProduct)]
         public async Task<ActionResult> CloseProductAsync(Guid productId)
         {

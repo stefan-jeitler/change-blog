@@ -34,7 +34,7 @@ namespace ChangeTracker.Application.Tests.TestDoubles
             return Products.Single(x => x.Id == productId);
         }
 
-        public async Task<IList<Product>> GetProductsAsync(ProductQuerySettings querySettings)
+        public async Task<IList<Product>> GetAccountProductsAsync(AccountProductsQuerySettings querySettings)
         {
             await Task.Yield();
 
@@ -67,15 +67,22 @@ namespace ChangeTracker.Application.Tests.TestDoubles
             return Task.CompletedTask;
         }
 
-        public async Task<IList<Product>> GetProductsAsync(Guid accountId, ushort count, Guid? lastProductId = null)
+        /// <summary>
+        ///     Not properly implemented, but should be enough for the use-case tests
+        ///     The actual implementation of IProductDao is tested separately.
+        /// </summary>
+        /// <param name="querySettings"></param>
+        /// <returns></returns>
+        public async Task<IList<Product>> GetUserProductsAsync(UserProductsQuerySettings querySettings)
         {
             await Task.Yield();
+            
+            var lastEmail = Products.FirstOrDefault(x => x.Id == querySettings.LastProductId);
 
-            return Products.Where(x => x.AccountId == accountId)
-                .OrderBy(x => x.Name)
-                .SkipWhile(x => x.Id != (lastProductId ?? Guid.Empty))
-                .Skip(1)
-                .Take(count)
+            return Products
+                .OrderBy(x => x.Name.Value)
+                .Where(x => lastEmail is null || string.Compare(x.Name, lastEmail.Name) > 0)
+                .Take(querySettings.Limit)
                 .ToList();
         }
     }

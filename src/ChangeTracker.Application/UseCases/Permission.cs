@@ -9,6 +9,7 @@
         ViewRoles,
         ViewAccount,
         ViewAccountUsers,
-        ViewUserProducts
+        ViewUserProducts,
+        ViewOwnUser
     }
 }

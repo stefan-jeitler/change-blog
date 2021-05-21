@@ -31,7 +31,7 @@ namespace ChangeTracker.Application.Tests.UseCaseTests.Queries.GetProducts
             _userDaoStub.Users.Add(TestAccount.User);
             _productDaoStub.Products.Add(TestAccount.Product);
             var interactor = CreateInteractor();
-            var requestModel = new ProductQueryRequestModel(TestAccount.UserId, TestAccount.Id, null, 1, true);
+            var requestModel = new AccountProductQueryRequestModel(TestAccount.UserId, TestAccount.Id, null, 1, true);
 
             // act
             var products = await interactor.ExecuteAsync(requestModel);
@@ -49,7 +49,7 @@ namespace ChangeTracker.Application.Tests.UseCaseTests.Queries.GetProducts
             _productDaoStub.Products.Add(TestAccount.Product);
             var interactor = CreateInteractor();
             var notExistingAccountId = Guid.Parse("3639c610-bd58-4924-a5fa-ec19b3a324b0");
-            var requestModel = new ProductQueryRequestModel(TestAccount.UserId, notExistingAccountId, null, 1, true);
+            var requestModel = new AccountProductQueryRequestModel(TestAccount.UserId, notExistingAccountId, null, 1, true);
 
             // act
             var products = await interactor.ExecuteAsync(requestModel);

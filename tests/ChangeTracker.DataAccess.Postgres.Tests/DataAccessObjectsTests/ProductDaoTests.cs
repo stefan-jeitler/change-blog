@@ -96,9 +96,9 @@ namespace ChangeTracker.DataAccess.Postgres.Tests.DataAccessObjectsTests
             var productDao = CreateDao();
             var t_ua_account_01 = Guid.Parse("ec3a44cc-0ba4-4c97-ad7f-911e9f6a73bc");
             var t_ua_account_01_user_02 = Guid.Parse("7aa9004b-ed6f-4862-8307-579030c860be");
-            var querySettings = new ProductQuerySettings(t_ua_account_01, t_ua_account_01_user_02);
+            var querySettings = new AccountProductsQuerySettings(t_ua_account_01, t_ua_account_01_user_02);
 
-            var products = await productDao.GetProductsAsync(querySettings);
+            var products = await productDao.GetAccountProductsAsync(querySettings);
 
             products.Should().HaveCount(2);
         }
@@ -109,9 +109,9 @@ namespace ChangeTracker.DataAccess.Postgres.Tests.DataAccessObjectsTests
             var productDao = CreateDao();
             var t_ua_account_01 = Guid.Parse("ec3a44cc-0ba4-4c97-ad7f-911e9f6a73bc");
             var t_ua_account_01_user_02 = Guid.Parse("7aa9004b-ed6f-4862-8307-579030c860be");
-            var querySettings = new ProductQuerySettings(t_ua_account_01, t_ua_account_01_user_02, null, 1);
+            var querySettings = new AccountProductsQuerySettings(t_ua_account_01, t_ua_account_01_user_02, null, 1);
 
-            var products = await productDao.GetProductsAsync(querySettings);
+            var products = await productDao.GetAccountProductsAsync(querySettings);
 
             products.Should().HaveCount(1);
         }
@@ -123,9 +123,9 @@ namespace ChangeTracker.DataAccess.Postgres.Tests.DataAccessObjectsTests
             var t_ua_account_01 = Guid.Parse("ec3a44cc-0ba4-4c97-ad7f-911e9f6a73bc");
             var t_ua_account_01_user_02 = Guid.Parse("7aa9004b-ed6f-4862-8307-579030c860be");
             var lastProductId = Guid.Parse("139a2e54-e9be-4168-98b4-2839d9b3db04");
-            var querySettings = new ProductQuerySettings(t_ua_account_01, t_ua_account_01_user_02, lastProductId);
+            var querySettings = new AccountProductsQuerySettings(t_ua_account_01, t_ua_account_01_user_02, lastProductId);
 
-            var products = await productDao.GetProductsAsync(querySettings);
+            var products = await productDao.GetAccountProductsAsync(querySettings);
 
             products.Should().HaveCount(1);
             products.Should().Contain(x => x.Id == Guid.Parse("0614f8d6-8895-4c74-bcbe-8a3c26076e1b"));

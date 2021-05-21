@@ -15,11 +15,13 @@
     <Compile Include="Db.fs" />
     <Compile Include="DbUpdates/AccountTable.fs" />
     <Compile Include="DbUpdates\AccountUserTable.fs" />
+    <Compile Include="DbUpdates\AccountViews.fs" />
     <Compile Include="DbUpdates\ApiKeyTable.fs" />
     <Compile Include="DbUpdates\ChangeLogLineTable.fs" />
     <Compile Include="DbUpdates\Functions.fs" />
     <Compile Include="DbUpdates\ProductTable.fs" />
     <Compile Include="DbUpdates\ProductUserTable.fs" />
+    <Compile Include="DbUpdates\ProductViews.fs" />
     <Compile Include="DbUpdates\RoleTable.fs" />
     <Compile Include="DbUpdates\RolePermissionTable.fs" />
     <Compile Include="DbUpdates/SchemaTable.fs" />

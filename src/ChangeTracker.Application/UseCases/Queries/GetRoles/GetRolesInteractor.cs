@@ -19,11 +19,11 @@ namespace ChangeTracker.Application.UseCases.Queries.GetRoles
         {
             var roles = await _rolesDao.GetRolesAsync();
 
-            var filtered = role is null
+            var result = role is null
                 ? roles
                 : roles.Where(x => x.Name.Value.Equals(role.Trim(), StringComparison.OrdinalIgnoreCase));
 
-            return filtered.Select(x =>
+            return result.Select(x =>
                     new RoleResponseModel(x.Name,
                         x.Permissions.Select(v => v.Value)
                             .ToList()))

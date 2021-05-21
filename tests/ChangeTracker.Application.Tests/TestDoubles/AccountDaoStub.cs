@@ -38,5 +38,14 @@ namespace ChangeTracker.Application.Tests.TestDoubles
 
             return Accounts;
         }
+
+        public async Task<IList<Account>> GetAccountsAsync(IList<Guid> accountIds)
+        {
+            await Task.Yield();
+
+            return Accounts
+                .Where(x => accountIds.Any(y => x.Id == y))
+                .ToList();
+        }
     }
 }

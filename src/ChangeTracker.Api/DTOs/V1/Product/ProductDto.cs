@@ -5,11 +5,12 @@ namespace ChangeTracker.Api.DTOs.V1.Product
 {
     public class ProductDto
     {
-        public ProductDto(Guid id, Guid accountId, string name, Guid versioningSchemeId, string versioningScheme,
-            string createdByUser, DateTime createdAt, bool isClosed)
+        public ProductDto(Guid id, Guid accountId, string accountName, string name, Guid versioningSchemeId,
+            string versioningScheme, string createdByUser, DateTime createdAt, bool isClosed)
         {
             Id = id;
             AccountId = accountId;
+            AccountName = accountName;
             Name = name;
             VersioningSchemeId = versioningSchemeId;
             VersioningScheme = versioningScheme;
@@ -20,6 +21,7 @@ namespace ChangeTracker.Api.DTOs.V1.Product
 
         public Guid Id { get; }
         public Guid AccountId { get; }
+        public string AccountName { get; }
         public string Name { get; }
         public Guid VersioningSchemeId { get; }
         public string VersioningScheme { get; }
@@ -32,6 +34,7 @@ namespace ChangeTracker.Api.DTOs.V1.Product
             return new(
                 m.Id,
                 m.AccountId,
+                m.AccountName,
                 m.Name,
                 m.VersioningSchemeId,
                 m.VersioningScheme,

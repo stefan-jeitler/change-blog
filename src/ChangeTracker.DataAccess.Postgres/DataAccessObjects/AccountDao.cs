@@ -2,13 +2,11 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using ChangeTracker.Application.DataAccess;
 using ChangeTracker.Application.DataAccess.Accounts;
 using ChangeTracker.Application.UseCases;
 using ChangeTracker.Domain;
 using CSharpFunctionalExtensions;
 using Dapper;
-using Microsoft.Extensions.Logging;
 
 namespace ChangeTracker.DataAccess.Postgres.DataAccessObjects
 {
@@ -75,6 +73,23 @@ namespace ChangeTracker.DataAccess.Postgres.DataAccessObjects
                     userId,
                     permission = Permission.ViewAccount.ToString()
                 });
+
+            return accounts.ToList();
+        }
+
+        public async Task<IList<Account>> GetAccountsAsync(IList<Guid> accountIds)
+        {
+            const string getAccountsSql = @"
+                select a.id,
+                       a.name,
+                       a.default_versioning_scheme_id AS defaultVersioningSchemeId,
+                       a.created_at                   AS createdAt,
+                       a.deleted_at                   AS deletedAt
+                from account a
+                where a.id = ANY (@accountIds)";
+
+            var accounts = await _dbAccessor.DbConnection
+                .QueryAsync<Account>(getAccountsSql, new {accountIds});
 
             return accounts.ToList();
         }

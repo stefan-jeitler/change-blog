@@ -70,5 +70,16 @@ namespace ChangeTracker.Api.Controllers.v1
 
             return presenter.Response;
         }
+
+        [HttpGet("{productId:Guid}/versions")]
+        [NeedsPermission(Permission.ViewCompleteVersion)]
+        public async Task<ActionResult> GetProductVersionsAsync(Guid productId, 
+            ushort limit,
+            bool includeDeleted)
+        {
+            await Task.Yield();
+
+            return Ok();
+        }
     }
 }

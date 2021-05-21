@@ -60,7 +60,7 @@ namespace ChangeTracker.Api.Controllers.v1
 
         [HttpGet("{versionId:Guid}")]
         [NeedsPermission(Permission.ViewCompleteVersion)]
-        public async Task<ActionResult> GetCompleteVersionAsync([FromServices] IGetCompleteVersions getCompleteVersion,
+        public async Task<ActionResult> GetCompleteVersionAsync([FromServices] IGetCompleteVersion getCompleteVersion,
             Guid versionId)
         {
             var userId = HttpContext.GetUserId();

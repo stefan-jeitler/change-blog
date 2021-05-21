@@ -14,6 +14,8 @@ namespace ChangeTracker.Api.DTOs.V1.Version
         public Guid AccountId { get; set; }
         public List<ChangeLogLineDto> ChangeLogLines { get; set; }
         public DateTime CreatedAt { get; set; }
+        public DateTime? ReleasedAt { get; set; }
+        public bool IsReleased { get; set; }
 
         public static CompleteVersionDto FromResponseModel(CompleteVersionResponseModel model)
         {
@@ -24,7 +26,9 @@ namespace ChangeTracker.Api.DTOs.V1.Version
                 ProductName = model.ProductName,
                 AccountId = model.AccountId,
                 ChangeLogLines = model.ChangeLogs.Select(ChangeLogLineDto.FromResponseModel).ToList(),
-                CreatedAt = model.CreatedAt
+                CreatedAt = model.CreatedAt,
+                ReleasedAt = model.ReleasedAt,
+                IsReleased = model.ReleasedAt.HasValue
             };
         }
     }

@@ -29,7 +29,7 @@ namespace ChangeTracker.Api.Extensions
             services
                 .AddScoped<IAddVersion, AddVersionInteractor>()
                 .AddScoped<IAddCompleteVersion, AddCompleteVersionInteractor>()
-                .AddScoped<IGetCompleteVersions, GetCompleteVersionsInteractor>();
+                .AddScoped<IGetCompleteVersion, GetCompleteVersionsInteractor>();
 
             return services;
         }

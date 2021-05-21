@@ -14,7 +14,7 @@ using CSharpFunctionalExtensions;
 
 namespace ChangeTracker.Application.UseCases.Queries.GetCompleteVersions
 {
-    public class GetCompleteVersionsInteractor : IGetCompleteVersions
+    public class GetCompleteVersionsInteractor : IGetCompleteVersion
     {
         private readonly IChangeLogQueriesDao _changeLogQueriesDao;
         private readonly IProductDao _productDao;
@@ -53,14 +53,15 @@ namespace ChangeTracker.Application.UseCases.Queries.GetCompleteVersions
                 clVersion.Value.ProductId,
                 product.Name,
                 product.AccountId,
-                clVersion.Value.CreatedAt.ToLocal(timeZone),
                 changeLogs.Lines.Select(x =>
                         new ChangeLogLineResponseModel(x.Id,
                             x.Text,
                             x.Labels.Select(l => l.Value).ToList(),
                             x.Issues.Select(i => i.Value).ToList(),
                             x.CreatedAt.ToLocal(timeZone)))
-                    .ToList()
+                    .ToList(),
+                clVersion.Value.CreatedAt.ToLocal(timeZone),
+                clVersion.Value.ReleasedAt?.ToLocal(timeZone)
             );
         }
     }

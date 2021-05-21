@@ -56,8 +56,8 @@ namespace ChangeTracker.DataAccess.Postgres.DataAccessObjects.ChangeLogs
                         versionId = l.VersionId,
                         prodcutId = l.ProductId,
                         text = l.Text,
-                        labels = l.Labels,
-                        issues = l.Issues,
+                        labels = l.Labels.AsEnumerable(),
+                        issues = l.Issues.AsEnumerable(),
                         position = (int)l.Position,
                         deletedAt = l.DeletedAt,
                         createdAt = l.CreatedAt
@@ -83,8 +83,8 @@ namespace ChangeTracker.DataAccess.Postgres.DataAccessObjects.ChangeLogs
                         versionId = l.VersionId,
                         productId = l.ProductId,
                         text = l.Text,
-                        labels = l.Labels,
-                        issues = l.Issues,
+                        labels = l.Labels.AsEnumerable(),
+                        issues = l.Issues.AsEnumerable(),
                         position = (int)l.Position,
                         deletedAt = l.DeletedAt,
                         createdAt = l.CreatedAt

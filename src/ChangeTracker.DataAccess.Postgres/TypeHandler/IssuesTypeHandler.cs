@@ -8,14 +8,14 @@ using Dapper;
 
 namespace ChangeTracker.DataAccess.Postgres.TypeHandler
 {
-    public class IssuesTypeHandler : SqlMapper.TypeHandler<IImmutableSet<Issue>>
+    public class IssuesTypeHandler : SqlMapper.TypeHandler<IEnumerable<Issue>>
     {
-        public override void SetValue(IDbDataParameter parameter, IImmutableSet<Issue> value)
+        public override void SetValue(IDbDataParameter parameter, IEnumerable<Issue> value)
         {
             parameter.Value = JsonSerializer.Serialize(value.Select(x => x.Value));
         }
 
-        public override IImmutableSet<Issue> Parse(object value)
+        public override IEnumerable<Issue> Parse(object value)
         {
             var json = value.ToString();
 
@@ -24,10 +24,9 @@ namespace ChangeTracker.DataAccess.Postgres.TypeHandler
 
             var issues = JsonSerializer
                 .Deserialize<List<string>>(json)?
-                .Select(Issue.Parse)
-                .ToImmutableHashSet();
+                .Select(Issue.Parse);
 
-            return issues ?? ImmutableHashSet<Issue>.Empty;
+            return issues ?? Enumerable.Empty<Issue>();
         }
     }
 }

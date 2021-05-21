@@ -1,4 +1,4 @@
-namespace ChangeTracker.DataAccess.Postgres.DataAccessObjects
+namespace ChangeTracker.DataAccess.Postgres.DataAccessObjects.User
 {
     public static class UserAccessDaoSqlStatements
     {

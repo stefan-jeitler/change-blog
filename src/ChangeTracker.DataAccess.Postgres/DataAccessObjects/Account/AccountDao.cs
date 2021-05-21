@@ -4,11 +4,10 @@ using System.Linq;
 using System.Threading.Tasks;
 using ChangeTracker.Application.DataAccess.Accounts;
 using ChangeTracker.Application.UseCases;
-using ChangeTracker.Domain;
 using CSharpFunctionalExtensions;
 using Dapper;
 
-namespace ChangeTracker.DataAccess.Postgres.DataAccessObjects
+namespace ChangeTracker.DataAccess.Postgres.DataAccessObjects.Account
 {
     public class AccountDao : IAccountDao
     {
@@ -19,7 +18,7 @@ namespace ChangeTracker.DataAccess.Postgres.DataAccessObjects
             _dbAccessor = dbAccessor;
         }
 
-        public async Task<Maybe<Account>> FindAccountAsync(Guid accountId)
+        public async Task<Maybe<Domain.Account>> FindAccountAsync(Guid accountId)
         {
             const string findAccountSql = @"
                 SELECT id,
@@ -31,17 +30,17 @@ namespace ChangeTracker.DataAccess.Postgres.DataAccessObjects
                 WHERE id = @accountId";
 
             var dbConnection = _dbAccessor.DbConnection;
-            var account = await dbConnection.QuerySingleOrDefaultAsync<Account>(findAccountSql, new
+            var account = await dbConnection.QuerySingleOrDefaultAsync<Domain.Account>(findAccountSql, new
             {
                 accountId
             });
 
             return account == default
-                ? Maybe<Account>.None
-                : Maybe<Account>.From(account);
+                ? Maybe<Domain.Account>.None
+                : Maybe<Domain.Account>.From(account);
         }
 
-        public async Task<Account> GetAccountAsync(Guid accountId)
+        public async Task<Domain.Account> GetAccountAsync(Guid accountId)
         {
             var account = await FindAccountAsync(accountId);
 
@@ -52,7 +51,7 @@ namespace ChangeTracker.DataAccess.Postgres.DataAccessObjects
             return account.Value;
         }
 
-        public async Task<IList<Account>> GetAccountsAsync(Guid userId)
+        public async Task<IList<Domain.Account>> GetAccountsAsync(Guid userId)
         {
             const string getAllUserAccountsSql = @"
                 SELECT DISTINCT a.id,
@@ -68,16 +67,16 @@ namespace ChangeTracker.DataAccess.Postgres.DataAccessObjects
                 AND rp.permission = @permission";
 
             var accounts = await _dbAccessor.DbConnection
-                .QueryAsync<Account>(getAllUserAccountsSql, new
+                .QueryAsync<Domain.Account>(getAllUserAccountsSql, new
                 {
                     userId,
                     permission = Permission.ViewAccount.ToString()
                 });
 
-            return accounts.ToList();
+            return accounts.AsList();
         }
 
-        public async Task<IList<Account>> GetAccountsAsync(IList<Guid> accountIds)
+        public async Task<IList<Domain.Account>> GetAccountsAsync(IList<Guid> accountIds)
         {
             const string getAccountsSql = @"
                 select a.id,
@@ -89,9 +88,9 @@ namespace ChangeTracker.DataAccess.Postgres.DataAccessObjects
                 where a.id = ANY (@accountIds)";
 
             var accounts = await _dbAccessor.DbConnection
-                .QueryAsync<Account>(getAccountsSql, new {accountIds});
+                .QueryAsync<Domain.Account>(getAccountsSql, new {accountIds});
 
-            return accounts.ToList();
+            return accounts.AsList();
         }
     }
 }

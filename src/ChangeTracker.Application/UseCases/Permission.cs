@@ -10,6 +10,9 @@
         ViewAccount,
         ViewAccountUsers,
         ViewUserProducts,
-        ViewOwnUser
+        ViewOwnUser,
+        
+        AddVersion,
+        ViewCompleteVersion
     }
 }

@@ -1,7 +1,10 @@
 ﻿using System;
 using System.Threading.Tasks;
+using ChangeTracker.Api.Authorization.RequestBodyIdentifiers;
 using ChangeTracker.Application.UseCases;
 using ChangeTracker.DataAccess.Postgres.DataAccessObjects;
+using ChangeTracker.DataAccess.Postgres.DataAccessObjects.Account;
+using ChangeTracker.DataAccess.Postgres.DataAccessObjects.User;
 using Microsoft.AspNetCore.Mvc.Filters;
 
 namespace ChangeTracker.Api.Authorization.PermissionChecks
@@ -20,9 +23,13 @@ namespace ChangeTracker.Api.Authorization.PermissionChecks
         public override async Task<bool> HasPermission(ActionExecutingContext context, Guid userId,
             Permission permission)
         {
-            var productId = TryFindIdInHeader(context.HttpContext, KnownIdentifiers.ProductId);
-            if (productId.HasValue)
-                return await _userAccessDao.HasProductPermissionAsync(userId, productId.Value, permission);
+            var productIdInRoute = TryFindIdInHeader(context.HttpContext, KnownIdentifiers.ProductId);
+            if (productIdInRoute.HasValue)
+                return await _userAccessDao.HasProductPermissionAsync(userId, productIdInRoute.Value, permission);
+
+            var productIdInBody = TryFindInBody<IContainsProductId>(context);
+            if (productIdInBody is not null)
+                return await _userAccessDao.HasProductPermissionAsync(userId, productIdInBody.ProductId, permission);
 
             return await _permissionCheckComponent.HasPermission(context, userId, permission);
         }

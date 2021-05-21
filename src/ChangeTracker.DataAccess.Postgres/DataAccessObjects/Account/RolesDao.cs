@@ -5,7 +5,7 @@ using ChangeTracker.Application.DataAccess.Accounts;
 using ChangeTracker.Domain;
 using Dapper;
 
-namespace ChangeTracker.DataAccess.Postgres.DataAccessObjects
+namespace ChangeTracker.DataAccess.Postgres.DataAccessObjects.Account
 {
     public class RolesDao : IRolesDao
     {

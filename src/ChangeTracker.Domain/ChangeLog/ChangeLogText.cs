@@ -31,7 +31,7 @@ namespace ChangeTracker.Domain.ChangeLog
             return exception is null;
         }
 
-        public static Exception ParseInternal(string candidate, out ChangeLogText text)
+        private static Exception ParseInternal(string candidate, out ChangeLogText text)
         {
             text = null;
 

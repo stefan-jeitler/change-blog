@@ -5,14 +5,13 @@ using System.Threading.Tasks;
 using ChangeTracker.Application.DataAccess;
 using ChangeTracker.Application.DataAccess.Products;
 using ChangeTracker.Application.UseCases;
-using ChangeTracker.Domain;
 using ChangeTracker.Domain.Common;
 using CSharpFunctionalExtensions;
 using Dapper;
 using Microsoft.Extensions.Logging;
-using static ChangeTracker.DataAccess.Postgres.DataAccessObjects.ProductDaoSqlStatements;
+using static ChangeTracker.DataAccess.Postgres.DataAccessObjects.Product.ProductDaoSqlStatements;
 
-namespace ChangeTracker.DataAccess.Postgres.DataAccessObjects
+namespace ChangeTracker.DataAccess.Postgres.DataAccessObjects.Product
 {
     public class ProductDao : IProductDao
     {
@@ -25,34 +24,34 @@ namespace ChangeTracker.DataAccess.Postgres.DataAccessObjects
             _logger = logger;
         }
 
-        public async Task<Maybe<Product>> FindProductAsync(Guid accountId, Name name)
+        public async Task<Maybe<Domain.Product>> FindProductAsync(Guid accountId, Name name)
         {
             var product = await _dbAccessor.DbConnection
-                .QueryFirstOrDefaultAsync<Product>(FindProductByAccountAndNameSql, new
+                .QueryFirstOrDefaultAsync<Domain.Product>(FindProductByAccountAndNameSql, new
                 {
                     accountId,
                     name = name.Value.ToLower()
                 });
 
             return product == default
-                ? Maybe<Product>.None
-                : Maybe<Product>.From(product);
+                ? Maybe<Domain.Product>.None
+                : Maybe<Domain.Product>.From(product);
         }
 
-        public async Task<Maybe<Product>> FindProductAsync(Guid productId)
+        public async Task<Maybe<Domain.Product>> FindProductAsync(Guid productId)
         {
             var product = await _dbAccessor.DbConnection
-                .QueryFirstOrDefaultAsync<Product>(FindProductByProductIdSql, new
+                .QueryFirstOrDefaultAsync<Domain.Product>(FindProductByProductIdSql, new
                 {
                     productId
                 });
 
             return product == default
-                ? Maybe<Product>.None
-                : Maybe<Product>.From(product);
+                ? Maybe<Domain.Product>.None
+                : Maybe<Domain.Product>.From(product);
         }
 
-        public async Task<Product> GetProductAsync(Guid productId)
+        public async Task<Domain.Product> GetProductAsync(Guid productId)
         {
             var product = await FindProductAsync(productId);
 
@@ -63,13 +62,13 @@ namespace ChangeTracker.DataAccess.Postgres.DataAccessObjects
             return product.Value;
         }
 
-        public async Task<IList<Product>> GetAccountProductsAsync(AccountProductsQuerySettings querySettings)
+        public async Task<IList<Domain.Product>> GetAccountProductsAsync(AccountProductsQuerySettings querySettings)
         {
             var sql = GetProductsForAccountSql(querySettings.LastProductId.HasValue,
                 querySettings.IncludeClosedProducts);
 
             var products = await _dbAccessor.DbConnection
-                .QueryAsync<Product>(sql, new
+                .QueryAsync<Domain.Product>(sql, new
                 {
                     querySettings.AccountId,
                     querySettings.UserId,
@@ -78,16 +77,16 @@ namespace ChangeTracker.DataAccess.Postgres.DataAccessObjects
                     limit = (int) querySettings.Limit
                 });
 
-            return products.ToList();
+            return products.AsList();
         }
 
-        public async Task<IList<Product>> GetUserProductsAsync(UserProductsQuerySettings querySettings)
+        public async Task<IList<Domain.Product>> GetUserProductsAsync(UserProductsQuerySettings querySettings)
         {
             var sql = GetProductsForUserSql(querySettings.LastProductId.HasValue,
                 querySettings.IncludeClosedProducts);
 
             var products = await _dbAccessor.DbConnection
-                .QueryAsync<Product>(sql, new
+                .QueryAsync<Domain.Product>(sql, new
                 {
                     querySettings.UserId,
                     permission = Permission.ViewUserProducts.ToString(),
@@ -95,10 +94,10 @@ namespace ChangeTracker.DataAccess.Postgres.DataAccessObjects
                     limit = (int) querySettings.Limit
                 });
 
-            return products.ToList();
+            return products.AsList();
         }
 
-        public async Task<Result<Product, Conflict>> AddProductAsync(Product newProduct)
+        public async Task<Result<Domain.Product, Conflict>> AddProductAsync(Domain.Product newProduct)
         {
             const string insertProductSql = @"
                     INSERT INTO product (id, account_id, versioning_scheme_id, name, created_by_user, closed_at, created_at)
@@ -118,7 +117,7 @@ namespace ChangeTracker.DataAccess.Postgres.DataAccessObjects
                         createdAt = newProduct.CreatedAt
                     });
 
-                return Result.Success<Product, Conflict>(newProduct);
+                return Result.Success<Domain.Product, Conflict>(newProduct);
             }
             catch (Exception e)
             {
@@ -127,7 +126,7 @@ namespace ChangeTracker.DataAccess.Postgres.DataAccessObjects
             }
         }
 
-        public async Task CloseProductAsync(Product product)
+        public async Task CloseProductAsync(Domain.Product product)
         {
             if (!product.ClosedAt.HasValue)
                 throw new Exception("The given product has no closed date.");

@@ -20,6 +20,13 @@ namespace ChangeTracker.Domain.ChangeLog
         {
         }
 
+        // Dapper constructor
+        public ChangeLogLine(Guid id, Guid? versionId, Guid productId, ChangeLogText text, int position,
+            DateTime createdAt, IImmutableSet<Label> labels, IImmutableSet<Issue> issues, DateTime? deletedAt = null)
+            : this(id, versionId, productId, text, (uint) position, createdAt, labels, issues, deletedAt)
+        {
+        }
+
         public ChangeLogLine(Guid id, Guid? versionId, Guid productId, ChangeLogText text, uint position,
             DateTime createdAt, IEnumerable<Label> labels, IEnumerable<Issue> issues, DateTime? deletedAt = null)
         {

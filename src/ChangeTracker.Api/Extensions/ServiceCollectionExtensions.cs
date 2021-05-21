@@ -1,6 +1,9 @@
-﻿using ChangeTracker.Application.UseCases.Commands.AddProduct;
+﻿using ChangeTracker.Application.UseCases.Commands.AddCompleteVersion;
+using ChangeTracker.Application.UseCases.Commands.AddProduct;
+using ChangeTracker.Application.UseCases.Commands.AddVersion;
 using ChangeTracker.Application.UseCases.Commands.CloseProduct;
 using ChangeTracker.Application.UseCases.Queries.GetAccounts;
+using ChangeTracker.Application.UseCases.Queries.GetCompleteVersions;
 using ChangeTracker.Application.UseCases.Queries.GetProducts;
 using ChangeTracker.Application.UseCases.Queries.GetRoles;
 using ChangeTracker.Application.UseCases.Queries.GetUsers;
@@ -12,7 +15,7 @@ namespace ChangeTracker.Api.Extensions
     {
         public static IServiceCollection AddProductUseCase(this IServiceCollection services)
         {
-            return services
+            services
                 .AddScoped<IAddProduct, AddProductInteractor>()
                 .AddScoped<ICloseProduct, CloseProductInteractor>()
                 .AddScoped<IGetAccountProducts, GetProductsInteractor>()
@@ -22,6 +25,13 @@ namespace ChangeTracker.Api.Extensions
                 .AddScoped<IGetUserProducts, GetProductsInteractor>()
                 .AddScoped<IGetProduct, GetProductsInteractor>()
                 .AddScoped<IGetAccountProducts, GetProductsInteractor>();
+
+            services
+                .AddScoped<IAddVersion, AddVersionInteractor>()
+                .AddScoped<IAddCompleteVersion, AddCompleteVersionInteractor>()
+                .AddScoped<IGetCompleteVersions, GetCompleteVersionsInteractor>();
+
+            return services;
         }
     }
 }

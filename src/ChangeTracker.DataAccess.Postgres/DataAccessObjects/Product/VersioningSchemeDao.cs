@@ -7,7 +7,7 @@ using ChangeTracker.Domain.Version;
 using CSharpFunctionalExtensions;
 using Dapper;
 
-namespace ChangeTracker.DataAccess.Postgres.DataAccessObjects
+namespace ChangeTracker.DataAccess.Postgres.DataAccessObjects.Product
 {
     public class VersioningSchemeDao : IVersioningSchemeDao
     {
@@ -81,7 +81,7 @@ namespace ChangeTracker.DataAccess.Postgres.DataAccessObjects
                     schemeIds = versioningSchemeIds
                 });
 
-            return schemes.ToList();
+            return schemes.AsList();
         }
     }
 }

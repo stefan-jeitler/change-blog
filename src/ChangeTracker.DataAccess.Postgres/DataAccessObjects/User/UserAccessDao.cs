@@ -3,9 +3,9 @@ using System.Data;
 using System.Threading.Tasks;
 using ChangeTracker.Application.UseCases;
 using Dapper;
-using static ChangeTracker.DataAccess.Postgres.DataAccessObjects.UserAccessDaoSqlStatements;
+using static ChangeTracker.DataAccess.Postgres.DataAccessObjects.User.UserAccessDaoSqlStatements;
 
-namespace ChangeTracker.DataAccess.Postgres.DataAccessObjects
+namespace ChangeTracker.DataAccess.Postgres.DataAccessObjects.User
 {
     public class UserAccessDao
     {

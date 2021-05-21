@@ -3,9 +3,16 @@ using System.Data;
 using System.Runtime.CompilerServices;
 using ChangeTracker.Application.DataAccess;
 using ChangeTracker.Application.DataAccess.Accounts;
+using ChangeTracker.Application.DataAccess.ChangeLogs;
 using ChangeTracker.Application.DataAccess.Products;
 using ChangeTracker.Application.DataAccess.Users;
+using ChangeTracker.Application.DataAccess.Versions;
 using ChangeTracker.DataAccess.Postgres.DataAccessObjects;
+using ChangeTracker.DataAccess.Postgres.DataAccessObjects.Account;
+using ChangeTracker.DataAccess.Postgres.DataAccessObjects.ChangeLogs;
+using ChangeTracker.DataAccess.Postgres.DataAccessObjects.Product;
+using ChangeTracker.DataAccess.Postgres.DataAccessObjects.User;
+using ChangeTracker.DataAccess.Postgres.DataAccessObjects.Version;
 using ChangeTracker.DataAccess.Postgres.TypeHandler;
 using Dapper;
 using Microsoft.Extensions.DependencyInjection;
@@ -33,6 +40,8 @@ namespace ChangeTracker.DataAccess.Postgres
             SqlMapper.AddTypeHandler(new EmailTypeHandler());
             SqlMapper.AddTypeHandler(new ChangeLogTextTypeHandler());
             SqlMapper.AddTypeHandler(new ClVersionValueTypeHandler());
+            SqlMapper.AddTypeHandler(new LabelsTypeHandler());
+            SqlMapper.AddTypeHandler(new IssuesTypeHandler());
         }
 
         private static IServiceCollection AddDbSession(this IServiceCollection services, string connectionString)
@@ -55,7 +64,10 @@ namespace ChangeTracker.DataAccess.Postgres
                 .AddScoped<IProductDao, ProductDao>()
                 .AddScoped<IVersioningSchemeDao, VersioningSchemeDao>()
                 .AddScoped<IUserDao, UserDao>()
-                .AddScoped<IRolesDao, RolesDao>();
+                .AddScoped<IRolesDao, RolesDao>()
+                .AddScoped<IVersionDao, VersionDao>()
+                .AddScoped<IChangeLogCommandsDao, ChangeLogCommandsDao>()
+                .AddScoped<IChangeLogQueriesDao, ChangeLogQueriesDao>();
         }
     }
 }

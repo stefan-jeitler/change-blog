@@ -16,7 +16,7 @@ namespace ChangeTracker.Api.DTOs.V1.Version
         public List<ChangeLogLineDto> ChangeLogLines { get; set; }
         public DateTime CreatedAt { get; set; }
         public DateTime? ReleasedAt { get; set; }
-        public bool IsReleased { get; set; }
+        public DateTime? DeletedAt { get; set; }
 
         public static CompleteVersionDto FromResponseModel(CompleteVersionResponseModel model)
         {
@@ -30,7 +30,7 @@ namespace ChangeTracker.Api.DTOs.V1.Version
                 ChangeLogLines = model.ChangeLogs.Select(ChangeLogLineDto.FromResponseModel).ToList(),
                 CreatedAt = model.CreatedAt,
                 ReleasedAt = model.ReleasedAt,
-                IsReleased = model.ReleasedAt.HasValue
+                DeletedAt = model.DeletedAt
             };
         }
     }

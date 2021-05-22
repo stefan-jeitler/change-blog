@@ -23,7 +23,7 @@ namespace ChangeTracker.DataAccess.Postgres.DataAccessObjects.Version
             if (!lastVersionId.HasValue || lastVersionId.Value == Guid.Empty)
                 return this;
             
-            _versionPredicates.Add("v.created_at > (select vs.created_at from version vs where vs.id = @lastVersionId)");
+            _versionPredicates.Add("(v.created_at, v.id) < ((select vs.created_at from version vs where vs.id = @lastVersionId), @lastVersionId)");
             _parameters.Add("lastVersionId", lastVersionId.Value);
 
             return this;
@@ -73,6 +73,7 @@ namespace ChangeTracker.DataAccess.Postgres.DataAccessObjects.Version
                              FROM changelog_line chl
                              where chl.product_id = v.product_id
                                and chl.version_id = v.id
+                               and chl.deleted_at is null
                                {changeLogLinePredicates}
                       )
                 order by v.created_at desc

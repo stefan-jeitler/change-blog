@@ -7,7 +7,7 @@ namespace ChangeTracker.Application.UseCases.Queries.GetCompleteVersions
     public class CompleteVersionResponseModel
     {
         public CompleteVersionResponseModel(Guid versionId, string version, Guid productId, string productName, Guid accountId,
-            List<ChangeLogLineResponseModel> changeLogs, DateTime createdAt, DateTime? releasedAt)
+            List<ChangeLogLineResponseModel> changeLogs, DateTime createdAt, DateTime? releasedAt, DateTime? deletedAt)
         {
             if (versionId == Guid.Empty)
                 throw new ArgumentException("VersionId cannot be empty.");
@@ -33,6 +33,7 @@ namespace ChangeTracker.Application.UseCases.Queries.GetCompleteVersions
             ChangeLogs = changeLogs ?? throw new ArgumentNullException(nameof(changeLogs));
             CreatedAt = createdAt;
             ReleasedAt = releasedAt;
+            DeletedAt = deletedAt;
         }
 
         public Guid VersionId { get; }
@@ -42,7 +43,7 @@ namespace ChangeTracker.Application.UseCases.Queries.GetCompleteVersions
         public Guid AccountId { get; }
         public List<ChangeLogLineResponseModel> ChangeLogs { get;}
         public DateTime CreatedAt { get; }
-
         public DateTime? ReleasedAt { get; }
+        public DateTime? DeletedAt { get; }
     }
 }

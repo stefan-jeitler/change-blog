@@ -25,14 +25,10 @@ namespace ChangeTracker.Application.UseCases.Queries.GetCompleteVersions
         }
 
         public Guid ProductId { get; }
-
         public Guid? LastVersionId { get; }
         public Guid UserId { get; }
-
         public string SearchTerm { get; }
-
         public ushort Limit { get; }
-
         public bool IncludeDeleted { get; }
     }
 }

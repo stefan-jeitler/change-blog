@@ -23,15 +23,15 @@ namespace ChangeTracker.Api.Controllers.v1
         private readonly IAddProduct _addProduct;
         private readonly ICloseProduct _closeProduct;
         private readonly IGetProduct _getProduct;
-        private readonly ISearchCompleteVersions _searchCompleteVersions;
+        private readonly IGetCompleteVersions _getCompleteVersions;
 
         public ProductController(IAddProduct addProduct, ICloseProduct closeProduct, IGetProduct getProduct,
-            ISearchCompleteVersions searchCompleteVersions)
+            IGetCompleteVersions getCompleteVersions)
         {
             _addProduct = addProduct;
             _closeProduct = closeProduct;
             _getProduct = getProduct;
-            _searchCompleteVersions = searchCompleteVersions;
+            _getCompleteVersions = getCompleteVersions;
         }
 
         [HttpGet("{productId:Guid}")]
@@ -96,7 +96,7 @@ namespace ChangeTracker.Api.Controllers.v1
                 limit,
                 includeDeleted);
 
-            var versions = await _searchCompleteVersions.ExecuteAsync(requestModel);
+            var versions = await _getCompleteVersions.ExecuteAsync(requestModel);
 
             return Ok(versions.Select(CompleteVersionDto.FromResponseModel));
         }

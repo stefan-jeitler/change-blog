@@ -15,7 +15,7 @@ using CSharpFunctionalExtensions;
 
 namespace ChangeTracker.Application.UseCases.Queries.GetCompleteVersions
 {
-    public class GetCompleteVersionsInteractor : IGetCompleteVersion, ISearchCompleteVersions
+    public class GetCompleteVersionsInteractor : IGetCompleteVersion, IGetCompleteVersions
     {
         private readonly IChangeLogQueriesDao _changeLogQueriesDao;
         private readonly IProductDao _productDao;
@@ -67,8 +67,6 @@ namespace ChangeTracker.Application.UseCases.Queries.GetCompleteVersions
                     currentUser.TimeZone,
                     changeLogsByVersionId[x.Id]))
                 .ToList();
-
-            return null;
         }
 
         private async Task<IReadOnlyDictionary<Guid, ChangeLogs>> GetChangeLogsAsync(IEnumerable<ClVersion> clVersions)
@@ -100,7 +98,8 @@ namespace ChangeTracker.Application.UseCases.Queries.GetCompleteVersions
                             x.CreatedAt.ToLocal(timeZone)))
                     .ToList(),
                 clVersion.CreatedAt.ToLocal(timeZone),
-                clVersion.ReleasedAt?.ToLocal(timeZone)
+                clVersion.ReleasedAt?.ToLocal(timeZone),
+                clVersion.DeletedAt?.ToLocal(timeZone)
             );
         }
     }

@@ -42,7 +42,7 @@ namespace ChangeTracker.Api.Tests
         }
 
         [Fact]
-        public async Task ChangeLogEndpoint_CorrectApiKeyIsPresent_Authorized()
+        public async Task ChangeLogEndpoint_HappyPath_Authorized()
         {
             // arrange
             const string testApiKey = "test-api-key";

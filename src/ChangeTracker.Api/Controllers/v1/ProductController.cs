@@ -48,7 +48,7 @@ namespace ChangeTracker.Api.Controllers.v1
 
         [HttpPost]
         [NeedsPermission(Permission.AddProduct)]
-        public async Task<ActionResult> AddProductAsync([FromBody] AddProjectDto addProductDto)
+        public async Task<ActionResult> AddProductAsync([FromBody] AddProductDto addProductDto)
         {
             if (addProductDto.VersioningSchemeId == Guid.Empty)
                 return BadRequest(DefaultResponse.Create("VersioningSchemeId cannot be empty."));

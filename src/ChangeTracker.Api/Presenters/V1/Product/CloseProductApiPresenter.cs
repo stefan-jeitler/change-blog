@@ -19,7 +19,7 @@ namespace ChangeTracker.Api.Presenters.V1.Product
 
         public void ProductClosed(Guid productId)
         {
-            Response = new OkObjectResult(DefaultResponse.Create($"Product with Id {productId} closed."));
+            Response = new NoContentResult();
         }
     }
 }

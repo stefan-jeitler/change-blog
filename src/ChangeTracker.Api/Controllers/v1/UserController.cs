@@ -27,8 +27,8 @@ namespace ChangeTracker.Api.Controllers.v1
 
         [HttpGet("products")]
         [NeedsPermission(Permission.ViewUserProducts)]
-        public async Task<ActionResult> GetUserProductsAsync(ushort limit = UserProductQueryRequestModel.MaxLimit, 
-            Guid? lastProductId = null,
+        public async Task<ActionResult> GetUserProductsAsync(Guid? lastProductId = null, 
+            ushort limit = UserProductQueryRequestModel.MaxLimit,
             bool includeClosedProducts = false)
         {
             var userId = HttpContext.GetUserId();

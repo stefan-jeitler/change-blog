@@ -71,11 +71,22 @@ namespace ChangeTracker.Api.Controllers.v1
             return presenter.Response;
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="productId"></param>
+        /// <param name="searchTerm">e.g. text, label or issue</param>
+        /// <param name="lastVersionId"></param>
+        /// <param name="includeDeleted"></param>
+        /// <param name="limit"></param>
+        /// <returns></returns>
         [HttpGet("{productId:Guid}/versions")]
         [NeedsPermission(Permission.ViewCompleteVersion)]
         public async Task<ActionResult> GetProductVersionsAsync(Guid productId, 
-            ushort limit,
-            bool includeDeleted)
+            string searchTerm = null,
+            Guid? lastVersionId = null,
+            bool includeDeleted = false,
+            ushort limit = 100)
         {
             await Task.Yield();
 

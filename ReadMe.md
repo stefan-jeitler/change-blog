@@ -56,7 +56,7 @@ Tag names must be a valid SemVer 2.0.0
 
 ### Testing
 
-This environment consists only of a database that is used for integration tests.
+This environment consists only of a database that is used by integration tests.
 
 ### Staging
 

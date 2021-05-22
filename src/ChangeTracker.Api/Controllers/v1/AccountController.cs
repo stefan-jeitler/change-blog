@@ -53,8 +53,8 @@ namespace ChangeTracker.Api.Controllers.v1
         [HttpGet("{accountId:Guid}/users")]
         [NeedsPermission(Permission.ViewAccountUsers)]
         public async Task<ActionResult> GetUsersAsync(Guid accountId,
-            ushort limit = UsersQueryRequestModel.MaxLimit,
-            Guid? lastUserId = null)
+            Guid? lastUserId = null,
+            ushort limit = UsersQueryRequestModel.MaxLimit)
         {
             var requestModel = new UsersQueryRequestModel(HttpContext.GetUserId(),
                 accountId,
@@ -70,8 +70,8 @@ namespace ChangeTracker.Api.Controllers.v1
         [HttpGet("{accountId:Guid}/products")]
         [NeedsPermission(Permission.ViewAccountProducts)]
         public async Task<ActionResult> GetProductsAsync(Guid accountId,
-            ushort limit = AccountProductQueryRequestModel.MaxLimit,
             Guid? lastProductId = null,
+            ushort limit = AccountProductQueryRequestModel.MaxLimit,
             bool includeClosedProducts = false)
         {
             var requestModel = new AccountProductQueryRequestModel(HttpContext.GetUserId(),
@@ -89,10 +89,10 @@ namespace ChangeTracker.Api.Controllers.v1
         [HttpGet("roles")]
         [NeedsPermission(Permission.ViewRoles)]
         public async Task<ActionResult> GetRolesAsync([FromServices] IGetRoles getRoles,
-            string role = null,
+            string filter = null,
             bool includePermissions = false)
         {
-            var roles = await getRoles.ExecuteAsync(role);
+            var roles = await getRoles.ExecuteAsync(filter);
 
             return Ok(roles.Select(x => RoleDto.FromResponseModel(x, includePermissions)));
         }

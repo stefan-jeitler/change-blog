@@ -30,8 +30,7 @@ namespace ChangeTracker.DataAccess.Postgres.DataAccessObjects.ChangeLogs
                        CAST(chl.issues AS text) as issues,
                        chl.deleted_at as deletedAt
                 from changelog_line chl
-                where id = @changeLogLineId
-                ";
+                where id = @changeLogLineId";
 
             var line = await _dbAccessor.DbConnection
                 .QuerySingleOrDefaultAsync<ChangeLogLine>(findLineSql, new

@@ -1,4 +1,6 @@
 using System;
+using System.Collections;
+using System.Collections.Generic;
 using System.Threading.Tasks;
 using ChangeTracker.Application.DataAccess;
 using ChangeTracker.Application.DataAccess.Versions;
@@ -79,6 +81,23 @@ namespace ChangeTracker.DataAccess.Postgres.DataAccessObjects.Version
                     "The requested version does not exist. If you are not sure whether the version exists use 'FindVersion' otherwise file an issue.");
 
             return version.Value;
+        }
+
+        public async Task<IList<ClVersion>> GetVersionsAsync(VersionQuerySettings querySettings)
+        {
+            var queryBuilder = new SearchVersionQueryBuilder(querySettings.ProductId)
+                .AddLastVersionId(querySettings.LastVersionId)
+                .AddTextSearch(querySettings.SearchTerm);
+
+            if (!querySettings.IncludeDeleted)
+                queryBuilder.ExcludeDeletedVersions();
+
+            var (query, parameters) = queryBuilder.Build(querySettings.Limit);
+
+            var versions = await _dbAccessor.DbConnection
+                .QueryAsync<ClVersion>(query, parameters);
+
+            return versions.AsList();
         }
 
         public async Task<Result<ClVersion, Conflict>> AddVersionAsync(ClVersion version)

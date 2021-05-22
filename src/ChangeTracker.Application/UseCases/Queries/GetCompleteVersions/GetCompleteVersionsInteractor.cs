@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using ChangeTracker.Application.DataAccess.ChangeLogs;
@@ -14,7 +15,7 @@ using CSharpFunctionalExtensions;
 
 namespace ChangeTracker.Application.UseCases.Queries.GetCompleteVersions
 {
-    public class GetCompleteVersionsInteractor : IGetCompleteVersion
+    public class GetCompleteVersionsInteractor : IGetCompleteVersion, ISearchCompleteVersions
     {
         private readonly IChangeLogQueriesDao _changeLogQueriesDao;
         private readonly IProductDao _productDao;
@@ -42,15 +43,53 @@ namespace ChangeTracker.Application.UseCases.Queries.GetCompleteVersions
             var changeLogs =
                 await _changeLogQueriesDao.GetChangeLogsAsync(clVersion.Value.ProductId, clVersion.Value.Id);
 
-            var responseModel = CreateResponseModel(clVersion, product, currentUser.TimeZone, changeLogs);
+            var responseModel = CreateResponseModel(clVersion.Value, product, currentUser.TimeZone, changeLogs);
             return Maybe<CompleteVersionResponseModel>.From(responseModel);
         }
 
-        private static CompleteVersionResponseModel CreateResponseModel(Maybe<ClVersion> clVersion, Product product,
+        public async Task<IList<CompleteVersionResponseModel>> ExecuteAsync(VersionsQueryRequestModel requestModel)
+        {
+            var querySettings = new VersionQuerySettings(requestModel.ProductId,
+                requestModel.LastVersionId,
+                requestModel.SearchTerm,
+                requestModel.Limit,
+                requestModel.IncludeDeleted);
+
+            var currentUser = await _userDao.GetUserAsync(requestModel.UserId);
+            var product = await _productDao.GetProductAsync(requestModel.ProductId);
+
+            var versions = await _versionDao.GetVersionsAsync(querySettings);
+            var changeLogsByVersionId = await GetChangeLogsAsync(versions);
+
+            return versions
+                .Select(x => CreateResponseModel(x,
+                    product, 
+                    currentUser.TimeZone,
+                    changeLogsByVersionId[x.Id]))
+                .ToList();
+
+            return null;
+        }
+
+        private async Task<IReadOnlyDictionary<Guid, ChangeLogs>> GetChangeLogsAsync(IEnumerable<ClVersion> clVersions)
+        {
+            var versionIds = clVersions
+                .Select(x => x.Id)
+                .Distinct()
+                .ToList();
+
+            var changeLogs = await _changeLogQueriesDao.GetChangeLogsAsync(versionIds);
+
+            return changeLogs
+                .ToDictionary(x => x.VersionId!.Value, x => x);
+        }
+
+        private static CompleteVersionResponseModel CreateResponseModel(ClVersion clVersion, Product product,
             string timeZone, ChangeLogs changeLogs)
         {
-            return new(clVersion.Value.Id,
-                clVersion.Value.ProductId,
+            return new(clVersion.Id,
+                clVersion.Value.Value,
+                clVersion.ProductId,
                 product.Name,
                 product.AccountId,
                 changeLogs.Lines.Select(x =>
@@ -60,8 +99,8 @@ namespace ChangeTracker.Application.UseCases.Queries.GetCompleteVersions
                             x.Issues.Select(i => i.Value).ToList(),
                             x.CreatedAt.ToLocal(timeZone)))
                     .ToList(),
-                clVersion.Value.CreatedAt.ToLocal(timeZone),
-                clVersion.Value.ReleasedAt?.ToLocal(timeZone)
+                clVersion.CreatedAt.ToLocal(timeZone),
+                clVersion.ReleasedAt?.ToLocal(timeZone)
             );
         }
     }

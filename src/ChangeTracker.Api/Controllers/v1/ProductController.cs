@@ -1,13 +1,16 @@
 ﻿using System;
+using System.Linq;
 using System.Threading.Tasks;
 using ChangeTracker.Api.Authorization;
 using ChangeTracker.Api.DTOs;
 using ChangeTracker.Api.DTOs.V1.Product;
+using ChangeTracker.Api.DTOs.V1.Version;
 using ChangeTracker.Api.Extensions;
 using ChangeTracker.Api.Presenters.V1.Product;
 using ChangeTracker.Application.UseCases;
 using ChangeTracker.Application.UseCases.Commands.AddProduct;
 using ChangeTracker.Application.UseCases.Commands.CloseProduct;
+using ChangeTracker.Application.UseCases.Queries.GetCompleteVersions;
 using ChangeTracker.Application.UseCases.Queries.GetProducts;
 using Microsoft.AspNetCore.Mvc;
 
@@ -20,12 +23,15 @@ namespace ChangeTracker.Api.Controllers.v1
         private readonly IAddProduct _addProduct;
         private readonly ICloseProduct _closeProduct;
         private readonly IGetProduct _getProduct;
+        private readonly ISearchCompleteVersions _searchCompleteVersions;
 
-        public ProductController(IAddProduct addProduct, ICloseProduct closeProduct, IGetProduct getProduct)
+        public ProductController(IAddProduct addProduct, ICloseProduct closeProduct, IGetProduct getProduct,
+            ISearchCompleteVersions searchCompleteVersions)
         {
             _addProduct = addProduct;
             _closeProduct = closeProduct;
             _getProduct = getProduct;
+            _searchCompleteVersions = searchCompleteVersions;
         }
 
         [HttpGet("{productId:Guid}")]
@@ -71,26 +77,28 @@ namespace ChangeTracker.Api.Controllers.v1
             return presenter.Response;
         }
 
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <param name="productId"></param>
-        /// <param name="searchTerm">e.g. text, label or issue</param>
-        /// <param name="lastVersionId"></param>
-        /// <param name="includeDeleted"></param>
-        /// <param name="limit"></param>
-        /// <returns></returns>
         [HttpGet("{productId:Guid}/versions")]
         [NeedsPermission(Permission.ViewCompleteVersion)]
-        public async Task<ActionResult> GetProductVersionsAsync(Guid productId, 
+        public async Task<ActionResult<CompleteVersionDto>> GetProductVersionsAsync(Guid productId,
             string searchTerm = null,
             Guid? lastVersionId = null,
             bool includeDeleted = false,
-            ushort limit = 100)
+            ushort limit = VersionsQueryRequestModel.MaxLimit)
         {
-            await Task.Yield();
+            if (searchTerm is not null && searchTerm.Trim().Contains(" "))
+                return BadRequest(DefaultResponse.Create("Whitespaces in search terms are not allowed."));
 
-            return Ok();
+            var userId = HttpContext.GetUserId();
+            var requestModel = new VersionsQueryRequestModel(productId,
+                lastVersionId,
+                userId,
+                searchTerm,
+                limit,
+                includeDeleted);
+
+            var versions = await _searchCompleteVersions.ExecuteAsync(requestModel);
+
+            return Ok(versions.Select(CompleteVersionDto.FromResponseModel));
         }
     }
 }

@@ -102,6 +102,17 @@ namespace ChangeTracker.Application.Tests.TestDoubles
             return new ChangeLogs(changeLogLines);
         }
 
+        public async Task<IList<ChangeLogs>> GetChangeLogsAsync(IList<Guid> versionIds)
+        {
+            await Task.Yield();
+
+            return ChangeLogs
+                .Where(x => versionIds.Any(y => x.Id == y))
+                .GroupBy(x => x.VersionId)
+                .Select(x => new ChangeLogs(x.ToList()))
+                .ToList();
+        }
+
         public async Task<IList<ChangeLogLine>> GetPendingLinesAsync(Guid productId)
         {
             await Task.Yield();

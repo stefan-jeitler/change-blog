@@ -9,6 +9,7 @@ namespace ChangeTracker.Api.DTOs.V1.Version
     public class CompleteVersionDto
     {
         public Guid VersionId { get; set; }
+        public string Version { get; set; }
         public Guid ProductId { get; set; }
         public string ProductName { get; set; }
         public Guid AccountId { get; set; }
@@ -22,6 +23,7 @@ namespace ChangeTracker.Api.DTOs.V1.Version
             return new()
             {
                 VersionId = model.VersionId,
+                Version =  model.Version,
                 ProductId = model.ProductId,
                 ProductName = model.ProductName,
                 AccountId = model.AccountId,

@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 using ChangeTracker.Application.DataAccess.ChangeLogs;
 using ChangeTracker.Domain.ChangeLog;
@@ -71,6 +72,30 @@ namespace ChangeTracker.DataAccess.Postgres.DataAccessObjects.ChangeLogs
                 });
 
             return new Domain.ChangeLog.ChangeLogs(lines.AsList());
+        }
+
+        public async Task<IList<Domain.ChangeLog.ChangeLogs>> GetChangeLogsAsync(IList<Guid> versionIds)
+        {
+            const string getChangeLogLinesSql = @"
+                select chl.id,
+                       chl.version_id           as versionId,
+                       chl.product_id           as productId,
+                       chl.text,
+                       chl.position,
+                       chl.created_at           as createdAt,
+                       CAST(chl.labels AS text) as labels,
+                       CAST(chl.issues AS text) as issues,
+                       chl.deleted_at           as deletedAt
+                from changelog_line chl
+                where chl.version_id = ANY (@versionIds)";
+
+            var lines = await _dbAccessor.DbConnection
+                .QueryAsync<ChangeLogLine>(getChangeLogLinesSql, new {versionIds});
+
+            return lines
+                .GroupBy(l => l.VersionId)
+                .Select(g => new Domain.ChangeLog.ChangeLogs(g.ToList()))
+                .ToList();
         }
 
         public async Task<IList<ChangeLogLine>> GetPendingLinesAsync(Guid productId)

@@ -6,13 +6,15 @@ namespace ChangeTracker.Application.UseCases.Queries.GetCompleteVersions
 {
     public class CompleteVersionResponseModel
     {
-        public CompleteVersionResponseModel(Guid versionId, Guid productId, string productName, Guid accountId,
+        public CompleteVersionResponseModel(Guid versionId, string version, Guid productId, string productName, Guid accountId,
             List<ChangeLogLineResponseModel> changeLogs, DateTime createdAt, DateTime? releasedAt)
         {
             if (versionId == Guid.Empty)
                 throw new ArgumentException("VersionId cannot be empty.");
             
             VersionId = versionId;
+
+            Version = version ?? throw new ArgumentNullException(nameof(version));
             
             if (productId == Guid.Empty)
                 throw new ArgumentException("ProductId cannot be empty.");
@@ -34,6 +36,7 @@ namespace ChangeTracker.Application.UseCases.Queries.GetCompleteVersions
         }
 
         public Guid VersionId { get; }
+        public string Version { get; }
         public Guid ProductId { get; }
         public string ProductName { get; }
         public Guid AccountId { get; }

@@ -31,6 +31,23 @@ namespace ChangeTracker.Application.Tests.TestDoubles
             return Task.FromResult(Versions.Single(x => x.Id == versionId));
         }
 
+        /// <summary>
+        ///     Not properly implemented, but should be enough for the use-case tests
+        ///     The actual implementation of IVersionDao is tested separately.
+        /// </summary>
+        /// <param name="querySettings"></param>
+        /// <returns></returns>
+        public async Task<IList<ClVersion>> GetVersionsAsync(VersionQuerySettings querySettings)
+        {
+            await Task.Yield();
+
+            return Versions
+                .Where(x => x.ProductId == querySettings.ProductId)
+                .Where(x => querySettings.IncludeDeleted || !x.IsDeleted)
+                .Take(querySettings.Limit)
+                .ToList();
+        }
+
         public Task<Result<ClVersion, Conflict>> AddVersionAsync(ClVersion clVersion)
         {
             if (ProduceConflict)

@@ -1,18 +1,15 @@
 ﻿using System;
-using System.Configuration;
+using System.Collections.Generic;
 using System.Data;
 using System.Net.Http.Json;
 using System.Threading.Tasks;
 using ChangeTracker.Api.DTOs.V1.Product;
-using ChangeTracker.Api.Presenters.V1.Product;
-using ChangeTracker.Application.UseCases.Commands.AddProduct;
-using ChangeTracker.DataAccess.Postgres;
+using ChangeTracker.Api.DTOs.V1.Version;
 using Dapper;
 using FluentAssertions;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc.Testing;
 using Microsoft.Extensions.DependencyInjection;
-using Moq;
 using Xunit;
 
 namespace ChangeTracker.Api.Tests
@@ -21,7 +18,7 @@ namespace ChangeTracker.Api.Tests
     {
         private const string TestProductName = "AddProduct Controller Test";
         private static readonly Guid TestAccountId = Guid.Parse("ec3a44cc-0ba4-4c97-ad7f-911e9f6a73bc");
-        
+
         private readonly WebApplicationFactory<Startup> _factory;
 
         public ProductControllerTests(WebApplicationFactory<Startup> factory)
@@ -30,7 +27,7 @@ namespace ChangeTracker.Api.Tests
         }
 
         [Fact]
-        public async Task GetProducts_HappyPath_Successful()
+        public async Task GetProduct_HappyPath_Successful()
         {
             // arrange
             var client = _factory.CreateClient();
@@ -62,11 +59,11 @@ namespace ChangeTracker.Api.Tests
 
             // act
             var response = await client.PostAsJsonAsync("api/v1/products", product);
-            
+
             // arrange
             response.StatusCode.Should().Be(StatusCodes.Status201Created);
         }
-        
+
         [Fact]
         public async Task AddProduct_EmptyVersioningSchemeId_BadRequest()
         {
@@ -85,11 +82,11 @@ namespace ChangeTracker.Api.Tests
 
             // act
             var response = await client.PostAsJsonAsync("api/v1/products", product);
-            
+
             // arrange
             response.StatusCode.Should().Be(StatusCodes.Status400BadRequest);
         }
-        
+
         [Fact]
         public async Task CloseProduct_HappyPath_NoContent()
         {
@@ -99,11 +96,11 @@ namespace ChangeTracker.Api.Tests
 
             // act
             var response = await client.PostAsync("api/v1/products/139a2e54-e9be-4168-98b4-2839d9b3db04/close", null!);
-            
+
             // arrange
             response.StatusCode.Should().Be(StatusCodes.Status204NoContent);
         }
-        
+
         private static async Task DeleteTestProductAsync(Func<IDbConnection> acquireDbConnection)
         {
             using var dbConnection = acquireDbConnection();

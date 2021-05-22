@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using ChangeTracker.Api.Authorization;
@@ -27,7 +28,7 @@ namespace ChangeTracker.Api.Controllers.v1
 
         [HttpGet("products")]
         [NeedsPermission(Permission.ViewUserProducts)]
-        public async Task<ActionResult> GetUserProductsAsync(Guid? lastProductId = null, 
+        public async Task<ActionResult<List<ProductDto>>> GetUserProductsAsync(Guid? lastProductId = null, 
             ushort limit = UserProductQueryRequestModel.MaxLimit,
             bool includeClosedProducts = false)
         {
@@ -44,7 +45,7 @@ namespace ChangeTracker.Api.Controllers.v1
 
         [HttpGet("info")]
         [NeedsPermission(Permission.ViewOwnUser)]
-        public async Task<ActionResult> GetUserInfoAsync()
+        public async Task<ActionResult<UserDto>> GetUserInfoAsync()
         {
             var userId = HttpContext.GetUserId();
             var user = await _getUser.ExecuteAsync(userId);

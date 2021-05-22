@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using ChangeTracker.Api.Authorization;
@@ -32,7 +33,7 @@ namespace ChangeTracker.Api.Controllers.v1
 
         [HttpGet]
         [NeedsPermission(Permission.ViewAccount)]
-        public async Task<ActionResult> GetAccountsAsync()
+        public async Task<ActionResult<List<AccountDto>>> GetAccountsAsync()
         {
             var userId = HttpContext.GetUserId();
             var accounts = await _getAccounts.ExecuteAsync(userId);
@@ -42,7 +43,7 @@ namespace ChangeTracker.Api.Controllers.v1
 
         [HttpGet("{accountId:Guid}")]
         [NeedsPermission(Permission.ViewAccount)]
-        public async Task<ActionResult> GetAccountAsync(Guid accountId)
+        public async Task<ActionResult<AccountDto>> GetAccountAsync(Guid accountId)
         {
             var userId = HttpContext.GetUserId();
             var account = await _getAccounts.ExecuteAsync(userId, accountId);
@@ -52,7 +53,7 @@ namespace ChangeTracker.Api.Controllers.v1
 
         [HttpGet("{accountId:Guid}/users")]
         [NeedsPermission(Permission.ViewAccountUsers)]
-        public async Task<ActionResult> GetUsersAsync(Guid accountId,
+        public async Task<ActionResult<List<UserDto>>> GetUsersAsync(Guid accountId,
             Guid? lastUserId = null,
             ushort limit = UsersQueryRequestModel.MaxLimit)
         {
@@ -69,7 +70,7 @@ namespace ChangeTracker.Api.Controllers.v1
 
         [HttpGet("{accountId:Guid}/products")]
         [NeedsPermission(Permission.ViewAccountProducts)]
-        public async Task<ActionResult> GetProductsAsync(Guid accountId,
+        public async Task<ActionResult<List<ProductDto>>> GetProductsAsync(Guid accountId,
             Guid? lastProductId = null,
             ushort limit = AccountProductQueryRequestModel.MaxLimit,
             bool includeClosedProducts = false)
@@ -88,7 +89,7 @@ namespace ChangeTracker.Api.Controllers.v1
 
         [HttpGet("roles")]
         [NeedsPermission(Permission.ViewRoles)]
-        public async Task<ActionResult> GetRolesAsync([FromServices] IGetRoles getRoles,
+        public async Task<ActionResult<List<RoleDto>>> GetRolesAsync([FromServices] IGetRoles getRoles,
             string filter = null,
             bool includePermissions = false)
         {

@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using ChangeTracker.Api.Authorization;
@@ -36,7 +37,7 @@ namespace ChangeTracker.Api.Controllers.v1
 
         [HttpGet("{productId:Guid}")]
         [NeedsPermission(Permission.ViewAccountProducts)]
-        public async Task<ActionResult> GetProductAsync(Guid productId)
+        public async Task<ActionResult<ProductDto>> GetProductAsync(Guid productId)
         {
             var userId = HttpContext.GetUserId();
             var product = await _getProduct.ExecuteAsync(userId, productId);
@@ -79,7 +80,7 @@ namespace ChangeTracker.Api.Controllers.v1
 
         [HttpGet("{productId:Guid}/versions")]
         [NeedsPermission(Permission.ViewCompleteVersion)]
-        public async Task<ActionResult<CompleteVersionDto>> GetCompleteProductVersionsAsync(Guid productId,
+        public async Task<ActionResult<List<CompleteVersionDto>>> GetCompleteProductVersionsAsync(Guid productId,
             string searchTerm = null,
             Guid? lastVersionId = null,
             bool includeDeleted = false,

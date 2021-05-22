@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Text.RegularExpressions;
 
 namespace ChangeTracker.Domain.ChangeLog
 {
@@ -45,6 +46,9 @@ namespace ChangeTracker.Domain.ChangeLog
 
             if (c == string.Empty)
                 return new ArgumentException("Label must not be empty.");
+
+            if (!Regex.IsMatch(c, @"^[a-zA-Z0-9]+$"))
+                return new ArgumentException("Label contains invalid characters. Only letters and numbers are allowed");
 
             switch (c.Length)
             {

@@ -19,7 +19,7 @@ namespace ChangeTracker.Api.Tests
         }
 
         [Fact]
-        public async Task Product_GetProducts_Successful()
+        public async Task GetProducts_HappyPath_Successful()
         {
             // arrange
             var client = _factory.CreateClient();

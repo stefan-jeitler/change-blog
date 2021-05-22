@@ -14,6 +14,14 @@ namespace ChangeTracker.Domain.Tests.ChangeLogTests
 
             labelName.Value.Should().Be("Feature");
         }
+        
+        [Fact]
+        public void Parse_WithNumber_Successful()
+        {
+            var labelName = Label.Parse("Feature001");
+
+            labelName.Value.Should().Be("Feature001");
+        }
 
         [Fact]
         public void Parse_WithEmptyString_ArgumentException()
@@ -53,6 +61,22 @@ namespace ChangeTracker.Domain.Tests.ChangeLogTests
         public void Parse_WithWhitespace_ArgumentException()
         {
             Func<Label> act = () => Label.Parse(" ");
+
+            act.Should().ThrowExactly<ArgumentException>();
+        }
+
+        [Fact]
+        public void Parse_WithUnderscore_ArgumentException()
+        {
+            Func<Label> act = () => Label.Parse("Label_Test");
+
+            act.Should().ThrowExactly<ArgumentException>();
+        }
+
+        [Fact]
+        public void Parse_WithDash_ArgumentException()
+        {
+            Func<Label> act = () => Label.Parse("Label-Test");
 
             act.Should().ThrowExactly<ArgumentException>();
         }

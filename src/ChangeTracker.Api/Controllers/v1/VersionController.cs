@@ -10,7 +10,6 @@ using ChangeTracker.Api.Presenters.V1.Version;
 using ChangeTracker.Application.UseCases;
 using ChangeTracker.Application.UseCases.Commands.AddCompleteVersion;
 using ChangeTracker.Application.UseCases.Commands.AddCompleteVersion.Models;
-using ChangeTracker.Application.UseCases.Commands.AddVersion;
 using ChangeTracker.Application.UseCases.Queries.GetCompleteVersions;
 using Microsoft.AspNetCore.Mvc;
 
@@ -21,19 +20,6 @@ namespace ChangeTracker.Api.Controllers.v1
     public class VersionController : ControllerBase
     {
         [HttpPost]
-        [NeedsPermission(Permission.AddVersion)]
-        public async Task<ActionResult> AddVersionAsync([FromServices] IAddVersion addVersion,
-            [FromBody] AddVersionDto versionDto)
-        {
-            var requestModel = new VersionRequestModel(versionDto.ProductId, versionDto.Version);
-            var presenter = new AddVersionApiPresenter(HttpContext);
-
-            await addVersion.ExecuteAsync(presenter, requestModel);
-
-            return presenter.Response;
-        }
-
-        [HttpPost("complete")]
         [NeedsPermission(Permission.AddVersion)]
         public async Task<ActionResult> AddCompleteVersionAsync([FromServices] IAddCompleteVersion addCompleteVersion,
             [FromBody] AddCompleteVersionDto completeVersionDto)

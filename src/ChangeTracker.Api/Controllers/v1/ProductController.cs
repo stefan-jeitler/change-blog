@@ -79,7 +79,7 @@ namespace ChangeTracker.Api.Controllers.v1
 
         [HttpGet("{productId:Guid}/versions")]
         [NeedsPermission(Permission.ViewCompleteVersion)]
-        public async Task<ActionResult<CompleteVersionDto>> GetProductVersionsAsync(Guid productId,
+        public async Task<ActionResult<CompleteVersionDto>> GetCompleteProductVersionsAsync(Guid productId,
             string searchTerm = null,
             Guid? lastVersionId = null,
             bool includeDeleted = false,

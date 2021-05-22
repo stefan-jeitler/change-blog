@@ -43,51 +43,6 @@ namespace ChangeTracker.Api.Tests
         }
 
         [Fact]
-        public async Task AddProduct_HappyPath_ProductAdded()
-        {
-            // arrange
-            var acquireDbConnection = _factory.Services.GetRequiredService<Func<IDbConnection>>();
-            await DeleteTestProductAsync(acquireDbConnection);
-            var client = _factory.CreateClient();
-            client.DefaultRequestHeaders.Add("X-API-KEY", new[] {"acc01usr02"});
-
-            var product = new AddProductDto
-            {
-                Name = TestProductName,
-                AccountId = TestAccountId
-            };
-
-            // act
-            var response = await client.PostAsJsonAsync("api/v1/products", product);
-
-            // arrange
-            response.StatusCode.Should().Be(StatusCodes.Status201Created);
-        }
-
-        [Fact]
-        public async Task AddProduct_EmptyVersioningSchemeId_BadRequest()
-        {
-            // arrange
-            var acquireDbConnection = _factory.Services.GetRequiredService<Func<IDbConnection>>();
-            await DeleteTestProductAsync(acquireDbConnection);
-            var client = _factory.CreateClient();
-            client.DefaultRequestHeaders.Add("X-API-KEY", new[] {"acc01usr02"});
-
-            var product = new AddProductDto
-            {
-                Name = TestProductName,
-                AccountId = TestAccountId,
-                VersioningSchemeId = Guid.Empty
-            };
-
-            // act
-            var response = await client.PostAsJsonAsync("api/v1/products", product);
-
-            // arrange
-            response.StatusCode.Should().Be(StatusCodes.Status400BadRequest);
-        }
-
-        [Fact]
         public async Task CloseProduct_HappyPath_NoContent()
         {
             // arrange
@@ -99,17 +54,6 @@ namespace ChangeTracker.Api.Tests
 
             // arrange
             response.StatusCode.Should().Be(StatusCodes.Status204NoContent);
-        }
-
-        private static async Task DeleteTestProductAsync(Func<IDbConnection> acquireDbConnection)
-        {
-            using var dbConnection = acquireDbConnection();
-            await dbConnection.ExecuteAsync("delete from product where account_id = @accountId and name = @name",
-                new
-                {
-                    accountId = TestAccountId,
-                    name = TestProductName
-                });
         }
     }
 }

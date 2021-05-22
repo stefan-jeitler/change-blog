@@ -25,10 +25,7 @@ namespace ChangeTracker.DataAccess.Postgres.Tests.DataAccessObjectsTests
             _lazyDbConnection?.Dispose();
         }
 
-        private AccountDao CreateDao()
-        {
-            return new(new DbSession(_lazyDbConnection));
-        }
+        private AccountDao CreateDao() => new(new DbSession(_lazyDbConnection));
 
         [Fact]
         public async Task FindAccount_ExistingAccount_ResultHasValue()

@@ -62,7 +62,7 @@ namespace ChangeTracker.Api.Tests
             client.DefaultRequestHeaders.Add("X-API-KEY", new[] {"acc01usr02"});
 
             // act
-            var response = await client.GetAsync("/api/v1/accounts/ec3a44cc-0ba4-4c97-ad7f-911e9f6a73bc/products");
+            var response = await client.GetAsync("/api/v1/accounts/ec3a44cc-0ba4-4c97-ad7f-911e9f6a73bc/products?includeClosedProducts=true");
             var content = await response.Content.ReadFromJsonAsync<List<ProductDto>>();
 
             // assert

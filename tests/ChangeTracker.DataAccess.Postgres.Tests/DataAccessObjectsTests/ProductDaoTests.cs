@@ -97,7 +97,7 @@ namespace ChangeTracker.DataAccess.Postgres.Tests.DataAccessObjectsTests
             var productDao = CreateDao();
             var t_ua_account_01 = Guid.Parse("ec3a44cc-0ba4-4c97-ad7f-911e9f6a73bc");
             var t_ua_account_01_user_02 = Guid.Parse("7aa9004b-ed6f-4862-8307-579030c860be");
-            var querySettings = new AccountProductsQuerySettings(t_ua_account_01, t_ua_account_01_user_02);
+            var querySettings = new AccountProductsQuerySettings(t_ua_account_01, t_ua_account_01_user_02, null, 100, true);
 
             var products = await productDao.GetAccountProductsAsync(querySettings);
 

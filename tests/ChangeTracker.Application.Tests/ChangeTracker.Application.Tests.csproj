@@ -26,4 +26,8 @@
     <ProjectReference Include="..\..\src\ChangeTracker.Application\ChangeTracker.Application.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="UseCaseTests\Queries\GetCompleteVersion\" />
+  </ItemGroup>
+
 </Project>

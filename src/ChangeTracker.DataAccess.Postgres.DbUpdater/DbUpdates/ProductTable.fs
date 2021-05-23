@@ -19,14 +19,12 @@ let private createProductSql = """
         )
     """
 
-let private addUniqueIndexOnAccountIdAndNameSql = "CREATE UNIQUE INDEX IF NOT EXISTS product_accountid_name_unique ON product (account_id, LOWER(name))"
+let private addUniqueIndexOnAccountIdAndNameSql =
+    "CREATE UNIQUE INDEX IF NOT EXISTS product_accountid_name_unique ON product (account_id, LOWER(name))"
 
 let create (dbConnection: IDbConnection) =
-    dbConnection.ExecuteAsync(createProductSql)
-    |> Async.AwaitTask
-    |> Async.Ignore
+    dbConnection.Execute(createProductSql) |> ignore
 
-let addUniqueIndexOnAccountIdAndName (dbConnection: IDbConnection) = 
-    dbConnection.ExecuteAsync(addUniqueIndexOnAccountIdAndNameSql)
-    |> Async.AwaitTask
-    |> Async.Ignore    
+let addUniqueIndexOnAccountIdAndName (dbConnection: IDbConnection) =
+    dbConnection.Execute(addUniqueIndexOnAccountIdAndNameSql)
+    |> ignore

@@ -6,74 +6,57 @@ open Dapper
 let inline (=>) a b = a, box b
 
 let tableExists (dbConnection: IDbConnection) (tableName: string) =
-    async {
-        let tableExistsSql = """
-            SELECT EXISTS (
-                SELECT FROM information_schema.tables
-                WHERE table_name = @tableName
-            )"""
+    let tableExistsSql = """
+        SELECT EXISTS (
+            SELECT FROM information_schema.tables
+            WHERE table_name = @tableName
+        )"""
 
-        let parameters =
-            dict [ "tableName" => tableName.ToLower() ]
+    let parameters =
+        dict [ "tableName" => tableName.ToLower() ]
 
-        return!
-            dbConnection.ExecuteScalarAsync<bool>(tableExistsSql, parameters)
-            |> Async.AwaitTask
-    }
+    dbConnection.ExecuteScalar<bool>(tableExistsSql, parameters)
 
 let constraintExists (dbConnection: IDbConnection) (constraintName: string) =
-    async {
-        let constraintExistsSql = """
-            SELECT EXISTS(SELECT NULL
-            FROM information_schema.constraint_column_usage
-            WHERE CONSTRAINT_NAME = @constraintName)
-        """
+    let constraintExistsSql = """
+        SELECT EXISTS(SELECT NULL
+        FROM information_schema.constraint_column_usage
+        WHERE CONSTRAINT_NAME = @constraintName)
+    """
 
-        let parameters =
-            dict [ "constraintName" => constraintName.ToLower() ]
+    let parameters =
+        dict [ "constraintName" => constraintName.ToLower() ]
 
-        return!
-            dbConnection.ExecuteScalarAsync<bool>(constraintExistsSql, parameters)
-            |> Async.AwaitTask
-    }
+    dbConnection.ExecuteScalar<bool>(constraintExistsSql, parameters)
+
 
 let getLatestSchemaVersion (dbConnection: IDbConnection) =
-    async {
-        let! tableExists = tableExists dbConnection "schema_version"
+    let tableExists =
+        tableExists dbConnection "schema_version"
 
-        match tableExists with
-        | false -> return -1
-        | true ->
-            let versionSql = "SELECT version FROM schema_version"
-
-            return!
-                dbConnection.ExecuteScalarAsync<int>(versionSql)
-                |> Async.AwaitTask
-    }
+    match tableExists with
+    | false -> -1
+    | true ->
+        let versionSql = "SELECT version FROM schema_version"
+        dbConnection.ExecuteScalar<int>(versionSql)
 
 let updateSchemaVersion (dbConnection: IDbConnection) (version: int) =
-    async {
-        let updateSchemaVersionSql =
-            "UPDATE schema_version SET version = @version, updated_at = now()"
+    let updateSchemaVersionSql =
+        "UPDATE schema_version SET version = @version, updated_at = now()"
 
-        let insertSchemaVersionSql =
-            "INSERT INTO schema_version (version, updated_at) VALUES(@version, now())"
+    let insertSchemaVersionSql =
+        "INSERT INTO schema_version (version, updated_at) VALUES(@version, now())"
 
-        let param = dict [ "version" => version ]
+    let param = dict [ "version" => version ]
 
-        let! c =
-            dbConnection.ExecuteAsync(updateSchemaVersionSql, param)
-            |> Async.AwaitTask
+    let c =
+        dbConnection.Execute(updateSchemaVersionSql, param)
 
-        match c with
-        | 0 ->
-            do!
-                dbConnection.ExecuteAsync(insertSchemaVersionSql, param)
-                |> Async.AwaitTask
-                |> Async.Ignore
-        | _ -> ()
-    }
+    match c with
+    | 0 ->
+        dbConnection.Execute(insertSchemaVersionSql, param)
+        |> ignore
+    | _ -> ()
 
 let getDbName (dbConnection: IDbConnection) =
-    dbConnection.ExecuteScalarAsync<string>("SELECT current_database()")
-    |> Async.AwaitTask
+    dbConnection.ExecuteScalar<string>("SELECT current_database()")

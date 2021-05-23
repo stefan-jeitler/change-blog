@@ -19,31 +19,24 @@ let private createConstraintSql = """
     		REFERENCES versioning_scheme(id)
     """
 
-let private addUniqueIndexOnNameAndDeletedAtSql = "CREATE UNIQUE INDEX IF NOT EXISTS account_name_deletedat_unique ON account (LOWER(name), (deleted_at is null)) where deleted_at is null"
+let private addUniqueIndexOnNameAndDeletedAtSql =
+    "CREATE UNIQUE INDEX IF NOT EXISTS account_name_deletedat_unique ON account (LOWER(name), (deleted_at is null)) where deleted_at is null"
 
 let create (dbConnection: IDbConnection) =
-    dbConnection.ExecuteAsync(createAccountSql)
-    |> Async.AwaitTask
-    |> Async.Ignore
+    dbConnection.Execute(createAccountSql) |> ignore
 
 let addVersioningSchemeForeignKey (dbConnection: IDbConnection) =
-    async {
-        let constraintName = "account_versioningschemeid_fkey"
-        let! constraintExists = Db.constraintExists dbConnection constraintName
+    let constraintName = "account_versioningschemeid_fkey"
 
-        match constraintExists with
-        | true -> ()
-        | false ->
-            do!
-                dbConnection.ExecuteAsync(createConstraintSql)
-                |> Async.AwaitTask
-                |> Async.Ignore
-    }
+    let constraintExists =
+        Db.constraintExists dbConnection constraintName
+
+    match constraintExists with
+    | true -> ()
+    | false ->
+        dbConnection.Execute(createConstraintSql)
+        |> ignore
 
 let addPartialUniqueIndexOnNameAndDeletedAt (dbConnection: IDbConnection) =
-    async {
-        do! 
-            dbConnection.ExecuteAsync(addUniqueIndexOnNameAndDeletedAtSql)
-            |> Async.AwaitTask
-            |> Async.Ignore
-    }
+    dbConnection.Execute(addUniqueIndexOnNameAndDeletedAtSql)
+    |> ignore

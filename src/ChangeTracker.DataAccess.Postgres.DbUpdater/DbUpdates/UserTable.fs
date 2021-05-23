@@ -21,14 +21,7 @@ let private createLowerEmailIndexSql =
     """CREATE INDEX IF NOT EXISTS user_email_idx ON "user" (lower(email))"""
 
 let create (dbConnection: IDbConnection) =
-    async {
-        do!
-            dbConnection.ExecuteAsync(createUserSql)
-            |> Async.AwaitTask
-            |> Async.Ignore
+    dbConnection.Execute(createUserSql) |> ignore
 
-        do!
-            dbConnection.ExecuteAsync(createLowerEmailIndexSql)
-            |> Async.AwaitTask
-            |> Async.Ignore
-    }
+    dbConnection.Execute(createLowerEmailIndexSql)
+    |> ignore

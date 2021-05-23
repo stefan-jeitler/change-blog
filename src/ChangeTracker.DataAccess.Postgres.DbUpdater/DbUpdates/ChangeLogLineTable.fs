@@ -24,10 +24,12 @@ let private addPartialUniqueIndexOnProductIdVersionIdTextDeletedAtSql = """
         CREATE UNIQUE INDEX IF NOT EXISTS changelogline_productid_versionid_text_deletedat_unique
         ON changelog_line (product_id, version_id, LOWER("text"), (deleted_at is null)) where deleted_at is null
     """
-    
-let private addSearchVectorsColumnSql = """ALTER TABLE changelog_line ADD IF NOT EXISTS "search_vectors" tsvector"""
 
-let private createSearchVectorsIndexSql = """CREATE INDEX IF NOT EXISTS changelogline_searchvector_idx ON changelog_line USING gin (search_vectors)"""
+let private addSearchVectorsColumnSql =
+    """ALTER TABLE changelog_line ADD IF NOT EXISTS "search_vectors" tsvector"""
+
+let private createSearchVectorsIndexSql =
+    """CREATE INDEX IF NOT EXISTS changelogline_searchvector_idx ON changelog_line USING gin (search_vectors)"""
 
 let private createUpdateTextSearchVectorsFunctionSql = """
 	CREATE OR REPLACE FUNCTION update_changelogline_textsearch() RETURNS trigger AS
@@ -45,7 +47,8 @@ let private createUpdateTextSearchVectorsFunctionSql = """
 		$$ LANGUAGE plpgsql
 	"""
 
-let private dropUpdateTextSearchTriggerSql = "drop trigger if exists update_changelogline_textsearch on changelog_line"
+let private dropUpdateTextSearchTriggerSql =
+    "drop trigger if exists update_changelogline_textsearch on changelog_line"
 
 let private createUpdateTextSearchTriggerSql = """
 		CREATE TRIGGER update_changelogline_textsearch
@@ -65,35 +68,26 @@ let private updateSearchVectorsForExistingLinesSql = """
     """
 
 let create (dbConnection: IDbConnection) =
-    dbConnection.ExecuteAsync(createLineSql)
-    |> Async.AwaitTask
-    |> Async.Ignore
+    dbConnection.Execute(createLineSql) |> ignore
 
-let addPartialUniqueIndexOnProductIdVersionIdTextDeletedAt (dbConnection: IDbConnection) = 
-    dbConnection.ExecuteAsync(addPartialUniqueIndexOnProductIdVersionIdTextDeletedAtSql)
-    |> Async.AwaitTask
-    |> Async.Ignore
-    
+let addPartialUniqueIndexOnProductIdVersionIdTextDeletedAt (dbConnection: IDbConnection) =
+    dbConnection.Execute(addPartialUniqueIndexOnProductIdVersionIdTextDeletedAtSql)
+    |> ignore
+
 let addTextSearch (dbConnection: IDbConnection) =
     let rec executeSql (statements: string list) =
-        async {
-            match statements with
-            | [] -> ()
-            | head :: tail ->
-                do!
-                    dbConnection.ExecuteAsync(head)
-                    |> Async.AwaitTask
-                    |> Async.Ignore
+        match statements with
+        | [] -> ()
+        | head :: tail ->
+            dbConnection.Execute(head) |> ignore
+            executeSql tail
 
-                do! executeSql tail
-        }
-
-    [
-      addSearchVectorsColumnSql
+    [ addSearchVectorsColumnSql
       createSearchVectorsIndexSql
       createUpdateTextSearchVectorsFunctionSql
       dropUpdateTextSearchTriggerSql
       createUpdateTextSearchTriggerSql
-      updateSearchVectorsForExistingLinesSql
-    ]
+      updateSearchVectorsForExistingLinesSql ]
     |> executeSql
+
+    ()

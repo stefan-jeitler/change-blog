@@ -51,22 +51,22 @@ let private addSomeViewPermissionsSql =
       INSERT INTO role_permission
       SELECT id, 'ViewAccountUsers', now() from role where name in ('PlatformManager', 'ProductOwner')
       ON CONFLICT (role_id, permission) DO NOTHING
-    """ 
+    """
       """
 	  INSERT INTO role_permission
 	  SELECT id, 'ViewUserProducts', now() from role where name in ('Support', 'ScrumMaster', 'ProductOwner', 'ProductManager', 'PlatformManager', 'Developer')
 	  ON CONFLICT (role_id, permission) DO NOTHING
-	"""  
+	"""
       """
 	  INSERT INTO role_permission
 	  SELECT id, 'ViewUserInfo', now() from role where name in ('DefaultUser', 'Support', 'ScrumMaster', 'ProductOwner', 'ProductManager', 'PlatformManager', 'Developer')
 	  ON CONFLICT (role_id, permission) DO NOTHING
-	"""  
+	"""
       """
 	  INSERT INTO role_permission
 	  SELECT id, 'AddVersion', now() from role where name in ('ScrumMaster', 'ProductOwner', 'PlatformManager', 'Developer')
 	  ON CONFLICT (role_id, permission) DO NOTHING
-	"""  
+	"""
       """
 	  INSERT INTO role_permission
 	  SELECT id, 'ViewCompleteVersion', now() from role where name in ('Support', 'ScrumMaster', 'ProductOwner', 'ProductManager', 'PlatformManager', 'Developer')
@@ -74,32 +74,23 @@ let private addSomeViewPermissionsSql =
 	""" ]
 
 let create (dbConnection: IDbConnection) =
-    dbConnection.ExecuteAsync(createRolePermissionSql)
-    |> Async.AwaitTask
-    |> Async.Ignore
+    dbConnection.Execute(createRolePermissionSql)
+    |> ignore
 
 let addPermissionAddProduct (dbConnection: IDbConnection) =
-    dbConnection.ExecuteAsync(addPermissionAddProductSql)
-    |> Async.AwaitTask
-    |> Async.Ignore
+    dbConnection.Execute(addPermissionAddProductSql)
+    |> ignore
 
 let addPermissionViewChangeLogLines (dbConnection: IDbConnection) =
-    dbConnection.ExecuteAsync(addPermissionViewChangeLogLinesSql)
-    |> Async.AwaitTask
-    |> Async.Ignore
+    dbConnection.Execute(addPermissionViewChangeLogLinesSql)
+    |> ignore
 
 let addSomeViewPermissions (dbConnection: IDbConnection) =
     let rec insertPermissions (permissions: string list) =
-        async {
-            match permissions with
-            | [] -> ()
-            | head :: tail ->
-                do!
-                    dbConnection.ExecuteAsync(head)
-                    |> Async.AwaitTask
-                    |> Async.Ignore
-
-                do! insertPermissions tail
-        }
+        match permissions with
+        | [] -> ()
+        | head :: tail ->
+            dbConnection.Execute(head) |> ignore
+            insertPermissions tail |> ignore
 
     insertPermissions addSomeViewPermissionsSql

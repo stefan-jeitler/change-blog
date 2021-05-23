@@ -33,16 +33,13 @@ let private addUniqueIndexOnNameAccountIdDeletedAtSql = """
     """
 
 let create (dbConnection: IDbConnection) =
-    dbConnection.ExecuteAsync(createVersioningSchemeSql)
-    |> Async.AwaitTask
-    |> Async.Ignore
+    dbConnection.Execute(createVersioningSchemeSql)
+    |> ignore
 
 let addSemVer2DefaultScheme (dbConnection: IDbConnection) =
-    dbConnection.ExecuteAsync(insertSemVer2SchemeSql)
-    |> Async.AwaitTask
-    |> Async.Ignore
+    dbConnection.Execute(insertSemVer2SchemeSql)
+    |> ignore
 
-let addUniqueIndexOnNameAccountIdDeletedAt (dbConnection: IDbConnection) = 
-    dbConnection.ExecuteAsync(addUniqueIndexOnNameAccountIdDeletedAtSql)
-    |> Async.AwaitTask
-    |> Async.Ignore
+let addUniqueIndexOnNameAccountIdDeletedAt (dbConnection: IDbConnection) =
+    dbConnection.Execute(addUniqueIndexOnNameAccountIdDeletedAtSql)
+    |> ignore

@@ -36,4 +36,5 @@ let dbUpdates: DbUpdate list = [
     { Version = 25; Update = AccountViews.createAccountUserRolesView}
     { Version = 26; Update = ProductViews.createProductUserRolesView}
     { Version = 27; Update = ChangeLogLineTable.addTextSearch}
-    { Version = 28; Update = CommonFunctions.addGuidFunction}]
+    { Version = 28; Update = CommonFunctions.addGuidFunction}
+    { Version = 29; Update = UserTable.fixEmailUniqeConstraint}]

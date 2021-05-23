@@ -32,6 +32,12 @@ let private addUserForDefaultVersioningSchemesSql = """
         on conflict (id) do nothing 
     """
 
+let private fixEmailUniqueConstraintSql = [
+    "ALTER TABLE \"user\" DROP CONSTRAINT IF EXISTS user_email_unique"
+    "DROP INDEX IF EXISTS user_email_idx"
+    "CREATE INDEX IF NOT EXISTS user_email_idx ON \"user\" (lower(email))"
+]
+
 let create (dbConnection: IDbConnection) =
     dbConnection.Execute(createUserSql) |> ignore
 
@@ -42,3 +48,9 @@ let addUserForDefaultVersioningSchemes (dbConnection: IDbConnection) =
     dbConnection.Execute(addUserForDefaultVersioningSchemesSql)
     |> ignore
     
+let fixEmailUniqeConstraint (dbConnection: IDbConnection) = 
+    fixEmailUniqueConstraintSql
+    |> List.map (fun x -> dbConnection.Execute(x))
+    |> ignore
+
+    ()

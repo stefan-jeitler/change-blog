@@ -96,12 +96,7 @@
                    p.closed_at        AS closedAt
             FROM product p
                      JOIN versioning_scheme vs on p.versioning_scheme_id = vs.id
-            WHERE EXISTS
-                (select null
-                 from product p
-                 where p.id = p.id
-                   and (
-                     -- permission on product level
+            WHERE      -- permission on product level
                          (exists(select null
                                  from product_user pu
                                  where pu.product_id = p.id
@@ -134,7 +129,7 @@
                                                      join role_permission rp2 on r2.id = rp2.role_id
                                             where au.account_id = p.account_id
                                               and rp2.permission = @permission)
-                             )))
+                             )
               {accountFilter}
               {pagingFilter}
               {includeClosedProductsFilter}

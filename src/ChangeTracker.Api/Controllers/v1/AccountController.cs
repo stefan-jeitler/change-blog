@@ -53,7 +53,7 @@ namespace ChangeTracker.Api.Controllers.v1
 
         [HttpGet("{accountId:Guid}/users")]
         [NeedsPermission(Permission.ViewAccountUsers)]
-        public async Task<ActionResult<List<UserDto>>> GetUsersAsync(Guid accountId,
+        public async Task<ActionResult<List<UserDto>>> GetAccountUsersAsync(Guid accountId,
             Guid? lastUserId = null,
             ushort limit = UsersQueryRequestModel.MaxLimit)
         {
@@ -70,7 +70,7 @@ namespace ChangeTracker.Api.Controllers.v1
 
         [HttpGet("{accountId:Guid}/products")]
         [NeedsPermission(Permission.ViewAccountProducts)]
-        public async Task<ActionResult<List<ProductDto>>> GetProductsAsync(Guid accountId,
+        public async Task<ActionResult<List<ProductDto>>> GetAccountProductsAsync(Guid accountId,
             Guid? lastProductId = null,
             ushort limit = AccountProductQueryRequestModel.MaxLimit,
             bool includeClosedProducts = false)

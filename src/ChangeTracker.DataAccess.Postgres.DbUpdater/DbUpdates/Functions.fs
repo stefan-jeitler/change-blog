@@ -11,6 +11,5 @@ let private createGuidFunctionSql = """
     """
 
 let createGuidFunction (dbConnection: IDbConnection) =
-    dbConnection.ExecuteAsync(createGuidFunctionSql)
-    |> Async.AwaitTask
-    |> Async.Ignore
+    dbConnection.Execute(createGuidFunctionSql)
+    |> ignore

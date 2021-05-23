@@ -18,6 +18,4 @@ let private createApiKeySql = """
     """
 
 let create (dbConnection: IDbConnection) =
-    dbConnection.ExecuteAsync(createApiKeySql)
-    |> Async.AwaitTask
-    |> Async.Ignore
+    dbConnection.Execute(createApiKeySql) |> ignore

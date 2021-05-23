@@ -4,26 +4,21 @@ open Npgsql
 open DbUpdates
 
 let executeUpdate dbConnection dbUpdate =
-    async {
-        let version = dbUpdate.Version
-        printf $"Update database to Version %i{version}\n"
-        do! dbUpdate.Update dbConnection
-        do! Db.updateSchemaVersion dbConnection version
-    }
+    let version = dbUpdate.Version
+    printf $"Update database to Version %i{version}\n"
+    dbUpdate.Update dbConnection
+    Db.updateSchemaVersion dbConnection version
 
 let runDbUpdates dbConnection =
-    async {
-        let! latestSchemaVersion = Db.getLatestSchemaVersion dbConnection
-        let! dbName = Db.getDbName dbConnection
-        printf $"Selected database: %s{dbName}\n"
+    let latestSchemaVersion = Db.getLatestSchemaVersion dbConnection
+    let dbName = Db.getDbName dbConnection
+    printf $"Selected database: %s{dbName}\n"
 
-        dbUpdates
-        |> Seq.skipWhile (fun x -> x.Version <= latestSchemaVersion)
-        |> Seq.map (executeUpdate dbConnection)
-        |> Async.Sequential
-        |> Async.Ignore
-        |> Async.RunSynchronously
-    }
+    dbUpdates
+    |> Seq.skipWhile (fun x -> x.Version <= latestSchemaVersion)
+    |> Seq.map (executeUpdate dbConnection)
+    |> Seq.toList
+    |> ignore
 
 let findDuplicates (u: DbUpdate list) =
     u
@@ -56,8 +51,6 @@ let main _ =
 
     printf "Run db updates ...\n"
 
-    runDbUpdates dbConnection
-    |> Async.Ignore
-    |> Async.RunSynchronously
+    runDbUpdates dbConnection |> ignore
 
     0

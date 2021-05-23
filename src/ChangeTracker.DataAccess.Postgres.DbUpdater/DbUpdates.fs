@@ -4,7 +4,7 @@ open System.Data
 
 type DbUpdate = { 
     Version: int
-    Update: IDbConnection -> Async<unit> 
+    Update: IDbConnection -> unit
 }
 
 let dbUpdates: DbUpdate list = [

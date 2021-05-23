@@ -17,6 +17,5 @@ let private createAccountUserRolesViewSql = """
     """
 
 let createAccountUserRolesView (dbConnection: IDbConnection) =
-    dbConnection.ExecuteAsync(createAccountUserRolesViewSql)
-    |> Async.AwaitTask
-    |> Async.Ignore
+    dbConnection.Execute(createAccountUserRolesViewSql)
+    |> ignore

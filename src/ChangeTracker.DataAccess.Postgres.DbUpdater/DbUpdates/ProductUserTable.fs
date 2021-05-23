@@ -18,6 +18,5 @@ let private createProductUserRoleSql = """
     """
 
 let create (dbConnection: IDbConnection) =
-    dbConnection.ExecuteAsync(createProductUserRoleSql)
-    |> Async.AwaitTask
-    |> Async.Ignore
+    dbConnection.Execute(createProductUserRoleSql)
+    |> ignore

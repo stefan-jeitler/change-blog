@@ -12,14 +12,9 @@ let private createSchemaSql = """
 
 
 let create (dbConnection: IDbConnection) =
-    async {
-        do!
-            dbConnection.ExecuteAsync(createSchemaSql)
-            |> Async.AwaitTask
-            |> Async.Ignore
+    dbConnection.Execute(createSchemaSql) |> ignore
 
-        do!
-            dbConnection.ExecuteAsync("INSERT INTO schema_version VALUES(0, now())")
-            |> Async.AwaitTask
-            |> Async.Ignore
-    }
+    dbConnection.Execute("INSERT INTO schema_version VALUES(0, now())")
+    |> ignore
+
+    ()

@@ -52,22 +52,14 @@ let private basicRolesInsertSql =
     """ ]
 
 let create (dbConnection: IDbConnection) =
-    dbConnection.ExecuteAsync(createRoleSql)
-    |> Async.AwaitTask
-    |> Async.Ignore
+    dbConnection.Execute(createRoleSql) |> ignore
 
 let addBasicRoles (dbConnection: IDbConnection) =
     let rec insertRoles (roles: string list) =
-        async {
-            match roles with
-            | [] -> ()
-            | head :: tail ->
-                do!
-                    dbConnection.ExecuteAsync(head)
-                    |> Async.AwaitTask
-                    |> Async.Ignore
-
-                do! insertRoles tail
-        }
+        match roles with
+        | [] -> ()
+        | head :: tail ->
+            dbConnection.Execute(head) |> ignore
+            insertRoles tail |> ignore
 
     insertRoles basicRolesInsertSql

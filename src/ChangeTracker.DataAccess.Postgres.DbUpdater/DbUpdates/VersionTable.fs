@@ -22,12 +22,8 @@ let private addUniqueIndexProductIdValueDeletedAtSql = """
     """
 
 let create (dbConnection: IDbConnection) =
-    dbConnection.ExecuteAsync(createVersionSql)
-    |> Async.AwaitTask
-    |> Async.Ignore
+    dbConnection.Execute(createVersionSql) |> ignore
 
 let addUniqueIndexProductIdValueDeletedAt (dbConnection: IDbConnection) =
-    dbConnection.ExecuteAsync(addUniqueIndexProductIdValueDeletedAtSql)
-    |> Async.AwaitTask
-    |> Async.Ignore
-
+    dbConnection.Execute(addUniqueIndexProductIdValueDeletedAtSql)
+    |> ignore

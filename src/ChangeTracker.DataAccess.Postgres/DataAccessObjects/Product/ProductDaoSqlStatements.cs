@@ -54,7 +54,7 @@
 
             const string accountFilter = "AND p.account_id = @accountId";
             
-            return CreateProductsQuerySql(accountFilter, pagingFilter, includeClosedProductsFilter);
+            return GetProductsQuerySql(accountFilter, pagingFilter, includeClosedProductsFilter);
         }
 
         public static string GetProductsForUserSql(bool usePaging, bool includeClosedProducts)
@@ -75,10 +75,10 @@
                                    where au.user_id = @userId
                                     and r.name = 'DefaultUser')";
 
-            return CreateProductsQuerySql(accountFilter, pagingFilter, includeClosedProductsFilter);
+            return GetProductsQuerySql(accountFilter, pagingFilter, includeClosedProductsFilter);
         }
 
-        private static string CreateProductsQuerySql(string accountFilter, string pagingFilter, string includeClosedProductsFilter) =>
+        private static string GetProductsQuerySql(string accountFilter, string pagingFilter, string includeClosedProductsFilter) =>
             @$"
             SELECT p.id,
                    p.account_id       AS accountId,

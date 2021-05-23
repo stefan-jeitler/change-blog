@@ -35,4 +35,5 @@ let dbUpdates: DbUpdate list = [
     { Version = 24; Update = RolePermissionTable.addSomeViewPermissions}
     { Version = 25; Update = AccountViews.createAccountUserRolesView}
     { Version = 26; Update = ProductViews.createProductUserRolesView}
-    { Version = 27; Update = ChangeLogLineTable.addTextSearch}]
+    { Version = 27; Update = ChangeLogLineTable.addTextSearch}
+    { Version = 28; Update = CommonFunctions.addGuidFunction}]

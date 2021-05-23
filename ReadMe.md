@@ -105,7 +105,7 @@ Things to keep in mind when working with `Func<IDbConnection>`.
 
 * Wrap the connection in a `using` block since it's an ephemeral disposable
 * Does not work with `IUnitOfWork`
-* Can be used in concurrent scenarios
+* Can be used in concurrent situations
 
 ### `IDbAccessor`
 
@@ -121,5 +121,5 @@ Things to keep in mind when working with `IDbAccessor`
 * Do not dispose connections
 * Do not open or close connections
 * Do not begin transactions
-* Do not use it in a concurrent scenario
+* Do not use it in concurrent scenarios
 * Use it with Dapper only

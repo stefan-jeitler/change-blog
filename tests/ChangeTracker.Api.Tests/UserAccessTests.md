@@ -291,15 +291,15 @@ insert into product values ('35c5df1a-079e-4b8c-87c5-09b30e52a82f',
                            ) on conflict (id) do nothing ;
 
 insert into product_user values (
-                                 (select id from "user" where email = 't_ua_account_01_user_01@change-tracker.com'),
                                  '139a2e54-e9be-4168-98b4-2839d9b3db04',
+                                 (select id from "user" where email = 't_ua_account_01_user_01@change-tracker.com'),
                                  (select id from role where name = 'ProductManager'),
                                  now()
                                 ) on conflict (product_id, user_id, role_id) do nothing ;
 
 insert into product_user values (
-                                 (select id from "user" where email = 't_ua_account_02_user_03@change-tracker.com'),
                                  '35c5df1a-079e-4b8c-87c5-09b30e52a82f',
+                                 (select id from "user" where email = 't_ua_account_02_user_03@change-tracker.com'),
                                  (select id from role where name = 'Developer'),
                                  now()
                                 ) on conflict (product_id, user_id, role_id) do nothing ;

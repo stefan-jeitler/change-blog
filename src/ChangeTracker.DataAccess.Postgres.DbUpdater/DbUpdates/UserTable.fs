@@ -20,8 +20,25 @@ let private createUserSql = """
 let private createLowerEmailIndexSql =
     """CREATE INDEX IF NOT EXISTS user_email_idx ON "user" (lower(email))"""
 
+let private addUserForDefaultVersioningSchemesSql = """
+        insert into "user" (id, email, first_name, last_name, timezone, deleted_at, created_at)
+        values ('a17f556c-14c3-4bc2-bfa7-3c0811fd75b8',
+                'versioning.scheme@change-tracker.com',
+                'versioning',
+                'scheme',
+                'Europe/Berlin',
+                null,
+                now())
+        on conflict (id) do nothing 
+    """
+
 let create (dbConnection: IDbConnection) =
     dbConnection.Execute(createUserSql) |> ignore
 
     dbConnection.Execute(createLowerEmailIndexSql)
     |> ignore
+
+let addUserForDefaultVersioningSchemes (dbConnection: IDbConnection) = 
+    dbConnection.Execute(addUserForDefaultVersioningSchemesSql)
+    |> ignore
+    

@@ -8,6 +8,7 @@ namespace ChangeTracker.Application.Tests.UseCaseTests.Commands.AddChangeLogLine
 {
     public class VersionIdChangeLogLineRequestModelTests
     {
+        private static Guid _testUserId;
         private List<string> _testIssues;
         private List<string> _testLabels;
         private string _testText;
@@ -16,15 +17,14 @@ namespace ChangeTracker.Application.Tests.UseCaseTests.Commands.AddChangeLogLine
         public VersionIdChangeLogLineRequestModelTests()
         {
             _testVersionId = Guid.Parse("079bac32-3092-4620-90d6-6a4b3888664e");
+            _testUserId = Guid.Parse("294c4f04-85d4-4d5b-ae25-e6b618f1676f");
             _testText = "some bug fixes";
             _testLabels = new List<string>(0);
             _testIssues = new List<string>(0);
         }
 
-        private VersionIdChangeLogLineRequestModelRequestModel CreateRequestModel()
-        {
-            return new(_testVersionId, _testText, _testLabels, _testIssues);
-        }
+        private VersionIdChangeLogLineRequestModelRequestModel CreateRequestModel() =>
+            new(_testUserId, _testVersionId, _testText, _testLabels, _testIssues);
 
         [Fact]
         public void Create_HappyPath_Successful()

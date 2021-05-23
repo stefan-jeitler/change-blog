@@ -61,11 +61,13 @@ namespace ChangeTracker.DataAccess.Postgres.DataAccessObjects.Version
             
             var query = $@"
                 select v.id,
-                       v.product_id  as productId,
-                       v.value       as versionValue,
-                       v.released_at as releasedAt,
-                       v.created_at  as createdAt,
-                       v.deleted_at  as deletedAt
+                       v.product_id      as productId,
+                       v.value           as versionValue,
+                       v.name,
+                       v.released_at     as releasedAt,
+                       v.created_by_user as createdByUser,
+                       v.created_at      as createdAt,
+                       v.deleted_at      as deletedAt
                 from version v
                 where v.product_id = @productId
                   {versionPredicates}

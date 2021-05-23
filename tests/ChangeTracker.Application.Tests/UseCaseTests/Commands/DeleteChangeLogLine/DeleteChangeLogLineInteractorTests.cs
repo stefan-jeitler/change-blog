@@ -44,7 +44,7 @@ namespace ChangeTracker.Application.Tests.UseCaseTests.Commands.DeleteChangeLogL
             _outputPortMock.Setup(m => m.LineDeleted(It.IsAny<Guid>()));
 
             _changeLogDaoStub.ChangeLogs.Add(new ChangeLogLine(existingLineId, null, TestAccount.Product.Id,
-                ChangeLogText.Parse("some feature added"), 0, DateTime.Parse("2021-05-13")));
+                ChangeLogText.Parse("some feature added"), 0, TestAccount.UserId, DateTime.Parse("2021-05-13")));
 
             await interactor.ExecuteAsync(_outputPortMock.Object, existingLineId);
 
@@ -59,7 +59,7 @@ namespace ChangeTracker.Application.Tests.UseCaseTests.Commands.DeleteChangeLogL
             _outputPortMock.Setup(m => m.Conflict(It.IsAny<string>()));
 
             _changeLogDaoStub.ChangeLogs.Add(new ChangeLogLine(existingLineId, null, TestAccount.Product.Id,
-                ChangeLogText.Parse("some feature added"), 0, DateTime.Parse("2021-05-13")));
+                ChangeLogText.Parse("some feature added"), 0, TestAccount.UserId, DateTime.Parse("2021-05-13")));
             _changeLogDaoStub.ProduceConflict = true;
 
             await interactor.ExecuteAsync(_outputPortMock.Object, existingLineId);

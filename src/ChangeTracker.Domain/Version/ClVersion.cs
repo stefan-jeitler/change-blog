@@ -1,16 +1,17 @@
 ﻿using System;
+using ChangeTracker.Domain.Common;
 
 namespace ChangeTracker.Domain.Version
 {
     public class ClVersion : IEquatable<ClVersion>
     {
-        public ClVersion(Guid productId, ClVersionValue versionValue, DateTime? releasedAt = null,
+        public ClVersion(Guid productId, ClVersionValue versionValue, OptionalName name, Guid createdByUser, DateTime? releasedAt = null,
             DateTime? deletedAt = null)
-            : this(Guid.NewGuid(), productId, versionValue, releasedAt, DateTime.UtcNow, deletedAt)
+            : this(Guid.NewGuid(), productId, versionValue, name, releasedAt, createdByUser, DateTime.UtcNow, deletedAt)
         {
         }
 
-        public ClVersion(Guid id, Guid productId, ClVersionValue versionValue, DateTime? releasedAt, DateTime createdAt,
+        public ClVersion(Guid id, Guid productId, ClVersionValue versionValue, OptionalName name, DateTime? releasedAt, Guid createdByUser, DateTime createdAt,
             DateTime? deletedAt)
         {
             if (id == Guid.Empty)
@@ -23,12 +24,18 @@ namespace ChangeTracker.Domain.Version
 
             ProductId = productId;
             Value = versionValue ?? throw new ArgumentNullException(nameof(versionValue));
+            Name = name ?? throw new ArgumentNullException(nameof(name));
 
             if (releasedAt.HasValue &&
                 (releasedAt.Value == DateTime.MinValue || releasedAt.Value == DateTime.MaxValue))
                 throw new ArgumentException("Invalid release date.", nameof(releasedAt));
 
             ReleasedAt = releasedAt;
+
+            if (createdByUser == Guid.Empty)
+                throw new ArgumentException("CreatedByUser cannot be empty.");
+
+            CreatedByUser = createdByUser;
 
             if (createdAt == DateTime.MinValue || createdAt == DateTime.MaxValue)
                 throw new ArgumentException("Invalid creation date.");
@@ -42,7 +49,9 @@ namespace ChangeTracker.Domain.Version
         public Guid Id { get; }
         public Guid ProductId { get; }
         public ClVersionValue Value { get; }
+        public OptionalName Name { get; }
         public DateTime? ReleasedAt { get; }
+        public Guid CreatedByUser { get; }
         public DateTime CreatedAt { get; }
         public DateTime? DeletedAt { get; }
 
@@ -67,7 +76,7 @@ namespace ChangeTracker.Domain.Version
         {
             if (IsReleased) throw new InvalidOperationException("An already released version cannot released.");
 
-            return new ClVersion(Id, ProductId, Value, DateTime.UtcNow, CreatedAt, DeletedAt);
+            return new ClVersion(Id, ProductId, Value, Name, DateTime.UtcNow, CreatedByUser, CreatedAt, DeletedAt);
         }
 
         private static void VerifyDeletedAtDate(DateTime? releasedAt, DateTime? deletedAt)
@@ -93,9 +102,6 @@ namespace ChangeTracker.Domain.Version
                    Equals((ClVersion) obj);
         }
 
-        public override int GetHashCode()
-        {
-            return HashCode.Combine(Id, ProductId, Value);
-        }
+        public override int GetHashCode() => HashCode.Combine(Id, ProductId, Value);
     }
 }

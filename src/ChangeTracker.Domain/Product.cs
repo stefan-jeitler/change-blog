@@ -13,12 +13,12 @@ namespace ChangeTracker.Domain
         }
 
         public Product(Guid id, Guid accountId, Name name,
-            Guid versioningSchemeId, Name versioningSchemeName, Text regexPattern, Text description,
-            DateTime versioningSchemeCreatedAt, DateTime? versioningSchemeDeletedAt, Guid createdByUser,
+            Guid vsId, Name vsName, Text vsRegexPattern, Text vsDescription,
+            Guid? vsAccountId, Guid vsCreatedByUser, DateTime? vsDeletedAt, DateTime vsCreatedAt, Guid createdByUser,
             DateTime createdAt, DateTime? closedAt)
             : this(id, accountId, name,
-                new VersioningScheme(versioningSchemeId, versioningSchemeName, regexPattern, accountId, description,
-                    versioningSchemeCreatedAt, versioningSchemeDeletedAt), createdByUser, createdAt, closedAt)
+                new VersioningScheme(vsId, vsName, vsRegexPattern, vsDescription, vsAccountId, vsCreatedByUser,
+                    vsDeletedAt, vsCreatedAt), createdByUser, createdAt, closedAt)
         {
         }
 
@@ -65,9 +65,6 @@ namespace ChangeTracker.Domain
 
         public bool IsClosed => ClosedAt.HasValue;
 
-        public Product Close()
-        {
-            return new(Id, AccountId, Name, VersioningScheme, CreatedByUser, CreatedAt, DateTime.UtcNow);
-        }
+        public Product Close() => new(Id, AccountId, Name, VersioningScheme, CreatedByUser, CreatedAt, DateTime.UtcNow);
     }
 }

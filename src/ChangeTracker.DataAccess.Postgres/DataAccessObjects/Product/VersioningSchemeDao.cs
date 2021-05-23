@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Threading.Tasks;
 using ChangeTracker.Application.DataAccess.Products;
 using ChangeTracker.Domain.Version;
@@ -11,6 +10,18 @@ namespace ChangeTracker.DataAccess.Postgres.DataAccessObjects.Product
 {
     public class VersioningSchemeDao : IVersioningSchemeDao
     {
+        private const string SelectVersioningScheme = @"
+                SELECT id,
+                       name,
+                       regex_pattern   AS regexPattern,
+                       description,
+                       account_id      AS accountId,
+                       created_by_user AS createdByUser,
+                       deleted_at      AS deletedAt,
+                       created_at      AS createdAt
+                FROM versioning_scheme
+                ";
+
         private readonly IDbAccessor _dbAccessor;
 
         public VersioningSchemeDao(IDbAccessor dbAccessor)
@@ -20,15 +31,8 @@ namespace ChangeTracker.DataAccess.Postgres.DataAccessObjects.Product
 
         public async Task<Maybe<VersioningScheme>> FindSchemeAsync(Guid versioningSchemeId)
         {
-            const string findVersioningSchemeSql = @"
-                SELECT id,
-                       name,
-                       regex_pattern AS regexPattern,
-                       account_id    AS accountId,
-                       description,
-                       created_at    AS createdAt,
-                       deleted_at    AS deletedAt
-                FROM versioning_scheme
+            var findVersioningSchemeSql = @$"
+                {SelectVersioningScheme}
                 WHERE id = @versioningSchemeId";
 
             var versioningScheme = await _dbAccessor.DbConnection
@@ -44,15 +48,8 @@ namespace ChangeTracker.DataAccess.Postgres.DataAccessObjects.Product
 
         public async Task<VersioningScheme> GetSchemeAsync(Guid versioningSchemeId)
         {
-            const string getSchemeSql = @"
-                SELECT id,
-                       name,
-                       regex_pattern AS regexPattern,
-                       account_id    AS accountId,
-                       description,
-                       created_at    AS createdAt,
-                       deleted_at    AS deletedAt
-                FROM versioning_scheme vs
+            var getSchemeSql = @$"
+                {SelectVersioningScheme}
                 WHERE id = @schemeId";
 
             return await _dbAccessor.DbConnection
@@ -64,15 +61,8 @@ namespace ChangeTracker.DataAccess.Postgres.DataAccessObjects.Product
 
         public async Task<IList<VersioningScheme>> GetSchemesAsync(IList<Guid> versioningSchemeIds)
         {
-            const string getSchemeSql = @"
-                SELECT id,
-                       name,
-                       regex_pattern AS regexPattern,
-                       account_id    AS accountId,
-                       description,
-                       created_at    AS createdAt,
-                       deleted_at    AS deletedAt
-                FROM versioning_scheme vs
+            var getSchemeSql = $@"
+                {SelectVersioningScheme}
                 WHERE id = ANY(@schemeIds)";
 
             var schemes = await _dbAccessor.DbConnection

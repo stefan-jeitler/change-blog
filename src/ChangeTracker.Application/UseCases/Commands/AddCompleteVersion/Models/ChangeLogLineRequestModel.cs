@@ -11,7 +11,7 @@ namespace ChangeTracker.Application.UseCases.Commands.AddCompleteVersion.Models
             Labels = labels ?? throw new ArgumentNullException(nameof(labels));
             Issues = issues ?? throw new ArgumentNullException(nameof(issues));
         }
-
+        
         public string Text { get; }
         public List<string> Labels { get; }
         public List<string> Issues { get; }

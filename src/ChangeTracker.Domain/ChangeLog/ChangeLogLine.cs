@@ -13,22 +13,23 @@ namespace ChangeTracker.Domain.ChangeLog
         public const int MaxLabels = 5;
 
         public ChangeLogLine(Guid id, Guid? versionId, Guid productId, ChangeLogText text, uint position,
-            DateTime createdAt, DateTime? deletedAt = null)
+            Guid createdByUser, DateTime createdAt, DateTime? deletedAt = null)
             : this(id, versionId, productId, text, position, createdAt, Enumerable.Empty<Label>(),
-                Enumerable.Empty<Issue>(),
-                deletedAt)
+                Enumerable.Empty<Issue>(), createdByUser, deletedAt)
         {
         }
 
         // Dapper constructor
         public ChangeLogLine(Guid id, Guid? versionId, Guid productId, ChangeLogText text, int position,
-            DateTime createdAt, IEnumerable<Label> labels, IEnumerable<Issue> issues, DateTime? deletedAt = null)
-            : this(id, versionId, productId, text, (uint) position, createdAt, labels, issues, deletedAt)
+            DateTime createdAt, IEnumerable<Label> labels, IEnumerable<Issue> issues, Guid createdByUser,
+            DateTime? deletedAt = null)
+            : this(id, versionId, productId, text, (uint) position, createdAt, labels, issues, createdByUser, deletedAt)
         {
         }
 
         public ChangeLogLine(Guid id, Guid? versionId, Guid productId, ChangeLogText text, uint position,
-            DateTime createdAt, IEnumerable<Label> labels, IEnumerable<Issue> issues, DateTime? deletedAt = null)
+            DateTime createdAt, IEnumerable<Label> labels, IEnumerable<Issue> issues, Guid createdByUser,
+            DateTime? deletedAt = null)
         {
             if (id == Guid.Empty)
                 throw new ArgumentException("Id must not be empty", nameof(id));
@@ -49,6 +50,11 @@ namespace ChangeTracker.Domain.ChangeLog
             Labels = Populate(labels ?? throw new ArgumentNullException(nameof(labels)), MaxLabels);
             Issues = Populate(issues ?? throw new ArgumentNullException(nameof(issues)), MaxIssues);
 
+            if (createdByUser == Guid.Empty)
+                throw new ArgumentException("CreatedByUser cannot be empty.");
+
+            CreatedByUser = createdByUser;
+
             if (createdAt == DateTime.MinValue || createdAt == DateTime.MaxValue)
                 throw new ArgumentException("Invalid creation date", nameof(createdAt));
 
@@ -60,8 +66,8 @@ namespace ChangeTracker.Domain.ChangeLog
             DeletedAt = deletedAt;
         }
 
-        public ChangeLogLine(Guid? versionId, Guid productId, ChangeLogText text, uint position)
-            : this(Guid.NewGuid(), versionId, productId, text, position, DateTime.UtcNow)
+        public ChangeLogLine(Guid? versionId, Guid productId, ChangeLogText text, uint position, Guid createdByUser)
+            : this(Guid.NewGuid(), versionId, productId, text, position, createdByUser, DateTime.UtcNow)
         {
         }
 
@@ -72,6 +78,7 @@ namespace ChangeTracker.Domain.ChangeLog
         public uint Position { get; }
         public IImmutableSet<Label> Labels { get; private set; }
         public IImmutableSet<Issue> Issues { get; private set; }
+        public Guid CreatedByUser { get; }
         public DateTime CreatedAt { get; }
         public DateTime? DeletedAt { get; }
 
@@ -135,13 +142,12 @@ namespace ChangeTracker.Domain.ChangeLog
             if (versionId == Guid.Empty)
                 throw new ArgumentException("VersionId cannot be empty.");
 
-            return new ChangeLogLine(Id, versionId, ProductId, Text, position, CreatedAt, Labels, Issues, DeletedAt);
+            return new ChangeLogLine(Id, versionId, ProductId, Text, position, CreatedAt, Labels, Issues, CreatedByUser,
+                DeletedAt);
         }
 
-        public ChangeLogLine Delete()
-        {
-            return new(Id, VersionId, ProductId, Text, Position, CreatedAt, DateTime.UtcNow);
-        }
+        public ChangeLogLine Delete() => new(Id, VersionId, ProductId, Text, Position, CreatedAt, Labels, Issues,
+            CreatedByUser, DateTime.UtcNow);
 
         private static ImmutableHashSet<T> Populate<T>(IEnumerable<T> items, ushort maxCount)
         {

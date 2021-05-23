@@ -8,6 +8,7 @@ using ChangeTracker.Application.UseCases.Commands.AddChangeLogLine;
 using ChangeTracker.Application.UseCases.Commands.AddChangeLogLine.Models;
 using ChangeTracker.Domain;
 using ChangeTracker.Domain.ChangeLog;
+using ChangeTracker.Domain.Common;
 using ChangeTracker.Domain.Version;
 using FluentAssertions;
 using Moq;
@@ -32,11 +33,9 @@ namespace ChangeTracker.Application.Tests.UseCaseTests.Commands.AddChangeLogLine
             _unitOfWorkMock = new Mock<IUnitOfWork>();
         }
 
-        private AddChangeLogLineInteractor CreateInteractor()
-        {
-            return new(_changeLogDaoStub, _changeLogDaoStub,
+        private AddChangeLogLineInteractor CreateInteractor() =>
+            new(_changeLogDaoStub, _changeLogDaoStub,
                 _unitOfWorkMock.Object, _versionDaoStub);
-        }
 
         [Fact]
         public async Task AddChangeLogLine_InvalidVersion_InvalidVersionFormatOutput()
@@ -46,7 +45,8 @@ namespace ChangeTracker.Application.Tests.UseCaseTests.Commands.AddChangeLogLine
             var labels = new List<string> {"Bugfix", "ProxyIssue"};
             var issues = new List<string> {"#1234", "#12345"};
             var changeLogLineRequestModel =
-                new VersionChangeLogLineRequestModelRequestModel(TestAccount.Product.Id, "1. .3", changeLogLine, labels,
+                new VersionChangeLogLineRequestModelRequestModel(TestAccount.UserId, TestAccount.Product.Id, "1. .3",
+                    changeLogLine, labels,
                     issues);
 
             _productDaoStub.Products.Add(new Product(TestAccount.Product.Id, TestAccount.Id, TestAccount.Product.Name,
@@ -71,13 +71,15 @@ namespace ChangeTracker.Application.Tests.UseCaseTests.Commands.AddChangeLogLine
             var labels = new List<string> {"Bugfix", "ProxyIssue"};
             var issues = new List<string> {"#1234", "#12345"};
             var changeLogLineRequestModel =
-                new VersionChangeLogLineRequestModelRequestModel(TestAccount.Product.Id, "1.2", changeLogLine, labels,
+                new VersionChangeLogLineRequestModelRequestModel(TestAccount.UserId, TestAccount.Product.Id, "1.2",
+                    changeLogLine, labels,
                     issues);
 
             _productDaoStub.Products.Add(new Product(TestAccount.Product.Id, TestAccount.Id, TestAccount.Product.Name,
                 TestAccount.CustomVersioningScheme, TestAccount.UserId, TestAccount.CreationDate, null));
 
-            var version = new ClVersion(TestAccount.Product.Id, ClVersionValue.Parse("1.2"));
+            var version = new ClVersion(TestAccount.Product.Id, ClVersionValue.Parse("1.2"), OptionalName.Empty,
+                TestAccount.UserId);
             _versionDaoStub.Versions.Add(version);
 
             _changeLogDaoStub.ProduceConflict = true;
@@ -102,17 +104,19 @@ namespace ChangeTracker.Application.Tests.UseCaseTests.Commands.AddChangeLogLine
             var labels = new List<string> {"Bugfix", "ProxyIssue"};
             var issues = new List<string> {"#1234", "#12345"};
             var changeLogLineRequestModel =
-                new VersionChangeLogLineRequestModelRequestModel(TestAccount.Product.Id, "1.2", changeLogLine, labels,
+                new VersionChangeLogLineRequestModelRequestModel(TestAccount.UserId, TestAccount.Product.Id, "1.2",
+                    changeLogLine, labels,
                     issues);
 
             _productDaoStub.Products.Add(new Product(TestAccount.Product.Id, TestAccount.Id, TestAccount.Product.Name,
                 TestAccount.CustomVersioningScheme, TestAccount.UserId, TestAccount.CreationDate, null));
 
-            var version = new ClVersion(TestAccount.Product.Id, ClVersionValue.Parse("1.2"));
+            var version = new ClVersion(TestAccount.Product.Id, ClVersionValue.Parse("1.2"), OptionalName.Empty,
+                TestAccount.UserId);
             _versionDaoStub.Versions.Add(version);
 
             var existingLine = new ChangeLogLine(version.Id, TestAccount.Product.Id,
-                ChangeLogText.Parse(changeLogLine), 0);
+                ChangeLogText.Parse(changeLogLine), 0, TestAccount.UserId);
             _changeLogDaoStub.ChangeLogs.Add(existingLine);
 
             var addLineInteractor = CreateInteractor();
@@ -135,7 +139,8 @@ namespace ChangeTracker.Application.Tests.UseCaseTests.Commands.AddChangeLogLine
             var labels = new List<string> {"Bugfix", "ProxyIssue"};
             var issues = new List<string> {"#1234", "#12345"};
             var changeLogLineRequestModel =
-                new VersionChangeLogLineRequestModelRequestModel(TestAccount.Product.Id, "1.2", changeLogLine, labels,
+                new VersionChangeLogLineRequestModelRequestModel(TestAccount.UserId, TestAccount.Product.Id, "1.2",
+                    changeLogLine, labels,
                     issues);
 
             _productDaoStub.Products.Add(new Product(TestAccount.Product.Id, TestAccount.Id, TestAccount.Product.Name,
@@ -161,7 +166,8 @@ namespace ChangeTracker.Application.Tests.UseCaseTests.Commands.AddChangeLogLine
             var issues = new List<string> {"#1234", "#12345"};
             var notExistingVersionId = Guid.Parse("e2eeaad4-dc62-4bb5-8581-f3bf1702255a");
             var changeLogLineRequestModel =
-                new VersionIdChangeLogLineRequestModelRequestModel(notExistingVersionId, changeLogLine, labels, issues);
+                new VersionIdChangeLogLineRequestModelRequestModel(TestAccount.UserId, notExistingVersionId,
+                    changeLogLine, labels, issues);
 
             _productDaoStub.Products.Add(new Product(TestAccount.Product.Id, TestAccount.Id, TestAccount.Product.Name,
                 TestAccount.CustomVersioningScheme, TestAccount.UserId, TestAccount.CreationDate, null));
@@ -187,7 +193,8 @@ namespace ChangeTracker.Application.Tests.UseCaseTests.Commands.AddChangeLogLine
             var issues = new List<string> {"#1234", "#12345"};
             var versionId = Guid.Parse("1d7831d5-32fb-437f-a9d5-bf5a7dd34b10");
             var changeLogLineRequestModel =
-                new VersionIdChangeLogLineRequestModelRequestModel(versionId, changeLogLine, labels, issues);
+                new VersionIdChangeLogLineRequestModelRequestModel(TestAccount.UserId, versionId, changeLogLine, labels,
+                    issues);
 
             _productDaoStub.Products.Add(new Product(TestAccount.Product.Id, TestAccount.Id, TestAccount.Product.Name,
                 TestAccount.CustomVersioningScheme, TestAccount.UserId, TestAccount.CreationDate, null));
@@ -195,7 +202,9 @@ namespace ChangeTracker.Application.Tests.UseCaseTests.Commands.AddChangeLogLine
             var version = new ClVersion(versionId,
                 TestAccount.Product.Id,
                 ClVersionValue.Parse("1.2"),
+                OptionalName.Empty,
                 null,
+                TestAccount.UserId,
                 DateTime.Parse("2021-04-09"),
                 null);
             _versionDaoStub.Versions.Add(version);
@@ -224,7 +233,8 @@ namespace ChangeTracker.Application.Tests.UseCaseTests.Commands.AddChangeLogLine
             var labels = new List<string> {"Bugfix", "ProxyIssue"};
             var issues = new List<string> {"#1234", "#12345"};
             var changeLogLineRequestModel =
-                new VersionChangeLogLineRequestModelRequestModel(TestAccount.Product.Id, "1.2", changeLogLine, labels,
+                new VersionChangeLogLineRequestModelRequestModel(TestAccount.UserId, TestAccount.Product.Id, "1.2",
+                    changeLogLine, labels,
                     issues);
 
             _productDaoStub.Products.Add(new Product(TestAccount.Product.Id, TestAccount.Id, TestAccount.Product.Name,
@@ -234,7 +244,9 @@ namespace ChangeTracker.Application.Tests.UseCaseTests.Commands.AddChangeLogLine
             var version = new ClVersion(versionId,
                 TestAccount.Product.Id,
                 ClVersionValue.Parse("1.2"),
+                OptionalName.Empty,
                 null,
+                TestAccount.UserId,
                 DateTime.Parse("2021-04-09"),
                 null);
             _versionDaoStub.Versions.Add(version);
@@ -262,7 +274,8 @@ namespace ChangeTracker.Application.Tests.UseCaseTests.Commands.AddChangeLogLine
             var labels = new List<string> {"Bugfix", "ProxyIssue"};
             var issues = new List<string> {"#1234", "#12345"};
             var changeLogLineRequestModel =
-                new VersionChangeLogLineRequestModelRequestModel(TestAccount.Product.Id, "1.2", changeLogLine, labels,
+                new VersionChangeLogLineRequestModelRequestModel(TestAccount.UserId, TestAccount.Product.Id, "1.2",
+                    changeLogLine, labels,
                     issues);
 
             _productDaoStub.Products.Add(new Product(TestAccount.Product.Id, TestAccount.Id, TestAccount.Product.Name,
@@ -270,12 +283,14 @@ namespace ChangeTracker.Application.Tests.UseCaseTests.Commands.AddChangeLogLine
 
             var versionId = Guid.Parse("1d7831d5-32fb-437f-a9d5-bf5a7dd34b10");
             var version = new ClVersion(versionId,
-                TestAccount.Product.Id, ClVersionValue.Parse("1.2"), null, DateTime.Parse("2021-04-09"), null);
+                TestAccount.Product.Id, ClVersionValue.Parse("1.2"), OptionalName.Empty, null, TestAccount.UserId,
+                DateTime.Parse("2021-04-09"), null);
             _versionDaoStub.Versions.Add(version);
 
             _changeLogDaoStub.ChangeLogs.AddRange(Enumerable.Range(0, 100)
                 .Select(x =>
-                    new ChangeLogLine(versionId, TestAccount.Product.Id, ChangeLogText.Parse($"{x:D5}"), (uint) x)));
+                    new ChangeLogLine(versionId, TestAccount.Product.Id, ChangeLogText.Parse($"{x:D5}"), (uint) x,
+                        TestAccount.UserId)));
 
             var addLineInteractor = CreateInteractor();
             _outputPortMock.Setup(m => m.TooManyLines(It.IsAny<int>()));
@@ -296,7 +311,8 @@ namespace ChangeTracker.Application.Tests.UseCaseTests.Commands.AddChangeLogLine
             var labels = new List<string> {"Bugfix"};
             var issues = new List<string> {"#1234", "#12345"};
             var changeLogLineRequestModel =
-                new VersionChangeLogLineRequestModelRequestModel(TestAccount.Product.Id, "1.2", changeLogLine, labels,
+                new VersionChangeLogLineRequestModelRequestModel(TestAccount.UserId, TestAccount.Product.Id, "1.2",
+                    changeLogLine, labels,
                     issues);
 
             _productDaoStub.Products.Add(new Product(TestAccount.Product.Id, TestAccount.Id, TestAccount.Product.Name,
@@ -306,7 +322,9 @@ namespace ChangeTracker.Application.Tests.UseCaseTests.Commands.AddChangeLogLine
             var version = new ClVersion(versionId,
                 TestAccount.Product.Id,
                 ClVersionValue.Parse("1.2"),
+                OptionalName.Empty,
                 null,
+                TestAccount.UserId,
                 DateTime.Parse("2021-04-09"),
                 null);
             _versionDaoStub.Versions.Add(version);

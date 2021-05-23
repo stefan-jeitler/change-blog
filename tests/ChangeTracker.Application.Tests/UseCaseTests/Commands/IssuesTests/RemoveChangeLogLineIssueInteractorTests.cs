@@ -41,7 +41,7 @@ namespace ChangeTracker.Application.Tests.UseCaseTests.Commands.IssuesTests
             var removeIssueInteractor = CreateInteractor();
 
             var line = new ChangeLogLine(lineId, null, TestAccount.Product.Id, ChangeLogText.Parse("some valid text"),
-                0U, DateTime.Parse("2021-04-19"), Array.Empty<Label>(), new List<Issue>(1) {issue});
+                0U, DateTime.Parse("2021-04-19"), Array.Empty<Label>(), new List<Issue>(1) {issue}, TestAccount.UserId);
             _changeLogDaoStub.ChangeLogs.Add(line);
 
             _outputPortMock.Setup(m => m.Removed(It.IsAny<Guid>()));
@@ -66,7 +66,7 @@ namespace ChangeTracker.Application.Tests.UseCaseTests.Commands.IssuesTests
             var removeIssueInteractor = CreateInteractor();
 
             var line = new ChangeLogLine(lineId, null, TestAccount.Product.Id, ChangeLogText.Parse("some valid text"),
-                0U, DateTime.Parse("2021-04-19"), Array.Empty<Label>(), new List<Issue>(1) {issue});
+                0U, DateTime.Parse("2021-04-19"), Array.Empty<Label>(), new List<Issue>(1) {issue}, TestAccount.UserId);
             _changeLogDaoStub.ChangeLogs.Add(line);
             _changeLogDaoStub.ProduceConflict = true;
 

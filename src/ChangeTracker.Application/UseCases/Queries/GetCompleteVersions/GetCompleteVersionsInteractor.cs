@@ -87,6 +87,7 @@ namespace ChangeTracker.Application.UseCases.Queries.GetCompleteVersions
         {
             return new(clVersion.Id,
                 clVersion.Value.Value,
+                clVersion.Name.Value,
                 clVersion.ProductId,
                 product.Name,
                 product.AccountId,

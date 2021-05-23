@@ -7,6 +7,7 @@ using ChangeTracker.Application.DataAccess;
 using ChangeTracker.Application.Tests.TestDoubles;
 using ChangeTracker.Application.UseCases.Commands.MakeAllChangeLogLinesPending;
 using ChangeTracker.Domain.ChangeLog;
+using ChangeTracker.Domain.Common;
 using ChangeTracker.Domain.Version;
 using FluentAssertions;
 using Moq;
@@ -29,10 +30,8 @@ namespace ChangeTracker.Application.Tests.UseCaseTests.Commands.MakeAllChangeLog
             _changeLogDaoStub = new ChangeLogDaoStub();
         }
 
-        private MakeAllChangeLogLinesPendingInteractor CreateInteractor()
-        {
-            return new(_versionDaoStub, _changeLogDaoStub, _changeLogDaoStub, _unitOfWorkMock.Object);
-        }
+        private MakeAllChangeLogLinesPendingInteractor CreateInteractor() => new(_versionDaoStub, _changeLogDaoStub,
+            _changeLogDaoStub, _unitOfWorkMock.Object);
 
         [Fact]
         public void MakeAllLinesPending_EmptyVersionId_ArgumentException()
@@ -116,7 +115,8 @@ namespace ChangeTracker.Application.Tests.UseCaseTests.Commands.MakeAllChangeLog
             // arrange
             var makeAllLinesPendingInteractor = CreateInteractor();
 
-            var clVersion = new ClVersion(TestAccount.Product.Id, ClVersionValue.Parse("1.2.3"),
+            var clVersion = new ClVersion(TestAccount.Product.Id, ClVersionValue.Parse("1.2.3"), OptionalName.Empty,
+                TestAccount.UserId,
                 DateTime.Parse("2021-04-24"));
 
             _versionDaoStub.Versions.Add(clVersion);
@@ -136,7 +136,8 @@ namespace ChangeTracker.Application.Tests.UseCaseTests.Commands.MakeAllChangeLog
             var makeAllLinesPendingInteractor = CreateInteractor();
 
             var clVersion = new ClVersion(Guid.NewGuid(), TestAccount.Product.Id, ClVersionValue.Parse("1.2.3"),
-                null, DateTime.Parse("2021-04-24"), DateTime.Parse("2021-04-24"));
+                OptionalName.Empty,
+                null, TestAccount.UserId, DateTime.Parse("2021-04-24"), DateTime.Parse("2021-04-24"));
 
             _versionDaoStub.Versions.Add(clVersion);
             _outputPortMock.Setup(m => m.VersionClosed());
@@ -155,13 +156,16 @@ namespace ChangeTracker.Application.Tests.UseCaseTests.Commands.MakeAllChangeLog
             var makeAllLinesPendingInteractor = CreateInteractor();
 
             var clVersion = new ClVersion(Guid.NewGuid(), TestAccount.Product.Id, ClVersionValue.Parse("1.2.3"),
-                null, DateTime.Parse("2021-04-24"), null);
+                OptionalName.Empty,
+                null, TestAccount.UserId, DateTime.Parse("2021-04-24"), null);
 
             var versionLine =
-                new ChangeLogLine(clVersion.Id, TestAccount.Product.Id, ChangeLogText.Parse("some text"), 0);
+                new ChangeLogLine(clVersion.Id, TestAccount.Product.Id, ChangeLogText.Parse("some text"), 0,
+                    TestAccount.UserId);
             _changeLogDaoStub.ChangeLogs.Add(versionLine);
             var pendingLines = Enumerable.Range(0, 100)
-                .Select(x => new ChangeLogLine(null, TestAccount.Product.Id, ChangeLogText.Parse($"{x:D5}"), (uint) x));
+                .Select(x => new ChangeLogLine(null, TestAccount.Product.Id, ChangeLogText.Parse($"{x:D5}"), (uint) x,
+                    TestAccount.UserId));
             _changeLogDaoStub.ChangeLogs.AddRange(pendingLines);
 
             _versionDaoStub.Versions.Add(clVersion);
@@ -183,14 +187,18 @@ namespace ChangeTracker.Application.Tests.UseCaseTests.Commands.MakeAllChangeLog
             var makeAllLinesPendingInteractor = CreateInteractor();
 
             var clVersion = new ClVersion(Guid.NewGuid(), TestAccount.Product.Id, ClVersionValue.Parse("1.2.3"),
-                null, DateTime.Parse("2021-04-24"), null);
+                OptionalName.Empty,
+                null, TestAccount.UserId, DateTime.Parse("2021-04-24"), null);
 
-            var versionLine1 = new ChangeLogLine(clVersion.Id, TestAccount.Product.Id, ChangeLogText.Parse("00000"), 0);
-            var versionLine2 = new ChangeLogLine(clVersion.Id, TestAccount.Product.Id, ChangeLogText.Parse("00001"), 0);
+            var versionLine1 = new ChangeLogLine(clVersion.Id, TestAccount.Product.Id, ChangeLogText.Parse("00000"), 0,
+                TestAccount.UserId);
+            var versionLine2 = new ChangeLogLine(clVersion.Id, TestAccount.Product.Id, ChangeLogText.Parse("00001"), 0,
+                TestAccount.UserId);
             _changeLogDaoStub.ChangeLogs.Add(versionLine1);
             _changeLogDaoStub.ChangeLogs.Add(versionLine2);
             var pendingLines = Enumerable.Range(0, 98)
-                .Select(x => new ChangeLogLine(null, TestAccount.Product.Id, ChangeLogText.Parse($"{x:D5}"), (uint) x));
+                .Select(x => new ChangeLogLine(null, TestAccount.Product.Id, ChangeLogText.Parse($"{x:D5}"), (uint) x,
+                    TestAccount.UserId));
             _changeLogDaoStub.ChangeLogs.AddRange(pendingLines);
 
             _versionDaoStub.Versions.Add(clVersion);
@@ -212,10 +220,12 @@ namespace ChangeTracker.Application.Tests.UseCaseTests.Commands.MakeAllChangeLog
             // arrange
             var makeAllLinesPendingInteractor = CreateInteractor();
 
-            var clVersion = new ClVersion(TestAccount.Product.Id, ClVersionValue.Parse("1.2.3"));
+            var clVersion = new ClVersion(TestAccount.Product.Id, ClVersionValue.Parse("1.2.3"), OptionalName.Empty,
+                TestAccount.UserId);
 
             var versionLine1 =
-                new ChangeLogLine(clVersion.Id, TestAccount.Product.Id, ChangeLogText.Parse("some text"), 0);
+                new ChangeLogLine(clVersion.Id, TestAccount.Product.Id, ChangeLogText.Parse("some text"), 0,
+                    TestAccount.UserId);
             _changeLogDaoStub.ChangeLogs.Add(versionLine1);
             _changeLogDaoStub.ProduceConflict = true;
             _versionDaoStub.Versions.Add(clVersion);
@@ -234,10 +244,12 @@ namespace ChangeTracker.Application.Tests.UseCaseTests.Commands.MakeAllChangeLog
             // arrange
             var makeAllLinesPendingInteractor = CreateInteractor();
 
-            var clVersion = new ClVersion(TestAccount.Product.Id, ClVersionValue.Parse("1.2.3"));
+            var clVersion = new ClVersion(TestAccount.Product.Id, ClVersionValue.Parse("1.2.3"), OptionalName.Empty,
+                TestAccount.UserId);
 
             var versionLine =
-                new ChangeLogLine(clVersion.Id, TestAccount.Product.Id, ChangeLogText.Parse("some text"), 0);
+                new ChangeLogLine(clVersion.Id, TestAccount.Product.Id, ChangeLogText.Parse("some text"), 0,
+                    TestAccount.UserId);
             _changeLogDaoStub.ChangeLogs.Add(versionLine);
             _versionDaoStub.Versions.Add(clVersion);
             _outputPortMock.Setup(m => m.MadePending(It.IsAny<int>()));

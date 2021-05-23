@@ -18,6 +18,7 @@ namespace ChangeTracker.Domain.Tests.ChangeLogTests
         private Guid _testId;
         private Guid _testProductId;
         private ChangeLogText _testText;
+        private static Guid _testUserId;
         private Guid? _testVersionId;
 
         public ChangeLogLineTests()
@@ -29,13 +30,13 @@ namespace ChangeTracker.Domain.Tests.ChangeLogTests
             _testVersionId = Guid.Parse("66845d0a-45bc-4834-96d0-b48c2c403628");
             _testProductId = Guid.Parse("ef5656e5-15f0-418d-b3a4-b69f1c3abac5");
             _testText = ChangeLogText.Parse("New feature added");
+            _testUserId = Guid.Parse("294c4f04-85d4-4d5b-ae25-e6b618f1676f");
             _testCreationDate = DateTime.Parse("2021-04-02T18:28");
             _testDeletionDate = null;
         }
 
-        private ChangeLogLine CreateChangeLogLine()
-        {
-            return new(_testId,
+        private ChangeLogLine CreateChangeLogLine() =>
+            new(_testId,
                 _testVersionId,
                 _testProductId,
                 _testText,
@@ -43,8 +44,8 @@ namespace ChangeTracker.Domain.Tests.ChangeLogTests
                 _testCreationDate,
                 _testLabels,
                 _testIssues,
+                _testUserId,
                 _testDeletionDate);
-        }
 
         [Fact]
         public void Create_WithValidArguments_Successful()
@@ -65,7 +66,7 @@ namespace ChangeTracker.Domain.Tests.ChangeLogTests
         [Fact]
         public void Create_WithOverloadedConstructor_IdIsGenerated()
         {
-            var line = new ChangeLogLine(_testVersionId, _testProductId, _testText, _testPosition);
+            var line = new ChangeLogLine(_testVersionId, _testProductId, _testText, _testPosition, _testUserId);
 
             line.Id.Should().NotBe(Guid.Empty);
         }
@@ -84,7 +85,7 @@ namespace ChangeTracker.Domain.Tests.ChangeLogTests
         [Fact]
         public void Create_WithOverloadedConstructor_IdAndCreatedAtDatetimeGenerated()
         {
-            var line = new ChangeLogLine(_testVersionId, _testProductId, _testText, _testPosition);
+            var line = new ChangeLogLine(_testVersionId, _testProductId, _testText, _testPosition, _testUserId);
 
             line.Id.Should().NotBe(Guid.Empty);
             line.CreatedAt.Should().BeAfter(DateTime.UtcNow.AddMinutes(-1));

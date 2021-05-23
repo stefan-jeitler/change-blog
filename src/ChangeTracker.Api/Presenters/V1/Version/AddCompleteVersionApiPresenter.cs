@@ -93,5 +93,10 @@ namespace ChangeTracker.Api.Presenters.V1.Version
         {
             Response = new UnprocessableEntityObjectResult(DefaultResponse.Create($"Lines with the same texts are not allowed. Duplicates: {duplicates}"));
         }
+
+        public void InvalidVersionName(string versionName)
+        {
+            Response = new UnprocessableEntityObjectResult(DefaultResponse.Create($"The name of the version is invalid. Name {versionName}"));
+        }
     }
 }

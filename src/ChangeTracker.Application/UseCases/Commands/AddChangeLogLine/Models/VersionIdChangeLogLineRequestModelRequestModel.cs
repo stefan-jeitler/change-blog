@@ -5,11 +5,16 @@ namespace ChangeTracker.Application.UseCases.Commands.AddChangeLogLine.Models
 {
     public class VersionIdChangeLogLineRequestModelRequestModel : IChangeLogLineRequestModel
     {
-        public VersionIdChangeLogLineRequestModelRequestModel(Guid versionId,
+        public VersionIdChangeLogLineRequestModelRequestModel(Guid userId, Guid versionId,
             string text,
             List<string> labels,
             List<string> issues)
         {
+            if (userId == Guid.Empty)
+                throw new ArgumentException("UserId cannot be empty.");
+
+            UserId = userId;
+
             if (versionId == Guid.Empty)
                 throw new ArgumentException("VersionId cannot be empty.");
 
@@ -19,6 +24,7 @@ namespace ChangeTracker.Application.UseCases.Commands.AddChangeLogLine.Models
             Issues = issues ?? throw new ArgumentNullException(nameof(issues));
         }
 
+        public Guid UserId { get; }
         public Guid VersionId { get; }
         public string Text { get; }
         public List<string> Labels { get; }

@@ -39,7 +39,7 @@ namespace ChangeTracker.Application.Tests.UseCaseTests.Commands.UpdateChangeLogL
 
             _changeLogDaoStub.ChangeLogs.Add(new ChangeLogLine(lineId, null, TestAccount.Product.Id,
                 ChangeLogText.Parse("some feature added"), 0, DateTime.Parse("2021-04-17"), Array.Empty<Label>(),
-                Array.Empty<Issue>()));
+                Array.Empty<Issue>(), TestAccount.UserId));
 
             _outputPortMock.Setup(m => m.Updated(It.IsAny<Guid>()));
             _unitOfWorkMock.Setup(m => m.Start());
@@ -66,7 +66,7 @@ namespace ChangeTracker.Application.Tests.UseCaseTests.Commands.UpdateChangeLogL
 
             _changeLogDaoStub.ChangeLogs.Add(new ChangeLogLine(lineId, null, TestAccount.Product.Id,
                 ChangeLogText.Parse("some feature added"), 0, DateTime.Parse("2021-04-17"), Array.Empty<Label>(),
-                Array.Empty<Issue>()));
+                Array.Empty<Issue>(), TestAccount.UserId));
 
             _changeLogDaoStub.ProduceConflict = true;
 
@@ -91,9 +91,9 @@ namespace ChangeTracker.Application.Tests.UseCaseTests.Commands.UpdateChangeLogL
 
             _changeLogDaoStub.ChangeLogs.Add(new ChangeLogLine(lineId, null, TestAccount.Product.Id,
                 ChangeLogText.Parse("some feature added"), 0, DateTime.Parse("2021-04-17"), Array.Empty<Label>(),
-                Array.Empty<Issue>()));
+                Array.Empty<Issue>(), TestAccount.UserId));
             _changeLogDaoStub.ChangeLogs.Add(new ChangeLogLine(null, TestAccount.Product.Id,
-                ChangeLogText.Parse("feature added"), 0));
+                ChangeLogText.Parse("feature added"), 0, TestAccount.UserId));
 
             _outputPortMock.Setup(m => m.LineWithSameTextAlreadyExists(It.IsAny<string>()));
 

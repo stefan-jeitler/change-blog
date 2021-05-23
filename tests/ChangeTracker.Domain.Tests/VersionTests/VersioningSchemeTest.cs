@@ -1,5 +1,6 @@
 ﻿using System;
 using ChangeTracker.Domain.Common;
+using ChangeTracker.Domain.Tests.TestDoubles;
 using ChangeTracker.Domain.Version;
 using FluentAssertions;
 using Xunit;
@@ -27,11 +28,9 @@ namespace ChangeTracker.Domain.Tests.VersionTests
             _testDeletionDate = null;
         }
 
-        private VersioningScheme CreateScheme()
-        {
-            return new(_testId, _testName, _testRegexPatter,
-                _testAccountId, _testDescription, _testCreationDate, _testDeletionDate);
-        }
+        private VersioningScheme CreateScheme() =>
+            new(_testId, _testName, _testRegexPatter,
+                _testDescription, _testAccountId, TestAccount.UserId, _testDeletionDate, _testCreationDate);
 
         [Fact]
         public void Create_WithValidArguments_Successful()

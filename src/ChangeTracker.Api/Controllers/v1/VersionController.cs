@@ -35,8 +35,9 @@ namespace ChangeTracker.Api.Controllers.v1
                         x.Issues ?? new List<string>(0)))
                 .ToList();
 
-            var requestModel = new CompleteVersionRequestModel(completeVersionDto.ProductId,
-                completeVersionDto.Version, lines, completeVersionDto.ReleaseImmediately);
+            var userId = HttpContext.GetUserId();
+            var requestModel = new CompleteVersionRequestModel(userId, completeVersionDto.ProductId,
+                completeVersionDto.Version, completeVersionDto.Name, lines, completeVersionDto.ReleaseImmediately);
 
             var presenter = new AddCompleteVersionApiPresenter(HttpContext);
             await addCompleteVersion.ExecuteAsync(presenter, requestModel);

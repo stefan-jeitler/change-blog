@@ -1,4 +1,5 @@
 ﻿using System;
+using ChangeTracker.Domain.Common;
 using ChangeTracker.Domain.Version;
 using FluentAssertions;
 using Xunit;
@@ -11,6 +12,8 @@ namespace ChangeTracker.Domain.Tests.VersionTests
         private DateTime? _testDeletedDate;
         private Guid _testId;
         private Guid _testProductId;
+        private static Guid _testUserId;
+        private OptionalName _testName;
         private DateTime? _testReleaseDate;
         private ClVersionValue _testVersionValue;
 
@@ -19,16 +22,16 @@ namespace ChangeTracker.Domain.Tests.VersionTests
             _testVersionValue = ClVersionValue.Parse("1.2.3-dev.0");
             _testId = Guid.Parse("4eaa1f8e-46d4-4cdd-92d4-6a2fe6f5ac10");
             _testProductId = Guid.Parse("d816fb67-f2c3-4d2a-8713-f93a432fbf41");
+            _testUserId = Guid.Parse("294c4f04-85d4-4d5b-ae25-e6b618f1676f");
             _testReleaseDate = DateTime.Parse("2021-04-02T19:30");
             _testCreationDate = DateTime.Parse("2021-04-02T17:30");
+            _testName = OptionalName.Empty;
             _testDeletedDate = null;
         }
 
-        private ClVersion CreateVersion()
-        {
-            return new(_testId, _testProductId, _testVersionValue, _testReleaseDate,
-                _testCreationDate, _testDeletedDate);
-        }
+        private ClVersion CreateVersion() =>
+            new(_testId, _testProductId, _testVersionValue, _testName,
+                _testReleaseDate, _testUserId, _testCreationDate, _testDeletedDate);
 
         [Fact]
         public void Create_WithValidArguments_Successful()

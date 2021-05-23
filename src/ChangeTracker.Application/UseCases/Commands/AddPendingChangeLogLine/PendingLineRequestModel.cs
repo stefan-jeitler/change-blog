@@ -5,8 +5,13 @@ namespace ChangeTracker.Application.UseCases.Commands.AddPendingChangeLogLine
 {
     public class PendingLineRequestModel
     {
-        public PendingLineRequestModel(Guid productId, string text, List<string> labels, List<string> issues)
+        public PendingLineRequestModel(Guid userId, Guid productId, string text, List<string> labels, List<string> issues)
         {
+            if (userId == Guid.Empty)
+                throw new ArgumentException("UserId cannot be empty.");
+
+            UserId = userId;
+
             if (productId == Guid.Empty)
                 throw new ArgumentException("ProductId cannot be empty.");
 
@@ -16,6 +21,7 @@ namespace ChangeTracker.Application.UseCases.Commands.AddPendingChangeLogLine
             Issues = issues ?? throw new ArgumentNullException(nameof(issues));
         }
 
+        public Guid UserId { get; }
         public Guid ProductId { get; }
         public string Text { get; }
         public List<string> Labels { get; }

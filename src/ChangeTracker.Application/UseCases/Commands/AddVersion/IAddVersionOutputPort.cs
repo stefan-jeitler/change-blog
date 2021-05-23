@@ -11,5 +11,6 @@ namespace ChangeTracker.Application.UseCases.Commands.AddVersion
         void Conflict(string reason);
         void VersionAlreadyExists(string version);
         void ProductClosed();
+        void InvalidVersionName(string versionName);
     }
 }

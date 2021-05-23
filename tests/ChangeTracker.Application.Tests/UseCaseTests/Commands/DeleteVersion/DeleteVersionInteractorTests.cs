@@ -23,10 +23,7 @@ namespace ChangeTracker.Application.Tests.UseCaseTests.Commands.DeleteVersion
             _outputPortMock = new Mock<IDeleteVersionOutputPort>(MockBehavior.Strict);
         }
 
-        private DeleteVersionInteractor CreateInteractor()
-        {
-            return new(_versionDaoStub, _productDaoStub);
-        }
+        private DeleteVersionInteractor CreateInteractor() => new(_versionDaoStub, _productDaoStub);
 
         [Fact]
         public async Task DeleteVersion_VersionDoesNotExist_VersionDoesNotExistOutput()
@@ -47,7 +44,8 @@ namespace ChangeTracker.Application.Tests.UseCaseTests.Commands.DeleteVersion
         public async Task DeleteVersion_DeletedVersion_VersionAlreadyDeletedOutput()
         {
             // arrange
-            var version = new ClVersion(TestAccount.Product.Id, ClVersionValue.Parse("1.23"), null,
+            var version = new ClVersion(TestAccount.Product.Id, ClVersionValue.Parse("1.23"), OptionalName.Empty,
+                TestAccount.UserId, null,
                 DateTime.Parse("2021-05-13"));
             var interactor = CreateInteractor();
             _outputPortMock.Setup(m => m.VersionAlreadyDeleted());
@@ -64,7 +62,8 @@ namespace ChangeTracker.Application.Tests.UseCaseTests.Commands.DeleteVersion
         public async Task DeleteVersion_ReleasedVersion_VersionAlreadyReleasedOutput()
         {
             // arrange
-            var version = new ClVersion(TestAccount.Product.Id, ClVersionValue.Parse("1.23"),
+            var version = new ClVersion(TestAccount.Product.Id, ClVersionValue.Parse("1.23"), OptionalName.Empty,
+                TestAccount.UserId,
                 DateTime.Parse("2021-05-13"));
             var interactor = CreateInteractor();
             _outputPortMock.Setup(m => m.VersionAlreadyReleased());
@@ -81,7 +80,8 @@ namespace ChangeTracker.Application.Tests.UseCaseTests.Commands.DeleteVersion
         public async Task DeleteVersion_ProductClosedExist_ProductClosedOutput()
         {
             // arrange
-            var version = new ClVersion(TestAccount.Product.Id, ClVersionValue.Parse("1.23"));
+            var version = new ClVersion(TestAccount.Product.Id, ClVersionValue.Parse("1.23"), OptionalName.Empty,
+                TestAccount.UserId);
             var interactor = CreateInteractor();
             _outputPortMock.Setup(m => m.ProductClosed(It.IsAny<Guid>()));
 
@@ -101,7 +101,8 @@ namespace ChangeTracker.Application.Tests.UseCaseTests.Commands.DeleteVersion
         public async Task DeleteVersion_ConflictWhenDeleting_ConflictOutput()
         {
             // arrange
-            var version = new ClVersion(TestAccount.Product.Id, ClVersionValue.Parse("1.23"));
+            var version = new ClVersion(TestAccount.Product.Id, ClVersionValue.Parse("1.23"), OptionalName.Empty,
+                TestAccount.UserId);
             var interactor = CreateInteractor();
             _outputPortMock.Setup(m => m.Conflict(It.IsAny<string>()));
 
@@ -120,7 +121,8 @@ namespace ChangeTracker.Application.Tests.UseCaseTests.Commands.DeleteVersion
         public async Task DeleteVersion_HappyPath_VersionDeletedOutput()
         {
             // arrange
-            var version = new ClVersion(TestAccount.Product.Id, ClVersionValue.Parse("1.23"));
+            var version = new ClVersion(TestAccount.Product.Id, ClVersionValue.Parse("1.23"), OptionalName.Empty,
+                TestAccount.UserId);
             var interactor = CreateInteractor();
             _outputPortMock.Setup(m => m.VersionDeleted(It.IsAny<Guid>()));
 

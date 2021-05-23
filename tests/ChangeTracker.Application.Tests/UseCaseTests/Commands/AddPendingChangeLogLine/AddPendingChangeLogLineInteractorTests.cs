@@ -40,7 +40,7 @@ namespace ChangeTracker.Application.Tests.UseCaseTests.Commands.AddPendingChange
             var labels = new List<string> {"Bugfix", "ProxyIssue"};
             var issues = new List<string> {"#1234", "#12345"};
             var lineRequestModel =
-                new PendingLineRequestModel(TestAccount.Product.Id, changeLogLine, labels, issues);
+                new PendingLineRequestModel(TestAccount.UserId, TestAccount.Product.Id, changeLogLine, labels, issues);
 
             var addPendingLineInteractor = CreateInteractor();
 
@@ -61,7 +61,7 @@ namespace ChangeTracker.Application.Tests.UseCaseTests.Commands.AddPendingChange
             var labels = new List<string> {"Bugfix", "ProxyIssue"};
             var issues = new List<string> {"#1234", "#12345"};
             var lineRequestModel =
-                new PendingLineRequestModel(TestAccount.Product.Id, changeLogLine, labels, issues);
+                new PendingLineRequestModel(TestAccount.UserId, TestAccount.Product.Id, changeLogLine, labels, issues);
 
             _productDaoStub.Products.Add(new Product(TestAccount.Product.Id, TestAccount.Id, TestAccount.Product.Name,
                 TestAccount.CustomVersioningScheme, TestAccount.UserId, TestAccount.CreationDate, null));
@@ -71,7 +71,8 @@ namespace ChangeTracker.Application.Tests.UseCaseTests.Commands.AddPendingChange
                 null,
                 TestAccount.Product.Id,
                 ChangeLogText.Parse("some-release"),
-                0,
+                0, 
+                TestAccount.UserId,
                 DateTime.Parse("2021-04-09")));
 
             var addPendingLineInteractor = CreateInteractor();
@@ -93,7 +94,7 @@ namespace ChangeTracker.Application.Tests.UseCaseTests.Commands.AddPendingChange
             var labels = new List<string> {"Bugfix", "ProxyIssue"};
             var issues = new List<string> {"#1234", "#12345"};
             var lineRequestModel =
-                new PendingLineRequestModel(TestAccount.Product.Id, changeLogLine, labels, issues);
+                new PendingLineRequestModel(TestAccount.UserId, TestAccount.Product.Id, changeLogLine, labels, issues);
 
             _productDaoStub.Products.Add(new Product(TestAccount.Product.Id, TestAccount.Id, TestAccount.Product.Name,
                 TestAccount.CustomVersioningScheme, TestAccount.UserId, TestAccount.CreationDate, null));
@@ -103,6 +104,7 @@ namespace ChangeTracker.Application.Tests.UseCaseTests.Commands.AddPendingChange
                 TestAccount.Product.Id,
                 ChangeLogText.Parse("some changes"),
                 0,
+                TestAccount.UserId,
                 DateTime.Parse("2021-04-09")));
 
             var addPendingLineInteractor = CreateInteractor();
@@ -125,14 +127,14 @@ namespace ChangeTracker.Application.Tests.UseCaseTests.Commands.AddPendingChange
             var labels = new List<string> {"Bugfix", "ProxyIssue"};
             var issues = new List<string> {"#1234", "#12345"};
             var lineRequestModel =
-                new PendingLineRequestModel(TestAccount.Product.Id, changeLogLine, labels, issues);
+                new PendingLineRequestModel(TestAccount.UserId, TestAccount.Product.Id, changeLogLine, labels, issues);
 
             _productDaoStub.Products.Add(new Product(TestAccount.Product.Id, TestAccount.Id, TestAccount.Product.Name,
                 TestAccount.CustomVersioningScheme, TestAccount.UserId, TestAccount.CreationDate, null));
 
             _changeLogDaoStub.ChangeLogs.AddRange(Enumerable.Range(0, 100)
                 .Select(x =>
-                    new ChangeLogLine(null, TestAccount.Product.Id, ChangeLogText.Parse($"{x:D5}"), (uint) x)));
+                    new ChangeLogLine(null, TestAccount.Product.Id, ChangeLogText.Parse($"{x:D5}"), (uint) x, TestAccount.UserId)));
 
             var addPendingLineInteractor = CreateInteractor();
 
@@ -154,7 +156,7 @@ namespace ChangeTracker.Application.Tests.UseCaseTests.Commands.AddPendingChange
             var labels = new List<string> {"Bugfix", "ProxyIssue"};
             var issues = new List<string> {"#1234", "#12345"};
             var lineRequestModel =
-                new PendingLineRequestModel(TestAccount.Product.Id, changeLogLine, labels, issues);
+                new PendingLineRequestModel(TestAccount.UserId, TestAccount.Product.Id, changeLogLine, labels, issues);
 
             _productDaoStub.Products.Add(new Product(TestAccount.Product.Id, TestAccount.Id, TestAccount.Product.Name,
                 TestAccount.CustomVersioningScheme, TestAccount.UserId, TestAccount.CreationDate, null));
@@ -163,7 +165,8 @@ namespace ChangeTracker.Application.Tests.UseCaseTests.Commands.AddPendingChange
                 null,
                 TestAccount.Product.Id,
                 ChangeLogText.Parse("some-release"),
-                0,
+                0, 
+                TestAccount.UserId,
                 DateTime.Parse("2021-04-09")));
 
             var addPendingLineInteractor = CreateInteractor();

@@ -52,5 +52,10 @@ namespace ChangeTracker.Api.Presenters.V1.Version
         {
             Response = new ConflictObjectResult(DefaultResponse.Create("The related product has already been closed."));
         }
+
+        public void InvalidVersionName(string versionName)
+        {
+            Response = new UnprocessableEntityObjectResult(DefaultResponse.Create($"The name of the version is invalid. Name {versionName}"));
+        }
     }
 }

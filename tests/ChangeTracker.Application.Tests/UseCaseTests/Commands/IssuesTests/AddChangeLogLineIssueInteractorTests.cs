@@ -40,7 +40,7 @@ namespace ChangeTracker.Application.Tests.UseCaseTests.Commands.IssuesTests
             var addLabelInteractor = CreateInteractor();
 
             _changeLogDaoStub.ChangeLogs.Add(new ChangeLogLine(lineId, null, TestAccount.Product.Id,
-                ChangeLogText.Parse("Some text"), 0U, DateTime.Parse("2021-04-17")));
+                ChangeLogText.Parse("Some text"), 0U, TestAccount.UserId, DateTime.Parse("2021-04-17")));
             _outputPortMock.Setup(m => m.Added(It.IsAny<Guid>()));
 
             // act
@@ -62,7 +62,7 @@ namespace ChangeTracker.Application.Tests.UseCaseTests.Commands.IssuesTests
             var addLabelInteractor = CreateInteractor();
 
             _changeLogDaoStub.ChangeLogs.Add(new ChangeLogLine(lineId, null, TestAccount.Product.Id,
-                ChangeLogText.Parse("Some text"), 0U, DateTime.Parse("2021-04-17")));
+                ChangeLogText.Parse("Some text"), 0U, TestAccount.UserId, DateTime.Parse("2021-04-17")));
             _outputPortMock.Setup(m => m.InvalidIssue(It.IsAny<string>()));
 
             // act
@@ -81,7 +81,7 @@ namespace ChangeTracker.Application.Tests.UseCaseTests.Commands.IssuesTests
             var addLabelInteractor = CreateInteractor();
 
             _changeLogDaoStub.ChangeLogs.Add(new ChangeLogLine(lineId, null, TestAccount.Product.Id,
-                ChangeLogText.Parse("Some text"), 0U, DateTime.Parse("2021-04-17")));
+                ChangeLogText.Parse("Some text"), 0U, TestAccount.UserId, DateTime.Parse("2021-04-17")));
             _outputPortMock.Setup(m => m.Conflict(It.IsAny<string>()));
 
             _changeLogDaoStub.ProduceConflict = true;
@@ -104,7 +104,7 @@ namespace ChangeTracker.Application.Tests.UseCaseTests.Commands.IssuesTests
             var existingIssues = Enumerable.Range(0, 10).Select(x => $"{x:D5}").Select(Issue.Parse);
             _changeLogDaoStub.ChangeLogs.Add(new ChangeLogLine(lineId, null, TestAccount.Product.Id,
                 ChangeLogText.Parse("Some text"), 0U, DateTime.Parse("2021-04-17"), Array.Empty<Label>(),
-                existingIssues));
+                existingIssues, TestAccount.UserId));
             _outputPortMock.Setup(m => m.MaxIssuesReached(It.IsAny<int>()));
 
             _changeLogDaoStub.ProduceConflict = true;

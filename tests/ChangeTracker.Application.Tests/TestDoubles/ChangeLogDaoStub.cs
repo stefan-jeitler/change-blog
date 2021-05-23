@@ -128,15 +128,12 @@ namespace ChangeTracker.Application.Tests.TestDoubles
 
             if (ProduceConflict) return Result.Failure<int, Conflict>(new Conflict("some conflict"));
 
-            bool MatchRequestVersion(ChangeLogLine l)
-            {
-                return l.VersionId.HasValue && l.VersionId.Value == versionId;
-            }
+            bool MatchRequestVersion(ChangeLogLine l) => l.VersionId.HasValue && l.VersionId.Value == versionId;
 
             var versionChangeLogLines = ChangeLogs.Where(MatchRequestVersion);
 
             var pendingLines = versionChangeLogLines.Select(x => new ChangeLogLine(x.Id, null, x.ProductId, x.Text,
-                    x.Position, x.CreatedAt, x.Labels, x.Issues, x.DeletedAt))
+                    x.Position, x.CreatedAt, x.Labels, x.Issues, x.CreatedByUser, x.DeletedAt))
                 .ToList();
 
             ChangeLogs.RemoveAll(MatchRequestVersion);

@@ -4,17 +4,19 @@
     {
         public const string FindProductByAccountAndNameSql = @"
             SELECT p.id,
-                   p.account_id      AS accountId,
+                   p.account_id       AS accountId,
                    p.name,
-                   vs.id             AS versioningSchemeId,
-                   vs.name           AS versioningSchemeName,
-                   vs.regex_pattern  AS regexPattern,
-                   vs.description,
-                   vs.created_at     AS versioningSchemeCreatedAt,
-                   vs.deleted_at     AS versioningSchemeDeletedAt,
-                   p.created_by_user AS createdByUser,
-                   p.created_at      AS createdAt,
-                   p.closed_at       AS closedAt
+                   vs.id              AS vsId,
+                   vs.name            AS vsName,
+                   vs.regex_pattern   AS vsRegexPattern,
+                   vs.description     AS vsDescription,
+                   vs.account_id      AS vsAccountId,
+                   vs.created_by_user AS vsCreatedByUser,
+                   vs.deleted_at      AS vsDeletedAt,
+                   vs.created_at      AS vsCreatedAt,
+                   p.created_by_user  AS createdByUser,
+                   p.created_at       AS createdAt,
+                   p.closed_at        AS closedAt
             FROM product p
                      JOIN account a on p.account_id = a.id
                      JOIN versioning_scheme vs on p.versioning_scheme_id = vs.id
@@ -23,17 +25,19 @@
 
         public const string FindProductByProductIdSql = @"
             SELECT p.id,
-                   p.account_id      AS accountId,
+                   p.account_id       AS accountId,
                    p.name,
-                   vs.id             AS versioningSchemeId,
-                   vs.name           AS versioningSchemeName,
-                   vs.regex_pattern  AS regexPattern,
-                   vs.description,
-                   vs.created_at     AS versioningSchemeCreatedAt,
-                   vs.deleted_at     AS versioningSchemeDeletedAt,
-                   p.created_by_user AS createdByUser,
-                   p.created_at      AS createdAt,
-                   p.closed_at       AS closedAt
+                   vs.id              AS vsId,
+                   vs.name            AS vsName,
+                   vs.regex_pattern   AS vsRegexPattern,
+                   vs.description     AS vsDescription,
+                   vs.account_id      AS vsAccountId,
+                   vs.created_by_user AS vsCreatedByUser,
+                   vs.deleted_at      AS vsDeletedAt,
+                   vs.created_at      AS vsCreatedAt,
+                   p.created_by_user  AS createdByUser,
+                   p.created_at       AS createdAt,
+                   p.closed_at        AS closedAt
             FROM product p
                      JOIN versioning_scheme vs on p.versioning_scheme_id = vs.id
             WHERE p.id = @productId";
@@ -74,21 +78,22 @@
             return CreateProductsQuerySql(accountFilter, pagingFilter, includeClosedProductsFilter);
         }
 
-        private static string CreateProductsQuerySql(string accountFilter, string pagingFilter, string includeClosedProductsFilter)
-        {
-            return @$"
-                SELECT p.id,
-                   p.account_id      AS accountId,
+        private static string CreateProductsQuerySql(string accountFilter, string pagingFilter, string includeClosedProductsFilter) =>
+            @$"
+            SELECT p.id,
+                   p.account_id       AS accountId,
                    p.name,
-                   vs.id             AS versioningSchemeId,
-                   vs.name           AS versioningSchemeName,
-                   vs.regex_pattern  AS regexPattern,
-                   vs.description,
-                   vs.created_at     AS versioningSchemeCreatedAt,
-                   vs.deleted_at     AS versioningSchemeDeletedAt,
-                   p.created_by_user AS createdByUser,
-                   p.created_at      AS createdAt,
-                   p.closed_at       AS closedAt
+                   vs.id              AS vsId,
+                   vs.name            AS vsName,
+                   vs.regex_pattern   AS vsRegexPattern,
+                   vs.description     AS vsDescription,
+                   vs.account_id      AS vsAccountId,
+                   vs.created_by_user AS vsCreatedByUser,
+                   vs.deleted_at      AS vsDeletedAt,
+                   vs.created_at      AS vsCreatedAt,
+                   p.created_by_user  AS createdByUser,
+                   p.created_at       AS createdAt,
+                   p.closed_at        AS closedAt
             FROM product p
                      JOIN versioning_scheme vs on p.versioning_scheme_id = vs.id
             WHERE EXISTS
@@ -135,6 +140,5 @@
               {includeClosedProductsFilter}
             ORDER BY p.name
                 FETCH FIRST (@limit) ROWS ONLY";
-        }
     }
 }

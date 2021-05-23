@@ -3,6 +3,7 @@ using System.Threading.Tasks;
 using ChangeTracker.Application.Tests.TestDoubles;
 using ChangeTracker.Application.UseCases.Commands.ReleaseVersion;
 using ChangeTracker.Domain;
+using ChangeTracker.Domain.Common;
 using ChangeTracker.Domain.Version;
 using Moq;
 using Xunit;
@@ -46,7 +47,7 @@ namespace ChangeTracker.Application.Tests.UseCaseTests.Commands.ReleaseVersion
         public async Task ReleaseVersion_DeletedVersion_VersionDeletedOutput()
         {
             // arrange
-            var version = new ClVersion(TestAccount.Product.Id, ClVersionValue.Parse("1.23"), null,
+            var version = new ClVersion(TestAccount.Product.Id, ClVersionValue.Parse("1.23"), OptionalName.Empty, TestAccount.UserId, null,
                 DateTime.Parse("2021-05-13"));
             var interactor = CreateInteractor();
             _outputPortMock.Setup(m => m.VersionDeleted());
@@ -63,7 +64,7 @@ namespace ChangeTracker.Application.Tests.UseCaseTests.Commands.ReleaseVersion
         public async Task ReleaseVersion_ReleasedVersion_VersionAlreadyReleasedOutput()
         {
             // arrange
-            var version = new ClVersion(TestAccount.Product.Id, ClVersionValue.Parse("1.23"),
+            var version = new ClVersion(TestAccount.Product.Id, ClVersionValue.Parse("1.23"), OptionalName.Empty, TestAccount.UserId,
                 DateTime.Parse("2021-05-13"));
             var interactor = CreateInteractor();
             _outputPortMock.Setup(m => m.VersionAlreadyReleased());
@@ -80,7 +81,7 @@ namespace ChangeTracker.Application.Tests.UseCaseTests.Commands.ReleaseVersion
         public async Task ReleaseVersion_RelatedProductClosed_RelatedProductClosedOutput()
         {
             // arrange
-            var version = new ClVersion(TestAccount.Product.Id, ClVersionValue.Parse("1.23"));
+            var version = new ClVersion(TestAccount.Product.Id, ClVersionValue.Parse("1.23"), OptionalName.Empty, TestAccount.UserId);
             var product = new Product(TestAccount.Product.Id, TestAccount.Id, TestAccount.Product.Name,
                 TestAccount.CustomVersioningScheme, TestAccount.UserId, TestAccount.Product.CreatedAt,
                 DateTime.Parse("2021-05-13"));
@@ -100,7 +101,7 @@ namespace ChangeTracker.Application.Tests.UseCaseTests.Commands.ReleaseVersion
         public async Task ReleaseVersion_ConflictWhenRelease_ConflictOutput()
         {
             // arrange
-            var version = new ClVersion(TestAccount.Product.Id, ClVersionValue.Parse("1.23"));
+            var version = new ClVersion(TestAccount.Product.Id, ClVersionValue.Parse("1.23"), OptionalName.Empty, TestAccount.UserId);
             var product = new Product(TestAccount.Product.Id, TestAccount.Id, TestAccount.Product.Name,
                 TestAccount.CustomVersioningScheme, TestAccount.UserId, TestAccount.Product.CreatedAt, null);
             var interactor = CreateInteractor();
@@ -120,7 +121,7 @@ namespace ChangeTracker.Application.Tests.UseCaseTests.Commands.ReleaseVersion
         public async Task ReleaseVersion_HappyPath_ReleasedOutput()
         {
             // arrange
-            var version = new ClVersion(TestAccount.Product.Id, ClVersionValue.Parse("1.23"));
+            var version = new ClVersion(TestAccount.Product.Id, ClVersionValue.Parse("1.23"), OptionalName.Empty, TestAccount.UserId );
             var product = new Product(TestAccount.Product.Id, TestAccount.Id, TestAccount.Product.Name,
                 TestAccount.CustomVersioningScheme, TestAccount.UserId, TestAccount.Product.CreatedAt, null);
             var interactor = CreateInteractor();

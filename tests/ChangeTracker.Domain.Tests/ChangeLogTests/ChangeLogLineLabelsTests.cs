@@ -16,6 +16,7 @@ namespace ChangeTracker.Domain.Tests.ChangeLogTests
         private static readonly Guid TestVersionId = Guid.Parse("66845d0a-45bc-4834-96d0-b48c2c403628");
         private static readonly Guid TestProductId = Guid.Parse("ef5656e5-15f0-418d-b3a4-b69f1c3abac5");
         private static readonly ChangeLogText TestText = ChangeLogText.Parse("New feature added");
+        private static readonly Guid TestUserId = Guid.Parse("294c4f04-85d4-4d5b-ae25-e6b618f1676f");
         private static readonly DateTime TestCreationDate = DateTime.Parse("2021-04.02T18:28");
 
         [Fact]
@@ -33,7 +34,7 @@ namespace ChangeTracker.Domain.Tests.ChangeLogTests
             // act
             var line = new ChangeLogLine(TestId, TestVersionId,
                 TestProductId, TestText, TestPosition,
-                TestCreationDate, labels, Array.Empty<Issue>());
+                TestCreationDate, labels, Array.Empty<Issue>(), TestUserId);
 
             // assert
             line.Labels.Count.Should().Be(2);
@@ -51,7 +52,8 @@ namespace ChangeTracker.Domain.Tests.ChangeLogTests
                 TestPosition,
                 TestCreationDate,
                 null,
-                Enumerable.Empty<Issue>());
+                Enumerable.Empty<Issue>(),
+                TestUserId);
 
             act.Should().ThrowExactly<ArgumentNullException>();
         }
@@ -68,7 +70,8 @@ namespace ChangeTracker.Domain.Tests.ChangeLogTests
 
             Func<ChangeLogLine> act = () => new ChangeLogLine(TestId, TestVersionId,
                 TestProductId, TestText, TestPosition,
-                TestCreationDate, labels, Array.Empty<Issue>());
+                TestCreationDate, labels, Array.Empty<Issue>(),
+                TestUserId);
 
             act.Should().ThrowExactly<ArgumentException>();
         }
@@ -78,7 +81,7 @@ namespace ChangeTracker.Domain.Tests.ChangeLogTests
         {
             var line = new ChangeLogLine(TestId, TestVersionId,
                 TestProductId, TestText, TestPosition,
-                TestCreationDate);
+                TestUserId, TestCreationDate);
 
             line.Labels.Should().BeEmpty();
         }
@@ -89,7 +92,7 @@ namespace ChangeTracker.Domain.Tests.ChangeLogTests
             var featureLabel = Label.Parse("Feature");
             var line = new ChangeLogLine(TestId, null,
                 TestProductId, TestText, TestPosition,
-                TestCreationDate);
+                TestUserId, TestCreationDate);
 
             line.AddLabel(featureLabel);
 
@@ -109,7 +112,8 @@ namespace ChangeTracker.Domain.Tests.ChangeLogTests
 
             var line = new ChangeLogLine(TestId, null,
                 TestProductId, TestText, TestPosition,
-                TestCreationDate, labels, Array.Empty<Issue>());
+                TestCreationDate, labels, Array.Empty<Issue>(),
+                TestUserId);
 
             var newLabel = Label.Parse("Security");
 
@@ -131,7 +135,8 @@ namespace ChangeTracker.Domain.Tests.ChangeLogTests
 
             var line = new ChangeLogLine(TestId, null,
                 TestProductId, TestText, TestPosition,
-                TestCreationDate, existingLabels, Array.Empty<Issue>());
+                TestCreationDate, existingLabels, Array.Empty<Issue>(),
+                TestUserId);
 
             // act
             line.AddLabel(deprecatedLabel);
@@ -153,7 +158,7 @@ namespace ChangeTracker.Domain.Tests.ChangeLogTests
             // act
             var line = new ChangeLogLine(TestId, TestVersionId,
                 TestProductId, TestText, TestPosition,
-                TestCreationDate, existingLabels, Array.Empty<Issue>());
+                TestCreationDate, existingLabels, Array.Empty<Issue>(), TestUserId);
 
             // assert
             line.Labels.Count.Should().Be(1);
@@ -166,7 +171,7 @@ namespace ChangeTracker.Domain.Tests.ChangeLogTests
             // arrange
             var line = new ChangeLogLine(TestId, TestVersionId,
                 TestProductId, TestText, TestPosition,
-                TestCreationDate, Enumerable.Empty<Label>(), Enumerable.Empty<Issue>());
+                TestCreationDate, Enumerable.Empty<Label>(), Enumerable.Empty<Issue>(), TestUserId);
 
             // act
             var remainingLabelPlaces = line.AvailableLabelPlaces;
@@ -184,7 +189,7 @@ namespace ChangeTracker.Domain.Tests.ChangeLogTests
 
             var line = new ChangeLogLine(TestId, TestVersionId,
                 TestProductId, TestText, TestPosition,
-                TestCreationDate, existingLabels, Array.Empty<Issue>());
+                TestCreationDate, existingLabels, Array.Empty<Issue>(), TestUserId);
 
             // act
             var remainingLabelPlaces = line.AvailableLabelPlaces;
@@ -208,7 +213,7 @@ namespace ChangeTracker.Domain.Tests.ChangeLogTests
 
             var line = new ChangeLogLine(TestId, TestVersionId,
                 TestProductId, TestText, TestPosition,
-                TestCreationDate, existingLabels, Array.Empty<Issue>());
+                TestCreationDate, existingLabels, Array.Empty<Issue>(), TestUserId);
 
             // act
             var remainingLabelPlaces = line.AvailableLabelPlaces;
@@ -226,7 +231,7 @@ namespace ChangeTracker.Domain.Tests.ChangeLogTests
 
             var line = new ChangeLogLine(TestId, null,
                 TestProductId, TestText, TestPosition,
-                TestCreationDate, existingLabels, Array.Empty<Issue>());
+                TestCreationDate, existingLabels, Array.Empty<Issue>(), TestUserId);
 
             // act
             line.AddLabel(featureLabel);
@@ -245,7 +250,7 @@ namespace ChangeTracker.Domain.Tests.ChangeLogTests
 
             var line = new ChangeLogLine(TestId, null,
                 TestProductId, TestText, TestPosition,
-                TestCreationDate, existingLabels, Array.Empty<Issue>());
+                TestCreationDate, existingLabels, Array.Empty<Issue>(), TestUserId);
 
             // act
             line.RemoveLabel(featureLabel);
@@ -260,7 +265,7 @@ namespace ChangeTracker.Domain.Tests.ChangeLogTests
             // arrange
             var line = new ChangeLogLine(TestId, null,
                 TestProductId, TestText, TestPosition,
-                TestCreationDate);
+                TestUserId, TestCreationDate);
 
             // act
             line.RemoveLabel(Label.Parse("Feature"));

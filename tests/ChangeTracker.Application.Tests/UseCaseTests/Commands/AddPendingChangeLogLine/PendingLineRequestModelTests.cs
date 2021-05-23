@@ -8,6 +8,7 @@ namespace ChangeTracker.Application.Tests.UseCaseTests.Commands.AddPendingChange
 {
     public class PendingLineRequestModelTests
     {
+        private static Guid _testUserId;
         private List<string> _testIssues;
         private List<string> _testLabels;
 
@@ -17,15 +18,14 @@ namespace ChangeTracker.Application.Tests.UseCaseTests.Commands.AddPendingChange
         public PendingLineRequestModelTests()
         {
             _testProductId = Guid.Parse("f02cf1c7-d8a7-492f-b46d-a2ba916770d0");
+            _testUserId = Guid.Parse("294c4f04-85d4-4d5b-ae25-e6b618f1676f");
             _testText = "some bug fixes";
             _testLabels = new List<string>(0);
             _testIssues = new List<string>(0);
         }
 
-        private PendingLineRequestModel CreateRequestModel()
-        {
-            return new(_testProductId, _testText, _testLabels, _testIssues);
-        }
+        private PendingLineRequestModel CreateRequestModel() =>
+            new(_testUserId, _testProductId, _testText, _testLabels, _testIssues);
 
         [Fact]
         public void Create_HappyPath_Successful()

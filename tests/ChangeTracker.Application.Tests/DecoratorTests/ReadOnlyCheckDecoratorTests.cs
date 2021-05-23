@@ -29,10 +29,8 @@ namespace ChangeTracker.Application.Tests.DecoratorTests
             _memoryCache = new MemoryCache(new MemoryCacheOptions());
         }
 
-        private ChangeLogLineReadonlyCheckDecorator CreateDecorator()
-        {
-            return new(_changeLogDaoStub, _versionDaoStub, _memoryCache, _productDaoStub);
-        }
+        private ChangeLogLineReadonlyCheckDecorator CreateDecorator() =>
+            new(_changeLogDaoStub, _versionDaoStub, _memoryCache, _productDaoStub);
 
         [Fact]
         public async Task AddLine_RelatedVersionAlreadyReleased_Conflict()
@@ -40,12 +38,13 @@ namespace ChangeTracker.Application.Tests.DecoratorTests
             // arrange
             var versionId = Guid.Parse("1d7831d5-32fb-437f-a9d5-bf5a7dd34b10");
             var version = new ClVersion(versionId, TestAccount.Product.Id, ClVersionValue.Parse("1.2.3"),
-                DateTime.Parse("2021-04-17"), DateTime.Parse("2021-04-17"), null);
+                OptionalName.Empty, DateTime.Parse("2021-04-17"), TestAccount.UserId,
+                DateTime.Parse("2021-04-17"), null);
             _versionDaoStub.Versions.Add(version);
 
             var lineId = Guid.Parse("0683e1e1-0e0d-405c-b77e-a6d0d5141b67");
             var line = new ChangeLogLine(lineId, versionId, TestAccount.Product.Id, ChangeLogText.Parse("some text"),
-                0U, DateTime.Parse("2021-04-17"));
+                0U, TestAccount.UserId, DateTime.Parse("2021-04-17"));
 
             var decorator = CreateDecorator();
 
@@ -64,12 +63,13 @@ namespace ChangeTracker.Application.Tests.DecoratorTests
             // arrange
             var versionId = Guid.Parse("1d7831d5-32fb-437f-a9d5-bf5a7dd34b10");
             var version = new ClVersion(versionId, TestAccount.Product.Id, ClVersionValue.Parse("1.2.3"),
-                DateTime.Parse("2021-04-17"), DateTime.Parse("2021-04-17"), null);
+                OptionalName.Empty,
+                DateTime.Parse("2021-04-17"), TestAccount.UserId, DateTime.Parse("2021-04-17"), null);
             _versionDaoStub.Versions.Add(version);
 
             var lineId = Guid.Parse("0683e1e1-0e0d-405c-b77e-a6d0d5141b67");
             var line = new ChangeLogLine(lineId, versionId, TestAccount.Product.Id, ChangeLogText.Parse("some text"),
-                0U, DateTime.Parse("2021-04-17"), DateTime.Parse("2021-04-17"));
+                0U, TestAccount.UserId, DateTime.Parse("2021-04-17"), DateTime.Parse("2021-04-17"));
 
             var decorator = CreateDecorator();
 
@@ -88,12 +88,13 @@ namespace ChangeTracker.Application.Tests.DecoratorTests
             // arrange
             var versionId = Guid.Parse("1d7831d5-32fb-437f-a9d5-bf5a7dd34b10");
             var version = new ClVersion(versionId, TestAccount.Product.Id, ClVersionValue.Parse("1.2.3"),
-                null, DateTime.Parse("2021-04-17"), DateTime.Parse("2021-04-17"));
+                OptionalName.Empty, null, TestAccount.UserId, DateTime.Parse("2021-04-17"),
+                DateTime.Parse("2021-04-17"));
             _versionDaoStub.Versions.Add(version);
 
             var lineId = Guid.Parse("0683e1e1-0e0d-405c-b77e-a6d0d5141b67");
             var line = new ChangeLogLine(lineId, versionId, TestAccount.Product.Id, ChangeLogText.Parse("some text"),
-                0U, DateTime.Parse("2021-04-17"));
+                0U, TestAccount.UserId, DateTime.Parse("2021-04-17"));
 
             var decorator = CreateDecorator();
 
@@ -113,7 +114,8 @@ namespace ChangeTracker.Application.Tests.DecoratorTests
             // arrange
             var versionId = Guid.Parse("1d7831d5-32fb-437f-a9d5-bf5a7dd34b10");
             var version = new ClVersion(versionId, TestAccount.Product.Id, ClVersionValue.Parse("1.2.3"),
-                null, DateTime.Parse("2021-04-17"), null);
+                OptionalName.Empty,
+                null, TestAccount.UserId, DateTime.Parse("2021-04-17"), null);
             _versionDaoStub.Versions.Add(version);
 
             _productDaoStub.Products.Add(new Product(TestAccount.Product.Id, TestAccount.Id, Name.Parse("Test product"),
@@ -122,7 +124,7 @@ namespace ChangeTracker.Application.Tests.DecoratorTests
 
             var lineId = Guid.Parse("0683e1e1-0e0d-405c-b77e-a6d0d5141b67");
             var line = new ChangeLogLine(lineId, versionId, TestAccount.Product.Id, ChangeLogText.Parse("some text"),
-                0U, DateTime.Parse("2021-04-17"));
+                0U, TestAccount.UserId, DateTime.Parse("2021-04-17"));
 
             var decorator = CreateDecorator();
 
@@ -141,14 +143,15 @@ namespace ChangeTracker.Application.Tests.DecoratorTests
             // arrange
             var versionId = Guid.Parse("1d7831d5-32fb-437f-a9d5-bf5a7dd34b10");
             var version = new ClVersion(versionId, TestAccount.Product.Id, ClVersionValue.Parse("1.2.3"),
-                null, DateTime.Parse("2021-04-17"), null);
+                OptionalName.Empty,
+                null, TestAccount.UserId, DateTime.Parse("2021-04-17"), null);
             _versionDaoStub.Versions.Add(version);
 
             _productDaoStub.Products.Add(TestAccount.Product);
 
             var lineId = Guid.Parse("0683e1e1-0e0d-405c-b77e-a6d0d5141b67");
             var line = new ChangeLogLine(lineId, versionId, TestAccount.Product.Id, ChangeLogText.Parse("some text"),
-                0U, DateTime.Parse("2021-04-17"));
+                0U, TestAccount.UserId, DateTime.Parse("2021-04-17"));
 
             var decorator = CreateDecorator();
 
@@ -166,7 +169,7 @@ namespace ChangeTracker.Application.Tests.DecoratorTests
             // arrange
             var lineId = Guid.Parse("0683e1e1-0e0d-405c-b77e-a6d0d5141b67");
             var line = new ChangeLogLine(lineId, null, TestAccount.Product.Id, ChangeLogText.Parse("some text"),
-                0U, DateTime.Parse("2021-04-17"));
+                0U, TestAccount.UserId, DateTime.Parse("2021-04-17"));
 
             var decorator = CreateDecorator();
 
@@ -184,7 +187,7 @@ namespace ChangeTracker.Application.Tests.DecoratorTests
             // arrange
             var lineId = Guid.Parse("0683e1e1-0e0d-405c-b77e-a6d0d5141b67");
             var line = new ChangeLogLine(lineId, null, TestAccount.Product.Id, ChangeLogText.Parse("some text"),
-                0U, DateTime.Parse("2021-04-17"));
+                0U, TestAccount.UserId, DateTime.Parse("2021-04-17"));
 
             var decorator = CreateDecorator();
 
@@ -202,7 +205,7 @@ namespace ChangeTracker.Application.Tests.DecoratorTests
             // arrange
             var lineId = Guid.Parse("0683e1e1-0e0d-405c-b77e-a6d0d5141b67");
             var line = new ChangeLogLine(lineId, null, TestAccount.Product.Id, ChangeLogText.Parse("some text"),
-                0U, DateTime.Parse("2021-04-17"));
+                0U, TestAccount.UserId, DateTime.Parse("2021-04-17"));
             _changeLogDaoStub.ChangeLogs.Add(line);
             var decorator = CreateDecorator();
 
@@ -221,11 +224,12 @@ namespace ChangeTracker.Application.Tests.DecoratorTests
             var versionId = Guid.Parse("1d7831d5-32fb-437f-a9d5-bf5a7dd34b10");
             var lineId = Guid.Parse("0683e1e1-0e0d-405c-b77e-a6d0d5141b67");
             var line = new ChangeLogLine(lineId, versionId, TestAccount.Product.Id, ChangeLogText.Parse("some text"),
-                0U, DateTime.Parse("2021-04-17"));
+                0U, TestAccount.UserId, DateTime.Parse("2021-04-17"));
             _changeLogDaoStub.ChangeLogs.Add(line);
 
             var version = new ClVersion(versionId, TestAccount.Product.Id, ClVersionValue.Parse("1.2.3"),
-                DateTime.Parse("2021-05-15"), DateTime.Parse("2021-04-17"), null);
+                OptionalName.Empty,
+                DateTime.Parse("2021-05-15"), TestAccount.UserId, DateTime.Parse("2021-04-17"), null);
             _versionDaoStub.Versions.Add(version);
 
             var decorator = CreateDecorator();
@@ -245,12 +249,12 @@ namespace ChangeTracker.Application.Tests.DecoratorTests
             var firstLineId = Guid.Parse("0683e1e1-0e0d-405c-b77e-a6d0d5141b67");
             var firstLine = new ChangeLogLine(firstLineId, null, TestAccount.Product.Id,
                 ChangeLogText.Parse("some text"),
-                0U, DateTime.Parse("2021-04-17"));
+                0U, TestAccount.UserId, DateTime.Parse("2021-04-17"));
 
             var secondLineId = Guid.Parse("4d755355-b527-4a4d-afbe-ab00a025609e");
             var secondLine = new ChangeLogLine(secondLineId, null, TestAccount.Product.Id,
                 ChangeLogText.Parse("some other text"),
-                0U, DateTime.Parse("2021-04-17"));
+                0U, TestAccount.UserId, DateTime.Parse("2021-04-17"));
 
             var decorator = CreateDecorator();
 
@@ -270,18 +274,19 @@ namespace ChangeTracker.Application.Tests.DecoratorTests
             // arrange
             var versionId = Guid.Parse("1d7831d5-32fb-437f-a9d5-bf5a7dd34b10");
             var version = new ClVersion(versionId, TestAccount.Product.Id, ClVersionValue.Parse("1.2.3"),
-                DateTime.Parse("2021-04-17"), DateTime.Parse("2021-04-17"), null);
+                OptionalName.Empty,
+                DateTime.Parse("2021-04-17"), TestAccount.UserId, DateTime.Parse("2021-04-17"), null);
             _versionDaoStub.Versions.Add(version);
 
             var firstLineId = Guid.Parse("0683e1e1-0e0d-405c-b77e-a6d0d5141b67");
             var firstLine = new ChangeLogLine(firstLineId, null, TestAccount.Product.Id,
                 ChangeLogText.Parse("some text"),
-                0U, DateTime.Parse("2021-04-17"));
+                0U, TestAccount.UserId, DateTime.Parse("2021-04-17"));
 
             var secondLineId = Guid.Parse("4d755355-b527-4a4d-afbe-ab00a025609e");
             var secondLine = new ChangeLogLine(secondLineId, versionId, TestAccount.Product.Id,
                 ChangeLogText.Parse("some other text"),
-                0U, DateTime.Parse("2021-04-17"));
+                0U, TestAccount.UserId, DateTime.Parse("2021-04-17"));
 
             var decorator = CreateDecorator();
 
@@ -302,7 +307,8 @@ namespace ChangeTracker.Application.Tests.DecoratorTests
             // arrange
             var versionId = Guid.Parse("1d7831d5-32fb-437f-a9d5-bf5a7dd34b10");
             var version = new ClVersion(versionId, TestAccount.Product.Id, ClVersionValue.Parse("1.2.3"),
-                null, DateTime.Parse("2021-04-17"), null);
+                OptionalName.Empty,
+                null, TestAccount.UserId, DateTime.Parse("2021-04-17"), null);
             _versionDaoStub.Versions.Add(version);
 
             _productDaoStub.Products.Add(TestAccount.Product);
@@ -310,7 +316,7 @@ namespace ChangeTracker.Application.Tests.DecoratorTests
             var lineId = Guid.Parse("0683e1e1-0e0d-405c-b77e-a6d0d5141b67");
             var lineUnassigned = new ChangeLogLine(lineId, null, TestAccount.Product.Id,
                 ChangeLogText.Parse("some text"),
-                0U, DateTime.Parse("2021-04-17"));
+                0U, TestAccount.UserId, DateTime.Parse("2021-04-17"));
             _changeLogDaoStub.ChangeLogs.Add(lineUnassigned);
 
             var lineAssigned = lineUnassigned.AssignToVersion(versionId, 0);
@@ -331,7 +337,8 @@ namespace ChangeTracker.Application.Tests.DecoratorTests
             // arrange
             var versionId = Guid.Parse("1d7831d5-32fb-437f-a9d5-bf5a7dd34b10");
             var version = new ClVersion(versionId, TestAccount.Product.Id, ClVersionValue.Parse("1.2.3"),
-                null, DateTime.Parse("2021-04-17"), null);
+                OptionalName.Empty,
+                null, TestAccount.UserId, DateTime.Parse("2021-04-17"), null);
             _versionDaoStub.Versions.Add(version);
 
             _productDaoStub.Products.Add(TestAccount.Product);
@@ -339,13 +346,13 @@ namespace ChangeTracker.Application.Tests.DecoratorTests
             var firstLineId = Guid.Parse("0683e1e1-0e0d-405c-b77e-a6d0d5141b67");
             var firstLineUnassigned = new ChangeLogLine(firstLineId, null, TestAccount.Product.Id,
                 ChangeLogText.Parse("some text"),
-                0U, DateTime.Parse("2021-04-17"));
+                0U, TestAccount.UserId, DateTime.Parse("2021-04-17"));
             _changeLogDaoStub.ChangeLogs.Add(firstLineUnassigned);
 
             var secondLineId = Guid.Parse("4d755355-b527-4a4d-afbe-ab00a025609e");
             var secondLineUnassigned = new ChangeLogLine(secondLineId, null, TestAccount.Product.Id,
                 ChangeLogText.Parse("some other text"),
-                1U, DateTime.Parse("2021-04-17"));
+                1U, TestAccount.UserId, DateTime.Parse("2021-04-17"));
             _changeLogDaoStub.ChangeLogs.Add(secondLineUnassigned);
 
             var firstLineAssigned = firstLineUnassigned.AssignToVersion(versionId, 0);
@@ -368,19 +375,20 @@ namespace ChangeTracker.Application.Tests.DecoratorTests
             // arrange
             var versionId = Guid.Parse("1d7831d5-32fb-437f-a9d5-bf5a7dd34b10");
             var version = new ClVersion(versionId, TestAccount.Product.Id, ClVersionValue.Parse("1.2.3"),
-                DateTime.Parse("2021-04-17"), DateTime.Parse("2021-04-17"), null);
+                OptionalName.Empty,
+                DateTime.Parse("2021-04-17"), TestAccount.UserId, DateTime.Parse("2021-04-17"), null);
             _versionDaoStub.Versions.Add(version);
 
             var firstLineId = Guid.Parse("0683e1e1-0e0d-405c-b77e-a6d0d5141b67");
             var firstLineUnassigned = new ChangeLogLine(firstLineId, null, TestAccount.Product.Id,
                 ChangeLogText.Parse("some text"),
-                0U, DateTime.Parse("2021-04-17"));
+                0U, TestAccount.UserId, DateTime.Parse("2021-04-17"));
             _changeLogDaoStub.ChangeLogs.Add(firstLineUnassigned);
 
             var secondLineId = Guid.Parse("4d755355-b527-4a4d-afbe-ab00a025609e");
             var secondLineUnassigned = new ChangeLogLine(secondLineId, null, TestAccount.Product.Id,
                 ChangeLogText.Parse("some other text"),
-                1U, DateTime.Parse("2021-04-17"));
+                1U, TestAccount.UserId, DateTime.Parse("2021-04-17"));
             _changeLogDaoStub.ChangeLogs.Add(secondLineUnassigned);
 
             var firstLineAssigned = firstLineUnassigned.AssignToVersion(versionId, 0);

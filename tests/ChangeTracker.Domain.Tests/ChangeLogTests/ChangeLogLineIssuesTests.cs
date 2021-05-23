@@ -17,6 +17,7 @@ namespace ChangeTracker.Domain.Tests.ChangeLogTests
         private static readonly Guid TestVersionId = Guid.Parse("66845d0a-45bc-4834-96d0-b48c2c403628");
         private static readonly Guid TestProductId = Guid.Parse("ef5656e5-15f0-418d-b3a4-b69f1c3abac5");
         private static readonly ChangeLogText TestText = ChangeLogText.Parse("New feature added");
+        private static readonly Guid TestUserId = Guid.Parse("294c4f04-85d4-4d5b-ae25-e6b618f1676f");
         private static readonly DateTime TestCreationDate = DateTime.Parse("2021-04.02T18:28");
 
         [Fact]
@@ -29,7 +30,8 @@ namespace ChangeTracker.Domain.Tests.ChangeLogTests
                 TestPosition,
                 TestCreationDate,
                 Array.Empty<Label>(),
-                new List<Issue> {TestIssue});
+                new List<Issue> {TestIssue}, 
+                TestUserId);
 
             line.Issues.Count.Should().Be(1);
             line.Issues.First().Should().Be(TestIssue);
@@ -45,7 +47,8 @@ namespace ChangeTracker.Domain.Tests.ChangeLogTests
                 TestPosition,
                 TestCreationDate,
                 Enumerable.Empty<Label>(),
-                Enumerable.Empty<Issue>());
+                Enumerable.Empty<Issue>(),
+                TestUserId);
 
             line.Issues.Should().BeEmpty();
         }
@@ -61,7 +64,8 @@ namespace ChangeTracker.Domain.Tests.ChangeLogTests
                 TestPosition,
                 TestCreationDate,
                 Enumerable.Empty<Label>(),
-                null);
+                null,
+                TestUserId);
 
             act.Should().ThrowExactly<ArgumentNullException>();
         }
@@ -84,7 +88,8 @@ namespace ChangeTracker.Domain.Tests.ChangeLogTests
                 TestPosition,
                 TestCreationDate,
                 Enumerable.Empty<Label>(),
-                issues);
+                issues,
+                TestUserId);
 
             act.Should().ThrowExactly<ArgumentException>();
         }
@@ -107,7 +112,8 @@ namespace ChangeTracker.Domain.Tests.ChangeLogTests
                 TestPosition,
                 TestCreationDate,
                 Enumerable.Empty<Label>(),
-                issues);
+                issues,
+                TestUserId);
 
             line.Issues.Count.Should().Be(10);
         }
@@ -121,7 +127,8 @@ namespace ChangeTracker.Domain.Tests.ChangeLogTests
                 null, TestProductId, TestText,
                 TestPosition, TestCreationDate,
                 Enumerable.Empty<Label>(),
-                Enumerable.Empty<Issue>());
+                Enumerable.Empty<Issue>(),
+                TestUserId);
 
             // act
             line.AddIssue(issue);
@@ -145,7 +152,8 @@ namespace ChangeTracker.Domain.Tests.ChangeLogTests
             var line = new ChangeLogLine(TestId,
                 null, TestProductId, TestText,
                 TestPosition, TestCreationDate,
-                Enumerable.Empty<Label>(), issues);
+                Enumerable.Empty<Label>(), issues,
+                TestUserId);
 
             // act
             Action act = () => line.AddIssue(Issue.Parse("#123411"));
@@ -161,7 +169,8 @@ namespace ChangeTracker.Domain.Tests.ChangeLogTests
                 null, TestProductId, TestText,
                 TestPosition, TestCreationDate,
                 Enumerable.Empty<Label>(),
-                Enumerable.Empty<Issue>());
+                Enumerable.Empty<Issue>(),
+                TestUserId);
 
             line.RemoveIssue(Issue.Parse("#123411"));
 
@@ -176,7 +185,8 @@ namespace ChangeTracker.Domain.Tests.ChangeLogTests
                 null, TestProductId, TestText,
                 TestPosition, TestCreationDate,
                 Enumerable.Empty<Label>(),
-                new List<Issue>(1) {issue});
+                new List<Issue>(1) {issue},
+                TestUserId);
 
             line.RemoveIssue(issue);
 
@@ -192,7 +202,8 @@ namespace ChangeTracker.Domain.Tests.ChangeLogTests
                 null, TestProductId, TestText,
                 TestPosition, TestCreationDate,
                 Enumerable.Empty<Label>(),
-                new List<Issue>(1) {issue1, issue2});
+                new List<Issue>(1) {issue1, issue2},
+                TestUserId);
 
             line.RemoveIssue(issue2);
 
@@ -206,7 +217,8 @@ namespace ChangeTracker.Domain.Tests.ChangeLogTests
             var line = new ChangeLogLine(TestId,
                 TestVersionId, TestProductId, TestText,
                 TestPosition, TestCreationDate,
-                Enumerable.Empty<Label>(), Enumerable.Empty<Issue>());
+                Enumerable.Empty<Label>(), Enumerable.Empty<Issue>(),
+                TestUserId);
 
             var remainingIssuePlaces = line.AvailableIssuePlaces;
 
@@ -228,7 +240,8 @@ namespace ChangeTracker.Domain.Tests.ChangeLogTests
             var line = new ChangeLogLine(TestId,
                 null, TestProductId, TestText,
                 TestPosition, TestCreationDate,
-                Enumerable.Empty<Label>(), issues);
+                Enumerable.Empty<Label>(), issues,
+                TestUserId);
 
             // act
             var remainingIssuePlaces = line.AvailableIssuePlaces;

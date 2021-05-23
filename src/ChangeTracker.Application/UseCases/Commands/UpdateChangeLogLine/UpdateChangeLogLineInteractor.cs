@@ -65,7 +65,7 @@ namespace ChangeTracker.Application.UseCases.Commands.UpdateChangeLogLine
         {
             var line = new ChangeLogLine(existingLine.Id, existingLine.VersionId, existingLine.ProductId,
                 updatedValues.Text, existingLine.Position, existingLine.CreatedAt, updatedValues.Labels,
-                updatedValues.Issues, existingLine.DeletedAt);
+                updatedValues.Issues, existingLine.CreatedByUser, existingLine.DeletedAt);
 
             await _changeLogCommands.UpdateLineAsync(line)
                 .Match(Finish, c => output.Conflict(c.Reason));

@@ -14,7 +14,7 @@ namespace ChangeTracker.DataAccess.Postgres.Tests.TestDoubles
             DateTime.Parse("2021-05-21"), 
             null);
 
-        public static readonly User User = new User(
+        public static readonly User User = new(
             Guid.Parse("9e13bbfc-451b-450e-a73a-72b6b23df64d"),
             Email.Parse("test.dataAccess@change-tracker.com"),
             Name.Parse("test"),
@@ -30,10 +30,11 @@ namespace ChangeTracker.DataAccess.Postgres.Tests.TestDoubles
             Text.Parse(
                 @"^(0|[1-9]\d*)\.(0|[1-9]\d*)\.(0|[1-9]\d*)(?:-((?:0|[1-9]\d*|\d*[a-zA-Z-][0-9a-zA-Z-]*)(?:\.(?:0|[1-9]\d*|\d*[a-zA-Z-][0-9a-zA-Z-]*))*))?(?:\+([0-9a-zA-Z-]+(?:\.[0-9a-zA-Z-]+)*))?$")
             ,
-            null,
             Text.Parse("Semantic Versioning 2.0.0 - see https://semver.org/ for more info"),
-            DateTime.Parse("2021-04-05T15:00:00"),
-            null);
+            null,
+            User.Id,
+            null,
+            DateTime.Parse("2021-04-05T15:00:00"));
 
         public static readonly Product Product = new(
             Guid.Parse("dcfe1635-1b3a-4c20-89d0-889dcbb66fed"),

@@ -100,7 +100,7 @@ namespace ChangeTracker.Application.UseCases.Commands.MakeAllChangeLogLinesPendi
             var lines = versionChangeLogs.Lines.Select((x, i) => new ChangeLogLine(x.Id,
                 null, x.ProductId,
                 x.Text, nextFreePosition + (uint) i,
-                x.CreatedAt, x.Labels, x.Issues, x.DeletedAt));
+                x.CreatedAt, x.Labels, x.Issues, x.CreatedByUser, x.DeletedAt));
 
             await MoveLinesAsync(output, lines);
         }

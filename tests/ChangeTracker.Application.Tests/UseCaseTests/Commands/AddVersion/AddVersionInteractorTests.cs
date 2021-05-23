@@ -4,6 +4,7 @@ using ChangeTracker.Application.DataAccess;
 using ChangeTracker.Application.Tests.TestDoubles;
 using ChangeTracker.Application.UseCases.Commands.AddVersion;
 using ChangeTracker.Domain;
+using ChangeTracker.Domain.Common;
 using ChangeTracker.Domain.Version;
 using Moq;
 using Xunit;
@@ -25,17 +26,15 @@ namespace ChangeTracker.Application.Tests.UseCaseTests.Commands.AddVersion
             _outputPortMock = new Mock<IAddVersionOutputPort>(MockBehavior.Strict);
         }
 
-        private AddVersionInteractor CreateInteractor()
-        {
-            return new(_versionDaoStub, _productDaoStub, _unitOfWorkMock.Object);
-        }
+        private AddVersionInteractor CreateInteractor() =>
+            new(_versionDaoStub, _productDaoStub, _unitOfWorkMock.Object);
 
         [Fact]
         public async Task CreateVersion_HappyPath_Successful()
         {
             // arrange
             _productDaoStub.Products.Add(TestAccount.Product);
-            var versionRequestModel = new VersionRequestModel(TestAccount.Product.Id, "1.2.3");
+            var versionRequestModel = new VersionRequestModel(TestAccount.UserId, TestAccount.Product.Id, "1.2.3", "");
             var createVersionInteractor = CreateInteractor();
 
             _outputPortMock.Setup(m => m.Created(It.IsAny<Guid>()));
@@ -52,7 +51,7 @@ namespace ChangeTracker.Application.Tests.UseCaseTests.Commands.AddVersion
         {
             // arrange
             _productDaoStub.Products.Add(TestAccount.Product);
-            var versionRequestModel = new VersionRequestModel(TestAccount.Product.Id, "1. .3");
+            var versionRequestModel = new VersionRequestModel(TestAccount.UserId, TestAccount.Product.Id, "1. .3", "");
             var createVersionInteractor = CreateInteractor();
 
             _outputPortMock.Setup(m => m.InvalidVersionFormat(It.IsAny<string>()));
@@ -68,7 +67,7 @@ namespace ChangeTracker.Application.Tests.UseCaseTests.Commands.AddVersion
         public async Task CreateVersion_NoProductExists_ProductDoesNotExistOutput()
         {
             // arrange
-            var versionRequestModel = new VersionRequestModel(TestAccount.Product.Id, "1.2.3");
+            var versionRequestModel = new VersionRequestModel(TestAccount.UserId, TestAccount.Product.Id, "1.2.3", "");
             var createVersionInteractor = CreateInteractor();
 
             _outputPortMock.Setup(m => m.ProductDoesNotExist());
@@ -88,7 +87,7 @@ namespace ChangeTracker.Application.Tests.UseCaseTests.Commands.AddVersion
                 TestAccount.CustomVersioningScheme, TestAccount.UserId, DateTime.Parse("2021-04-04"),
                 DateTime.Parse("2021-05-13")));
 
-            var versionRequestModel = new VersionRequestModel(TestAccount.Product.Id, "12.1");
+            var versionRequestModel = new VersionRequestModel(TestAccount.UserId, TestAccount.Product.Id, "12.1", "");
             var createVersionInteractor = CreateInteractor();
 
             _outputPortMock.Setup(m => m.ProductClosed());
@@ -107,7 +106,7 @@ namespace ChangeTracker.Application.Tests.UseCaseTests.Commands.AddVersion
             _productDaoStub.Products.Add(new Product(TestAccount.Product.Id, TestAccount.Id, TestAccount.Product.Name,
                 TestAccount.CustomVersioningScheme, TestAccount.UserId, DateTime.Parse("2021-04-04"), null));
 
-            var versionRequestModel = new VersionRequestModel(TestAccount.Product.Id, "12*");
+            var versionRequestModel = new VersionRequestModel(TestAccount.UserId, TestAccount.Product.Id, "12*", "");
             var createVersionInteractor = CreateInteractor();
 
             _outputPortMock.Setup(m => m.VersionDoesNotMatchScheme(It.IsAny<string>()));
@@ -129,10 +128,10 @@ namespace ChangeTracker.Application.Tests.UseCaseTests.Commands.AddVersion
             var versionId = Guid.Parse("1d7831d5-32fb-437f-a9d5-bf5a7dd34b10");
             var version = ClVersionValue.Parse("1.2");
             _versionDaoStub.Versions.Add(new ClVersion(versionId, TestAccount.Product.Id,
-                version, DateTime.Parse("2021-04-12"),
+                version, OptionalName.Empty, DateTime.Parse("2021-04-12"), TestAccount.UserId,
                 DateTime.Parse("2021-04-12"), DateTime.Parse("2021-04-12")));
 
-            var versionRequestModel = new VersionRequestModel(TestAccount.Product.Id, version);
+            var versionRequestModel = new VersionRequestModel(TestAccount.UserId, TestAccount.Product.Id, version, "");
             var createVersionInteractor = CreateInteractor();
 
             _outputPortMock.Setup(m => m.VersionAlreadyExists(It.IsAny<string>()));
@@ -149,7 +148,7 @@ namespace ChangeTracker.Application.Tests.UseCaseTests.Commands.AddVersion
         {
             // arrange
             _productDaoStub.Products.Add(TestAccount.Product);
-            var versionRequestModel = new VersionRequestModel(TestAccount.Product.Id, "1.2.3");
+            var versionRequestModel = new VersionRequestModel(TestAccount.UserId, TestAccount.Product.Id, "1.2.3", "");
             var createVersionInteractor = CreateInteractor();
             _versionDaoStub.ProduceConflict = true;
             _outputPortMock.Setup(m => m.Conflict(It.IsAny<string>()));

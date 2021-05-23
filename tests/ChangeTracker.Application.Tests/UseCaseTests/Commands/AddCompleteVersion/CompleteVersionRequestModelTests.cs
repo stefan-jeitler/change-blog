@@ -8,7 +8,9 @@ namespace ChangeTracker.Application.Tests.UseCaseTests.Commands.AddCompleteVersi
 {
     public class CompleteVersionRequestModelTests
     {
+        private static Guid _testUserId;
         private List<ChangeLogLineRequestModel> _testLines;
+        private readonly string _testName;
         private Guid _testProductId;
         private bool _testReleaseImmediately;
         private string _testVersion;
@@ -16,15 +18,15 @@ namespace ChangeTracker.Application.Tests.UseCaseTests.Commands.AddCompleteVersi
         public CompleteVersionRequestModelTests()
         {
             _testProductId = Guid.Parse("f02cf1c7-d8a7-492f-b46d-a2ba916770d0");
+            _testUserId = Guid.Parse("294c4f04-85d4-4d5b-ae25-e6b618f1676f");
             _testVersion = "1.2.3";
+            _testName = string.Empty;
             var testLine = new ChangeLogLineRequestModel("some text", new List<string>(0), new List<string>(0));
             _testLines = new List<ChangeLogLineRequestModel>(1) {testLine};
         }
 
-        private CompleteVersionRequestModel CreateRequestModel()
-        {
-            return new(_testProductId, _testVersion, _testLines, _testReleaseImmediately);
-        }
+        private CompleteVersionRequestModel CreateRequestModel() => new(_testUserId, _testProductId, _testVersion,
+            _testName, _testLines, _testReleaseImmediately);
 
         [Fact]
         public void Create_HappyPath_Successful()

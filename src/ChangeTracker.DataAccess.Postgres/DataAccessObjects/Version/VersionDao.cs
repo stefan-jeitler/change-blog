@@ -15,6 +15,18 @@ namespace ChangeTracker.DataAccess.Postgres.DataAccessObjects.Version
 {
     public class VersionDao : IVersionDao
     {
+        private const string SelectVersion = @"
+            select v.id,
+                   v.product_id      as productId,
+                   v.value           as versionValue,
+                   v.name,
+                   v.released_at     as releasedAt,
+                   v.created_by_user as createdByUser,
+                   v.created_at      as createdAt,
+                   v.deleted_at      as deletedAt
+            from version v
+            ";
+
         private readonly IDbAccessor _dbAccessor;
         private readonly ILogger<VersionDao> _logger;
 
@@ -26,14 +38,8 @@ namespace ChangeTracker.DataAccess.Postgres.DataAccessObjects.Version
 
         public async Task<Maybe<ClVersion>> FindVersionAsync(Guid productId, ClVersionValue versionValue)
         {
-            const string findVersionSql = @"
-                select v.id,
-                       v.product_id  as productId,
-                       v.value       as versionValue,
-                       v.released_at as releasedAt,
-                       v.created_at  as createdAt,
-                       v.deleted_at  as deletedAt
-                from version v
+            var findVersionSql = $@"
+                {SelectVersion}
                 where v.product_id = @productId
                 and v.value = @versionValue";
 
@@ -51,14 +57,8 @@ namespace ChangeTracker.DataAccess.Postgres.DataAccessObjects.Version
 
         public async Task<Maybe<ClVersion>> FindVersionAsync(Guid versionId)
         {
-            const string findVersionSql = @"
-                select v.id,
-                       v.product_id  as productId,
-                       v.value       as versionValue,
-                       v.released_at as releasedAt,
-                       v.created_at  as createdAt,
-                       v.deleted_at  as deletedAt
-                from version v
+            var findVersionSql = @$"
+                {SelectVersion}
                 where v.id = @versionId";
 
             var version = await _dbAccessor.DbConnection
@@ -103,8 +103,9 @@ namespace ChangeTracker.DataAccess.Postgres.DataAccessObjects.Version
         public async Task<Result<ClVersion, Conflict>> AddVersionAsync(ClVersion version)
         {
             const string insertVersionSql = @"
-                insert into version (id, product_id, ""value"", released_at, deleted_at, created_at)
-                values (@id, @productId, @value, @releasedAt, @deletedAt, @createdAt)";
+                insert into version (id, product_id, ""value"", name, released_at, created_by_user, deleted_at, created_at)
+                values (@id, @productId, @value, @name, @releasedAt, @createdByUser, @deletedAt, @createdAt)
+            ";
 
             try
             {
@@ -113,7 +114,9 @@ namespace ChangeTracker.DataAccess.Postgres.DataAccessObjects.Version
                     id = version.Id,
                     productId = version.ProductId,
                     value = version.Value,
+                    name = version.Name.Value,
                     releasedAt = version.ReleasedAt,
+                    createdByUser = version.CreatedByUser,
                     deletedAt = version.DeletedAt,
                     createdAt = version.CreatedAt
                 });

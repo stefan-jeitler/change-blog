@@ -10,6 +10,7 @@ using ChangeTracker.Application.Services.ChangeLogLineParsing;
 using ChangeTracker.Application.UseCases.Commands.AddCompleteVersion.Models;
 using ChangeTracker.Domain;
 using ChangeTracker.Domain.ChangeLog;
+using ChangeTracker.Domain.Common;
 using ChangeTracker.Domain.Version;
 using CSharpFunctionalExtensions;
 
@@ -42,8 +43,7 @@ namespace ChangeTracker.Application.UseCases.Commands.AddCompleteVersion
             if (product.HasNoValue)
                 return;
 
-            var newVersion = CreateNewVersion(output, product.Value, versionRequestModel.Version,
-                versionRequestModel.ReleaseImmediately);
+            var newVersion = CreateNewVersion(output, product.Value, versionRequestModel);
             if (newVersion.HasNoValue)
                 return;
 
@@ -80,11 +80,11 @@ namespace ChangeTracker.Application.UseCases.Commands.AddCompleteVersion
         }
 
         private static Maybe<ClVersion> CreateNewVersion(IAddCompleteVersionOutputPort output,
-            Product product, string versionCandidate, bool releaseImmediately)
+            Product product, CompleteVersionRequestModel requestModel)
         {
-            if (!ClVersionValue.TryParse(versionCandidate, out var clVersion))
+            if (!ClVersionValue.TryParse(requestModel.Version, out var clVersion))
             {
-                output.InvalidVersionFormat(versionCandidate);
+                output.InvalidVersionFormat(requestModel.Version);
                 return Maybe<ClVersion>.None;
             }
 
@@ -94,12 +94,20 @@ namespace ChangeTracker.Application.UseCases.Commands.AddCompleteVersion
                 return Maybe<ClVersion>.None;
             }
 
+            if (!OptionalName.TryParse(requestModel.Name, out var versionName))
+            {
+                output.InvalidVersionName(requestModel.Name);
+                return Maybe<ClVersion>.None;
+            }
+
             var utcNow = DateTime.UtcNow;
-            DateTime? releaseDate = releaseImmediately ? utcNow : null;
+            DateTime? releaseDate = requestModel.ReleaseImmediately ? utcNow : null;
             var version = new ClVersion(Guid.NewGuid(),
                 product.Id,
                 clVersion,
+                versionName,
                 releaseDate,
+                requestModel.UserId,
                 utcNow,
                 null);
 
@@ -159,9 +167,14 @@ namespace ChangeTracker.Application.UseCases.Commands.AddCompleteVersion
             if (parsedLine.HasNoValue) return Maybe<ChangeLogLine>.None;
 
             var changeLogLine = new ChangeLogLine(Guid.NewGuid(),
-                clVersion.Id, clVersion.ProductId,
-                parsedLine.Value.Text, position, DateTime.UtcNow,
-                parsedLine.Value.Labels, parsedLine.Value.Issues);
+                clVersion.Id,
+                clVersion.ProductId,
+                parsedLine.Value.Text,
+                position, 
+                DateTime.UtcNow,
+                parsedLine.Value.Labels, 
+                parsedLine.Value.Issues, 
+                clVersion.CreatedByUser);
 
             return Maybe<ChangeLogLine>.From(changeLogLine);
         }

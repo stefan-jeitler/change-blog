@@ -14,8 +14,10 @@ namespace ChangeTracker.DataAccess.Postgres.DataAccessObjects.ChangeLogs
     public class ChangeLogCommandsDao : IChangeLogCommandsDao
     {
         private const string InsertLineSql = @"
-                insert into changelog_line (id, version_id, product_id, text, labels, issues, ""position"", deleted_at, created_at)
-                values (@id, @versionId, @productId, @text, CAST(@labels AS json), CAST(@issues AS json), @position, @deletedAt, @createdAt)
+            insert into changelog_line (id, version_id, product_id, text, labels, issues, ""position"", created_by_user, deleted_at, created_at)
+            values (@id, @versionId, @productId, @text,
+                    CAST(@labels AS json), CAST(@issues AS json), @position,
+                    @createdByUser, @deletedAt, @createdAt)
                 ";
 
         private const string MoveLineSql = @"
@@ -59,6 +61,7 @@ namespace ChangeTracker.DataAccess.Postgres.DataAccessObjects.ChangeLogs
                         labels = l.Labels.AsEnumerable(),
                         issues = l.Issues.AsEnumerable(),
                         position = (int)l.Position,
+                        createdByUser = l.CreatedByUser,
                         deletedAt = l.DeletedAt,
                         createdAt = l.CreatedAt
                     });
@@ -86,6 +89,7 @@ namespace ChangeTracker.DataAccess.Postgres.DataAccessObjects.ChangeLogs
                         labels = l.Labels.AsEnumerable(),
                         issues = l.Issues.AsEnumerable(),
                         position = (int)l.Position,
+                        createdByUser = l.CreatedByUser,
                         deletedAt = l.DeletedAt,
                         createdAt = l.CreatedAt
                     }));

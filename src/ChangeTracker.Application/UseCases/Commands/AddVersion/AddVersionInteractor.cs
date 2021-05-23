@@ -4,6 +4,7 @@ using ChangeTracker.Application.DataAccess;
 using ChangeTracker.Application.DataAccess.Products;
 using ChangeTracker.Application.DataAccess.Versions;
 using ChangeTracker.Domain;
+using ChangeTracker.Domain.Common;
 using ChangeTracker.Domain.Version;
 using CSharpFunctionalExtensions;
 
@@ -24,21 +25,20 @@ namespace ChangeTracker.Application.UseCases.Commands.AddVersion
             _unitOfWork = unitOfWork ?? throw new ArgumentNullException(nameof(unitOfWork));
         }
 
-        public async Task ExecuteAsync(IAddVersionOutputPort output, VersionRequestModel versionRequestModel)
+        public async Task ExecuteAsync(IAddVersionOutputPort output, VersionRequestModel requestModel)
         {
-            var (productId, v) = versionRequestModel;
-            if (!ClVersionValue.TryParse(v, out var versionValue))
+            if (!ClVersionValue.TryParse(requestModel.Version, out var versionValue))
             {
-                output.InvalidVersionFormat(v);
+                output.InvalidVersionFormat(requestModel.Version);
                 return;
             }
 
             _unitOfWork.Start();
-            var product = await GetProductAsync(output, productId);
+            var product = await GetProductAsync(output, requestModel.ProductId);
             if (product.HasNoValue)
                 return;
 
-            var clVersion = await CreateVersionAsync(output, product.Value, versionValue);
+            var clVersion = await CreateVersionAsync(output, product.Value, versionValue, requestModel);
             if (clVersion.HasNoValue)
                 return;
 
@@ -46,7 +46,7 @@ namespace ChangeTracker.Application.UseCases.Commands.AddVersion
         }
 
         private async Task<Maybe<ClVersion>> CreateVersionAsync(IAddVersionOutputPort output, Product product,
-            ClVersionValue versionValue)
+            ClVersionValue versionValue, VersionRequestModel requestModel)
         {
             var existingClVersion = await _versionDao.FindVersionAsync(product.Id, versionValue);
             if (existingClVersion.HasValue)
@@ -61,9 +61,20 @@ namespace ChangeTracker.Application.UseCases.Commands.AddVersion
                 return Maybe<ClVersion>.None;
             }
 
+            if (!OptionalName.TryParse(requestModel.Name, out var versionName))
+            {
+                output.InvalidVersionName(requestModel.Name);
+                return Maybe<ClVersion>.None;
+            }
+
             var clVersion = new ClVersion(Guid.NewGuid(),
-                product.Id, versionValue,
-                null, DateTime.UtcNow, null);
+                product.Id,
+                versionValue,
+                versionName,
+                null,
+                requestModel.UserId, 
+                DateTime.UtcNow,
+                null);
 
             return Maybe<ClVersion>.From(clVersion);
         }

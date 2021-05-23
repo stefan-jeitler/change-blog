@@ -15,5 +15,6 @@ namespace ChangeTracker.Application.UseCases.Commands.AddCompleteVersion
         void VersionAlreadyExists(string version);
         void TooManyLines(int maxChangeLogLines);
         void LinesWithSameTextsAreNotAllowed(IList<string> duplicates);
+        void InvalidVersionName(string versionName);
     }
 }

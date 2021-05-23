@@ -29,6 +29,7 @@ namespace ChangeTracker.DataAccess.Postgres.DataAccessObjects.ChangeLogs
                        chl.created_at as createdAt,
                        CAST(chl.labels AS text) as labels,
                        CAST(chl.issues AS text) as issues,
+                       chl.created_by_user as createdByUser,
                        chl.deleted_at as deletedAt
                 from changelog_line chl
                 where id = @changeLogLineId";
@@ -59,6 +60,7 @@ namespace ChangeTracker.DataAccess.Postgres.DataAccessObjects.ChangeLogs
                        chl.created_at as createdAt,
                        CAST(chl.labels AS text) as labels,
                        CAST(chl.issues AS text) as issues,
+                       chl.created_by_user as createdByUser,
                        chl.deleted_at as deletedAt
                 from changelog_line chl
                 where product_id = @productId
@@ -85,6 +87,7 @@ namespace ChangeTracker.DataAccess.Postgres.DataAccessObjects.ChangeLogs
                        chl.created_at           as createdAt,
                        CAST(chl.labels AS text) as labels,
                        CAST(chl.issues AS text) as issues,
+                       chl.created_by_user as createdByUser,
                        chl.deleted_at           as deletedAt
                 from changelog_line chl
                 where chl.version_id = ANY (@versionIds)";
@@ -109,6 +112,7 @@ namespace ChangeTracker.DataAccess.Postgres.DataAccessObjects.ChangeLogs
                        chl.created_at as createdAt,
                        CAST(chl.labels AS text) as labels,
                        CAST(chl.issues AS text) as issues,
+                       chl.created_by_user as createdByUser,
                        chl.deleted_at as deletedAt
                 from changelog_line chl
                 where chl.product_id = @productId

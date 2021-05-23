@@ -98,7 +98,7 @@ namespace ChangeTracker.Application.UseCases.Commands.AddChangeLogLine
             var changeLogLine = new ChangeLogLine(Guid.NewGuid(),
                 clVersion.Id, clVersion.ProductId, parsedLine.Value.Text,
                 changeLogs.NextFreePosition, DateTime.UtcNow,
-                parsedLine.Value.Labels, parsedLine.Value.Issues);
+                parsedLine.Value.Labels, parsedLine.Value.Issues, requestModel.UserId);
 
             return Maybe<ChangeLogLine>.From(changeLogLine);
         }

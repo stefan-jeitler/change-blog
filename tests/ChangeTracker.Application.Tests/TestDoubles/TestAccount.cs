@@ -22,10 +22,11 @@ namespace ChangeTracker.Application.Tests.TestDoubles
             Guid.Parse("76a96500-6446-42b3-bb3d-5e318b338b0d"),
             Name.Parse("My custom scheme"),
             Text.Parse(@"^(\d+\.)?(\d+\.)?(\*|\d+)$"),
-            Id,
             Text.Parse("a custom scheme for my product"),
-            DateTime.Parse("2021-04-05T15:00:00"),
-            null);
+            Id,
+            UserId,
+            null,
+            DateTime.Parse("2021-04-05T15:00:00"));
 
         public static readonly VersioningScheme DefaultScheme = new(
             Guid.Parse("4091b948-9bc5-43ee-9f98-df3d27853565"),
@@ -33,10 +34,11 @@ namespace ChangeTracker.Application.Tests.TestDoubles
             Text.Parse(
                 @"^(0|[1-9]\d*)\.(0|[1-9]\d*)\.(0|[1-9]\d*)(?:-((?:0|[1-9]\d*|\d*[a-zA-Z-][0-9a-zA-Z-]*)(?:\.(?:0|[1-9]\d*|\d*[a-zA-Z-][0-9a-zA-Z-]*))*))?(?:\+([0-9a-zA-Z-]+(?:\.[0-9a-zA-Z-]+)*))?$")
             ,
-            null,
             Text.Parse("Semantic Versioning 2.0.0 - see https://semver.org/ for more info"),
-            DateTime.Parse("2021-04-05T15:00:00"),
-            null);
+            null,
+            UserId,
+            null,
+            DateTime.Parse("2021-04-05T15:00:00"));
 
         public static readonly Account Account = new(Id, Name, CustomVersioningScheme.Id, CreationDate, null);
 

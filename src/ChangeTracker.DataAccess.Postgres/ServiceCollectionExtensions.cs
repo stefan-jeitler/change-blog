@@ -7,7 +7,6 @@ using ChangeTracker.Application.DataAccess.ChangeLogs;
 using ChangeTracker.Application.DataAccess.Products;
 using ChangeTracker.Application.DataAccess.Users;
 using ChangeTracker.Application.DataAccess.Versions;
-using ChangeTracker.DataAccess.Postgres.DataAccessObjects;
 using ChangeTracker.DataAccess.Postgres.DataAccessObjects.Account;
 using ChangeTracker.DataAccess.Postgres.DataAccessObjects.ChangeLogs;
 using ChangeTracker.DataAccess.Postgres.DataAccessObjects.Product;
@@ -17,6 +16,7 @@ using ChangeTracker.DataAccess.Postgres.TypeHandler;
 using Dapper;
 using Microsoft.Extensions.DependencyInjection;
 using Npgsql;
+// ReSharper disable ArrangeMethodOrOperatorBody
 
 namespace ChangeTracker.DataAccess.Postgres
 {
@@ -36,6 +36,7 @@ namespace ChangeTracker.DataAccess.Postgres
         public static void RegisterTypeHandler()
         {
             SqlMapper.AddTypeHandler(new NameTypeHandler());
+            SqlMapper.AddTypeHandler(new OptionalNameTypeHandler());
             SqlMapper.AddTypeHandler(new TextTypeHandler());
             SqlMapper.AddTypeHandler(new EmailTypeHandler());
             SqlMapper.AddTypeHandler(new ChangeLogTextTypeHandler());

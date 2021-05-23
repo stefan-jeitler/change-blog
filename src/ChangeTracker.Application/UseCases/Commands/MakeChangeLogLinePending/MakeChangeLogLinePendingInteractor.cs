@@ -110,14 +110,17 @@ namespace ChangeTracker.Application.UseCases.Commands.MakeChangeLogLinePending
             return Maybe<ChangeLogs>.From(pendingChangeLogs);
         }
 
-        private static ChangeLogLine MakeLinePending(ChangeLogLine line, ChangeLogs pendingChangeLogs)
-        {
-            return new(line.Id, null,
-                line.ProductId, line.Text,
+        private static ChangeLogLine MakeLinePending(ChangeLogLine line, ChangeLogs pendingChangeLogs) =>
+            new(line.Id, 
+                null,
+                line.ProductId,
+                line.Text,
                 pendingChangeLogs.NextFreePosition,
-                line.CreatedAt, line.Labels,
-                line.Issues, line.DeletedAt);
-        }
+                line.CreatedAt,
+                line.Labels,
+                line.Issues,
+                line.CreatedByUser, 
+                line.DeletedAt);
 
         private async Task MoveLineAsyncAsync(IMakeChangeLogLinePendingOutputPort output, ChangeLogLine line)
         {

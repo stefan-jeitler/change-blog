@@ -6,7 +6,7 @@ Due to the continuous movement towards microservices, releases are harder to tra
 Often monoliths get subdivided into many micro/nano services, each of them are deployed independently with its own versioning.  
 
 Imagine you're a product owner who is responsible for many products.  
-In order to communicate the changes to the customer you need to be up-to-date about the releases.  
+In order to communicate the changes to the customer you need to be up-to-date about releases.  
 Maybe you talk to the developer directly or call an api info endpoint to get the latest deployed version.  
 After that, you check what's inside this release in your ticket system to be informed about the latest changes.  
 

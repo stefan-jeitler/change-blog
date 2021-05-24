@@ -2,8 +2,7 @@
 {
     public record OptionalName
     {
-        public const uint MinLength = 2;
-        public const uint MaxLength = 50;
+        public const uint MaxLength = Name.MaxLength;
 
         public static readonly OptionalName Empty = new(string.Empty);
 

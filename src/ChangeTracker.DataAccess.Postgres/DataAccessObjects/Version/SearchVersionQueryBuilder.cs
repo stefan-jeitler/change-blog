@@ -6,8 +6,7 @@ namespace ChangeTracker.DataAccess.Postgres.DataAccessObjects.Version
 {
     public class SearchVersionQueryBuilder
     {
-        private readonly List<string> _versionPredicates = new();
-        private readonly List<string> _changeLogPredicates = new();
+        private readonly List<string> _predicates = new();
         private readonly Dictionary<string, object> _parameters = new();
 
         public SearchVersionQueryBuilder(Guid productId)
@@ -22,8 +21,8 @@ namespace ChangeTracker.DataAccess.Postgres.DataAccessObjects.Version
         {
             if (!lastVersionId.HasValue || lastVersionId.Value == Guid.Empty)
                 return this;
-            
-            _versionPredicates.Add("(v.created_at, v.id) < ((select vs.created_at from version vs where vs.id = @lastVersionId), @lastVersionId)");
+
+            _predicates.Add("(v.created_at, v.id) < ((select vs.created_at from version vs where vs.id = @lastVersionId), @lastVersionId)");
             _parameters.Add("lastVersionId", lastVersionId.Value);
 
             return this;
@@ -31,7 +30,7 @@ namespace ChangeTracker.DataAccess.Postgres.DataAccessObjects.Version
 
         public SearchVersionQueryBuilder ExcludeDeletedVersions()
         {
-            _versionPredicates.Add("v.deleted_at is null");
+            _predicates.Add("v.deleted_at is null");
             return this;
         }
 
@@ -41,24 +40,28 @@ namespace ChangeTracker.DataAccess.Postgres.DataAccessObjects.Version
                 return this;
 
             var trimmedSearchTerm = searchTerm.Trim();
-            if (trimmedSearchTerm.Contains(" "))
-                return this;
-            
-            _changeLogPredicates.Add("chl.search_vectors @@ to_tsquery(trim(@searchTerm))");
-            _parameters.Add("searchTerm", searchTerm);
+            var finalSearchTerm = trimmedSearchTerm.Contains(" ")
+                ? string.Join(" & ", trimmedSearchTerm.Split(" "))
+                : trimmedSearchTerm;
+
+            _predicates.Add(@"
+                  (exists(SELECT NULL
+                             FROM changelog_line chl
+                             where chl.product_id = v.product_id
+                               and chl.version_id = v.id
+                               and chl.deleted_at is null
+                               and chl.search_vectors @@ to_tsquery(trim(@searchTerm))
+                      ) or v.search_vectors @@ to_tsquery(trim(@searchTerm)))");
+            _parameters.Add("searchTerm", finalSearchTerm);
             return this;
         }
 
         public (string, IReadOnlyDictionary<string, object>) Build(ushort limit)
         {
-            var versionPredicates = _versionPredicates.Any()
-                ? $"and {string.Join(" and ", _versionPredicates)}"
+            var predicates = _predicates.Any()
+                ? $"and {string.Join(" and ", _predicates)}"
                 : string.Empty;
 
-            var changeLogLinePredicates = _changeLogPredicates.Any()
-                ? $"and {string.Join(" and ", _changeLogPredicates)}"
-                : string.Empty;
-            
             var query = $@"
                 select v.id,
                        v.product_id      as productId,
@@ -70,14 +73,7 @@ namespace ChangeTracker.DataAccess.Postgres.DataAccessObjects.Version
                        v.deleted_at      as deletedAt
                 from version v
                 where v.product_id = @productId
-                  {versionPredicates}
-                  and exists(SELECT NULL
-                             FROM changelog_line chl
-                             where chl.product_id = v.product_id
-                               and chl.version_id = v.id
-                               and chl.deleted_at is null
-                               {changeLogLinePredicates}
-                      )
+                  {predicates}
                 order by v.created_at desc
                     fetch first (@limit) rows only";
 

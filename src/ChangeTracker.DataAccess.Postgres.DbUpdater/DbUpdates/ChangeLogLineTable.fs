@@ -72,6 +72,31 @@ let private updateSearchVectorsForExistingLinesSql = """
                                           'g')))
     """
 
+let private removeColumnsFromUpdateSearchVectorsFunctionSql = """
+        CREATE OR REPLACE FUNCTION update_changelogline_textsearch() RETURNS trigger AS
+        $$
+        DECLARE
+        BEGIN
+            NEW.search_vectors = to_tsvector(NEW.text)
+                || to_tsvector(regexp_replace((SELECT coalesce(string_agg(value::text, ' '), '')
+                                               FROM jsonb_array_elements_text(NEW.labels || NEW.issues)), '([a-z])([A-Z])',
+                                              '\1 \2',
+                                              'g'));
+
+            RETURN NEW;
+        END;
+        $$ LANGUAGE plpgsql
+    """
+
+let private updateSearchVectorsForExistingLinesAfterRemovingColumnsSql = """
+    update changelog_line chl
+    set search_vectors = to_tsvector(text)
+        || to_tsvector(regexp_replace((SELECT coalesce(string_agg(value::text, ''), '')
+                                       FROM jsonb_array_elements_text(chl.labels || chl.issues)), '([a-z])([A-Z])', '\1 \2',
+                                      'g'))
+    
+"""
+
 let create (dbConnection: IDbConnection) =
     dbConnection.Execute(createLineSql) |> ignore
 
@@ -94,5 +119,11 @@ let addTextSearch (dbConnection: IDbConnection) =
       createUpdateTextSearchTriggerSql
       updateSearchVectorsForExistingLinesSql ]
     |> executeSql
+
+    ()
+
+let removeVersionColumnsFromTextSearch (dbConnection: IDbConnection) = 
+    dbConnection.Execute(removeColumnsFromUpdateSearchVectorsFunctionSql) |> ignore 
+    dbConnection.Execute(updateSearchVectorsForExistingLinesAfterRemovingColumnsSql) |> ignore 
 
     ()

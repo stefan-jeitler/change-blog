@@ -24,9 +24,60 @@ let private addUniqueIndexProductIdValueDeletedAtSql = """
         ON "version" (product_id, lower(value), (deleted_at IS NULL)) WHERE deleted_at is null
     """
 
+let private addSearchVectorsColumnSql = """ALTER TABLE version ADD COLUMN IF NOT EXISTS "search_vectors" tsvector"""
+
+let private createSearchVectorsIndexSql = """CREATE INDEX IF NOT EXISTS version_searchvector_idx ON version USING gin (search_vectors)"""
+
+let private createUpdateTextSearchVectorsFunctionSql = """
+		CREATE OR REPLACE FUNCTION update_version_textsearch() RETURNS trigger AS
+		$$
+		DECLARE
+		BEGIN
+			NEW.search_vectors = (setweight(to_tsvector(NEW.value), 'A')
+				|| (setweight(to_tsvector(NEW.name), 'B')));
+
+			RETURN NEW;
+		END;
+		$$ LANGUAGE plpgsql	
+	"""
+
+let private dropUpdateTextSearchTriggerSql = """drop trigger if exists update_version_textsearch on version"""
+
+let private createUpdateTextSearchTriggerSql = """
+		CREATE TRIGGER update_version_textsearch
+		BEFORE INSERT OR UPDATE
+		ON version
+		FOR EACH ROW
+		EXECUTE PROCEDURE update_version_textsearch()
+	"""
+
+let private updateSearchVectorsForExistingLinesSql = """
+		update version v
+		set search_vectors = (setweight(to_tsvector(v.value), 'A')
+				|| (setweight(to_tsvector(v.name), 'B')))
+	"""
+
 let create (dbConnection: IDbConnection) =
     dbConnection.Execute(createVersionSql) |> ignore
 
 let addUniqueIndexProductIdValueDeletedAt (dbConnection: IDbConnection) =
     dbConnection.Execute(addUniqueIndexProductIdValueDeletedAtSql)
     |> ignore
+
+let addTextSearch (dbConnection: IDbConnection) =
+    let rec executeSql (statements: string list) =
+        match statements with
+        | [] -> ()
+        | head :: tail ->
+            dbConnection.Execute(head) |> ignore
+            executeSql tail
+
+    [ addSearchVectorsColumnSql
+      createSearchVectorsIndexSql
+      createUpdateTextSearchVectorsFunctionSql
+      dropUpdateTextSearchTriggerSql
+      createUpdateTextSearchTriggerSql
+      updateSearchVectorsForExistingLinesSql ]
+    |> executeSql
+
+    ()

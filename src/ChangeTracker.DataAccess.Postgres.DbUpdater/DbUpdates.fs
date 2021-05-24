@@ -37,4 +37,6 @@ let dbUpdates: DbUpdate list = [
     { Version = 26; Update = ProductViews.createProductUserRolesView}
     { Version = 27; Update = ChangeLogLineTable.addTextSearch}
     { Version = 28; Update = CommonFunctions.addGuidFunction}
-    { Version = 29; Update = UserTable.fixEmailUniqeConstraint}]
+    { Version = 29; Update = UserTable.fixEmailUniqeConstraint}
+    { Version = 30; Update = VersionTable.addTextSearch}
+    { Version = 31; Update = ChangeLogLineTable.removeVersionColumnsFromTextSearch}]

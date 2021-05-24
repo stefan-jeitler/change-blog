@@ -86,9 +86,6 @@ namespace ChangeTracker.Api.Controllers.v1
             bool includeDeleted = false,
             ushort limit = VersionsQueryRequestModel.MaxLimit)
         {
-            if (searchTerm is not null && searchTerm.Trim().Contains(" "))
-                return BadRequest(DefaultResponse.Create("Whitespaces in search terms are not allowed."));
-
             var userId = HttpContext.GetUserId();
             var requestModel = new VersionsQueryRequestModel(productId,
                 lastVersionId,

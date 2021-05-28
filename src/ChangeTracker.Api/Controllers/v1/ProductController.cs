@@ -23,8 +23,8 @@ namespace ChangeTracker.Api.Controllers.v1
     {
         private readonly IAddProduct _addProduct;
         private readonly ICloseProduct _closeProduct;
-        private readonly IGetProduct _getProduct;
         private readonly IGetCompleteVersions _getCompleteVersions;
+        private readonly IGetProduct _getProduct;
 
         public ProductController(IAddProduct addProduct, ICloseProduct closeProduct, IGetProduct getProduct,
             IGetCompleteVersions getCompleteVersions)
@@ -86,6 +86,12 @@ namespace ChangeTracker.Api.Controllers.v1
             bool includeDeleted = false,
             ushort limit = VersionsQueryRequestModel.MaxLimit)
         {
+            if (searchTerm is not null && searchTerm.Length > VersionsQueryRequestModel.MaxSearchTermLength)
+            {
+                return BadRequest(DefaultResponse.Create(
+                    $"SearchTerm is too long. Max length {VersionsQueryRequestModel.MaxSearchTermLength}"));
+            }
+
             var userId = HttpContext.GetUserId();
             var requestModel = new VersionsQueryRequestModel(productId,
                 lastVersionId,

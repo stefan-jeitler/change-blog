@@ -16,21 +16,18 @@ using ChangeTracker.DataAccess.Postgres.TypeHandler;
 using Dapper;
 using Microsoft.Extensions.DependencyInjection;
 using Npgsql;
-// ReSharper disable ArrangeMethodOrOperatorBody
 
 namespace ChangeTracker.DataAccess.Postgres
 {
     public static class ServiceCollectionExtensions
     {
         public static IServiceCollection AddPostgresDataAccess(this IServiceCollection services,
-            string connectionString)
-        {
-            return services
+            string connectionString) =>
+            services
                 .AddDbSession(connectionString)
                 .AddScoped<UserAccessDao>()
                 .AddScoped<SchemaVersion>()
                 .AddDataAccessObjects();
-        }
 
         [ModuleInitializer]
         public static void RegisterTypeHandler()
@@ -58,9 +55,8 @@ namespace ChangeTracker.DataAccess.Postgres
             return services;
         }
 
-        private static IServiceCollection AddDataAccessObjects(this IServiceCollection services)
-        {
-            return services
+        private static IServiceCollection AddDataAccessObjects(this IServiceCollection services) =>
+            services
                 .AddScoped<IAccountDao, AccountDao>()
                 .AddScoped<IProductDao, ProductDao>()
                 .AddScoped<IVersioningSchemeDao, VersioningSchemeDao>()
@@ -69,6 +65,5 @@ namespace ChangeTracker.DataAccess.Postgres
                 .AddScoped<IVersionDao, VersionDao>()
                 .AddScoped<IChangeLogCommandsDao, ChangeLogCommandsDao>()
                 .AddScoped<IChangeLogQueriesDao, ChangeLogQueriesDao>();
-        }
     }
 }

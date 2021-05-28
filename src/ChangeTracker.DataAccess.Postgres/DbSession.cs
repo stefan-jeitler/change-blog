@@ -1,4 +1,5 @@
-﻿using System.Data;
+﻿using System;
+using System.Data;
 using ChangeTracker.Application.DataAccess;
 
 namespace ChangeTracker.DataAccess.Postgres
@@ -6,7 +7,6 @@ namespace ChangeTracker.DataAccess.Postgres
     public sealed class DbSession : IDbAccessor, IUnitOfWork
     {
         private readonly LazyDbConnection _dbConnection;
-        private readonly object _lock = new();
         private uint _startedUows;
         private IDbTransaction _transaction;
 
@@ -19,31 +19,28 @@ namespace ChangeTracker.DataAccess.Postgres
 
         public void Start()
         {
-            lock (_lock)
-            {
-                if (_startedUows >= 1) return;
+            if (_startedUows >= 1) 
+                return;
 
-                if (_dbConnection.Value.State != ConnectionState.Open) _dbConnection.Value.Open();
+            if (_dbConnection.Value.State != ConnectionState.Open)
+                _dbConnection.Value.Open();
 
-                _transaction = _dbConnection.Value.BeginTransaction(IsolationLevel.RepeatableRead);
-                _startedUows++;
-            }
+            _transaction = _dbConnection.Value.BeginTransaction(IsolationLevel.RepeatableRead);
+            _startedUows++;
         }
 
         public void Commit()
         {
-            lock (_lock)
+            if (_startedUows == 1)
             {
-                if (_startedUows == 1)
-                {
-                    _transaction.Commit();
-                    _transaction.Dispose();
-                    _dbConnection.Value.Close();
-                }
-
-                if (_startedUows > 0)
-                    _startedUows--;
+                _transaction.Commit();
+                _transaction.Dispose();
+                _dbConnection.Value.Close();
+                _dbConnection.Value.Dispose();
             }
+
+            if (_startedUows > 0)
+                _startedUows--;
         }
     }
 }

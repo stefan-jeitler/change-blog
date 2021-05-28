@@ -11,8 +11,8 @@ let private createProductUserRolesViewSql = """
             u.email,
             r.name                                             as role,
             r.id                                               as role_id,
-            p.name                                             as project_name,
-            p.id                                               as project_id
+            p.name                                             as product_name,
+            p.id                                               as product_id
     from "user" u
                 join product_user pu on u.id = pu.user_id
                 join product p on pu.product_id = p.id

@@ -44,14 +44,7 @@ namespace ChangeTracker.DataAccess.Postgres.DataAccessObjects.Version
                 ? string.Join(" & ", trimmedSearchTerm.Split(" "))
                 : trimmedSearchTerm;
 
-            _predicates.Add(@"
-                  (exists(SELECT NULL
-                             FROM changelog_line chl
-                             where chl.product_id = v.product_id
-                               and chl.version_id = v.id
-                               and chl.deleted_at is null
-                               and chl.search_vectors @@ to_tsquery(trim(@searchTerm))
-                      ) or v.search_vectors @@ to_tsquery(trim(@searchTerm)))");
+            _predicates.Add("v.search_vectors @@ to_tsquery(trim(@searchTerm))");
             _parameters.Add("searchTerm", finalSearchTerm);
             return this;
         }
@@ -75,7 +68,7 @@ namespace ChangeTracker.DataAccess.Postgres.DataAccessObjects.Version
                 where v.product_id = @productId
                   {predicates}
                 order by v.created_at desc
-                    fetch first (@limit) rows only";
+                fetch first (@limit) rows only";
 
             _parameters.Add("limit", (int)limit);
 

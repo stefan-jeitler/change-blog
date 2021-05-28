@@ -54,7 +54,7 @@ namespace ChangeTracker.Application.Tests.TestDoubles
             Email.Parse("test@change-tracker.com"),
             Name.Parse("test"),
             Name.Parse("user"),
-            Text.Parse("Europe/Berlin"),
+            Name.Parse("Europe/Berlin"),
             null, DateTime.Parse("2021-05-16"));
     }
 }

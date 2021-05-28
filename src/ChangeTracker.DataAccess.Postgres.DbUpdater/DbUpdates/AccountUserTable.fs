@@ -17,6 +17,14 @@ let private createAccountUserSql = """
 		)
     """
 
+let private createIndexOnUserIdAndRoleIdSql = """
+		CREATE INDEX IF NOT EXISTS accountuser_userid_roleid_idx on account_user(user_id, role_id)
+	"""
+
 let create (dbConnection: IDbConnection) =
     dbConnection.Execute(createAccountUserSql)
+    |> ignore
+
+let createIndexOnUserIdAndRoleId (dbConnection: IDbConnection) = 
+    dbConnection.Execute(createIndexOnUserIdAndRoleIdSql)
     |> ignore

@@ -19,7 +19,7 @@ namespace ChangeTracker.DataAccess.Postgres.Tests.TestDoubles
             Email.Parse("test.dataAccess@change-tracker.com"),
             Name.Parse("test"),
             Name.Parse("dataAccess"),
-            Text.Parse("Europe/Berlin"),
+            Name.Parse("Europe/Berlin"),
             null,
             DateTime.Parse("2021-05-21")
             );

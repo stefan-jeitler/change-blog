@@ -35,7 +35,7 @@ let private addUserForDefaultVersioningSchemesSql = """
 let private fixEmailUniqueConstraintSql = [
     "ALTER TABLE \"user\" DROP CONSTRAINT IF EXISTS user_email_unique"
     "DROP INDEX IF EXISTS user_email_idx"
-    "CREATE INDEX IF NOT EXISTS user_email_idx ON \"user\" (lower(email))"
+    "CREATE UNIQUE INDEX IF NOT EXISTS user_email_idx ON \"user\" (lower(email))"
 ]
 
 let create (dbConnection: IDbConnection) =

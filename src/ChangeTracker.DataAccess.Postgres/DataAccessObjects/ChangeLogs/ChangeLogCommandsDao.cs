@@ -50,23 +50,7 @@ namespace ChangeTracker.DataAccess.Postgres.DataAccessObjects.ChangeLogs
         {
             try
             {
-                var l = changeLogLine;
-                await _dbAccessor.DbConnection
-                    .ExecuteAsync(InsertLineSql, new
-                    {
-                        id = l.Id,
-                        versionId = l.VersionId,
-                        prodcutId = l.ProductId,
-                        text = l.Text,
-                        labels = l.Labels.AsEnumerable(),
-                        issues = l.Issues.AsEnumerable(),
-                        position = (int)l.Position,
-                        createdByUser = l.CreatedByUser,
-                        deletedAt = l.DeletedAt,
-                        createdAt = l.CreatedAt
-                    });
-
-                return Result.Success<ChangeLogLine, Conflict>(changeLogLine);
+                return await AddLineInternalAsync(changeLogLine);
             }
             catch (Exception e)
             {
@@ -79,22 +63,7 @@ namespace ChangeTracker.DataAccess.Postgres.DataAccessObjects.ChangeLogs
         {
             try
             {
-                var count = await _dbAccessor.DbConnection
-                    .ExecuteAsync(InsertLineSql, changeLogLines.Select(l => new
-                    {
-                        id = l.Id,
-                        versionId = l.VersionId,
-                        productId = l.ProductId,
-                        text = l.Text,
-                        labels = l.Labels.AsEnumerable(),
-                        issues = l.Issues.AsEnumerable(),
-                        position = (int)l.Position,
-                        createdByUser = l.CreatedByUser,
-                        deletedAt = l.DeletedAt,
-                        createdAt = l.CreatedAt
-                    }));
-
-                return Result.Success<int, Conflict>(count);
+                return await AddLinesInternalAsync(changeLogLines.AsList());
             }
             catch (Exception e)
             {
@@ -107,14 +76,7 @@ namespace ChangeTracker.DataAccess.Postgres.DataAccessObjects.ChangeLogs
         {
             try
             {
-                await _dbAccessor.DbConnection
-                    .ExecuteAsync(MoveLineSql, new
-                    {
-                        versionId = changeLogLine.VersionId,
-                        changeLogLineId = changeLogLine.Id
-                    });
-
-                return Result.Success<ChangeLogLine, Conflict>(changeLogLine);
+                return await MoveLineInternalAsync(changeLogLine);
             }
             catch (Exception e)
             {
@@ -127,14 +89,7 @@ namespace ChangeTracker.DataAccess.Postgres.DataAccessObjects.ChangeLogs
         {
             try
             {
-                var count = await _dbAccessor.DbConnection
-                    .ExecuteAsync(MoveLineSql, changeLogLines.Select(l => new
-                    {
-                        versionId = l.VersionId,
-                        changeLogLineId = l.Id
-                    }));
-
-                return Result.Success<int, Conflict>(count);
+                return await MoveLinesInternalAsync(changeLogLines);
             }
             catch (Exception e)
             {
@@ -147,16 +102,7 @@ namespace ChangeTracker.DataAccess.Postgres.DataAccessObjects.ChangeLogs
         {
             try
             {
-                await _dbAccessor.DbConnection
-                    .ExecuteAsync(UpdateLineSql, new
-                    {
-                        changeLogLineId = changeLogLine.Id,
-                        text = changeLogLine.Text,
-                        labels = changeLogLine.Labels,
-                        issues = changeLogLine.Issues
-                    });
-
-                return Result.Success<ChangeLogLine, Conflict>(changeLogLine);
+                return await UpdateLineInternalAsync(changeLogLine);
             }
             catch (Exception e)
             {
@@ -169,20 +115,183 @@ namespace ChangeTracker.DataAccess.Postgres.DataAccessObjects.ChangeLogs
         {
             try
             {
-                await _dbAccessor.DbConnection
-                    .ExecuteAsync(DeleteLineSql, new
-                    {
-                        changeLogLineId = changeLogLine.Id,
-                        deletedAt = changeLogLine.DeletedAt
-                    });
-
-                return Result.Success<ChangeLogLine, Conflict>(changeLogLine);
+                return await DeleteLineInternalAsync(changeLogLine);
             }
             catch (Exception e)
             {
                 _logger.LogError(e, "Error while deleting a change log line");
                 throw;
             }
+        }
+
+        private async Task<Result<ChangeLogLine, Conflict>> MoveLineInternalAsync(ChangeLogLine changeLogLine)
+        {
+            var currentVersionId = await GetVersionIdAsync(changeLogLine);
+            var newVersionId = changeLogLine.VersionId;
+
+            await _dbAccessor.DbConnection
+                .ExecuteAsync(MoveLineSql, new
+                {
+                    versionId = changeLogLine.VersionId,
+                    changeLogLineId = changeLogLine.Id
+                });
+
+
+            if (currentVersionId.HasValue)
+                await UpdateSearchVectorsAsync(currentVersionId.Value);
+
+            if (newVersionId.HasValue)
+                await UpdateSearchVectorsAsync(newVersionId.Value);
+
+            return Result.Success<ChangeLogLine, Conflict>(changeLogLine);
+        }
+
+        private async Task<Result<int, Conflict>> MoveLinesInternalAsync(IEnumerable<ChangeLogLine> changeLogLines)
+        {
+            var lines = changeLogLines.AsList();
+
+            var versionIds = await GetVersionIdsAsync(lines);
+
+            var count = await _dbAccessor.DbConnection
+                .ExecuteAsync(MoveLineSql, lines.Select(l => new
+                {
+                    versionId = l.VersionId,
+                    changeLogLineId = l.Id
+                }));
+
+            var versionIdsOfNewDestination = await GetVersionIdsAsync(lines);
+
+            foreach (var versionId in versionIds.Concat(versionIdsOfNewDestination))
+            {
+                await UpdateSearchVectorsAsync(versionId);
+            }
+
+            return Result.Success<int, Conflict>(count);
+        }
+
+        private async Task<Result<ChangeLogLine, Conflict>> AddLineInternalAsync(ChangeLogLine changeLogLine)
+        {
+            var l = changeLogLine;
+            await _dbAccessor.DbConnection
+                .ExecuteAsync(InsertLineSql, new
+                {
+                    id = l.Id,
+                    versionId = l.VersionId,
+                    prodcutId = l.ProductId,
+                    text = l.Text,
+                    labels = l.Labels.AsEnumerable(),
+                    issues = l.Issues.AsEnumerable(),
+                    position = (int) l.Position,
+                    createdByUser = l.CreatedByUser,
+                    deletedAt = l.DeletedAt,
+                    createdAt = l.CreatedAt
+                });
+
+            if (l.VersionId.HasValue)
+            {
+                await UpdateSearchVectorsAsync(l.VersionId.Value);
+            }
+
+            return Result.Success<ChangeLogLine, Conflict>(changeLogLine);
+        }
+
+        private async Task<Result<int, Conflict>> AddLinesInternalAsync(IReadOnlyCollection<ChangeLogLine> lines)
+        {
+            var count = await _dbAccessor.DbConnection
+                .ExecuteAsync(InsertLineSql, lines.Select(l => new
+                {
+                    id = l.Id,
+                    versionId = l.VersionId,
+                    productId = l.ProductId,
+                    text = l.Text,
+                    labels = l.Labels.AsEnumerable(),
+                    issues = l.Issues.AsEnumerable(),
+                    position = (int) l.Position,
+                    createdByUser = l.CreatedByUser,
+                    deletedAt = l.DeletedAt,
+                    createdAt = l.CreatedAt
+                }));
+
+            foreach (var versionId in lines
+                .Where(x => x.VersionId.HasValue)
+                .Select(x => x.VersionId.Value)
+                .Distinct())
+            {
+                await UpdateSearchVectorsAsync(versionId);
+            }
+
+            return Result.Success<int, Conflict>(count);
+        }
+
+        private async Task<Result<ChangeLogLine, Conflict>> UpdateLineInternalAsync(ChangeLogLine changeLogLine)
+        {
+            await _dbAccessor.DbConnection
+                .ExecuteAsync(UpdateLineSql, new
+                {
+                    changeLogLineId = changeLogLine.Id,
+                    text = changeLogLine.Text,
+                    labels = changeLogLine.Labels,
+                    issues = changeLogLine.Issues
+                });
+
+            if (changeLogLine.VersionId.HasValue)
+            {
+                await UpdateSearchVectorsAsync(changeLogLine.VersionId.Value);
+            }
+
+            return Result.Success<ChangeLogLine, Conflict>(changeLogLine);
+        }
+
+        private async Task<Result<ChangeLogLine, Conflict>> DeleteLineInternalAsync(ChangeLogLine changeLogLine)
+        {
+            await _dbAccessor.DbConnection
+                .ExecuteAsync(DeleteLineSql, new
+                {
+                    changeLogLineId = changeLogLine.Id,
+                    deletedAt = changeLogLine.DeletedAt
+                });
+
+            if (changeLogLine.VersionId.HasValue)
+            {
+                await UpdateSearchVectorsAsync(changeLogLine.VersionId.Value);
+            }
+
+            return Result.Success<ChangeLogLine, Conflict>(changeLogLine);
+        }
+
+        private Task UpdateSearchVectorsAsync(Guid versionId) =>
+            _dbAccessor.DbConnection
+                .ExecuteAsync("CALL update_version_searchvectors_proc(@versionId)",
+                    new
+                    {
+                        versionId
+                    });
+
+        private async Task<IList<Guid>> GetVersionIdsAsync(IEnumerable<ChangeLogLine> changeLogLines)
+        {
+            const string sql = @"
+                select distinct version_id from changelog_line
+                where id = ANY (@changeLogLineIds)
+                and version_id is not null";
+
+            var versionIds = await _dbAccessor.DbConnection
+                .QueryAsync<Guid>(sql, new
+                {
+                    changeLogLineIds = changeLogLines.Select(x => x.Id)
+                });
+
+            return versionIds.AsList();
+        }
+
+        private async Task<Guid?> GetVersionIdAsync(ChangeLogLine line)
+        {
+            const string sql = "select version_id from changelog_line where id = @changeLogLineId";
+
+            return await _dbAccessor.DbConnection
+                .ExecuteScalarAsync<Guid?>(sql, new
+                {
+                    changeLogLineId = line.Id
+                });
         }
     }
 }

@@ -12,7 +12,7 @@ namespace ChangeTracker.Domain.Tests
         private Email _testEmail;
         private Name _testFirstName;
         private Name _testLastName;
-        private Text _testTimeZone;
+        private Name _testTimeZone;
         private Guid _testUserId;
 
         public UserTests()
@@ -21,16 +21,14 @@ namespace ChangeTracker.Domain.Tests
             _testEmail = Email.Parse("stefan@changeLog");
             _testFirstName = Name.Parse("Stefan");
             _testLastName = Name.Parse("Jeitler");
-            _testTimeZone = Text.Parse("Europe/Berlin");
+            _testTimeZone = Name.Parse("Europe/Berlin");
             _testDeletionDate = DateTime.Parse("2021-04-03");
             _testCreationDate = DateTime.Parse("2021-04-03");
         }
 
-        private User CreateUser()
-        {
-            return new(_testUserId, _testEmail, _testFirstName, _testLastName, _testTimeZone,
+        private User CreateUser() =>
+            new(_testUserId, _testEmail, _testFirstName, _testLastName, _testTimeZone,
                 _testDeletionDate, _testCreationDate);
-        }
 
         [Fact]
         public void Create_WithValidArguments_Successful()

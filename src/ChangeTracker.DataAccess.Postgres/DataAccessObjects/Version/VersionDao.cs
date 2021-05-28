@@ -1,5 +1,4 @@
 using System;
-using System.Collections;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using ChangeTracker.Application.DataAccess;
@@ -121,6 +120,8 @@ namespace ChangeTracker.DataAccess.Postgres.DataAccessObjects.Version
                     createdAt = version.CreatedAt
                 });
 
+                await UpdateSearchVectorsAsync(version.Id);
+
                 return Result.Success<ClVersion, Conflict>(version);
             }
             catch (Exception e)
@@ -157,5 +158,13 @@ namespace ChangeTracker.DataAccess.Postgres.DataAccessObjects.Version
 
             return Result.Success<ClVersion, Conflict>(version);
         }
+
+        private Task UpdateSearchVectorsAsync(Guid versionId) =>
+            _dbAccessor.DbConnection
+                .ExecuteAsync("CALL update_version_searchvectors_proc(@versionId)",
+                    new
+                    {
+                        versionId
+                    });
     }
 }

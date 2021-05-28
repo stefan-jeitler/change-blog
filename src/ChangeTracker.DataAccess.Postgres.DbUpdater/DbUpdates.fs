@@ -35,8 +35,7 @@ let dbUpdates: DbUpdate list = [
     { Version = 24; Update = RolePermissionTable.addSomeViewPermissions}
     { Version = 25; Update = AccountViews.createAccountUserRolesView}
     { Version = 26; Update = ProductViews.createProductUserRolesView}
-    { Version = 27; Update = ChangeLogLineTable.addTextSearch}
-    { Version = 28; Update = CommonFunctions.addGuidFunction}
-    { Version = 29; Update = UserTable.fixEmailUniqeConstraint}
-    { Version = 30; Update = VersionTable.addTextSearch}
-    { Version = 31; Update = ChangeLogLineTable.removeVersionColumnsFromTextSearch}]
+    { Version = 27; Update = CommonFunctions.addGuidFunction}
+    { Version = 28; Update = UserTable.fixEmailUniqeConstraint}
+    { Version = 29; Update = VersionTable.addTextSearch}
+    { Version = 30; Update = AccountUserTable.createIndexOnUserIdAndRoleId}]

@@ -5,6 +5,7 @@ namespace ChangeTracker.Application.UseCases.Queries.GetCompleteVersions
     public class VersionsQueryRequestModel
     {
         public const ushort MaxLimit = 100;
+        public const ushort MaxSearchTermLength = 50;
 
         public VersionsQueryRequestModel(Guid productId, Guid? lastVersionId, Guid userId, string searchTerm,
             ushort limit, bool includeDeleted = false)
@@ -19,6 +20,10 @@ namespace ChangeTracker.Application.UseCases.Queries.GetCompleteVersions
                 throw new ArgumentException("UserId cannot be empty.");
             
             UserId = userId;
+
+            if (searchTerm is not null && searchTerm.Length > MaxSearchTermLength)
+                throw new ArgumentException($"SearchTerm is too long. Max length: {MaxSearchTermLength}");
+
             SearchTerm = searchTerm;
             Limit = Math.Min(limit, MaxLimit);
             IncludeDeleted = includeDeleted;

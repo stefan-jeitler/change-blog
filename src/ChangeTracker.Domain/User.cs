@@ -5,7 +5,7 @@ namespace ChangeTracker.Domain
 {
     public class User
     {
-        public User(Guid id, Email email, Name firstName, Name lastName, Text timeZone, DateTime? deletedAt,
+        public User(Guid id, Email email, Name firstName, Name lastName, Name timeZone, DateTime? deletedAt,
             DateTime createdAt)
         {
             if (id == Guid.Empty)
@@ -37,7 +37,7 @@ namespace ChangeTracker.Domain
         /// <summary>
         ///     OlsonId
         /// </summary>
-        public Text TimeZone { get; }
+        public Name TimeZone { get; }
 
         public DateTime? DeletedAt { get; }
 

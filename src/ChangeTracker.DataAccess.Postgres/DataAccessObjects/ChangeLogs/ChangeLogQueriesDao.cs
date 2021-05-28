@@ -11,6 +11,19 @@ namespace ChangeTracker.DataAccess.Postgres.DataAccessObjects.ChangeLogs
 {
     public class ChangeLogQueriesDao : IChangeLogQueriesDao
     {
+        private const string SelectChangeLogLine = @"
+            select chl.id,
+                   chl.version_id as versionId,
+                   chl.product_id as productId,
+                   chl.text,
+                   chl.position,
+                   chl.created_at as createdAt,
+                   CAST(chl.labels AS text) as labels,
+                   CAST(chl.issues AS text) as issues,
+                   chl.created_by_user as createdByUser,
+                   chl.deleted_at as deletedAt
+            ";
+
         private readonly IDbAccessor _dbAccessor;
 
         public ChangeLogQueriesDao(IDbAccessor dbAccessor)
@@ -20,17 +33,8 @@ namespace ChangeTracker.DataAccess.Postgres.DataAccessObjects.ChangeLogs
 
         public async Task<Maybe<ChangeLogLine>> FindLineAsync(Guid changeLogLineId)
         {
-            const string findLineSql = @"
-                select chl.id,
-                       chl.version_id as versionId,
-                       chl.product_id as productId,
-                       chl.text,
-                       chl.position,
-                       chl.created_at as createdAt,
-                       CAST(chl.labels AS text) as labels,
-                       CAST(chl.issues AS text) as issues,
-                       chl.created_by_user as createdByUser,
-                       chl.deleted_at as deletedAt
+            var findLineSql = @$"
+                {SelectChangeLogLine}
                 from changelog_line chl
                 where id = @changeLogLineId";
 
@@ -52,16 +56,7 @@ namespace ChangeTracker.DataAccess.Postgres.DataAccessObjects.ChangeLogs
                 : string.Empty;
 
             var getLinesSql = $@"
-                select chl.id,
-                       chl.version_id as versionId,
-                       chl.product_id as productId,
-                       chl.text,
-                       chl.position,
-                       chl.created_at as createdAt,
-                       CAST(chl.labels AS text) as labels,
-                       CAST(chl.issues AS text) as issues,
-                       chl.created_by_user as createdByUser,
-                       chl.deleted_at as deletedAt
+                {SelectChangeLogLine}
                 from changelog_line chl
                 where product_id = @productId
                 {versionIdFilter}";
@@ -78,17 +73,8 @@ namespace ChangeTracker.DataAccess.Postgres.DataAccessObjects.ChangeLogs
 
         public async Task<IList<Domain.ChangeLog.ChangeLogs>> GetChangeLogsAsync(IList<Guid> versionIds)
         {
-            const string getChangeLogLinesSql = @"
-                select chl.id,
-                       chl.version_id           as versionId,
-                       chl.product_id           as productId,
-                       chl.text,
-                       chl.position,
-                       chl.created_at           as createdAt,
-                       CAST(chl.labels AS text) as labels,
-                       CAST(chl.issues AS text) as issues,
-                       chl.created_by_user as createdByUser,
-                       chl.deleted_at           as deletedAt
+            var getChangeLogLinesSql = @$"
+                {SelectChangeLogLine}
                 from changelog_line chl
                 where chl.version_id = ANY (@versionIds)";
 
@@ -103,17 +89,8 @@ namespace ChangeTracker.DataAccess.Postgres.DataAccessObjects.ChangeLogs
 
         public async Task<IList<ChangeLogLine>> GetPendingLinesAsync(Guid productId)
         {
-            const string getPendingLinesSql = @"
-                select chl.id,
-                       chl.version_id as versionId,
-                       chl.product_id as productId,
-                       chl.text,
-                       chl.position,
-                       chl.created_at as createdAt,
-                       CAST(chl.labels AS text) as labels,
-                       CAST(chl.issues AS text) as issues,
-                       chl.created_by_user as createdByUser,
-                       chl.deleted_at as deletedAt
+            var getPendingLinesSql = @$"
+                {SelectChangeLogLine}
                 from changelog_line chl
                 where chl.product_id = @productId
                 and chl.version_id is null

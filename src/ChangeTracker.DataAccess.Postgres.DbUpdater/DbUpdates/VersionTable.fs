@@ -2,6 +2,8 @@
 
 open System.Data
 open Dapper
+open System
+open Db
 
 let private createVersionSql = """
 		CREATE TABLE IF NOT EXISTS "version"
@@ -28,34 +30,56 @@ let private addSearchVectorsColumnSql = """ALTER TABLE version ADD COLUMN IF NOT
 
 let private createSearchVectorsIndexSql = """CREATE INDEX IF NOT EXISTS version_searchvector_idx ON version USING gin (search_vectors)"""
 
-let private createUpdateTextSearchVectorsFunctionSql = """
-		CREATE OR REPLACE FUNCTION update_version_textsearch() RETURNS trigger AS
-		$$
-		DECLARE
-		BEGIN
-			NEW.search_vectors = (setweight(to_tsvector(NEW.value), 'A')
-				|| (setweight(to_tsvector(NEW.name), 'B')));
+let private dropTsVectorAggregateSql = "DROP AGGREGATE IF EXISTS tsvector_agg(tsvector)"
 
-			RETURN NEW;
-		END;
-		$$ LANGUAGE plpgsql	
+let private addTsVectorAggregateSql = """
+        CREATE AGGREGATE tsvector_agg(tsvector) (
+            STYPE = pg_catalog.tsvector,
+            SFUNC = pg_catalog.tsvector_concat,
+            INITCOND = ''
+            )
+    """
+
+let private createUpdateSearchVectorsProcedureSql = """
+        CREATE OR REPLACE PROCEDURE update_version_searchvectors_proc(versionId uuid)
+        LANGUAGE SQL
+        AS
+        $$
+        WITH chl_agg AS (
+        select (select tsvector_agg(to_tsvector(text)
+                                        || to_tsvector(regexp_replace((SELECT coalesce(string_agg(value::text, ' '), '')
+                                                                        FROM jsonb_array_elements_text(chl.labels)),
+                                                                        '([a-z])([A-Z])',
+                                                                        '\1 \2',
+                                                                        'g'))
+            || to_tsvector((SELECT coalesce(string_agg(value::text, ' '), '')
+                            FROM jsonb_array_elements_text(chl.labels || chl.issues))))
+                ) as value
+        from changelog_line chl
+        where chl.version_id = versionId
+        )
+        update version v
+        set search_vectors = (to_tsvector(v.value) || to_tsvector(v.name) || chl_agg.value)
+        from chl_agg
+        where v.id = versionId;
+        $$
 	"""
 
-let private dropUpdateTextSearchTriggerSql = """drop trigger if exists update_version_textsearch on version"""
-
-let private createUpdateTextSearchTriggerSql = """
-		CREATE TRIGGER update_version_textsearch
-		BEFORE INSERT OR UPDATE
-		ON version
-		FOR EACH ROW
-		EXECUTE PROCEDURE update_version_textsearch()
-	"""
-
-let private updateSearchVectorsForExistingLinesSql = """
-		update version v
-		set search_vectors = (setweight(to_tsvector(v.value), 'A')
-				|| (setweight(to_tsvector(v.name), 'B')))
-	"""
+let private createUpdateAllSearchVectorsProcedureSql = """
+        CREATE OR REPLACE PROCEDURE update_all_version_searchvectors_proc()
+        LANGUAGE plpgsql
+        AS
+        $$
+        DECLARE
+        t_row version%rowtype;
+        BEGIN
+        FOR t_row in SELECT * FROM version
+            LOOP
+                Call update_version_searchvectors_proc(t_row.id);
+            END LOOP;
+        END;
+        $$
+    """
 
 let create (dbConnection: IDbConnection) =
     dbConnection.Execute(createVersionSql) |> ignore
@@ -73,11 +97,14 @@ let addTextSearch (dbConnection: IDbConnection) =
             executeSql tail
 
     [ addSearchVectorsColumnSql
+      dropTsVectorAggregateSql
       createSearchVectorsIndexSql
-      createUpdateTextSearchVectorsFunctionSql
-      dropUpdateTextSearchTriggerSql
-      createUpdateTextSearchTriggerSql
-      updateSearchVectorsForExistingLinesSql ]
+      addTsVectorAggregateSql
+      createUpdateSearchVectorsProcedureSql 
+      createUpdateAllSearchVectorsProcedureSql]
     |> executeSql
+
+    dbConnection.Execute("CALL update_all_version_searchvectors_proc()")
+    |> ignore
 
     ()

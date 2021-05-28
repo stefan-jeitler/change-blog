@@ -38,9 +38,8 @@ namespace ChangeTracker.DataAccess.Postgres.DataAccessObjects.User
         public static string ChangeLogLinePermissionSql => BaseQuery(
             "(select p.id from changelog_line chl join product p on chl.product_id = p.id where chl.id = @changeLogLineId)");
 
-        private static string BaseQuery(string selectProductId)
-        {
-            return $@"
+        private static string BaseQuery(string selectProductId) =>
+            $@"
                 select exists(select null
                               from product p
                               where p.id = {selectProductId}
@@ -79,6 +78,5 @@ namespace ChangeTracker.DataAccess.Postgres.DataAccessObjects.User
                                                          where au.account_id = p.account_id
                                                            and rp2.permission = @permission)
                                           )))";
-        }
     }
 }

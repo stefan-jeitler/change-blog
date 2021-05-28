@@ -2,6 +2,9 @@
 using ChangeTracker.Application.UseCases.Commands.AddProduct;
 using ChangeTracker.Application.UseCases.Commands.AddVersion;
 using ChangeTracker.Application.UseCases.Commands.CloseProduct;
+using ChangeTracker.Application.UseCases.Commands.DeleteVersion;
+using ChangeTracker.Application.UseCases.Commands.ReleaseVersion;
+using ChangeTracker.Application.UseCases.Commands.UpdateVersion;
 using ChangeTracker.Application.UseCases.Queries.GetAccounts;
 using ChangeTracker.Application.UseCases.Queries.GetCompleteVersions;
 using ChangeTracker.Application.UseCases.Queries.GetProducts;
@@ -30,7 +33,10 @@ namespace ChangeTracker.Api.Extensions
                 .AddScoped<IAddVersion, AddVersionInteractor>()
                 .AddScoped<IAddCompleteVersion, AddCompleteVersionInteractor>()
                 .AddScoped<IGetCompleteVersion, GetCompleteVersionsInteractor>()
-                .AddScoped<IGetCompleteVersions, GetCompleteVersionsInteractor>();
+                .AddScoped<IGetCompleteVersions, GetCompleteVersionsInteractor>()
+                .AddScoped<IReleaseVersion, ReleaseVersionInteractor>()
+                .AddScoped<IDeleteVersion, DeleteVersionInteractor>()
+                .AddScoped<IUpdateVersion, UpdateVersionInteractor>();
 
             return services;
         }

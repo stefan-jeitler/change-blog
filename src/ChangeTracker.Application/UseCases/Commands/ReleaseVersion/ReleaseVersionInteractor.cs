@@ -51,7 +51,7 @@ namespace ChangeTracker.Application.UseCases.Commands.ReleaseVersion
 
             if (clVersion.Value.IsDeleted)
             {
-                output.VersionDeleted();
+                output.VersionAlreadyDeleted();
                 return Maybe<ClVersion>.None;
             }
 

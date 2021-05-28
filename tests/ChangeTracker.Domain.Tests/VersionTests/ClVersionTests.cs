@@ -176,14 +176,36 @@ namespace ChangeTracker.Domain.Tests.VersionTests
         }
 
         [Fact]
-        public void Release_VersionAlreadyReleased_InvalidOperationException()
+        public void Release_VersionAlreadyReleased_ReturnsSameObject()
         {
             _testReleaseDate = DateTime.Parse("2021-05-14");
             var version = CreateVersion();
 
-            Func<ClVersion> act = () => version.Release();
+            var releasedVersion =  version.Release();
 
-            act.Should().ThrowExactly<InvalidOperationException>();
+            releasedVersion.Should().BeEquivalentTo(version);
+        }
+
+        [Fact]
+        public void Delete_VersionAlreadyDeleted_ReturnsSameObject()
+        {
+            _testDeletedDate = DateTime.Parse("2021-05-14");
+            var version = CreateVersion();
+
+            var deletedVersion =  version.Delete();
+
+            deletedVersion.Should().BeEquivalentTo(version);
+        }
+
+        [Fact]
+        public void Delete_VersionIsNotYetDeleted_ReturnsDeletedVersion()
+        {
+            _testDeletedDate = null;
+            var version = CreateVersion();
+
+            var deletedVersion =  version.Delete();
+
+            deletedVersion.DeletedAt.Should().HaveValue();
         }
 
         [Fact]

@@ -32,7 +32,7 @@ namespace ChangeTracker.Application.Tests.TestDoubles
         }
 
         /// <summary>
-        ///     Not properly implemented, but should be enough for the use-case tests
+        ///     Not properly implemented, but should be enough for use-case tests
         ///     The actual implementation of IVersionDao is tested separately.
         /// </summary>
         /// <param name="querySettings"></param>
@@ -80,6 +80,19 @@ namespace ChangeTracker.Application.Tests.TestDoubles
 
             Versions.RemoveAll(x => x.Id == version.Id);
             Versions.Add(version);
+            return Result.Success<ClVersion, Conflict>(version);
+        }
+
+        public async Task<Result<ClVersion, Conflict>> UpdateVersionAsync(ClVersion version)
+        {
+            await Task.Yield();
+
+            if (ProduceConflict)
+                return Result.Failure<ClVersion, Conflict>(new Conflict("something went wrong"));
+
+            Versions.RemoveAll(x => x.Id == version.Id);
+            Versions.Add(version);
+
             return Result.Success<ClVersion, Conflict>(version);
         }
     }

@@ -10,6 +10,9 @@ using ChangeTracker.Api.Presenters.V1.Version;
 using ChangeTracker.Application.UseCases;
 using ChangeTracker.Application.UseCases.Commands.AddCompleteVersion;
 using ChangeTracker.Application.UseCases.Commands.AddCompleteVersion.Models;
+using ChangeTracker.Application.UseCases.Commands.DeleteVersion;
+using ChangeTracker.Application.UseCases.Commands.ReleaseVersion;
+using ChangeTracker.Application.UseCases.Commands.UpdateVersion;
 using ChangeTracker.Application.UseCases.Queries.GetCompleteVersions;
 using Microsoft.AspNetCore.Mvc;
 
@@ -57,6 +60,41 @@ namespace ChangeTracker.Api.Controllers.v1
                 return new NotFoundObjectResult(DefaultResponse.Create("Version not found"));
 
             return Ok(CompleteVersionDto.FromResponseModel(completeVersion.Value));
+        }
+
+        [HttpPost("{versionId:Guid}/release")]
+        [NeedsPermission(Permission.ReleaseVersion)]
+        public async Task<ActionResult> ReleaseVersionAsync([FromServices] IReleaseVersion releaseVersion, Guid versionId)
+        {
+            var presenter = new ReleaseVersionPresenter();
+            await releaseVersion.ExecuteAsync(presenter, versionId);
+
+            return presenter.Response;
+        }
+
+        [HttpDelete("{versionId:Guid}")]
+        [NeedsPermission(Permission.DeleteVersion)]
+        public async Task<ActionResult> DeleteVersionAsync([FromServices] IDeleteVersion deleteVersion, Guid versionId)
+        {
+            var presenter = new DeleteVersionPresenter();
+            await deleteVersion.ExecuteAsync(presenter, versionId);
+
+            return presenter.Response;
+        }
+
+        [HttpPut("{versionId:Guid}")]
+        [NeedsPermission(Permission.UpdateVersion)]
+        public async Task<ActionResult> UpdateVersionAsync([FromServices] IUpdateVersion updateVersion,
+            Guid versionId, [FromBody] UpdateVersionDto updateVersionDto)
+        {
+
+            var updateVersionRequestModel =
+                new UpdateVersionRequestModel(versionId, updateVersionDto.Name, updateVersionDto.Version);
+
+            var presenter = new UpdateVersionPresenter();
+            await updateVersion.ExecuteAsync(presenter, updateVersionRequestModel);
+
+            return presenter.Response;
         }
     }
 }

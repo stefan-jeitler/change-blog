@@ -50,14 +50,14 @@ namespace ChangeTracker.Application.Tests.UseCaseTests.Commands.ReleaseVersion
             var version = new ClVersion(TestAccount.Product.Id, ClVersionValue.Parse("1.23"), OptionalName.Empty, TestAccount.UserId, null,
                 DateTime.Parse("2021-05-13"));
             var interactor = CreateInteractor();
-            _outputPortMock.Setup(m => m.VersionDeleted());
+            _outputPortMock.Setup(m => m.VersionAlreadyDeleted());
             _versionDaoStub.Versions.Add(version);
 
             // act
             await interactor.ExecuteAsync(_outputPortMock.Object, version.Id);
 
             // assert
-            _outputPortMock.Verify(m => m.VersionDeleted(), Times.Once);
+            _outputPortMock.Verify(m => m.VersionAlreadyDeleted(), Times.Once);
         }
 
         [Fact]

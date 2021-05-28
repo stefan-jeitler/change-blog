@@ -65,7 +65,7 @@ namespace ChangeTracker.Application.UseCases.Queries.GetCompleteVersions
                 .Select(x => CreateResponseModel(x,
                     product, 
                     currentUser.TimeZone,
-                    changeLogsByVersionId[x.Id]))
+                    changeLogsByVersionId.GetValueOrDefault(x.Id, new ChangeLogs(new ChangeLogLine[0]))))
                 .ToList();
         }
 

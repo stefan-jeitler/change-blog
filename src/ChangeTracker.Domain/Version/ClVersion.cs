@@ -5,13 +5,15 @@ namespace ChangeTracker.Domain.Version
 {
     public class ClVersion : IEquatable<ClVersion>
     {
-        public ClVersion(Guid productId, ClVersionValue versionValue, OptionalName name, Guid createdByUser, DateTime? releasedAt = null,
+        public ClVersion(Guid productId, ClVersionValue versionValue, OptionalName name, Guid createdByUser,
+            DateTime? releasedAt = null,
             DateTime? deletedAt = null)
             : this(Guid.NewGuid(), productId, versionValue, name, releasedAt, createdByUser, DateTime.UtcNow, deletedAt)
         {
         }
 
-        public ClVersion(Guid id, Guid productId, ClVersionValue versionValue, OptionalName name, DateTime? releasedAt, Guid createdByUser, DateTime createdAt,
+        public ClVersion(Guid id, Guid productId, ClVersionValue versionValue, OptionalName name, DateTime? releasedAt,
+            Guid createdByUser, DateTime createdAt,
             DateTime? deletedAt)
         {
             if (id == Guid.Empty)
@@ -72,12 +74,14 @@ namespace ChangeTracker.Domain.Version
                    Equals(Value, other.Value);
         }
 
-        public ClVersion Release()
-        {
-            if (IsReleased) throw new InvalidOperationException("An already released version cannot released.");
+        public ClVersion Release() =>
+            IsReleased
+                ? this
+                : new ClVersion(Id, ProductId, Value, Name, DateTime.UtcNow, CreatedByUser, CreatedAt, DeletedAt);
 
-            return new ClVersion(Id, ProductId, Value, Name, DateTime.UtcNow, CreatedByUser, CreatedAt, DeletedAt);
-        }
+        public ClVersion Delete() => IsDeleted
+            ? this
+            : new ClVersion(Id, ProductId, Value, Name, ReleasedAt, CreatedByUser, CreatedAt, DateTime.UtcNow);
 
         private static void VerifyDeletedAtDate(DateTime? releasedAt, DateTime? deletedAt)
         {

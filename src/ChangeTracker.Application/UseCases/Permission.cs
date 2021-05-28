@@ -13,6 +13,9 @@
         ViewOwnUser,
         
         AddVersion,
-        ViewCompleteVersion
+        ViewCompleteVersion,
+        ReleaseVersion,
+        DeleteVersion,
+        UpdateVersion
     }
 }

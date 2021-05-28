@@ -27,7 +27,7 @@ namespace ChangeTracker.Application.Tests.TestDoubles
         }
 
         /// <summary>
-        ///     Not properly implemented, but should be enough for the use-case tests
+        ///     Not properly implemented, but should be enough for use-case tests
         ///     The actual implementation of IAccountDao is tested separately.
         /// </summary>
         /// <param name="userId"></param>

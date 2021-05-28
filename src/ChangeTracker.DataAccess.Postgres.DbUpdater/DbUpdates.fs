@@ -38,4 +38,5 @@ let dbUpdates: DbUpdate list = [
     { Version = 27; Update = CommonFunctions.addGuidFunction}
     { Version = 28; Update = UserTable.fixEmailUniqeConstraint}
     { Version = 29; Update = VersionTable.addTextSearch}
-    { Version = 30; Update = AccountUserTable.createIndexOnUserIdAndRoleId}]
+    { Version = 30; Update = AccountUserTable.createIndexOnUserIdAndRoleId}
+    { Version = 31; Update = RolePermissionTable.addVersionPermissions}]

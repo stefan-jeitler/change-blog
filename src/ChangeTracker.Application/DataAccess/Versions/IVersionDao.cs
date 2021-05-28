@@ -16,5 +16,6 @@ namespace ChangeTracker.Application.DataAccess.Versions
         Task<Result<ClVersion, Conflict>> AddVersionAsync(ClVersion version);
         Task<Result<ClVersion, Conflict>> DeleteVersionAsync(ClVersion version);
         Task<Result<ClVersion, Conflict>> ReleaseVersionAsync(ClVersion version);
+        Task<Result<ClVersion, Conflict>> UpdateVersionAsync(ClVersion version);
     }
 }

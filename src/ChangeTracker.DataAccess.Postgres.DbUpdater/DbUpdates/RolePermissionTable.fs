@@ -73,6 +73,24 @@ let private addSomeViewPermissionsSql =
   	  ON CONFLICT (role_id, permission) DO NOTHING
 	""" ]
 
+let private addVersionPermissionsSql = [
+    """
+	  INSERT INTO role_permission
+	  SELECT id, 'ReleaseVersion', now() from role where name in ('ScrumMaster', 'ProductOwner', 'PlatformManager', 'Developer')
+	  ON CONFLICT (role_id, permission) DO NOTHING
+   """
+    """
+	  INSERT INTO role_permission
+	  SELECT id, 'DeleteVersion', now() from role where name in ('ProductOwner', 'PlatformManager', 'Developer')
+	  ON CONFLICT (role_id, permission) DO NOTHING
+   """
+    """
+	  INSERT INTO role_permission
+	  SELECT id, 'UpdateVersion', now() from role where name in ('ProductOwner', 'PlatformManager', 'Developer')
+	  ON CONFLICT (role_id, permission) DO NOTHING
+   """
+]
+
 let create (dbConnection: IDbConnection) =
     dbConnection.Execute(createRolePermissionSql)
     |> ignore
@@ -94,3 +112,10 @@ let addSomeViewPermissions (dbConnection: IDbConnection) =
             insertPermissions tail |> ignore
 
     insertPermissions addSomeViewPermissionsSql
+
+let addVersionPermissions (dbConnection: IDbConnection) = 
+    addVersionPermissionsSql
+    |> List.map (fun x -> dbConnection.Execute(x))
+    |> ignore
+
+    ()

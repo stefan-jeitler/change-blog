@@ -29,11 +29,12 @@ namespace ChangeTracker.Application.UseCases.Commands.DeleteVersion
             var product = await _productDao.GetProductAsync(clVersion.Value.ProductId);
             if (product.IsClosed)
             {
-                output.ProductClosed(product.Id);
+                output.RelatedProductClosed(product.Id);
                 return;
             }
 
-            await _versionDao.DeleteVersionAsync(clVersion.Value)
+            var deletedVersion = clVersion.Value.Delete();
+            await _versionDao.DeleteVersionAsync(deletedVersion)
                 .Match(
                     v => output.VersionDeleted(v.Id),
                     c => output.Conflict(c.Reason));

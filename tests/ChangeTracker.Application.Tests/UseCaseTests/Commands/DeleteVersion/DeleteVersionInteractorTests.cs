@@ -83,7 +83,7 @@ namespace ChangeTracker.Application.Tests.UseCaseTests.Commands.DeleteVersion
             var version = new ClVersion(TestAccount.Product.Id, ClVersionValue.Parse("1.23"), OptionalName.Empty,
                 TestAccount.UserId);
             var interactor = CreateInteractor();
-            _outputPortMock.Setup(m => m.ProductClosed(It.IsAny<Guid>()));
+            _outputPortMock.Setup(m => m.RelatedProductClosed(It.IsAny<Guid>()));
 
             _productDaoStub.Products.Add(new Product(TestAccount.Product.Id, TestAccount.Id, Name.Parse("test product"),
                 TestAccount.CustomVersioningScheme, TestAccount.UserId, DateTime.Parse("2021-05-13"),
@@ -94,7 +94,7 @@ namespace ChangeTracker.Application.Tests.UseCaseTests.Commands.DeleteVersion
             await interactor.ExecuteAsync(_outputPortMock.Object, version.Id);
 
             // assert
-            _outputPortMock.Verify(m => m.ProductClosed(It.IsAny<Guid>()), Times.Once);
+            _outputPortMock.Verify(m => m.RelatedProductClosed(It.IsAny<Guid>()), Times.Once);
         }
 
         [Fact]

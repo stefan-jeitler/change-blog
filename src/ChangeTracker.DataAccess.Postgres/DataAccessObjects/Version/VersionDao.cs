@@ -133,7 +133,8 @@ namespace ChangeTracker.DataAccess.Postgres.DataAccessObjects.Version
 
         public async Task<Result<ClVersion, Conflict>> DeleteVersionAsync(ClVersion version)
         {
-            if (!version.IsDeleted) throw new Exception("Only deleted versions can be marked as deleted.");
+            if (!version.IsDeleted) 
+                throw new Exception("Only deleted versions can be marked as deleted.");
 
             await _dbAccessor.DbConnection
                 .ExecuteAsync("update version set deleted_at = @deletedAt where id = @versionId", new
@@ -157,6 +158,29 @@ namespace ChangeTracker.DataAccess.Postgres.DataAccessObjects.Version
                 });
 
             return Result.Success<ClVersion, Conflict>(version);
+        }
+
+        public async Task<Result<ClVersion, Conflict>> UpdateVersionAsync(ClVersion version)
+        {
+            try
+            {
+                await _dbAccessor.DbConnection
+                    .ExecuteAsync("update version set name = @name, value = @value where id = @versionId", new
+                    {
+                        name = version.Name.Value,
+                        value = version.Value.Value,
+                        versionId = version.Id
+                    });
+
+                await UpdateSearchVectorsAsync(version.Id);
+
+                return Result.Success<ClVersion, Conflict>(version);
+            }
+            catch (Exception exception)
+            {
+                _logger.LogError(exception, exception.Message);
+                throw;
+            }
         }
 
         private Task UpdateSearchVectorsAsync(Guid versionId) =>

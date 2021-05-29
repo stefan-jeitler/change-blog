@@ -5,7 +5,7 @@ namespace ChangeTracker.Application.Extensions
 {
     public static class DateTimeExtensions
     {
-        public static DateTime ToLocal(this DateTime dateTime, string olsonId)
+        public static DateTimeOffset ToLocal(this DateTime dateTime, string olsonId)
         {
             if (olsonId is null)
                 throw new ArgumentNullException(nameof(olsonId));
@@ -17,7 +17,7 @@ namespace ChangeTracker.Application.Extensions
 
             var instant = Instant.FromDateTimeUtc(DateTime.SpecifyKind(dateTime, DateTimeKind.Utc));
 
-            return instant.InZone(timeZone).ToDateTimeUnspecified();
+            return instant.InZone(timeZone).ToDateTimeOffset();
         }
     }
 }

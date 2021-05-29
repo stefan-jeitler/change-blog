@@ -34,7 +34,7 @@ namespace ChangeTracker.Api.Presenters.V1.Product
         public void ProductAlreadyExists(Guid productId)
         {
             Response = new ConflictObjectResult(
-                DefaultResponse.Create($"Product already exists. ProductId {productId}"));
+                DefaultResponse.Create($"Product already exists. ProductId {productId}", productId));
         }
 
         public void VersioningSchemeDoesNotExist()
@@ -50,7 +50,7 @@ namespace ChangeTracker.Api.Presenters.V1.Product
         public void Created(Guid accountId, Guid productId)
         {
             var location = _httpContext.CreateLinkTo($"api/v1/products/{productId}");
-            Response = new CreatedResult(location, DefaultResponse.Create($"Product with id {productId} added."));
+            Response = new CreatedResult(location, DefaultResponse.Create($"Product with id {productId} added.", productId));
         }
     }
 }

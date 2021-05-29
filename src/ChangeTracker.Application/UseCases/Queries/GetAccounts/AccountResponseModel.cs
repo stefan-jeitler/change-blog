@@ -5,7 +5,7 @@ namespace ChangeTracker.Application.UseCases.Queries.GetAccounts
     public class AccountResponseModel
     {
         public AccountResponseModel(Guid id, string name, string defaultVersioningScheme,
-            Guid defaultVersioningSchemeId, DateTime createdAt)
+            Guid defaultVersioningSchemeId, DateTimeOffset createdAt)
         {
             if (id == Guid.Empty)
                 throw new ArgumentException("Id cannot be empty.");
@@ -19,10 +19,6 @@ namespace ChangeTracker.Application.UseCases.Queries.GetAccounts
                 throw new ArgumentException("VersioningSchemeId cannot be empty.");
 
             DefaultVersioningSchemeId = defaultVersioningSchemeId;
-
-            if (createdAt == DateTime.MinValue || createdAt == DateTime.MaxValue)
-                throw new ArgumentException("Invalid creation date.");
-
             CreatedAt = createdAt;
         }
 
@@ -30,6 +26,6 @@ namespace ChangeTracker.Application.UseCases.Queries.GetAccounts
         public string Name { get; }
         public string DefaultVersioningScheme { get; }
         public Guid DefaultVersioningSchemeId { get; }
-        public DateTime CreatedAt { get; }
+        public DateTimeOffset CreatedAt { get; }
     }
 }

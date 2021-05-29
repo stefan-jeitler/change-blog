@@ -22,9 +22,27 @@ let private createProductSql = """
 let private addUniqueIndexOnAccountIdAndNameSql =
     "CREATE UNIQUE INDEX IF NOT EXISTS product_accountid_name_unique ON product (account_id, LOWER(name))"
 
+let private addProductForAppChangesSql = """
+        INSERT INTO product
+        VALUES ('5701bbed-83f5-4551-afaf-9ac546636473',
+                'a00788cb-03f8-4a8c-84b6-756622550e8c',
+                '4091b948-9bc5-43ee-9f98-df3d27853565',
+                'ChangeTracker.Api',
+                '8e983811-7d39-4fe2-9373-1c6b0e4eb360',
+                null,
+                '2021-05-29 10:45:44.737828')
+        ON CONFLICT (id) do nothing 
+    """
+
 let create (dbConnection: IDbConnection) =
     dbConnection.Execute(createProductSql) |> ignore
 
 let addUniqueIndexOnAccountIdAndName (dbConnection: IDbConnection) =
     dbConnection.Execute(addUniqueIndexOnAccountIdAndNameSql)
     |> ignore
+
+    
+let addProductForAppChanges (dbConnection: IDbConnection) =
+    dbConnection.Execute(addProductForAppChangesSql)
+    |> ignore
+    

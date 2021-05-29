@@ -1,8 +1,18 @@
 ﻿using System;
+using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
+using System.Linq;
 using System.Net.Mime;
 using System.Reflection;
+using System.Threading.Tasks;
+using ChangeTracker.Api.Authorization;
 using ChangeTracker.Api.DTOs;
+using ChangeTracker.Api.DTOs.V1.Version;
+using ChangeTracker.Api.Extensions;
 using ChangeTracker.Api.SwaggerUI;
+using ChangeTracker.Application.Constants;
+using ChangeTracker.Application.UseCases;
+using ChangeTracker.Application.UseCases.Queries.GetCompleteVersions;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Hosting;
@@ -17,6 +27,8 @@ namespace ChangeTracker.Api.Controllers
     [SwaggerControllerOrder(0)]
     public class HomeController : ControllerBase
     {
+        private readonly IGetCompleteVersions _getCompleteVersions;
+
         private static readonly Lazy<string> AssemblyVersion =
             new(() =>
             {
@@ -33,9 +45,10 @@ namespace ChangeTracker.Api.Controllers
 
         private readonly IHostEnvironment _hostEnvironment;
 
-        public HomeController(IHostEnvironment hostEnvironment)
+        public HomeController(IHostEnvironment hostEnvironment, IGetCompleteVersions getCompleteVersions)
         {
             _hostEnvironment = hostEnvironment;
+            _getCompleteVersions = getCompleteVersions;
         }
 
         [HttpGet("info")]
@@ -51,6 +64,21 @@ namespace ChangeTracker.Api.Controllers
 
         [HttpGet("changeLogs")]
         [AllowAnonymous]
-        public ActionResult ChangeLogs() => Ok("coming soon ...");
+        public async Task<ActionResult<List<CompleteVersionDto>>> GetCompleteProductVersionsAsync(
+            [MaxLength(VersionsQueryRequestModel.MaxSearchTermLength)]
+            string searchTerm = null,
+            Guid? lastVersionId = null,
+            ushort limit = VersionsQueryRequestModel.MaxLimit)
+        {
+            var requestModel = new VersionsQueryRequestModel(AppChanges.ProductId,
+                lastVersionId,
+                AppChanges.UserId,
+                searchTerm,
+                limit);
+
+            var versions = await _getCompleteVersions.ExecuteAsync(requestModel);
+
+            return Ok(versions.Select(CompleteVersionDto.FromResponseModel));
+        }
     }
 }

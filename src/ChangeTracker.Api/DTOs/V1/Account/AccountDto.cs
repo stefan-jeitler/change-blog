@@ -9,7 +9,7 @@ namespace ChangeTracker.Api.DTOs.V1.Account
         public string Name { get; set; }
         public string DefaultVersioningScheme { get; set; }
         public Guid DefaultVersioningSchemeId { get; set; }
-        public DateTime CreatedAt { get; set; }
+        public DateTimeOffset CreatedAt { get; set; }
 
         public static AccountDto FromResponseModel(AccountResponseModel m) =>
             new()

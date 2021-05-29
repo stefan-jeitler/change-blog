@@ -10,7 +10,7 @@ namespace ChangeTracker.Api.DTOs.V1.ChangeLog
         public string Text { get; set; }
         public List<string> Labels { get; set; }
         public List<string> Issues { get; set; }
-        public DateTime CreatedAt { get; set; }
+        public DateTimeOffset CreatedAt { get; set; }
 
         public static ChangeLogLineDto FromResponseModel(ChangeLogLineResponseModel model) =>
             new()

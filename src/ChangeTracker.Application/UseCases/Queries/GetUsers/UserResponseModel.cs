@@ -5,7 +5,7 @@ namespace ChangeTracker.Application.UseCases.Queries.GetUsers
     public class UserResponseModel
     {
         public UserResponseModel(Guid id, string email, string firstName, string lastName, string timeZone,
-            DateTime createdAt)
+            DateTimeOffset createdAt)
         {
             Id = id;
             Email = email;
@@ -20,6 +20,6 @@ namespace ChangeTracker.Application.UseCases.Queries.GetUsers
         public string FirstName { get; }
         public string LastName { get; }
         public string TimeZone { get; }
-        public DateTime CreatedAt { get; }
+        public DateTimeOffset CreatedAt { get; }
     }
 }

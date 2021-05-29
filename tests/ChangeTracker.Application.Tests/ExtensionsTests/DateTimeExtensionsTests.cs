@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Globalization;
 using ChangeTracker.Application.Extensions;
 using FluentAssertions;
 using Xunit;
@@ -10,12 +11,12 @@ namespace ChangeTracker.Application.Tests.ExtensionsTests
         [Fact]
         public void ToLocal_ValidTimeZone_ReturnLocalTime()
         {
-            var utc = DateTime.Parse("2021-05-14T12:00:00Z");
+            var utc = DateTime.SpecifyKind(DateTime.Parse("2021-05-14T12:00:00"), DateTimeKind.Utc);
             const string timeZone = "Europe/Berlin";
 
             var local = utc.ToLocal(timeZone);
 
-            var expected = DateTime.Parse("2021-05-14T14:00:00Z");
+            var expected = DateTimeOffset.Parse("2021-05-14T14:00:00+02:00");
             local.Should().Be(expected);
         }
 
@@ -24,7 +25,7 @@ namespace ChangeTracker.Application.Tests.ExtensionsTests
         {
             var utc = DateTime.Parse("2021-05-14T12:00:00Z");
 
-            Func<DateTime> act = () => utc.ToLocal(null);
+            Func<DateTimeOffset> act = () => utc.ToLocal(null);
 
             act.Should().ThrowExactly<ArgumentNullException>();
         }

@@ -19,7 +19,7 @@ namespace ChangeTracker.Api.Presenters.V1.Version
         public void Created(Guid id)
         {
             var location = _httpContext.CreateLinkTo($"api/v1/versions/{id}");
-            Response = new CreatedResult(location, DefaultResponse.Create($"Version with Id '{id}' added."));
+            Response = new CreatedResult(location, DefaultResponse.Create("Version added.", id));
         }
 
         public void InvalidVersionFormat(string version)

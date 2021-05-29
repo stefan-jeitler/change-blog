@@ -15,9 +15,9 @@ namespace ChangeTracker.Api.DTOs.V1.Version
         public string ProductName { get; set; }
         public Guid AccountId { get; set; }
         public List<ChangeLogLineDto> ChangeLogLines { get; set; }
-        public DateTime CreatedAt { get; set; }
-        public DateTime? ReleasedAt { get; set; }
-        public DateTime? DeletedAt { get; set; }
+        public DateTimeOffset CreatedAt { get; set; }
+        public DateTimeOffset? ReleasedAt { get; set; }
+        public DateTimeOffset? DeletedAt { get; set; }
 
         public static CompleteVersionDto FromResponseModel(CompleteVersionResponseModel model) =>
             new()

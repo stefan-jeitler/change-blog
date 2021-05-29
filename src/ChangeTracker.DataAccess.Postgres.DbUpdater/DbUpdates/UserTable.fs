@@ -38,6 +38,18 @@ let private fixEmailUniqueConstraintSql = [
     "CREATE UNIQUE INDEX IF NOT EXISTS user_email_idx ON \"user\" (lower(email))"
 ]
 
+let private addUserForAppChangesSql = """
+        insert into "user"
+        values ('c1db054a-a07c-4712-9c69-86e0806a89a0',
+                'changes@change-tracker.com',
+                'change',
+                'tracker',
+                'UTC',
+                null,
+                now())
+        on conflict (id) do nothing
+    """
+
 let create (dbConnection: IDbConnection) =
     dbConnection.Execute(createUserSql) |> ignore
 
@@ -54,3 +66,7 @@ let fixEmailUniqeConstraint (dbConnection: IDbConnection) =
     |> ignore
 
     ()
+
+let addUserForAppChanges (dbConnection: IDbConnection) = 
+    dbConnection.Execute(addUserForAppChangesSql)
+    |> ignore

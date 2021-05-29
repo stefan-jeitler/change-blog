@@ -8,7 +8,7 @@ namespace ChangeTracker.Application.UseCases.Queries.GetCompleteVersions
     {
         public CompleteVersionResponseModel(Guid versionId, string version, string name, Guid productId,
             string productName, Guid accountId,
-            List<ChangeLogLineResponseModel> changeLogs, DateTime createdAt, DateTime? releasedAt, DateTime? deletedAt)
+            List<ChangeLogLineResponseModel> changeLogs, DateTimeOffset createdAt, DateTimeOffset? releasedAt, DateTimeOffset? deletedAt)
         {
             if (versionId == Guid.Empty)
                 throw new ArgumentException("VersionId cannot be empty.");
@@ -29,7 +29,7 @@ namespace ChangeTracker.Application.UseCases.Queries.GetCompleteVersions
 
             AccountId = accountId;
 
-            if (createdAt == DateTime.MinValue || createdAt == DateTime.MaxValue)
+            if (createdAt == DateTimeOffset.MinValue || createdAt == DateTimeOffset.MaxValue)
                 throw new ArgumentException("Invalid creation date.");
 
             ChangeLogs = changeLogs ?? throw new ArgumentNullException(nameof(changeLogs));
@@ -45,8 +45,8 @@ namespace ChangeTracker.Application.UseCases.Queries.GetCompleteVersions
         public string ProductName { get; }
         public Guid AccountId { get; }
         public List<ChangeLogLineResponseModel> ChangeLogs { get; }
-        public DateTime CreatedAt { get; }
-        public DateTime? ReleasedAt { get; }
-        public DateTime? DeletedAt { get; }
+        public DateTimeOffset CreatedAt { get; }
+        public DateTimeOffset? ReleasedAt { get; }
+        public DateTimeOffset? DeletedAt { get; }
     }
 }

@@ -5,7 +5,7 @@ namespace ChangeTracker.Api.DTOs.V1.Account
 {
     public class UserDto
     {
-        public UserDto(Guid id, string email, string firstName, string lastName, string timeZone, DateTime createdAt)
+        public UserDto(Guid id, string email, string firstName, string lastName, string timeZone, DateTimeOffset createdAt)
         {
             Id = id;
             Email = email;
@@ -20,7 +20,7 @@ namespace ChangeTracker.Api.DTOs.V1.Account
         public string FirstName { get; }
         public string LastName { get; }
         public string TimeZone { get; }
-        public DateTime CreatedAt { get; }
+        public DateTimeOffset CreatedAt { get; }
 
         public static UserDto FromResponseModel(UserResponseModel m) =>
             new(

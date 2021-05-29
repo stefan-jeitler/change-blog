@@ -6,7 +6,7 @@ namespace ChangeTracker.Api.DTOs.V1.Product
     public class ProductDto
     {
         public ProductDto(Guid id, Guid accountId, string accountName, string name, Guid versioningSchemeId,
-            string versioningScheme, string createdByUser, DateTime createdAt, bool isClosed)
+            string versioningScheme, string createdByUser, DateTimeOffset createdAt, bool isClosed)
         {
             Id = id;
             AccountId = accountId;
@@ -26,7 +26,7 @@ namespace ChangeTracker.Api.DTOs.V1.Product
         public Guid VersioningSchemeId { get; }
         public string VersioningScheme { get; }
         public string CreatedByUser { get; }
-        public DateTime CreatedAt { get; }
+        public DateTimeOffset CreatedAt { get; }
         public bool IsClosed { get; }
 
         public static ProductDto FromResponseModel(ProductResponseModel m) =>

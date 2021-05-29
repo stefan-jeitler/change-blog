@@ -37,7 +37,6 @@ namespace ChangeTracker.Application.Decorators
         private readonly IProductDao _productDao;
         private readonly IVersionDao _versionDao;
 
-
         public ChangeLogLineReadonlyCheckDecorator(IChangeLogCommandsDao changeLogCommandsComponent,
             IVersionDao versionDao,
             IMemoryCache memoryCache, IProductDao productDao)

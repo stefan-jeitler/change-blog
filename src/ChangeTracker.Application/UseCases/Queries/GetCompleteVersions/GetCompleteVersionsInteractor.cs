@@ -91,12 +91,15 @@ namespace ChangeTracker.Application.UseCases.Queries.GetCompleteVersions
                 clVersion.ProductId,
                 product.Name,
                 product.AccountId,
-                changeLogs.Lines.Select(x =>
+                changeLogs.Lines
+                    .OrderByDescending(x => x.Position)
+                    .Select(x =>
                         new ChangeLogLineResponseModel(x.Id,
                             x.Text,
                             x.Labels.Select(l => l.Value).ToList(),
                             x.Issues.Select(i => i.Value).ToList(),
                             x.CreatedAt.ToLocal(timeZone)))
+
                     .ToList(),
                 clVersion.CreatedAt.ToLocal(timeZone),
                 clVersion.ReleasedAt?.ToLocal(timeZone),

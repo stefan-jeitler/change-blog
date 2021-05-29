@@ -2,22 +2,26 @@
 {
     public enum Permission
     {
-        AddProduct,
-        CloseProduct,
-        ViewAccountProducts,
         ViewRoles,
         ViewAccount,
         ViewAccountUsers,
-        ViewUserProducts,
         ViewOwnUser,
 
-        AddVersion,
-        ViewCompleteVersion,
+        ViewUserProducts,
+        ViewAccountProducts,
+        CloseProduct,
+        AddProduct,
+
+        AddOrUpdateVersion,
+        AddCompleteVersion,
+        ViewCompleteVersions,
         ReleaseVersion,
         DeleteVersion,
-        UpdateVersion,
 
         ViewPendingChangeLogLines,
         ViewChangeLogLines,
+        AddOrUpdateChangeLogLine,
+        DeleteChangeLogLine,
+        MoveChangeLogLines
     }
 }

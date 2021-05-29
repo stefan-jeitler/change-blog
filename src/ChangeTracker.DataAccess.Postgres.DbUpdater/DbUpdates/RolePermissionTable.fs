@@ -64,12 +64,17 @@ let private addSomeViewPermissionsSql =
 	"""
       """
   	  INSERT INTO role_permission
-  	  SELECT id, 'AddVersion', now() from role where name in ('ScrumMaster', 'ProductOwner', 'PlatformManager', 'Developer')
+  	  SELECT id, 'AddOrUpdateVersion', now() from role where name in ('ScrumMaster', 'ProductOwner', 'PlatformManager', 'Developer')
   	  ON CONFLICT (role_id, permission) DO NOTHING
 	"""
       """
+ 	  INSERT INTO role_permission
+ 	  SELECT id, 'AddCompleteVersion', now() from role where name in ('ScrumMaster', 'ProductOwner', 'PlatformManager', 'Developer')
+ 	  ON CONFLICT (role_id, permission) DO NOTHING
+     """
+      """
   	  INSERT INTO role_permission
-  	  SELECT id, 'ViewCompleteVersion', now() from role where name in ('Support', 'ScrumMaster', 'ProductOwner', 'ProductManager', 'PlatformManager', 'Developer')
+  	  SELECT id, 'ViewCompleteVersions', now() from role where name in ('Support', 'ScrumMaster', 'ProductOwner', 'ProductManager', 'PlatformManager', 'Developer')
   	  ON CONFLICT (role_id, permission) DO NOTHING
 	""" ]
 
@@ -84,18 +89,28 @@ let private addVersionPermissionsSql = [
 	  SELECT id, 'DeleteVersion', now() from role where name in ('ProductOwner', 'PlatformManager', 'Developer')
 	  ON CONFLICT (role_id, permission) DO NOTHING
    """
-    """
-	  INSERT INTO role_permission
-	  SELECT id, 'UpdateVersion', now() from role where name in ('ProductOwner', 'PlatformManager', 'Developer')
-	  ON CONFLICT (role_id, permission) DO NOTHING
-   """
 ]
 
 let private addChangeLogLinesPermissionSql = [
     """
-        INSERT INTO role_permission
-        SELECT id, 'ViewPendingChangeLogLines', now() from role where name in ('ScrumMaster', 'ProductOwner', 'ProductManager', 'PlatformManager', 'Developer')
-        ON CONFLICT (role_id, permission) DO NOTHING
+    INSERT INTO role_permission
+    SELECT id, 'ViewPendingChangeLogLines', now() from role where name in ('ScrumMaster', 'ProductOwner', 'ProductManager', 'PlatformManager', 'Developer')
+    ON CONFLICT (role_id, permission) DO NOTHING
+   """
+    """
+    INSERT INTO role_permission
+    SELECT id, 'AddOrUpdateChangeLogLine', now() from role where name in ('ScrumMaster', 'ProductOwner', 'PlatformManager', 'Developer')
+    ON CONFLICT (role_id, permission) DO NOTHING
+   """
+    """
+    INSERT INTO role_permission
+    SELECT id, 'DeleteChangeLogLine', now() from role where name in ('ProductOwner', 'PlatformManager', 'Developer')
+    ON CONFLICT (role_id, permission) DO NOTHING
+   """
+    """
+    INSERT INTO role_permission
+    SELECT id, 'MoveChangeLogLines', now() from role where name in ('ProductOwner', 'PlatformManager', 'Developer')
+    ON CONFLICT (role_id, permission) DO NOTHING
    """
 ]
 

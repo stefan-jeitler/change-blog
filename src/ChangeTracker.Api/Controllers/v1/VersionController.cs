@@ -28,7 +28,7 @@ namespace ChangeTracker.Api.Controllers.v1
     public class VersionController : ControllerBase
     {
         [HttpPost("complete")]
-        [NeedsPermission(Permission.AddVersion)]
+        [NeedsPermission(Permission.AddCompleteVersion)]
         public async Task<ActionResult> AddCompleteVersionAsync([FromServices] IAddCompleteVersion addCompleteVersion,
             [FromBody] AddCompleteVersionDto completeVersionDto)
         {
@@ -53,7 +53,7 @@ namespace ChangeTracker.Api.Controllers.v1
         }
 
         [HttpGet("{versionId:Guid}")]
-        [NeedsPermission(Permission.ViewCompleteVersion)]
+        [NeedsPermission(Permission.ViewCompleteVersions)]
         public async Task<ActionResult<CompleteVersionDto>> GetCompleteVersionAsync(
             [FromServices] IGetCompleteVersion getCompleteVersion,
             Guid versionId)
@@ -89,7 +89,7 @@ namespace ChangeTracker.Api.Controllers.v1
         }
 
         [HttpPut]
-        [NeedsPermission(Permission.UpdateVersion)]
+        [NeedsPermission(Permission.AddOrUpdateVersion)]
         public async Task<ActionResult> AddOrUpdateVersionAsync([FromServices] IAddOrUpdateVersion addOrUpdateVersion,
             [FromBody] AddOrUpdateVersionDto addOrUpdateVersionDto)
         {

@@ -21,7 +21,7 @@ namespace ChangeTracker.Application.Tests.UseCaseTests.Commands.UpdateVersion
             _testVersion = "1.2.3";
         }
 
-        private VersionRequestModel CreateRequestModel() => new(_testProductId, _testUserId, _testName, _testVersion);
+        private VersionRequestModel CreateRequestModel() => new(_testUserId, _testProductId, _testVersion, _testName);
 
         [Fact]
         public void Create_HappyPath_Successful()
@@ -29,6 +29,7 @@ namespace ChangeTracker.Application.Tests.UseCaseTests.Commands.UpdateVersion
             var updateVersionRequestModel = CreateRequestModel();
 
             updateVersionRequestModel.ProductId.Should().Be(_testProductId);
+            updateVersionRequestModel.UserId.Should().Be(_testUserId);
             updateVersionRequestModel.Version.Should().Be(_testVersion);
             updateVersionRequestModel.Name.Should().Be(_testName);
         }

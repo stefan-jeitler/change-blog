@@ -5,7 +5,7 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace ChangeTracker.Api.Presenters.V1.Version
 {
-    public class ReleaseVersionPresenter : BasePresenter, IReleaseVersionOutputPort
+    public class ReleaseVersionApiPresenter : BaseApiPresenter, IReleaseVersionOutputPort
     {
         public void VersionAlreadyReleased()
         {

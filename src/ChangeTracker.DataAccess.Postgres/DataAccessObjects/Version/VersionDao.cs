@@ -165,12 +165,15 @@ namespace ChangeTracker.DataAccess.Postgres.DataAccessObjects.Version
             try
             {
                 await _dbAccessor.DbConnection
-                    .ExecuteAsync("update version set name = @name, value = @value where id = @versionId", new
-                    {
-                        name = version.Name.Value,
-                        value = version.Value.Value,
-                        versionId = version.Id
-                    });
+                    .ExecuteAsync(
+                        "update version set name = @name, value = @value, released_at = @releasedAt where id = @versionId",
+                        new
+                        {
+                            name = version.Name.Value,
+                            value = version.Value.Value,
+                            releasedAt = version.ReleasedAt,
+                            versionId = version.Id
+                        });
 
                 await UpdateSearchVectorsAsync(version.Id);
 

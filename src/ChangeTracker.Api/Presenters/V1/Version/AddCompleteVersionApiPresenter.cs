@@ -8,7 +8,7 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace ChangeTracker.Api.Presenters.V1.Version
 {
-    public class AddCompleteVersionApiPresenter : BasePresenter, IAddCompleteVersionOutputPort
+    public class AddCompleteVersionApiPresenter : BaseApiPresenter, IAddCompleteVersionOutputPort
     {
         private readonly HttpContext _httpContext;
 
@@ -55,7 +55,7 @@ namespace ChangeTracker.Api.Presenters.V1.Version
 
         public void ProductClosed()
         {
-            Response = new ConflictObjectResult(DefaultResponse.Create("The product has already been closed."));
+            Response = new ConflictObjectResult(DefaultResponse.Create("You cannot add a version when the related product has been closed."));
         }
 
         public void InvalidVersionFormat(string version)

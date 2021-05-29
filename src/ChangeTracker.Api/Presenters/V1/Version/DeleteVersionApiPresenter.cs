@@ -5,7 +5,7 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace ChangeTracker.Api.Presenters.V1.Version
 {
-    public class DeleteVersionPresenter : BasePresenter, IDeleteVersionOutputPort
+    public class DeleteVersionApiPresenter : BaseApiPresenter, IDeleteVersionOutputPort
     {
         public void VersionDoesNotExist()
         {

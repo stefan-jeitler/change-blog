@@ -2,7 +2,6 @@
 {
     public enum Permission
     {
-        ViewChangeLogLines,
         AddProduct,
         CloseProduct,
         ViewAccountProducts,
@@ -16,6 +15,9 @@
         ViewCompleteVersion,
         ReleaseVersion,
         DeleteVersion,
-        UpdateVersion
+        UpdateVersion,
+
+        ViewPendingChangeLogLines,
+        ViewChangeLogLines,
     }
 }

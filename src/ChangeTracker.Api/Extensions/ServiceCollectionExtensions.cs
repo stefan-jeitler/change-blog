@@ -36,7 +36,7 @@ namespace ChangeTracker.Api.Extensions
                 .AddScoped<IGetCompleteVersions, GetCompleteVersionsInteractor>()
                 .AddScoped<IReleaseVersion, ReleaseVersionInteractor>()
                 .AddScoped<IDeleteVersion, DeleteVersionInteractor>()
-                .AddScoped<IUpdateVersion, UpdateVersionInteractor>();
+                .AddScoped<IAddOrUpdateVersion, AddOrUpdateVersionInteractor>();
 
             return services;
         }

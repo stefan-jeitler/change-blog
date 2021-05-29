@@ -1,5 +1,6 @@
 ﻿using System;
 using ChangeTracker.Application.UseCases.Commands.AddVersion;
+using ChangeTracker.Application.UseCases.Commands.SharedModels;
 using FluentAssertions;
 using Xunit;
 

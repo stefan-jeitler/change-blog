@@ -14,6 +14,7 @@ using ChangeTracker.Application.UseCases.Commands.AddCompleteVersion;
 using ChangeTracker.Application.UseCases.Commands.AddCompleteVersion.Models;
 using ChangeTracker.Application.UseCases.Commands.DeleteVersion;
 using ChangeTracker.Application.UseCases.Commands.ReleaseVersion;
+using ChangeTracker.Application.UseCases.Commands.SharedModels;
 using ChangeTracker.Application.UseCases.Commands.UpdateVersion;
 using ChangeTracker.Application.UseCases.Queries.GetCompleteVersions;
 using Microsoft.AspNetCore.Mvc;
@@ -23,10 +24,10 @@ namespace ChangeTracker.Api.Controllers.v1
     [ApiController]
     [Route("api/v1/versions")]
     [Produces(MediaTypeNames.Application.Json)]
-    [SwaggerControllerOrder(4)]
+    [SwaggerControllerOrder(5)]
     public class VersionController : ControllerBase
     {
-        [HttpPost]
+        [HttpPost("complete")]
         [NeedsPermission(Permission.AddVersion)]
         public async Task<ActionResult> AddCompleteVersionAsync([FromServices] IAddCompleteVersion addCompleteVersion,
             [FromBody] AddCompleteVersionDto completeVersionDto)
@@ -34,8 +35,7 @@ namespace ChangeTracker.Api.Controllers.v1
             if (completeVersionDto is null)
                 return new BadRequestObjectResult(DefaultResponse.Create("Missing version dto."));
 
-            var lines = completeVersionDto?
-                .ChangeLogLines
+            var lines = completeVersionDto.ChangeLogLines
                 .Select(x =>
                     new ChangeLogLineRequestModel(x.Text,
                         x.Labels ?? new List<string>(0),
@@ -72,7 +72,7 @@ namespace ChangeTracker.Api.Controllers.v1
         public async Task<ActionResult> ReleaseVersionAsync([FromServices] IReleaseVersion releaseVersion,
             Guid versionId)
         {
-            var presenter = new ReleaseVersionPresenter();
+            var presenter = new ReleaseVersionApiPresenter();
             await releaseVersion.ExecuteAsync(presenter, versionId);
 
             return presenter.Response;
@@ -82,22 +82,28 @@ namespace ChangeTracker.Api.Controllers.v1
         [NeedsPermission(Permission.DeleteVersion)]
         public async Task<ActionResult> DeleteVersionAsync([FromServices] IDeleteVersion deleteVersion, Guid versionId)
         {
-            var presenter = new DeleteVersionPresenter();
+            var presenter = new DeleteVersionApiPresenter();
             await deleteVersion.ExecuteAsync(presenter, versionId);
 
             return presenter.Response;
         }
 
-        [HttpPut("{versionId:Guid}")]
+        [HttpPut]
         [NeedsPermission(Permission.UpdateVersion)]
-        public async Task<ActionResult> UpdateVersionAsync([FromServices] IUpdateVersion updateVersion,
-            Guid versionId, [FromBody] UpdateVersionDto updateVersionDto)
+        public async Task<ActionResult> AddOrUpdateVersionAsync([FromServices] IAddOrUpdateVersion addOrUpdateVersion,
+            [FromBody] AddOrUpdateVersionDto addOrUpdateVersionDto)
         {
-            var updateVersionRequestModel =
-                new UpdateVersionRequestModel(versionId, updateVersionDto.Name, updateVersionDto.Version);
+            var userId = HttpContext.GetUserId();
 
-            var presenter = new UpdateVersionPresenter();
-            await updateVersion.ExecuteAsync(presenter, updateVersionRequestModel);
+            var updateVersionRequestModel =
+                new VersionRequestModel(addOrUpdateVersionDto.ProductId,
+                    userId, 
+                    addOrUpdateVersionDto.Name, 
+                    addOrUpdateVersionDto.Version,
+                    addOrUpdateVersionDto.ReleaseImmediately);
+
+            var presenter = new AddOrUpdateVersionApiPresenter(HttpContext);
+            await addOrUpdateVersion.ExecuteAsync(presenter, updateVersionRequestModel);
 
             return presenter.Response;
         }

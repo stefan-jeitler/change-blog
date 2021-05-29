@@ -7,7 +7,7 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace ChangeTracker.Api.Presenters.V1.Product
 {
-    public class AddProductApiPresenter : BasePresenter, IAddProductOutputPort
+    public class AddProductApiPresenter : BaseApiPresenter, IAddProductOutputPort
     {
         private readonly HttpContext _httpContext;
 

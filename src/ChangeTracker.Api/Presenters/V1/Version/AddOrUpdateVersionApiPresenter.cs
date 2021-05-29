@@ -1,12 +1,21 @@
 ﻿using System;
 using ChangeTracker.Api.DTOs;
+using ChangeTracker.Api.Extensions;
 using ChangeTracker.Application.UseCases.Commands.UpdateVersion;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
 namespace ChangeTracker.Api.Presenters.V1.Version
 {
-    public class UpdateVersionPresenter : BasePresenter, IUpdateVersionOutputPort
+    public class AddOrUpdateVersionApiPresenter : BaseApiPresenter, IAddOrUpdateVersionOutputPort
     {
+        private readonly HttpContext _httpContext;
+
+        public AddOrUpdateVersionApiPresenter(HttpContext httpContext)
+        {
+            _httpContext = httpContext;
+        }
+
         public void VersionDoesNotExist()
         {
             Response = new NotFoundObjectResult(DefaultResponse.Create("Version not found"));
@@ -14,18 +23,29 @@ namespace ChangeTracker.Api.Presenters.V1.Version
 
         public void VersionAlreadyDeleted()
         {
-            Response = new ConflictObjectResult(DefaultResponse.Create("You cannot update versions that have been deleted."));
+            Response = new ConflictObjectResult(DefaultResponse.Create("You cannot add or update versions that have been deleted."));
         }
 
         public void VersionAlreadyReleased()
         {
             Response = new ConflictObjectResult(
-                DefaultResponse.Create("You cannot release update version that have been released."));
+                DefaultResponse.Create("You cannot add or update versions that have been released."));
+        }
+
+        public void Created(Guid id)
+        {
+            var location = _httpContext.CreateLinkTo($"api/v1/versions/{id}");
+            Response = new CreatedResult(location, DefaultResponse.Create("Version added.", id));
         }
 
         public void InvalidVersionFormat(string version)
         {
             Response = new UnprocessableEntityObjectResult(DefaultResponse.Create($"Invalid format '{version}'."));
+        }
+
+        public void ProductClosed()
+        {
+            Response = new ConflictObjectResult(DefaultResponse.Create("You cannot add or update a version when the related product has been closed."));
         }
 
         public void InvalidVersionName(string name)
@@ -41,12 +61,22 @@ namespace ChangeTracker.Api.Presenters.V1.Version
 
         public void VersionUpdated(Guid versionId)
         {
-            Response = new NoContentResult();
+            Response = new OkObjectResult(DefaultResponse.Create("Version successfully updated.", versionId));
+        }
+
+        public void ProductDoesNotExist()
+        {
+            Response = new NotFoundObjectResult(DefaultResponse.Create("Product does not exist"));
         }
 
         public void Conflict(string reason)
         {
             Response = new ConflictObjectResult(DefaultResponse.Create(reason));
+        }
+
+        public void VersionAlreadyExists(string version)
+        {
+            Response = new ConflictObjectResult(DefaultResponse.Create($"Version '{version}' already exists."));
         }
 
         public void RelatedProductClosed(Guid productId)

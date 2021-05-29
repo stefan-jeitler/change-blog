@@ -3,6 +3,7 @@ using System.Threading.Tasks;
 using ChangeTracker.Application.DataAccess;
 using ChangeTracker.Application.DataAccess.Products;
 using ChangeTracker.Application.DataAccess.Versions;
+using ChangeTracker.Application.UseCases.Commands.SharedModels;
 using ChangeTracker.Domain;
 using ChangeTracker.Domain.Common;
 using ChangeTracker.Domain.Version;
@@ -67,11 +68,15 @@ namespace ChangeTracker.Application.UseCases.Commands.AddVersion
                 return Maybe<ClVersion>.None;
             }
 
+            var releasedAt = requestModel.ReleaseImmediately
+                ? DateTime.UtcNow
+                : (DateTime?) null;
+
             var clVersion = new ClVersion(Guid.NewGuid(),
                 product.Id,
                 versionValue,
                 versionName,
-                null,
+                releasedAt,
                 requestModel.UserId,
                 DateTime.UtcNow,
                 null);

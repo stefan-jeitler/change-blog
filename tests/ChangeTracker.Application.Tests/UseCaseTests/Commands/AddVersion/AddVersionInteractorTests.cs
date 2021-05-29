@@ -3,6 +3,7 @@ using System.Threading.Tasks;
 using ChangeTracker.Application.DataAccess;
 using ChangeTracker.Application.Tests.TestDoubles;
 using ChangeTracker.Application.UseCases.Commands.AddVersion;
+using ChangeTracker.Application.UseCases.Commands.SharedModels;
 using ChangeTracker.Domain;
 using ChangeTracker.Domain.Common;
 using ChangeTracker.Domain.Version;

@@ -5,7 +5,7 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace ChangeTracker.Api.Presenters.V1.Product
 {
-    public class CloseProductApiPresenter : BasePresenter, ICloseProductOutputPort
+    public class CloseProductApiPresenter : BaseApiPresenter, ICloseProductOutputPort
     {
         public void ProductAlreadyClosed(Guid productId)
         {

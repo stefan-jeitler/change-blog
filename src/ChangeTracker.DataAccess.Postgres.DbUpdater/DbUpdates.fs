@@ -41,4 +41,5 @@ let dbUpdates: DbUpdate list = [
     { Version = 30; Update = AccountUserTable.createIndexOnUserIdAndRoleId}
     { Version = 31; Update = RolePermissionTable.addVersionPermissions}
     { Version = 32; Update = UserTable.addUserForAppChanges}
-    { Version = 33; Update = ProductTable.addProductForAppChanges}]
+    { Version = 33; Update = ProductTable.addProductForAppChanges}
+    { Version = 34; Update = ProductTable.addProductForAppChanges}]

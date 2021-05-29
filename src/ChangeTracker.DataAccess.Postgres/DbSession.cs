@@ -18,13 +18,11 @@ namespace ChangeTracker.DataAccess.Postgres
 
         public void Start()
         {
-            if (_startedUows >= 1)
-                return;
+            if (_startedUows == 0)
+            {
+                BeginTransaction();
+            }
 
-            if (_dbConnection.Value.State != ConnectionState.Open)
-                _dbConnection.Value.Open();
-
-            _transaction = _dbConnection.Value.BeginTransaction(IsolationLevel.RepeatableRead);
             _startedUows++;
         }
 
@@ -32,14 +30,27 @@ namespace ChangeTracker.DataAccess.Postgres
         {
             if (_startedUows == 1)
             {
-                _transaction.Commit();
-                _transaction.Dispose();
-                _dbConnection.Value.Close();
-                _dbConnection.Value.Dispose();
+                CommitTransaction();
             }
 
             if (_startedUows > 0)
                 _startedUows--;
+        }
+
+        private void CommitTransaction()
+        {
+            _transaction.Commit();
+            _transaction.Dispose();
+            _dbConnection.Value.Close();
+            _dbConnection.Value.Dispose();
+        }
+
+        private void BeginTransaction()
+        {
+            if (_dbConnection.Value.State != ConnectionState.Open)
+                _dbConnection.Value.Open();
+
+            _transaction = _dbConnection.Value.BeginTransaction(IsolationLevel.RepeatableRead);
         }
     }
 }

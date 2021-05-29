@@ -91,6 +91,14 @@ let private addVersionPermissionsSql = [
    """
 ]
 
+let private addChangeLogLinesPermissionSql = [
+    """
+        INSERT INTO role_permission
+        SELECT id, 'ViewPendingChangeLogLines', now() from role where name in ('ScrumMaster', 'ProductOwner', 'ProductManager', 'PlatformManager', 'Developer')
+        ON CONFLICT (role_id, permission) DO NOTHING
+   """
+]
+
 let create (dbConnection: IDbConnection) =
     dbConnection.Execute(createRolePermissionSql)
     |> ignore
@@ -115,6 +123,13 @@ let addSomeViewPermissions (dbConnection: IDbConnection) =
 
 let addVersionPermissions (dbConnection: IDbConnection) = 
     addVersionPermissionsSql
+    |> List.map (fun x -> dbConnection.Execute(x))
+    |> ignore
+
+    ()
+
+let addChangeLogLinePermissions (dbConnection: IDbConnection) = 
+    addChangeLogLinesPermissionSql
     |> List.map (fun x -> dbConnection.Execute(x))
     |> ignore
 

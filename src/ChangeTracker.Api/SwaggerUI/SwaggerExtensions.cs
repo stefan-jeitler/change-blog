@@ -7,7 +7,7 @@ using Microsoft.OpenApi.Models;
 
 namespace ChangeTracker.Api.SwaggerUI
 {
-    public static class SwaggerExtension
+    public static class SwaggerExtensions
     {
         public static IServiceCollection AddSwagger(this IServiceCollection services)
         {

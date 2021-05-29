@@ -23,7 +23,7 @@ namespace ChangeTracker.Api.Presenters.V1.Product
 
         public void AccountDeleted(Guid accountId)
         {
-            Response = new NotFoundObjectResult(DefaultResponse.Create("The requested account has been deleted."));
+            Response = new UnprocessableEntityObjectResult(DefaultResponse.Create("The requested account has been deleted."));
         }
 
         public void InvalidName(string name)
@@ -34,7 +34,7 @@ namespace ChangeTracker.Api.Presenters.V1.Product
         public void ProductAlreadyExists(Guid productId)
         {
             Response = new ConflictObjectResult(
-                DefaultResponse.Create($"Product already exists. ProductId {productId}", productId));
+                DefaultResponse.Create($"Product already exists.", productId));
         }
 
         public void VersioningSchemeDoesNotExist()

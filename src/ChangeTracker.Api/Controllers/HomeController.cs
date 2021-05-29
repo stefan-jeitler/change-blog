@@ -62,12 +62,13 @@ namespace ChangeTracker.Api.Controllers
             return Ok(apiInfo);
         }
 
-        [HttpGet("changeLogs")]
+        [HttpGet("changes")]
         [AllowAnonymous]
-        public async Task<ActionResult<List<CompleteVersionDto>>> GetCompleteProductVersionsAsync(
+        public async Task<ActionResult<List<CompleteVersionDto>>> GetChangesAsync(
             [MaxLength(VersionsQueryRequestModel.MaxSearchTermLength)]
             string searchTerm = null,
             Guid? lastVersionId = null,
+            [Range(1, VersionsQueryRequestModel.MaxLimit)]
             ushort limit = VersionsQueryRequestModel.MaxLimit)
         {
             var requestModel = new VersionsQueryRequestModel(AppChanges.ProductId,

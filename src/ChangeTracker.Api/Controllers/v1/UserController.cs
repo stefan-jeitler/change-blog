@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Net.Mime;
 using System.Threading.Tasks;
@@ -33,6 +34,7 @@ namespace ChangeTracker.Api.Controllers.v1
         [HttpGet("products")]
         [NeedsPermission(Permission.ViewUserProducts)]
         public async Task<ActionResult<List<ProductDto>>> GetUserProductsAsync(Guid? lastProductId = null,
+            [Range(1, UserProductQueryRequestModel.MaxLimit)]
             ushort limit = UserProductQueryRequestModel.MaxLimit,
             bool includeClosedProducts = false)
         {

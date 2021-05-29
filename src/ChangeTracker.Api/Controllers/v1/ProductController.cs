@@ -91,6 +91,7 @@ namespace ChangeTracker.Api.Controllers.v1
             string searchTerm = null,
             Guid? lastVersionId = null,
             bool includeDeleted = false,
+            [Range(1, VersionsQueryRequestModel.MaxLimit)]
             ushort limit = VersionsQueryRequestModel.MaxLimit)
         {
             var userId = HttpContext.GetUserId();

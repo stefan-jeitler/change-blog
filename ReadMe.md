@@ -36,6 +36,7 @@ The architecture of the app is mainly influenced by:
 
 * Multi-tenant capabilities
 * Role-based access control
+* FullTextSearch for versions and change logs
 
 ## CI/CD
 

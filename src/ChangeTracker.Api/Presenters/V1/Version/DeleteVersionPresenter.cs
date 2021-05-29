@@ -20,13 +20,13 @@ namespace ChangeTracker.Api.Presenters.V1.Version
 
         public void VersionAlreadyDeleted()
         {
-            Response = new ConflictObjectResult(DefaultResponse.Create("Version has been deleted."));
+            Response = new NoContentResult();
         }
 
         public void VersionAlreadyReleased()
         {
             Response = new UnprocessableEntityObjectResult(
-                DefaultResponse.Create("Version released. Released version can no longer be modified."));
+                DefaultResponse.Create("Version released. Released versions can no longer be modified."));
         }
 
         public void VersionDeleted(Guid versionId)

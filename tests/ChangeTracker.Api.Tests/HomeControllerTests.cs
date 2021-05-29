@@ -53,7 +53,7 @@ namespace ChangeTracker.Api.Tests
             client.DefaultRequestHeaders.Add("X-API-KEY", new[] {testApiKey});
 
             // act
-            var response = await client.GetAsync("api/changeLogs");
+            var response = await client.GetAsync("api/changes");
 
             // assert
             response.StatusCode.Should().NotBe(HttpStatusCode.Unauthorized);

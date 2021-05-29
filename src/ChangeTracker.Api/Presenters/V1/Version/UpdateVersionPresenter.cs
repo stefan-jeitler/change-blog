@@ -14,13 +14,13 @@ namespace ChangeTracker.Api.Presenters.V1.Version
 
         public void VersionAlreadyDeleted()
         {
-            Response = new ConflictObjectResult(DefaultResponse.Create("Version has been deleted."));
+            Response = new ConflictObjectResult(DefaultResponse.Create("You cannot update versions that have been deleted."));
         }
 
         public void VersionAlreadyReleased()
         {
-            Response = new UnprocessableEntityObjectResult(
-                DefaultResponse.Create("Version released. Released versions can no longer be modified."));
+            Response = new ConflictObjectResult(
+                DefaultResponse.Create("You cannot release update version that have been released."));
         }
 
         public void InvalidVersionFormat(string version)
@@ -51,7 +51,7 @@ namespace ChangeTracker.Api.Presenters.V1.Version
 
         public void RelatedProductClosed(Guid productId)
         {
-            Response = new ConflictObjectResult(DefaultResponse.Create("The product has already been closed."));
+            Response = new ConflictObjectResult(DefaultResponse.Create("Versions of closed products can no longer be modified."));
         }
 
         public void VersionDoesNotMatchScheme(string version)

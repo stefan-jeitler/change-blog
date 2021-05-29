@@ -25,7 +25,8 @@ namespace ChangeTracker.Domain.Tests.ChangeLogTests
             return Enumerable
                 .Range(0, count)
                 .Select(x =>
-                    new ChangeLogLine(_testVersionId, _testProductId, ChangeLogText.Parse($"{x:D5}"), (uint) x, _testUserId))
+                    new ChangeLogLine(_testVersionId, _testProductId, ChangeLogText.Parse($"{x:D5}"), (uint) x,
+                        _testUserId))
                 .ToList();
         }
 
@@ -242,7 +243,8 @@ namespace ChangeTracker.Domain.Tests.ChangeLogTests
         [Fact]
         public void ContainsText_SameTextDifferentCase_ReturnsTrue()
         {
-            var line = new ChangeLogLine(_testVersionId, _testProductId, ChangeLogText.Parse("new Feature"), 0, _testUserId);
+            var line = new ChangeLogLine(_testVersionId, _testProductId, ChangeLogText.Parse("new Feature"), 0,
+                _testUserId);
             var changeLogs = new ChangeLogs(new List<ChangeLogLine>(1) {line});
 
             var containsText = changeLogs.ContainsText(ChangeLogText.Parse("New Feature"));
@@ -253,7 +255,8 @@ namespace ChangeTracker.Domain.Tests.ChangeLogTests
         [Fact]
         public void ContainsText_DifferentText_ReturnsFalse()
         {
-            var line = new ChangeLogLine(_testVersionId, _testProductId, ChangeLogText.Parse("new Feature"), 0, _testUserId);
+            var line = new ChangeLogLine(_testVersionId, _testProductId, ChangeLogText.Parse("new Feature"), 0,
+                _testUserId);
             var changeLogs = new ChangeLogs(new List<ChangeLogLine>(1) {line});
 
             var containsText = changeLogs.ContainsText(ChangeLogText.Parse("Bugfix"));

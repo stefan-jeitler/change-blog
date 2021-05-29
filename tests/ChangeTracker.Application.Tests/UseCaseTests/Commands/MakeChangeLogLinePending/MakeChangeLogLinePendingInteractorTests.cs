@@ -36,7 +36,8 @@ namespace ChangeTracker.Application.Tests.UseCaseTests.Commands.MakeChangeLogLin
         public async Task MakeLinePending_HappyPath_SuccessfullyAndUowStartedAndCommitted()
         {
             // arrange
-            var clVersion = new ClVersion(TestAccount.Product.Id, ClVersionValue.Parse("1.2.3"), OptionalName.Empty, TestAccount.UserId);
+            var clVersion = new ClVersion(TestAccount.Product.Id, ClVersionValue.Parse("1.2.3"), OptionalName.Empty,
+                TestAccount.UserId);
             _versionDaoStub.Versions.Add(clVersion);
 
             var changeLogLine = new ChangeLogLine(clVersion.Id, TestAccount.Product.Id,
@@ -106,7 +107,7 @@ namespace ChangeTracker.Application.Tests.UseCaseTests.Commands.MakeChangeLogLin
         public async Task MakeLinePending_VersionIsAlreadyReleased_VersionAlreadyReleasedOutput()
         {
             // arrange
-            var clVersion = new ClVersion(TestAccount.Product.Id, ClVersionValue.Parse("1.2.3"), OptionalName.Empty, 
+            var clVersion = new ClVersion(TestAccount.Product.Id, ClVersionValue.Parse("1.2.3"), OptionalName.Empty,
                 TestAccount.UserId, DateTime.Parse("2021-04-18"));
             _versionDaoStub.Versions.Add(clVersion);
 
@@ -130,7 +131,8 @@ namespace ChangeTracker.Application.Tests.UseCaseTests.Commands.MakeChangeLogLin
         {
             // arrange
             var clVersion = new ClVersion(Guid.NewGuid(), TestAccount.Product.Id,
-                ClVersionValue.Parse("1.2.3"), OptionalName.Empty, null, TestAccount.UserId, DateTime.Parse("2021-04-18"),
+                ClVersionValue.Parse("1.2.3"), OptionalName.Empty, null, TestAccount.UserId,
+                DateTime.Parse("2021-04-18"),
                 DateTime.Parse("2021-04-18"));
 
             _versionDaoStub.Versions.Add(clVersion);
@@ -154,7 +156,8 @@ namespace ChangeTracker.Application.Tests.UseCaseTests.Commands.MakeChangeLogLin
         public async Task MakeLinePending_TooManyPendingLinesExists_TooManyPendingLinesOutput()
         {
             // arrange
-            var clVersion = new ClVersion(TestAccount.Product.Id, ClVersionValue.Parse("1.2.3"), OptionalName.Empty, TestAccount.UserId);
+            var clVersion = new ClVersion(TestAccount.Product.Id, ClVersionValue.Parse("1.2.3"), OptionalName.Empty,
+                TestAccount.UserId);
             _versionDaoStub.Versions.Add(clVersion);
 
             var changeLogLine = new ChangeLogLine(clVersion.Id, TestAccount.Product.Id,
@@ -180,7 +183,8 @@ namespace ChangeTracker.Application.Tests.UseCaseTests.Commands.MakeChangeLogLin
         public async Task MakeLinePending_ConflictWhileSaving_ConflictOutput()
         {
             // arrange
-            var clVersion = new ClVersion(TestAccount.Product.Id, ClVersionValue.Parse("1.2.3"), OptionalName.Empty, TestAccount.UserId);
+            var clVersion = new ClVersion(TestAccount.Product.Id, ClVersionValue.Parse("1.2.3"), OptionalName.Empty,
+                TestAccount.UserId);
             _versionDaoStub.Versions.Add(clVersion);
 
             var changeLogLine = new ChangeLogLine(clVersion.Id, TestAccount.Product.Id,
@@ -203,7 +207,8 @@ namespace ChangeTracker.Application.Tests.UseCaseTests.Commands.MakeChangeLogLin
         public async Task MakeLinePending_PendingLineWithSameTextExists_ConflictOutput()
         {
             // arrange
-            var clVersion = new ClVersion(TestAccount.Product.Id, ClVersionValue.Parse("1.2.3"), OptionalName.Empty, TestAccount.UserId);
+            var clVersion = new ClVersion(TestAccount.Product.Id, ClVersionValue.Parse("1.2.3"), OptionalName.Empty,
+                TestAccount.UserId);
             _versionDaoStub.Versions.Add(clVersion);
 
             var changeLogLine = new ChangeLogLine(clVersion.Id, TestAccount.Product.Id,

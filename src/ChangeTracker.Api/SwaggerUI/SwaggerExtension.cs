@@ -1,10 +1,13 @@
 ﻿using System;
+using System.Linq;
+using Microsoft.AspNetCore.Builder;
+using Microsoft.AspNetCore.Mvc.Controllers;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.OpenApi.Models;
 
 namespace ChangeTracker.Api.SwaggerUI
 {
-    public static class ServiceCollectionExtension
+    public static class SwaggerExtension
     {
         public static IServiceCollection AddSwagger(this IServiceCollection services)
         {
@@ -17,7 +20,7 @@ namespace ChangeTracker.Api.SwaggerUI
                     Type = SecuritySchemeType.ApiKey,
                     In = ParameterLocation.Header,
                     Name = "X-API-KEY",
-                    Description = "App uses Api keys for authentication"
+                    Description = "Api key authentication"
                 });
 
                 c.AddSecurityRequirement(new OpenApiSecurityRequirement
@@ -34,9 +37,36 @@ namespace ChangeTracker.Api.SwaggerUI
                         Array.Empty<string>()
                     }
                 });
+
+                c.OrderActionsBy(api =>
+                {
+                    if (api.ActionDescriptor is not ControllerActionDescriptor descriptor)
+                    {
+                        return string.Empty;
+                    }
+
+                    var orderAttribute = descriptor.EndpointMetadata.OfType<SwaggerControllerOrderAttribute>()
+                        .FirstOrDefault();
+                    return orderAttribute is null
+                        ? descriptor.ControllerName
+                        : orderAttribute.Position.ToString();
+                });
             });
 
             return services;
+        }
+
+
+        public static IApplicationBuilder AddSwagger(this IApplicationBuilder app)
+        {
+            app.UseSwagger();
+            app.UseSwaggerUI(c =>
+            {
+                c.SwaggerEndpoint("/swagger/v1/swagger.json", "ChangeTracker.Api v1");
+                c.RoutePrefix = string.Empty;
+            });
+
+            return app;
         }
     }
 }

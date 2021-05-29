@@ -9,9 +9,9 @@ namespace ChangeTracker.DataAccess.Postgres.Tests.TestDoubles
     {
         public static readonly Account Account = new(
             Guid.Parse("80f00d91-97ff-4050-8eb0-6f4484b4df99"),
-            Name.Parse("TestAccount DataAccess tests"), 
+            Name.Parse("TestAccount DataAccess tests"),
             Defaults.VersioningSchemeId,
-            DateTime.Parse("2021-05-21"), 
+            DateTime.Parse("2021-05-21"),
             null);
 
         public static readonly User User = new(
@@ -22,7 +22,7 @@ namespace ChangeTracker.DataAccess.Postgres.Tests.TestDoubles
             Name.Parse("Europe/Berlin"),
             null,
             DateTime.Parse("2021-05-21")
-            );
+        );
 
         public static readonly VersioningScheme DefaultScheme = new(
             Guid.Parse("4091b948-9bc5-43ee-9f98-df3d27853565"),

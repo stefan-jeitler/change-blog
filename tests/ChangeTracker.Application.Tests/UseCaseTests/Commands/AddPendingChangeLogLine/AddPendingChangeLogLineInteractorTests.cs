@@ -27,10 +27,8 @@ namespace ChangeTracker.Application.Tests.UseCaseTests.Commands.AddPendingChange
             _unitOfWorkMock = new Mock<IUnitOfWork>();
         }
 
-        private AddPendingChangeLogLineInteractor CreateInteractor()
-        {
-            return new(_productDaoStub, _changeLogDaoStub, _changeLogDaoStub, _unitOfWorkMock.Object);
-        }
+        private AddPendingChangeLogLineInteractor CreateInteractor() => new(_productDaoStub, _changeLogDaoStub,
+            _changeLogDaoStub, _unitOfWorkMock.Object);
 
         [Fact]
         public async Task AddPendingLine_NotExistingProduct_ProductDoesNotExistOutput()
@@ -71,7 +69,7 @@ namespace ChangeTracker.Application.Tests.UseCaseTests.Commands.AddPendingChange
                 null,
                 TestAccount.Product.Id,
                 ChangeLogText.Parse("some-release"),
-                0, 
+                0,
                 TestAccount.UserId,
                 DateTime.Parse("2021-04-09")));
 
@@ -134,7 +132,8 @@ namespace ChangeTracker.Application.Tests.UseCaseTests.Commands.AddPendingChange
 
             _changeLogDaoStub.ChangeLogs.AddRange(Enumerable.Range(0, 100)
                 .Select(x =>
-                    new ChangeLogLine(null, TestAccount.Product.Id, ChangeLogText.Parse($"{x:D5}"), (uint) x, TestAccount.UserId)));
+                    new ChangeLogLine(null, TestAccount.Product.Id, ChangeLogText.Parse($"{x:D5}"), (uint) x,
+                        TestAccount.UserId)));
 
             var addPendingLineInteractor = CreateInteractor();
 
@@ -165,7 +164,7 @@ namespace ChangeTracker.Application.Tests.UseCaseTests.Commands.AddPendingChange
                 null,
                 TestAccount.Product.Id,
                 ChangeLogText.Parse("some-release"),
-                0, 
+                0,
                 TestAccount.UserId,
                 DateTime.Parse("2021-04-09")));
 

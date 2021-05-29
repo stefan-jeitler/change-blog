@@ -19,10 +19,7 @@ namespace ChangeTracker.Application.Tests.UseCaseTests.Commands.DeleteChangeLogL
             _outputPortMock = new Mock<IDeleteChangeLogLineOutputPort>(MockBehavior.Strict);
         }
 
-        private DeleteChangeLogLineInteractor CreateInteractor()
-        {
-            return new(_changeLogDaoStub, _changeLogDaoStub);
-        }
+        private DeleteChangeLogLineInteractor CreateInteractor() => new(_changeLogDaoStub, _changeLogDaoStub);
 
         [Fact]
         public async Task DeleteLine_LinesDoesNotExist_LineDoesNotExistOutput()

@@ -54,9 +54,6 @@ namespace ChangeTracker.Domain.ChangeLog
             }
         }
 
-        public static implicit operator string(ChangeLogText text)
-        {
-            return text.Value;
-        }
+        public static implicit operator string(ChangeLogText text) => text.Value;
     }
 }

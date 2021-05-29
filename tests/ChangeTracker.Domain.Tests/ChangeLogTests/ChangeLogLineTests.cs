@@ -10,6 +10,7 @@ namespace ChangeTracker.Domain.Tests.ChangeLogTests
 {
     public class ChangeLogLineTests
     {
+        private static Guid _testUserId;
         private readonly List<Issue> _testIssues;
         private readonly List<Label> _testLabels;
         private readonly uint _testPosition;
@@ -18,7 +19,6 @@ namespace ChangeTracker.Domain.Tests.ChangeLogTests
         private Guid _testId;
         private Guid _testProductId;
         private ChangeLogText _testText;
-        private static Guid _testUserId;
         private Guid? _testVersionId;
 
         public ChangeLogLineTests()

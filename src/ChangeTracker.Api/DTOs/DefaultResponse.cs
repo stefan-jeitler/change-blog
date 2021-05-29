@@ -17,9 +17,6 @@ namespace ChangeTracker.Api.DTOs
 
         public string Message { get; }
 
-        public static DefaultResponse Create(string message)
-        {
-            return new(message);
-        }
+        public static DefaultResponse Create(string message) => new(message);
     }
 }

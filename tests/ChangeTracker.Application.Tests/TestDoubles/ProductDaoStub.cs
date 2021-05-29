@@ -76,7 +76,7 @@ namespace ChangeTracker.Application.Tests.TestDoubles
         public async Task<IList<Product>> GetUserProductsAsync(UserProductsQuerySettings querySettings)
         {
             await Task.Yield();
-            
+
             var lastEmail = Products.FirstOrDefault(x => x.Id == querySettings.LastProductId);
 
             return Products

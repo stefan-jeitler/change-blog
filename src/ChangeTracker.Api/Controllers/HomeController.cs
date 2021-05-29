@@ -1,6 +1,8 @@
 ﻿using System;
+using System.Net.Mime;
 using System.Reflection;
 using ChangeTracker.Api.DTOs;
+using ChangeTracker.Api.SwaggerUI;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Hosting;
@@ -11,6 +13,8 @@ namespace ChangeTracker.Api.Controllers
 {
     [ApiController]
     [Route("api")]
+    [Produces(MediaTypeNames.Application.Json)]
+    [SwaggerControllerOrder(0)]
     public class HomeController : ControllerBase
     {
         private static readonly Lazy<string> AssemblyVersion =
@@ -47,9 +51,6 @@ namespace ChangeTracker.Api.Controllers
 
         [HttpGet("changeLogs")]
         [AllowAnonymous]
-        public ActionResult ChangeLogs()
-        {
-            return Ok("coming soon ...");
-        }
+        public ActionResult ChangeLogs() => Ok("coming soon ...");
     }
 }

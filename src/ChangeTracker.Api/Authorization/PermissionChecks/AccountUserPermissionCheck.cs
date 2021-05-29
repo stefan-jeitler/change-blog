@@ -1,8 +1,6 @@
 ﻿using System;
 using System.Threading.Tasks;
 using ChangeTracker.Application.UseCases;
-using ChangeTracker.DataAccess.Postgres.DataAccessObjects;
-using ChangeTracker.DataAccess.Postgres.DataAccessObjects.Account;
 using ChangeTracker.DataAccess.Postgres.DataAccessObjects.User;
 using Microsoft.AspNetCore.Mvc.Filters;
 
@@ -21,8 +19,6 @@ namespace ChangeTracker.Api.Authorization.PermissionChecks
         }
 
         public override Task<bool> HasPermission(ActionExecutingContext context, Guid userId, Permission permission)
-        {
-            return _userAccessDao.HasUserPermissionAsync(userId, permission);
-        }
+            => _userAccessDao.HasUserPermissionAsync(userId, permission);
     }
 }

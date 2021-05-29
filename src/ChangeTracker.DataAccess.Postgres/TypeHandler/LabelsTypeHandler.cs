@@ -23,8 +23,8 @@ namespace ChangeTracker.DataAccess.Postgres.TypeHandler
                 return ImmutableHashSet<Label>.Empty;
 
             var labels = JsonSerializer
-                             .Deserialize<List<string>>(json)?
-                             .Select(Label.Parse);
+                .Deserialize<List<string>>(json)?
+                .Select(Label.Parse);
 
             return labels ?? Enumerable.Empty<Label>();
         }

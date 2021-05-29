@@ -25,10 +25,8 @@ namespace ChangeTracker.Application.Tests.UseCaseTests.Commands.IssuesTests
             _changeLogDaoStub = new ChangeLogDaoStub();
         }
 
-        private AddChangeLogLineIssueInteractor CreateInteractor()
-        {
-            return new(_unitOfWorkMock.Object, _changeLogDaoStub, _changeLogDaoStub);
-        }
+        private AddChangeLogLineIssueInteractor CreateInteractor() =>
+            new(_unitOfWorkMock.Object, _changeLogDaoStub, _changeLogDaoStub);
 
         [Fact]
         public async Task AddIssue_HappyPath_IssueAddedAndUowCommitted()

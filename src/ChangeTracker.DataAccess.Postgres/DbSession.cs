@@ -1,5 +1,4 @@
-﻿using System;
-using System.Data;
+﻿using System.Data;
 using ChangeTracker.Application.DataAccess;
 
 namespace ChangeTracker.DataAccess.Postgres
@@ -19,7 +18,7 @@ namespace ChangeTracker.DataAccess.Postgres
 
         public void Start()
         {
-            if (_startedUows >= 1) 
+            if (_startedUows >= 1)
                 return;
 
             if (_dbConnection.Value.State != ConnectionState.Open)

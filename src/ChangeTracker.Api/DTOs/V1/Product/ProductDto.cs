@@ -29,9 +29,8 @@ namespace ChangeTracker.Api.DTOs.V1.Product
         public DateTime CreatedAt { get; }
         public bool IsClosed { get; }
 
-        public static ProductDto FromResponseModel(ProductResponseModel m)
-        {
-            return new(
+        public static ProductDto FromResponseModel(ProductResponseModel m) =>
+            new(
                 m.Id,
                 m.AccountId,
                 m.AccountName,
@@ -41,6 +40,5 @@ namespace ChangeTracker.Api.DTOs.V1.Product
                 m.CreatedByUser,
                 m.CreatedAt,
                 m.ClosedAt.HasValue);
-        }
     }
 }

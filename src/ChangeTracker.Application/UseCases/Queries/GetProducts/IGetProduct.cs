@@ -6,6 +6,6 @@ namespace ChangeTracker.Application.UseCases.Queries.GetProducts
 {
     public interface IGetProduct
     {
-        Task<Maybe<ProductResponseModel>> ExecuteAsync(Guid userId, Guid productId); 
+        Task<Maybe<ProductResponseModel>> ExecuteAsync(Guid userId, Guid productId);
     }
 }

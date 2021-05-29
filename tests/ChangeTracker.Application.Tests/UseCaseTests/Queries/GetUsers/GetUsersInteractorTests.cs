@@ -16,10 +16,7 @@ namespace ChangeTracker.Application.Tests.UseCaseTests.Queries.GetUsers
             _userDaoStub = new UserDaoStub();
         }
 
-        private GetUsersInteractor CreateInteractor()
-        {
-            return new(_userDaoStub);
-        }
+        private GetUsersInteractor CreateInteractor() => new(_userDaoStub);
 
         [Fact]
         public async Task GetUsers_HappyPath_Successful()

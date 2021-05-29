@@ -32,10 +32,8 @@ namespace ChangeTracker.Application.Tests.UseCaseTests.Commands.AssignPendingLin
             _unitOfWorkMock = new Mock<IUnitOfWork>();
         }
 
-        private AssignPendingLineToVersionInteractor CreateInteractor()
-        {
-            return new(_versionDaoStub, _changeLogDaoStub, _changeLogDaoStub, _unitOfWorkMock.Object);
-        }
+        private AssignPendingLineToVersionInteractor CreateInteractor() => new(_versionDaoStub, _changeLogDaoStub,
+            _changeLogDaoStub, _unitOfWorkMock.Object);
 
         [Fact]
         public async Task AssignPendingLineByVersionId_HappyPath_AssignedAndUowCommitted()
@@ -47,7 +45,8 @@ namespace ChangeTracker.Application.Tests.UseCaseTests.Commands.AssignPendingLin
                 TestAccount.UserId,
                 TestAccount.CreationDate));
 
-            var clVersion = new ClVersion(TestAccount.Product.Id, ClVersionValue.Parse("1.2"), OptionalName.Empty, TestAccount.UserId);
+            var clVersion = new ClVersion(TestAccount.Product.Id, ClVersionValue.Parse("1.2"), OptionalName.Empty,
+                TestAccount.UserId);
             _versionDaoStub.Versions.Add(clVersion);
 
             var line = new ChangeLogLine(Guid.NewGuid(), null, TestAccount.Product.Id,
@@ -107,7 +106,8 @@ namespace ChangeTracker.Application.Tests.UseCaseTests.Commands.AssignPendingLin
                 TestAccount.UserId,
                 TestAccount.CreationDate));
 
-            var clVersion = new ClVersion(TestAccount.Product.Id, ClVersionValue.Parse("1.2"), OptionalName.Empty, TestAccount.UserId);
+            var clVersion = new ClVersion(TestAccount.Product.Id, ClVersionValue.Parse("1.2"), OptionalName.Empty,
+                TestAccount.UserId);
             _versionDaoStub.Versions.Add(clVersion);
 
             var line = new ChangeLogLine(Guid.NewGuid(), null, TestAccount.Product.Id,
@@ -165,7 +165,8 @@ namespace ChangeTracker.Application.Tests.UseCaseTests.Commands.AssignPendingLin
                 TestAccount.UserId,
                 TestAccount.CreationDate));
 
-            var clVersion = new ClVersion(TestAccount.Product.Id, ClVersionValue.Parse("1.2"), OptionalName.Empty, TestAccount.UserId);
+            var clVersion = new ClVersion(TestAccount.Product.Id, ClVersionValue.Parse("1.2"), OptionalName.Empty,
+                TestAccount.UserId);
             _versionDaoStub.Versions.Add(clVersion);
 
             var lineId = Guid.Parse("2b4b147a-9ebd-4350-a45b-aaae5d8d63de");
@@ -193,13 +194,15 @@ namespace ChangeTracker.Application.Tests.UseCaseTests.Commands.AssignPendingLin
                 TestAccount.UserId,
                 TestAccount.CreationDate));
 
-            var clVersion = new ClVersion(TestAccount.Product.Id, ClVersionValue.Parse("1.2"), OptionalName.Empty, TestAccount.UserId);
+            var clVersion = new ClVersion(TestAccount.Product.Id, ClVersionValue.Parse("1.2"), OptionalName.Empty,
+                TestAccount.UserId);
             _versionDaoStub.Versions.Add(clVersion);
 
             var lineId = Guid.Parse("2b4b147a-9ebd-4350-a45b-aaae5d8d63de");
 
             _changeLogDaoStub.ChangeLogs.AddRange(Enumerable.Range(0, 100).Select(x =>
-                new ChangeLogLine(clVersion.Id, TestAccount.Product.Id, ChangeLogText.Parse($"{x:D5}"), (uint) x, TestAccount.UserId)));
+                new ChangeLogLine(clVersion.Id, TestAccount.Product.Id, ChangeLogText.Parse($"{x:D5}"), (uint) x,
+                    TestAccount.UserId)));
 
             var assignmentRequestModel =
                 new VersionIdAssignmentRequestModel(clVersion.Id, lineId);
@@ -226,14 +229,17 @@ namespace ChangeTracker.Application.Tests.UseCaseTests.Commands.AssignPendingLin
                 TestAccount.UserId,
                 TestAccount.CreationDate));
 
-            var clVersion = new ClVersion(TestAccount.Product.Id, ClVersionValue.Parse("1.2"), OptionalName.Empty, TestAccount.UserId);
+            var clVersion = new ClVersion(TestAccount.Product.Id, ClVersionValue.Parse("1.2"), OptionalName.Empty,
+                TestAccount.UserId);
             _versionDaoStub.Versions.Add(clVersion);
 
-            var pendingLine = new ChangeLogLine(null, TestAccount.Product.Id, ChangeLogText.Parse("00000"), 0, TestAccount.UserId);
+            var pendingLine = new ChangeLogLine(null, TestAccount.Product.Id, ChangeLogText.Parse("00000"), 0,
+                TestAccount.UserId);
             _changeLogDaoStub.ChangeLogs.Add(pendingLine);
 
             _changeLogDaoStub.ChangeLogs.AddRange(Enumerable.Range(0, 1).Select(x =>
-                new ChangeLogLine(clVersion.Id, TestAccount.Product.Id, ChangeLogText.Parse($"{x:D5}"), (uint) x, TestAccount.UserId)));
+                new ChangeLogLine(clVersion.Id, TestAccount.Product.Id, ChangeLogText.Parse($"{x:D5}"), (uint) x,
+                    TestAccount.UserId)));
 
             var assignmentRequestModel =
                 new VersionIdAssignmentRequestModel(clVersion.Id, pendingLine.Id);
@@ -258,7 +264,8 @@ namespace ChangeTracker.Application.Tests.UseCaseTests.Commands.AssignPendingLin
                 TestAccount.UserId,
                 TestAccount.CreationDate));
 
-            var clVersion = new ClVersion(TestAccount.Product.Id, ClVersionValue.Parse("1.2"), OptionalName.Empty, TestAccount.UserId);
+            var clVersion = new ClVersion(TestAccount.Product.Id, ClVersionValue.Parse("1.2"), OptionalName.Empty,
+                TestAccount.UserId);
             _versionDaoStub.Versions.Add(clVersion);
 
             var line = new ChangeLogLine(Guid.NewGuid(), clVersion.Id, TestAccount.Product.Id,
@@ -288,7 +295,8 @@ namespace ChangeTracker.Application.Tests.UseCaseTests.Commands.AssignPendingLin
                 TestAccount.UserId,
                 TestAccount.CreationDate));
 
-            var clVersion = new ClVersion(TestAccount.Product.Id, ClVersionValue.Parse("1.2"), OptionalName.Empty, TestAccount.UserId);
+            var clVersion = new ClVersion(TestAccount.Product.Id, ClVersionValue.Parse("1.2"), OptionalName.Empty,
+                TestAccount.UserId);
             _versionDaoStub.Versions.Add(clVersion);
 
             var line = new ChangeLogLine(Guid.NewGuid(), null, TestAccount.Product.Id,

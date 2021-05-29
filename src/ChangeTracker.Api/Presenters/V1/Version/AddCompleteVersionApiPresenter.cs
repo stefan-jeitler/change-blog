@@ -1,6 +1,5 @@
 using System;
 using System.Collections.Generic;
-using System.Net.Http;
 using ChangeTracker.Api.DTOs;
 using ChangeTracker.Api.Extensions;
 using ChangeTracker.Application.UseCases.Commands.AddCompleteVersion;
@@ -25,7 +24,8 @@ namespace ChangeTracker.Api.Presenters.V1.Version
 
         public void InvalidIssue(string changeLogText, string issue)
         {
-            Response = new BadRequestObjectResult(DefaultResponse.Create($"Invalid issue '{issue}' for change log '{changeLogText}'."));
+            Response = new BadRequestObjectResult(
+                DefaultResponse.Create($"Invalid issue '{issue}' for change log '{changeLogText}'."));
         }
 
         public void TooManyIssues(string changeLogText, int maxIssues)
@@ -37,7 +37,8 @@ namespace ChangeTracker.Api.Presenters.V1.Version
 
         public void InvalidLabel(string changeLogText, string label)
         {
-            Response = new BadRequestObjectResult(DefaultResponse.Create($"Invalid label '{label}' for change log '{changeLogText}'."));
+            Response = new BadRequestObjectResult(
+                DefaultResponse.Create($"Invalid label '{label}' for change log '{changeLogText}'."));
         }
 
         public void TooManyLabels(string changeLogText, int maxLabels)
@@ -65,7 +66,8 @@ namespace ChangeTracker.Api.Presenters.V1.Version
         public void VersionDoesNotMatchScheme(string version)
         {
             Response = new UnprocessableEntityObjectResult(
-                DefaultResponse.Create($"Version does not match your product's versioning scheme. Version '{version}'"));
+                DefaultResponse.Create(
+                    $"Version does not match your product's versioning scheme. Version '{version}'"));
         }
 
         public void Created(Guid versionId)
@@ -86,17 +88,20 @@ namespace ChangeTracker.Api.Presenters.V1.Version
 
         public void TooManyLines(int maxChangeLogLines)
         {
-            Response = new UnprocessableEntityObjectResult(DefaultResponse.Create($"Too many lines. Max lines: {maxChangeLogLines}"));
+            Response = new UnprocessableEntityObjectResult(
+                DefaultResponse.Create($"Too many lines. Max lines: {maxChangeLogLines}"));
         }
 
         public void LinesWithSameTextsAreNotAllowed(IList<string> duplicates)
         {
-            Response = new UnprocessableEntityObjectResult(DefaultResponse.Create($"Lines with the same texts are not allowed. Duplicates: {duplicates}"));
+            Response = new UnprocessableEntityObjectResult(
+                DefaultResponse.Create($"Lines with the same texts are not allowed. Duplicates: {duplicates}"));
         }
 
         public void InvalidVersionName(string versionName)
         {
-            Response = new UnprocessableEntityObjectResult(DefaultResponse.Create($"The name of the version is invalid. Name {versionName}"));
+            Response = new UnprocessableEntityObjectResult(
+                DefaultResponse.Create($"The name of the version is invalid. Name {versionName}"));
         }
     }
 }

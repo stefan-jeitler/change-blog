@@ -18,10 +18,7 @@ namespace ChangeTracker.Application.Tests.UseCaseTests.Queries.GetRoles
             _rolesDaoMock = new Mock<IRolesDao>();
         }
 
-        private GetRolesInteractor CreateInteractor()
-        {
-            return new(_rolesDaoMock.Object);
-        }
+        private GetRolesInteractor CreateInteractor() => new(_rolesDaoMock.Object);
 
         [Fact]
         public async Task GetRoles_HappyPath_Successfully()
@@ -36,7 +33,7 @@ namespace ChangeTracker.Application.Tests.UseCaseTests.Queries.GetRoles
             // assert
             roles.Should().HaveCount(TestRoles.Roles.Count);
         }
-        
+
         [Fact]
         public async Task GetRoles_FilterDeveloperRole_Successfully()
         {
@@ -50,7 +47,7 @@ namespace ChangeTracker.Application.Tests.UseCaseTests.Queries.GetRoles
             // assert
             roles.Should().HaveCount(1);
         }
-        
+
         [Fact]
         public async Task GetRoles_FilterDeveloperRole_ResultProperlyPopulated()
         {

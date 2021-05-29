@@ -12,9 +12,8 @@ namespace ChangeTracker.Api.DTOs.V1.ChangeLog
         public List<string> Issues { get; set; }
         public DateTime CreatedAt { get; set; }
 
-        public static ChangeLogLineDto FromResponseModel(ChangeLogLineResponseModel model)
-        {
-            return new()
+        public static ChangeLogLineDto FromResponseModel(ChangeLogLineResponseModel model) =>
+            new()
             {
                 Id = model.Id,
                 Text = model.Text,
@@ -22,6 +21,5 @@ namespace ChangeTracker.Api.DTOs.V1.ChangeLog
                 Issues = model.Issues,
                 CreatedAt = model.CreatedAt
             };
-        }
     }
 }

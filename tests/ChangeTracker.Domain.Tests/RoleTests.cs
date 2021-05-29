@@ -24,10 +24,7 @@ namespace ChangeTracker.Domain.Tests
             _testPermissions = new List<Name>(2) {Name.Parse("TestApi"), Name.Parse("TestUi")};
         }
 
-        private Role CreateRole()
-        {
-            return new(_testId, _testName, _testDescription, _testCreationDate, _testPermissions);
-        }
+        private Role CreateRole() => new(_testId, _testName, _testDescription, _testCreationDate, _testPermissions);
 
         [Fact]
         public void Create_HappyPath_Successful()

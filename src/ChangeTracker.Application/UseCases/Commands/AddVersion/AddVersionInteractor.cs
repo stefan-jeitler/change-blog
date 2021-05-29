@@ -72,7 +72,7 @@ namespace ChangeTracker.Application.UseCases.Commands.AddVersion
                 versionValue,
                 versionName,
                 null,
-                requestModel.UserId, 
+                requestModel.UserId,
                 DateTime.UtcNow,
                 null);
 

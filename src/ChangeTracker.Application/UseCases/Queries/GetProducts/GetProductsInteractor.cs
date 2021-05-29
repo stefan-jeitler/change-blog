@@ -100,7 +100,8 @@ namespace ChangeTracker.Application.UseCases.Queries.GetProducts
             return creators.ToDictionary(x => x.Id, x => x);
         }
 
-        private static ProductResponseModel CreateResponse(Product product, IReadOnlyDictionary<Guid, Account> accountById,
+        private static ProductResponseModel CreateResponse(Product product,
+            IReadOnlyDictionary<Guid, Account> accountById,
             IReadOnlyDictionary<Guid, User> userById,
             string timeZone)
         {

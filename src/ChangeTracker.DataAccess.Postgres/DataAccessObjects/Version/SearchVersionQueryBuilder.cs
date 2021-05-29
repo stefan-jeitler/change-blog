@@ -6,8 +6,8 @@ namespace ChangeTracker.DataAccess.Postgres.DataAccessObjects.Version
 {
     public class SearchVersionQueryBuilder
     {
-        private readonly List<string> _predicates = new();
         private readonly Dictionary<string, object> _parameters = new();
+        private readonly List<string> _predicates = new();
 
         public SearchVersionQueryBuilder(Guid productId)
         {
@@ -22,7 +22,8 @@ namespace ChangeTracker.DataAccess.Postgres.DataAccessObjects.Version
             if (!lastVersionId.HasValue || lastVersionId.Value == Guid.Empty)
                 return this;
 
-            _predicates.Add("(v.created_at, v.id) < ((select vs.created_at from version vs where vs.id = @lastVersionId), @lastVersionId)");
+            _predicates.Add(
+                "(v.created_at, v.id) < ((select vs.created_at from version vs where vs.id = @lastVersionId), @lastVersionId)");
             _parameters.Add("lastVersionId", lastVersionId.Value);
 
             return this;
@@ -70,7 +71,7 @@ namespace ChangeTracker.DataAccess.Postgres.DataAccessObjects.Version
                 order by v.created_at desc
                 fetch first (@limit) rows only";
 
-            _parameters.Add("limit", (int)limit);
+            _parameters.Add("limit", (int) limit);
 
             return (query, _parameters);
         }

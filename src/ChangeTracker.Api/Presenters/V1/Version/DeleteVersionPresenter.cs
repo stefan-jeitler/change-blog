@@ -14,7 +14,8 @@ namespace ChangeTracker.Api.Presenters.V1.Version
 
         public void RelatedProductClosed(Guid productId)
         {
-            Response = new ConflictObjectResult(DefaultResponse.Create($"The related product has been closed. ProductId {productId}"));
+            Response = new ConflictObjectResult(
+                DefaultResponse.Create($"The related product has been closed. ProductId {productId}"));
         }
 
         public void VersionAlreadyDeleted()
@@ -24,7 +25,8 @@ namespace ChangeTracker.Api.Presenters.V1.Version
 
         public void VersionAlreadyReleased()
         {
-            Response = new UnprocessableEntityObjectResult(DefaultResponse.Create("Version released. Released version can no longer be modified."));
+            Response = new UnprocessableEntityObjectResult(
+                DefaultResponse.Create("Version released. Released version can no longer be modified."));
         }
 
         public void VersionDeleted(Guid versionId)

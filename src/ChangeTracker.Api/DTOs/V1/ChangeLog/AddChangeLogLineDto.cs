@@ -8,7 +8,7 @@ namespace ChangeTracker.Api.DTOs.V1.ChangeLog
         [Required] public string Text { get; set; }
 
         public List<string> Labels { get; set; }
-        
+
         public List<string> Issues { get; set; }
     }
 }

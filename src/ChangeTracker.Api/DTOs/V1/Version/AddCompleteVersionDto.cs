@@ -13,7 +13,7 @@ namespace ChangeTracker.Api.DTOs.V1.Version
 
         [Required] public List<AddChangeLogLineDto> ChangeLogLines { get; set; }
 
-        public bool ReleaseImmediately { get; set; } = false;
+        public bool ReleaseImmediately { get; set; }
         [Required] public Guid ProductId { set; get; }
     }
 }

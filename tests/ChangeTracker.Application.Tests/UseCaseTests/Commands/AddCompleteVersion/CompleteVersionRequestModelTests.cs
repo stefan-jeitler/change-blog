@@ -9,8 +9,8 @@ namespace ChangeTracker.Application.Tests.UseCaseTests.Commands.AddCompleteVersi
     public class CompleteVersionRequestModelTests
     {
         private static Guid _testUserId;
-        private List<ChangeLogLineRequestModel> _testLines;
         private readonly string _testName;
+        private List<ChangeLogLineRequestModel> _testLines;
         private Guid _testProductId;
         private bool _testReleaseImmediately;
         private string _testVersion;

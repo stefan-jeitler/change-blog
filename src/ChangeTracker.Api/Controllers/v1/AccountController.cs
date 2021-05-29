@@ -1,12 +1,14 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Net.Mime;
 using System.Threading.Tasks;
 using ChangeTracker.Api.Authorization;
 using ChangeTracker.Api.DTOs;
 using ChangeTracker.Api.DTOs.V1.Account;
 using ChangeTracker.Api.DTOs.V1.Product;
 using ChangeTracker.Api.Extensions;
+using ChangeTracker.Api.SwaggerUI;
 using ChangeTracker.Application.UseCases;
 using ChangeTracker.Application.UseCases.Queries.GetAccounts;
 using ChangeTracker.Application.UseCases.Queries.GetProducts;
@@ -18,10 +20,12 @@ namespace ChangeTracker.Api.Controllers.v1
 {
     [ApiController]
     [Route("api/v1/accounts")]
+    [Produces(MediaTypeNames.Application.Json)]
+    [SwaggerControllerOrder(1)]
     public class AccountController : ControllerBase
     {
-        private readonly IGetAccounts _getAccounts;
         private readonly IGetAccountProducts _getAccountProducts;
+        private readonly IGetAccounts _getAccounts;
         private readonly IGetUsers _getUsers;
 
         public AccountController(IGetAccountProducts getAccountProducts, IGetAccounts getAccounts, IGetUsers getUsers)

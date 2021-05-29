@@ -31,7 +31,7 @@ namespace ChangeTracker.Api
         private static void ConfigureControllers(IServiceCollection services)
         {
             services
-                .AddControllers(o => o.Filters.Add(typeof(PermissionAuthorizationFilter)))
+                .AddControllers(o => { o.Filters.Add(typeof(PermissionAuthorizationFilter)); })
                 .ConfigureApiBehaviorOptions(o => o.InvalidModelStateResponseFactory = CustomErrorMessage);
         }
 
@@ -57,15 +57,8 @@ namespace ChangeTracker.Api
             if (env.IsDevelopment())
                 app.UseDeveloperExceptionPage();
 
-            app.UseSwagger();
-            app.UseSwaggerUI(c =>
-            {
-                c.SwaggerEndpoint("/swagger/v1/swagger.json", "ChangeTracker.Api v1");
-                c.RoutePrefix = string.Empty;
-            });
-
+            app.AddSwagger();
             app.UseRouting();
-
             app.UseAuthentication();
             app.UseAuthorization();
             app.UseEndpoints(endpoints =>

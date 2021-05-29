@@ -22,10 +22,8 @@ namespace ChangeTracker.Application.Tests.UseCaseTests.Commands.UpdateChangeLogL
             _unitOfWorkMock = new Mock<IUnitOfWork>();
         }
 
-        private UpdateChangeLogLineInteractor CreateInteractor()
-        {
-            return new(_changeLogDaoStub, _changeLogDaoStub, _unitOfWorkMock.Object);
-        }
+        private UpdateChangeLogLineInteractor CreateInteractor() =>
+            new(_changeLogDaoStub, _changeLogDaoStub, _unitOfWorkMock.Object);
 
         [Fact]
         public async Task UpdateLine_HappyPath_Successful()

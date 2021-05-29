@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Threading.Tasks;
 using ChangeTracker.Application.DataAccess.Products;
-using ChangeTracker.DataAccess.Postgres.DataAccessObjects;
 using ChangeTracker.DataAccess.Postgres.DataAccessObjects.Product;
 using ChangeTracker.DataAccess.Postgres.Tests.TestDoubles;
 using ChangeTracker.Domain;
@@ -37,10 +36,7 @@ namespace ChangeTracker.DataAccess.Postgres.Tests.DataAccessObjectsTests
             return Task.CompletedTask;
         }
 
-        private ProductDao CreateDao()
-        {
-            return new(new DbSession(_lazyDbConnection), NullLogger<ProductDao>.Instance);
-        }
+        private ProductDao CreateDao() => new(new DbSession(_lazyDbConnection), NullLogger<ProductDao>.Instance);
 
         [Fact]
         public async Task FindProduct_ByAccountIdAndName_ReturnsProduct()
@@ -97,7 +93,8 @@ namespace ChangeTracker.DataAccess.Postgres.Tests.DataAccessObjectsTests
             var productDao = CreateDao();
             var t_ua_account_01 = Guid.Parse("ec3a44cc-0ba4-4c97-ad7f-911e9f6a73bc");
             var t_ua_account_01_user_02 = Guid.Parse("7aa9004b-ed6f-4862-8307-579030c860be");
-            var querySettings = new AccountProductsQuerySettings(t_ua_account_01, t_ua_account_01_user_02, null, 100, true);
+            var querySettings =
+                new AccountProductsQuerySettings(t_ua_account_01, t_ua_account_01_user_02, null, 100, true);
 
             var products = await productDao.GetAccountProductsAsync(querySettings);
 
@@ -124,14 +121,15 @@ namespace ChangeTracker.DataAccess.Postgres.Tests.DataAccessObjectsTests
             var t_ua_account_01 = Guid.Parse("ec3a44cc-0ba4-4c97-ad7f-911e9f6a73bc");
             var t_ua_account_01_user_02 = Guid.Parse("7aa9004b-ed6f-4862-8307-579030c860be");
             var lastProductId = Guid.Parse("139a2e54-e9be-4168-98b4-2839d9b3db04");
-            var querySettings = new AccountProductsQuerySettings(t_ua_account_01, t_ua_account_01_user_02, lastProductId);
+            var querySettings =
+                new AccountProductsQuerySettings(t_ua_account_01, t_ua_account_01_user_02, lastProductId);
 
             var products = await productDao.GetAccountProductsAsync(querySettings);
 
             products.Should().HaveCount(1);
             products.Should().Contain(x => x.Id == Guid.Parse("0614f8d6-8895-4c74-bcbe-8a3c26076e1b"));
         }
-        
+
         [Fact]
         public async Task AddProduct_HappyPath_SuccessfullyAdded()
         {
@@ -151,7 +149,7 @@ namespace ChangeTracker.DataAccess.Postgres.Tests.DataAccessObjectsTests
                 "select exists(select null from product where id = @productId)", new {productId = TestData.Product.Id});
             exists.Should().BeTrue();
         }
-        
+
         [Fact]
         public async Task CloseProduct_HappyPath_SuccessfullyClosed()
         {
@@ -168,10 +166,11 @@ namespace ChangeTracker.DataAccess.Postgres.Tests.DataAccessObjectsTests
 
             // assert
             var exists = await _lazyDbConnection.Value.ExecuteScalarAsync<bool>(
-                "select exists(select null from product where id = @productId and closed_at is not null)", new {productId = TestData.Product.Id});
+                "select exists(select null from product where id = @productId and closed_at is not null)",
+                new {productId = TestData.Product.Id});
             exists.Should().BeTrue();
         }
-        
+
         private async Task InsertTestUserAsync()
         {
             const string insertTestUserSql =

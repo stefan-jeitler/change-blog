@@ -23,7 +23,7 @@ namespace ChangeTracker.Api.DTOs.V1.Version
             new()
             {
                 VersionId = model.VersionId,
-                Version =  model.Version,
+                Version = model.Version,
                 Name = model.Name,
                 ProductId = model.ProductId,
                 ProductName = model.ProductName,

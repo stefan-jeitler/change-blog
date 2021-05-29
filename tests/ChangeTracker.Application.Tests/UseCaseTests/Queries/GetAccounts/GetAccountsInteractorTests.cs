@@ -21,10 +21,8 @@ namespace ChangeTracker.Application.Tests.UseCaseTests.Queries.GetAccounts
             _versioningSchemeDaoStub = new VersioningSchemeDaoStub();
         }
 
-        private GetAccountsInteractor CreateInteractor()
-        {
-            return new(_accountDaoStub, _userDaoStub, _versioningSchemeDaoStub);
-        }
+        private GetAccountsInteractor CreateInteractor() =>
+            new(_accountDaoStub, _userDaoStub, _versioningSchemeDaoStub);
 
         [Fact]
         public async Task GetAccounts_HappyPath_Successful()

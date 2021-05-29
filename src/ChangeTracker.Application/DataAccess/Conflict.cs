@@ -11,9 +11,6 @@ namespace ChangeTracker.Application.DataAccess
 
         public string Reason { get; }
 
-        public static implicit operator string(Conflict conflict)
-        {
-            return conflict.Reason;
-        }
+        public static implicit operator string(Conflict conflict) => conflict.Reason;
     }
 }

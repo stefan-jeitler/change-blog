@@ -5,7 +5,8 @@ namespace ChangeTracker.Application.UseCases.Queries.GetProducts
     public class ProductResponseModel
     {
         public ProductResponseModel(Guid id, Guid accountId, string accountName, string name,
-            Guid versioningSchemeId, string versioningScheme, string createdByUser, DateTime createdAt, DateTime? closedAt)
+            Guid versioningSchemeId, string versioningScheme, string createdByUser, DateTime createdAt,
+            DateTime? closedAt)
         {
             Id = id;
             AccountId = accountId;

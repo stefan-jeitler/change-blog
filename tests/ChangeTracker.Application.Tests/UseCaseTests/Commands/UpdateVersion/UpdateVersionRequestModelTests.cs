@@ -1,5 +1,4 @@
 ﻿using System;
-using ChangeTracker.Application.Tests.TestDoubles;
 using ChangeTracker.Application.UseCases.Commands.UpdateVersion;
 using FluentAssertions;
 using Xunit;
@@ -8,10 +7,10 @@ namespace ChangeTracker.Application.Tests.UseCaseTests.Commands.UpdateVersion
 {
     public class UpdateVersionRequestModelTests
     {
-
-        private Guid _testVersionId;
         private string _testName;
         private string _testVersion;
+
+        private Guid _testVersionId;
 
         public UpdateVersionRequestModelTests()
         {

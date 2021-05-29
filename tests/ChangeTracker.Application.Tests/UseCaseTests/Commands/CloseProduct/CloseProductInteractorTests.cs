@@ -19,10 +19,7 @@ namespace ChangeTracker.Application.Tests.UseCaseTests.Commands.CloseProduct
             _outputPortMock = new Mock<ICloseProductOutputPort>(MockBehavior.Strict);
         }
 
-        private CloseProductInteractor CreateInteractor()
-        {
-            return new(_productDaoStub);
-        }
+        private CloseProductInteractor CreateInteractor() => new(_productDaoStub);
 
         [Fact]
         public async Task CloseProduct_ProductDoesNotExist_ProductDoesNotExistOutput()

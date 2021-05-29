@@ -8,12 +8,12 @@ namespace ChangeTracker.Domain.Tests.VersionTests
 {
     public class ClVersionTests
     {
+        private static Guid _testUserId;
         private DateTime _testCreationDate;
         private DateTime? _testDeletedDate;
         private Guid _testId;
+        private readonly OptionalName _testName;
         private Guid _testProductId;
-        private static Guid _testUserId;
-        private OptionalName _testName;
         private DateTime? _testReleaseDate;
         private ClVersionValue _testVersionValue;
 
@@ -181,7 +181,7 @@ namespace ChangeTracker.Domain.Tests.VersionTests
             _testReleaseDate = DateTime.Parse("2021-05-14");
             var version = CreateVersion();
 
-            var releasedVersion =  version.Release();
+            var releasedVersion = version.Release();
 
             releasedVersion.Should().BeEquivalentTo(version);
         }
@@ -192,7 +192,7 @@ namespace ChangeTracker.Domain.Tests.VersionTests
             _testDeletedDate = DateTime.Parse("2021-05-14");
             var version = CreateVersion();
 
-            var deletedVersion =  version.Delete();
+            var deletedVersion = version.Delete();
 
             deletedVersion.Should().BeEquivalentTo(version);
         }
@@ -203,7 +203,7 @@ namespace ChangeTracker.Domain.Tests.VersionTests
             _testDeletedDate = null;
             var version = CreateVersion();
 
-            var deletedVersion =  version.Delete();
+            var deletedVersion = version.Delete();
 
             deletedVersion.DeletedAt.Should().HaveValue();
         }

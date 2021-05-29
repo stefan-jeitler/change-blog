@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 using System.Linq;
+using System.Net.Mime;
 using System.Threading.Tasks;
 using ChangeTracker.Api.Authorization;
 using ChangeTracker.Api.DTOs;
@@ -8,6 +10,7 @@ using ChangeTracker.Api.DTOs.V1.Product;
 using ChangeTracker.Api.DTOs.V1.Version;
 using ChangeTracker.Api.Extensions;
 using ChangeTracker.Api.Presenters.V1.Product;
+using ChangeTracker.Api.SwaggerUI;
 using ChangeTracker.Application.UseCases;
 using ChangeTracker.Application.UseCases.Commands.AddProduct;
 using ChangeTracker.Application.UseCases.Commands.CloseProduct;
@@ -19,6 +22,8 @@ namespace ChangeTracker.Api.Controllers.v1
 {
     [ApiController]
     [Route("api/v1/products")]
+    [Produces(MediaTypeNames.Application.Json)]
+    [SwaggerControllerOrder(3)]
     public class ProductController : ControllerBase
     {
         private readonly IAddProduct _addProduct;
@@ -42,7 +47,8 @@ namespace ChangeTracker.Api.Controllers.v1
             var userId = HttpContext.GetUserId();
             var product = await _getProduct.ExecuteAsync(userId, productId);
 
-            if (product.HasNoValue) return NotFound(DefaultResponse.Create("Product not found"));
+            if (product.HasNoValue)
+                return NotFound(DefaultResponse.Create("Product not found"));
 
             return Ok(ProductDto.FromResponseModel(product.Value));
         }
@@ -81,17 +87,12 @@ namespace ChangeTracker.Api.Controllers.v1
         [HttpGet("{productId:Guid}/versions")]
         [NeedsPermission(Permission.ViewCompleteVersion)]
         public async Task<ActionResult<List<CompleteVersionDto>>> GetCompleteProductVersionsAsync(Guid productId,
+            [MaxLength(VersionsQueryRequestModel.MaxSearchTermLength)]
             string searchTerm = null,
             Guid? lastVersionId = null,
             bool includeDeleted = false,
             ushort limit = VersionsQueryRequestModel.MaxLimit)
         {
-            if (searchTerm is not null && searchTerm.Length > VersionsQueryRequestModel.MaxSearchTermLength)
-            {
-                return BadRequest(DefaultResponse.Create(
-                    $"SearchTerm is too long. Max length {VersionsQueryRequestModel.MaxSearchTermLength}"));
-            }
-
             var userId = HttpContext.GetUserId();
             var requestModel = new VersionsQueryRequestModel(productId,
                 lastVersionId,

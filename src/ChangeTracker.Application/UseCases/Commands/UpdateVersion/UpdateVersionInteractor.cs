@@ -54,7 +54,7 @@ namespace ChangeTracker.Application.UseCases.Commands.UpdateVersion
 
             var existingVersionWithSameValue =
                 await _versionDao.FindVersionAsync(clVersion.Value.ProductId, clVersionValue);
-            if (existingVersionWithSameValue.HasValue && 
+            if (existingVersionWithSameValue.HasValue &&
                 existingVersionWithSameValue.Value.Id != clVersion.Value.Id)
             {
                 output.VersionWithSameValueAlreadyExists(clVersionValue);
@@ -100,10 +100,10 @@ namespace ChangeTracker.Application.UseCases.Commands.UpdateVersion
             await _versionDao.UpdateVersionAsync(updatedClVersion)
                 .Match(Finish, c => output.Conflict(c.Reason));
 
-            void Finish(ClVersion v)
+            void Finish(ClVersion version)
             {
                 _unitOfWork.Commit();
-                output.VersionUpdated(v.Id);
+                output.VersionUpdated(version.Id);
             }
         }
 

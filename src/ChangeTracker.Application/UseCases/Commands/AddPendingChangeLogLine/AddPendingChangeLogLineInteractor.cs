@@ -68,13 +68,13 @@ namespace ChangeTracker.Application.UseCases.Commands.AddPendingChangeLogLine
             }
 
             var changeLogLine = new ChangeLogLine(Guid.NewGuid(),
-                null, 
+                null,
                 product.Id,
-                parsedLine.Value.Text, 
-                changeLogs.NextFreePosition, 
+                parsedLine.Value.Text,
+                changeLogs.NextFreePosition,
                 DateTime.UtcNow,
-                parsedLine.Value.Labels, 
-                parsedLine.Value.Issues, 
+                parsedLine.Value.Labels,
+                parsedLine.Value.Issues,
                 requestModel.UserId);
 
             return Maybe<ChangeLogLine>.From(changeLogLine);

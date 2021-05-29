@@ -14,7 +14,7 @@ namespace ChangeTracker.Domain.Tests.ChangeLogTests
 
             labelName.Value.Should().Be("Feature");
         }
-        
+
         [Fact]
         public void Parse_WithNumber_Successful()
         {

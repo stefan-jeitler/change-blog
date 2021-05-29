@@ -12,13 +12,13 @@ namespace ChangeTracker.Application.UseCases.Queries.GetCompleteVersions
         {
             if (productId == Guid.Empty)
                 throw new ArgumentException("ProductId cannot be empty.");
-            
+
             ProductId = productId;
             LastVersionId = lastVersionId;
 
             if (userId == Guid.Empty)
                 throw new ArgumentException("UserId cannot be empty.");
-            
+
             UserId = userId;
 
             if (searchTerm is not null && searchTerm.Length > MaxSearchTermLength)

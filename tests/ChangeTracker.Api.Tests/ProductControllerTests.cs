@@ -1,15 +1,10 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Data;
 using System.Net.Http.Json;
 using System.Threading.Tasks;
 using ChangeTracker.Api.DTOs.V1.Product;
-using ChangeTracker.Api.DTOs.V1.Version;
-using Dapper;
 using FluentAssertions;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc.Testing;
-using Microsoft.Extensions.DependencyInjection;
 using Xunit;
 
 namespace ChangeTracker.Api.Tests

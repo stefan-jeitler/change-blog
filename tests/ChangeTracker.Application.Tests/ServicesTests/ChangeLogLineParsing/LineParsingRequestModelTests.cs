@@ -19,10 +19,7 @@ namespace ChangeTracker.Application.Tests.ServicesTests.ChangeLogLineParsing
             _testIssues = new List<string>(0);
         }
 
-        private LineParserRequestModel CreateRequestModel()
-        {
-            return new(_testText, _testLabels, _testIssues);
-        }
+        private LineParserRequestModel CreateRequestModel() => new(_testText, _testLabels, _testIssues);
 
         [Fact]
         public void Create_HappyPath_Successful()

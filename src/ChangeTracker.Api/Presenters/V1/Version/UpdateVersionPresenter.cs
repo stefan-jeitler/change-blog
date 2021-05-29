@@ -19,7 +19,8 @@ namespace ChangeTracker.Api.Presenters.V1.Version
 
         public void VersionAlreadyReleased()
         {
-            Response = new UnprocessableEntityObjectResult(DefaultResponse.Create("Version released. Released versions can no longer be modified."));
+            Response = new UnprocessableEntityObjectResult(
+                DefaultResponse.Create("Version released. Released versions can no longer be modified."));
         }
 
         public void InvalidVersionFormat(string version)
@@ -56,7 +57,8 @@ namespace ChangeTracker.Api.Presenters.V1.Version
         public void VersionDoesNotMatchScheme(string version)
         {
             Response = new UnprocessableEntityObjectResult(
-                DefaultResponse.Create($"Version does not match your product's versioning scheme. Version '{version}'"));
+                DefaultResponse.Create(
+                    $"Version does not match your product's versioning scheme. Version '{version}'"));
         }
     }
 }

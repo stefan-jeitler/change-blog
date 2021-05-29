@@ -11,9 +11,8 @@ namespace ChangeTracker.Api.DTOs.V1.Account
         public Guid DefaultVersioningSchemeId { get; set; }
         public DateTime CreatedAt { get; set; }
 
-        public static AccountDto FromResponseModel(AccountResponseModel m)
-        {
-            return new()
+        public static AccountDto FromResponseModel(AccountResponseModel m) =>
+            new()
             {
                 Id = m.Id,
                 Name = m.Name,
@@ -21,6 +20,5 @@ namespace ChangeTracker.Api.DTOs.V1.Account
                 DefaultVersioningSchemeId = m.DefaultVersioningSchemeId,
                 CreatedAt = m.CreatedAt
             };
-        }
     }
 }

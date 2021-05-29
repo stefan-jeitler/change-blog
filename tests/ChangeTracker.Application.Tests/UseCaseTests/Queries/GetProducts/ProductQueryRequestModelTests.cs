@@ -23,10 +23,8 @@ namespace ChangeTracker.Application.Tests.UseCaseTests.Queries.GetProducts
             _testCount = 100;
         }
 
-        private AccountProductQueryRequestModel CreateRequestModel()
-        {
-            return new(_testUserId, _testAccountId, _testLastProductId, _testCount, true);
-        }
+        private AccountProductQueryRequestModel CreateRequestModel() =>
+            new(_testUserId, _testAccountId, _testLastProductId, _testCount, true);
 
         [Fact]
         public void Create_HappyPath_Successful()

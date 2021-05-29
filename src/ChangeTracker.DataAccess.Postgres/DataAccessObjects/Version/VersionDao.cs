@@ -133,7 +133,7 @@ namespace ChangeTracker.DataAccess.Postgres.DataAccessObjects.Version
 
         public async Task<Result<ClVersion, Conflict>> DeleteVersionAsync(ClVersion version)
         {
-            if (!version.IsDeleted) 
+            if (!version.IsDeleted)
                 throw new Exception("Only deleted versions can be marked as deleted.");
 
             await _dbAccessor.DbConnection

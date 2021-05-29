@@ -30,7 +30,8 @@ namespace ChangeTracker.Api.Presenters.V1.Version
         public void VersionDoesNotMatchScheme(string version)
         {
             Response = new UnprocessableEntityObjectResult(
-                DefaultResponse.Create($"Version does not match your product's versioning scheme. Version '{version}'"));
+                DefaultResponse.Create(
+                    $"Version does not match your product's versioning scheme. Version '{version}'"));
         }
 
         public void ProductDoesNotExist()
@@ -55,7 +56,8 @@ namespace ChangeTracker.Api.Presenters.V1.Version
 
         public void InvalidVersionName(string versionName)
         {
-            Response = new UnprocessableEntityObjectResult(DefaultResponse.Create($"The name of the version is invalid. Name {versionName}"));
+            Response = new UnprocessableEntityObjectResult(
+                DefaultResponse.Create($"The name of the version is invalid. Name {versionName}"));
         }
     }
 }

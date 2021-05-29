@@ -5,7 +5,8 @@ namespace ChangeTracker.Domain.Version
 {
     public class VersioningScheme
     {
-        public VersioningScheme(Guid id, Name name, Text regexPattern, Text description, Guid? accountId, Guid createdByUser,
+        public VersioningScheme(Guid id, Name name, Text regexPattern, Text description, Guid? accountId,
+            Guid createdByUser,
             DateTime? deletedAt, DateTime createdAt)
         {
             if (id == Guid.Empty)

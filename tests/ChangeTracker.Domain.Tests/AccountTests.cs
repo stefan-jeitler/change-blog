@@ -22,14 +22,12 @@ namespace ChangeTracker.Domain.Tests
             _testDeletionDate = DateTime.Parse("2021-04-03");
         }
 
-        private Account CreateAccount()
-        {
-            return new(_testAccountId,
+        private Account CreateAccount() =>
+            new(_testAccountId,
                 _testName,
                 _defaultVersioningSchemeId,
                 _testCreationDate,
                 _testDeletionDate);
-        }
 
         [Fact]
         public void Create_WithValidArguments_Successful()

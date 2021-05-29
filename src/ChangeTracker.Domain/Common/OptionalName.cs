@@ -32,12 +32,11 @@
                 return true;
             }
 
-            if (!Name.TryParse(candidate, out var n)) 
+            if (!Name.TryParse(candidate, out var n))
                 return false;
 
             name = new OptionalName(n.Value);
             return true;
-
         }
 
         public static implicit operator string(OptionalName name) => name.Value;

@@ -60,9 +60,6 @@ namespace ChangeTracker.Domain.ChangeLog
             }
         }
 
-        public static implicit operator string(Label label)
-        {
-            return label.Value;
-        }
+        public static implicit operator string(Label label) => label.Value;
     }
 }

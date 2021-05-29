@@ -17,7 +17,8 @@ namespace ChangeTracker.Application.Tests.TestDoubles
                     Name.Parse("ViewOwnUser"), Name.Parse("ViewAccount"), Name.Parse("AddProduct"),
                     Name.Parse("ViewChangeLogLines")
                 }),
-            new(Guid.Parse("446bceb2-0b9d-4899-934d-51be0576b7fa"), Name.Parse("PlatformManager"), Text.Parse("Platform Manager"),
+            new(Guid.Parse("446bceb2-0b9d-4899-934d-51be0576b7fa"), Name.Parse("PlatformManager"),
+                Text.Parse("Platform Manager"),
                 DateTime.Parse("2021-05-21"), new[]
                 {
                     Name.Parse("ViewOwnUser"), Name.Parse("ViewAccount"), Name.Parse("AddProduct"),

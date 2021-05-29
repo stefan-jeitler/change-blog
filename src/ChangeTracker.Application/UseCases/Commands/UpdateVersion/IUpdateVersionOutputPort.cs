@@ -1,5 +1,4 @@
 ﻿using System;
-using ChangeTracker.Domain.Version;
 
 namespace ChangeTracker.Application.UseCases.Commands.UpdateVersion
 {

@@ -23,10 +23,7 @@ namespace ChangeTracker.Application.Tests.UseCaseTests.Commands.ReleaseVersion
             _outputPortMock = new Mock<IReleaseVersionOutputPort>(MockBehavior.Strict);
         }
 
-        private ReleaseVersionInteractor CreateInteractor()
-        {
-            return new(_versionDaoStub, _productDaoStub);
-        }
+        private ReleaseVersionInteractor CreateInteractor() => new(_versionDaoStub, _productDaoStub);
 
         [Fact]
         public async Task ReleaseVersion_NotExistingVersion_VersionDoesNotExistOutput()
@@ -47,7 +44,8 @@ namespace ChangeTracker.Application.Tests.UseCaseTests.Commands.ReleaseVersion
         public async Task ReleaseVersion_DeletedVersion_VersionDeletedOutput()
         {
             // arrange
-            var version = new ClVersion(TestAccount.Product.Id, ClVersionValue.Parse("1.23"), OptionalName.Empty, TestAccount.UserId, null,
+            var version = new ClVersion(TestAccount.Product.Id, ClVersionValue.Parse("1.23"), OptionalName.Empty,
+                TestAccount.UserId, null,
                 DateTime.Parse("2021-05-13"));
             var interactor = CreateInteractor();
             _outputPortMock.Setup(m => m.VersionAlreadyDeleted());
@@ -64,7 +62,8 @@ namespace ChangeTracker.Application.Tests.UseCaseTests.Commands.ReleaseVersion
         public async Task ReleaseVersion_ReleasedVersion_VersionAlreadyReleasedOutput()
         {
             // arrange
-            var version = new ClVersion(TestAccount.Product.Id, ClVersionValue.Parse("1.23"), OptionalName.Empty, TestAccount.UserId,
+            var version = new ClVersion(TestAccount.Product.Id, ClVersionValue.Parse("1.23"), OptionalName.Empty,
+                TestAccount.UserId,
                 DateTime.Parse("2021-05-13"));
             var interactor = CreateInteractor();
             _outputPortMock.Setup(m => m.VersionAlreadyReleased());
@@ -81,7 +80,8 @@ namespace ChangeTracker.Application.Tests.UseCaseTests.Commands.ReleaseVersion
         public async Task ReleaseVersion_RelatedProductClosed_RelatedProductClosedOutput()
         {
             // arrange
-            var version = new ClVersion(TestAccount.Product.Id, ClVersionValue.Parse("1.23"), OptionalName.Empty, TestAccount.UserId);
+            var version = new ClVersion(TestAccount.Product.Id, ClVersionValue.Parse("1.23"), OptionalName.Empty,
+                TestAccount.UserId);
             var product = new Product(TestAccount.Product.Id, TestAccount.Id, TestAccount.Product.Name,
                 TestAccount.CustomVersioningScheme, TestAccount.UserId, TestAccount.Product.CreatedAt,
                 DateTime.Parse("2021-05-13"));
@@ -101,7 +101,8 @@ namespace ChangeTracker.Application.Tests.UseCaseTests.Commands.ReleaseVersion
         public async Task ReleaseVersion_ConflictWhenRelease_ConflictOutput()
         {
             // arrange
-            var version = new ClVersion(TestAccount.Product.Id, ClVersionValue.Parse("1.23"), OptionalName.Empty, TestAccount.UserId);
+            var version = new ClVersion(TestAccount.Product.Id, ClVersionValue.Parse("1.23"), OptionalName.Empty,
+                TestAccount.UserId);
             var product = new Product(TestAccount.Product.Id, TestAccount.Id, TestAccount.Product.Name,
                 TestAccount.CustomVersioningScheme, TestAccount.UserId, TestAccount.Product.CreatedAt, null);
             var interactor = CreateInteractor();
@@ -121,7 +122,8 @@ namespace ChangeTracker.Application.Tests.UseCaseTests.Commands.ReleaseVersion
         public async Task ReleaseVersion_HappyPath_ReleasedOutput()
         {
             // arrange
-            var version = new ClVersion(TestAccount.Product.Id, ClVersionValue.Parse("1.23"), OptionalName.Empty, TestAccount.UserId );
+            var version = new ClVersion(TestAccount.Product.Id, ClVersionValue.Parse("1.23"), OptionalName.Empty,
+                TestAccount.UserId);
             var product = new Product(TestAccount.Product.Id, TestAccount.Id, TestAccount.Product.Name,
                 TestAccount.CustomVersioningScheme, TestAccount.UserId, TestAccount.Product.CreatedAt, null);
             var interactor = CreateInteractor();

@@ -1,11 +1,13 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Net.Mime;
 using System.Threading.Tasks;
 using ChangeTracker.Api.Authorization;
 using ChangeTracker.Api.DTOs.V1.Account;
 using ChangeTracker.Api.DTOs.V1.Product;
 using ChangeTracker.Api.Extensions;
+using ChangeTracker.Api.SwaggerUI;
 using ChangeTracker.Application.UseCases;
 using ChangeTracker.Application.UseCases.Queries.GetProducts;
 using ChangeTracker.Application.UseCases.Queries.GetUsers;
@@ -15,10 +17,12 @@ namespace ChangeTracker.Api.Controllers.v1
 {
     [ApiController]
     [Route("api/v1/user")]
+    [Produces(MediaTypeNames.Application.Json)]
+    [SwaggerControllerOrder(2)]
     public class UserController : ControllerBase
     {
-        private readonly IGetUserProducts _getUserProducts;
         private readonly IGetUsers _getUser;
+        private readonly IGetUserProducts _getUserProducts;
 
         public UserController(IGetUserProducts getUserProducts, IGetUsers getUser)
         {
@@ -28,7 +32,7 @@ namespace ChangeTracker.Api.Controllers.v1
 
         [HttpGet("products")]
         [NeedsPermission(Permission.ViewUserProducts)]
-        public async Task<ActionResult<List<ProductDto>>> GetUserProductsAsync(Guid? lastProductId = null, 
+        public async Task<ActionResult<List<ProductDto>>> GetUserProductsAsync(Guid? lastProductId = null,
             ushort limit = UserProductQueryRequestModel.MaxLimit,
             bool includeClosedProducts = false)
         {

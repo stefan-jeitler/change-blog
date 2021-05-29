@@ -10,9 +10,9 @@ namespace ChangeTracker.Application.Tests.UseCaseTests.Queries.GetProducts
 {
     public class GetProductsInteractorTests
     {
+        private readonly AccountDaoStub _accountDaoStub;
         private readonly ProductDaoStub _productDaoStub;
         private readonly UserDaoStub _userDaoStub;
-        private readonly AccountDaoStub _accountDaoStub;
 
         public GetProductsInteractorTests()
         {
@@ -22,10 +22,7 @@ namespace ChangeTracker.Application.Tests.UseCaseTests.Queries.GetProducts
             _accountDaoStub.Accounts.Add(TestAccount.Account);
         }
 
-        private GetProductsInteractor CreateInteractor()
-        {
-            return new(_productDaoStub, _userDaoStub, _accountDaoStub);
-        }
+        private GetProductsInteractor CreateInteractor() => new(_productDaoStub, _userDaoStub, _accountDaoStub);
 
         [Fact]
         public async Task GetAccountProducts_HappyPath_Successful()
@@ -52,7 +49,8 @@ namespace ChangeTracker.Application.Tests.UseCaseTests.Queries.GetProducts
             _productDaoStub.Products.Add(TestAccount.Product);
             var interactor = CreateInteractor();
             var notExistingAccountId = Guid.Parse("3639c610-bd58-4924-a5fa-ec19b3a324b0");
-            var requestModel = new AccountProductQueryRequestModel(TestAccount.UserId, notExistingAccountId, null, 1, true);
+            var requestModel =
+                new AccountProductQueryRequestModel(TestAccount.UserId, notExistingAccountId, null, 1, true);
 
             // act
             var products = await interactor.ExecuteAsync(requestModel);
@@ -91,8 +89,8 @@ namespace ChangeTracker.Application.Tests.UseCaseTests.Queries.GetProducts
             // assert
             product.Value.CreatedAt.Should().Be(createdAtLocal);
         }
-        
-        
+
+
         [Fact]
         public async Task GetUserProducts_HappyPath_Successful()
         {
@@ -114,7 +112,7 @@ namespace ChangeTracker.Application.Tests.UseCaseTests.Queries.GetProducts
             products.Should().ContainSingle(x => x.ClosedAt == TestAccount.Product.ClosedAt);
             products.Should().ContainSingle(x => x.CreatedByUser == TestAccount.User.Email.Value);
         }
-        
+
         [Fact]
         public async Task GetUserProducts_NotProductsExist_EmptyResult()
         {
@@ -129,6 +127,5 @@ namespace ChangeTracker.Application.Tests.UseCaseTests.Queries.GetProducts
             // assert
             products.Should().BeEmpty();
         }
-
     }
 }

@@ -26,13 +26,11 @@ namespace ChangeTracker.Application.Tests.UseCaseTests.Commands.AddProduct
             _outputPortMock = new Mock<IAddProductOutputPort>(MockBehavior.Strict);
         }
 
-        private AddProductInteractor CreateInteractor()
-        {
-            return new(_accountDaoStub,
+        private AddProductInteractor CreateInteractor() =>
+            new(_accountDaoStub,
                 _versioningSchemeDaoStub,
                 _productDaoStub,
                 _unitOfWorkMock.Object);
-        }
 
         [Fact]
         public async Task CreateProduct_Successful()

@@ -170,10 +170,10 @@ namespace ChangeTracker.Application.UseCases.Commands.AddCompleteVersion
                 clVersion.Id,
                 clVersion.ProductId,
                 parsedLine.Value.Text,
-                position, 
+                position,
                 DateTime.UtcNow,
-                parsedLine.Value.Labels, 
-                parsedLine.Value.Issues, 
+                parsedLine.Value.Labels,
+                parsedLine.Value.Issues,
                 clVersion.CreatedByUser);
 
             return Maybe<ChangeLogLine>.From(changeLogLine);

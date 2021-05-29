@@ -30,7 +30,7 @@ namespace ChangeTracker.Domain.Tests.ChangeLogTests
                 TestPosition,
                 TestCreationDate,
                 Array.Empty<Label>(),
-                new List<Issue> {TestIssue}, 
+                new List<Issue> {TestIssue},
                 TestUserId);
 
             line.Issues.Count.Should().Be(1);

@@ -28,11 +28,9 @@ namespace ChangeTracker.Domain.Tests.ProductTests
             _testClosedDate = null;
         }
 
-        private Product CreateProduct()
-        {
-            return new(_testId, _testAccountId, _testName, _testVersioningScheme, _testUserId,
+        private Product CreateProduct() =>
+            new(_testId, _testAccountId, _testName, _testVersioningScheme, _testUserId,
                 _testCreationDate, _testClosedDate);
-        }
 
         [Fact]
         public void Create_WithValidArguments_Successful()

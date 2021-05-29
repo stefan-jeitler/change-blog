@@ -53,7 +53,7 @@
                 : "AND p.closed_at IS NULL";
 
             const string accountFilter = "AND p.account_id = @accountId";
-            
+
             return GetProductsQuerySql(accountFilter, pagingFilter, includeClosedProductsFilter);
         }
 
@@ -78,7 +78,8 @@
             return GetProductsQuerySql(accountFilter, pagingFilter, includeClosedProductsFilter);
         }
 
-        private static string GetProductsQuerySql(string accountFilter, string pagingFilter, string includeClosedProductsFilter) =>
+        private static string GetProductsQuerySql(string accountFilter, string pagingFilter,
+            string includeClosedProductsFilter) =>
             @$"
             SELECT p.id,
                    p.account_id       AS accountId,

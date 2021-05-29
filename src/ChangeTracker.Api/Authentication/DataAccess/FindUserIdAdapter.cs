@@ -1,7 +1,5 @@
 ﻿using System;
 using System.Threading.Tasks;
-using ChangeTracker.DataAccess.Postgres.DataAccessObjects;
-using ChangeTracker.DataAccess.Postgres.DataAccessObjects.Account;
 using ChangeTracker.DataAccess.Postgres.DataAccessObjects.User;
 
 namespace ChangeTracker.Api.Authentication.DataAccess
@@ -15,9 +13,6 @@ namespace ChangeTracker.Api.Authentication.DataAccess
             _userAccessDao = userAccessDao;
         }
 
-        public Task<Guid?> FindAsync(string apiKey)
-        {
-            return _userAccessDao.FindUserIdAsync(apiKey);
-        }
+        public Task<Guid?> FindAsync(string apiKey) => _userAccessDao.FindUserIdAsync(apiKey);
     }
 }

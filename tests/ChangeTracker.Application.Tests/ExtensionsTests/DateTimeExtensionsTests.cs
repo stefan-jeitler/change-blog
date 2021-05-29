@@ -11,7 +11,7 @@ namespace ChangeTracker.Application.Tests.ExtensionsTests
         [Fact]
         public void ToLocal_ValidTimeZone_ReturnLocalTime()
         {
-            var utc = DateTime.SpecifyKind(DateTime.Parse("2021-05-14T12:00:00"), DateTimeKind.Utc);
+            var utc = DateTime.Parse("2021-05-14T12:00:00");
             const string timeZone = "Europe/Berlin";
 
             var local = utc.ToLocal(timeZone);

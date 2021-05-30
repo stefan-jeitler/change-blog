@@ -5,15 +5,12 @@ namespace ChangeTracker.Application.UseCases.Commands.AddOrUpdateVersion
 {
     public interface IAddOrUpdateVersionOutputPort : IAddVersionOutputPort
     {
-        void VersionDoesNotExist();
-        void VersionAlreadyDeleted();
-        void VersionAlreadyReleased();
+        void VersionAlreadyDeleted(Guid versionId);
+        void VersionAlreadyReleased(Guid versionId);
         new void InvalidVersionFormat(string version);
         new void InvalidVersionName(string name);
-        void VersionWithSameValueAlreadyExists(string value);
         void VersionUpdated(Guid versionId);
         new void Conflict(string reason);
-        void RelatedProductClosed(Guid productId);
-        new void VersionDoesNotMatchScheme(string version);
+        void RelatedProductClosed(Guid versionId);
     }
 }

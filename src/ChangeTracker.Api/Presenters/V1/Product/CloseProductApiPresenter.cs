@@ -12,9 +12,9 @@ namespace ChangeTracker.Api.Presenters.V1.Product
             Response = new NoContentResult();
         }
 
-        public void ProductDoesNotExist()
+        public void ProductDoesNotExist(Guid productId)
         {
-            Response = new NotFoundObjectResult(DefaultResponse.Create("Product not found."));
+            Response = new NotFoundObjectResult(DefaultResponse.Create("Product not found.", productId));
         }
 
         public void ProductClosed(Guid productId)

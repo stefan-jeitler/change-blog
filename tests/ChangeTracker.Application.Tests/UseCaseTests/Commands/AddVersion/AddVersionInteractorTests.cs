@@ -71,33 +71,34 @@ namespace ChangeTracker.Application.Tests.UseCaseTests.Commands.AddVersion
             var versionRequestModel = new VersionRequestModel(TestAccount.UserId, TestAccount.Product.Id, "1.2.3", "");
             var addVersionInteractor = CreateInteractor();
 
-            _outputPortMock.Setup(m => m.ProductDoesNotExist());
+            _outputPortMock.Setup(m => m.ProductDoesNotExist(It.IsAny<Guid>()));
 
             // act
             await addVersionInteractor.ExecuteAsync(_outputPortMock.Object, versionRequestModel);
 
             // assert
-            _outputPortMock.Verify(m => m.ProductDoesNotExist());
+            _outputPortMock.Verify(m => m.ProductDoesNotExist(It.Is<Guid>(x => x == TestAccount.Product.Id)));
         }
 
         [Fact]
         public async Task CreateVersion_ProductIsClosed_ProductClosedOutput()
         {
             // arrange
-            _productDaoStub.Products.Add(new Product(TestAccount.Product.Id, TestAccount.Id, TestAccount.Product.Name,
+            var product = new Product(TestAccount.Product.Id, TestAccount.Id, TestAccount.Product.Name,
                 TestAccount.CustomVersioningScheme, TestAccount.UserId, DateTime.Parse("2021-04-04"),
-                DateTime.Parse("2021-05-13")));
+                DateTime.Parse("2021-05-13"));
+            _productDaoStub.Products.Add(product);
 
             var versionRequestModel = new VersionRequestModel(TestAccount.UserId, TestAccount.Product.Id, "12.1", "");
             var addVersionInteractor = CreateInteractor();
 
-            _outputPortMock.Setup(m => m.ProductClosed());
+            _outputPortMock.Setup(m => m.ProductClosed(It.IsAny<Guid>()));
 
             // act
             await addVersionInteractor.ExecuteAsync(_outputPortMock.Object, versionRequestModel);
 
             // assert
-            _outputPortMock.Verify(m => m.ProductClosed());
+            _outputPortMock.Verify(m => m.ProductClosed(It.Is<Guid>(x => x == product.Id)));
         }
 
         [Fact]
@@ -110,13 +111,14 @@ namespace ChangeTracker.Application.Tests.UseCaseTests.Commands.AddVersion
             var versionRequestModel = new VersionRequestModel(TestAccount.UserId, TestAccount.Product.Id, "12*", "");
             var addVersionInteractor = CreateInteractor();
 
-            _outputPortMock.Setup(m => m.VersionDoesNotMatchScheme(It.IsAny<string>()));
+            _outputPortMock.Setup(m => m.VersionDoesNotMatchScheme(It.IsAny<string>(), It.IsAny<string>()));
 
             // act
             await addVersionInteractor.ExecuteAsync(_outputPortMock.Object, versionRequestModel);
 
             // assert
-            _outputPortMock.Verify(m => m.VersionDoesNotMatchScheme(It.Is<string>(x => x == "12*")));
+            _outputPortMock.Verify(m => m.VersionDoesNotMatchScheme(It.Is<string>(x => x == "12*"), 
+                It.Is<string>(x => x == TestAccount.CustomVersioningScheme.Name.Value)));
         }
 
         [Fact]
@@ -135,13 +137,13 @@ namespace ChangeTracker.Application.Tests.UseCaseTests.Commands.AddVersion
             var versionRequestModel = new VersionRequestModel(TestAccount.UserId, TestAccount.Product.Id, version, "");
             var addVersionInteractor = CreateInteractor();
 
-            _outputPortMock.Setup(m => m.VersionAlreadyExists(It.IsAny<string>()));
+            _outputPortMock.Setup(m => m.VersionAlreadyExists(It.IsAny<Guid>()));
 
             // act
             await addVersionInteractor.ExecuteAsync(_outputPortMock.Object, versionRequestModel);
 
             // assert
-            _outputPortMock.Verify(m => m.VersionAlreadyExists(It.Is<string>(x => x == version.Value)));
+            _outputPortMock.Verify(m => m.VersionAlreadyExists(It.Is<Guid>(x => x == versionId)));
         }
 
         [Fact]

@@ -31,13 +31,13 @@ namespace ChangeTracker.Application.Tests.UseCaseTests.Commands.ReleaseVersion
             // arrange
             var notExistingVersion = Guid.Parse("7a9fef4d-cf90-4eaf-9c7e-ee639b88939b");
             var interactor = CreateInteractor();
-            _outputPortMock.Setup(m => m.VersionDoesNotExist());
+            _outputPortMock.Setup(m => m.VersionDoesNotExist(It.IsAny<Guid>()));
 
             // act
             await interactor.ExecuteAsync(_outputPortMock.Object, notExistingVersion);
 
             // assert
-            _outputPortMock.Verify(m => m.VersionDoesNotExist(), Times.Once);
+            _outputPortMock.Verify(m => m.VersionDoesNotExist(It.Is<Guid>(x => x == notExistingVersion)), Times.Once);
         }
 
         [Fact]
@@ -48,14 +48,14 @@ namespace ChangeTracker.Application.Tests.UseCaseTests.Commands.ReleaseVersion
                 TestAccount.UserId, null,
                 DateTime.Parse("2021-05-13"));
             var interactor = CreateInteractor();
-            _outputPortMock.Setup(m => m.VersionAlreadyDeleted());
+            _outputPortMock.Setup(m => m.VersionAlreadyDeleted(It.IsAny<Guid>()));
             _versionDaoStub.Versions.Add(version);
 
             // act
             await interactor.ExecuteAsync(_outputPortMock.Object, version.Id);
 
             // assert
-            _outputPortMock.Verify(m => m.VersionAlreadyDeleted(), Times.Once);
+            _outputPortMock.Verify(m => m.VersionAlreadyDeleted(It.Is<Guid>(x => x == version.Id)), Times.Once);
         }
 
         [Fact]
@@ -66,14 +66,14 @@ namespace ChangeTracker.Application.Tests.UseCaseTests.Commands.ReleaseVersion
                 TestAccount.UserId,
                 DateTime.Parse("2021-05-13"));
             var interactor = CreateInteractor();
-            _outputPortMock.Setup(m => m.VersionAlreadyReleased());
+            _outputPortMock.Setup(m => m.VersionAlreadyReleased(It.IsAny<Guid>()));
             _versionDaoStub.Versions.Add(version);
 
             // act
             await interactor.ExecuteAsync(_outputPortMock.Object, version.Id);
 
             // assert
-            _outputPortMock.Verify(m => m.VersionAlreadyReleased(), Times.Once);
+            _outputPortMock.Verify(m => m.VersionAlreadyReleased(It.Is<Guid>(x => x == version.Id)), Times.Once);
         }
 
         [Fact]

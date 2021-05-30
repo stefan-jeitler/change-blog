@@ -7,19 +7,19 @@ namespace ChangeTracker.Api.Presenters.V1.Version
 {
     public class ReleaseVersionApiPresenter : BaseApiPresenter, IReleaseVersionOutputPort
     {
-        public void VersionAlreadyReleased()
+        public void VersionAlreadyDeleted(Guid versionId)
         {
-            Response = new NoContentResult();
+            Response = new OkObjectResult(DefaultResponse.Create("Version deleted.", versionId));
         }
 
-        public void VersionAlreadyDeleted()
+        public void VersionAlreadyReleased(Guid versionId)
         {
-            Response = new ConflictObjectResult(DefaultResponse.Create("Version has been deleted."));
+            Response = new OkObjectResult(DefaultResponse.Create("Version released.", versionId));
         }
 
         public void VersionReleased(Guid versionId)
         {
-            Response = new NoContentResult();
+            Response = new OkObjectResult(DefaultResponse.Create("Version released.", versionId));
         }
 
         public void Conflict(string reason)
@@ -27,15 +27,15 @@ namespace ChangeTracker.Api.Presenters.V1.Version
             Response = new ConflictObjectResult(DefaultResponse.Create(reason));
         }
 
-        public void VersionDoesNotExist()
+        public void VersionDoesNotExist(Guid versionId)
         {
-            Response = new NotFoundObjectResult(DefaultResponse.Create("Version not found"));
+            Response = new NotFoundObjectResult(DefaultResponse.Create("Version not found", versionId));
         }
 
         public void RelatedProductClosed(Guid productId)
         {
             Response = new ConflictObjectResult(
-                DefaultResponse.Create($"The related product has been closed. ProductId {productId}"));
+                DefaultResponse.Create($"The related product has been closed. ProductId {productId}", productId));
         }
     }
 }

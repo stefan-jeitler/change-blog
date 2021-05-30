@@ -18,7 +18,7 @@ namespace ChangeTracker.Application.UseCases.Commands.CloseProduct
             var product = await _productDao.FindProductAsync(productId);
             if (product.HasNoValue)
             {
-                output.ProductDoesNotExist();
+                output.ProductDoesNotExist(productId);
                 return;
             }
 

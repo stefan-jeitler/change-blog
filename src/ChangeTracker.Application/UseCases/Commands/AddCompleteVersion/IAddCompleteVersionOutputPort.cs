@@ -6,10 +6,10 @@ namespace ChangeTracker.Application.UseCases.Commands.AddCompleteVersion
 {
     public interface IAddCompleteVersionOutputPort : ILineParserOutput
     {
-        void ProductDoesNotExist();
-        void ProductClosed();
+        void ProductDoesNotExist(Guid productId);
+        void ProductClosed(Guid productId);
         void InvalidVersionFormat(string version);
-        void VersionDoesNotMatchScheme(string version);
+        void VersionDoesNotMatchScheme(string version, string versioningSchemeName);
         void Created(Guid versionId);
         void Conflict(string reason);
         void VersionAlreadyExists(string version);

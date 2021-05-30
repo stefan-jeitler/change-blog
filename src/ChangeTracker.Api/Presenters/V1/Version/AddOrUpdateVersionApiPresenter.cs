@@ -2,6 +2,7 @@
 using ChangeTracker.Api.DTOs;
 using ChangeTracker.Api.Extensions;
 using ChangeTracker.Application.UseCases.Commands.AddOrUpdateVersion;
+using ChangeTracker.Domain.Common;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
@@ -16,26 +17,16 @@ namespace ChangeTracker.Api.Presenters.V1.Version
             _httpContext = httpContext;
         }
 
-        public void VersionDoesNotExist()
-        {
-            Response = new NotFoundObjectResult(DefaultResponse.Create("Version not found"));
-        }
-
-        public void VersionAlreadyDeleted()
-        {
-            Response = new ConflictObjectResult(DefaultResponse.Create("You cannot add or update versions that have been deleted."));
-        }
-
-        public void VersionAlreadyReleased()
+        public void VersionAlreadyReleased(Guid versionId)
         {
             Response = new ConflictObjectResult(
-                DefaultResponse.Create("You cannot add or update versions that have been released."));
+                DefaultResponse.Create("You cannot add or update versions that have been released.,", versionId));
         }
 
-        public void Created(Guid id)
+        public void Created(Guid versionId)
         {
-            var location = _httpContext.CreateLinkTo($"api/v1/versions/{id}");
-            Response = new CreatedResult(location, DefaultResponse.Create("Version added.", id));
+            var location = _httpContext.CreateLinkTo($"api/v1/versions/{versionId}");
+            Response = new CreatedResult(location, DefaultResponse.Create("Version added.", versionId));
         }
 
         public void InvalidVersionFormat(string version)
@@ -43,30 +34,36 @@ namespace ChangeTracker.Api.Presenters.V1.Version
             Response = new UnprocessableEntityObjectResult(DefaultResponse.Create($"Invalid format '{version}'."));
         }
 
-        public void ProductClosed()
+        public void VersionDoesNotMatchScheme(string version, string versioningSchemeName)
         {
-            Response = new ConflictObjectResult(DefaultResponse.Create("You cannot add or update a version when the related product has been closed."));
+            Response = new UnprocessableEntityObjectResult(
+                DefaultResponse.Create(
+                    $"Version does not match your product's versioning scheme. Version '{version}', Scheme: {versioningSchemeName}"));
+        }
+
+        public void VersionAlreadyExists(Guid versionId)
+        {
+            Response = new ConflictObjectResult(DefaultResponse.Create($"Version already exists.", versionId));
+        }
+
+        public void ProductClosed(Guid productId)
+        {
+            Response = new ConflictObjectResult(
+                DefaultResponse.Create("You cannot add or update a version when the related product has been closed."));
         }
 
         public void InvalidVersionName(string name)
         {
             Response = new UnprocessableEntityObjectResult(DefaultResponse.Create($"Invalid name '{name}'."));
         }
-
-        public void VersionWithSameValueAlreadyExists(string value)
-        {
-            Response = new ConflictObjectResult(
-                DefaultResponse.Create("A version with the same value already exists."));
-        }
-
         public void VersionUpdated(Guid versionId)
         {
             Response = new OkObjectResult(DefaultResponse.Create("Version successfully updated.", versionId));
         }
 
-        public void ProductDoesNotExist()
+        public void ProductDoesNotExist(Guid productId)
         {
-            Response = new NotFoundObjectResult(DefaultResponse.Create("Product does not exist"));
+            Response = new NotFoundObjectResult(DefaultResponse.Create("Product does not exist", productId));
         }
 
         public void Conflict(string reason)
@@ -74,21 +71,16 @@ namespace ChangeTracker.Api.Presenters.V1.Version
             Response = new ConflictObjectResult(DefaultResponse.Create(reason));
         }
 
-        public void VersionAlreadyExists(string version)
-        {
-            Response = new ConflictObjectResult(DefaultResponse.Create($"Version '{version}' already exists."));
-        }
-
         public void RelatedProductClosed(Guid productId)
         {
-            Response = new ConflictObjectResult(DefaultResponse.Create("Versions of closed products can no longer be modified."));
+            Response = new ConflictObjectResult(
+                DefaultResponse.Create("Versions of closed products can no longer be modified.", productId));
         }
 
-        public void VersionDoesNotMatchScheme(string version)
+        public void VersionAlreadyDeleted(Guid versionId)
         {
-            Response = new UnprocessableEntityObjectResult(
-                DefaultResponse.Create(
-                    $"Version does not match your product's versioning scheme. Version '{version}'"));
+            Response = new ConflictObjectResult(
+                DefaultResponse.Create("You cannot add or update versions that have been deleted.", versionId));
         }
     }
 }

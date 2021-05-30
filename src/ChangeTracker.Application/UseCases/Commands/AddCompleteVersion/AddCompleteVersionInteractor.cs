@@ -66,13 +66,13 @@ namespace ChangeTracker.Application.UseCases.Commands.AddCompleteVersion
             var product = await _productDao.FindProductAsync(productId);
             if (product.HasNoValue)
             {
-                output.ProductDoesNotExist();
+                output.ProductDoesNotExist(productId);
                 return Maybe<Product>.None;
             }
 
             if (product.Value.IsClosed)
             {
-                output.ProductClosed();
+                output.ProductClosed(productId);
                 return Maybe<Product>.None;
             }
 
@@ -90,7 +90,7 @@ namespace ChangeTracker.Application.UseCases.Commands.AddCompleteVersion
 
             if (!clVersion.Match(product.VersioningScheme))
             {
-                output.VersionDoesNotMatchScheme(clVersion.Value);
+                output.VersionDoesNotMatchScheme(clVersion.Value, product.VersioningScheme.Name);
                 return Maybe<ClVersion>.None;
             }
 

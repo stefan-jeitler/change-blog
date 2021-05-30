@@ -95,7 +95,7 @@ namespace ChangeTracker.Api.Controllers.v1
             if (addOrUpdateProductDto.VersioningSchemeId == Guid.Empty)
                 return BadRequest(DefaultResponse.Create("VersioningSchemeId cannot be empty."));
 
-            var presenter = new AddOrUpdateProductApiPresenter(HttpContext);
+            var presenter = new AddProductApiPresenter(HttpContext);
             var userId = HttpContext.GetUserId();
 
             var requestModel = new ProductRequestModel(addOrUpdateProductDto.AccountId, addOrUpdateProductDto.Name,

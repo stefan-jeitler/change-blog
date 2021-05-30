@@ -63,7 +63,7 @@ namespace ChangeTracker.Application.UseCases.Commands.AddProduct
             var account = await _accountDao.FindAccountAsync(accountId);
             if (account.HasNoValue)
             {
-                output.AccountDoesNotExist();
+                output.AccountDoesNotExist(accountId);
                 return Maybe<Account>.None;
             }
 
@@ -87,7 +87,7 @@ namespace ChangeTracker.Application.UseCases.Commands.AddProduct
 
             if (scheme.HasNoValue)
             {
-                output.VersioningSchemeDoesNotExist();
+                output.VersioningSchemeDoesNotExist(versioningSchemeId);
                 return Maybe<VersioningScheme>.None;
             }
 
@@ -98,7 +98,7 @@ namespace ChangeTracker.Application.UseCases.Commands.AddProduct
             var schemeBelongsToAccount = scheme.Value.AccountId == account.Id;
             if (!schemeBelongsToAccount)
             {
-                output.VersioningSchemeDoesNotExist();
+                output.VersioningSchemeDoesNotExist(scheme.Value.Id);
                 return Maybe<VersioningScheme>.None;
             }
 

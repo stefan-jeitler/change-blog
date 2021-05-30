@@ -45,19 +45,19 @@ namespace ChangeTracker.Application.UseCases.Commands.ReleaseVersion
             var clVersion = await _versionDao.FindVersionAsync(versionId);
             if (clVersion.HasNoValue)
             {
-                output.VersionDoesNotExist();
+                output.VersionDoesNotExist(versionId);
                 return Maybe<ClVersion>.None;
             }
 
             if (clVersion.Value.IsDeleted)
             {
-                output.VersionAlreadyDeleted();
+                output.VersionAlreadyDeleted(clVersion.Value.Id);
                 return Maybe<ClVersion>.None;
             }
 
             if (clVersion.Value.IsReleased)
             {
-                output.VersionAlreadyReleased();
+                output.VersionAlreadyReleased(clVersion.Value.Id);
                 return Maybe<ClVersion>.None;
             }
 

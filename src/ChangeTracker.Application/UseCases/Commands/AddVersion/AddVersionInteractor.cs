@@ -52,13 +52,13 @@ namespace ChangeTracker.Application.UseCases.Commands.AddVersion
             var existingClVersion = await _versionDao.FindVersionAsync(product.Id, versionValue);
             if (existingClVersion.HasValue)
             {
-                output.VersionAlreadyExists(versionValue);
+                output.VersionAlreadyExists(existingClVersion.Value.Id);
                 return Maybe<ClVersion>.None;
             }
 
             if (!versionValue.Match(product.VersioningScheme))
             {
-                output.VersionDoesNotMatchScheme(versionValue);
+                output.VersionDoesNotMatchScheme(versionValue, product.VersioningScheme.Name);
                 return Maybe<ClVersion>.None;
             }
 
@@ -89,13 +89,13 @@ namespace ChangeTracker.Application.UseCases.Commands.AddVersion
             var product = await _productDao.FindProductAsync(productId);
             if (product.HasNoValue)
             {
-                output.ProductDoesNotExist();
+                output.ProductDoesNotExist(productId);
                 return Maybe<Product>.None;
             }
 
             if (product.Value.IsClosed)
             {
-                output.ProductClosed();
+                output.ProductClosed(product.Value.Id);
                 return Maybe<Product>.None;
             }
 

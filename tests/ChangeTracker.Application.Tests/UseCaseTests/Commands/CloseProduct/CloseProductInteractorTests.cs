@@ -26,14 +26,14 @@ namespace ChangeTracker.Application.Tests.UseCaseTests.Commands.CloseProduct
         {
             // arrange
             var notExistingProductId = Guid.Parse("658ab2ec-ac88-47aa-af14-2093a0d07f4f");
-            _outputPortMock.Setup(m => m.ProductDoesNotExist());
+            _outputPortMock.Setup(m => m.ProductDoesNotExist(It.IsAny<Guid>()));
             var interactor = CreateInteractor();
 
             // act
             await interactor.ExecuteAsync(_outputPortMock.Object, notExistingProductId);
 
             // assert
-            _outputPortMock.Verify(m => m.ProductDoesNotExist(), Times.Once);
+            _outputPortMock.Verify(m => m.ProductDoesNotExist(It.Is<Guid>(x => x == notExistingProductId)), Times.Once);
         }
 
         [Fact]

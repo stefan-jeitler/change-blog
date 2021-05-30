@@ -65,13 +65,13 @@ namespace ChangeTracker.Application.UseCases.Commands.AddOrUpdateVersion
         {
             if (clVersion.IsDeleted)
             {
-                output.VersionAlreadyDeleted();
+                output.VersionAlreadyDeleted(clVersion.Id);
                 return;
             }
 
             if (clVersion.IsReleased)
             {
-                output.VersionAlreadyReleased();
+                output.VersionAlreadyReleased(clVersion.Id);
                 return;
             }
 
@@ -82,17 +82,9 @@ namespace ChangeTracker.Application.UseCases.Commands.AddOrUpdateVersion
                 return;
             }
 
-            var existingVersionWithSameValue = await _versionDao.FindVersionAsync(product.Id, clVersionValue);
-            if (existingVersionWithSameValue.HasValue &&
-                existingVersionWithSameValue.Value.Id != clVersion.Id)
-            {
-                output.VersionWithSameValueAlreadyExists(clVersionValue);
-                return;
-            }
-
             if (!clVersion.Value.Match(product.VersioningScheme))
             {
-                output.VersionDoesNotMatchScheme(clVersion.Value);
+                output.VersionDoesNotMatchScheme(clVersion.Value, product.VersioningScheme.Name);
                 return;
             }
 

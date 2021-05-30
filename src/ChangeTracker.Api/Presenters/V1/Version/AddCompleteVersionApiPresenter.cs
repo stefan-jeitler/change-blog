@@ -48,14 +48,14 @@ namespace ChangeTracker.Api.Presenters.V1.Version
                     $"The change log '{changeLogText}' has too many labels. Max labels: '{maxLabels}'."));
         }
 
-        public void ProductDoesNotExist()
+        public void ProductDoesNotExist(Guid productId)
         {
-            Response = new NotFoundObjectResult(DefaultResponse.Create("Product does not exist"));
+            Response = new NotFoundObjectResult(DefaultResponse.Create("Product does not exist", productId));
         }
 
-        public void ProductClosed()
+        public void ProductClosed(Guid productId)
         {
-            Response = new ConflictObjectResult(DefaultResponse.Create("You cannot add a version when the related product has been closed."));
+            Response = new ConflictObjectResult(DefaultResponse.Create("You cannot add a version when the related product has been closed.", productId));
         }
 
         public void InvalidVersionFormat(string version)
@@ -63,11 +63,11 @@ namespace ChangeTracker.Api.Presenters.V1.Version
             Response = new UnprocessableEntityObjectResult(DefaultResponse.Create($"Invalid format '{version}'."));
         }
 
-        public void VersionDoesNotMatchScheme(string version)
+        public void VersionDoesNotMatchScheme(string version, string versioningSchemeName)
         {
             Response = new UnprocessableEntityObjectResult(
                 DefaultResponse.Create(
-                    $"Version does not match your product's versioning scheme. Version '{version}'"));
+                    $"Version does not match your product's versioning scheme. Version: {version}, Scheme: {versioningSchemeName}"));
         }
 
         public void Created(Guid versionId)

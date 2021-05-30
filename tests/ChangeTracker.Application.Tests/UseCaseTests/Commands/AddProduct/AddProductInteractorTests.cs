@@ -66,13 +66,13 @@ namespace ChangeTracker.Application.Tests.UseCaseTests.Commands.AddProduct
             var productRequestModel =
                 new ProductRequestModel(TestAccount.Id, TestAccount.Name.Value, null, TestAccount.UserId);
             var createProductInteractor = CreateInteractor();
-            _outputPortMock.Setup(m => m.AccountDoesNotExist());
+            _outputPortMock.Setup(m => m.AccountDoesNotExist(It.IsAny<Guid>()));
 
             // act
             await createProductInteractor.ExecuteAsync(_outputPortMock.Object, productRequestModel);
 
             // assert
-            _outputPortMock.Verify(m => m.AccountDoesNotExist(), Times.Once);
+            _outputPortMock.Verify(m => m.AccountDoesNotExist(It.Is<Guid>(x => x == TestAccount.Id)), Times.Once);
         }
 
         [Fact]
@@ -152,13 +152,13 @@ namespace ChangeTracker.Application.Tests.UseCaseTests.Commands.AddProduct
                     TestAccount.UserId);
             var createProductInteractor = CreateInteractor();
 
-            _outputPortMock.Setup(m => m.VersioningSchemeDoesNotExist());
+            _outputPortMock.Setup(m => m.VersioningSchemeDoesNotExist(It.IsAny<Guid>()));
 
             // act
             await createProductInteractor.ExecuteAsync(_outputPortMock.Object, productRequestModel);
 
             // assert
-            _outputPortMock.Verify(m => m.VersioningSchemeDoesNotExist(), Times.Once);
+            _outputPortMock.Verify(m => m.VersioningSchemeDoesNotExist(It.Is<Guid>(x => x == notExistingVersioningSchemeId)), Times.Once);
         }
 
         [Fact]

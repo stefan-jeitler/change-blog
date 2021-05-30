@@ -79,14 +79,14 @@ namespace ChangeTracker.Application.Tests.UseCaseTests.Commands.AddCompleteVersi
                 "1.23", OptionalName.Empty, changeLogLines);
 
 
-            _outputPortMock.Setup(m => m.ProductDoesNotExist());
+            _outputPortMock.Setup(m => m.ProductDoesNotExist(It.IsAny<Guid>()));
             var addCompleteVersionInteractor = CreateInteractor();
 
             // act
             await addCompleteVersionInteractor.ExecuteAsync(_outputPortMock.Object, versionRequestModel);
 
             // assert
-            _outputPortMock.Verify(m => m.ProductDoesNotExist(), Times.Once);
+            _outputPortMock.Verify(m => m.ProductDoesNotExist(It.Is<Guid>(x => x == TestAccount.Product.Id)), Times.Once);
         }
 
         [Fact]
@@ -108,14 +108,14 @@ namespace ChangeTracker.Application.Tests.UseCaseTests.Commands.AddCompleteVersi
                 DateTime.Parse("2021-05-13"),
                 DateTime.Parse("2021-05-13")));
 
-            _outputPortMock.Setup(m => m.ProductClosed());
+            _outputPortMock.Setup(m => m.ProductClosed(It.IsAny<Guid>()));
             var addCompleteVersionInteractor = CreateInteractor();
 
             // act
             await addCompleteVersionInteractor.ExecuteAsync(_outputPortMock.Object, versionRequestModel);
 
             // assert
-            _outputPortMock.Verify(m => m.ProductClosed(), Times.Once);
+            _outputPortMock.Verify(m => m.ProductClosed(It.Is<Guid>(x => x == TestAccount.Product.Id)), Times.Once);
         }
 
         [Fact]
@@ -182,7 +182,7 @@ namespace ChangeTracker.Application.Tests.UseCaseTests.Commands.AddCompleteVersi
                 "*.23", OptionalName.Empty, changeLogLines);
 
             _productDaoStub.Products.Add(TestAccount.Product);
-            _outputPortMock.Setup(m => m.VersionDoesNotMatchScheme(It.IsAny<string>()));
+            _outputPortMock.Setup(m => m.VersionDoesNotMatchScheme(It.IsAny<string>(), It.IsAny<string>()));
             var addCompleteVersionInteractor = CreateInteractor();
 
             // act
@@ -190,7 +190,7 @@ namespace ChangeTracker.Application.Tests.UseCaseTests.Commands.AddCompleteVersi
 
             // assert
             _outputPortMock.Verify(m =>
-                m.VersionDoesNotMatchScheme(It.Is<string>(x => x == "*.23")), Times.Once);
+                m.VersionDoesNotMatchScheme(It.Is<string>(x => x == "*.23"), It.IsAny<string>()), Times.Once);
         }
 
         [Fact]

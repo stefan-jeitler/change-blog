@@ -7,31 +7,31 @@ namespace ChangeTracker.Api.Presenters.V1.Version
 {
     public class DeleteVersionApiPresenter : BaseApiPresenter, IDeleteVersionOutputPort
     {
-        public void VersionDoesNotExist()
+        public void VersionDoesNotExist(Guid versionId)
         {
-            Response = new NotFoundObjectResult(DefaultResponse.Create("Version not found"));
+            Response = new NotFoundObjectResult(DefaultResponse.Create("Version not found.", versionId));
         }
 
         public void RelatedProductClosed(Guid productId)
         {
             Response = new ConflictObjectResult(
-                DefaultResponse.Create($"The related product has been closed. ProductId {productId}"));
+                DefaultResponse.Create($"The related product has been closed.", productId));
         }
 
-        public void VersionAlreadyDeleted()
+        public void VersionAlreadyDeleted(Guid versionId)
         {
-            Response = new NoContentResult();
+            Response = new OkObjectResult(DefaultResponse.Create("Version deleted.", versionId));
         }
 
-        public void VersionAlreadyReleased()
+        public void VersionAlreadyReleased(Guid versionId)
         {
             Response = new UnprocessableEntityObjectResult(
-                DefaultResponse.Create("Version released. Released versions can no longer be modified."));
+                DefaultResponse.Create("Version released. Released versions can no longer be modified.", versionId));
         }
 
         public void VersionDeleted(Guid versionId)
         {
-            Response = new NoContentResult();
+            Response = new OkObjectResult(DefaultResponse.Create("Version deleted.", versionId));
         }
 
         public void Conflict(string reason)

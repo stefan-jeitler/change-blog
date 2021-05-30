@@ -2,7 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 
-namespace ChangeTracker.DataAccess.Postgres.DataAccessObjects.Version
+namespace ChangeTracker.DataAccess.Postgres.DataAccessObjects.Versions
 {
     public class SearchVersionQueryBuilder
     {

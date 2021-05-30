@@ -5,7 +5,7 @@ using Xunit;
 
 namespace ChangeTracker.Domain.Tests
 {
-    public class VersioningSchemeServiceTests
+    public class VersioningSchemeIdFinderTests
     {
         [Fact]
         public void FindSchemeIdForProduct_NoCustomSchemeIdPresentAndNoAccountDefaultScheme_ReturnsDefaultSchemeId()
@@ -13,7 +13,7 @@ namespace ChangeTracker.Domain.Tests
             // arrange
             var testAccount = new Account(TestAccount.Id, TestAccount.Name, null, TestAccount.CreationDate, null);
 
-            var service = new VersioningSchemeService(testAccount);
+            var service = new VersioningSchemeIdFinder(testAccount);
 
             // act
             var schemeId = service.FindSchemeIdForProduct(null);
@@ -31,7 +31,7 @@ namespace ChangeTracker.Domain.Tests
                 TestAccount.CreationDate, null);
             var customSchemeId = (Guid?) null;
 
-            var service = new VersioningSchemeService(testAccount);
+            var service = new VersioningSchemeIdFinder(testAccount);
 
             // act
             var schemeId = service.FindSchemeIdForProduct(customSchemeId);
@@ -49,7 +49,7 @@ namespace ChangeTracker.Domain.Tests
                 TestAccount.CreationDate, null);
             var customSchemeId = Guid.Parse("aaf9047d-1086-4d57-82cd-3325592a0d27");
 
-            var service = new VersioningSchemeService(testAccount);
+            var service = new VersioningSchemeIdFinder(testAccount);
 
             // act
             var schemeId = service.FindSchemeIdForProduct(customSchemeId);

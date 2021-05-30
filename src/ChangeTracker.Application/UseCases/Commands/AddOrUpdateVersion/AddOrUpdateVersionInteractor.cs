@@ -5,14 +5,13 @@ using ChangeTracker.Application.DataAccess.Products;
 using ChangeTracker.Application.DataAccess.Versions;
 using ChangeTracker.Application.UseCases.Commands.AddVersion;
 using ChangeTracker.Application.UseCases.Commands.SharedModels;
-using ChangeTracker.Domain;
 using ChangeTracker.Domain.Common;
 using ChangeTracker.Domain.Version;
 using CSharpFunctionalExtensions;
 
 // ReSharper disable InvertIf
 
-namespace ChangeTracker.Application.UseCases.Commands.UpdateVersion
+namespace ChangeTracker.Application.UseCases.Commands.AddOrUpdateVersion
 {
     public class AddOrUpdateVersionInteractor : IAddOrUpdateVersion
     {

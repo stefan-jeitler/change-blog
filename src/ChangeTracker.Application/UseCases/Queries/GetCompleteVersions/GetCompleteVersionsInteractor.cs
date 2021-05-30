@@ -47,6 +47,27 @@ namespace ChangeTracker.Application.UseCases.Queries.GetCompleteVersions
             return Maybe<CompleteVersionResponseModel>.From(responseModel);
         }
 
+        public async Task<Maybe<CompleteVersionResponseModel>> ExecuteAsync(Guid userId, Guid productId, string version)
+        {
+            if (!ClVersionValue.TryParse(version, out var clVersionValue))
+            {
+                return Maybe<CompleteVersionResponseModel>.None;
+            }
+
+            var clVersion = await _versionDao.FindVersionAsync(productId, clVersionValue);
+            if (clVersion.HasNoValue)
+                return Maybe<CompleteVersionResponseModel>.None;
+
+            var currentUser = await _userDao.GetUserAsync(userId);
+            var product = await _productDao.GetProductAsync(clVersion.Value.ProductId);
+
+            var changeLogs =
+                await _changeLogQueriesDao.GetChangeLogsAsync(clVersion.Value.ProductId, clVersion.Value.Id);
+
+            var responseModel = CreateResponseModel(clVersion.Value, product, currentUser.TimeZone, changeLogs);
+            return Maybe<CompleteVersionResponseModel>.From(responseModel);
+        }
+
         public async Task<IList<CompleteVersionResponseModel>> ExecuteAsync(VersionsQueryRequestModel requestModel)
         {
             var querySettings = new VersionQuerySettings(requestModel.ProductId,

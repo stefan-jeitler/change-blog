@@ -4,7 +4,7 @@ using ChangeTracker.Api.Authorization.RequestBodyIdentifiers;
 
 namespace ChangeTracker.Api.DTOs.V1.Product
 {
-    public class AddProductDto : IContainsAccountId
+    public class AddOrUpdateProductDto : IContainsAccountId
     {
         [Required] public string Name { get; set; }
 

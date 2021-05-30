@@ -3,7 +3,7 @@ using System.ComponentModel.DataAnnotations;
 
 namespace ChangeTracker.Api.DTOs.V1.ChangeLog
 {
-    public class AddChangeLogLineDto
+    public class AddOrUpdateChangeLogLineDto
     {
         [Required] public string Text { get; set; }
 

@@ -10,7 +10,7 @@ using Microsoft.Extensions.Logging;
 
 // ReSharper disable PossibleUnintendedReferenceComparison
 
-namespace ChangeTracker.DataAccess.Postgres.DataAccessObjects.Version
+namespace ChangeTracker.DataAccess.Postgres.DataAccessObjects.Versions
 {
     public class VersionDao : IVersionDao
     {

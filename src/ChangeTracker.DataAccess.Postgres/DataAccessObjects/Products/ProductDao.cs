@@ -4,13 +4,14 @@ using System.Threading.Tasks;
 using ChangeTracker.Application.DataAccess;
 using ChangeTracker.Application.DataAccess.Products;
 using ChangeTracker.Application.UseCases;
+using ChangeTracker.Domain;
 using ChangeTracker.Domain.Common;
 using CSharpFunctionalExtensions;
 using Dapper;
 using Microsoft.Extensions.Logging;
-using static ChangeTracker.DataAccess.Postgres.DataAccessObjects.Product.ProductDaoSqlStatements;
+using static ChangeTracker.DataAccess.Postgres.DataAccessObjects.Products.ProductDaoSqlStatements;
 
-namespace ChangeTracker.DataAccess.Postgres.DataAccessObjects.Product
+namespace ChangeTracker.DataAccess.Postgres.DataAccessObjects.Products
 {
     public class ProductDao : IProductDao
     {
@@ -96,7 +97,7 @@ namespace ChangeTracker.DataAccess.Postgres.DataAccessObjects.Product
             return products.AsList();
         }
 
-        public async Task<Result<Domain.Product, Conflict>> AddProductAsync(Domain.Product newProduct)
+        public async Task<Result<Domain.Product, Conflict>> AddProductAsync(Domain.Product product)
         {
             const string insertProductSql = @"
                     INSERT INTO product (id, account_id, versioning_scheme_id, name, created_by_user, closed_at, created_at)
@@ -107,16 +108,16 @@ namespace ChangeTracker.DataAccess.Postgres.DataAccessObjects.Product
                 await _dbAccessor.DbConnection
                     .ExecuteAsync(insertProductSql, new
                     {
-                        id = newProduct.Id,
-                        accountId = newProduct.AccountId,
-                        versioningSchemeId = newProduct.VersioningScheme.Id,
-                        name = newProduct.Name,
-                        user = newProduct.CreatedByUser,
-                        closedAt = newProduct.ClosedAt,
-                        createdAt = newProduct.CreatedAt
+                        id = product.Id,
+                        accountId = product.AccountId,
+                        versioningSchemeId = product.VersioningScheme.Id,
+                        name = product.Name,
+                        user = product.CreatedByUser,
+                        closedAt = product.ClosedAt,
+                        createdAt = product.CreatedAt
                     });
 
-                return Result.Success<Domain.Product, Conflict>(newProduct);
+                return Result.Success<Domain.Product, Conflict>(product);
             }
             catch (Exception e)
             {
@@ -137,6 +138,28 @@ namespace ChangeTracker.DataAccess.Postgres.DataAccessObjects.Product
                 closedAt = product.ClosedAt,
                 productId = product.Id
             });
+        }
+
+        public async Task<Result<Product, Conflict>> UpdateProductAsync(Product product)
+        {
+            try
+            {
+                const string closeProductSql = "UPDATE product SET name = @name, versioning_scheme_id @versioningSchemeId WHERE id = @productId";
+
+                await _dbAccessor.DbConnection.ExecuteScalarAsync(closeProductSql, new
+                {
+                    name = product.Name,
+                    versioningSchemeId = product.VersioningScheme.Id,
+                    productId = product.Id
+                });
+
+                return Result.Success<Product, Conflict>(product);
+            }
+            catch (Exception exception)
+            {
+                _logger.LogError(exception, exception.Message);
+                throw;
+            }
         }
     }
 }

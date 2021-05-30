@@ -25,7 +25,7 @@ namespace ChangeTracker.Api
 
         private static void AddUseCases(IServiceCollection services)
         {
-            services.AddProductUseCase();
+            services.AddUseCases();
         }
 
         private static void ConfigureControllers(IServiceCollection services)

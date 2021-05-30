@@ -16,7 +16,7 @@ namespace ChangeTracker.Application.DataAccess.Products
         Task<IList<Product>> GetAccountProductsAsync(AccountProductsQuerySettings querySettings);
         Task<IList<Product>> GetUserProductsAsync(UserProductsQuerySettings querySettings);
 
-        Task<Result<Product, Conflict>> AddProductAsync(Product newProduct);
+        Task<Result<Product, Conflict>> AddProductAsync(Product product);
         Task CloseProductAsync(Product product);
     }
 }

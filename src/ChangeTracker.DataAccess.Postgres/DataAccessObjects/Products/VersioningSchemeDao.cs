@@ -6,7 +6,7 @@ using ChangeTracker.Domain.Version;
 using CSharpFunctionalExtensions;
 using Dapper;
 
-namespace ChangeTracker.DataAccess.Postgres.DataAccessObjects.Product
+namespace ChangeTracker.DataAccess.Postgres.DataAccessObjects.Products
 {
     public class VersioningSchemeDao : IVersioningSchemeDao
     {

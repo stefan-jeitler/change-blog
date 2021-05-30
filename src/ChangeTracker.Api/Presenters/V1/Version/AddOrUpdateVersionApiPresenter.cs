@@ -1,7 +1,7 @@
 ﻿using System;
 using ChangeTracker.Api.DTOs;
 using ChangeTracker.Api.Extensions;
-using ChangeTracker.Application.UseCases.Commands.UpdateVersion;
+using ChangeTracker.Application.UseCases.Commands.AddOrUpdateVersion;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 

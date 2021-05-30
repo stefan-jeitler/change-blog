@@ -4,7 +4,7 @@ using System.Threading.Tasks;
 using ChangeTracker.Application.DataAccess.Users;
 using Dapper;
 
-namespace ChangeTracker.DataAccess.Postgres.DataAccessObjects.User
+namespace ChangeTracker.DataAccess.Postgres.DataAccessObjects.Users
 {
     public class UserDao : IUserDao
     {

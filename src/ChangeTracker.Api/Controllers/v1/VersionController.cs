@@ -12,10 +12,11 @@ using ChangeTracker.Api.SwaggerUI;
 using ChangeTracker.Application.UseCases;
 using ChangeTracker.Application.UseCases.Commands.AddCompleteVersion;
 using ChangeTracker.Application.UseCases.Commands.AddCompleteVersion.Models;
+using ChangeTracker.Application.UseCases.Commands.AddOrUpdateVersion;
+using ChangeTracker.Application.UseCases.Commands.AddVersion;
 using ChangeTracker.Application.UseCases.Commands.DeleteVersion;
 using ChangeTracker.Application.UseCases.Commands.ReleaseVersion;
 using ChangeTracker.Application.UseCases.Commands.SharedModels;
-using ChangeTracker.Application.UseCases.Commands.UpdateVersion;
 using ChangeTracker.Application.UseCases.Queries.GetCompleteVersions;
 using Microsoft.AspNetCore.Mvc;
 
@@ -24,9 +25,24 @@ namespace ChangeTracker.Api.Controllers.v1
     [ApiController]
     [Route("api/v1/versions")]
     [Produces(MediaTypeNames.Application.Json)]
-    [SwaggerControllerOrder(5)]
+    [SwaggerControllerOrder(4)]
     public class VersionController : ControllerBase
     {
+        [HttpGet("{versionId:Guid}")]
+        [NeedsPermission(Permission.ViewCompleteVersions)]
+        public async Task<ActionResult<CompleteVersionDto>> GetCompleteVersionAsync(
+            Guid versionId,
+            [FromServices] IGetCompleteVersion getCompleteVersion)
+        {
+            var userId = HttpContext.GetUserId();
+            var completeVersion = await getCompleteVersion.ExecuteAsync(userId, versionId);
+
+            if (completeVersion.HasNoValue)
+                return new NotFoundObjectResult(DefaultResponse.Create("Version not found"));
+
+            return Ok(CompleteVersionDto.FromResponseModel(completeVersion.Value));
+        }
+
         [HttpPost("complete")]
         [NeedsPermission(Permission.AddCompleteVersion)]
         public async Task<ActionResult> AddCompleteVersionAsync([FromServices] IAddCompleteVersion addCompleteVersion,
@@ -52,21 +68,6 @@ namespace ChangeTracker.Api.Controllers.v1
             return presenter.Response;
         }
 
-        [HttpGet("{versionId:Guid}")]
-        [NeedsPermission(Permission.ViewCompleteVersions)]
-        public async Task<ActionResult<CompleteVersionDto>> GetCompleteVersionAsync(
-            [FromServices] IGetCompleteVersion getCompleteVersion,
-            Guid versionId)
-        {
-            var userId = HttpContext.GetUserId();
-            var completeVersion = await getCompleteVersion.ExecuteAsync(userId, versionId);
-
-            if (completeVersion.HasNoValue)
-                return new NotFoundObjectResult(DefaultResponse.Create("Version not found"));
-
-            return Ok(CompleteVersionDto.FromResponseModel(completeVersion.Value));
-        }
-
         [HttpPost("{versionId:Guid}/release")]
         [NeedsPermission(Permission.ReleaseVersion)]
         public async Task<ActionResult> ReleaseVersionAsync([FromServices] IReleaseVersion releaseVersion,
@@ -74,16 +75,6 @@ namespace ChangeTracker.Api.Controllers.v1
         {
             var presenter = new ReleaseVersionApiPresenter();
             await releaseVersion.ExecuteAsync(presenter, versionId);
-
-            return presenter.Response;
-        }
-
-        [HttpDelete("{versionId:Guid}")]
-        [NeedsPermission(Permission.DeleteVersion)]
-        public async Task<ActionResult> DeleteVersionAsync([FromServices] IDeleteVersion deleteVersion, Guid versionId)
-        {
-            var presenter = new DeleteVersionApiPresenter();
-            await deleteVersion.ExecuteAsync(presenter, versionId);
 
             return presenter.Response;
         }
@@ -96,14 +87,44 @@ namespace ChangeTracker.Api.Controllers.v1
             var userId = HttpContext.GetUserId();
 
             var updateVersionRequestModel =
-                new VersionRequestModel(addOrUpdateVersionDto.ProductId,
-                    userId, 
-                    addOrUpdateVersionDto.Name, 
-                    addOrUpdateVersionDto.Version,
+                new VersionRequestModel(userId,
+                    addOrUpdateVersionDto.ProductId, 
+                    addOrUpdateVersionDto.Version, 
+                    addOrUpdateVersionDto.Name,
                     addOrUpdateVersionDto.ReleaseImmediately);
 
             var presenter = new AddOrUpdateVersionApiPresenter(HttpContext);
             await addOrUpdateVersion.ExecuteAsync(presenter, updateVersionRequestModel);
+
+            return presenter.Response;
+        }
+
+        [HttpPost]
+        [NeedsPermission(Permission.AddOrUpdateVersion)]
+        public async Task<ActionResult> AddVersionAsync([FromServices] IAddVersion addVersion,
+            [FromBody] AddOrUpdateVersionDto addOrUpdateVersionDto)
+        {
+            var userId = HttpContext.GetUserId();
+
+            var updateVersionRequestModel =
+                new VersionRequestModel(userId,
+                    addOrUpdateVersionDto.ProductId, 
+                    addOrUpdateVersionDto.Version, 
+                    addOrUpdateVersionDto.Name,
+                    addOrUpdateVersionDto.ReleaseImmediately);
+
+            var presenter = new AddOrUpdateVersionApiPresenter(HttpContext);
+            await addVersion.ExecuteAsync(presenter, updateVersionRequestModel);
+
+            return presenter.Response;
+        }
+
+        [HttpDelete("{versionId:Guid}")]
+        [NeedsPermission(Permission.DeleteVersion)]
+        public async Task<ActionResult> DeleteVersionAsync([FromServices] IDeleteVersion deleteVersion, Guid versionId)
+        {
+            var presenter = new DeleteVersionApiPresenter();
+            await deleteVersion.ExecuteAsync(presenter, versionId);
 
             return presenter.Response;
         }

@@ -1,10 +1,10 @@
 ﻿using ChangeTracker.Application.UseCases.Commands.AddCompleteVersion;
+using ChangeTracker.Application.UseCases.Commands.AddOrUpdateVersion;
 using ChangeTracker.Application.UseCases.Commands.AddProduct;
 using ChangeTracker.Application.UseCases.Commands.AddVersion;
 using ChangeTracker.Application.UseCases.Commands.CloseProduct;
 using ChangeTracker.Application.UseCases.Commands.DeleteVersion;
 using ChangeTracker.Application.UseCases.Commands.ReleaseVersion;
-using ChangeTracker.Application.UseCases.Commands.UpdateVersion;
 using ChangeTracker.Application.UseCases.Queries.GetAccounts;
 using ChangeTracker.Application.UseCases.Queries.GetCompleteVersions;
 using ChangeTracker.Application.UseCases.Queries.GetProducts;
@@ -16,19 +16,27 @@ namespace ChangeTracker.Api.Extensions
 {
     public static class ServiceCollectionExtensions
     {
-        public static IServiceCollection AddProductUseCase(this IServiceCollection services)
-        {
+        public static IServiceCollection AddUseCases(this IServiceCollection services) =>
+            services
+                .AddAccountUseCases()
+                .AddProductUseCases()
+                .AddVersionUseCases();
+
+        public static IServiceCollection AddAccountUseCases(this IServiceCollection services) =>
+            services
+                .AddScoped<IGetRoles, GetRolesInteractor>()
+                .AddScoped<IGetAccounts, GetAccountsInteractor>()
+                .AddScoped<IGetUsers, GetUsersInteractor>();
+
+        public static IServiceCollection AddProductUseCases(this IServiceCollection services) =>
             services
                 .AddScoped<IAddProduct, AddProductInteractor>()
                 .AddScoped<ICloseProduct, CloseProductInteractor>()
-                .AddScoped<IGetAccountProducts, GetProductsInteractor>()
-                .AddScoped<IGetRoles, GetRolesInteractor>()
-                .AddScoped<IGetAccounts, GetAccountsInteractor>()
-                .AddScoped<IGetUsers, GetUsersInteractor>()
                 .AddScoped<IGetUserProducts, GetProductsInteractor>()
                 .AddScoped<IGetProduct, GetProductsInteractor>()
                 .AddScoped<IGetAccountProducts, GetProductsInteractor>();
 
+        public static IServiceCollection AddVersionUseCases(this IServiceCollection services) =>
             services
                 .AddScoped<IAddVersion, AddVersionInteractor>()
                 .AddScoped<IAddCompleteVersion, AddCompleteVersionInteractor>()
@@ -37,8 +45,5 @@ namespace ChangeTracker.Api.Extensions
                 .AddScoped<IReleaseVersion, ReleaseVersionInteractor>()
                 .AddScoped<IDeleteVersion, DeleteVersionInteractor>()
                 .AddScoped<IAddOrUpdateVersion, AddOrUpdateVersionInteractor>();
-
-            return services;
-        }
     }
 }

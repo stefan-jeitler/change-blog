@@ -14,9 +14,9 @@ let private createRolePermissionSql = """
 		)
     """
 
-let private addPermissionAddProductSql = """
+let private addPermissionAddOrUpdateProductSql = """
 		INSERT INTO role_permission
-		SELECT id, 'AddProduct', now() from role where name in ('ProductOwner', 'PlatformManager', 'Developer')
+		SELECT id, 'AddOrUpdateProduct', now() from role where name in ('ProductOwner', 'PlatformManager', 'Developer')
 		ON CONFLICT (role_id, permission) DO NOTHING
 	"""
 
@@ -118,8 +118,8 @@ let create (dbConnection: IDbConnection) =
     dbConnection.Execute(createRolePermissionSql)
     |> ignore
 
-let addPermissionAddProduct (dbConnection: IDbConnection) =
-    dbConnection.Execute(addPermissionAddProductSql)
+let addPermissionAddOrUpdateProduct (dbConnection: IDbConnection) =
+    dbConnection.Execute(addPermissionAddOrUpdateProductSql)
     |> ignore
 
 let addPermissionViewChangeLogLines (dbConnection: IDbConnection) =

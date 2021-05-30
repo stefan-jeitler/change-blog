@@ -2,7 +2,7 @@
 using System.Threading.Tasks;
 using ChangeTracker.Api.Authorization.RequestBodyIdentifiers;
 using ChangeTracker.Application.UseCases;
-using ChangeTracker.DataAccess.Postgres.DataAccessObjects.User;
+using ChangeTracker.DataAccess.Postgres.DataAccessObjects.Users;
 using Microsoft.AspNetCore.Mvc.Filters;
 
 namespace ChangeTracker.Api.Authorization.PermissionChecks

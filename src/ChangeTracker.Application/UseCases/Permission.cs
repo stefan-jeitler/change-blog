@@ -10,7 +10,7 @@
         ViewUserProducts,
         ViewAccountProducts,
         CloseProduct,
-        AddProduct,
+        AddOrUpdateProduct,
 
         AddOrUpdateVersion,
         AddCompleteVersion,

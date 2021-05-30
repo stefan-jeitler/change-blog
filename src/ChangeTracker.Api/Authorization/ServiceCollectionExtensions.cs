@@ -7,9 +7,9 @@ namespace ChangeTracker.Api.Authorization
     {
         public static IServiceCollection AddPermissionCheck(this IServiceCollection services) =>
             services.AddScoped<PermissionCheck, AccountUserPermissionCheck>()
-                .Decorate<PermissionCheck, ChangeLogLinePermissionCheckDecorator>()
-                .Decorate<PermissionCheck, VersionPermissionCheckDecorator>()
+                .Decorate<PermissionCheck, AccountPermissionCheckDecorator>()
                 .Decorate<PermissionCheck, ProductPermissionCheckDecorator>()
-                .Decorate<PermissionCheck, AccountPermissionCheckDecorator>();
+                .Decorate<PermissionCheck, VersionPermissionCheckDecorator>()
+                .Decorate<PermissionCheck, ChangeLogLinePermissionCheckDecorator>();
     }
 }

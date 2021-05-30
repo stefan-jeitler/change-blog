@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Threading.Tasks;
 using ChangeTracker.Application.UseCases;
-using ChangeTracker.DataAccess.Postgres.DataAccessObjects.User;
+using ChangeTracker.DataAccess.Postgres.DataAccessObjects.Users;
 using FluentAssertions;
 using Npgsql;
 using Xunit;

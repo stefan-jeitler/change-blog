@@ -48,7 +48,7 @@ namespace ChangeTracker.Application.Tests.TestDoubles
                 .ToList();
         }
 
-        public Task<Result<Product, Conflict>> AddProductAsync(Product newProduct)
+        public Task<Result<Product, Conflict>> AddProductAsync(Product product)
         {
             if (ProduceConflict)
             {
@@ -56,8 +56,8 @@ namespace ChangeTracker.Application.Tests.TestDoubles
                 return Task.FromResult(Result.Failure<Product, Conflict>(conflict));
             }
 
-            Products.Add(newProduct);
-            return Task.FromResult(Result.Success<Product, Conflict>(newProduct));
+            Products.Add(product);
+            return Task.FromResult(Result.Success<Product, Conflict>(product));
         }
 
         public Task CloseProductAsync(Product product)

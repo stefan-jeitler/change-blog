@@ -2,11 +2,11 @@
 
 namespace ChangeTracker.Domain
 {
-    public class VersioningSchemeService
+    public class VersioningSchemeIdFinder
     {
         private readonly Account _account;
 
-        public VersioningSchemeService(Account account)
+        public VersioningSchemeIdFinder(Account account)
         {
             _account = account;
         }

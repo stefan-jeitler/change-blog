@@ -30,7 +30,7 @@ let dbUpdates: DbUpdate list = [
     { Version = 19; Update = Functions.createGuidFunction}
     { Version = 20; Update = RoleTable.addBasicRoles}
     { Version = 21; Update = VersioningSchemeTable.addUniqueIndexOnNameAccountIdDeletedAt}
-    { Version = 22; Update = RolePermissionTable.addPermissionAddProduct}
+    { Version = 22; Update = RolePermissionTable.addPermissionAddOrUpdateProduct}
     { Version = 23; Update = RolePermissionTable.addPermissionViewChangeLogLines}
     { Version = 24; Update = RolePermissionTable.addSomeViewPermissions}
     { Version = 25; Update = AccountViews.createAccountUserRolesView}

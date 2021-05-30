@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Threading.Tasks;
 using ChangeTracker.Application.DataAccess.Products;
-using ChangeTracker.DataAccess.Postgres.DataAccessObjects.Product;
+using ChangeTracker.DataAccess.Postgres.DataAccessObjects.Products;
 using ChangeTracker.DataAccess.Postgres.Tests.TestDoubles;
 using ChangeTracker.Domain;
 using ChangeTracker.Domain.Common;

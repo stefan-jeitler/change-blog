@@ -1,6 +1,6 @@
 ﻿using System;
 using System.Threading.Tasks;
-using ChangeTracker.DataAccess.Postgres.DataAccessObjects.User;
+using ChangeTracker.DataAccess.Postgres.DataAccessObjects.Users;
 
 namespace ChangeTracker.Api.Authentication.DataAccess
 {

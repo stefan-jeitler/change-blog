@@ -1,4 +1,4 @@
-﻿namespace ChangeTracker.DataAccess.Postgres.DataAccessObjects.Product
+﻿namespace ChangeTracker.DataAccess.Postgres.DataAccessObjects.Products
 {
     public static class ProductDaoSqlStatements
     {

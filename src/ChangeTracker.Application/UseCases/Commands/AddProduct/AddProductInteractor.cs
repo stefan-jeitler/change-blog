@@ -3,6 +3,7 @@ using System.Threading.Tasks;
 using ChangeTracker.Application.DataAccess;
 using ChangeTracker.Application.DataAccess.Accounts;
 using ChangeTracker.Application.DataAccess.Products;
+using ChangeTracker.Application.UseCases.Commands.SharedModels;
 using ChangeTracker.Domain;
 using ChangeTracker.Domain.Common;
 using ChangeTracker.Domain.Version;
@@ -78,7 +79,7 @@ namespace ChangeTracker.Application.UseCases.Commands.AddProduct
         private async Task<Maybe<VersioningScheme>> GetVersioningSchemeIdAsync(IAddProductOutputPort output,
             ProductRequestModel productRequestModel, Account account)
         {
-            var versioningSchemeService = new VersioningSchemeService(account);
+            var versioningSchemeService = new VersioningSchemeIdFinder(account);
             var customSchemeId = productRequestModel.VersioningSchemeId;
             var versioningSchemeId = versioningSchemeService.FindSchemeIdForProduct(customSchemeId);
 

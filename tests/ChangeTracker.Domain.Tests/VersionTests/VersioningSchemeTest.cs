@@ -14,6 +14,7 @@ namespace ChangeTracker.Domain.Tests.VersionTests
         private DateTime? _testDeletionDate;
         private Text _testDescription;
         private Guid _testId;
+        private Guid _testUserId;
         private Name _testName;
         private Text _testRegexPatter;
 
@@ -25,12 +26,13 @@ namespace ChangeTracker.Domain.Tests.VersionTests
             _testAccountId = Guid.Parse("fce44eb5-b842-44ca-b1c7-7a7cb88ccd3d");
             _testDescription = Text.Parse("custom scheme for my needs.");
             _testCreationDate = DateTime.Parse("2021-04-03");
+            _testUserId = Guid.Parse("fc573542-e3bd-4454-9b56-37e7bbd9c349");
             _testDeletionDate = null;
         }
 
         private VersioningScheme CreateScheme() =>
             new(_testId, _testName, _testRegexPatter,
-                _testDescription, _testAccountId, TestAccount.UserId, _testDeletionDate, _testCreationDate);
+                _testDescription, _testAccountId, _testUserId, _testDeletionDate, _testCreationDate);
 
         [Fact]
         public void Create_WithValidArguments_Successful()
@@ -44,6 +46,7 @@ namespace ChangeTracker.Domain.Tests.VersionTests
             vs.AccountId!.Value.Should().Be(_testAccountId!.Value);
             vs.Description.Should().Be(_testDescription);
             vs.CreatedAt.Should().Be(_testCreationDate);
+            vs.CreatedByUser.Should().Be(_testUserId);
             vs.DeletedAt.Should().BeNull();
         }
 
@@ -91,6 +94,16 @@ namespace ChangeTracker.Domain.Tests.VersionTests
         public void Create_WithEmptyAccountId_ArgumentException()
         {
             _testAccountId = Guid.Empty;
+
+            Func<VersioningScheme> act = CreateScheme;
+
+            act.Should().ThrowExactly<ArgumentException>();
+        }
+
+        [Fact]
+        public void Create_WithEmptyUserIdId_ArgumentException()
+        {
+            _testUserId = Guid.Empty;
 
             Func<VersioningScheme> act = CreateScheme;
 

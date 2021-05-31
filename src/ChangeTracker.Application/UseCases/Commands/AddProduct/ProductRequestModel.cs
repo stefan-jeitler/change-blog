@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace ChangeTracker.Application.UseCases.Commands.SharedModels
+namespace ChangeTracker.Application.UseCases.Commands.AddProduct
 {
     public class ProductRequestModel
     {

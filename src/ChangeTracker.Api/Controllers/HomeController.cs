@@ -71,9 +71,9 @@ namespace ChangeTracker.Api.Controllers
             [Range(1, VersionsQueryRequestModel.MaxLimit)]
             ushort limit = VersionsQueryRequestModel.MaxLimit)
         {
-            var requestModel = new VersionsQueryRequestModel(AppChanges.ProductId,
+            var requestModel = new VersionsQueryRequestModel(Application.Constants.ChangeTracker.ProductId,
                 lastVersionId,
-                AppChanges.UserId,
+                Application.Constants.ChangeTracker.UserId,
                 searchTerm,
                 limit);
 

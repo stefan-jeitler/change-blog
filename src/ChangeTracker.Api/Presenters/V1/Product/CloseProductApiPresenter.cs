@@ -9,7 +9,7 @@ namespace ChangeTracker.Api.Presenters.V1.Product
     {
         public void ProductAlreadyClosed(Guid productId)
         {
-            Response = new NoContentResult();
+            Response = new OkObjectResult(DefaultResponse.Create("Project successfully closed.", productId));
         }
 
         public void ProductDoesNotExist(Guid productId)
@@ -19,7 +19,7 @@ namespace ChangeTracker.Api.Presenters.V1.Product
 
         public void ProductClosed(Guid productId)
         {
-            Response = new NoContentResult();
+            Response = new OkObjectResult(DefaultResponse.Create("Project successfully closed.", productId));
         }
     }
 }

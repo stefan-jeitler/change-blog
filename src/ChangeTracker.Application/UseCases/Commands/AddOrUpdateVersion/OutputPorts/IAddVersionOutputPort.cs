@@ -12,7 +12,7 @@ namespace ChangeTracker.Application.UseCases.Commands.AddOrUpdateVersion.OutputP
         void VersionDoesNotMatchScheme(string version, string versioningSchemeName);
         void Created(Guid versionId);
         void Conflict(string reason);
-        void VersionAlreadyExists(string version);
+        void VersionAlreadyExists(Guid versionId);
         void TooManyLines(int maxChangeLogLines);
         void LinesWithSameTextsAreNotAllowed(IList<string> duplicates);
         void InvalidVersionName(string versionName);

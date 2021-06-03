@@ -49,7 +49,8 @@ namespace ChangeTracker.Api.Presenters.V1.Version
 
         public void LinesWithSameTextsAreNotAllowed(IList<string> duplicates)
         {
-            throw new NotImplementedException();
+            Response = new UnprocessableEntityObjectResult(
+                DefaultResponse.Create($"Lines with the same texts are not allowed. Duplicates: {duplicates}"));
         }
 
         public void InvalidVersionName(string name)
@@ -72,14 +73,15 @@ namespace ChangeTracker.Api.Presenters.V1.Version
             Response = new ConflictObjectResult(DefaultResponse.Create(reason));
         }
 
-        public void VersionAlreadyExists(string version)
+        public void VersionAlreadyExists(Guid versionId)
         {
-            throw new NotImplementedException();
+            Response = new ConflictObjectResult(DefaultResponse.Create($"Version already exists.", versionId));
         }
 
         public void TooManyLines(int maxChangeLogLines)
         {
-            throw new NotImplementedException();
+            Response = new UnprocessableEntityObjectResult(
+                DefaultResponse.Create($"Too many lines. Max lines: {maxChangeLogLines}"));
         }
 
         public void RelatedProductClosed(Guid productId)

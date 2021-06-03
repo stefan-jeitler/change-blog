@@ -48,7 +48,7 @@ namespace ChangeTracker.Api.Tests
             var response = await client.PostAsync("api/v1/products/139a2e54-e9be-4168-98b4-2839d9b3db04/close", null!);
 
             // arrange
-            response.StatusCode.Should().Be(StatusCodes.Status204NoContent);
+            response.StatusCode.Should().Be(StatusCodes.Status200OK);
         }
     }
 }

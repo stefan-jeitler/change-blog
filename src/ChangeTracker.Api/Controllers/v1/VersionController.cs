@@ -107,7 +107,7 @@ namespace ChangeTracker.Api.Controllers.v1
             var requestModel = new VersionRequestModel(userId, productId,
                 versionDto.Version, versionDto.Name, lines, versionDto.ReleaseImmediately);
 
-            var presenter = new AddVersionApiPresenter(HttpContext);
+            var presenter = new AddOrUpdateVersionApiPresenter(HttpContext);
             await addVersion.ExecuteAsync(presenter, requestModel);
 
             return presenter.Response;

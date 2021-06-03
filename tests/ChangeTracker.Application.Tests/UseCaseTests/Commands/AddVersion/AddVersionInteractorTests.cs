@@ -132,17 +132,18 @@ namespace ChangeTracker.Application.Tests.UseCaseTests.Commands.AddVersion
                 "1.23", OptionalName.Empty, changeLogLines);
 
             _productDaoStub.Products.Add(TestAccount.Product);
-            _versionDaoStub.Versions.Add(new ClVersion(TestAccount.Product.Id, ClVersionValue.Parse("1.23"),
-                OptionalName.Empty, TestAccount.UserId));
+            var clVersion = new ClVersion(TestAccount.Product.Id, ClVersionValue.Parse("1.23"),
+                OptionalName.Empty, TestAccount.UserId);
+            _versionDaoStub.Versions.Add(clVersion);
 
-            _outputPortMock.Setup(m => m.VersionAlreadyExists(It.IsAny<string>()));
+            _outputPortMock.Setup(m => m.VersionAlreadyExists(It.IsAny<Guid>()));
             var addVersionInteractor = CreateInteractor();
 
             // act
             await addVersionInteractor.ExecuteAsync(_outputPortMock.Object, versionRequestModel);
 
             // assert
-            _outputPortMock.Verify(m => m.VersionAlreadyExists(It.Is<string>(x => x == "1.23")), Times.Once);
+            _outputPortMock.Verify(m => m.VersionAlreadyExists(It.Is<Guid>(x => x == clVersion.Id)), Times.Once);
         }
 
         [Fact]

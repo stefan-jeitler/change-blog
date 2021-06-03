@@ -73,9 +73,10 @@ namespace ChangeTracker.Application.UseCases.Commands.AddOrUpdateVersion
             if (newVersion.HasNoValue)
                 return;
 
-            if ((await _versionDao.FindVersionAsync(product.Value.Id, newVersion.Value.Value)).HasValue)
+            var existingVersion = await _versionDao.FindVersionAsync(product.Value.Id, newVersion.Value.Value);
+            if (existingVersion.HasValue)
             {
-                output.VersionAlreadyExists(newVersion.Value.Value);
+                output.VersionAlreadyExists(existingVersion.Value.Id);
                 return;
             }
 

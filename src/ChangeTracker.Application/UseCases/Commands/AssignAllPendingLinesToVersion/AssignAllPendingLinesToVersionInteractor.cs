@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using ChangeTracker.Application.DataAccess;
-using ChangeTracker.Application.DataAccess.ChangeLogs;
+using ChangeTracker.Application.DataAccess.ChangeLog;
 using ChangeTracker.Application.DataAccess.Versions;
 using ChangeTracker.Application.UseCases.Commands.AssignAllPendingLinesToVersion.Models;
 using ChangeTracker.Domain.ChangeLog;
@@ -94,8 +94,6 @@ namespace ChangeTracker.Application.UseCases.Commands.AssignAllPendingLinesToVer
                 return Maybe<IEnumerable<ChangeLogLine>>.None;
             }
 
-            var lines = await _changeLogQueries.GetPendingLinesAsync(productId);
-
             var duplicates = versionChangeLogs
                 .FindDuplicateTexts(pendingChangeLogs.Lines)
                 .ToList();
@@ -106,7 +104,7 @@ namespace ChangeTracker.Application.UseCases.Commands.AssignAllPendingLinesToVer
                 return Maybe<IEnumerable<ChangeLogLine>>.None;
             }
 
-            var assignedLines = lines
+            var assignedLines = pendingChangeLogs.Lines
                 .Select((x, i) => new {Line = x, Position = versionChangeLogs.NextFreePosition + i})
                 .Select(x => x.Line.AssignToVersion(clVersion.Id, (uint) x.Position));
 

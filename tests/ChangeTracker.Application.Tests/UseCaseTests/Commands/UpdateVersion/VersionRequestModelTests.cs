@@ -1,18 +1,20 @@
 ﻿using System;
-using ChangeTracker.Application.UseCases.Commands.SharedModels;
+using System.Collections.Generic;
+using ChangeTracker.Application.UseCases.Commands.AddOrUpdateVersion;
+using ChangeTracker.Application.UseCases.Commands.AddOrUpdateVersion.Models;
 using FluentAssertions;
 using Xunit;
 
 namespace ChangeTracker.Application.Tests.UseCaseTests.Commands.UpdateVersion
 {
-    public class UpdateVersionRequestModelTests
+    public class VersionRequestModelTests
     {
         private string _testName;
         private string _testVersion;
         private Guid _testUserId;
         private Guid _testProductId;
 
-        public UpdateVersionRequestModelTests()
+        public VersionRequestModelTests()
         {
             _testProductId = Guid.Parse("53161c63-e6c9-4908-8dac-9940896817c9");
             _testUserId = Guid.Parse("220cac7a-a4cd-41ed-9f3c-5118a97f75a2");
@@ -20,7 +22,7 @@ namespace ChangeTracker.Application.Tests.UseCaseTests.Commands.UpdateVersion
             _testVersion = "1.2.3";
         }
 
-        private VersionRequestModel CreateRequestModel() => new(_testUserId, _testProductId, _testVersion, _testName);
+        private VersionRequestModel CreateRequestModel() => new(_testUserId, _testProductId, _testVersion, _testName, new List<ChangeLogLineRequestModel>());
 
         [Fact]
         public void Create_HappyPath_Successful()

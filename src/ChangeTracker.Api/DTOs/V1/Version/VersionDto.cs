@@ -2,11 +2,11 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using ChangeTracker.Api.DTOs.V1.ChangeLog;
-using ChangeTracker.Application.UseCases.Queries.GetCompleteVersions;
+using ChangeTracker.Application.UseCases.Queries.GetVersions;
 
 namespace ChangeTracker.Api.DTOs.V1.Version
 {
-    public class CompleteVersionDto
+    public class VersionDto
     {
         public Guid VersionId { get; set; }
         public string Version { get; set; }
@@ -19,7 +19,7 @@ namespace ChangeTracker.Api.DTOs.V1.Version
         public DateTimeOffset? ReleasedAt { get; set; }
         public DateTimeOffset? DeletedAt { get; set; }
 
-        public static CompleteVersionDto FromResponseModel(CompleteVersionResponseModel model) =>
+        public static VersionDto FromResponseModel(VersionResponseModel model) =>
             new()
             {
                 VersionId = model.VersionId,

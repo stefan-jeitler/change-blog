@@ -3,12 +3,13 @@ using System.Data;
 using System.Runtime.CompilerServices;
 using ChangeTracker.Application.DataAccess;
 using ChangeTracker.Application.DataAccess.Accounts;
-using ChangeTracker.Application.DataAccess.ChangeLogs;
+using ChangeTracker.Application.DataAccess.ChangeLog;
 using ChangeTracker.Application.DataAccess.Products;
 using ChangeTracker.Application.DataAccess.Users;
 using ChangeTracker.Application.DataAccess.Versions;
+using ChangeTracker.Application.Decorators;
 using ChangeTracker.DataAccess.Postgres.DataAccessObjects.Account;
-using ChangeTracker.DataAccess.Postgres.DataAccessObjects.ChangeLogs;
+using ChangeTracker.DataAccess.Postgres.DataAccessObjects.ChangeLog;
 using ChangeTracker.DataAccess.Postgres.DataAccessObjects.Products;
 using ChangeTracker.DataAccess.Postgres.DataAccessObjects.Users;
 using ChangeTracker.DataAccess.Postgres.DataAccessObjects.Versions;
@@ -55,7 +56,8 @@ namespace ChangeTracker.DataAccess.Postgres
             return services;
         }
 
-        private static IServiceCollection AddDataAccessObjects(this IServiceCollection services) =>
+        private static IServiceCollection AddDataAccessObjects(this IServiceCollection services)
+        {
             services
                 .AddScoped<IAccountDao, AccountDao>()
                 .AddScoped<IProductDao, ProductDao>()
@@ -63,7 +65,13 @@ namespace ChangeTracker.DataAccess.Postgres
                 .AddScoped<IUserDao, UserDao>()
                 .AddScoped<IRolesDao, RolesDao>()
                 .AddScoped<IVersionDao, VersionDao>()
-                .AddScoped<IChangeLogCommandsDao, ChangeLogCommandsDao>()
+                
                 .AddScoped<IChangeLogQueriesDao, ChangeLogQueriesDao>();
+
+            services.AddScoped<IChangeLogCommandsDao, ChangeLogCommandsDao>()
+                .Decorate<IChangeLogCommandsDao, ChangeLogLineReadonlyCheckDecorator>();
+
+            return services;
+        }
     }
 }

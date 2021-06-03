@@ -1,8 +1,9 @@
 ﻿using System;
+using System.Collections.Generic;
 using ChangeTracker.Api.DTOs;
 using ChangeTracker.Api.Extensions;
 using ChangeTracker.Application.UseCases.Commands.AddOrUpdateVersion;
-using ChangeTracker.Domain.Common;
+using ChangeTracker.Application.UseCases.Commands.AddOrUpdateVersion.OutputPorts;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
@@ -20,7 +21,7 @@ namespace ChangeTracker.Api.Presenters.V1.Version
         public void VersionAlreadyReleased(Guid versionId)
         {
             Response = new ConflictObjectResult(
-                DefaultResponse.Create("You cannot add or update versions that have been released.,", versionId));
+                DefaultResponse.Create("You cannot add or update versions that have been released.", versionId));
         }
 
         public void Created(Guid versionId)
@@ -41,21 +42,22 @@ namespace ChangeTracker.Api.Presenters.V1.Version
                     $"Version does not match your product's versioning scheme. Version '{version}', Scheme: {versioningSchemeName}"));
         }
 
-        public void VersionAlreadyExists(Guid versionId)
-        {
-            Response = new ConflictObjectResult(DefaultResponse.Create($"Version already exists.", versionId));
-        }
-
         public void ProductClosed(Guid productId)
         {
             Response = new ConflictObjectResult(
                 DefaultResponse.Create("You cannot add or update a version when the related product has been closed."));
         }
 
+        public void LinesWithSameTextsAreNotAllowed(IList<string> duplicates)
+        {
+            throw new NotImplementedException();
+        }
+
         public void InvalidVersionName(string name)
         {
             Response = new UnprocessableEntityObjectResult(DefaultResponse.Create($"Invalid name '{name}'."));
         }
+
         public void VersionUpdated(Guid versionId)
         {
             Response = new OkObjectResult(DefaultResponse.Create("Version successfully updated.", versionId));
@@ -71,6 +73,16 @@ namespace ChangeTracker.Api.Presenters.V1.Version
             Response = new ConflictObjectResult(DefaultResponse.Create(reason));
         }
 
+        public void VersionAlreadyExists(string version)
+        {
+            throw new NotImplementedException();
+        }
+
+        public void TooManyLines(int maxChangeLogLines)
+        {
+            throw new NotImplementedException();
+        }
+
         public void RelatedProductClosed(Guid productId)
         {
             Response = new ConflictObjectResult(
@@ -81,6 +93,37 @@ namespace ChangeTracker.Api.Presenters.V1.Version
         {
             Response = new ConflictObjectResult(
                 DefaultResponse.Create("You cannot add or update versions that have been deleted.", versionId));
+        }
+
+        public void InvalidChangeLogLineText(string text)
+        {
+            Response = new BadRequestObjectResult(DefaultResponse.Create($"Invalid change log text '{text}'."));
+        }
+
+        public void InvalidIssue(string changeLogText, string issue)
+        {
+            Response = new BadRequestObjectResult(
+                DefaultResponse.Create($"Invalid issue '{issue}' for change log '{changeLogText}'."));
+        }
+
+        public void TooManyIssues(string changeLogText, int maxIssues)
+        {
+            Response = new UnprocessableEntityObjectResult(
+                DefaultResponse.Create(
+                    $"The change log '{changeLogText}' has too many issues. Max issues: '{maxIssues}'."));
+        }
+
+        public void InvalidLabel(string changeLogText, string label)
+        {
+            Response = new BadRequestObjectResult(
+                DefaultResponse.Create($"Invalid label '{label}' for change log '{changeLogText}'."));
+        }
+
+        public void TooManyLabels(string changeLogText, int maxLabels)
+        {
+            Response = new UnprocessableEntityObjectResult(
+                DefaultResponse.Create(
+                    $"The change log '{changeLogText}' has too many labels. Max labels: '{maxLabels}'."));
         }
     }
 }

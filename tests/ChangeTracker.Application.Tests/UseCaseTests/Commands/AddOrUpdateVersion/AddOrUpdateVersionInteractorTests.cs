@@ -1,10 +1,11 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Threading.Tasks;
 using ChangeTracker.Application.DataAccess;
 using ChangeTracker.Application.Tests.TestDoubles;
 using ChangeTracker.Application.UseCases.Commands.AddOrUpdateVersion;
-using ChangeTracker.Application.UseCases.Commands.AddVersion;
-using ChangeTracker.Application.UseCases.Commands.SharedModels;
+using ChangeTracker.Application.UseCases.Commands.AddOrUpdateVersion.Models;
+using ChangeTracker.Application.UseCases.Commands.AddOrUpdateVersion.OutputPorts;
 using ChangeTracker.Domain.Common;
 using ChangeTracker.Domain.Version;
 using FluentAssertions;
@@ -15,30 +16,31 @@ namespace ChangeTracker.Application.Tests.UseCaseTests.Commands.AddOrUpdateVersi
 {
     public class AddOrUpdateVersionInteractorTests
     {
-        private readonly Mock<IAddVersion> _addVersionMock;
         private readonly ProductDaoStub _productDaoStub;
         private readonly Mock<IUnitOfWork> _unitOfWorkMock;
         private readonly VersionDaoStub _versionDaoStub;
+        private readonly ChangeLogDaoStub _changeLogDaoStub;
         private readonly Mock<IAddOrUpdateVersionOutputPort> _outputPortMock;
 
         public AddOrUpdateVersionInteractorTests()
         {
             _productDaoStub = new ProductDaoStub();
             _versionDaoStub = new VersionDaoStub();
+            _changeLogDaoStub = new ChangeLogDaoStub();
             _unitOfWorkMock = new Mock<IUnitOfWork>();
-            _addVersionMock = new Mock<IAddVersion>();
             _outputPortMock = new Mock<IAddOrUpdateVersionOutputPort>(MockBehavior.Strict);
         }
 
-        private AddOrUpdateVersionInteractor CreateInteractor() => new(_versionDaoStub,
-            _productDaoStub, _unitOfWorkMock.Object, _addVersionMock.Object);
+        private AddOrUpdateVersionInteractor CreateInteractor() =>
+            new(_productDaoStub, _versionDaoStub,
+                _unitOfWorkMock.Object, _changeLogDaoStub, _changeLogDaoStub);
 
         [Fact]
         public async Task UpdateVersion_HappyPath_SuccessfullyUpdated()
         {
             // arrange
             var requestModel =
-                new VersionRequestModel(TestAccount.UserId, TestAccount.Product.Id, "1.2.3", "catchy name");
+                new VersionRequestModel(TestAccount.UserId, TestAccount.Product.Id, "1.2.3", "catchy name", new List<ChangeLogLineRequestModel>(0));
 
             var existingVersion = new ClVersion(TestAccount.Product.Id, ClVersionValue.Parse("1.2.3"),
                 OptionalName.Empty, TestAccount.UserId);

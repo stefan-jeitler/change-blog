@@ -3,26 +3,30 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using ChangeTracker.Application.DataAccess;
-using ChangeTracker.Application.DataAccess.ChangeLogs;
+using ChangeTracker.Application.DataAccess.ChangeLog;
 using ChangeTracker.Domain.ChangeLog;
 using CSharpFunctionalExtensions;
 using Dapper;
 using Microsoft.Extensions.Logging;
 
-namespace ChangeTracker.DataAccess.Postgres.DataAccessObjects.ChangeLogs
+namespace ChangeTracker.DataAccess.Postgres.DataAccessObjects.ChangeLog
 {
     public class ChangeLogCommandsDao : IChangeLogCommandsDao
     {
-        private const string InsertLineSql = @"
+        private const string InsertOrUpdateSql = @"
             insert into changelog_line (id, version_id, product_id, text, labels, issues, ""position"", created_by_user, deleted_at, created_at)
             values (@id, @versionId, @productId, @text,
                     CAST(@labels AS json), CAST(@issues AS json), @position,
                     @createdByUser, @deletedAt, @createdAt)
-                ";
+            on conflict (product_id, version_id, lower(text), ((deleted_at IS NULL))) WHERE (deleted_at IS NULL) do update
+                set text     = @text,
+                    labels   = CAST(@labels AS json),
+                    issues   = CAST(@issues AS json),
+                    position = @position";
 
         private const string MoveLineSql = @"
                 update changelog_line
-                set version_id = @versionId
+                set version_id = @versionId, position = @position
                 where id = @changeLogLineId";
 
         private const string UpdateLineSql = @"
@@ -46,11 +50,12 @@ namespace ChangeTracker.DataAccess.Postgres.DataAccessObjects.ChangeLogs
             _logger = logger;
         }
 
-        public async Task<Result<ChangeLogLine, Conflict>> AddLineAsync(ChangeLogLine changeLogLine)
+        public async Task<Result<ChangeLogLine, Conflict>> AddOrUpdateLineAsync(ChangeLogLine changeLogLine)
         {
             try
             {
-                return await AddLineInternalAsync(changeLogLine);
+                await AddOrUpdateLinesInternalAsync(new []{ changeLogLine });
+                return Result.Success<ChangeLogLine, Conflict>(changeLogLine);
             }
             catch (Exception e)
             {
@@ -59,11 +64,11 @@ namespace ChangeTracker.DataAccess.Postgres.DataAccessObjects.ChangeLogs
             }
         }
 
-        public async Task<Result<int, Conflict>> AddLinesAsync(IEnumerable<ChangeLogLine> changeLogLines)
+        public async Task<Result<int, Conflict>> AddOrUpdateLinesAsync(IEnumerable<ChangeLogLine> changeLogLines)
         {
             try
             {
-                return await AddLinesInternalAsync(changeLogLines.AsList());
+                return await AddOrUpdateLinesInternalAsync(changeLogLines.AsList());
             }
             catch (Exception e)
             {
@@ -133,9 +138,9 @@ namespace ChangeTracker.DataAccess.Postgres.DataAccessObjects.ChangeLogs
                 .ExecuteAsync(MoveLineSql, new
                 {
                     versionId = changeLogLine.VersionId,
+                    position = (int)changeLogLine.Position,
                     changeLogLineId = changeLogLine.Id
                 });
-
 
             if (currentVersionId.HasValue)
                 await UpdateSearchVectorsAsync(currentVersionId.Value);
@@ -149,19 +154,22 @@ namespace ChangeTracker.DataAccess.Postgres.DataAccessObjects.ChangeLogs
         private async Task<Result<int, Conflict>> MoveLinesInternalAsync(IEnumerable<ChangeLogLine> changeLogLines)
         {
             var lines = changeLogLines.AsList();
-
-            var versionIds = await GetVersionIdsAsync(lines);
+            var versionIdsBeforeMove = await GetVersionIdsAsync(lines.Select(x => x.Id));
 
             var count = await _dbAccessor.DbConnection
                 .ExecuteAsync(MoveLineSql, lines.Select(l => new
                 {
                     versionId = l.VersionId,
+                    position = (int)l.Position,
                     changeLogLineId = l.Id
                 }));
 
-            var versionIdsOfNewDestination = await GetVersionIdsAsync(lines);
+            var versionIdsOfNewDestination = lines
+                .Where(x => x.VersionId.HasValue)
+                .Select(x => x.VersionId.Value)
+                .Distinct();
 
-            foreach (var versionId in versionIds.Concat(versionIdsOfNewDestination))
+            foreach (var versionId in versionIdsBeforeMove.Concat(versionIdsOfNewDestination))
             {
                 await UpdateSearchVectorsAsync(versionId);
             }
@@ -169,11 +177,11 @@ namespace ChangeTracker.DataAccess.Postgres.DataAccessObjects.ChangeLogs
             return Result.Success<int, Conflict>(count);
         }
 
-        private async Task<Result<ChangeLogLine, Conflict>> AddLineInternalAsync(ChangeLogLine changeLogLine)
+        private async Task<Result<ChangeLogLine, Conflict>> AddOrUpdateLineInternalAsync(ChangeLogLine changeLogLine)
         {
             var l = changeLogLine;
             await _dbAccessor.DbConnection
-                .ExecuteAsync(InsertLineSql, new
+                .ExecuteAsync(InsertOrUpdateSql, new
                 {
                     id = l.Id,
                     versionId = l.VersionId,
@@ -195,10 +203,10 @@ namespace ChangeTracker.DataAccess.Postgres.DataAccessObjects.ChangeLogs
             return Result.Success<ChangeLogLine, Conflict>(changeLogLine);
         }
 
-        private async Task<Result<int, Conflict>> AddLinesInternalAsync(IReadOnlyCollection<ChangeLogLine> lines)
+        private async Task<Result<int, Conflict>> AddOrUpdateLinesInternalAsync(IReadOnlyCollection<ChangeLogLine> lines)
         {
             var count = await _dbAccessor.DbConnection
-                .ExecuteAsync(InsertLineSql, lines.Select(l => new
+                .ExecuteAsync(InsertOrUpdateSql, lines.Select(l => new
                 {
                     id = l.Id,
                     versionId = l.VersionId,
@@ -230,8 +238,8 @@ namespace ChangeTracker.DataAccess.Postgres.DataAccessObjects.ChangeLogs
                 {
                     changeLogLineId = changeLogLine.Id,
                     text = changeLogLine.Text,
-                    labels = changeLogLine.Labels,
-                    issues = changeLogLine.Issues
+                    labels = changeLogLine.Labels.AsEnumerable(),
+                    issues = changeLogLine.Issues.AsEnumerable()
                 });
 
             if (changeLogLine.VersionId.HasValue)
@@ -267,7 +275,7 @@ namespace ChangeTracker.DataAccess.Postgres.DataAccessObjects.ChangeLogs
                         versionId
                     });
 
-        private async Task<IList<Guid>> GetVersionIdsAsync(IEnumerable<ChangeLogLine> changeLogLines)
+        private async Task<IList<Guid>> GetVersionIdsAsync(IEnumerable<Guid> changeLogLineIds)
         {
             const string sql = @"
                 select distinct version_id from changelog_line
@@ -277,7 +285,7 @@ namespace ChangeTracker.DataAccess.Postgres.DataAccessObjects.ChangeLogs
             var versionIds = await _dbAccessor.DbConnection
                 .QueryAsync<Guid>(sql, new
                 {
-                    changeLogLineIds = changeLogLines.Select(x => x.Id)
+                    changeLogLineIds
                 });
 
             return versionIds.AsList();

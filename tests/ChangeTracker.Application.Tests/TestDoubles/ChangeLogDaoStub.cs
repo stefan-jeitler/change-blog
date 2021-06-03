@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using ChangeTracker.Application.DataAccess;
-using ChangeTracker.Application.DataAccess.ChangeLogs;
+using ChangeTracker.Application.DataAccess.ChangeLog;
 using ChangeTracker.Domain.ChangeLog;
 using CSharpFunctionalExtensions;
 
@@ -14,7 +14,7 @@ namespace ChangeTracker.Application.Tests.TestDoubles
         public List<ChangeLogLine> ChangeLogs { get; set; } = new();
         public bool ProduceConflict { get; set; }
 
-        public async Task<Result<ChangeLogLine, Conflict>> AddLineAsync(ChangeLogLine changeLogLine)
+        public async Task<Result<ChangeLogLine, Conflict>> AddOrUpdateLineAsync(ChangeLogLine changeLogLine)
         {
             await Task.Yield();
 
@@ -24,10 +24,12 @@ namespace ChangeTracker.Application.Tests.TestDoubles
             return changeLogLine;
         }
 
-        public async Task<Result<int, Conflict>> AddLinesAsync(IEnumerable<ChangeLogLine> changeLogLines)
+        public async Task<Result<int, Conflict>> AddOrUpdateLinesAsync(IEnumerable<ChangeLogLine> changeLogLines)
         {
             await Task.Yield();
             var lines = changeLogLines.ToList();
+
+            ChangeLogs.RemoveAll(x => lines.Any(y => x.Id == y.Id));
 
             if (ProduceConflict)
                 return Result.Failure<int, Conflict>(new Conflict("something went wrong."));
@@ -111,35 +113,6 @@ namespace ChangeTracker.Application.Tests.TestDoubles
                 .GroupBy(x => x.VersionId)
                 .Select(x => new ChangeLogs(x.ToList()))
                 .ToList();
-        }
-
-        public async Task<IList<ChangeLogLine>> GetPendingLinesAsync(Guid productId)
-        {
-            await Task.Yield();
-
-            return ChangeLogs
-                .Where(x => x.ProductId == productId && x.IsPending)
-                .ToList();
-        }
-
-        public async Task<Result<int, Conflict>> MakeAllLinesPending(Guid versionId)
-        {
-            await Task.Yield();
-
-            if (ProduceConflict) return Result.Failure<int, Conflict>(new Conflict("some conflict"));
-
-            bool MatchRequestVersion(ChangeLogLine l) => l.VersionId.HasValue && l.VersionId.Value == versionId;
-
-            var versionChangeLogLines = ChangeLogs.Where(MatchRequestVersion);
-
-            var pendingLines = versionChangeLogLines.Select(x => new ChangeLogLine(x.Id, null, x.ProductId, x.Text,
-                    x.Position, x.CreatedAt, x.Labels, x.Issues, x.CreatedByUser, x.DeletedAt))
-                .ToList();
-
-            ChangeLogs.RemoveAll(MatchRequestVersion);
-            ChangeLogs.AddRange(pendingLines);
-
-            return Result.Success<int, Conflict>(pendingLines.Count);
         }
     }
 }

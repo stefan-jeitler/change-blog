@@ -12,7 +12,7 @@ using ChangeTracker.Api.Extensions;
 using ChangeTracker.Api.SwaggerUI;
 using ChangeTracker.Application.Constants;
 using ChangeTracker.Application.UseCases;
-using ChangeTracker.Application.UseCases.Queries.GetCompleteVersions;
+using ChangeTracker.Application.UseCases.Queries.GetVersions;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Hosting;
@@ -27,7 +27,7 @@ namespace ChangeTracker.Api.Controllers
     [SwaggerControllerOrder(0)]
     public class HomeController : ControllerBase
     {
-        private readonly IGetCompleteVersions _getCompleteVersions;
+        private readonly IGetVersions _getVersions;
 
         private static readonly Lazy<string> AssemblyVersion =
             new(() =>
@@ -45,10 +45,10 @@ namespace ChangeTracker.Api.Controllers
 
         private readonly IHostEnvironment _hostEnvironment;
 
-        public HomeController(IHostEnvironment hostEnvironment, IGetCompleteVersions getCompleteVersions)
+        public HomeController(IHostEnvironment hostEnvironment, IGetVersions getVersions)
         {
             _hostEnvironment = hostEnvironment;
-            _getCompleteVersions = getCompleteVersions;
+            _getVersions = getVersions;
         }
 
         [HttpGet("info")]
@@ -64,7 +64,7 @@ namespace ChangeTracker.Api.Controllers
 
         [HttpGet("changes")]
         [AllowAnonymous]
-        public async Task<ActionResult<List<CompleteVersionDto>>> GetChangesAsync(
+        public async Task<ActionResult<List<VersionDto>>> GetChangesAsync(
             [MaxLength(VersionsQueryRequestModel.MaxSearchTermLength)]
             string searchTerm = null,
             Guid? lastVersionId = null,
@@ -77,9 +77,9 @@ namespace ChangeTracker.Api.Controllers
                 searchTerm,
                 limit);
 
-            var versions = await _getCompleteVersions.ExecuteAsync(requestModel);
+            var versions = await _getVersions.ExecuteAsync(requestModel);
 
-            return Ok(versions.Select(CompleteVersionDto.FromResponseModel));
+            return Ok(versions.Select(VersionDto.FromResponseModel));
         }
     }
 }

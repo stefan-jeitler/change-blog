@@ -1,7 +1,7 @@
 using System;
 using System.Threading.Tasks;
 using ChangeTracker.Application.DataAccess;
-using ChangeTracker.Application.DataAccess.ChangeLogs;
+using ChangeTracker.Application.DataAccess.ChangeLog;
 using ChangeTracker.Application.DataAccess.Versions;
 using ChangeTracker.Application.Services.ChangeLogLineParsing;
 using ChangeTracker.Application.UseCases.Commands.AddChangeLogLine.Models;
@@ -115,7 +115,7 @@ namespace ChangeTracker.Application.UseCases.Commands.AddChangeLogLine
         private async Task SaveChangeLogLineAsync(IAddLineOutputPort output, ChangeLogLine changeLogLine)
         {
             await _changeLogCommands
-                .AddLineAsync(changeLogLine)
+                .AddOrUpdateLineAsync(changeLogLine)
                 .Match(Finish, c => output.Conflict(c));
 
             void Finish(ChangeLogLine l)

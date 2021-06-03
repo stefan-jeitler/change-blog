@@ -2,9 +2,9 @@
 using System.Collections.Generic;
 using ChangeTracker.Application.Services.ChangeLogLineParsing;
 
-namespace ChangeTracker.Application.UseCases.Commands.AddCompleteVersion
+namespace ChangeTracker.Application.UseCases.Commands.AddOrUpdateVersion.OutputPorts
 {
-    public interface IAddCompleteVersionOutputPort : ILineParserOutput
+    public interface IAddVersionOutputPort : ILineParserOutput
     {
         void ProductDoesNotExist(Guid productId);
         void ProductClosed(Guid productId);

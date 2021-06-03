@@ -1,15 +1,13 @@
-﻿using ChangeTracker.Application.UseCases.Commands.AddCompleteVersion;
-using ChangeTracker.Application.UseCases.Commands.AddOrUpdateVersion;
+﻿using ChangeTracker.Application.UseCases.Commands.AddOrUpdateVersion;
 using ChangeTracker.Application.UseCases.Commands.AddProduct;
-using ChangeTracker.Application.UseCases.Commands.AddVersion;
 using ChangeTracker.Application.UseCases.Commands.CloseProduct;
 using ChangeTracker.Application.UseCases.Commands.DeleteVersion;
 using ChangeTracker.Application.UseCases.Commands.ReleaseVersion;
 using ChangeTracker.Application.UseCases.Queries.GetAccounts;
-using ChangeTracker.Application.UseCases.Queries.GetCompleteVersions;
 using ChangeTracker.Application.UseCases.Queries.GetProducts;
 using ChangeTracker.Application.UseCases.Queries.GetRoles;
 using ChangeTracker.Application.UseCases.Queries.GetUsers;
+using ChangeTracker.Application.UseCases.Queries.GetVersions;
 using Microsoft.Extensions.DependencyInjection;
 
 namespace ChangeTracker.Api.Extensions
@@ -38,12 +36,11 @@ namespace ChangeTracker.Api.Extensions
 
         public static IServiceCollection AddVersionUseCases(this IServiceCollection services) =>
             services
-                .AddScoped<IAddVersion, AddVersionInteractor>()
-                .AddScoped<IAddCompleteVersion, AddCompleteVersionInteractor>()
-                .AddScoped<IGetCompleteVersion, GetCompleteVersionsInteractor>()
-                .AddScoped<IGetCompleteVersions, GetCompleteVersionsInteractor>()
+                .AddScoped<IAddVersion, AddOrUpdateVersionInteractor>()
+                .AddScoped<IAddOrUpdateVersion, AddOrUpdateVersionInteractor>()
+                .AddScoped<IGetVersion, GetVersionsInteractor>()
+                .AddScoped<IGetVersions, GetVersionsInteractor>()
                 .AddScoped<IReleaseVersion, ReleaseVersionInteractor>()
-                .AddScoped<IDeleteVersion, DeleteVersionInteractor>()
-                .AddScoped<IAddOrUpdateVersion, AddOrUpdateVersionInteractor>();
+                .AddScoped<IDeleteVersion, DeleteVersionInteractor>();
     }
 }

@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Threading.Tasks;
 using ChangeTracker.Application.DataAccess;
-using ChangeTracker.Application.DataAccess.ChangeLogs;
+using ChangeTracker.Application.DataAccess.ChangeLog;
 using ChangeTracker.Application.Services.ChangeLogLineParsing;
 using ChangeTracker.Domain.ChangeLog;
 using CSharpFunctionalExtensions;

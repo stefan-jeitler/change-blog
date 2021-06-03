@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 
-namespace ChangeTracker.Application.UseCases.Commands.AddCompleteVersion.Models
+namespace ChangeTracker.Application.UseCases.Commands.AddOrUpdateVersion.Models
 {
     public class ChangeLogLineRequestModel
     {

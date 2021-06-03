@@ -2,17 +2,18 @@ using System;
 using System.Collections.Generic;
 using ChangeTracker.Api.DTOs;
 using ChangeTracker.Api.Extensions;
-using ChangeTracker.Application.UseCases.Commands.AddCompleteVersion;
+using ChangeTracker.Application.UseCases.Commands.AddOrUpdateVersion;
+using ChangeTracker.Application.UseCases.Commands.AddOrUpdateVersion.OutputPorts;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
 namespace ChangeTracker.Api.Presenters.V1.Version
 {
-    public class AddCompleteVersionApiPresenter : BaseApiPresenter, IAddCompleteVersionOutputPort
+    public class AddVersionApiPresenter : BaseApiPresenter, IAddVersionOutputPort
     {
         private readonly HttpContext _httpContext;
 
-        public AddCompleteVersionApiPresenter(HttpContext httpContext)
+        public AddVersionApiPresenter(HttpContext httpContext)
         {
             _httpContext = httpContext;
         }

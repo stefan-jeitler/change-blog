@@ -69,12 +69,12 @@ let private addSomeViewPermissionsSql =
 	"""
       """
  	  INSERT INTO role_permission
- 	  SELECT id, 'AddCompleteVersion', now() from role where name in ('ScrumMaster', 'ProductOwner', 'PlatformManager', 'Developer')
+ 	  SELECT id, 'AddVersion', now() from role where name in ('ScrumMaster', 'ProductOwner', 'PlatformManager', 'Developer')
  	  ON CONFLICT (role_id, permission) DO NOTHING
      """
       """
   	  INSERT INTO role_permission
-  	  SELECT id, 'ViewCompleteVersions', now() from role where name in ('Support', 'ScrumMaster', 'ProductOwner', 'ProductManager', 'PlatformManager', 'Developer')
+  	  SELECT id, 'ViewVersions', now() from role where name in ('Support', 'ScrumMaster', 'ProductOwner', 'ProductManager', 'PlatformManager', 'Developer')
   	  ON CONFLICT (role_id, permission) DO NOTHING
 	""" ]
 

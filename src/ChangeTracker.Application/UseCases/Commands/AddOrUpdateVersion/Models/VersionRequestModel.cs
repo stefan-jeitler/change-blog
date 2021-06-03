@@ -1,11 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
 
-namespace ChangeTracker.Application.UseCases.Commands.AddCompleteVersion.Models
+namespace ChangeTracker.Application.UseCases.Commands.AddOrUpdateVersion.Models
 {
-    public class CompleteVersionRequestModel
+    public class VersionRequestModel
     {
-        public CompleteVersionRequestModel(Guid userId, Guid productId, string version, string name,
+        public VersionRequestModel(Guid userId, Guid productId, string version, string name,
             List<ChangeLogLineRequestModel> lines,
             bool releaseImmediately = false)
         {

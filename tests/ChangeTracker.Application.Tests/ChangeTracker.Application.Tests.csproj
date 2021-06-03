@@ -28,7 +28,6 @@
 
   <ItemGroup>
     <Folder Include="UseCaseTests\Commands\AddOrUpdateVersion\" />
-    <Folder Include="UseCaseTests\Queries\GetCompleteVersion\" />
   </ItemGroup>
 
 </Project>

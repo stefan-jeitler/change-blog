@@ -1,6 +1,6 @@
 ﻿using System;
 using System.Threading.Tasks;
-using ChangeTracker.Application.DataAccess.ChangeLogs;
+using ChangeTracker.Application.DataAccess.ChangeLog;
 using CSharpFunctionalExtensions;
 
 namespace ChangeTracker.Application.UseCases.Commands.DeleteChangeLogLine

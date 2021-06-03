@@ -13,8 +13,8 @@
         AddOrUpdateProduct,
 
         AddOrUpdateVersion,
-        AddCompleteVersion,
-        ViewCompleteVersions,
+        AddVersion,
+        ViewVersions,
         ReleaseVersion,
         DeleteVersion,
 

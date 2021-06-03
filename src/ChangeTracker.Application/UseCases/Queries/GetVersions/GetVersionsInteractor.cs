@@ -2,7 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using ChangeTracker.Application.DataAccess.ChangeLogs;
+using ChangeTracker.Application.DataAccess.ChangeLog;
 using ChangeTracker.Application.DataAccess.Products;
 using ChangeTracker.Application.DataAccess.Users;
 using ChangeTracker.Application.DataAccess.Versions;
@@ -13,16 +13,16 @@ using ChangeTracker.Domain.ChangeLog;
 using ChangeTracker.Domain.Version;
 using CSharpFunctionalExtensions;
 
-namespace ChangeTracker.Application.UseCases.Queries.GetCompleteVersions
+namespace ChangeTracker.Application.UseCases.Queries.GetVersions
 {
-    public class GetCompleteVersionsInteractor : IGetCompleteVersion, IGetCompleteVersions
+    public class GetVersionsInteractor : IGetVersion, IGetVersions
     {
         private readonly IChangeLogQueriesDao _changeLogQueriesDao;
         private readonly IProductDao _productDao;
         private readonly IUserDao _userDao;
         private readonly IVersionDao _versionDao;
 
-        public GetCompleteVersionsInteractor(IProductDao productDao, IVersionDao versionDao,
+        public GetVersionsInteractor(IProductDao productDao, IVersionDao versionDao,
             IChangeLogQueriesDao changeLogQueriesDao, IUserDao userDao)
         {
             _productDao = productDao ?? throw new ArgumentNullException(nameof(productDao));
@@ -31,11 +31,11 @@ namespace ChangeTracker.Application.UseCases.Queries.GetCompleteVersions
             _userDao = userDao;
         }
 
-        public async Task<Maybe<CompleteVersionResponseModel>> ExecuteAsync(Guid userId, Guid versionId)
+        public async Task<Maybe<VersionResponseModel>> ExecuteAsync(Guid userId, Guid versionId)
         {
             var clVersion = await _versionDao.FindVersionAsync(versionId);
             if (clVersion.HasNoValue)
-                return Maybe<CompleteVersionResponseModel>.None;
+                return Maybe<VersionResponseModel>.None;
 
             var currentUser = await _userDao.GetUserAsync(userId);
             var product = await _productDao.GetProductAsync(clVersion.Value.ProductId);
@@ -44,19 +44,19 @@ namespace ChangeTracker.Application.UseCases.Queries.GetCompleteVersions
                 await _changeLogQueriesDao.GetChangeLogsAsync(clVersion.Value.ProductId, clVersion.Value.Id);
 
             var responseModel = CreateResponseModel(clVersion.Value, product, currentUser.TimeZone, changeLogs);
-            return Maybe<CompleteVersionResponseModel>.From(responseModel);
+            return Maybe<VersionResponseModel>.From(responseModel);
         }
 
-        public async Task<Maybe<CompleteVersionResponseModel>> ExecuteAsync(Guid userId, Guid productId, string version)
+        public async Task<Maybe<VersionResponseModel>> ExecuteAsync(Guid userId, Guid productId, string version)
         {
             if (!ClVersionValue.TryParse(version, out var clVersionValue))
             {
-                return Maybe<CompleteVersionResponseModel>.None;
+                return Maybe<VersionResponseModel>.None;
             }
 
             var clVersion = await _versionDao.FindVersionAsync(productId, clVersionValue);
             if (clVersion.HasNoValue)
-                return Maybe<CompleteVersionResponseModel>.None;
+                return Maybe<VersionResponseModel>.None;
 
             var currentUser = await _userDao.GetUserAsync(userId);
             var product = await _productDao.GetProductAsync(clVersion.Value.ProductId);
@@ -65,10 +65,10 @@ namespace ChangeTracker.Application.UseCases.Queries.GetCompleteVersions
                 await _changeLogQueriesDao.GetChangeLogsAsync(clVersion.Value.ProductId, clVersion.Value.Id);
 
             var responseModel = CreateResponseModel(clVersion.Value, product, currentUser.TimeZone, changeLogs);
-            return Maybe<CompleteVersionResponseModel>.From(responseModel);
+            return Maybe<VersionResponseModel>.From(responseModel);
         }
 
-        public async Task<IList<CompleteVersionResponseModel>> ExecuteAsync(VersionsQueryRequestModel requestModel)
+        public async Task<IList<VersionResponseModel>> ExecuteAsync(VersionsQueryRequestModel requestModel)
         {
             var querySettings = new VersionQuerySettings(requestModel.ProductId,
                 requestModel.LastVersionId,
@@ -103,7 +103,7 @@ namespace ChangeTracker.Application.UseCases.Queries.GetCompleteVersions
                 .ToDictionary(x => x.VersionId!.Value, x => x);
         }
 
-        private static CompleteVersionResponseModel CreateResponseModel(ClVersion clVersion, Product product,
+        private static VersionResponseModel CreateResponseModel(ClVersion clVersion, Product product,
             string timeZone, ChangeLogs changeLogs)
         {
             return new(clVersion.Id,
@@ -113,7 +113,7 @@ namespace ChangeTracker.Application.UseCases.Queries.GetCompleteVersions
                 product.Name,
                 product.AccountId,
                 changeLogs.Lines
-                    .OrderByDescending(x => x.Position)
+                    .OrderBy(x => x.Position)
                     .Select(x =>
                         new ChangeLogLineResponseModel(x.Id,
                             x.Text,

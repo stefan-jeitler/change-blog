@@ -1,7 +1,6 @@
 ﻿using System;
-using ChangeTracker.Application.UseCases.Commands.AddVersion;
 
-namespace ChangeTracker.Application.UseCases.Commands.AddOrUpdateVersion
+namespace ChangeTracker.Application.UseCases.Commands.AddOrUpdateVersion.OutputPorts
 {
     public interface IAddOrUpdateVersionOutputPort : IAddVersionOutputPort
     {

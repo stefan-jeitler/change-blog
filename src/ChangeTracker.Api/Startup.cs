@@ -49,6 +49,8 @@ namespace ChangeTracker.Api
             var connectionString = _configuration.GetConnectionString("ChangeTrackerDb");
             services.AddPostgresDataAccess(connectionString);
 
+            services.AddMemoryCache();
+
             AddUseCases(services);
         }
 

@@ -1,6 +1,6 @@
 using System;
 
-namespace ChangeTracker.Application.UseCases.Queries.GetCompleteVersions
+namespace ChangeTracker.Application.UseCases.Queries.GetVersions
 {
     public class VersionsQueryRequestModel
     {

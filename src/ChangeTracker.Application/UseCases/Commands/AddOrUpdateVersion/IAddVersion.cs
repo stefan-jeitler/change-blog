@@ -4,8 +4,8 @@ using ChangeTracker.Application.UseCases.Commands.AddOrUpdateVersion.OutputPorts
 
 namespace ChangeTracker.Application.UseCases.Commands.AddOrUpdateVersion
 {
-    public interface IAddOrUpdateVersion
+    public interface IAddVersion
     {
-        Task ExecuteAsync(IAddOrUpdateVersionOutputPort output, VersionRequestModel requestModel);
+        Task ExecuteAsync(IAddVersionOutputPort output, VersionRequestModel versionRequestModel);
     }
 }

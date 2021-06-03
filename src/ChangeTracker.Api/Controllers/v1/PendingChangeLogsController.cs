@@ -12,12 +12,21 @@ using Microsoft.AspNetCore.Mvc;
 namespace ChangeTracker.Api.Controllers.v1
 {
     [ApiController]
-    [Route("api/v1/products/{productId:Guid}")]
+    [Route("api/v1")]
     [Produces(MediaTypeNames.Application.Json)]
     [SwaggerControllerOrder(5)]
     public class PendingChangeLogsController : ControllerBase
     {
-        [HttpGet("pending-changelogs")]
+        [HttpGet("products/{productId:Guid}/pending-changelogs")]
+        [NeedsPermission(Permission.ViewPendingChangeLogLines)]
+        public async Task<ActionResult<List<ChangeLogLineDto>>> GetPendingChangeLogsAsync(Guid productId)
+        {
+            await Task.Yield();
+
+            return Ok(productId);
+        }
+
+        [HttpGet("pending-changelogs/{changeLogLineId:Guid}")]
         [NeedsPermission(Permission.ViewPendingChangeLogLines)]
         public async Task<ActionResult<List<ChangeLogLineDto>>> GetPendingChangeLogLineAsync(Guid productId)
         {
@@ -26,7 +35,7 @@ namespace ChangeTracker.Api.Controllers.v1
             return Ok(productId);
         }
 
-        [HttpPut("pending-changelogs")]
+        [HttpPut("products/{productId:Guid}/pending-changelogs")]
         [NeedsPermission(Permission.AddOrUpdateChangeLogLine)]
         public async Task<ActionResult> AddOrUpdatePendingChangeLogLineAsync(Guid productId,
             [FromBody] AddOrUpdateChangeLogLineDto changeLogLineDto)
@@ -47,7 +56,7 @@ namespace ChangeTracker.Api.Controllers.v1
             return Ok(productId);
         }
 
-        [HttpPost("pending-changelogs/move")]
+        [HttpPost("products/{productId:Guid}/pending-changelogs/move")]
         [NeedsPermission(Permission.MoveChangeLogLines)]
         public async Task<ActionResult> MoveAllPendingChangeLogLineAsync(Guid productId,
             [FromBody] MoveChangeLogLineDto moveChangeLogLineDto)
@@ -67,7 +76,7 @@ namespace ChangeTracker.Api.Controllers.v1
             return Ok(productId);
         }
 
-        [HttpDelete("pending-changelogs")]
+        [HttpDelete("products/{productId:Guid}/pending-changelogs")]
         [NeedsPermission(Permission.DeleteChangeLogLine)]
         public async Task<ActionResult> DeleteAllPendingChangeLogLineAsync(Guid productId)
         {

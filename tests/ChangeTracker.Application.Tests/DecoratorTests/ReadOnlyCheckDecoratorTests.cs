@@ -49,11 +49,11 @@ namespace ChangeTracker.Application.Tests.DecoratorTests
             var decorator = CreateDecorator();
 
             // act
-            var result = await decorator.AddLineAsync(line);
+            var result = await decorator.AddOrUpdateLineAsync(line);
 
             // assert
             result.IsFailure.Should().BeTrue();
-            result.Error.Reason.Should().StartWith("The related version has already been released");
+            result.Error.Reason.Should().StartWith("The related version has");
             _changeLogDaoStub.ChangeLogs.Should().BeEmpty();
         }
 
@@ -74,7 +74,7 @@ namespace ChangeTracker.Application.Tests.DecoratorTests
             var decorator = CreateDecorator();
 
             // act
-            var result = await decorator.AddLineAsync(line);
+            var result = await decorator.AddOrUpdateLineAsync(line);
 
             // assert
             result.IsFailure.Should().BeTrue();
@@ -99,7 +99,7 @@ namespace ChangeTracker.Application.Tests.DecoratorTests
             var decorator = CreateDecorator();
 
             // act
-            var result = await decorator.AddLineAsync(line);
+            var result = await decorator.AddOrUpdateLineAsync(line);
 
             // assert
             result.IsFailure.Should().BeTrue();
@@ -129,7 +129,7 @@ namespace ChangeTracker.Application.Tests.DecoratorTests
             var decorator = CreateDecorator();
 
             // act
-            var result = await decorator.AddLineAsync(line);
+            var result = await decorator.AddOrUpdateLineAsync(line);
 
             // assert
             result.IsFailure.Should().BeTrue();
@@ -156,7 +156,7 @@ namespace ChangeTracker.Application.Tests.DecoratorTests
             var decorator = CreateDecorator();
 
             // act
-            var result = await decorator.AddLineAsync(line);
+            var result = await decorator.AddOrUpdateLineAsync(line);
 
             // assert
             result.IsSuccess.Should().BeTrue();
@@ -174,7 +174,7 @@ namespace ChangeTracker.Application.Tests.DecoratorTests
             var decorator = CreateDecorator();
 
             // act
-            var result = await decorator.AddLineAsync(line);
+            var result = await decorator.AddOrUpdateLineAsync(line);
 
             // assert
             result.IsSuccess.Should().BeTrue();
@@ -243,7 +243,7 @@ namespace ChangeTracker.Application.Tests.DecoratorTests
         }
 
         [Fact]
-        public async Task AddLines_ChangeLogLinesArePending_SuccessfullyAdded()
+        public async Task AddOrUpdateLines_ChangeLogLinesArePending_SuccessfullyAdded()
         {
             // arrange
             var firstLineId = Guid.Parse("0683e1e1-0e0d-405c-b77e-a6d0d5141b67");
@@ -259,7 +259,7 @@ namespace ChangeTracker.Application.Tests.DecoratorTests
             var decorator = CreateDecorator();
 
             // act
-            var result = await decorator.AddLinesAsync(new List<ChangeLogLine>(2) {firstLine, secondLine});
+            var result = await decorator.AddOrUpdateLinesAsync(new List<ChangeLogLine>(2) {firstLine, secondLine});
 
             // assert
             result.IsSuccess.Should().BeTrue();
@@ -269,7 +269,7 @@ namespace ChangeTracker.Application.Tests.DecoratorTests
         }
 
         [Fact]
-        public async Task AddLines_RelatedVersionOfSecondLineIsReadOnly_Conflict()
+        public async Task AddOrUpdateLines_RelatedVersionOfSecondLineIsReadOnly_Conflict()
         {
             // arrange
             var versionId = Guid.Parse("1d7831d5-32fb-437f-a9d5-bf5a7dd34b10");
@@ -291,13 +291,13 @@ namespace ChangeTracker.Application.Tests.DecoratorTests
             var decorator = CreateDecorator();
 
             // act
-            var result = await decorator.AddLinesAsync(new List<ChangeLogLine>(2) {firstLine, secondLine});
+            var result = await decorator.AddOrUpdateLinesAsync(new List<ChangeLogLine>(2) {firstLine, secondLine});
 
             // assert
             result.IsSuccess.Should().BeFalse();
             result.Error.Reason.Should()
                 .StartWith(
-                    "The related version has already been released");
+                    "The related version has");
             _changeLogDaoStub.ChangeLogs.Should().BeEmpty();
         }
 

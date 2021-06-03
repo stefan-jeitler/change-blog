@@ -11,7 +11,7 @@ using Microsoft.AspNetCore.Mvc;
 namespace ChangeTracker.Api.Controllers.v1
 {
     [ApiController]
-    [Route("api/v1/change-logs")]
+    [Route("api/v1/changelogs")]
     [Produces(MediaTypeNames.Application.Json)]
     [SwaggerControllerOrder(6)]
     public class ChangeLogsController : ControllerBase

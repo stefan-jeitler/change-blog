@@ -14,8 +14,6 @@ using ChangeTracker.Api.SwaggerUI;
 using ChangeTracker.Application.UseCases;
 using ChangeTracker.Application.UseCases.Commands.AddProduct;
 using ChangeTracker.Application.UseCases.Commands.CloseProduct;
-using ChangeTracker.Application.UseCases.Commands.SharedModels;
-using ChangeTracker.Application.UseCases.Queries.GetCompleteVersions;
 using ChangeTracker.Application.UseCases.Queries.GetProducts;
 using Microsoft.AspNetCore.Mvc;
 
@@ -27,12 +25,6 @@ namespace ChangeTracker.Api.Controllers.v1
     [SwaggerControllerOrder(3)]
     public class ProductController : ControllerBase
     {
-        private readonly IGetCompleteVersions _getCompleteVersions;
-
-        public ProductController(IGetCompleteVersions getCompleteVersions)
-        {
-            _getCompleteVersions = getCompleteVersions;
-        }
 
         [HttpGet("{productId:Guid}")]
         [NeedsPermission(Permission.ViewAccountProducts)]
@@ -46,45 +38,6 @@ namespace ChangeTracker.Api.Controllers.v1
                 return NotFound(DefaultResponse.Create("Product not found"));
 
             return Ok(ProductDto.FromResponseModel(product.Value));
-        }
-
-        [HttpGet("{productId:Guid}/versions")]
-        [NeedsPermission(Permission.ViewCompleteVersions)]
-        public async Task<ActionResult<List<CompleteVersionDto>>> GetCompleteProductVersionsAsync(Guid productId,
-            [MaxLength(VersionsQueryRequestModel.MaxSearchTermLength)]
-            string searchTerm = null,
-            Guid? lastVersionId = null,
-            bool includeDeleted = false,
-            [Range(1, VersionsQueryRequestModel.MaxLimit)]
-            ushort limit = VersionsQueryRequestModel.MaxLimit)
-        {
-            var userId = HttpContext.GetUserId();
-            var requestModel = new VersionsQueryRequestModel(productId,
-                lastVersionId,
-                userId,
-                searchTerm,
-                limit,
-                includeDeleted);
-
-            var versions = await _getCompleteVersions.ExecuteAsync(requestModel);
-
-            return Ok(versions.Select(CompleteVersionDto.FromResponseModel));
-        }
-
-        [HttpGet("{productId:Guid}/versions/{version}")]
-        [NeedsPermission(Permission.ViewCompleteVersions)]
-        public async Task<ActionResult<List<CompleteVersionDto>>> GetCompleteProductVersionAsync(
-            [FromServices] IGetCompleteVersion getCompleteVersion,
-            Guid productId,
-            [Required] string version)
-        {
-            var userId = HttpContext.GetUserId();
-            var completeVersion = await getCompleteVersion.ExecuteAsync(userId, productId, version);
-
-            if (completeVersion.HasNoValue)
-                return new NotFoundObjectResult(DefaultResponse.Create("Version not found"));
-
-            return Ok(CompleteVersionDto.FromResponseModel(completeVersion.Value));
         }
 
         [HttpPost]

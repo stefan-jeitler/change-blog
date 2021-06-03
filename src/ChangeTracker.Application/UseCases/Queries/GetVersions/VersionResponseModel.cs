@@ -2,11 +2,11 @@ using System;
 using System.Collections.Generic;
 using ChangeTracker.Application.UseCases.Queries.SharedModels;
 
-namespace ChangeTracker.Application.UseCases.Queries.GetCompleteVersions
+namespace ChangeTracker.Application.UseCases.Queries.GetVersions
 {
-    public class CompleteVersionResponseModel
+    public class VersionResponseModel
     {
-        public CompleteVersionResponseModel(Guid versionId, string version, string name, Guid productId,
+        public VersionResponseModel(Guid versionId, string version, string name, Guid productId,
             string productName, Guid accountId,
             List<ChangeLogLineResponseModel> changeLogs, DateTimeOffset createdAt, DateTimeOffset? releasedAt, DateTimeOffset? deletedAt)
         {

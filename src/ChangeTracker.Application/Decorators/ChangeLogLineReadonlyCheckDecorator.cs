@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using ChangeTracker.Application.DataAccess;
-using ChangeTracker.Application.DataAccess.ChangeLogs;
+using ChangeTracker.Application.DataAccess.ChangeLog;
 using ChangeTracker.Application.DataAccess.Products;
 using ChangeTracker.Application.DataAccess.Versions;
 using ChangeTracker.Domain;
@@ -27,7 +27,7 @@ namespace ChangeTracker.Application.Decorators
         private const string VersionDeletedMessage = "The related version has been deleted. VersionId {0}.";
 
         private const string VersionReleasedMessage =
-            "The related version has already been released and can no longe be modified. VersionId {0}.";
+            "The related version has been released and can no longer be modified. VersionId {0}.";
 
         private const string ProductClosedMessage =
             "The requested product has been closed. ProductId {0}.";
@@ -47,13 +47,13 @@ namespace ChangeTracker.Application.Decorators
             _productDao = productDao;
         }
 
-        public Task<Result<ChangeLogLine, Conflict>> AddLineAsync(ChangeLogLine changeLogLine)
+        public Task<Result<ChangeLogLine, Conflict>> AddOrUpdateLineAsync(ChangeLogLine changeLogLine)
         {
             return IsReadOnlyAsync(changeLogLine)
-                .Bind(l => _changeLogCommandsComponent.AddLineAsync(l));
+                .Bind(l => _changeLogCommandsComponent.AddOrUpdateLineAsync(l));
         }
 
-        public async Task<Result<int, Conflict>> AddLinesAsync(IEnumerable<ChangeLogLine> changeLogLines)
+        public async Task<Result<int, Conflict>> AddOrUpdateLinesAsync(IEnumerable<ChangeLogLine> changeLogLines)
         {
             var lines = changeLogLines.ToList();
             foreach (var line in lines)
@@ -63,7 +63,7 @@ namespace ChangeTracker.Application.Decorators
                     return Result.Failure<int, Conflict>(result.Error);
             }
 
-            return await _changeLogCommandsComponent.AddLinesAsync(lines);
+            return await _changeLogCommandsComponent.AddOrUpdateLinesAsync(lines);
         }
 
         public async Task<Result<int, Conflict>> MoveLinesAsync(IEnumerable<ChangeLogLine> changeLogLines)

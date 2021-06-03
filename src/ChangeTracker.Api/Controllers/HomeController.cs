@@ -5,13 +5,9 @@ using System.Linq;
 using System.Net.Mime;
 using System.Reflection;
 using System.Threading.Tasks;
-using ChangeTracker.Api.Authorization;
 using ChangeTracker.Api.DTOs;
 using ChangeTracker.Api.DTOs.V1.Version;
-using ChangeTracker.Api.Extensions;
 using ChangeTracker.Api.SwaggerUI;
-using ChangeTracker.Application.Constants;
-using ChangeTracker.Application.UseCases;
 using ChangeTracker.Application.UseCases.Queries.GetVersions;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -27,8 +23,6 @@ namespace ChangeTracker.Api.Controllers
     [SwaggerControllerOrder(0)]
     public class HomeController : ControllerBase
     {
-        private readonly IGetVersions _getVersions;
-
         private static readonly Lazy<string> AssemblyVersion =
             new(() =>
             {
@@ -42,6 +36,8 @@ namespace ChangeTracker.Api.Controllers
 
         private static readonly Lazy<string> AssemblyName =
             new(() => Assembly.GetEntryAssembly()?.GetName().Name);
+
+        private readonly IGetVersions _getVersions;
 
         private readonly IHostEnvironment _hostEnvironment;
 

@@ -8,7 +8,8 @@ namespace ChangeTracker.Application.UseCases.Queries.GetVersions
     {
         public VersionResponseModel(Guid versionId, string version, string name, Guid productId,
             string productName, Guid accountId,
-            List<ChangeLogLineResponseModel> changeLogs, DateTimeOffset createdAt, DateTimeOffset? releasedAt, DateTimeOffset? deletedAt)
+            List<ChangeLogLineResponseModel> changeLogs, DateTimeOffset createdAt, DateTimeOffset? releasedAt,
+            DateTimeOffset? deletedAt)
         {
             if (versionId == Guid.Empty)
                 throw new ArgumentException("VersionId cannot be empty.");

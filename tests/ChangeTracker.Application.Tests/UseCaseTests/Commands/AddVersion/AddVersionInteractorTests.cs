@@ -87,7 +87,8 @@ namespace ChangeTracker.Application.Tests.UseCaseTests.Commands.AddVersion
             await addVersionInteractor.ExecuteAsync(_outputPortMock.Object, versionRequestModel);
 
             // assert
-            _outputPortMock.Verify(m => m.ProductDoesNotExist(It.Is<Guid>(x => x == TestAccount.Product.Id)), Times.Once);
+            _outputPortMock.Verify(m => m.ProductDoesNotExist(It.Is<Guid>(x => x == TestAccount.Product.Id)),
+                Times.Once);
         }
 
         [Fact]

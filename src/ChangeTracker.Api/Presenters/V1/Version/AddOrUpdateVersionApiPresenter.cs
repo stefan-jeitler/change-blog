@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using ChangeTracker.Api.DTOs;
 using ChangeTracker.Api.Extensions;
-using ChangeTracker.Application.UseCases.Commands.AddOrUpdateVersion;
 using ChangeTracker.Application.UseCases.Commands.AddOrUpdateVersion.OutputPorts;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;

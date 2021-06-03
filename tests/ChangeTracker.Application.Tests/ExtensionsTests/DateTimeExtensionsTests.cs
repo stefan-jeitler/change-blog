@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Globalization;
 using ChangeTracker.Application.Extensions;
 using FluentAssertions;
 using Xunit;

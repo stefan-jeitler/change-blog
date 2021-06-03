@@ -2,7 +2,6 @@ using System;
 using System.Collections.Generic;
 using ChangeTracker.Api.DTOs;
 using ChangeTracker.Api.Extensions;
-using ChangeTracker.Application.UseCases.Commands.AddOrUpdateVersion;
 using ChangeTracker.Application.UseCases.Commands.AddOrUpdateVersion.OutputPorts;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -56,7 +55,9 @@ namespace ChangeTracker.Api.Presenters.V1.Version
 
         public void ProductClosed(Guid productId)
         {
-            Response = new ConflictObjectResult(DefaultResponse.Create("You cannot add a version when the related product has been closed.", productId));
+            Response = new ConflictObjectResult(
+                DefaultResponse.Create("You cannot add a version when the related product has been closed.",
+                    productId));
         }
 
         public void InvalidVersionFormat(string version)

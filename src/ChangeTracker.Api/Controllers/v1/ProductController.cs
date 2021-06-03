@@ -1,13 +1,9 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations;
-using System.Linq;
 using System.Net.Mime;
 using System.Threading.Tasks;
 using ChangeTracker.Api.Authorization;
 using ChangeTracker.Api.DTOs;
 using ChangeTracker.Api.DTOs.V1.Product;
-using ChangeTracker.Api.DTOs.V1.Version;
 using ChangeTracker.Api.Extensions;
 using ChangeTracker.Api.Presenters.V1.Product;
 using ChangeTracker.Api.SwaggerUI;
@@ -25,7 +21,6 @@ namespace ChangeTracker.Api.Controllers.v1
     [SwaggerControllerOrder(3)]
     public class ProductController : ControllerBase
     {
-
         [HttpGet("{productId:Guid}")]
         [NeedsPermission(Permission.ViewAccountProducts)]
         public async Task<ActionResult<ProductDto>> GetProductAsync([FromServices] IGetProduct getProduct,

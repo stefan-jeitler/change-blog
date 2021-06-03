@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using ChangeTracker.Application.UseCases.Commands.AddOrUpdateVersion;
 using ChangeTracker.Application.UseCases.Commands.AddOrUpdateVersion.Models;
 using FluentAssertions;
 using Xunit;
@@ -10,9 +9,9 @@ namespace ChangeTracker.Application.Tests.UseCaseTests.Commands.UpdateVersion
     public class VersionRequestModelTests
     {
         private string _testName;
-        private string _testVersion;
-        private Guid _testUserId;
         private Guid _testProductId;
+        private Guid _testUserId;
+        private string _testVersion;
 
         public VersionRequestModelTests()
         {
@@ -22,7 +21,8 @@ namespace ChangeTracker.Application.Tests.UseCaseTests.Commands.UpdateVersion
             _testVersion = "1.2.3";
         }
 
-        private VersionRequestModel CreateRequestModel() => new(_testUserId, _testProductId, _testVersion, _testName, new List<ChangeLogLineRequestModel>());
+        private VersionRequestModel CreateRequestModel() => new(_testUserId, _testProductId, _testVersion, _testName,
+            new List<ChangeLogLineRequestModel>());
 
         [Fact]
         public void Create_HappyPath_Successful()

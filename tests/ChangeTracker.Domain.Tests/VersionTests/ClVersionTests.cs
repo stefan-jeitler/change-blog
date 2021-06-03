@@ -9,10 +9,10 @@ namespace ChangeTracker.Domain.Tests.VersionTests
     public class ClVersionTests
     {
         private static Guid _testUserId;
+        private readonly OptionalName _testName;
         private DateTime _testCreationDate;
         private DateTime? _testDeletedDate;
         private Guid _testId;
-        private readonly OptionalName _testName;
         private Guid _testProductId;
         private DateTime? _testReleaseDate;
         private ClVersionValue _testVersionValue;

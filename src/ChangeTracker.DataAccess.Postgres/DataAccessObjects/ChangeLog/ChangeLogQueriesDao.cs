@@ -50,7 +50,7 @@ namespace ChangeTracker.DataAccess.Postgres.DataAccessObjects.ChangeLog
                 : Maybe<ChangeLogLine>.From(line);
         }
 
-        public async Task<Domain.ChangeLog.ChangeLogs> GetChangeLogsAsync(Guid productId, Guid? versionId = null)
+        public async Task<ChangeLogs> GetChangeLogsAsync(Guid productId, Guid? versionId = null)
         {
             var versionIdFilter = versionId.HasValue
                 ? "and chl.version_id = @versionId"
@@ -86,7 +86,7 @@ namespace ChangeTracker.DataAccess.Postgres.DataAccessObjects.ChangeLog
 
             return lines
                 .GroupBy(l => l.VersionId)
-                .Select(g => new Domain.ChangeLog.ChangeLogs(g.ToList()))
+                .Select(g => new ChangeLogs(g.ToList()))
                 .ToList();
         }
     }

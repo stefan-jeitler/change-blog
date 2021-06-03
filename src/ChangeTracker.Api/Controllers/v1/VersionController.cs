@@ -143,7 +143,7 @@ namespace ChangeTracker.Api.Controllers.v1
             var updateVersionRequestModel =
                 new VersionRequestModel(userId,
                     productId,
-                    version, 
+                    version,
                     addOrUpdateVersionDto.Name,
                     lines,
                     addOrUpdateVersionDto.ReleaseImmediately);

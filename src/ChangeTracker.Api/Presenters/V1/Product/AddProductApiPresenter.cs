@@ -23,7 +23,8 @@ namespace ChangeTracker.Api.Presenters.V1.Product
 
         public void AccountDeleted(Guid accountId)
         {
-            Response = new UnprocessableEntityObjectResult(DefaultResponse.Create("The requested account has been deleted."));
+            Response = new UnprocessableEntityObjectResult(
+                DefaultResponse.Create("The requested account has been deleted."));
         }
 
         public void InvalidName(string name)
@@ -34,12 +35,13 @@ namespace ChangeTracker.Api.Presenters.V1.Product
         public void ProductAlreadyExists(Guid productId)
         {
             Response = new ConflictObjectResult(
-                DefaultResponse.Create($"Product already exists.", productId));
+                DefaultResponse.Create("Product already exists.", productId));
         }
 
         public void VersioningSchemeDoesNotExist(Guid versioningSchemeId)
         {
-            Response = new NotFoundObjectResult(DefaultResponse.Create("VersioningScheme not found.", versioningSchemeId));
+            Response = new NotFoundObjectResult(DefaultResponse.Create("VersioningScheme not found.",
+                versioningSchemeId));
         }
 
         public void Conflict(string reason)
@@ -50,7 +52,7 @@ namespace ChangeTracker.Api.Presenters.V1.Product
         public void Created(Guid accountId, Guid productId)
         {
             var location = _httpContext.CreateLinkTo($"api/v1/products/{productId}");
-            Response = new CreatedResult(location, DefaultResponse.Create($"Product added.", productId));
+            Response = new CreatedResult(location, DefaultResponse.Create("Product added.", productId));
         }
     }
 }

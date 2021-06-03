@@ -16,11 +16,11 @@ namespace ChangeTracker.Application.Tests.UseCaseTests.Commands.AddOrUpdateVersi
 {
     public class AddOrUpdateVersionInteractorTests
     {
+        private readonly ChangeLogDaoStub _changeLogDaoStub;
+        private readonly Mock<IAddOrUpdateVersionOutputPort> _outputPortMock;
         private readonly ProductDaoStub _productDaoStub;
         private readonly Mock<IUnitOfWork> _unitOfWorkMock;
         private readonly VersionDaoStub _versionDaoStub;
-        private readonly ChangeLogDaoStub _changeLogDaoStub;
-        private readonly Mock<IAddOrUpdateVersionOutputPort> _outputPortMock;
 
         public AddOrUpdateVersionInteractorTests()
         {
@@ -40,7 +40,8 @@ namespace ChangeTracker.Application.Tests.UseCaseTests.Commands.AddOrUpdateVersi
         {
             // arrange
             var requestModel =
-                new VersionRequestModel(TestAccount.UserId, TestAccount.Product.Id, "1.2.3", "catchy name", new List<ChangeLogLineRequestModel>(0));
+                new VersionRequestModel(TestAccount.UserId, TestAccount.Product.Id, "1.2.3", "catchy name",
+                    new List<ChangeLogLineRequestModel>(0));
 
             var existingVersion = new ClVersion(TestAccount.Product.Id, ClVersionValue.Parse("1.2.3"),
                 OptionalName.Empty, TestAccount.UserId);

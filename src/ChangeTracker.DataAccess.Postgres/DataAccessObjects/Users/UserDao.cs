@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using ChangeTracker.Application.DataAccess.Users;
+using ChangeTracker.Domain;
 using Dapper;
 
 namespace ChangeTracker.DataAccess.Postgres.DataAccessObjects.Users
@@ -15,7 +16,7 @@ namespace ChangeTracker.DataAccess.Postgres.DataAccessObjects.Users
             _dbAccessor = dbAccessor;
         }
 
-        public async Task<Domain.User> GetUserAsync(Guid userId)
+        public async Task<User> GetUserAsync(Guid userId)
         {
             const string getUserSql = @"
                 SELECT id,
@@ -29,13 +30,13 @@ namespace ChangeTracker.DataAccess.Postgres.DataAccessObjects.Users
                 WHERE id = @userId";
 
             return await _dbAccessor.DbConnection
-                .QuerySingleAsync<Domain.User>(getUserSql, new
+                .QuerySingleAsync<User>(getUserSql, new
                 {
                     userId
                 });
         }
 
-        public async Task<IList<Domain.User>> GetUsersAsync(IList<Guid> userIds)
+        public async Task<IList<User>> GetUsersAsync(IList<Guid> userIds)
         {
             const string getUsersSql = @"
                 SELECT id,
@@ -49,7 +50,7 @@ namespace ChangeTracker.DataAccess.Postgres.DataAccessObjects.Users
                 WHERE id = ANY (@userIds)";
 
             var users = await _dbAccessor.DbConnection
-                .QueryAsync<Domain.User>(getUsersSql, new
+                .QueryAsync<User>(getUsersSql, new
                 {
                     userIds
                 });
@@ -57,7 +58,7 @@ namespace ChangeTracker.DataAccess.Postgres.DataAccessObjects.Users
             return users.AsList();
         }
 
-        public async Task<IList<Domain.User>> GetUsersAsync(Guid accountId, ushort limit, Guid? lastUserId)
+        public async Task<IList<User>> GetUsersAsync(Guid accountId, ushort limit, Guid? lastUserId)
         {
             var pagingFilter = lastUserId.HasValue
                 ? "AND u.email > (SELECT us.email FROM \"user\" us where us.id = @lastUserId)"
@@ -79,7 +80,7 @@ namespace ChangeTracker.DataAccess.Postgres.DataAccessObjects.Users
                     FETCH FIRST (@limit) ROWS ONLY";
 
             var users = await _dbAccessor.DbConnection
-                .QueryAsync<Domain.User>(getAccountUsersSql, new
+                .QueryAsync<User>(getAccountUsersSql, new
                 {
                     accountId,
                     lastUserId,

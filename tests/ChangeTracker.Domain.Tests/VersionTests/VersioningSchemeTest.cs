@@ -1,6 +1,5 @@
 ﻿using System;
 using ChangeTracker.Domain.Common;
-using ChangeTracker.Domain.Tests.TestDoubles;
 using ChangeTracker.Domain.Version;
 using FluentAssertions;
 using Xunit;
@@ -14,9 +13,9 @@ namespace ChangeTracker.Domain.Tests.VersionTests
         private DateTime? _testDeletionDate;
         private Text _testDescription;
         private Guid _testId;
-        private Guid _testUserId;
         private Name _testName;
         private Text _testRegexPatter;
+        private Guid _testUserId;
 
         public VersioningSchemeTest()
         {

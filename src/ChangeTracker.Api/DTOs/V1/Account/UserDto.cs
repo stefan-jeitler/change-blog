@@ -5,7 +5,8 @@ namespace ChangeTracker.Api.DTOs.V1.Account
 {
     public class UserDto
     {
-        public UserDto(Guid id, string email, string firstName, string lastName, string timeZone, DateTimeOffset createdAt)
+        public UserDto(Guid id, string email, string firstName, string lastName, string timeZone,
+            DateTimeOffset createdAt)
         {
             Id = id;
             Email = email;

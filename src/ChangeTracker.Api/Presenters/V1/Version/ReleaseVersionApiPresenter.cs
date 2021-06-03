@@ -9,12 +9,14 @@ namespace ChangeTracker.Api.Presenters.V1.Version
     {
         public void VersionAlreadyDeleted(Guid versionId)
         {
-            Response = new ConflictObjectResult(DefaultResponse.Create("Version has been deleted and can no longer be modified.", versionId));
+            Response = new ConflictObjectResult(
+                DefaultResponse.Create("Version has been deleted and can no longer be modified.", versionId));
         }
 
         public void VersionAlreadyReleased(Guid versionId)
         {
-            Response = new ConflictObjectResult(DefaultResponse.Create("Version has been released and can no longer be modified.", versionId));
+            Response = new ConflictObjectResult(
+                DefaultResponse.Create("Version has been released and can no longer be modified.", versionId));
         }
 
         public void VersionReleased(Guid versionId)
@@ -35,7 +37,7 @@ namespace ChangeTracker.Api.Presenters.V1.Version
         public void RelatedProductClosed(Guid productId)
         {
             Response = new ConflictObjectResult(
-                DefaultResponse.Create($"The related product has been closed.", productId));
+                DefaultResponse.Create("The related product has been closed.", productId));
         }
     }
 }

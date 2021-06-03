@@ -120,7 +120,6 @@ namespace ChangeTracker.Application.UseCases.Queries.GetVersions
                             x.Labels.Select(l => l.Value).ToList(),
                             x.Issues.Select(i => i.Value).ToList(),
                             x.CreatedAt.ToLocal(timeZone)))
-
                     .ToList(),
                 clVersion.CreatedAt.ToLocal(timeZone),
                 clVersion.ReleasedAt?.ToLocal(timeZone),

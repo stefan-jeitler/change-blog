@@ -65,7 +65,6 @@ namespace ChangeTracker.DataAccess.Postgres
                 .AddScoped<IUserDao, UserDao>()
                 .AddScoped<IRolesDao, RolesDao>()
                 .AddScoped<IVersionDao, VersionDao>()
-                
                 .AddScoped<IChangeLogQueriesDao, ChangeLogQueriesDao>();
 
             services.AddScoped<IChangeLogCommandsDao, ChangeLogCommandsDao>()

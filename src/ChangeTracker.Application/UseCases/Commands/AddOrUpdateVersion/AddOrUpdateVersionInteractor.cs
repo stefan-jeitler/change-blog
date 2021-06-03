@@ -132,7 +132,7 @@ namespace ChangeTracker.Application.UseCases.Commands.AddOrUpdateVersion
                 versionName,
                 null,
                 requestModel.UserId,
-                DateTime.UtcNow, 
+                DateTime.UtcNow,
                 null);
 
             return Maybe<ClVersion>.From(version);
@@ -208,8 +208,8 @@ namespace ChangeTracker.Application.UseCases.Commands.AddOrUpdateVersion
         {
             await _versionDao.AddVersionAsync(newVersion)
                 .Bind(_ => _changeLogCommands.AddOrUpdateLinesAsync(lines))
-                .Bind(_ => releaseImmediately 
-                    ? _versionDao.ReleaseVersionAsync(newVersion.Release()) 
+                .Bind(_ => releaseImmediately
+                    ? _versionDao.ReleaseVersionAsync(newVersion.Release())
                     : Task.FromResult(Result.Success<ClVersion, Conflict>(newVersion)))
                 .Match(Finish, c => output.Conflict(c));
 

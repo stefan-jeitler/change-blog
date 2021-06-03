@@ -1,7 +1,5 @@
-using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
-using ChangeTracker.Api.Authorization.RequestBodyIdentifiers;
 using ChangeTracker.Api.DTOs.V1.ChangeLog;
 
 namespace ChangeTracker.Api.DTOs.V1.Version

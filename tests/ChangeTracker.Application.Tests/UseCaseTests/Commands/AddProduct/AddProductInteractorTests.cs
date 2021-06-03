@@ -157,7 +157,8 @@ namespace ChangeTracker.Application.Tests.UseCaseTests.Commands.AddProduct
             await createProductInteractor.ExecuteAsync(_outputPortMock.Object, productRequestModel);
 
             // assert
-            _outputPortMock.Verify(m => m.VersioningSchemeDoesNotExist(It.Is<Guid>(x => x == notExistingVersioningSchemeId)), Times.Once);
+            _outputPortMock.Verify(
+                m => m.VersioningSchemeDoesNotExist(It.Is<Guid>(x => x == notExistingVersioningSchemeId)), Times.Once);
         }
 
         [Fact]

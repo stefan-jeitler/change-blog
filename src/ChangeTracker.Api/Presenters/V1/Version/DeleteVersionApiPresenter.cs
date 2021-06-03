@@ -15,7 +15,7 @@ namespace ChangeTracker.Api.Presenters.V1.Version
         public void RelatedProductClosed(Guid productId)
         {
             Response = new ConflictObjectResult(
-                DefaultResponse.Create($"The related product has been closed.", productId));
+                DefaultResponse.Create("The related product has been closed.", productId));
         }
 
         public void VersionAlreadyDeleted(Guid versionId)

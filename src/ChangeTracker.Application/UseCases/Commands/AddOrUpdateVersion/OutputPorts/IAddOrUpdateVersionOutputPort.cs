@@ -10,6 +10,6 @@ namespace ChangeTracker.Application.UseCases.Commands.AddOrUpdateVersion.OutputP
         new void InvalidVersionName(string name);
         void VersionUpdated(Guid versionId);
         new void Conflict(string reason);
-        void RelatedProductClosed(Guid versionId);
+        new void RelatedProductClosed(Guid versionId);
     }
 }

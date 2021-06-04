@@ -7,7 +7,7 @@ namespace ChangeTracker.Application.UseCases.Commands.AddOrUpdateVersion.OutputP
     public interface IAddVersionOutputPort : ILineParserOutput
     {
         void ProductDoesNotExist(Guid productId);
-        void ProductClosed(Guid productId);
+        void RelatedProductClosed(Guid productId);
         void InvalidVersionFormat(string version);
         void VersionDoesNotMatchScheme(string version, string versioningSchemeName);
         void Created(Guid versionId);

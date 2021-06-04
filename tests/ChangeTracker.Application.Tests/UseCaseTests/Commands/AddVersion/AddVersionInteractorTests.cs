@@ -111,14 +111,14 @@ namespace ChangeTracker.Application.Tests.UseCaseTests.Commands.AddVersion
                 DateTime.Parse("2021-05-13"),
                 DateTime.Parse("2021-05-13")));
 
-            _outputPortMock.Setup(m => m.ProductClosed(It.IsAny<Guid>()));
+            _outputPortMock.Setup(m => m.RelatedProductClosed(It.IsAny<Guid>()));
             var addVersionInteractor = CreateInteractor();
 
             // act
             await addVersionInteractor.ExecuteAsync(_outputPortMock.Object, versionRequestModel);
 
             // assert
-            _outputPortMock.Verify(m => m.ProductClosed(It.Is<Guid>(x => x == TestAccount.Product.Id)), Times.Once);
+            _outputPortMock.Verify(m => m.RelatedProductClosed(It.Is<Guid>(x => x == TestAccount.Product.Id)), Times.Once);
         }
 
         [Fact]

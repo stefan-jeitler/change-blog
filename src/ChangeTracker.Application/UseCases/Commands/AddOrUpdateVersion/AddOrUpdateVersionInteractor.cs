@@ -99,7 +99,7 @@ namespace ChangeTracker.Application.UseCases.Commands.AddOrUpdateVersion
 
             if (product.Value.IsClosed)
             {
-                output.ProductClosed(productId);
+                output.RelatedProductClosed(productId);
                 return Maybe<Product>.None;
             }
 

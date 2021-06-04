@@ -41,12 +41,6 @@ namespace ChangeTracker.Api.Presenters.V1.Version
                     $"Version does not match your product's versioning scheme. Version '{version}', Scheme: {versioningSchemeName}"));
         }
 
-        public void ProductClosed(Guid productId)
-        {
-            Response = new ConflictObjectResult(
-                DefaultResponse.Create("You cannot add or update a version when the related product has been closed."));
-        }
-
         public void LinesWithSameTextsAreNotAllowed(IList<string> duplicates)
         {
             Response = new UnprocessableEntityObjectResult(
@@ -87,7 +81,7 @@ namespace ChangeTracker.Api.Presenters.V1.Version
         public void RelatedProductClosed(Guid productId)
         {
             Response = new ConflictObjectResult(
-                DefaultResponse.Create("Versions of closed products can no longer be modified.", productId));
+                DefaultResponse.Create("The related product has been closed.", productId));
         }
 
         public void VersionAlreadyDeleted(Guid versionId)

@@ -292,7 +292,7 @@ namespace ChangeTracker.Application.UseCases.Commands.AddOrUpdateVersion
 
         private async Task DeleteExistingLines(IEnumerable<ChangeLogLine> changeLogLines)
         {
-            foreach (var line in changeLogLines.Select(x => x.Delete()))
+            foreach (var line in changeLogLines)
             {
                 await _changeLogCommands.DeleteLineAsync(line);
             }

@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Threading.Tasks;
 using ChangeTracker.Domain.ChangeLog;
 using CSharpFunctionalExtensions;
@@ -15,5 +16,6 @@ namespace ChangeTracker.Application.DataAccess.ChangeLog
 
         Task<Result<ChangeLogLine, Conflict>> UpdateLineAsync(ChangeLogLine changeLogLine);
         Task<Result<ChangeLogLine, Conflict>> DeleteLineAsync(ChangeLogLine changeLogLine);
+        Task DeletePendingChangeLogs(Guid productId);
     }
 }

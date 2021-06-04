@@ -28,6 +28,7 @@
 
   <ItemGroup>
     <Folder Include="UseCaseTests\Commands\AddOrUpdateVersion\" />
+    <Folder Include="UseCaseTests\Commands\DeleteAllPendingChangeLogLines\" />
   </ItemGroup>
 
 </Project>

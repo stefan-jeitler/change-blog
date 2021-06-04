@@ -5,10 +5,10 @@ namespace ChangeTracker.Application.UseCases.Commands.AddPendingChangeLogLine
 {
     public interface IAddPendingLineOutputPort : ILineParserOutput
     {
-        void ProductDoesNotExist();
+        void ProductDoesNotExist(Guid productId);
         void Created(Guid changeLogLineId);
         void Conflict(string reason);
         void TooManyLines(int maxChangeLogLines);
-        void LineWithSameTextAlreadyExists(string text);
+        void LinesWithSameTextsAreNotAllowed(string text);
     }
 }

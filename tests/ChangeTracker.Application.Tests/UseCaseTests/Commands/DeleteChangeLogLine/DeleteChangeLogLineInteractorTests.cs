@@ -26,11 +26,11 @@ namespace ChangeTracker.Application.Tests.UseCaseTests.Commands.DeleteChangeLogL
         {
             var notExistingLineId = Guid.Parse("11cbae99-5cc0-4268-8d3f-31961822133c");
             var interactor = CreateInteractor();
-            _outputPortMock.Setup(m => m.LineDoesNotExist());
+            _outputPortMock.Setup(m => m.LineDoesNotExist(It.IsAny<Guid>()));
 
             await interactor.ExecuteAsync(_outputPortMock.Object, notExistingLineId);
 
-            _outputPortMock.Verify(m => m.LineDoesNotExist(), Times.Once);
+            _outputPortMock.Verify(m => m.LineDoesNotExist(It.Is<Guid>(x => x == notExistingLineId)), Times.Once);
         }
 
         [Fact]

@@ -5,7 +5,7 @@ namespace ChangeTracker.Application.UseCases.Commands.AssignPendingLineToVersion
 {
     public interface IAssignPendingLineToVersion
     {
-        Task ExecuteAsync(IAssignPendingLineOutputPort output, VersionIdAssignmentRequestModel requestModel);
-        Task ExecuteAsync(IAssignPendingLineOutputPort output, VersionAssignmentRequestModel requestModel);
+        Task ExecuteAsync(IAssignPendingLineToVersionOutputPort output, VersionIdAssignmentRequestModel requestModel);
+        Task ExecuteAsync(IAssignPendingLineToVersionOutputPort output, VersionAssignmentRequestModel requestModel);
     }
 }

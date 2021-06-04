@@ -8,6 +8,7 @@ using ChangeTracker.Domain.ChangeLog;
 using CSharpFunctionalExtensions;
 using Dapper;
 using Microsoft.Extensions.Logging;
+using Npgsql;
 
 namespace ChangeTracker.DataAccess.Postgres.DataAccessObjects.ChangeLog
 {
@@ -38,7 +39,7 @@ namespace ChangeTracker.DataAccess.Postgres.DataAccessObjects.ChangeLog
 
         private const string DeleteLineSql = @"
             update changelog_line
-            set deleted_at = @deletedAt
+            set deleted_at = now()
             where id = @changeLogLineId";
 
         private readonly IDbAccessor _dbAccessor;
@@ -56,6 +57,11 @@ namespace ChangeTracker.DataAccess.Postgres.DataAccessObjects.ChangeLog
             {
                 await AddOrUpdateLinesInternalAsync(new[] {changeLogLine});
                 return Result.Success<ChangeLogLine, Conflict>(changeLogLine);
+            }
+            //duplicate key value violates unique constraint
+            catch (PostgresException postgresException) when (postgresException.SqlState == "23505")
+            {
+                return Result.Failure<ChangeLogLine, Conflict>(new Conflict("Concurrency issue. Please try it again later."));
             }
             catch (Exception e)
             {
@@ -129,6 +135,16 @@ namespace ChangeTracker.DataAccess.Postgres.DataAccessObjects.ChangeLog
             }
         }
 
+        public Task DeletePendingChangeLogs(Guid productId)
+        {
+            const string deletePendingChangeLogsSql = "update changelog_line set deleted_at = now() where product_id = @productId and version_id is null";
+
+            return _dbAccessor.DbConnection.ExecuteAsync(deletePendingChangeLogsSql, new
+            {
+                productId
+            });
+        }
+
         private async Task<Result<ChangeLogLine, Conflict>> MoveLineInternalAsync(ChangeLogLine changeLogLine)
         {
             var currentVersionId = await GetVersionIdAsync(changeLogLine);
@@ -175,32 +191,6 @@ namespace ChangeTracker.DataAccess.Postgres.DataAccessObjects.ChangeLog
             }
 
             return Result.Success<int, Conflict>(count);
-        }
-
-        private async Task<Result<ChangeLogLine, Conflict>> AddOrUpdateLineInternalAsync(ChangeLogLine changeLogLine)
-        {
-            var l = changeLogLine;
-            await _dbAccessor.DbConnection
-                .ExecuteAsync(InsertOrUpdateSql, new
-                {
-                    id = l.Id,
-                    versionId = l.VersionId,
-                    prodcutId = l.ProductId,
-                    text = l.Text,
-                    labels = l.Labels.AsEnumerable(),
-                    issues = l.Issues.AsEnumerable(),
-                    position = (int) l.Position,
-                    createdByUser = l.CreatedByUser,
-                    deletedAt = l.DeletedAt,
-                    createdAt = l.CreatedAt
-                });
-
-            if (l.VersionId.HasValue)
-            {
-                await UpdateSearchVectorsAsync(l.VersionId.Value);
-            }
-
-            return Result.Success<ChangeLogLine, Conflict>(changeLogLine);
         }
 
         private async Task<Result<int, Conflict>> AddOrUpdateLinesInternalAsync(
@@ -256,8 +246,7 @@ namespace ChangeTracker.DataAccess.Postgres.DataAccessObjects.ChangeLog
             await _dbAccessor.DbConnection
                 .ExecuteAsync(DeleteLineSql, new
                 {
-                    changeLogLineId = changeLogLine.Id,
-                    deletedAt = changeLogLine.DeletedAt
+                    changeLogLineId = changeLogLine.Id
                 });
 
             if (changeLogLine.VersionId.HasValue)
@@ -286,7 +275,7 @@ namespace ChangeTracker.DataAccess.Postgres.DataAccessObjects.ChangeLog
             var versionIds = await _dbAccessor.DbConnection
                 .QueryAsync<Guid>(sql, new
                 {
-                    changeLogLineIds
+                    changeLogLineIds = changeLogLineIds.ToList()
                 });
 
             return versionIds.AsList();

@@ -146,9 +146,6 @@ namespace ChangeTracker.Domain.ChangeLog
                 DeletedAt);
         }
 
-        public ChangeLogLine Delete() => new(Id, VersionId, ProductId, Text, Position, CreatedAt, Labels, Issues,
-            CreatedByUser, DateTime.UtcNow);
-
         private static ImmutableHashSet<T> Populate<T>(IEnumerable<T> items, ushort maxCount)
         {
             var itemsSet = items.ToImmutableHashSet();

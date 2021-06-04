@@ -34,7 +34,7 @@ namespace ChangeTracker.Application.UseCases.Commands.AddPendingChangeLogLine
             var product = await _productDao.FindProductAsync(lineRequestModel.ProductId);
             if (product.HasNoValue)
             {
-                output.ProductDoesNotExist();
+                output.ProductDoesNotExist(lineRequestModel.ProductId);
                 return;
             }
 
@@ -63,7 +63,7 @@ namespace ChangeTracker.Application.UseCases.Commands.AddPendingChangeLogLine
 
             if (changeLogs.ContainsText(parsedLine.Value.Text))
             {
-                output.LineWithSameTextAlreadyExists(parsedLine.Value.Text);
+                output.LinesWithSameTextsAreNotAllowed(parsedLine.Value.Text);
                 return Maybe<ChangeLogLine>.None;
             }
 

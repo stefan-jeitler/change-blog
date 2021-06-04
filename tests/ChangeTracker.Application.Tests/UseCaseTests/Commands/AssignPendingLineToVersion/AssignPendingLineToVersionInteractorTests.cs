@@ -18,7 +18,7 @@ namespace ChangeTracker.Application.Tests.UseCaseTests.Commands.AssignPendingLin
     public class AssignPendingLineToVersionInteractorTests
     {
         private readonly ChangeLogDaoStub _changeLogDaoStub;
-        private readonly Mock<IAssignPendingLineOutputPort> _outputPortMock;
+        private readonly Mock<IAssignPendingLineToVersionOutputPort> _outputPortMock;
         private readonly ProductDaoStub _productDaoStub;
         private readonly Mock<IUnitOfWork> _unitOfWorkMock;
         private readonly VersionDaoStub _versionDaoStub;
@@ -28,7 +28,7 @@ namespace ChangeTracker.Application.Tests.UseCaseTests.Commands.AssignPendingLin
             _productDaoStub = new ProductDaoStub();
             _versionDaoStub = new VersionDaoStub();
             _changeLogDaoStub = new ChangeLogDaoStub();
-            _outputPortMock = new Mock<IAssignPendingLineOutputPort>(MockBehavior.Strict);
+            _outputPortMock = new Mock<IAssignPendingLineToVersionOutputPort>(MockBehavior.Strict);
             _unitOfWorkMock = new Mock<IUnitOfWork>();
         }
 
@@ -180,13 +180,13 @@ namespace ChangeTracker.Application.Tests.UseCaseTests.Commands.AssignPendingLin
                 new VersionIdAssignmentRequestModel(clVersion.Id, lineId);
             var assignToVersionInteractor = CreateInteractor();
 
-            _outputPortMock.Setup(m => m.ChangeLogLineDoesNotExist());
+            _outputPortMock.Setup(m => m.ChangeLogLineDoesNotExist(It.IsAny<Guid>()));
 
             // act
             await assignToVersionInteractor.ExecuteAsync(_outputPortMock.Object, assignmentRequestModel);
 
             // assert
-            _outputPortMock.Verify(m => m.ChangeLogLineDoesNotExist(), Times.Once);
+            _outputPortMock.Verify(m => m.ChangeLogLineDoesNotExist(It.Is<Guid>(x => x == lineId)), Times.Once);
         }
 
         [Fact]

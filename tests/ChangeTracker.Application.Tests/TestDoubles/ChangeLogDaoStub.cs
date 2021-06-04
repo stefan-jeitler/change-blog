@@ -88,6 +88,14 @@ namespace ChangeTracker.Application.Tests.TestDoubles
             return Result.Success<ChangeLogLine, Conflict>(changeLogLine);
         }
 
+        public Task DeletePendingChangeLogs(Guid productId)
+        {
+
+            ChangeLogs.RemoveAll(x => x.ProductId == productId && !x.VersionId.HasValue);
+
+            return Task.CompletedTask;
+        }
+
         public Task<Maybe<ChangeLogLine>> FindLineAsync(Guid changeLogLineId)
         {
             return Task.FromResult(ChangeLogs.TryFirst(x => x.Id == changeLogLineId));

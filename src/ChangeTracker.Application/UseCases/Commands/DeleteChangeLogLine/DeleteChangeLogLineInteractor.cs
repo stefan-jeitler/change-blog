@@ -23,12 +23,17 @@ namespace ChangeTracker.Application.UseCases.Commands.DeleteChangeLogLine
 
             if (existingLine.HasNoValue)
             {
-                output.LineDoesNotExist();
+                output.LineDoesNotExist(changeLogLineId);
                 return;
             }
 
-            var deletedLine = existingLine.Value.Delete();
-            await _changeLogCommands.DeleteLineAsync(deletedLine)
+            if (existingLine.Value.DeletedAt.HasValue)
+            {
+                output.LineDeleted(existingLine.Value.Id);
+                return;
+            }
+
+            await _changeLogCommands.DeleteLineAsync(existingLine.Value)
                 .Match(
                     l => output.LineDeleted(l.Id),
                     c => output.Conflict(c.Reason));

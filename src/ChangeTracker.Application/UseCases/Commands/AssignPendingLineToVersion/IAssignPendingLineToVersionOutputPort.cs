@@ -2,12 +2,12 @@
 
 namespace ChangeTracker.Application.UseCases.Commands.AssignPendingLineToVersion
 {
-    public interface IAssignPendingLineOutputPort
+    public interface IAssignPendingLineToVersionOutputPort
     {
         void InvalidVersionFormat(string version);
         void VersionDoesNotExist();
         void MaxChangeLogLinesReached(int maxChangeLogLines);
-        void ChangeLogLineDoesNotExist();
+        void ChangeLogLineDoesNotExist(Guid changeLogLineId);
         void Conflict(string reason);
         void Assigned(Guid versionId, Guid changeLogLineId);
         void ChangeLogLineIsNotPending(Guid changeLogLineId);

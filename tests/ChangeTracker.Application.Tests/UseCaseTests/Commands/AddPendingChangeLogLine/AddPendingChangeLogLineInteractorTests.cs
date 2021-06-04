@@ -42,13 +42,13 @@ namespace ChangeTracker.Application.Tests.UseCaseTests.Commands.AddPendingChange
 
             var addPendingLineInteractor = CreateInteractor();
 
-            _outputPortMock.Setup(m => m.ProductDoesNotExist());
+            _outputPortMock.Setup(m => m.ProductDoesNotExist(It.IsAny<Guid>()));
 
             // act
             await addPendingLineInteractor.ExecuteAsync(_outputPortMock.Object, lineRequestModel);
 
             // assert
-            _outputPortMock.Verify(m => m.ProductDoesNotExist(), Times.Once);
+            _outputPortMock.Verify(m => m.ProductDoesNotExist(It.Is<Guid>(x => x == TestAccount.Product.Id)), Times.Once);
         }
 
         [Fact]
@@ -107,13 +107,13 @@ namespace ChangeTracker.Application.Tests.UseCaseTests.Commands.AddPendingChange
 
             var addPendingLineInteractor = CreateInteractor();
 
-            _outputPortMock.Setup(m => m.LineWithSameTextAlreadyExists(It.IsAny<string>()));
+            _outputPortMock.Setup(m => m.LinesWithSameTextsAreNotAllowed(It.IsAny<string>()));
 
             // act
             await addPendingLineInteractor.ExecuteAsync(_outputPortMock.Object, lineRequestModel);
 
             // assert
-            _outputPortMock.Verify(m => m.LineWithSameTextAlreadyExists(It.Is<string>(x => x == changeLogLine)),
+            _outputPortMock.Verify(m => m.LinesWithSameTextsAreNotAllowed(It.Is<string>(x => x == changeLogLine)),
                 Times.Once);
         }
 

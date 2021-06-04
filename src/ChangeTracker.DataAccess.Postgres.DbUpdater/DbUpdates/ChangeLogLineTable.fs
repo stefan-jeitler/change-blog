@@ -27,9 +27,20 @@ let private addPartialUniqueIndexOnProductIdVersionIdTextDeletedAtSql = """
         ON changelog_line (product_id, version_id, LOWER("text"), (deleted_at is null)) where deleted_at is null
     """
 
+let private addPartialUniqueIndexOnProductIdVersionIdPositionDeletedAtSql = """
+        CREATE UNIQUE INDEX IF NOT EXISTS changelogline_productid_versionid_position_deletedat_unique 
+        ON changelog_line (product_id, coalesce(version_id, '00000000-0000-0000-0000-000000000000'), position, ((deleted_at IS NULL))) 
+        WHERE (deleted_at IS NULL)
+"""
+
 let create (dbConnection: IDbConnection) =
     dbConnection.Execute(createLineSql) |> ignore
 
 let addPartialUniqueIndexOnProductIdVersionIdTextDeletedAt (dbConnection: IDbConnection) =
     dbConnection.Execute(addPartialUniqueIndexOnProductIdVersionIdTextDeletedAtSql)
     |> ignore
+
+let addPartialUniqueIndexOnProductIdVersionIdPositionDeletedAt (dbConnection: IDbConnection) =
+    dbConnection.Execute(addPartialUniqueIndexOnProductIdVersionIdPositionDeletedAtSql)
+    |> ignore
+

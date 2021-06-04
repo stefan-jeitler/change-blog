@@ -28,7 +28,7 @@ namespace ChangeTracker.Application.UseCases.Commands.AssignPendingLineToVersion
             _changeLogCommands = changeLogCommands ?? throw new ArgumentNullException(nameof(changeLogCommands));
         }
 
-        public async Task ExecuteAsync(IAssignPendingLineOutputPort output,
+        public async Task ExecuteAsync(IAssignPendingLineToVersionOutputPort output,
             VersionIdAssignmentRequestModel requestModel)
         {
             _unitOfWork.Start();
@@ -43,7 +43,7 @@ namespace ChangeTracker.Application.UseCases.Commands.AssignPendingLineToVersion
             await AssignToVersionAsync(output, version.Value, requestModel.ChangeLogLineId);
         }
 
-        public async Task ExecuteAsync(IAssignPendingLineOutputPort output, VersionAssignmentRequestModel requestModel)
+        public async Task ExecuteAsync(IAssignPendingLineToVersionOutputPort output, VersionAssignmentRequestModel requestModel)
         {
             if (!ClVersionValue.TryParse(requestModel.Version, out var versionValue))
             {
@@ -63,49 +63,49 @@ namespace ChangeTracker.Application.UseCases.Commands.AssignPendingLineToVersion
             await AssignToVersionAsync(output, version.Value, requestModel.ChangeLogLineId);
         }
 
-        private async Task AssignToVersionAsync(IAssignPendingLineOutputPort output, ClVersion version,
+        private async Task AssignToVersionAsync(IAssignPendingLineToVersionOutputPort toVersionOutput, ClVersion version,
             Guid pendingLineId)
         {
             var changeLogs = await _changeLogQueries.GetChangeLogsAsync(version.ProductId, version.Id);
             if (!changeLogs.IsPositionAvailable)
             {
-                output.MaxChangeLogLinesReached(ChangeLogs.MaxLines);
+                toVersionOutput.MaxChangeLogLinesReached(ChangeLogs.MaxLines);
                 return;
             }
 
             var pendingLine = await _changeLogQueries.FindLineAsync(pendingLineId);
             if (pendingLine.HasNoValue)
             {
-                output.ChangeLogLineDoesNotExist();
+                toVersionOutput.ChangeLogLineDoesNotExist(pendingLineId);
                 return;
             }
 
             if (!pendingLine.Value.IsPending)
             {
-                output.ChangeLogLineIsNotPending(pendingLine.Value.Id);
+                toVersionOutput.ChangeLogLineIsNotPending(pendingLine.Value.Id);
                 return;
             }
 
             if (changeLogs.ContainsText(pendingLine.Value.Text))
             {
-                output.LineWithSameTextAlreadyExists(pendingLine.Value.Text);
+                toVersionOutput.LineWithSameTextAlreadyExists(pendingLine.Value.Text);
                 return;
             }
 
             var assignedLine = pendingLine.Value.AssignToVersion(version.Id, changeLogs.NextFreePosition);
 
-            await SaveAssignmentAsync(output, assignedLine);
+            await SaveAssignmentAsync(toVersionOutput, assignedLine);
         }
 
-        private async Task SaveAssignmentAsync(IAssignPendingLineOutputPort output, ChangeLogLine assignedLine)
+        private async Task SaveAssignmentAsync(IAssignPendingLineToVersionOutputPort toVersionOutput, ChangeLogLine assignedLine)
         {
             await _changeLogCommands.MoveLineAsync(assignedLine)
-                .Match(Finish, c => output.Conflict(c.Reason));
+                .Match(Finish, c => toVersionOutput.Conflict(c.Reason));
 
             void Finish(ChangeLogLine l)
             {
                 _unitOfWork.Commit();
-                output.Assigned(l.VersionId!.Value, l.Id);
+                toVersionOutput.Assigned(l.VersionId!.Value, l.Id);
             }
         }
     }

@@ -44,7 +44,7 @@ namespace ChangeTracker.Api.Presenters.V1.Version
         public void LinesWithSameTextsAreNotAllowed(IList<string> duplicates)
         {
             Response = new UnprocessableEntityObjectResult(
-                DefaultResponse.Create($"Lines with the same texts are not allowed. Duplicates: {duplicates}"));
+                DefaultResponse.Create($"Lines with same texts are not allowed. Duplicates: {duplicates}"));
         }
 
         public void InvalidVersionName(string name)
@@ -59,7 +59,7 @@ namespace ChangeTracker.Api.Presenters.V1.Version
 
         public void ProductDoesNotExist(Guid productId)
         {
-            Response = new NotFoundObjectResult(DefaultResponse.Create("Product does not exist", productId));
+            Response = new NotFoundObjectResult(DefaultResponse.Create("Product does not exist"));
         }
 
         public void Conflict(string reason)

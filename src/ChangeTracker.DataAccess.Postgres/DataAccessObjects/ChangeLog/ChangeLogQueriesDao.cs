@@ -37,7 +37,8 @@ namespace ChangeTracker.DataAccess.Postgres.DataAccessObjects.ChangeLog
                 {SelectChangeLogLine}
                 from changelog_line chl
                 where chl.id = @changeLogLineId
-                chl.deleted_at is null";
+                and chl.deleted_at is null
+                order by chl.position";
 
             var line = await _dbAccessor.DbConnection
                 .QuerySingleOrDefaultAsync<ChangeLogLine>(findLineSql, new
@@ -54,14 +55,15 @@ namespace ChangeTracker.DataAccess.Postgres.DataAccessObjects.ChangeLog
         {
             var versionIdFilter = versionId.HasValue
                 ? "and chl.version_id = @versionId"
-                : string.Empty;
+                : "and chl.version_id is null";
 
             var getLinesSql = $@"
                 {SelectChangeLogLine}
                 from changelog_line chl
                 where chl.product_id = @productId
                 and chl.deleted_at is null
-                {versionIdFilter}";
+                {versionIdFilter} 
+                order by chl.position";
 
             var lines = await _dbAccessor.DbConnection
                 .QueryAsync<ChangeLogLine>(getLinesSql, new

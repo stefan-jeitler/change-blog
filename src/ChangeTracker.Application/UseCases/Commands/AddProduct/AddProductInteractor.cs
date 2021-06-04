@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Linq;
 using System.Threading.Tasks;
 using ChangeTracker.Application.DataAccess;
 using ChangeTracker.Application.DataAccess.Accounts;
@@ -50,11 +51,39 @@ namespace ChangeTracker.Application.UseCases.Commands.AddProduct
             }
 
             var versioningSchemeId = await GetVersioningSchemeIdAsync(output, productRequestModel, account.Value);
-            if (versioningSchemeId.HasNoValue) return;
+            if (versioningSchemeId.HasNoValue)
+                return;
+
+            var langCode = await GetLangCodeAsync(output, productRequestModel.LanguageCode);
+            if (langCode.HasNoValue)
+                return;
 
             var product = new Product(account.Value.Id, name, versioningSchemeId.Value, productRequestModel.UserId,
+                langCode.Value,
                 DateTime.UtcNow);
             await SaveProductAsync(output, product);
+        }
+
+        private async Task<Maybe<Name>> GetLangCodeAsync(IAddProductOutputPort output, string languageCode)
+        {
+            var supportedLangCodes = await _productDao.GetSupportedLanguageCodesAsync();
+
+            if (!Name.TryParse(languageCode, out var productLangCode))
+            {
+                output.NotSupportedLanguageCode(languageCode, supportedLangCodes.Select(x => x.Value).ToList());
+                return Maybe<Name>.None;
+            }
+
+            var langCode = supportedLangCodes.TryFirst(x =>
+                x.Value.Equals(productLangCode.Value, StringComparison.OrdinalIgnoreCase));
+
+            if (langCode.HasNoValue)
+            {
+                output.NotSupportedLanguageCode(productLangCode.Value, supportedLangCodes.Select(x => x.Value).ToList());
+                return Maybe<Name>.None;
+            }
+
+            return langCode;
         }
 
         private async Task<Maybe<Account>> GetAccountAsync(IAddProductOutputPort output, Guid accountId)

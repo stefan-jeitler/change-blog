@@ -1,7 +1,9 @@
 ﻿using System;
+using System.Collections.Generic;
 using ChangeTracker.Api.DTOs;
 using ChangeTracker.Api.Extensions;
 using ChangeTracker.Application.UseCases.Commands.AddProduct;
+using ChangeTracker.Domain.Common;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
@@ -53,6 +55,12 @@ namespace ChangeTracker.Api.Presenters.V1.Product
         {
             var location = _httpContext.CreateLinkTo($"api/v1/products/{productId}");
             Response = new CreatedResult(location, DefaultResponse.Create("Product added.", productId));
+        }
+
+        public void NotSupportedLanguageCode(string languageCode, IList<string> supportedLangCodes)
+        {
+            Response = new UnprocessableEntityObjectResult(
+                DefaultResponse.Create($"The given LanguageCode {languageCode} is not supported. Supported Codes are {string.Join(", ", supportedLangCodes)}"));
         }
     }
 }

@@ -46,6 +46,7 @@ namespace ChangeTracker.Application.Tests.TestDoubles
             Id,
             Name.Parse("Test Product"),
             CustomVersioningScheme,
+            Name.Parse("en"),
             UserId,
             DateTime.Parse("2021-04-04"),
             null);

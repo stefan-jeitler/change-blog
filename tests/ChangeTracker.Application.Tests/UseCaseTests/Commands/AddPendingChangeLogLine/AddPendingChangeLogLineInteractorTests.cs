@@ -62,7 +62,7 @@ namespace ChangeTracker.Application.Tests.UseCaseTests.Commands.AddPendingChange
                 new PendingLineRequestModel(TestAccount.UserId, TestAccount.Product.Id, changeLogLine, labels, issues);
 
             _productDaoStub.Products.Add(new Product(TestAccount.Product.Id, TestAccount.Id, TestAccount.Product.Name,
-                TestAccount.CustomVersioningScheme, TestAccount.UserId, TestAccount.CreationDate, null));
+                TestAccount.CustomVersioningScheme, TestAccount.Product.LanguageCode, TestAccount.UserId, TestAccount.CreationDate, null));
 
             _changeLogDaoStub.ProduceConflict = true;
             _changeLogDaoStub.ChangeLogs.Add(new ChangeLogLine(Guid.NewGuid(),
@@ -95,7 +95,7 @@ namespace ChangeTracker.Application.Tests.UseCaseTests.Commands.AddPendingChange
                 new PendingLineRequestModel(TestAccount.UserId, TestAccount.Product.Id, changeLogLine, labels, issues);
 
             _productDaoStub.Products.Add(new Product(TestAccount.Product.Id, TestAccount.Id, TestAccount.Product.Name,
-                TestAccount.CustomVersioningScheme, TestAccount.UserId, TestAccount.CreationDate, null));
+                TestAccount.CustomVersioningScheme, TestAccount.Product.LanguageCode, TestAccount.UserId, TestAccount.CreationDate, null));
 
             _changeLogDaoStub.ChangeLogs.Add(new ChangeLogLine(Guid.NewGuid(),
                 null,
@@ -128,7 +128,7 @@ namespace ChangeTracker.Application.Tests.UseCaseTests.Commands.AddPendingChange
                 new PendingLineRequestModel(TestAccount.UserId, TestAccount.Product.Id, changeLogLine, labels, issues);
 
             _productDaoStub.Products.Add(new Product(TestAccount.Product.Id, TestAccount.Id, TestAccount.Product.Name,
-                TestAccount.CustomVersioningScheme, TestAccount.UserId, TestAccount.CreationDate, null));
+                TestAccount.CustomVersioningScheme, TestAccount.Product.LanguageCode, TestAccount.UserId, TestAccount.CreationDate, null));
 
             _changeLogDaoStub.ChangeLogs.AddRange(Enumerable.Range(0, 100)
                 .Select(x =>
@@ -158,7 +158,7 @@ namespace ChangeTracker.Application.Tests.UseCaseTests.Commands.AddPendingChange
                 new PendingLineRequestModel(TestAccount.UserId, TestAccount.Product.Id, changeLogLine, labels, issues);
 
             _productDaoStub.Products.Add(new Product(TestAccount.Product.Id, TestAccount.Id, TestAccount.Product.Name,
-                TestAccount.CustomVersioningScheme, TestAccount.UserId, TestAccount.CreationDate, null));
+                TestAccount.CustomVersioningScheme, TestAccount.Product.LanguageCode, TestAccount.UserId, TestAccount.CreationDate, null));
 
             _changeLogDaoStub.ChangeLogs.Add(new ChangeLogLine(Guid.NewGuid(),
                 null,

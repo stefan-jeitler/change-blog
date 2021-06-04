@@ -15,6 +15,7 @@ namespace ChangeTracker.Domain.Tests.ProductTests
         private Guid _testId;
         private Name _testName;
         private Guid _testUserId;
+        private Name _testLangCode;
         private VersioningScheme _testVersioningScheme;
 
         public ProductTests()
@@ -25,11 +26,12 @@ namespace ChangeTracker.Domain.Tests.ProductTests
             _testCreationDate = DateTime.Parse("2021-04-03");
             _testAccountId = TestAccount.Id;
             _testVersioningScheme = TestAccount.CustomVersioningScheme;
+            _testLangCode = Name.Parse("en");
             _testClosedDate = null;
         }
 
         private Product CreateProduct() =>
-            new(_testId, _testAccountId, _testName, _testVersioningScheme, _testUserId,
+            new(_testId, _testAccountId, _testName, _testVersioningScheme, _testLangCode, _testUserId,
                 _testCreationDate, _testClosedDate);
 
         [Fact]
@@ -43,6 +45,7 @@ namespace ChangeTracker.Domain.Tests.ProductTests
             product.VersioningScheme.Should().Be(_testVersioningScheme);
             product.CreatedByUser.Should().Be(_testUserId);
             product.CreatedAt.Should().Be(_testCreationDate);
+            product.LanguageCode.Should().Be(_testLangCode);
             product.ClosedAt.HasValue.Should().BeFalse();
         }
 
@@ -103,6 +106,16 @@ namespace ChangeTracker.Domain.Tests.ProductTests
         public void Create_WithNullVersioningScheme_ArgumentException()
         {
             _testVersioningScheme = null;
+
+            Func<Product> act = CreateProduct;
+
+            act.Should().ThrowExactly<ArgumentNullException>();
+        }
+
+        [Fact]
+        public void Create_WithNullLanguageCode_ArgumentException()
+        {
+            _testLangCode = null;
 
             Func<Product> act = CreateProduct;
 

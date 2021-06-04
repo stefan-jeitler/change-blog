@@ -81,6 +81,45 @@ let private createUpdateAllSearchVectorsProcedureSql = """
         $$
     """
 
+let private makeUpdateSearchVectorsProcedureLanguageAwareSql = """
+        CREATE OR REPLACE PROCEDURE update_version_searchvectors_proc(versionId uuid)
+        LANGUAGE plpgsql
+        AS
+        $$
+        DECLARE
+        lang regconfig;
+        BEGIN
+        select LOWER(l.name)
+        into lang
+        from language l
+        join product p on l.code = p.language_code
+        where p.id = (select v.product_id from version v where v.id = versionId)
+        fetch first 1 row only ;
+
+        RAISE NOTICE 'VersionId: %, Language: %', versionId, lang;
+
+        WITH chl_agg AS (
+            select (select tsvector_agg(to_tsvector(lang, text)
+                                            ||
+                                        to_tsvector(lang, regexp_replace((SELECT coalesce(string_agg(value::text, ' '), '')
+                                                                               FROM jsonb_array_elements_text(chl.labels)),
+                                                                              '([a-z])([A-Z])',
+                                                                              '\1 \2',
+                                                                              'g'))
+                || to_tsvector(lang, (SELECT coalesce(string_agg(value::text, ' '), '')
+                                           FROM jsonb_array_elements_text(chl.labels || chl.issues))))
+                   ) as value
+            from changelog_line chl
+            where chl.version_id = versionId
+        )
+        update version v
+        set search_vectors = (to_tsvector(lang, v.value) || to_tsvector(lang, v.name) || chl_agg.value)
+        from chl_agg
+        where v.id = versionId;
+        END
+        $$
+    """
+
 let create (dbConnection: IDbConnection) =
     dbConnection.Execute(createVersionSql) |> ignore
 
@@ -106,5 +145,10 @@ let addTextSearch (dbConnection: IDbConnection) =
 
     dbConnection.Execute("CALL update_all_version_searchvectors_proc()")
     |> ignore
+
+    ()
+
+let makeUpdateSearchVectorsProcedureLangauageAware (dbConnection: IDbConnection) = 
+    dbConnection.Execute(makeUpdateSearchVectorsProcedureLanguageAwareSql) |> ignore
 
     ()

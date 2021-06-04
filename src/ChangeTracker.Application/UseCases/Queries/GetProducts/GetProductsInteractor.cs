@@ -123,6 +123,7 @@ namespace ChangeTracker.Application.UseCases.Queries.GetProducts
                 product.Name.Value,
                 product.VersioningScheme.Id,
                 product.VersioningScheme.Name,
+                product.LanguageCode.Value,
                 userName,
                 createdAtLocal,
                 closedAtLocal);

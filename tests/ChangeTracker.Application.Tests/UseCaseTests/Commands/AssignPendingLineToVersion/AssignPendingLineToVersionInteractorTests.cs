@@ -43,6 +43,7 @@ namespace ChangeTracker.Application.Tests.UseCaseTests.Commands.AssignPendingLin
                 Name.Parse("Test Product"),
                 TestAccount.CustomVersioningScheme,
                 TestAccount.UserId,
+                TestAccount.Product.LanguageCode,
                 TestAccount.CreationDate));
 
             var clVersion = new ClVersion(TestAccount.Product.Id, ClVersionValue.Parse("1.2"), OptionalName.Empty,
@@ -78,6 +79,7 @@ namespace ChangeTracker.Application.Tests.UseCaseTests.Commands.AssignPendingLin
                 Name.Parse("Test Product"),
                 TestAccount.CustomVersioningScheme,
                 TestAccount.UserId,
+                TestAccount.Product.LanguageCode,
                 TestAccount.CreationDate));
 
             var line = new ChangeLogLine(Guid.NewGuid(), null, TestAccount.Product.Id,
@@ -104,6 +106,7 @@ namespace ChangeTracker.Application.Tests.UseCaseTests.Commands.AssignPendingLin
                 Name.Parse("Test Product"),
                 TestAccount.CustomVersioningScheme,
                 TestAccount.UserId,
+                TestAccount.Product.LanguageCode,
                 TestAccount.CreationDate));
 
             var clVersion = new ClVersion(TestAccount.Product.Id, ClVersionValue.Parse("1.2"), OptionalName.Empty,
@@ -134,6 +137,7 @@ namespace ChangeTracker.Application.Tests.UseCaseTests.Commands.AssignPendingLin
                 Name.Parse("Test Product"),
                 TestAccount.CustomVersioningScheme,
                 TestAccount.UserId,
+                TestAccount.Product.LanguageCode,
                 TestAccount.CreationDate));
 
             var versionId = Guid.Parse("1d7831d5-32fb-437f-a9d5-bf5a7dd34b10");
@@ -163,6 +167,7 @@ namespace ChangeTracker.Application.Tests.UseCaseTests.Commands.AssignPendingLin
                 Name.Parse("Test Product"),
                 TestAccount.CustomVersioningScheme,
                 TestAccount.UserId,
+                TestAccount.Product.LanguageCode,
                 TestAccount.CreationDate));
 
             var clVersion = new ClVersion(TestAccount.Product.Id, ClVersionValue.Parse("1.2"), OptionalName.Empty,
@@ -192,6 +197,7 @@ namespace ChangeTracker.Application.Tests.UseCaseTests.Commands.AssignPendingLin
                 Name.Parse("Test Product"),
                 TestAccount.CustomVersioningScheme,
                 TestAccount.UserId,
+                TestAccount.Product.LanguageCode,
                 TestAccount.CreationDate));
 
             var clVersion = new ClVersion(TestAccount.Product.Id, ClVersionValue.Parse("1.2"), OptionalName.Empty,
@@ -227,6 +233,7 @@ namespace ChangeTracker.Application.Tests.UseCaseTests.Commands.AssignPendingLin
                 Name.Parse("Test Product"),
                 TestAccount.CustomVersioningScheme,
                 TestAccount.UserId,
+                TestAccount.Product.LanguageCode,
                 TestAccount.CreationDate));
 
             var clVersion = new ClVersion(TestAccount.Product.Id, ClVersionValue.Parse("1.2"), OptionalName.Empty,
@@ -262,6 +269,7 @@ namespace ChangeTracker.Application.Tests.UseCaseTests.Commands.AssignPendingLin
                 Name.Parse("Test Product"),
                 TestAccount.CustomVersioningScheme,
                 TestAccount.UserId,
+                TestAccount.Product.LanguageCode,
                 TestAccount.CreationDate));
 
             var clVersion = new ClVersion(TestAccount.Product.Id, ClVersionValue.Parse("1.2"), OptionalName.Empty,
@@ -293,6 +301,7 @@ namespace ChangeTracker.Application.Tests.UseCaseTests.Commands.AssignPendingLin
                 Name.Parse("Test Product"),
                 TestAccount.CustomVersioningScheme,
                 TestAccount.UserId,
+                TestAccount.Product.LanguageCode,
                 TestAccount.CreationDate));
 
             var clVersion = new ClVersion(TestAccount.Product.Id, ClVersionValue.Parse("1.2"), OptionalName.Empty,

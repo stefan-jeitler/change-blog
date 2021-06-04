@@ -43,4 +43,7 @@ let dbUpdates: DbUpdate list = [
     { Version = 32; Update = UserTable.addUserForAppChanges}
     { Version = 33; Update = ProductTable.addProductForAppChanges}
     { Version = 34; Update = ProductTable.addProductForAppChanges}
-    { Version = 35; Update = RolePermissionTable.addChangeLogLinePermissions}]
+    { Version = 35; Update = RolePermissionTable.addChangeLogLinePermissions}
+    { Version = 36; Update = LanguageTable.addLanguageTableWithBasicLanguages}
+    { Version = 37; Update = ProductTable.addLanguageCodes}
+    { Version = 38; Update = VersionTable.makeUpdateSearchVectorsProcedureLangauageAware}]

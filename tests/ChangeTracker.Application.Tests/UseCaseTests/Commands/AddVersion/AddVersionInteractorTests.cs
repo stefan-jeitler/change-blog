@@ -106,6 +106,7 @@ namespace ChangeTracker.Application.Tests.UseCaseTests.Commands.AddVersion
                 TestAccount.Id,
                 Name.Parse("Test product"),
                 TestAccount.CustomVersioningScheme,
+                TestAccount.Product.LanguageCode,
                 TestAccount.UserId,
                 DateTime.Parse("2021-05-13"),
                 DateTime.Parse("2021-05-13")));

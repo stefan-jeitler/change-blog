@@ -119,7 +119,7 @@ namespace ChangeTracker.Application.Tests.DecoratorTests
             _versionDaoStub.Versions.Add(version);
 
             _productDaoStub.Products.Add(new Product(TestAccount.Product.Id, TestAccount.Id, Name.Parse("Test product"),
-                TestAccount.CustomVersioningScheme, TestAccount.UserId, DateTime.Parse("2021-05-13"),
+                TestAccount.CustomVersioningScheme, TestAccount.Product.LanguageCode, TestAccount.UserId, DateTime.Parse("2021-05-13"),
                 DateTime.Parse("2021-05-13")));
 
             var lineId = Guid.Parse("0683e1e1-0e0d-405c-b77e-a6d0d5141b67");

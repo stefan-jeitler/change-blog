@@ -18,5 +18,7 @@ namespace ChangeTracker.Application.DataAccess.Products
 
         Task<Result<Product, Conflict>> AddProductAsync(Product product);
         Task CloseProductAsync(Product product);
+
+        Task<IList<Name>> GetSupportedLanguageCodesAsync();
     }
 }

@@ -25,7 +25,7 @@ namespace ChangeTracker.Api.Presenters.V1.Version
 
         public void VersionAlreadyReleased(Guid versionId)
         {
-            Response = new UnprocessableEntityObjectResult(
+            Response = new ConflictObjectResult(
                 DefaultResponse.Create("Version released. Released versions can no longer be modified.", versionId));
         }
 

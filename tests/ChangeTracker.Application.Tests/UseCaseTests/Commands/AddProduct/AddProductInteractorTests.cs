@@ -1,9 +1,11 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Threading.Tasks;
 using ChangeTracker.Application.DataAccess;
 using ChangeTracker.Application.Tests.TestDoubles;
 using ChangeTracker.Application.UseCases.Commands.AddProduct;
 using ChangeTracker.Domain;
+using ChangeTracker.Domain.Common;
 using Moq;
 using Xunit;
 
@@ -40,7 +42,7 @@ namespace ChangeTracker.Application.Tests.UseCaseTests.Commands.AddProduct
             _accountDaoStub.Accounts.Add(account);
             _versioningSchemeDaoStub.VersioningSchemes.Add(TestAccount.CustomVersioningScheme);
             var productRequestModel = new ProductRequestModel(TestAccount.Id, TestAccount.Name.Value,
-                TestAccount.CustomVersioningScheme.Id, TestAccount.UserId);
+                TestAccount.CustomVersioningScheme.Id, "en", TestAccount.UserId);
             var createProductInteractor = CreateInteractor();
 
             _outputPortMock.Setup(m => m.Created(It.IsAny<Guid>(), It.IsAny<Guid>()));
@@ -63,7 +65,7 @@ namespace ChangeTracker.Application.Tests.UseCaseTests.Commands.AddProduct
         {
             // arrange
             var productRequestModel =
-                new ProductRequestModel(TestAccount.Id, TestAccount.Name.Value, null, TestAccount.UserId);
+                new ProductRequestModel(TestAccount.Id, TestAccount.Name.Value, null, "en", TestAccount.UserId);
             var createProductInteractor = CreateInteractor();
             _outputPortMock.Setup(m => m.AccountDoesNotExist(It.IsAny<Guid>()));
 
@@ -83,7 +85,7 @@ namespace ChangeTracker.Application.Tests.UseCaseTests.Commands.AddProduct
             _accountDaoStub.Accounts.Add(deletedAccount);
 
             var productRequestModel =
-                new ProductRequestModel(TestAccount.Id, TestAccount.Name.Value, null, TestAccount.UserId);
+                new ProductRequestModel(TestAccount.Id, TestAccount.Name.Value, null, "en", TestAccount.UserId);
             var createProductInteractor = CreateInteractor();
 
             _outputPortMock.Setup(m => m.AccountDeleted(It.IsAny<Guid>()));
@@ -103,7 +105,7 @@ namespace ChangeTracker.Application.Tests.UseCaseTests.Commands.AddProduct
             _accountDaoStub.Accounts.Add(new Account(TestAccount.Id, TestAccount.Name, null, TestAccount.CreationDate,
                 null));
 
-            var productRequestModel = new ProductRequestModel(TestAccount.Id, "", null, TestAccount.UserId);
+            var productRequestModel = new ProductRequestModel(TestAccount.Id, "", null, "en", TestAccount.UserId);
             var createProductInteractor = CreateInteractor();
 
             _outputPortMock.Setup(m => m.InvalidName(It.IsAny<string>()));
@@ -122,11 +124,11 @@ namespace ChangeTracker.Application.Tests.UseCaseTests.Commands.AddProduct
             _accountDaoStub.Accounts.Add(new Account(TestAccount.Id, TestAccount.Name, null, TestAccount.CreationDate,
                 null));
             _productDaoStub.Products.Add(new Product(TestAccount.Id, TestAccount.Name,
-                TestAccount.Product.VersioningScheme, TestAccount.UserId,
+                TestAccount.Product.VersioningScheme, TestAccount.UserId, TestAccount.Product.LanguageCode,
                 DateTime.Parse("2021-04-04")));
 
             var productRequestModel =
-                new ProductRequestModel(TestAccount.Id, TestAccount.Name.Value, null, TestAccount.UserId);
+                new ProductRequestModel(TestAccount.Id, TestAccount.Name.Value, null, "en", TestAccount.UserId);
             var createProductInteractor = CreateInteractor();
 
             _outputPortMock.Setup(m => m.ProductAlreadyExists(It.IsAny<Guid>()));
@@ -147,7 +149,7 @@ namespace ChangeTracker.Application.Tests.UseCaseTests.Commands.AddProduct
             var notExistingVersioningSchemeId = Guid.Parse("3984bcf2-9930-4d41-984e-b72ccc6d6c87");
 
             var productRequestModel =
-                new ProductRequestModel(TestAccount.Id, TestAccount.Name.Value, notExistingVersioningSchemeId,
+                new ProductRequestModel(TestAccount.Id, TestAccount.Name.Value, notExistingVersioningSchemeId, "en",
                     TestAccount.UserId);
             var createProductInteractor = CreateInteractor();
 
@@ -162,6 +164,52 @@ namespace ChangeTracker.Application.Tests.UseCaseTests.Commands.AddProduct
         }
 
         [Fact]
+        public async Task CreateProduct_EmptyLangCode_NotSupportedLanguageCodeOutput()
+        {
+            // arrange
+            _accountDaoStub.Accounts.Add(new Account(TestAccount.Id, TestAccount.Name, null, TestAccount.CreationDate,
+                null));
+            _versioningSchemeDaoStub.VersioningSchemes.Add(TestAccount.DefaultScheme);
+
+            var productRequestModel =
+                new ProductRequestModel(TestAccount.Id, TestAccount.Name.Value, null, "",
+                    TestAccount.UserId);
+            var createProductInteractor = CreateInteractor();
+
+            _outputPortMock.Setup(m => m.NotSupportedLanguageCode(It.IsAny<string>(), It.IsAny<IList<string>>()));
+
+            // act
+            await createProductInteractor.ExecuteAsync(_outputPortMock.Object, productRequestModel);
+
+            // assert
+            _outputPortMock.Verify(
+                m => m.NotSupportedLanguageCode(It.Is<string>(x => x == string.Empty), It.IsAny<IList<string>>()), Times.Once);
+        }
+
+        [Fact]
+        public async Task CreateProduct_NotSupportedLangCode_NotSupportedLanguageCodeOutput()
+        {
+            // arrange
+            _accountDaoStub.Accounts.Add(new Account(TestAccount.Id, TestAccount.Name, null, TestAccount.CreationDate,
+                null));
+            _versioningSchemeDaoStub.VersioningSchemes.Add(TestAccount.DefaultScheme);
+            
+            var productRequestModel =
+                new ProductRequestModel(TestAccount.Id, TestAccount.Name.Value, null, "Deitsch",
+                    TestAccount.UserId);
+            var createProductInteractor = CreateInteractor();
+
+            _outputPortMock.Setup(m => m.NotSupportedLanguageCode(It.IsAny<string>(), It.IsAny<IList<string>>()));
+
+            // act
+            await createProductInteractor.ExecuteAsync(_outputPortMock.Object, productRequestModel);
+
+            // assert
+            _outputPortMock.Verify(
+                m => m.NotSupportedLanguageCode(It.Is<string>(x => x == "deitsch"), It.IsAny<IList<string>>()), Times.Once);
+        }
+
+        [Fact]
         public async Task CreateProduct_ConflictWhenSaving_ConflictOutput()
         {
             // arrange
@@ -172,7 +220,7 @@ namespace ChangeTracker.Application.Tests.UseCaseTests.Commands.AddProduct
             _productDaoStub.ProduceConflict = true;
 
             var productRequestModel = new ProductRequestModel(TestAccount.Id, TestAccount.Name.Value,
-                TestAccount.CustomVersioningScheme.Id, TestAccount.UserId);
+                TestAccount.CustomVersioningScheme.Id, "en", TestAccount.UserId);
             var createProductInteractor = CreateInteractor();
 
             _outputPortMock.Setup(m => m.Conflict(It.IsAny<string>()));

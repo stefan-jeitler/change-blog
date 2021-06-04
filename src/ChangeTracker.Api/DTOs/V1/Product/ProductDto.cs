@@ -6,7 +6,7 @@ namespace ChangeTracker.Api.DTOs.V1.Product
     public class ProductDto
     {
         public ProductDto(Guid id, Guid accountId, string accountName, string name, Guid versioningSchemeId,
-            string versioningScheme, string createdByUser, DateTimeOffset createdAt, bool isClosed)
+            string versioningScheme, string languageCode, string createdByUser, DateTimeOffset createdAt, bool isClosed)
         {
             Id = id;
             AccountId = accountId;
@@ -14,6 +14,7 @@ namespace ChangeTracker.Api.DTOs.V1.Product
             Name = name;
             VersioningSchemeId = versioningSchemeId;
             VersioningScheme = versioningScheme;
+            LanguageCode = languageCode;
             CreatedByUser = createdByUser;
             CreatedAt = createdAt;
             IsClosed = isClosed;
@@ -25,6 +26,7 @@ namespace ChangeTracker.Api.DTOs.V1.Product
         public string Name { get; }
         public Guid VersioningSchemeId { get; }
         public string VersioningScheme { get; }
+        public string LanguageCode { get; }
         public string CreatedByUser { get; }
         public DateTimeOffset CreatedAt { get; }
         public bool IsClosed { get; }
@@ -37,6 +39,7 @@ namespace ChangeTracker.Api.DTOs.V1.Product
                 m.Name,
                 m.VersioningSchemeId,
                 m.VersioningScheme,
+                m.LanguageCode,
                 m.CreatedByUser,
                 m.CreatedAt,
                 m.ClosedAt.HasValue);

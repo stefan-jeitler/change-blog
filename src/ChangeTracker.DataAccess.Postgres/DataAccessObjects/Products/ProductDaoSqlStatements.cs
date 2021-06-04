@@ -14,6 +14,7 @@
                    vs.created_by_user AS vsCreatedByUser,
                    vs.deleted_at      AS vsDeletedAt,
                    vs.created_at      AS vsCreatedAt,
+                   p.language_code    AS languageCode,
                    p.created_by_user  AS createdByUser,
                    p.created_at       AS createdAt,
                    p.closed_at        AS closedAt
@@ -35,6 +36,7 @@
                    vs.created_by_user AS vsCreatedByUser,
                    vs.deleted_at      AS vsDeletedAt,
                    vs.created_at      AS vsCreatedAt,
+                   p.language_code    AS languageCode,
                    p.created_by_user  AS createdByUser,
                    p.created_at       AS createdAt,
                    p.closed_at        AS closedAt
@@ -92,6 +94,7 @@
                    vs.created_by_user AS vsCreatedByUser,
                    vs.deleted_at      AS vsDeletedAt,
                    vs.created_at      AS vsCreatedAt,
+                   p.language_code    AS languageCode,
                    p.created_by_user  AS createdByUser,
                    p.created_at       AS createdAt,
                    p.closed_at        AS closedAt

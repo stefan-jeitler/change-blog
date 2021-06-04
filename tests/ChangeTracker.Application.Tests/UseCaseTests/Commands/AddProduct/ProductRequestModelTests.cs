@@ -11,6 +11,7 @@ namespace ChangeTracker.Application.Tests.UseCaseTests.Commands.AddProduct
         private string _testName;
         private Guid? _testSchemeId;
         private Guid _testUserId;
+        private string _testLangCode;
 
         public ProductRequestModelTests()
         {
@@ -18,9 +19,10 @@ namespace ChangeTracker.Application.Tests.UseCaseTests.Commands.AddProduct
             _testName = "Product X";
             _testSchemeId = Guid.Parse("76a96500-6446-42b3-bb3d-5e318b338b0d");
             _testUserId = Guid.Parse("a1b89f2d-d13f-4572-8522-8a92fb4fdb6a");
+            _testLangCode = "en";
         }
 
-        private ProductRequestModel CreateRequestModel() => new(_testAccountId, _testName, _testSchemeId, _testUserId);
+        private ProductRequestModel CreateRequestModel() => new(_testAccountId, _testName, _testSchemeId, _testLangCode, _testUserId);
 
         [Fact]
         public void Create_HappyPath_Successful()
@@ -55,13 +57,33 @@ namespace ChangeTracker.Application.Tests.UseCaseTests.Commands.AddProduct
         }
 
         [Fact]
-        public void Create_WithEmptySchemeId_ArgumentNullException()
+        public void Create_WithEmptySchemeId_ArgumentException()
         {
             _testSchemeId = Guid.Empty;
 
             Func<ProductRequestModel> act = CreateRequestModel;
 
             act.Should().ThrowExactly<ArgumentException>();
+        }
+
+        [Fact]
+        public void Create_WithNullLangCode_ArgumentNullException()
+        {
+            _testLangCode = null;
+
+            Func<ProductRequestModel> act = CreateRequestModel;
+
+            act.Should().ThrowExactly<ArgumentNullException>();
+        }
+
+        [Fact]
+        public void Create_WithUpperCaseLangCode_LangCodeIsLowerCased()
+        {
+            _testLangCode = "EN";
+
+            var requestModel = CreateRequestModel();
+
+            requestModel.LanguageCode.Should().Be("en");
         }
 
         [Fact]

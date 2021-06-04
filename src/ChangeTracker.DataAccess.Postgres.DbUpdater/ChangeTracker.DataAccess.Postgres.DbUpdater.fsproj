@@ -20,6 +20,7 @@
     <Compile Include="DbUpdates\ApiKeyTable.fs" />
     <Compile Include="DbUpdates\ChangeLogLineTable.fs" />
     <Compile Include="DbUpdates\Functions.fs" />
+    <Compile Include="DbUpdates\LanguageTable.fs" />
     <Compile Include="DbUpdates\ProductTable.fs" />
     <Compile Include="DbUpdates\ProductUserTable.fs" />
     <Compile Include="DbUpdates\ProductViews.fs" />

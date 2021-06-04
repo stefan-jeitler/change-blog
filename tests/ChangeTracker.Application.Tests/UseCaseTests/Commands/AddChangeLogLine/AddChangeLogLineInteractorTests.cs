@@ -50,7 +50,7 @@ namespace ChangeTracker.Application.Tests.UseCaseTests.Commands.AddChangeLogLine
                     issues);
 
             _productDaoStub.Products.Add(new Product(TestAccount.Product.Id, TestAccount.Id, TestAccount.Product.Name,
-                TestAccount.CustomVersioningScheme, TestAccount.UserId, TestAccount.CreationDate, null));
+                TestAccount.CustomVersioningScheme, TestAccount.Product.LanguageCode, TestAccount.UserId, TestAccount.CreationDate, null));
 
             var addLineInteractor = CreateInteractor();
 
@@ -76,7 +76,7 @@ namespace ChangeTracker.Application.Tests.UseCaseTests.Commands.AddChangeLogLine
                     issues);
 
             _productDaoStub.Products.Add(new Product(TestAccount.Product.Id, TestAccount.Id, TestAccount.Product.Name,
-                TestAccount.CustomVersioningScheme, TestAccount.UserId, TestAccount.CreationDate, null));
+                TestAccount.CustomVersioningScheme, TestAccount.Product.LanguageCode, TestAccount.UserId, TestAccount.CreationDate, null));
 
             var version = new ClVersion(TestAccount.Product.Id, ClVersionValue.Parse("1.2"), OptionalName.Empty,
                 TestAccount.UserId);
@@ -109,7 +109,7 @@ namespace ChangeTracker.Application.Tests.UseCaseTests.Commands.AddChangeLogLine
                     issues);
 
             _productDaoStub.Products.Add(new Product(TestAccount.Product.Id, TestAccount.Id, TestAccount.Product.Name,
-                TestAccount.CustomVersioningScheme, TestAccount.UserId, TestAccount.CreationDate, null));
+                TestAccount.CustomVersioningScheme, TestAccount.Product.LanguageCode, TestAccount.UserId, TestAccount.CreationDate, null));
 
             var version = new ClVersion(TestAccount.Product.Id, ClVersionValue.Parse("1.2"), OptionalName.Empty,
                 TestAccount.UserId);
@@ -144,7 +144,7 @@ namespace ChangeTracker.Application.Tests.UseCaseTests.Commands.AddChangeLogLine
                     issues);
 
             _productDaoStub.Products.Add(new Product(TestAccount.Product.Id, TestAccount.Id, TestAccount.Product.Name,
-                TestAccount.CustomVersioningScheme, TestAccount.UserId, TestAccount.CreationDate, null));
+                TestAccount.CustomVersioningScheme, TestAccount.Product.LanguageCode, TestAccount.UserId, TestAccount.CreationDate, null));
 
             var addLineInteractor = CreateInteractor();
 
@@ -170,7 +170,7 @@ namespace ChangeTracker.Application.Tests.UseCaseTests.Commands.AddChangeLogLine
                     changeLogLine, labels, issues);
 
             _productDaoStub.Products.Add(new Product(TestAccount.Product.Id, TestAccount.Id, TestAccount.Product.Name,
-                TestAccount.CustomVersioningScheme, TestAccount.UserId, TestAccount.CreationDate, null));
+                TestAccount.CustomVersioningScheme, TestAccount.Product.LanguageCode, TestAccount.UserId, TestAccount.CreationDate, null));
 
             var addLineInteractor = CreateInteractor();
 
@@ -197,7 +197,7 @@ namespace ChangeTracker.Application.Tests.UseCaseTests.Commands.AddChangeLogLine
                     issues);
 
             _productDaoStub.Products.Add(new Product(TestAccount.Product.Id, TestAccount.Id, TestAccount.Product.Name,
-                TestAccount.CustomVersioningScheme, TestAccount.UserId, TestAccount.CreationDate, null));
+                TestAccount.CustomVersioningScheme, TestAccount.Product.LanguageCode, TestAccount.UserId, TestAccount.CreationDate, null));
 
             var version = new ClVersion(versionId,
                 TestAccount.Product.Id,
@@ -238,7 +238,7 @@ namespace ChangeTracker.Application.Tests.UseCaseTests.Commands.AddChangeLogLine
                     issues);
 
             _productDaoStub.Products.Add(new Product(TestAccount.Product.Id, TestAccount.Id, TestAccount.Product.Name,
-                TestAccount.CustomVersioningScheme, TestAccount.UserId, TestAccount.CreationDate, null));
+                TestAccount.CustomVersioningScheme, TestAccount.Product.LanguageCode, TestAccount.UserId, TestAccount.CreationDate, null));
 
             var versionId = Guid.Parse("1d7831d5-32fb-437f-a9d5-bf5a7dd34b10");
             var version = new ClVersion(versionId,
@@ -279,7 +279,7 @@ namespace ChangeTracker.Application.Tests.UseCaseTests.Commands.AddChangeLogLine
                     issues);
 
             _productDaoStub.Products.Add(new Product(TestAccount.Product.Id, TestAccount.Id, TestAccount.Product.Name,
-                TestAccount.CustomVersioningScheme, TestAccount.UserId, TestAccount.CreationDate, null));
+                TestAccount.CustomVersioningScheme, TestAccount.Product.LanguageCode, TestAccount.UserId, TestAccount.CreationDate, null));
 
             var versionId = Guid.Parse("1d7831d5-32fb-437f-a9d5-bf5a7dd34b10");
             var version = new ClVersion(versionId,
@@ -316,7 +316,7 @@ namespace ChangeTracker.Application.Tests.UseCaseTests.Commands.AddChangeLogLine
                     issues);
 
             _productDaoStub.Products.Add(new Product(TestAccount.Product.Id, TestAccount.Id, TestAccount.Product.Name,
-                TestAccount.CustomVersioningScheme, TestAccount.UserId, TestAccount.CreationDate, null));
+                TestAccount.CustomVersioningScheme, TestAccount.Product.LanguageCode, TestAccount.UserId, TestAccount.CreationDate, null));
 
             var versionId = Guid.Parse("1d7831d5-32fb-437f-a9d5-bf5a7dd34b10");
             var version = new ClVersion(versionId,

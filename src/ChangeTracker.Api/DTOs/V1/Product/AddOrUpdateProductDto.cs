@@ -9,6 +9,7 @@ namespace ChangeTracker.Api.DTOs.V1.Product
         [Required] public string Name { get; set; }
 
         public Guid? VersioningSchemeId { get; set; }
+        [Required] public string LanguageCode { get; set; }
 
         [Required] public Guid AccountId { get; set; }
     }

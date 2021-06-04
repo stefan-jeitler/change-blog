@@ -41,6 +41,7 @@ namespace ChangeTracker.DataAccess.Postgres.Tests.TestDoubles
             Account.Id,
             Name.Parse("TestProduct DataAccess tests"),
             DefaultScheme,
+            Name.Parse("en"),
             User.Id,
             DateTime.Parse("2021-05-21"),
             null

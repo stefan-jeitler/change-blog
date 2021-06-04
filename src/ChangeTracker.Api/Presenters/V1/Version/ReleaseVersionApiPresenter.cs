@@ -9,8 +9,7 @@ namespace ChangeTracker.Api.Presenters.V1.Version
     {
         public void VersionAlreadyDeleted(Guid versionId)
         {
-            Response = new ConflictObjectResult(
-                DefaultResponse.Create("Version has been deleted and can no longer be modified.", versionId));
+            Response = new OkObjectResult(DefaultResponse.Create("Version successfully released.", versionId));
         }
 
         public void VersionAlreadyReleased(Guid versionId)

@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Runtime.CompilerServices;
 using System.Threading.Tasks;
 using ChangeTracker.Application.DataAccess;
 using ChangeTracker.Application.DataAccess.Products;
@@ -100,8 +101,8 @@ namespace ChangeTracker.DataAccess.Postgres.DataAccessObjects.Products
         public async Task<Result<Product, Conflict>> AddProductAsync(Product product)
         {
             const string insertProductSql = @"
-                    INSERT INTO product (id, account_id, versioning_scheme_id, name, created_by_user, closed_at, created_at)
-                    VALUES (@id, @accountId, @versioningSchemeId, @name, @user, @closedAt, @createdAt)";
+                INSERT INTO product (id, account_id, versioning_scheme_id, name, created_by_user, closed_at, created_at, language_code)
+                VALUES (@id, @accountId, @versioningSchemeId, @name, @user, @closedAt, @createdAt, @languageCode)";
 
             try
             {
@@ -114,7 +115,8 @@ namespace ChangeTracker.DataAccess.Postgres.DataAccessObjects.Products
                         name = product.Name,
                         user = product.CreatedByUser,
                         closedAt = product.ClosedAt,
-                        createdAt = product.CreatedAt
+                        createdAt = product.CreatedAt,
+                        languageCode = product.LanguageCode.Value
                     });
 
                 return Result.Success<Product, Conflict>(product);
@@ -140,27 +142,16 @@ namespace ChangeTracker.DataAccess.Postgres.DataAccessObjects.Products
             });
         }
 
-        public async Task<Result<Product, Conflict>> UpdateProductAsync(Product product)
+        public async Task<IList<Name>> GetSupportedLanguageCodesAsync()
         {
-            try
-            {
-                const string closeProductSql =
-                    "UPDATE product SET name = @name, versioning_scheme_id @versioningSchemeId WHERE id = @productId";
+            const string getSupportedLangCodesSql = @"
+                select code
+                from language l
+                where exists(SELECT NULL FROM pg_ts_config pt where LOWER(pt.cfgname) = LOWER(l.name))";
 
-                await _dbAccessor.DbConnection.ExecuteScalarAsync(closeProductSql, new
-                {
-                    name = product.Name,
-                    versioningSchemeId = product.VersioningScheme.Id,
-                    productId = product.Id
-                });
+            var langCodes = await _dbAccessor.DbConnection.QueryAsync<Name>(getSupportedLangCodesSql);
+            return langCodes.AsList();
 
-                return Result.Success<Product, Conflict>(product);
-            }
-            catch (Exception exception)
-            {
-                _logger.LogError(exception, exception.Message);
-                throw;
-            }
         }
     }
 }

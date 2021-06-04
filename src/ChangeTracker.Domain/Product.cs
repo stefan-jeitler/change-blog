@@ -7,22 +7,23 @@ namespace ChangeTracker.Domain
     public class Product
     {
         public Product(Guid accountId, Name name, VersioningScheme versioningScheme, Guid createdByUser,
-            DateTime createdAt)
-            : this(Guid.NewGuid(), accountId, name, versioningScheme, createdByUser, createdAt, null)
+            Name languageCode, DateTime createdAt)
+            : this(Guid.NewGuid(), accountId, name, versioningScheme, languageCode, createdByUser, createdAt, null)
         {
         }
 
         public Product(Guid id, Guid accountId, Name name,
             Guid vsId, Name vsName, Text vsRegexPattern, Text vsDescription,
-            Guid? vsAccountId, Guid vsCreatedByUser, DateTime? vsDeletedAt, DateTime vsCreatedAt, Guid createdByUser,
+            Guid? vsAccountId, Guid vsCreatedByUser, DateTime? vsDeletedAt, DateTime vsCreatedAt,
+            Name languageCode, Guid createdByUser,
             DateTime createdAt, DateTime? closedAt)
             : this(id, accountId, name,
                 new VersioningScheme(vsId, vsName, vsRegexPattern, vsDescription, vsAccountId, vsCreatedByUser,
-                    vsDeletedAt, vsCreatedAt), createdByUser, createdAt, closedAt)
+                    vsDeletedAt, vsCreatedAt), languageCode, createdByUser, createdAt, closedAt)
         {
         }
 
-        public Product(Guid id, Guid accountId, Name name, VersioningScheme versioningScheme, Guid createdByUser,
+        public Product(Guid id, Guid accountId, Name name, VersioningScheme versioningScheme, Name languageCode, Guid createdByUser,
             DateTime createdAt,
             DateTime? closedAt)
         {
@@ -37,6 +38,8 @@ namespace ChangeTracker.Domain
             AccountId = accountId;
             Name = name ?? throw new ArgumentNullException(nameof(name));
             VersioningScheme = versioningScheme ?? throw new ArgumentNullException(nameof(versioningScheme));
+
+            LanguageCode = languageCode ?? throw new ArgumentNullException(nameof(languageCode));
 
             if (createdByUser == Guid.Empty)
                 throw new ArgumentException("UserId cannot be empty.");
@@ -59,12 +62,13 @@ namespace ChangeTracker.Domain
         public Guid AccountId { get; }
         public Name Name { get; }
         public VersioningScheme VersioningScheme { get; }
+        public Name LanguageCode { get; }
         public Guid CreatedByUser { get; }
         public DateTime CreatedAt { get; }
         public DateTime? ClosedAt { get; }
 
         public bool IsClosed => ClosedAt.HasValue;
 
-        public Product Close() => new(Id, AccountId, Name, VersioningScheme, CreatedByUser, CreatedAt, DateTime.UtcNow);
+        public Product Close() => new(Id, AccountId, Name, VersioningScheme, LanguageCode, CreatedByUser, CreatedAt, DateTime.UtcNow);
     }
 }

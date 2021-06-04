@@ -34,6 +34,22 @@ let private addProductForAppChangesSql = """
         ON CONFLICT (id) do nothing 
     """
 
+let private addLanguageCodeColumnSql = """
+        ALTER TABLE product
+        ADD COLUMN IF NOT EXISTS language_code char(2)
+    """
+
+let private setDefaultLanguageSql = "UPDATE product set language_code = 'en' where language_code is null"
+
+let private addLanguageCodeForeignKeySql = """
+        ALTER TABLE product
+        ADD CONSTRAINT product_languagecode_fkey
+        FOREIGN KEY (language_code)
+        REFERENCES language(code)
+    """
+
+let private addLanguageCodeNotNullConstraintSql = "ALTER TABLE product ALTER COLUMN language_code SET NOT NULL"
+
 let create (dbConnection: IDbConnection) =
     dbConnection.Execute(createProductSql) |> ignore
 
@@ -46,3 +62,15 @@ let addProductForAppChanges (dbConnection: IDbConnection) =
     dbConnection.Execute(addProductForAppChangesSql)
     |> ignore
     
+let addLanguageCodes (dbConnection: IDbConnection) = 
+    dbConnection.Execute(addLanguageCodeColumnSql) |> ignore
+    dbConnection.Execute(setDefaultLanguageSql) |> ignore
+
+    let langCodeForeignKeyConstraintExists = Db.constraintExists dbConnection "product_languagecode_fkey"
+    match langCodeForeignKeyConstraintExists with
+    | true -> ()
+    | false -> dbConnection.Execute(addLanguageCodeForeignKeySql) |> ignore
+
+    dbConnection.Execute(addLanguageCodeNotNullConstraintSql) |> ignore
+
+    ()

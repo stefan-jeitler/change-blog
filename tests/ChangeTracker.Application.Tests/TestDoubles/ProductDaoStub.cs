@@ -67,6 +67,9 @@ namespace ChangeTracker.Application.Tests.TestDoubles
             return Task.CompletedTask;
         }
 
+        public Task<IList<Name>> GetSupportedLanguageCodesAsync() =>
+            Task.FromResult((IList<Name>) new List<Name> {Name.Parse("en"), Name.Parse("de")});
+
         /// <summary>
         ///     Not properly implemented, but should be enough for use-case tests
         ///     The actual implementation of IProductDao is tested separately.

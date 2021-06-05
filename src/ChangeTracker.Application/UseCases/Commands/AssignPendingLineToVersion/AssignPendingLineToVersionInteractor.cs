@@ -63,49 +63,49 @@ namespace ChangeTracker.Application.UseCases.Commands.AssignPendingLineToVersion
             await AssignToVersionAsync(output, version.Value, requestModel.ChangeLogLineId);
         }
 
-        private async Task AssignToVersionAsync(IAssignPendingLineToVersionOutputPort toVersionOutput, ClVersion version,
+        private async Task AssignToVersionAsync(IAssignPendingLineToVersionOutputPort output, ClVersion version,
             Guid pendingLineId)
         {
             var changeLogs = await _changeLogQueries.GetChangeLogsAsync(version.ProductId, version.Id);
             if (!changeLogs.IsPositionAvailable)
             {
-                toVersionOutput.MaxChangeLogLinesReached(ChangeLogs.MaxLines);
+                output.MaxChangeLogLinesReached(ChangeLogs.MaxLines);
                 return;
             }
 
             var pendingLine = await _changeLogQueries.FindLineAsync(pendingLineId);
             if (pendingLine.HasNoValue)
             {
-                toVersionOutput.ChangeLogLineDoesNotExist(pendingLineId);
+                output.ChangeLogLineDoesNotExist(pendingLineId);
                 return;
             }
 
             if (!pendingLine.Value.IsPending)
             {
-                toVersionOutput.ChangeLogLineIsNotPending(pendingLine.Value.Id);
+                output.ChangeLogLineIsNotPending(pendingLine.Value.Id);
                 return;
             }
 
             if (changeLogs.ContainsText(pendingLine.Value.Text))
             {
-                toVersionOutput.LineWithSameTextAlreadyExists(pendingLine.Value.Text);
+                output.LineWithSameTextAlreadyExists(pendingLine.Value.Text);
                 return;
             }
 
             var assignedLine = pendingLine.Value.AssignToVersion(version.Id, changeLogs.NextFreePosition);
 
-            await SaveAssignmentAsync(toVersionOutput, assignedLine);
+            await SaveAssignmentAsync(output, assignedLine);
         }
 
-        private async Task SaveAssignmentAsync(IAssignPendingLineToVersionOutputPort toVersionOutput, ChangeLogLine assignedLine)
+        private async Task SaveAssignmentAsync(IAssignPendingLineToVersionOutputPort output, ChangeLogLine assignedLine)
         {
             await _changeLogCommands.MoveLineAsync(assignedLine)
-                .Match(Finish, c => toVersionOutput.Conflict(c.Reason));
+                .Match(Finish, output.Conflict);
 
             void Finish(ChangeLogLine l)
             {
                 _unitOfWork.Commit();
-                toVersionOutput.Assigned(l.VersionId!.Value, l.Id);
+                output.Assigned(l.VersionId!.Value, l.Id);
             }
         }
     }

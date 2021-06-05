@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Threading.Tasks;
+using ChangeTracker.Application.DataAccess;
 using ChangeTracker.Application.Tests.TestDoubles;
 using ChangeTracker.Application.UseCases.Commands.DeleteVersion;
 using ChangeTracker.Domain;
@@ -104,17 +105,17 @@ namespace ChangeTracker.Application.Tests.UseCaseTests.Commands.DeleteVersion
             var version = new ClVersion(TestAccount.Product.Id, ClVersionValue.Parse("1.23"), OptionalName.Empty,
                 TestAccount.UserId);
             var interactor = CreateInteractor();
-            _outputPortMock.Setup(m => m.Conflict(It.IsAny<string>()));
+            _outputPortMock.Setup(m => m.Conflict(It.IsAny<Conflict>()));
 
             _productDaoStub.Products.Add(TestAccount.Product);
             _versionDaoStub.Versions.Add(version);
-            _versionDaoStub.ProduceConflict = true;
+            _versionDaoStub.Conflict = new ConflictStub();
 
             // act
             await interactor.ExecuteAsync(_outputPortMock.Object, version.Id);
 
             // assert
-            _outputPortMock.Verify(m => m.Conflict(It.IsAny<string>()), Times.Once);
+            _outputPortMock.Verify(m => m.Conflict(It.IsAny<Conflict>()), Times.Once);
         }
 
         [Fact]

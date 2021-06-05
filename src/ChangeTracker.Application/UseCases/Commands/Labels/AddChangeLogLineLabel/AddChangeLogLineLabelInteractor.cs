@@ -56,7 +56,7 @@ namespace ChangeTracker.Application.UseCases.Commands.Labels.AddChangeLogLineLab
             line.AddLabel(label);
 
             await _changeLogCommands.UpdateLineAsync(line)
-                .Match(Finish, c => output.Conflict(c.Reason));
+                .Match(Finish, output.Conflict);
 
             void Finish(ChangeLogLine l)
             {

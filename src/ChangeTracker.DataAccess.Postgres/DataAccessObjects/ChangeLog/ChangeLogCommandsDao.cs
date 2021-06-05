@@ -4,6 +4,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using ChangeTracker.Application.DataAccess;
 using ChangeTracker.Application.DataAccess.ChangeLog;
+using ChangeTracker.Application.DataAccess.Conflicts;
 using ChangeTracker.Domain.ChangeLog;
 using CSharpFunctionalExtensions;
 using Dapper;
@@ -26,9 +27,9 @@ namespace ChangeTracker.DataAccess.Postgres.DataAccessObjects.ChangeLog
                     position = @position";
 
         private const string MoveLineSql = @"
-                update changelog_line
-                set version_id = @versionId, position = @position
-                where id = @changeLogLineId";
+            update changelog_line
+            set version_id = @versionId, position = @position
+            where id = @changeLogLineId";
 
         private const string UpdateLineSql = @"
             update changelog_line
@@ -61,7 +62,10 @@ namespace ChangeTracker.DataAccess.Postgres.DataAccessObjects.ChangeLog
             //duplicate key value violates unique constraint
             catch (PostgresException postgresException) when (postgresException.SqlState == "23505")
             {
-                return Result.Failure<ChangeLogLine, Conflict>(new Conflict("Concurrency issue. Please try it again later."));
+                return Result.Failure<ChangeLogLine, Conflict>(
+                    new AddOrUpdateChangeLogLineConcurrencyConflict(changeLogLine.ProductId, 
+                        changeLogLine.VersionId, 
+                        changeLogLine.Id));
             }
             catch (Exception e)
             {
@@ -72,9 +76,19 @@ namespace ChangeTracker.DataAccess.Postgres.DataAccessObjects.ChangeLog
 
         public async Task<Result<int, Conflict>> AddOrUpdateLinesAsync(IEnumerable<ChangeLogLine> changeLogLines)
         {
+            var lines = changeLogLines.AsList();
+
             try
             {
-                return await AddOrUpdateLinesInternalAsync(changeLogLines.AsList());
+                return await AddOrUpdateLinesInternalAsync(lines);
+            }
+            //duplicate key value violates unique constraint
+            catch (PostgresException postgresException) when (postgresException.SqlState == "23505")
+            {
+                var l = lines.First();
+
+                return Result.Failure<int, Conflict>(
+                    new AddOrUpdateChangeLogLineConcurrencyConflict(l.ProductId, l.VersionId, l.Id));
             }
             catch (Exception e)
             {

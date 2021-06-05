@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using ChangeTracker.Api.DTOs;
 using ChangeTracker.Api.Extensions;
+using ChangeTracker.Application.DataAccess;
 using ChangeTracker.Application.UseCases.Commands.AddOrUpdateVersion.OutputPorts;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -19,15 +20,26 @@ namespace ChangeTracker.Api.Presenters.V1.Version
 
         public void VersionAlreadyReleased(Guid versionId)
         {
+            var resourceIds = new Dictionary<string, string>
+            {
+                [nameof(versionId)] = versionId.ToString()
+            };
+
             Response = new ConflictObjectResult(
-                DefaultResponse.Create("You cannot add or update versions that have been released.", versionId));
+                DefaultResponse.Create("You cannot add or update versions that have been released.", resourceIds));
         }
 
         public void Created(Guid versionId)
         {
+            var resourceIds = new Dictionary<string, string>
+            {
+                [nameof(versionId)] = versionId.ToString()
+            };
+
             var location = _httpContext.CreateLinkTo($"api/v1/versions/{versionId}");
-            Response = new CreatedResult(location, DefaultResponse.Create("Version added.", versionId));
+            Response = new CreatedResult(location, DefaultResponse.Create("Version added.", resourceIds));
         }
+
 
         public void InvalidVersionFormat(string version)
         {
@@ -52,24 +64,39 @@ namespace ChangeTracker.Api.Presenters.V1.Version
             Response = new UnprocessableEntityObjectResult(DefaultResponse.Create($"Invalid name '{name}'."));
         }
 
+        public void InsertConflict(Conflict conflict)
+        {
+            Response = conflict.ToResponse();
+        }
+
         public void VersionUpdated(Guid versionId)
         {
-            Response = new OkObjectResult(DefaultResponse.Create("Version successfully updated.", versionId));
+            var resourceIds = new Dictionary<string, string>
+            {
+                [nameof(versionId)] = versionId.ToString()
+            };
+
+            Response = new OkObjectResult(DefaultResponse.Create("Version successfully updated.", resourceIds));
         }
 
         public void ProductDoesNotExist(Guid productId)
         {
-            Response = new NotFoundObjectResult(DefaultResponse.Create("Product does not exist"));
-        }
+            var resourceIds = new Dictionary<string, string>
+            {
+                [nameof(productId)] = productId.ToString()
+            };
 
-        public void Conflict(string reason)
-        {
-            Response = new ConflictObjectResult(DefaultResponse.Create(reason));
+            Response = new NotFoundObjectResult(DefaultResponse.Create("Product does not exist", resourceIds));
         }
 
         public void VersionAlreadyExists(Guid versionId)
         {
-            Response = new ConflictObjectResult(DefaultResponse.Create($"Version already exists.", versionId));
+            var resourceIds = new Dictionary<string, string>
+            {
+                [nameof(versionId)] = versionId.ToString()
+            };
+
+            Response = new ConflictObjectResult(DefaultResponse.Create($"Version already exists.", resourceIds));
         }
 
         public void TooManyLines(int maxChangeLogLines)
@@ -80,14 +107,29 @@ namespace ChangeTracker.Api.Presenters.V1.Version
 
         public void RelatedProductClosed(Guid productId)
         {
+            var resourceIds = new Dictionary<string, string>
+            {
+                [nameof(productId)] = productId.ToString()
+            };
+
             Response = new ConflictObjectResult(
-                DefaultResponse.Create("The related product has been closed.", productId));
+                DefaultResponse.Create("The related product has been closed.", resourceIds));
+        }
+
+        public void UpdateConflict(Conflict conflict)
+        {
+            Response = conflict.ToResponse();
         }
 
         public void VersionAlreadyDeleted(Guid versionId)
         {
+            var resourceIds = new Dictionary<string, string>
+            {
+                [nameof(versionId)] = versionId.ToString()
+            };
+
             Response = new ConflictObjectResult(
-                DefaultResponse.Create("You cannot add or update versions that have been deleted.", versionId));
+                DefaultResponse.Create("You cannot add or update versions that have been deleted.", resourceIds));
         }
 
         public void InvalidChangeLogLineText(string text)

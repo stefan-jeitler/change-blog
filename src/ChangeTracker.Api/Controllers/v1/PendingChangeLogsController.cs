@@ -53,10 +53,15 @@ namespace ChangeTracker.Api.Controllers.v1
             var userId = HttpContext.GetUserId();
             var pendingLine = await getPendingChangeLogLine.ExecuteAsync(userId, changeLogLineId);
 
+            var resourceIds = new Dictionary<string, string>
+            {
+                [nameof(changeLogLineId)] = changeLogLineId.ToString()
+            };
+
             return pendingLine.HasValue
                 ? Ok(PendingChangeLogLineDto.FromResponseModel(pendingLine.Value))
                 : NotFound(DefaultResponse.Create("Pending ChangeLogLine not found. Maybe it isn't pending.",
-                    changeLogLineId));
+                    resourceIds));
         }
 
         [HttpPost("products/{productId:Guid}/pending-changelogs")]

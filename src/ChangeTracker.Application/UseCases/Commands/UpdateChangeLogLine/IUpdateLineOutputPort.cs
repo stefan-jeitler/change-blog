@@ -1,4 +1,5 @@
 ﻿using System;
+using ChangeTracker.Application.DataAccess;
 using ChangeTracker.Application.Services.ChangeLogLineParsing;
 
 namespace ChangeTracker.Application.UseCases.Commands.UpdateChangeLogLine
@@ -7,7 +8,7 @@ namespace ChangeTracker.Application.UseCases.Commands.UpdateChangeLogLine
     {
         void Updated(Guid lineId);
         void ChangeLogLineDoesNotExist();
-        void Conflict(string reason);
+        void Conflict(Conflict conflict);
         void LineWithSameTextAlreadyExists(string text);
     }
 }

@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using ChangeTracker.Application.DataAccess;
 
 namespace ChangeTracker.Application.UseCases.Commands.AssignAllPendingLinesToVersion
 {
@@ -9,8 +10,8 @@ namespace ChangeTracker.Application.UseCases.Commands.AssignAllPendingLinesToVer
         void InvalidVersionFormat(string version);
         void VersionDoesNotExist();
         void TooManyLinesToAdd(uint remainingLinesToAdd);
-        void Conflict(string reason);
-        void NoPendingChangeLogLines();
+        void Conflict(Conflict conflict);
+        void NoPendingChangeLogLines(Guid productId);
         void LineWithSameTextAlreadyExists(List<string> texts);
     }
 }

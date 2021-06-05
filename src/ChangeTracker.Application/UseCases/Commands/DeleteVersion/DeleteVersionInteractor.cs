@@ -37,7 +37,7 @@ namespace ChangeTracker.Application.UseCases.Commands.DeleteVersion
             await _versionDao.DeleteVersionAsync(deletedVersion)
                 .Match(
                     v => output.VersionDeleted(v.Id),
-                    c => output.Conflict(c.Reason));
+                    output.Conflict);
         }
 
         private async Task<Maybe<ClVersion>> GetVersionAsync(IDeleteVersionOutputPort output, Guid versionId)

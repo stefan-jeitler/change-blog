@@ -81,15 +81,15 @@ namespace ChangeTracker.Application.Tests.UseCaseTests.Commands.LabelsTests
 
             _changeLogDaoStub.ChangeLogs.Add(new ChangeLogLine(lineId, null, TestAccount.Product.Id,
                 ChangeLogText.Parse("Some text"), 0U, TestAccount.UserId, DateTime.Parse("2021-04-17")));
-            _outputPortMock.Setup(m => m.Conflict(It.IsAny<string>()));
+            _outputPortMock.Setup(m => m.Conflict(It.IsAny<Conflict>()));
 
-            _changeLogDaoStub.ProduceConflict = true;
+            _changeLogDaoStub.Conflict = new ConflictStub();
 
             // act
             await addLabelInteractor.ExecuteAsync(_outputPortMock.Object, requestModel);
 
             // assert
-            _outputPortMock.Verify(m => m.Conflict(It.IsAny<string>()), Times.Once);
+            _outputPortMock.Verify(m => m.Conflict(It.IsAny<Conflict>()), Times.Once);
         }
 
         [Fact]
@@ -106,8 +106,6 @@ namespace ChangeTracker.Application.Tests.UseCaseTests.Commands.LabelsTests
                 ChangeLogText.Parse("Some text"), 0U, DateTime.Parse("2021-04-17"), existingLabels,
                 Array.Empty<Issue>(), TestAccount.UserId));
             _outputPortMock.Setup(m => m.MaxLabelsReached(It.IsAny<int>()));
-
-            _changeLogDaoStub.ProduceConflict = true;
 
             // act
             await addLabelInteractor.ExecuteAsync(_outputPortMock.Object, requestModel);

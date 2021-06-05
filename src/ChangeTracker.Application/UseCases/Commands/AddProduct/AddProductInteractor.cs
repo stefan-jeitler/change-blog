@@ -137,7 +137,7 @@ namespace ChangeTracker.Application.UseCases.Commands.AddProduct
         {
             await _productDao
                 .AddProductAsync(newProduct)
-                .Match(Finish, c => output.Conflict(c));
+                .Match(Finish, output.Conflict);
 
             void Finish(Product x)
             {

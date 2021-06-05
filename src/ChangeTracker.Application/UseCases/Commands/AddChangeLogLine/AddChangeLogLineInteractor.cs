@@ -116,7 +116,7 @@ namespace ChangeTracker.Application.UseCases.Commands.AddChangeLogLine
         {
             await _changeLogCommands
                 .AddOrUpdateLineAsync(changeLogLine)
-                .Match(Finish, c => output.Conflict(c));
+                .Match(Finish, output.Conflict);
 
             void Finish(ChangeLogLine l)
             {

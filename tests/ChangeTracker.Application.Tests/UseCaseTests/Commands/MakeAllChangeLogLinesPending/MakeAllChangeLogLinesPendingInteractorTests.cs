@@ -227,15 +227,15 @@ namespace ChangeTracker.Application.Tests.UseCaseTests.Commands.MakeAllChangeLog
                 new ChangeLogLine(clVersion.Id, TestAccount.Product.Id, ChangeLogText.Parse("some text"), 0,
                     TestAccount.UserId);
             _changeLogDaoStub.ChangeLogs.Add(versionLine1);
-            _changeLogDaoStub.ProduceConflict = true;
+            _changeLogDaoStub.Conflict = new ConflictStub();
             _versionDaoStub.Versions.Add(clVersion);
-            _outputPortMock.Setup(m => m.Conflict(It.IsAny<string>()));
+            _outputPortMock.Setup(m => m.Conflict(It.IsAny<Conflict>()));
 
             // act
             await makeAllLinesPendingInteractor.ExecuteAsync(_outputPortMock.Object, clVersion.Id);
 
             // assert
-            _outputPortMock.Verify(m => m.Conflict(It.IsAny<string>()), Times.Once);
+            _outputPortMock.Verify(m => m.Conflict(It.IsAny<Conflict>()), Times.Once);
         }
 
         [Fact]

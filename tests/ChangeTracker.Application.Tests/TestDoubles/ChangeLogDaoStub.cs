@@ -4,6 +4,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using ChangeTracker.Application.DataAccess;
 using ChangeTracker.Application.DataAccess.ChangeLog;
+using ChangeTracker.Application.DataAccess.Conflicts;
 using ChangeTracker.Domain.ChangeLog;
 using CSharpFunctionalExtensions;
 
@@ -12,13 +13,14 @@ namespace ChangeTracker.Application.Tests.TestDoubles
     public class ChangeLogDaoStub : IChangeLogQueriesDao, IChangeLogCommandsDao
     {
         public List<ChangeLogLine> ChangeLogs { get; set; } = new();
-        public bool ProduceConflict { get; set; }
+        public Conflict Conflict { get; set; }
 
         public async Task<Result<ChangeLogLine, Conflict>> AddOrUpdateLineAsync(ChangeLogLine changeLogLine)
         {
             await Task.Yield();
 
-            if (ProduceConflict) return new Conflict("some conflict");
+            if (Conflict is not null) 
+                return Result.Failure<ChangeLogLine, Conflict>(Conflict);
 
             ChangeLogs.Add(changeLogLine);
             return changeLogLine;
@@ -31,8 +33,8 @@ namespace ChangeTracker.Application.Tests.TestDoubles
 
             ChangeLogs.RemoveAll(x => lines.Any(y => x.Id == y.Id));
 
-            if (ProduceConflict)
-                return Result.Failure<int, Conflict>(new Conflict("something went wrong."));
+            if (Conflict is not null)
+                return Result.Failure<int, Conflict>(Conflict);
 
             ChangeLogs.AddRange(lines);
             return Result.Success<int, Conflict>(lines.Count);
@@ -55,8 +57,8 @@ namespace ChangeTracker.Application.Tests.TestDoubles
         {
             await Task.Yield();
 
-            if (ProduceConflict)
-                return Result.Failure<ChangeLogLine, Conflict>(new Conflict("some conflict"));
+            if (Conflict is not null)
+                return Result.Failure<ChangeLogLine, Conflict>(Conflict);
 
             ChangeLogs.RemoveAll(x => x.Id == changeLogLine.Id);
             ChangeLogs.Add(changeLogLine);
@@ -68,8 +70,8 @@ namespace ChangeTracker.Application.Tests.TestDoubles
         {
             await Task.Yield();
 
-            if (ProduceConflict)
-                return Result.Failure<ChangeLogLine, Conflict>(new Conflict("some conflict."));
+            if (Conflict is not null)
+                return Result.Failure<ChangeLogLine, Conflict>(Conflict);
 
             ChangeLogs.RemoveAll(x => x.Id == changeLogLine.Id);
             ChangeLogs.Add(changeLogLine);
@@ -81,8 +83,8 @@ namespace ChangeTracker.Application.Tests.TestDoubles
         {
             await Task.Yield();
 
-            if (ProduceConflict)
-                return Result.Failure<ChangeLogLine, Conflict>(new Conflict("some went badly wrong"));
+            if (Conflict is not null)
+                return Result.Failure<ChangeLogLine, Conflict>(Conflict);
 
             ChangeLogs.RemoveAll(x => x.Id == changeLogLine.Id);
             return Result.Success<ChangeLogLine, Conflict>(changeLogLine);

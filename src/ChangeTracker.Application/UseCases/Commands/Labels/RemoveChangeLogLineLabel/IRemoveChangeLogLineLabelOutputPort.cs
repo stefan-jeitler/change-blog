@@ -1,4 +1,5 @@
 ﻿using System;
+using ChangeTracker.Application.DataAccess;
 
 namespace ChangeTracker.Application.UseCases.Commands.Labels.RemoveChangeLogLineLabel
 {
@@ -6,7 +7,7 @@ namespace ChangeTracker.Application.UseCases.Commands.Labels.RemoveChangeLogLine
     {
         void Removed(Guid lineId);
         void InvalidLabel(string label);
-        void Conflict(string reason);
+        void Conflict(Conflict conflict);
         void ChangeLogLineDoesNotExist();
     }
 }

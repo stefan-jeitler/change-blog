@@ -4,6 +4,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using ChangeTracker.Application.DataAccess;
 using ChangeTracker.Application.DataAccess.ChangeLog;
+using ChangeTracker.Application.DataAccess.Conflicts;
 using ChangeTracker.Application.DataAccess.Products;
 using ChangeTracker.Application.DataAccess.Versions;
 using ChangeTracker.Domain;
@@ -21,17 +22,6 @@ namespace ChangeTracker.Application.Decorators
     /// </summary>
     public class ChangeLogLineReadonlyCheckDecorator : IChangeLogCommandsDao
     {
-        private const string LineDeletedMessage =
-            "The requested change log line has been deleted. ChangeLogLineId {0}.";
-
-        private const string VersionDeletedMessage = "The related version has been deleted. VersionId {0}.";
-
-        private const string VersionReleasedMessage =
-            "The related version has been released and can no longer be modified. VersionId {0}.";
-
-        private const string ProductClosedMessage =
-            "The requested product has been closed. ProductId {0}.";
-
         private readonly IChangeLogCommandsDao _changeLogCommandsComponent;
         private readonly IMemoryCache _memoryCache;
         private readonly IProductDao _productDao;
@@ -105,7 +95,7 @@ namespace ChangeTracker.Application.Decorators
         {
             if (line.DeletedAt.HasValue)
                 return Result.Failure<ChangeLogLine, Conflict>(
-                    new Conflict(string.Format(LineDeletedMessage, line.Id)));
+                    new ChangeLogLineDeletedConflict(line.Id));
 
             if (line.IsPending) return Result.Success<ChangeLogLine, Conflict>(line);
 
@@ -113,17 +103,17 @@ namespace ChangeTracker.Application.Decorators
 
             if (version.IsDeleted)
                 return Result.Failure<ChangeLogLine, Conflict>(
-                    new Conflict(string.Format(VersionDeletedMessage, version.Id)));
+                    new VersionDeletedConflict(version.Id));
 
             if (version.IsReleased)
                 return Result.Failure<ChangeLogLine, Conflict>(
-                    new Conflict(string.Format(VersionReleasedMessage, version.Id)));
+                    new VersionReleasedConflict(version.Id));
 
             var product = await GetProductAsync(version.ProductId);
 
             if (product.IsClosed)
                 return Result.Failure<ChangeLogLine, Conflict>(
-                    new Conflict(string.Format(ProductClosedMessage, product.Id)));
+                    new ProductClosedConflict(product.Id));
 
             return Result.Success<ChangeLogLine, Conflict>(line);
         }

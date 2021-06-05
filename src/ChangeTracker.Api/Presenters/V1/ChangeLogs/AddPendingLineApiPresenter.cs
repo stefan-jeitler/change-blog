@@ -5,6 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using ChangeTracker.Api.DTOs;
 using ChangeTracker.Api.Extensions;
+using ChangeTracker.Application.DataAccess;
 using ChangeTracker.Application.UseCases.Commands.AddPendingChangeLogLine;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -22,18 +23,28 @@ namespace ChangeTracker.Api.Presenters.V1.ChangeLogs
 
         public void ProductDoesNotExist(Guid productId)
         {
-            Response = new NotFoundObjectResult(DefaultResponse.Create("Product does not exist."));
+            var resourceIds = new Dictionary<string, string>
+            {
+                [nameof(productId)] = productId.ToString()
+            };
+
+            Response = new NotFoundObjectResult(DefaultResponse.Create("Product does not exist.", resourceIds));
         }
 
         public void Created(Guid changeLogLineId)
         {
+            var resourceIds = new Dictionary<string, string>
+            {
+                [nameof(changeLogLineId)] = changeLogLineId.ToString()
+            };
+
             var location = _httpContext.CreateLinkTo($"api/v1/pending-changelogs/{changeLogLineId}");
-            Response = new CreatedResult(location, DefaultResponse.Create("Pending ChangeLogLine successfully added.", changeLogLineId));
+            Response = new CreatedResult(location, DefaultResponse.Create("Pending ChangeLogLine successfully added.", resourceIds));
         }
 
-        public void Conflict(string reason)
+        public void Conflict(Conflict conflict)
         {
-            Response = new ConflictObjectResult(DefaultResponse.Create(reason));
+            Response = conflict.ToResponse();
         }
 
         public void TooManyLines(int maxChangeLogLines)
@@ -45,7 +56,7 @@ namespace ChangeTracker.Api.Presenters.V1.ChangeLogs
         public void LinesWithSameTextsAreNotAllowed(string duplicate)
         {
             Response = new UnprocessableEntityObjectResult(
-                DefaultResponse.Create($"Lines with the same text are not allowed. Duplicate: {duplicate}"));
+                DefaultResponse.Create($"Lines with the same text are not allowed. Duplicate: '{duplicate}'"));
         }
 
         public void InvalidChangeLogLineText(string text)

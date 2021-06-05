@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using ChangeTracker.Application.DataAccess;
+using ChangeTracker.Application.DataAccess.Conflicts;
 using ChangeTracker.Application.Tests.TestDoubles;
 using ChangeTracker.Application.UseCases.Commands.AddProduct;
 using ChangeTracker.Domain;
@@ -217,19 +218,19 @@ namespace ChangeTracker.Application.Tests.UseCaseTests.Commands.AddProduct
                 null));
 
             _versioningSchemeDaoStub.VersioningSchemes.Add(TestAccount.CustomVersioningScheme);
-            _productDaoStub.ProduceConflict = true;
+            _productDaoStub.Conflict = new ConflictStub();
 
             var productRequestModel = new ProductRequestModel(TestAccount.Id, TestAccount.Name.Value,
                 TestAccount.CustomVersioningScheme.Id, "en", TestAccount.UserId);
             var createProductInteractor = CreateInteractor();
 
-            _outputPortMock.Setup(m => m.Conflict(It.IsAny<string>()));
+            _outputPortMock.Setup(m => m.Conflict(It.IsAny<Conflict>()));
 
             // act
             await createProductInteractor.ExecuteAsync(_outputPortMock.Object, productRequestModel);
 
             // assert
-            _outputPortMock.Verify(m => m.Conflict(It.IsAny<string>()), Times.Once);
+            _outputPortMock.Verify(m => m.Conflict(It.IsAny<Conflict>()), Times.Once);
         }
     }
 }

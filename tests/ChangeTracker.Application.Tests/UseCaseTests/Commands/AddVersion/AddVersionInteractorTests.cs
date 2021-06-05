@@ -358,9 +358,9 @@ namespace ChangeTracker.Application.Tests.UseCaseTests.Commands.AddVersion
             var versionRequestModel = new VersionRequestModel(TestAccount.UserId, TestAccount.Product.Id,
                 "1.23", OptionalName.Empty, changeLogLines);
 
-            _changeLogDaoStub.ProduceConflict = true;
+            _changeLogDaoStub.Conflict = new ConflictStub();
             _productDaoStub.Products.Add(TestAccount.Product);
-            _outputPortMock.Setup(m => m.Conflict(It.IsAny<string>()));
+            _outputPortMock.Setup(m => m.InsertConflict(It.IsAny<Conflict>()));
             _unitOfWorkMock.Setup(m => m.Start());
 
             var addVersionInteractor = CreateInteractor();
@@ -369,7 +369,7 @@ namespace ChangeTracker.Application.Tests.UseCaseTests.Commands.AddVersion
             await addVersionInteractor.ExecuteAsync(_outputPortMock.Object, versionRequestModel);
 
             // assert
-            _outputPortMock.Verify(m => m.Conflict(It.IsAny<string>()), Times.Once);
+            _outputPortMock.Verify(m => m.InsertConflict(It.IsAny<Conflict>()), Times.Once);
         }
     }
 }

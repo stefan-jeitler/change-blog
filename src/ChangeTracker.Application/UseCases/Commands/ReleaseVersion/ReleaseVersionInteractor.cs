@@ -37,7 +37,7 @@ namespace ChangeTracker.Application.UseCases.Commands.ReleaseVersion
             await _versionDao.ReleaseVersionAsync(releaseVersion)
                 .Match(
                     v => output.VersionReleased(v.Id),
-                    c => output.Conflict(c.Reason));
+                    output.Conflict);
         }
 
         private async Task<Maybe<ClVersion>> GetVersionAsync(IReleaseVersionOutputPort output, Guid versionId)

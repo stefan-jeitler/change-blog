@@ -84,7 +84,7 @@ namespace ChangeTracker.Application.UseCases.Commands.AssignAllPendingLinesToVer
 
             if (pendingChangeLogs.Count == 0)
             {
-                output.NoPendingChangeLogLines();
+                output.NoPendingChangeLogLines(clVersion.ProductId);
                 return Maybe<IEnumerable<ChangeLogLine>>.None;
             }
 
@@ -115,7 +115,7 @@ namespace ChangeTracker.Application.UseCases.Commands.AssignAllPendingLinesToVer
             IEnumerable<ChangeLogLine> assignedLines, ClVersion clVersion)
         {
             await _changeLogCommands.MoveLinesAsync(assignedLines)
-                .Match(Finish, c => output.Conflict(c.Reason));
+                .Match(Finish, output.Conflict);
 
             void Finish(int count)
             {

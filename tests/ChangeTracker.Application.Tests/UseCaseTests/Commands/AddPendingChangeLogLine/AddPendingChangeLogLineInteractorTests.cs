@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using ChangeTracker.Application.DataAccess;
+using ChangeTracker.Application.DataAccess.Conflicts;
 using ChangeTracker.Application.Tests.TestDoubles;
 using ChangeTracker.Application.UseCases.Commands.AddPendingChangeLogLine;
 using ChangeTracker.Domain;
@@ -64,7 +65,7 @@ namespace ChangeTracker.Application.Tests.UseCaseTests.Commands.AddPendingChange
             _productDaoStub.Products.Add(new Product(TestAccount.Product.Id, TestAccount.Id, TestAccount.Product.Name,
                 TestAccount.CustomVersioningScheme, TestAccount.Product.LanguageCode, TestAccount.UserId, TestAccount.CreationDate, null));
 
-            _changeLogDaoStub.ProduceConflict = true;
+            _changeLogDaoStub.Conflict = new ConflictStub();
             _changeLogDaoStub.ChangeLogs.Add(new ChangeLogLine(Guid.NewGuid(),
                 null,
                 TestAccount.Product.Id,
@@ -75,13 +76,13 @@ namespace ChangeTracker.Application.Tests.UseCaseTests.Commands.AddPendingChange
 
             var addPendingLineInteractor = CreateInteractor();
 
-            _outputPortMock.Setup(m => m.Conflict(It.IsAny<string>()));
+            _outputPortMock.Setup(m => m.Conflict(It.IsAny<Conflict>()));
 
             // act
             await addPendingLineInteractor.ExecuteAsync(_outputPortMock.Object, lineRequestModel);
 
             // assert
-            _outputPortMock.Verify(m => m.Conflict(It.IsAny<string>()), Times.Once);
+            _outputPortMock.Verify(m => m.Conflict(It.IsAny<Conflict>()), Times.Once);
         }
 
         [Fact]

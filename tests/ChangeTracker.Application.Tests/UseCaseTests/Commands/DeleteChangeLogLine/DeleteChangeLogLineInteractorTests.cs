@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Threading.Tasks;
+using ChangeTracker.Application.DataAccess;
 using ChangeTracker.Application.Tests.TestDoubles;
 using ChangeTracker.Application.UseCases.Commands.DeleteChangeLogLine;
 using ChangeTracker.Domain.ChangeLog;
@@ -53,15 +54,15 @@ namespace ChangeTracker.Application.Tests.UseCaseTests.Commands.DeleteChangeLogL
         {
             var existingLineId = Guid.Parse("11cbae99-5cc0-4268-8d3f-31961822133c");
             var interactor = CreateInteractor();
-            _outputPortMock.Setup(m => m.Conflict(It.IsAny<string>()));
+            _outputPortMock.Setup(m => m.Conflict(It.IsAny<Conflict>()));
 
             _changeLogDaoStub.ChangeLogs.Add(new ChangeLogLine(existingLineId, null, TestAccount.Product.Id,
                 ChangeLogText.Parse("some feature added"), 0, TestAccount.UserId, DateTime.Parse("2021-05-13")));
-            _changeLogDaoStub.ProduceConflict = true;
+            _changeLogDaoStub.Conflict = new ConflictStub();
 
             await interactor.ExecuteAsync(_outputPortMock.Object, existingLineId);
 
-            _outputPortMock.Verify(m => m.Conflict(It.IsAny<string>()), Times.Once);
+            _outputPortMock.Verify(m => m.Conflict(It.IsAny<Conflict>()), Times.Once);
         }
     }
 }

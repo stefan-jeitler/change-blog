@@ -12,7 +12,7 @@ namespace ChangeTracker.Application.Tests.TestDoubles
     public class VersionDaoStub : IVersionDao
     {
         public List<ClVersion> Versions { get; } = new();
-        public bool ProduceConflict { get; set; }
+        public Conflict Conflict { get; set; }
 
         public Task<Maybe<ClVersion>> FindVersionAsync(Guid productId, ClVersionValue versionValue)
         {
@@ -50,9 +50,9 @@ namespace ChangeTracker.Application.Tests.TestDoubles
 
         public Task<Result<ClVersion, Conflict>> AddVersionAsync(ClVersion clVersion)
         {
-            if (ProduceConflict)
+            if (Conflict is not null)
             {
-                var conflict = Result.Failure<ClVersion, Conflict>(new Conflict("some conflict"));
+                var conflict = Result.Failure<ClVersion, Conflict>(Conflict);
                 return Task.FromResult(conflict);
             }
 
@@ -64,8 +64,10 @@ namespace ChangeTracker.Application.Tests.TestDoubles
         {
             await Task.Yield();
 
-            if (ProduceConflict)
-                return Result.Failure<ClVersion, Conflict>(new Conflict("something went wrong"));
+            if (Conflict is not null)
+            {
+                return Result.Failure<ClVersion, Conflict>(Conflict);
+            }
 
             Versions.RemoveAll(x => x.Id == version.Id);
             return Result.Success<ClVersion, Conflict>(version);
@@ -75,8 +77,10 @@ namespace ChangeTracker.Application.Tests.TestDoubles
         {
             await Task.Yield();
 
-            if (ProduceConflict)
-                return Result.Failure<ClVersion, Conflict>(new Conflict("something went wrong"));
+            if (Conflict is not null)
+            {
+                return Result.Failure<ClVersion, Conflict>(Conflict);
+            }
 
             Versions.RemoveAll(x => x.Id == version.Id);
             Versions.Add(version);
@@ -87,8 +91,10 @@ namespace ChangeTracker.Application.Tests.TestDoubles
         {
             await Task.Yield();
 
-            if (ProduceConflict)
-                return Result.Failure<ClVersion, Conflict>(new Conflict("something went wrong"));
+            if (Conflict is not null)
+            {
+                return Result.Failure<ClVersion, Conflict>(Conflict);
+            }
 
             Versions.RemoveAll(x => x.Id == version.Id);
             Versions.Add(version);

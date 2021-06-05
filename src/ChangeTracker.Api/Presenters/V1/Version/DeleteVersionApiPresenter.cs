@@ -1,5 +1,7 @@
 ﻿using System;
+using System.Collections.Generic;
 using ChangeTracker.Api.DTOs;
+using ChangeTracker.Application.DataAccess;
 using ChangeTracker.Application.UseCases.Commands.DeleteVersion;
 using Microsoft.AspNetCore.Mvc;
 
@@ -9,34 +11,59 @@ namespace ChangeTracker.Api.Presenters.V1.Version
     {
         public void VersionDoesNotExist(Guid versionId)
         {
-            Response = new NotFoundObjectResult(DefaultResponse.Create("Version not found.", versionId));
+            var resourceIds = new Dictionary<string, string>
+            {
+                [nameof(versionId)] = versionId.ToString()
+            };
+
+            Response = new NotFoundObjectResult(DefaultResponse.Create("Version not found.", resourceIds));
         }
 
         public void RelatedProductClosed(Guid productId)
         {
+            var resourceIds = new Dictionary<string, string>
+            {
+                [nameof(productId)] = productId.ToString()
+            };
+
             Response = new ConflictObjectResult(
-                DefaultResponse.Create("The related product has been closed.", productId));
+                DefaultResponse.Create("The related product has been closed.", resourceIds));
         }
 
         public void VersionAlreadyDeleted(Guid versionId)
         {
-            Response = new OkObjectResult(DefaultResponse.Create("Version deleted.", versionId));
+            var resourceIds = new Dictionary<string, string>
+            {
+                [nameof(versionId)] = versionId.ToString()
+            };
+
+            Response = new OkObjectResult(DefaultResponse.Create("Version deleted.", resourceIds));
         }
 
         public void VersionAlreadyReleased(Guid versionId)
         {
+            var resourceIds = new Dictionary<string, string>
+            {
+                [nameof(versionId)] = versionId.ToString()
+            };
+
             Response = new ConflictObjectResult(
-                DefaultResponse.Create("Version released. Released versions can no longer be modified.", versionId));
+                DefaultResponse.Create("Version released. Released versions can no longer be modified.", resourceIds));
         }
 
         public void VersionDeleted(Guid versionId)
         {
-            Response = new OkObjectResult(DefaultResponse.Create("Version deleted.", versionId));
+            var resourceIds = new Dictionary<string, string>
+            {
+                [nameof(versionId)] = versionId.ToString()
+            };
+
+            Response = new OkObjectResult(DefaultResponse.Create("Version deleted.", resourceIds));
         }
 
-        public void Conflict(string reason)
+        public void Conflict(Conflict conflict)
         {
-            Response = new ConflictObjectResult(DefaultResponse.Create(reason));
+            Response = conflict.ToResponse();
         }
     }
 }

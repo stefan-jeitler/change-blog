@@ -94,13 +94,13 @@ namespace ChangeTracker.Application.Tests.UseCaseTests.Commands.MakeChangeLogLin
 
             var makeLinePendingInteractor = CreateInteractor();
 
-            _outputPortMock.Setup(m => m.ChangeLogLineIsAlreadyPending());
+            _outputPortMock.Setup(m => m.ChangeLogLineIsAlreadyPending(It.IsAny<Guid>()));
 
             // act
             await makeLinePendingInteractor.ExecuteAsync(_outputPortMock.Object, changeLogLine.Id);
 
             // assert
-            _outputPortMock.Verify(m => m.ChangeLogLineIsAlreadyPending(), Times.Once);
+            _outputPortMock.Verify(m => m.ChangeLogLineIsAlreadyPending(It.Is<Guid>(x => x == changeLogLine.Id)), Times.Once);
         }
 
         [Fact]
@@ -117,13 +117,13 @@ namespace ChangeTracker.Application.Tests.UseCaseTests.Commands.MakeChangeLogLin
 
             var makeLinePendingInteractor = CreateInteractor();
 
-            _outputPortMock.Setup(m => m.VersionAlreadyReleased());
+            _outputPortMock.Setup(m => m.VersionAlreadyReleased(It.IsAny<Guid>()));
 
             // act
             await makeLinePendingInteractor.ExecuteAsync(_outputPortMock.Object, changeLogLine.Id);
 
             // assert
-            _outputPortMock.Verify(m => m.VersionAlreadyReleased(), Times.Once);
+            _outputPortMock.Verify(m => m.VersionAlreadyReleased(It.Is<Guid>(x => x == clVersion.Id)), Times.Once);
         }
 
         [Fact]
@@ -143,13 +143,13 @@ namespace ChangeTracker.Application.Tests.UseCaseTests.Commands.MakeChangeLogLin
 
             var makeLinePendingInteractor = CreateInteractor();
 
-            _outputPortMock.Setup(m => m.VersionClosed());
+            _outputPortMock.Setup(m => m.VersionClosed(It.IsAny<Guid>()));
 
             // act
             await makeLinePendingInteractor.ExecuteAsync(_outputPortMock.Object, changeLogLine.Id);
 
             // assert
-            _outputPortMock.Verify(m => m.VersionClosed(), Times.Once);
+            _outputPortMock.Verify(m => m.VersionClosed(It.Is<Guid>(x => x == clVersion.Id)), Times.Once);
         }
 
         [Fact]
@@ -192,15 +192,15 @@ namespace ChangeTracker.Application.Tests.UseCaseTests.Commands.MakeChangeLogLin
             _changeLogDaoStub.ChangeLogs.Add(changeLogLine);
 
             var makeLinePendingInteractor = CreateInteractor();
-            _changeLogDaoStub.ProduceConflict = true;
+            _changeLogDaoStub.Conflict = new ConflictStub();
 
-            _outputPortMock.Setup(m => m.Conflict(It.IsAny<string>()));
+            _outputPortMock.Setup(m => m.Conflict(It.IsAny<Conflict>()));
 
             // act
             await makeLinePendingInteractor.ExecuteAsync(_outputPortMock.Object, changeLogLine.Id);
 
             // assert
-            _outputPortMock.Verify(m => m.Conflict(It.IsAny<string>()), Times.Once);
+            _outputPortMock.Verify(m => m.Conflict(It.IsAny<Conflict>()), Times.Once);
         }
 
         [Fact]
@@ -218,7 +218,6 @@ namespace ChangeTracker.Application.Tests.UseCaseTests.Commands.MakeChangeLogLin
                 ChangeLogText.Parse("some text"), 0, TestAccount.UserId));
 
             var makeLinePendingInteractor = CreateInteractor();
-            _changeLogDaoStub.ProduceConflict = true;
 
             _outputPortMock.Setup(m => m.LineWithSameTextAlreadyExists(It.IsAny<string>()));
 

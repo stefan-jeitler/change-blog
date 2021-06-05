@@ -312,20 +312,20 @@ namespace ChangeTracker.Application.Tests.UseCaseTests.Commands.AssignPendingLin
                 ChangeLogText.Parse("Some new changes"), 0, TestAccount.UserId, DateTime.Parse("2021-04-12"));
             _changeLogDaoStub.ChangeLogs.Add(line);
 
-            _changeLogDaoStub.ProduceConflict = true;
+            _changeLogDaoStub.Conflict = new ConflictStub();
 
             var assignmentRequestModel =
                 new VersionIdAssignmentRequestModel(clVersion.Id, line.Id);
             var assignToVersionInteractor = CreateInteractor();
 
-            _outputPortMock.Setup(m => m.Conflict(It.IsAny<string>()));
+            _outputPortMock.Setup(m => m.Conflict(It.IsAny<Conflict>()));
 
             // act
             await assignToVersionInteractor.ExecuteAsync(_outputPortMock.Object, assignmentRequestModel);
 
             // assert
             _unitOfWorkMock.Verify(m => m.Commit(), Times.Never);
-            _outputPortMock.Verify(m => m.Conflict(It.IsAny<string>()), Times.Once);
+            _outputPortMock.Verify(m => m.Conflict(It.IsAny<Conflict>()), Times.Once);
         }
     }
 }

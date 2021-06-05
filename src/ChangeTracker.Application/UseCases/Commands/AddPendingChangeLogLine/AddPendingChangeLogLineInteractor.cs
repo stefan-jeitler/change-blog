@@ -93,7 +93,7 @@ namespace ChangeTracker.Application.UseCases.Commands.AddPendingChangeLogLine
         {
             await _changeLogCommands
                 .AddOrUpdateLineAsync(line)
-                .Match(Finish, c => outputPort.Conflict(c));
+                .Match(Finish, outputPort.Conflict);
 
             void Finish(ChangeLogLine l)
             {

@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using ChangeTracker.Application.DataAccess;
+using ChangeTracker.Application.DataAccess.Conflicts;
 using ChangeTracker.Application.Tests.TestDoubles;
 using ChangeTracker.Application.UseCases.Commands.AssignAllPendingLinesToVersion;
 using ChangeTracker.Application.UseCases.Commands.AssignAllPendingLinesToVersion.Models;
@@ -124,13 +125,13 @@ namespace ChangeTracker.Application.Tests.UseCaseTests.Commands.AssignAllPending
                 TestAccount.UserId);
             _versionDaoStub.Versions.Add(clVersion);
 
-            _outputPortMock.Setup(m => m.NoPendingChangeLogLines());
+            _outputPortMock.Setup(m => m.NoPendingChangeLogLines(It.IsAny<Guid>()));
 
             // act
             await assignAllPendingLinesInteractor.ExecuteAsync(_outputPortMock.Object, requestModel);
 
             // assert
-            _outputPortMock.Verify(m => m.NoPendingChangeLogLines(), Times.Once);
+            _outputPortMock.Verify(m => m.NoPendingChangeLogLines(It.Is<Guid>(x => x == TestAccount.Product.Id)), Times.Once);
         }
 
         [Fact]
@@ -211,15 +212,15 @@ namespace ChangeTracker.Application.Tests.UseCaseTests.Commands.AssignAllPending
                 TestAccount.UserId);
             _versionDaoStub.Versions.Add(clVersion);
 
-            _changeLogDaoStub.ProduceConflict = true;
+            _changeLogDaoStub.Conflict = new VersionReleasedConflict(clVersion.Id);
 
-            _outputPortMock.Setup(m => m.Conflict(It.IsAny<string>()));
+            _outputPortMock.Setup(m => m.Conflict(It.IsAny<Conflict>()));
 
             // act
             await assignAllPendingLinesInteractor.ExecuteAsync(_outputPortMock.Object, requestModel);
 
             // assert
-            _outputPortMock.Verify(m => m.Conflict(It.IsAny<string>()), Times.Once);
+            _outputPortMock.Verify(m => m.Conflict(It.IsAny<Conflict>()), Times.Once);
         }
     }
 }

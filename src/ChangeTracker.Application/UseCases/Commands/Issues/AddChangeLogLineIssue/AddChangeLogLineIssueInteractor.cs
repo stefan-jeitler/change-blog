@@ -54,7 +54,7 @@ namespace ChangeTracker.Application.UseCases.Commands.Issues.AddChangeLogLineIss
             line.AddIssue(issue);
 
             await _changeLogCommands.UpdateLineAsync(line)
-                .Match(Finish, c => output.Conflict(c.Reason));
+                .Match(Finish, output.Conflict);
 
             void Finish(ChangeLogLine l)
             {

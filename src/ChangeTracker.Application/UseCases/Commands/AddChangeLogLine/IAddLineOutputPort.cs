@@ -1,4 +1,5 @@
 ﻿using System;
+using ChangeTracker.Application.DataAccess;
 using ChangeTracker.Application.Services.ChangeLogLineParsing;
 
 namespace ChangeTracker.Application.UseCases.Commands.AddChangeLogLine
@@ -7,7 +8,7 @@ namespace ChangeTracker.Application.UseCases.Commands.AddChangeLogLine
     {
         void InvalidVersionFormat();
         void Created(Guid changeLogLineId);
-        void Conflict(string reason);
+        void Conflict(Conflict conflict);
         void VersionDoesNotExist();
         void TooManyLines(int maxChangeLogLines);
         void LineWithSameTextAlreadyExists(string text);

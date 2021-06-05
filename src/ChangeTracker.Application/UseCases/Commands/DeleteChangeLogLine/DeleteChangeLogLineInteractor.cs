@@ -36,7 +36,7 @@ namespace ChangeTracker.Application.UseCases.Commands.DeleteChangeLogLine
             await _changeLogCommands.DeleteLineAsync(existingLine.Value)
                 .Match(
                     l => output.LineDeleted(l.Id),
-                    c => output.Conflict(c.Reason));
+                    output.Conflict);
         }
     }
 }

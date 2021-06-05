@@ -13,7 +13,7 @@ namespace ChangeTracker.Application.Tests.TestDoubles
     public class ProductDaoStub : IProductDao
     {
         public List<Product> Products { get; } = new();
-        public bool ProduceConflict { get; set; }
+        public Conflict Conflict { get; set; }
 
         public Task<Maybe<Product>> FindProductAsync(Guid accountId, Name name)
         {
@@ -50,10 +50,9 @@ namespace ChangeTracker.Application.Tests.TestDoubles
 
         public Task<Result<Product, Conflict>> AddProductAsync(Product product)
         {
-            if (ProduceConflict)
+            if (Conflict is not null)
             {
-                var conflict = new Conflict("some conflict");
-                return Task.FromResult(Result.Failure<Product, Conflict>(conflict));
+                return Task.FromResult(Result.Failure<Product, Conflict>(Conflict));
             }
 
             Products.Add(product);

@@ -212,7 +212,7 @@ namespace ChangeTracker.Application.UseCases.Commands.AddOrUpdateVersion
                 .Bind(_ => releaseImmediately
                     ? _versionDao.ReleaseVersionAsync(newVersion.Release())
                     : Task.FromResult(Result.Success<ClVersion, Conflict>(newVersion)))
-                .Match(Finish, c => output.Conflict(c));
+                .Match(Finish, output.InsertConflict);
 
             void Finish(ClVersion version)
             {
@@ -281,7 +281,7 @@ namespace ChangeTracker.Application.UseCases.Commands.AddOrUpdateVersion
 
             await _changeLogCommands.AddOrUpdateLinesAsync(parsedChangeLogs.Value.Lines)
                 .Bind(_ => _versionDao.UpdateVersionAsync(updatedVersion))
-                .Match(Finish, c => output.Conflict(c.Reason));
+                .Match(Finish, output.UpdateConflict);
 
             void Finish(ClVersion version)
             {

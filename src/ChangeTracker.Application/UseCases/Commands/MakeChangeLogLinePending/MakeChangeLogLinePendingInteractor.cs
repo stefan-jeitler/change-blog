@@ -62,7 +62,7 @@ namespace ChangeTracker.Application.UseCases.Commands.MakeChangeLogLinePending
 
             if (line.Value.IsPending)
             {
-                output.ChangeLogLineIsAlreadyPending();
+                output.ChangeLogLineIsAlreadyPending(line.Value.Id);
                 return Maybe<ChangeLogLine>.None;
             }
 
@@ -77,13 +77,13 @@ namespace ChangeTracker.Application.UseCases.Commands.MakeChangeLogLinePending
 
             if (clVersion.IsReleased)
             {
-                output.VersionAlreadyReleased();
+                output.VersionAlreadyReleased(versionId);
                 return Maybe<ClVersion>.None;
             }
 
             if (clVersion.IsDeleted)
             {
-                output.VersionClosed();
+                output.VersionClosed(versionId);
                 return Maybe<ClVersion>.None;
             }
 
@@ -125,7 +125,7 @@ namespace ChangeTracker.Application.UseCases.Commands.MakeChangeLogLinePending
         private async Task MoveLineAsyncAsync(IMakeChangeLogLinePendingOutputPort output, ChangeLogLine line)
         {
             await _changeLogCommands.MoveLineAsync(line)
-                .Match(Finish, c => output.Conflict(c.Reason));
+                .Match(Finish, output.Conflict);
 
             void Finish(ChangeLogLine m)
             {

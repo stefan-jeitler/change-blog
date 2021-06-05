@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using ChangeTracker.Api.DTOs;
+using ChangeTracker.Application.DataAccess;
 using ChangeTracker.Application.UseCases.Commands.AssignPendingLineToVersion;
 using Microsoft.AspNetCore.Mvc;
 
@@ -30,23 +31,39 @@ namespace ChangeTracker.Api.Presenters.V1.ChangeLogs
 
         public void ChangeLogLineDoesNotExist(Guid changeLogLineId)
         {
-            Response = new NotFoundObjectResult(DefaultResponse.Create("ChangeLogLine not found.", changeLogLineId));
+            var resourceIds = new Dictionary<string, string>
+            {
+                [nameof(changeLogLineId)] = changeLogLineId.ToString()
+            };
+
+            Response = new NotFoundObjectResult(DefaultResponse.Create("ChangeLogLine not found.", resourceIds));
         }
 
-        public void Conflict(string reason)
+        public void Conflict(Conflict conflict)
         {
-            Response = new ConflictObjectResult(DefaultResponse.Create(reason));
+            Response = conflict.ToResponse();
         }
-
+        
         public void Assigned(Guid versionId, Guid changeLogLineId)
         {
-            Response = new OkObjectResult(DefaultResponse.Create("Line successfully moved.", versionId));
+            var resourceIds = new Dictionary<string, string>
+            {
+                [nameof(versionId)] = versionId.ToString(),
+                [nameof(changeLogLineId)] = changeLogLineId.ToString()
+            };
+
+            Response = new OkObjectResult(DefaultResponse.Create("Line successfully moved.", resourceIds));
         }
 
         public void ChangeLogLineIsNotPending(Guid changeLogLineId)
         {
+            var resourceIds = new Dictionary<string, string>
+            {
+                [nameof(changeLogLineId)] = changeLogLineId.ToString()
+            };
+
             Response = new ConflictObjectResult(DefaultResponse.Create("The given ChangeLogLine is not pending",
-                changeLogLineId));
+                resourceIds));
         }
 
         public void LineWithSameTextAlreadyExists(string text)

@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using ChangeTracker.Application.DataAccess.Conflicts;
 using ChangeTracker.Application.Decorators;
 using ChangeTracker.Application.Tests.TestDoubles;
 using ChangeTracker.Domain;
@@ -53,7 +54,7 @@ namespace ChangeTracker.Application.Tests.DecoratorTests
 
             // assert
             result.IsFailure.Should().BeTrue();
-            result.Error.Reason.Should().StartWith("The related version has");
+            result.Error.Should().BeOfType<VersionReleasedConflict>();
             _changeLogDaoStub.ChangeLogs.Should().BeEmpty();
         }
 
@@ -78,7 +79,7 @@ namespace ChangeTracker.Application.Tests.DecoratorTests
 
             // assert
             result.IsFailure.Should().BeTrue();
-            result.Error.Reason.Should().StartWith("The requested change log line has been deleted");
+            result.Error.Should().BeOfType<ChangeLogLineDeletedConflict>();
             _changeLogDaoStub.ChangeLogs.Should().BeEmpty();
         }
 
@@ -103,7 +104,7 @@ namespace ChangeTracker.Application.Tests.DecoratorTests
 
             // assert
             result.IsFailure.Should().BeTrue();
-            result.Error.Reason.Should().StartWith("The related version has been deleted");
+            result.Error.Should().BeOfType<VersionDeletedConflict>();
             _changeLogDaoStub.ChangeLogs.Should().BeEmpty();
         }
 
@@ -133,7 +134,7 @@ namespace ChangeTracker.Application.Tests.DecoratorTests
 
             // assert
             result.IsFailure.Should().BeTrue();
-            result.Error.Reason.Should().StartWith("The requested product has been closed");
+            result.Error.Should().BeOfType<ProductClosedConflict>();
             _changeLogDaoStub.ChangeLogs.Should().BeEmpty();
         }
 
@@ -295,9 +296,7 @@ namespace ChangeTracker.Application.Tests.DecoratorTests
 
             // assert
             result.IsSuccess.Should().BeFalse();
-            result.Error.Reason.Should()
-                .StartWith(
-                    "The related version has");
+            result.Error.Should().BeOfType<VersionReleasedConflict>();
             _changeLogDaoStub.ChangeLogs.Should().BeEmpty();
         }
 

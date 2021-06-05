@@ -1,11 +1,12 @@
 ﻿using System;
+using ChangeTracker.Application.DataAccess;
 
 namespace ChangeTracker.Application.UseCases.Commands.DeleteChangeLogLine
 {
     public interface IDeleteChangeLogLineOutputPort
     {
         public void LineDoesNotExist(Guid changeLogLineId);
-        void LineDeleted(Guid lineId);
-        void Conflict(string reason);
+        void LineDeleted(Guid changeLogLineId);
+        void Conflict(Conflict conflict);
     }
 }

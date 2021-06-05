@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using ChangeTracker.Api.DTOs;
+using ChangeTracker.Application.DataAccess;
 using ChangeTracker.Application.UseCases.Commands.AssignAllPendingLinesToVersion;
 using Microsoft.AspNetCore.Mvc;
 
@@ -10,7 +11,12 @@ namespace ChangeTracker.Api.Presenters.V1.ChangeLogs
     {
         public void Assigned(Guid versionId)
         {
-            Response = new OkObjectResult(DefaultResponse.Create("Lines successfully moved.", versionId));
+            var resourceIds = new Dictionary<string, string>
+            {
+                [nameof(versionId)] = versionId.ToString()
+            };
+
+            Response = new OkObjectResult(DefaultResponse.Create("Lines successfully moved.", resourceIds));
         }
 
         public void InvalidVersionFormat(string version)
@@ -30,14 +36,19 @@ namespace ChangeTracker.Api.Presenters.V1.ChangeLogs
                 DefaultResponse.Create($"Too many lines. Remaining lines: {remainingLinesToAdd}"));
         }
 
-        public void Conflict(string reason)
+        public void Conflict(Conflict conflict)
         {
-            Response = new ConflictObjectResult(DefaultResponse.Create(reason));
+            Response = conflict.ToResponse();
         }
 
-        public void NoPendingChangeLogLines()
+        public void NoPendingChangeLogLines(Guid productId)
         {
-            Response = new OkObjectResult(DefaultResponse.Create("There are no Lines to assign."));
+            var resourceIds = new Dictionary<string, string>
+            {
+                [nameof(productId)] = productId.ToString()
+            };
+
+            Response = new OkObjectResult(DefaultResponse.Create("There are no Lines to assign.", resourceIds));
         }
 
         public void LineWithSameTextAlreadyExists(List<string> texts)

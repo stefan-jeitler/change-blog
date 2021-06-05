@@ -1,4 +1,5 @@
 ﻿using System;
+using ChangeTracker.Application.DataAccess;
 
 namespace ChangeTracker.Application.UseCases.Commands.AddOrUpdateVersion.OutputPorts
 {
@@ -9,7 +10,7 @@ namespace ChangeTracker.Application.UseCases.Commands.AddOrUpdateVersion.OutputP
         new void InvalidVersionFormat(string version);
         new void InvalidVersionName(string name);
         void VersionUpdated(Guid versionId);
-        new void Conflict(string reason);
         new void RelatedProductClosed(Guid versionId);
+        void UpdateConflict(Conflict conflict);
     }
 }

@@ -1,4 +1,5 @@
 ﻿using System;
+using ChangeTracker.Application.DataAccess;
 
 namespace ChangeTracker.Application.UseCases.Commands.DeleteVersion
 {
@@ -9,6 +10,6 @@ namespace ChangeTracker.Application.UseCases.Commands.DeleteVersion
         void VersionAlreadyDeleted(Guid versionId);
         void VersionAlreadyReleased(Guid versionId);
         void VersionDeleted(Guid versionId);
-        void Conflict(string reason);
+        void Conflict(Conflict conflict);
     }
 }

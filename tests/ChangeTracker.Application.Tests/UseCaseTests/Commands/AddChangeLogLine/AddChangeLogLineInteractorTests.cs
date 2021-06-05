@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using ChangeTracker.Application.DataAccess;
+using ChangeTracker.Application.DataAccess.Conflicts;
 using ChangeTracker.Application.Tests.TestDoubles;
 using ChangeTracker.Application.UseCases.Commands.AddChangeLogLine;
 using ChangeTracker.Application.UseCases.Commands.AddChangeLogLine.Models;
@@ -82,17 +83,17 @@ namespace ChangeTracker.Application.Tests.UseCaseTests.Commands.AddChangeLogLine
                 TestAccount.UserId);
             _versionDaoStub.Versions.Add(version);
 
-            _changeLogDaoStub.ProduceConflict = true;
+            _changeLogDaoStub.Conflict = new VersionDeletedConflict(version.Id);
 
             var addLineInteractor = CreateInteractor();
 
-            _outputPortMock.Setup(m => m.Conflict(It.IsAny<string>()));
+            _outputPortMock.Setup(m => m.Conflict(It.IsAny<Conflict>()));
 
             // act
             await addLineInteractor.ExecuteAsync(_outputPortMock.Object, changeLogLineRequestModel);
 
             // assert
-            _outputPortMock.Verify(m => m.Conflict(It.IsAny<string>()), Times.Once);
+            _outputPortMock.Verify(m => m.Conflict(It.IsAny<Conflict>()), Times.Once);
             _unitOfWorkMock.Verify(m => m.Start(), Times.Once);
         }
 

@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using ChangeTracker.Application.DataAccess;
 using ChangeTracker.Application.Services.ChangeLogLineParsing;
 
 namespace ChangeTracker.Application.UseCases.Commands.AddOrUpdateVersion.OutputPorts
@@ -11,10 +12,10 @@ namespace ChangeTracker.Application.UseCases.Commands.AddOrUpdateVersion.OutputP
         void InvalidVersionFormat(string version);
         void VersionDoesNotMatchScheme(string version, string versioningSchemeName);
         void Created(Guid versionId);
-        void Conflict(string reason);
         void VersionAlreadyExists(Guid versionId);
         void TooManyLines(int maxChangeLogLines);
         void LinesWithSameTextsAreNotAllowed(IList<string> duplicates);
         void InvalidVersionName(string versionName);
+        void InsertConflict(Conflict conflict);
     }
 }

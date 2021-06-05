@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using ChangeTracker.Api.DTOs;
 using ChangeTracker.Api.Extensions;
+using ChangeTracker.Application.DataAccess;
 using ChangeTracker.Application.UseCases.Commands.AddProduct;
 using ChangeTracker.Domain.Common;
 using Microsoft.AspNetCore.Http;
@@ -20,13 +21,23 @@ namespace ChangeTracker.Api.Presenters.V1.Product
 
         public void AccountDoesNotExist(Guid accountId)
         {
-            Response = new NotFoundObjectResult(DefaultResponse.Create("Account not found.", accountId));
+            var resourceIds = new Dictionary<string, string>
+            {
+                [nameof(accountId)] = accountId.ToString()
+            };
+
+            Response = new NotFoundObjectResult(DefaultResponse.Create("Account not found.", resourceIds));
         }
 
         public void AccountDeleted(Guid accountId)
         {
+            var resourceIds = new Dictionary<string, string>
+            {
+                [nameof(accountId)] = accountId.ToString()
+            };
+
             Response = new UnprocessableEntityObjectResult(
-                DefaultResponse.Create("The requested account has been deleted."));
+                DefaultResponse.Create("The requested account has been deleted.", resourceIds));
         }
 
         public void InvalidName(string name)
@@ -36,25 +47,41 @@ namespace ChangeTracker.Api.Presenters.V1.Product
 
         public void ProductAlreadyExists(Guid productId)
         {
+            var resourceIds = new Dictionary<string, string>
+            {
+                [nameof(productId)] = productId.ToString()
+            };
+
             Response = new ConflictObjectResult(
-                DefaultResponse.Create("Product already exists.", productId));
+                DefaultResponse.Create("Product already exists.", resourceIds));
         }
 
         public void VersioningSchemeDoesNotExist(Guid versioningSchemeId)
         {
+            var resourceIds = new Dictionary<string, string>
+            {
+                [nameof(versioningSchemeId)] = versioningSchemeId.ToString()
+            };
+
             Response = new NotFoundObjectResult(DefaultResponse.Create("VersioningScheme not found.",
-                versioningSchemeId));
+                resourceIds));
         }
 
-        public void Conflict(string reason)
+        public void Conflict(Conflict conflict)
         {
-            Response = new ConflictObjectResult(DefaultResponse.Create(reason));
+            Response = conflict.ToResponse();
         }
 
         public void Created(Guid accountId, Guid productId)
         {
+            var resourceIds = new Dictionary<string, string>
+            {
+                [nameof(accountId)] = accountId.ToString(),
+                [nameof(productId)] = productId.ToString()
+            };
+
             var location = _httpContext.CreateLinkTo($"api/v1/products/{productId}");
-            Response = new CreatedResult(location, DefaultResponse.Create("Product added.", productId));
+            Response = new CreatedResult(location, DefaultResponse.Create("Product added.", resourceIds));
         }
 
         public void NotSupportedLanguageCode(string languageCode, IList<string> supportedLangCodes)

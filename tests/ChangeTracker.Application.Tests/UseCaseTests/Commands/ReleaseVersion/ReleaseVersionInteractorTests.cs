@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Threading.Tasks;
+using ChangeTracker.Application.DataAccess;
 using ChangeTracker.Application.Tests.TestDoubles;
 using ChangeTracker.Application.UseCases.Commands.ReleaseVersion;
 using ChangeTracker.Domain;
@@ -106,16 +107,16 @@ namespace ChangeTracker.Application.Tests.UseCaseTests.Commands.ReleaseVersion
             var product = new Product(TestAccount.Product.Id, TestAccount.Id, TestAccount.Product.Name,
                 TestAccount.CustomVersioningScheme, TestAccount.Product.LanguageCode, TestAccount.UserId, TestAccount.Product.CreatedAt, null);
             var interactor = CreateInteractor();
-            _outputPortMock.Setup(m => m.Conflict(It.IsAny<string>()));
+            _outputPortMock.Setup(m => m.Conflict(It.IsAny<Conflict>()));
             _versionDaoStub.Versions.Add(version);
-            _versionDaoStub.ProduceConflict = true;
+            _versionDaoStub.Conflict = new ConflictStub();
             _productDaoStub.Products.Add(product);
 
             // act
             await interactor.ExecuteAsync(_outputPortMock.Object, version.Id);
 
             // assert
-            _outputPortMock.Verify(m => m.Conflict(It.IsAny<string>()), Times.Once);
+            _outputPortMock.Verify(m => m.Conflict(It.IsAny<Conflict>()), Times.Once);
         }
 
         [Fact]

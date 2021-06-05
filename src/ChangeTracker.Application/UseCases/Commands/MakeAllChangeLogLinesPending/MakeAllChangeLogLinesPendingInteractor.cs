@@ -125,8 +125,10 @@ namespace ChangeTracker.Application.UseCases.Commands.MakeAllChangeLogLinesPendi
         private async Task MoveLinesAsync(IMakeAllChangeLogLinesPendingOutputPort output,
             IEnumerable<ChangeLogLine> lines)
         {
-            await _changeLogCommands.MoveLinesAsync(lines)
-                .Match(Finish, c => output.Conflict(c.Reason));
+            var changeLogLines = lines.ToList();
+
+            await _changeLogCommands.MoveLinesAsync(changeLogLines)
+                .Match(Finish, output.Conflict);
 
             void Finish(int count)
             {

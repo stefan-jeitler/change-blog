@@ -4,7 +4,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using ChangeTracker.Application.DataAccess;
 using ChangeTracker.Application.Tests.TestDoubles;
-using ChangeTracker.Application.UseCases.Commands.Issues.RemoveChangeLogLineIssue;
+using ChangeTracker.Application.UseCases.Commands.Issues.DeleteChangeLogLineIssue;
 using ChangeTracker.Application.UseCases.Commands.Issues.SharedModels;
 using ChangeTracker.Domain.ChangeLog;
 using FluentAssertions;
@@ -16,17 +16,17 @@ namespace ChangeTracker.Application.Tests.UseCaseTests.Commands.IssuesTests
     public class RemoveChangeLogLineIssueInteractorTests
     {
         private readonly ChangeLogDaoStub _changeLogDaoStub;
-        private readonly Mock<IRemoveChangeLogLineIssueOutputPort> _outputPortMock;
+        private readonly Mock<IDeleteChangeLogLineIssueOutputPort> _outputPortMock;
         private readonly Mock<IUnitOfWork> _unitOfWorkMock;
 
         public RemoveChangeLogLineIssueInteractorTests()
         {
             _changeLogDaoStub = new ChangeLogDaoStub();
-            _outputPortMock = new Mock<IRemoveChangeLogLineIssueOutputPort>(MockBehavior.Strict);
+            _outputPortMock = new Mock<IDeleteChangeLogLineIssueOutputPort>(MockBehavior.Strict);
             _unitOfWorkMock = new Mock<IUnitOfWork>();
         }
 
-        private RemoveChangeLogLineIssueInteractor CreateInteractor() =>
+        private DeleteChangeLogLineIssueInteractor CreateInteractor() =>
             new(_changeLogDaoStub, _changeLogDaoStub, _unitOfWorkMock.Object);
 
         [Fact]

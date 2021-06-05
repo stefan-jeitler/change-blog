@@ -12,6 +12,7 @@ namespace ChangeTracker.Application.UseCases.Queries.SharedModels
                 throw new ArgumentException("Id cannot be empty.");
 
             Id = id;
+
             Text = text ?? throw new ArgumentNullException(nameof(text));
             Labels = labels ?? throw new ArgumentNullException(nameof(labels));
             Issues = issues ?? throw new ArgumentNullException(nameof(issues));

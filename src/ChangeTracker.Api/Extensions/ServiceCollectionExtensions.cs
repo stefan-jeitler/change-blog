@@ -1,4 +1,5 @@
-﻿using ChangeTracker.Application.UseCases.Commands.AddOrUpdateVersion;
+﻿using ChangeTracker.Application.UseCases.Commands.AddChangeLogLine;
+using ChangeTracker.Application.UseCases.Commands.AddOrUpdateVersion;
 using ChangeTracker.Application.UseCases.Commands.AddPendingChangeLogLine;
 using ChangeTracker.Application.UseCases.Commands.AddProduct;
 using ChangeTracker.Application.UseCases.Commands.AssignAllPendingLinesToVersion;
@@ -7,11 +8,17 @@ using ChangeTracker.Application.UseCases.Commands.CloseProduct;
 using ChangeTracker.Application.UseCases.Commands.DeleteAllPendingChangeLogLines;
 using ChangeTracker.Application.UseCases.Commands.DeleteChangeLogLine;
 using ChangeTracker.Application.UseCases.Commands.DeleteVersion;
+using ChangeTracker.Application.UseCases.Commands.Issues.AddChangeLogLineIssue;
+using ChangeTracker.Application.UseCases.Commands.Issues.DeleteChangeLogLineIssue;
+using ChangeTracker.Application.UseCases.Commands.Labels.AddChangeLogLineLabel;
+using ChangeTracker.Application.UseCases.Commands.Labels.DeleteChangeLogLineLabel;
 using ChangeTracker.Application.UseCases.Commands.MakeAllChangeLogLinesPending;
 using ChangeTracker.Application.UseCases.Commands.MakeChangeLogLinePending;
 using ChangeTracker.Application.UseCases.Commands.ReleaseVersion;
 using ChangeTracker.Application.UseCases.Queries.GetAccounts;
 using ChangeTracker.Application.UseCases.Queries.GetChangeLogLine;
+using ChangeTracker.Application.UseCases.Queries.GetIssues;
+using ChangeTracker.Application.UseCases.Queries.GetLabels;
 using ChangeTracker.Application.UseCases.Queries.GetPendingChangeLogs;
 using ChangeTracker.Application.UseCases.Queries.GetProducts;
 using ChangeTracker.Application.UseCases.Queries.GetRoles;
@@ -29,7 +36,9 @@ namespace ChangeTracker.Api.Extensions
                 .AddProductUseCases()
                 .AddVersionUseCases()
                 .AddPendingChangeLogLineUseCases()
-                .AddChangeLogLineUseCases();
+                .AddChangeLogLineUseCases()
+                .AddLabelUseCases()
+                .AddIssueUseCases();
 
         public static IServiceCollection AddAccountUseCases(this IServiceCollection services) =>
             services
@@ -69,6 +78,21 @@ namespace ChangeTracker.Api.Extensions
                 .AddScoped<IMakeChangeLogLinePending, MakeChangeLogLinePendingInteractor>()
                 .AddScoped<IMakeAllChangeLogLinesPending, MakeAllChangeLogLinesPendingInteractor>()
                 .AddScoped<IGetChangeLogLine, GetChangeLogLineInteractor>()
-                .AddScoped<IDeleteChangeLogLine, DeleteChangeLogLineInteractor>();
+                .AddScoped<IDeleteChangeLogLine, DeleteChangeLogLineInteractor>()
+                .AddScoped<IAddChangeLogLine, AddChangeLogLineInteractor>();
+
+        public static IServiceCollection AddLabelUseCases(this IServiceCollection services) => 
+            services
+                .AddScoped<IGetLabels, GetLabelsInteractor>()
+                .AddScoped<IDeleteChangeLogLineLabel, DeleteChangeLogLineLabelInteractor>()
+                .AddScoped<IAddChangeLogLineLabel, AddChangeLogLineLabelInteractor>()
+            ;
+
+        public static IServiceCollection AddIssueUseCases(this IServiceCollection services) => 
+            services
+                .AddScoped<IGetIssues, GetIssuesInteractor>()
+                .AddScoped<IDeleteChangeLogLineIssue, DeleteChangeLogLineIssueInteractor>()
+                .AddScoped<IAddChangeLogLineIssue, AddChangeLogLineIssueInteractor>()
+            ;
     }
 }

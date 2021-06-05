@@ -44,7 +44,7 @@ namespace ChangeTracker.Api.Presenters
                 [nameof(versionId)] = versionId.ToString()
             };
 
-            var responseMessage = DefaultResponse.Create("The requested version has already been deleted.",
+            var responseMessage = DefaultResponse.Create("The requested version has been deleted.",
                 resourceIds);
 
             return new ConflictObjectResult(responseMessage);
@@ -59,7 +59,7 @@ namespace ChangeTracker.Api.Presenters
             };
 
             var responseMessage =
-                DefaultResponse.Create("The related product has already been closed.", resourceIds);
+                DefaultResponse.Create("The related product has been closed.", resourceIds);
 
             return new ConflictObjectResult(responseMessage);
         }
@@ -73,7 +73,7 @@ namespace ChangeTracker.Api.Presenters
             };
 
             var responseMessage = DefaultResponse.Create(
-                "The requested ChangeLogLine has already been deleted.", resourceIds);
+                "The requested ChangeLogLine has been deleted.", resourceIds);
 
             return new ConflictObjectResult(responseMessage);
         }

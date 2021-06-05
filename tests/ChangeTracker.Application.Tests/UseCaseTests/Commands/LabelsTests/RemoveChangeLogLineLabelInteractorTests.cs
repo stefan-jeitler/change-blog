@@ -4,7 +4,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using ChangeTracker.Application.DataAccess;
 using ChangeTracker.Application.Tests.TestDoubles;
-using ChangeTracker.Application.UseCases.Commands.Labels.RemoveChangeLogLineLabel;
+using ChangeTracker.Application.UseCases.Commands.Labels.DeleteChangeLogLineLabel;
 using ChangeTracker.Application.UseCases.Commands.Labels.SharedModels;
 using ChangeTracker.Domain.ChangeLog;
 using FluentAssertions;
@@ -16,17 +16,17 @@ namespace ChangeTracker.Application.Tests.UseCaseTests.Commands.LabelsTests
     public class RemoveChangeLogLineLabelInteractorTests
     {
         private readonly ChangeLogDaoStub _changeLogDaoStub;
-        private readonly Mock<IRemoveChangeLogLineLabelOutputPort> _outputPortMock;
+        private readonly Mock<IDeleteChangeLogLineLabelOutputPort> _outputPortMock;
         private readonly Mock<IUnitOfWork> _unitOfWorkMock;
 
         public RemoveChangeLogLineLabelInteractorTests()
         {
-            _outputPortMock = new Mock<IRemoveChangeLogLineLabelOutputPort>(MockBehavior.Strict);
+            _outputPortMock = new Mock<IDeleteChangeLogLineLabelOutputPort>(MockBehavior.Strict);
             _unitOfWorkMock = new Mock<IUnitOfWork>();
             _changeLogDaoStub = new ChangeLogDaoStub();
         }
 
-        private RemoveChangeLogLineLabelInteractor CreateInteractor() =>
+        private DeleteChangeLogLineLabelInteractor CreateInteractor() =>
             new(_unitOfWorkMock.Object, _changeLogDaoStub, _changeLogDaoStub);
 
         [Fact]
@@ -41,13 +41,13 @@ namespace ChangeTracker.Application.Tests.UseCaseTests.Commands.LabelsTests
             var line = new ChangeLogLine(lineId, null, TestAccount.Product.Id, ChangeLogText.Parse("some valid text"),
                 0U, DateTime.Parse("2021-04-19"), new List<Label> {label}, Array.Empty<Issue>(), TestAccount.UserId);
             _changeLogDaoStub.ChangeLogs.Add(line);
-            _outputPortMock.Setup(m => m.Removed(It.IsAny<Guid>()));
+            _outputPortMock.Setup(m => m.Deleted(It.IsAny<Guid>()));
 
             // act
             await removeLabelInteractor.ExecuteAsync(_outputPortMock.Object, requestModel);
 
             // assert
-            _outputPortMock.Verify(m => m.Removed(It.Is<Guid>(x => x == lineId)), Times.Once);
+            _outputPortMock.Verify(m => m.Deleted(It.Is<Guid>(x => x == lineId)), Times.Once);
             _unitOfWorkMock.Verify(m => m.Start(), Times.Once);
             _unitOfWorkMock.Verify(m => m.Commit(), Times.Once);
             _changeLogDaoStub.ChangeLogs.Single().Labels.Should().BeEmpty();

@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Text.Json.Serialization;
 
 namespace ChangeTracker.Api.DTOs
 {
@@ -17,6 +18,7 @@ namespace ChangeTracker.Api.DTOs
 
         public string Message { get; }
 
+        [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
         public IReadOnlyDictionary<string, string> ResourceIds { get; }
 
         public static DefaultResponse Create(string message) => new(message);

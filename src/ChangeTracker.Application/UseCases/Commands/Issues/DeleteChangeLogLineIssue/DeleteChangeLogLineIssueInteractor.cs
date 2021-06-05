@@ -6,15 +6,15 @@ using ChangeTracker.Application.UseCases.Commands.Issues.SharedModels;
 using ChangeTracker.Domain.ChangeLog;
 using CSharpFunctionalExtensions;
 
-namespace ChangeTracker.Application.UseCases.Commands.Issues.RemoveChangeLogLineIssue
+namespace ChangeTracker.Application.UseCases.Commands.Issues.DeleteChangeLogLineIssue
 {
-    public class RemoveChangeLogLineIssueInteractor : IRemoveChangeLogLineIssue
+    public class DeleteChangeLogLineIssueInteractor : IDeleteChangeLogLineIssue
     {
         private readonly IChangeLogCommandsDao _changeLogCommands;
         private readonly IChangeLogQueriesDao _changeLogQueries;
         private readonly IUnitOfWork _unitOfWork;
 
-        public RemoveChangeLogLineIssueInteractor(IChangeLogQueriesDao changeLogQueries,
+        public DeleteChangeLogLineIssueInteractor(IChangeLogQueriesDao changeLogQueries,
             IChangeLogCommandsDao changeLogCommands, IUnitOfWork unitOfWork)
         {
             _changeLogQueries = changeLogQueries ?? throw new ArgumentNullException(nameof(changeLogQueries));
@@ -22,7 +22,7 @@ namespace ChangeTracker.Application.UseCases.Commands.Issues.RemoveChangeLogLine
             _unitOfWork = unitOfWork ?? throw new ArgumentNullException(nameof(unitOfWork));
         }
 
-        public async Task ExecuteAsync(IRemoveChangeLogLineIssueOutputPort output,
+        public async Task ExecuteAsync(IDeleteChangeLogLineIssueOutputPort output,
             ChangeLogLineIssueRequestModel requestModel)
         {
             if (!Issue.TryParse(requestModel.Issue, out var issue))
@@ -43,7 +43,7 @@ namespace ChangeTracker.Application.UseCases.Commands.Issues.RemoveChangeLogLine
             await RemoveIssueAsync(output, line.Value, issue);
         }
 
-        private async Task RemoveIssueAsync(IRemoveChangeLogLineIssueOutputPort output, ChangeLogLine line, Issue issue)
+        private async Task RemoveIssueAsync(IDeleteChangeLogLineIssueOutputPort output, ChangeLogLine line, Issue issue)
         {
             line.RemoveIssue(issue);
 

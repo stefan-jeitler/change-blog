@@ -1,11 +1,11 @@
 ﻿using System;
 using ChangeTracker.Application.DataAccess;
 
-namespace ChangeTracker.Application.UseCases.Commands.Issues.RemoveChangeLogLineIssue
+namespace ChangeTracker.Application.UseCases.Commands.Issues.DeleteChangeLogLineIssue
 {
-    public interface IRemoveChangeLogLineIssueOutputPort
+    public interface IDeleteChangeLogLineIssueOutputPort
     {
-        void Removed(Guid lineId);
+        void Removed(Guid changeLogLineId);
         void Conflict(Conflict conflict);
         void ChangeLogLineDoesNotExist();
         void InvalidIssue(string issue);

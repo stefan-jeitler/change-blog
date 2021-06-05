@@ -6,15 +6,15 @@ using ChangeTracker.Application.UseCases.Commands.Labels.SharedModels;
 using ChangeTracker.Domain.ChangeLog;
 using CSharpFunctionalExtensions;
 
-namespace ChangeTracker.Application.UseCases.Commands.Labels.RemoveChangeLogLineLabel
+namespace ChangeTracker.Application.UseCases.Commands.Labels.DeleteChangeLogLineLabel
 {
-    public class RemoveChangeLogLineLabelInteractor : IRemoveChangeLogLineLabel
+    public class DeleteChangeLogLineLabelInteractor : IDeleteChangeLogLineLabel
     {
         private readonly IChangeLogCommandsDao _changeLogCommands;
         private readonly IChangeLogQueriesDao _changeLogQueries;
         private readonly IUnitOfWork _unitOfWork;
 
-        public RemoveChangeLogLineLabelInteractor(IUnitOfWork unitOfWork, IChangeLogQueriesDao changeLogQueries,
+        public DeleteChangeLogLineLabelInteractor(IUnitOfWork unitOfWork, IChangeLogQueriesDao changeLogQueries,
             IChangeLogCommandsDao changeLogCommands)
         {
             _unitOfWork = unitOfWork ?? throw new ArgumentNullException(nameof(unitOfWork));
@@ -22,7 +22,7 @@ namespace ChangeTracker.Application.UseCases.Commands.Labels.RemoveChangeLogLine
             _changeLogCommands = changeLogCommands ?? throw new ArgumentNullException(nameof(changeLogCommands));
         }
 
-        public async Task ExecuteAsync(IRemoveChangeLogLineLabelOutputPort output,
+        public async Task ExecuteAsync(IDeleteChangeLogLineLabelOutputPort output,
             ChangeLogLineLabelRequestModel requestModel)
         {
             if (!Label.TryParse(requestModel.Label, out var label))
@@ -43,7 +43,7 @@ namespace ChangeTracker.Application.UseCases.Commands.Labels.RemoveChangeLogLine
             await RemoveLabelAsync(output, line.Value, label);
         }
 
-        private async Task RemoveLabelAsync(IRemoveChangeLogLineLabelOutputPort output, ChangeLogLine line, Label label)
+        private async Task RemoveLabelAsync(IDeleteChangeLogLineLabelOutputPort output, ChangeLogLine line, Label label)
         {
             line.RemoveLabel(label);
 
@@ -53,7 +53,7 @@ namespace ChangeTracker.Application.UseCases.Commands.Labels.RemoveChangeLogLine
             void Finish(ChangeLogLine l)
             {
                 _unitOfWork.Commit();
-                output.Removed(l.Id);
+                output.Deleted(l.Id);
             }
         }
     }

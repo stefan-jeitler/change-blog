@@ -5,7 +5,7 @@ namespace ChangeTracker.Application.UseCases.Commands.Labels.AddChangeLogLineLab
 {
     public interface IAddChangeLogLineLabelOutputPort
     {
-        void Added(Guid lineId);
+        void Added(Guid changeLogLineId);
         void Conflict(Conflict conflict);
         void ChangeLogLineDoesNotExist();
         void InvalidLabel(string label);

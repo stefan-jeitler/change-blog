@@ -32,7 +32,7 @@ namespace ChangeTracker.Api.Presenters.V1.ChangeLogs
                 [nameof(versionId)] = versionId.ToString()
             };
 
-            Response = new ConflictObjectResult(DefaultResponse.Create("The requested version has already been deleted.",
+            Response = new ConflictObjectResult(DefaultResponse.Create("The requested version has been deleted.",
                 resourceIds));
         }
 

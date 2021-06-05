@@ -34,8 +34,8 @@ namespace ChangeTracker.DataAccess.Postgres.DataAccessObjects.ChangeLog
         private const string UpdateLineSql = @"
             update changelog_line
             set text = @text,
-                labels = @labels,
-                issues = @issues
+                labels = CAST(@labels AS json),
+                issues = CAST(@issues AS json)
             where id = @changeLogLineId";
 
         private const string DeleteLineSql = @"

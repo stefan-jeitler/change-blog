@@ -48,7 +48,7 @@ namespace ChangeTracker.Api.Presenters.V1.ChangeLogs
 
             var location = _httpContext.CreateLinkTo($"api/v1/pending-changelogs/{changeLogLineId}");
             Response = new CreatedResult(location,
-                DefaultResponse.Create("Pending ChangeLogLine successfully added.", resourceIds));
+                DefaultResponse.Create("ChangeLogLine successfully added.", resourceIds));
         }
 
         public void Conflict(Conflict conflict)

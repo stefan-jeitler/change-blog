@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using ChangeTracker.Application.DataAccess;
-using ChangeTracker.Application.DataAccess.Conflicts;
 using ChangeTracker.Application.Tests.TestDoubles;
 using ChangeTracker.Application.UseCases.Commands.AddPendingChangeLogLine;
 using ChangeTracker.Domain;
@@ -16,7 +15,7 @@ namespace ChangeTracker.Application.Tests.UseCaseTests.Commands.AddPendingChange
     public class AddPendingChangeLogLineInteractorTests
     {
         private readonly ChangeLogDaoStub _changeLogDaoStub;
-        private readonly Mock<IAddPendingLineOutputPort> _outputPortMock;
+        private readonly Mock<IAddPendingChangeLogLineOutputPort> _outputPortMock;
         private readonly ProductDaoStub _productDaoStub;
         private readonly Mock<IUnitOfWork> _unitOfWorkMock;
 
@@ -24,7 +23,7 @@ namespace ChangeTracker.Application.Tests.UseCaseTests.Commands.AddPendingChange
         {
             _productDaoStub = new ProductDaoStub();
             _changeLogDaoStub = new ChangeLogDaoStub();
-            _outputPortMock = new Mock<IAddPendingLineOutputPort>(MockBehavior.Strict);
+            _outputPortMock = new Mock<IAddPendingChangeLogLineOutputPort>(MockBehavior.Strict);
             _unitOfWorkMock = new Mock<IUnitOfWork>();
         }
 
@@ -39,7 +38,7 @@ namespace ChangeTracker.Application.Tests.UseCaseTests.Commands.AddPendingChange
             var labels = new List<string> {"Bugfix", "ProxyIssue"};
             var issues = new List<string> {"#1234", "#12345"};
             var lineRequestModel =
-                new PendingLineRequestModel(TestAccount.UserId, TestAccount.Product.Id, changeLogLine, labels, issues);
+                new PendingChangeLogLineRequestModel(TestAccount.UserId, TestAccount.Product.Id, changeLogLine, labels, issues);
 
             var addPendingLineInteractor = CreateInteractor();
 
@@ -49,7 +48,8 @@ namespace ChangeTracker.Application.Tests.UseCaseTests.Commands.AddPendingChange
             await addPendingLineInteractor.ExecuteAsync(_outputPortMock.Object, lineRequestModel);
 
             // assert
-            _outputPortMock.Verify(m => m.ProductDoesNotExist(It.Is<Guid>(x => x == TestAccount.Product.Id)), Times.Once);
+            _outputPortMock.Verify(m => m.ProductDoesNotExist(It.Is<Guid>(x => x == TestAccount.Product.Id)),
+                Times.Once);
         }
 
         [Fact]
@@ -60,10 +60,11 @@ namespace ChangeTracker.Application.Tests.UseCaseTests.Commands.AddPendingChange
             var labels = new List<string> {"Bugfix", "ProxyIssue"};
             var issues = new List<string> {"#1234", "#12345"};
             var lineRequestModel =
-                new PendingLineRequestModel(TestAccount.UserId, TestAccount.Product.Id, changeLogLine, labels, issues);
+                new PendingChangeLogLineRequestModel(TestAccount.UserId, TestAccount.Product.Id, changeLogLine, labels, issues);
 
             _productDaoStub.Products.Add(new Product(TestAccount.Product.Id, TestAccount.Id, TestAccount.Product.Name,
-                TestAccount.CustomVersioningScheme, TestAccount.Product.LanguageCode, TestAccount.UserId, TestAccount.CreationDate, null));
+                TestAccount.CustomVersioningScheme, TestAccount.Product.LanguageCode, TestAccount.UserId,
+                TestAccount.CreationDate, null));
 
             _changeLogDaoStub.Conflict = new ConflictStub();
             _changeLogDaoStub.ChangeLogs.Add(new ChangeLogLine(Guid.NewGuid(),
@@ -93,28 +94,32 @@ namespace ChangeTracker.Application.Tests.UseCaseTests.Commands.AddPendingChange
             var labels = new List<string> {"Bugfix", "ProxyIssue"};
             var issues = new List<string> {"#1234", "#12345"};
             var lineRequestModel =
-                new PendingLineRequestModel(TestAccount.UserId, TestAccount.Product.Id, changeLogLine, labels, issues);
+                new PendingChangeLogLineRequestModel(TestAccount.UserId, TestAccount.Product.Id, changeLogLine, labels, issues);
 
             _productDaoStub.Products.Add(new Product(TestAccount.Product.Id, TestAccount.Id, TestAccount.Product.Name,
-                TestAccount.CustomVersioningScheme, TestAccount.Product.LanguageCode, TestAccount.UserId, TestAccount.CreationDate, null));
+                TestAccount.CustomVersioningScheme, TestAccount.Product.LanguageCode, TestAccount.UserId,
+                TestAccount.CreationDate, null));
 
-            _changeLogDaoStub.ChangeLogs.Add(new ChangeLogLine(Guid.NewGuid(),
+            var existingLineWithSameText = new ChangeLogLine(Guid.NewGuid(),
                 null,
                 TestAccount.Product.Id,
                 ChangeLogText.Parse("some changes"),
                 0,
                 TestAccount.UserId,
-                DateTime.Parse("2021-04-09")));
+                DateTime.Parse("2021-04-09"));
+            _changeLogDaoStub.ChangeLogs.Add(existingLineWithSameText);
 
             var addPendingLineInteractor = CreateInteractor();
 
-            _outputPortMock.Setup(m => m.LinesWithSameTextsAreNotAllowed(It.IsAny<string>()));
+            _outputPortMock.Setup(m => m.LinesWithSameTextsAreNotAllowed(It.IsAny<Guid>(), It.IsAny<string>()));
 
             // act
             await addPendingLineInteractor.ExecuteAsync(_outputPortMock.Object, lineRequestModel);
 
             // assert
-            _outputPortMock.Verify(m => m.LinesWithSameTextsAreNotAllowed(It.Is<string>(x => x == changeLogLine)),
+            _outputPortMock.Verify(
+                m => m.LinesWithSameTextsAreNotAllowed(It.Is<Guid>(x => x == existingLineWithSameText.Id),
+                    It.Is<string>(x => x == changeLogLine)),
                 Times.Once);
         }
 
@@ -126,10 +131,11 @@ namespace ChangeTracker.Application.Tests.UseCaseTests.Commands.AddPendingChange
             var labels = new List<string> {"Bugfix", "ProxyIssue"};
             var issues = new List<string> {"#1234", "#12345"};
             var lineRequestModel =
-                new PendingLineRequestModel(TestAccount.UserId, TestAccount.Product.Id, changeLogLine, labels, issues);
+                new PendingChangeLogLineRequestModel(TestAccount.UserId, TestAccount.Product.Id, changeLogLine, labels, issues);
 
             _productDaoStub.Products.Add(new Product(TestAccount.Product.Id, TestAccount.Id, TestAccount.Product.Name,
-                TestAccount.CustomVersioningScheme, TestAccount.Product.LanguageCode, TestAccount.UserId, TestAccount.CreationDate, null));
+                TestAccount.CustomVersioningScheme, TestAccount.Product.LanguageCode, TestAccount.UserId,
+                TestAccount.CreationDate, null));
 
             _changeLogDaoStub.ChangeLogs.AddRange(Enumerable.Range(0, 100)
                 .Select(x =>
@@ -156,10 +162,11 @@ namespace ChangeTracker.Application.Tests.UseCaseTests.Commands.AddPendingChange
             var labels = new List<string> {"Bugfix", "ProxyIssue"};
             var issues = new List<string> {"#1234", "#12345"};
             var lineRequestModel =
-                new PendingLineRequestModel(TestAccount.UserId, TestAccount.Product.Id, changeLogLine, labels, issues);
+                new PendingChangeLogLineRequestModel(TestAccount.UserId, TestAccount.Product.Id, changeLogLine, labels, issues);
 
             _productDaoStub.Products.Add(new Product(TestAccount.Product.Id, TestAccount.Id, TestAccount.Product.Name,
-                TestAccount.CustomVersioningScheme, TestAccount.Product.LanguageCode, TestAccount.UserId, TestAccount.CreationDate, null));
+                TestAccount.CustomVersioningScheme, TestAccount.Product.LanguageCode, TestAccount.UserId,
+                TestAccount.CreationDate, null));
 
             _changeLogDaoStub.ChangeLogs.Add(new ChangeLogLine(Guid.NewGuid(),
                 null,

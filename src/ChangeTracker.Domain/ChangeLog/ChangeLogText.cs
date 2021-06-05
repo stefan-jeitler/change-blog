@@ -54,6 +54,17 @@ namespace ChangeTracker.Domain.ChangeLog
             }
         }
 
+        public virtual bool Equals(ChangeLogText other)
+        {
+            if (other is null) 
+                return false;
+
+            return ReferenceEquals(this, other) ||
+                   string.Equals(Value, other.Value, StringComparison.OrdinalIgnoreCase);
+        }
+
+        public override int GetHashCode() => StringComparer.OrdinalIgnoreCase.GetHashCode(Value);
+
         public static implicit operator string(ChangeLogText text) => text.Value;
     }
 }

@@ -43,7 +43,7 @@ namespace ChangeTracker.Domain.ChangeLog
         public bool ContainsText(ChangeLogText other)
         {
             return Lines
-                .Any(x => x.Text.Value.Equals(other.Value, StringComparison.OrdinalIgnoreCase));
+                .Any(x => x.Text.Equals(other));
         }
 
         public IEnumerable<ChangeLogLine> FindDuplicateTexts(IEnumerable<ChangeLogLine> others)

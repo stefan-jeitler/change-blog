@@ -4,12 +4,12 @@ using ChangeTracker.Application.Services.ChangeLogLineParsing;
 
 namespace ChangeTracker.Application.UseCases.Commands.AddPendingChangeLogLine
 {
-    public interface IAddPendingLineOutputPort : ILineParserOutput
+    public interface IAddPendingChangeLogLineOutputPort : ILineParserOutput
     {
         void ProductDoesNotExist(Guid productId);
         void Created(Guid changeLogLineId);
         void Conflict(Conflict conflict);
         void TooManyLines(int maxChangeLogLines);
-        void LinesWithSameTextsAreNotAllowed(string text);
+        void LinesWithSameTextsAreNotAllowed(Guid changeLogLineId, string text);
     }
 }

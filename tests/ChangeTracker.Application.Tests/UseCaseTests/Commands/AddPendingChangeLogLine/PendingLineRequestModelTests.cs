@@ -24,7 +24,7 @@ namespace ChangeTracker.Application.Tests.UseCaseTests.Commands.AddPendingChange
             _testIssues = new List<string>(0);
         }
 
-        private PendingLineRequestModel CreateRequestModel() =>
+        private PendingChangeLogLineRequestModel CreateRequestModel() =>
             new(_testUserId, _testProductId, _testText, _testLabels, _testIssues);
 
         [Fact]
@@ -43,7 +43,7 @@ namespace ChangeTracker.Application.Tests.UseCaseTests.Commands.AddPendingChange
         {
             _testProductId = Guid.Empty;
 
-            Func<PendingLineRequestModel> act = CreateRequestModel;
+            Func<PendingChangeLogLineRequestModel> act = CreateRequestModel;
 
             act.Should().ThrowExactly<ArgumentException>();
         }
@@ -53,7 +53,7 @@ namespace ChangeTracker.Application.Tests.UseCaseTests.Commands.AddPendingChange
         {
             _testText = null;
 
-            Func<PendingLineRequestModel> act = CreateRequestModel;
+            Func<PendingChangeLogLineRequestModel> act = CreateRequestModel;
 
             act.Should().ThrowExactly<ArgumentNullException>();
         }
@@ -63,7 +63,7 @@ namespace ChangeTracker.Application.Tests.UseCaseTests.Commands.AddPendingChange
         {
             _testLabels = null;
 
-            Func<PendingLineRequestModel> act = CreateRequestModel;
+            Func<PendingChangeLogLineRequestModel> act = CreateRequestModel;
 
             act.Should().ThrowExactly<ArgumentNullException>();
         }
@@ -73,7 +73,7 @@ namespace ChangeTracker.Application.Tests.UseCaseTests.Commands.AddPendingChange
         {
             _testIssues = null;
 
-            Func<PendingLineRequestModel> act = CreateRequestModel;
+            Func<PendingChangeLogLineRequestModel> act = CreateRequestModel;
 
             act.Should().ThrowExactly<ArgumentNullException>();
         }

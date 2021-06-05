@@ -9,9 +9,9 @@ namespace ChangeTracker.Application.UseCases.Commands.MakeChangeLogLinePending
         void ChangeLogLineDoesNotExist();
         void ChangeLogLineIsAlreadyPending(Guid changeLogLineId);
         void VersionAlreadyReleased(Guid versionId);
-        void VersionClosed(Guid versionId);
+        void VersionDeleted(Guid versionId);
         void TooManyPendingLines(int maxChangeLogLines);
         void Conflict(Conflict conflict);
-        void LineWithSameTextAlreadyExists(string text);
+        void LineWithSameTextAlreadyExists(Guid changeLogLineId, string duplicate);
     }
 }

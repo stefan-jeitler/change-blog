@@ -120,13 +120,13 @@ namespace ChangeTracker.Application.Tests.UseCaseTests.Commands.MakeAllChangeLog
                 DateTime.Parse("2021-04-24"));
 
             _versionDaoStub.Versions.Add(clVersion);
-            _outputPortMock.Setup(m => m.VersionAlreadyReleased());
+            _outputPortMock.Setup(m => m.VersionAlreadyReleased(It.IsAny<Guid>()));
 
             // act
             await makeAllLinesPendingInteractor.ExecuteAsync(_outputPortMock.Object, clVersion.Id);
 
             // assert
-            _outputPortMock.Verify(m => m.VersionAlreadyReleased(), Times.Once);
+            _outputPortMock.Verify(m => m.VersionAlreadyReleased(It.Is<Guid>(x => x == clVersion.Id)), Times.Once);
         }
 
         [Fact]
@@ -140,13 +140,13 @@ namespace ChangeTracker.Application.Tests.UseCaseTests.Commands.MakeAllChangeLog
                 null, TestAccount.UserId, DateTime.Parse("2021-04-24"), DateTime.Parse("2021-04-24"));
 
             _versionDaoStub.Versions.Add(clVersion);
-            _outputPortMock.Setup(m => m.VersionClosed());
+            _outputPortMock.Setup(m => m.VersionDeleted(It.IsAny<Guid>()));
 
             // act
             await makeAllLinesPendingInteractor.ExecuteAsync(_outputPortMock.Object, clVersion.Id);
 
             // assert
-            _outputPortMock.Verify(m => m.VersionClosed(), Times.Once);
+            _outputPortMock.Verify(m => m.VersionDeleted(It.Is<Guid>(x => x == clVersion.Id)), Times.Once);
         }
 
         [Fact]
@@ -252,13 +252,13 @@ namespace ChangeTracker.Application.Tests.UseCaseTests.Commands.MakeAllChangeLog
                     TestAccount.UserId);
             _changeLogDaoStub.ChangeLogs.Add(versionLine);
             _versionDaoStub.Versions.Add(clVersion);
-            _outputPortMock.Setup(m => m.MadePending(It.IsAny<int>()));
+            _outputPortMock.Setup(m => m.MadePending(It.IsAny<Guid>(), It.IsAny<int>()));
 
             // act
             await makeAllLinesPendingInteractor.ExecuteAsync(_outputPortMock.Object, clVersion.Id);
 
             // assert
-            _outputPortMock.Verify(m => m.MadePending(It.Is<int>(x => x == 1)), Times.Once);
+            _outputPortMock.Verify(m => m.MadePending(It.Is<Guid>(x => x == TestAccount.Product.Id), It.Is<int>(x => x == 1)), Times.Once);
             _unitOfWorkMock.Verify(m => m.Start(), Times.Once);
             _unitOfWorkMock.Verify(m => m.Commit(), Times.Once);
         }

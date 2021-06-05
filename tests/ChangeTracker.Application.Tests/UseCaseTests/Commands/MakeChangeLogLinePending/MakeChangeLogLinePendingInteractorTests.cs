@@ -100,7 +100,8 @@ namespace ChangeTracker.Application.Tests.UseCaseTests.Commands.MakeChangeLogLin
             await makeLinePendingInteractor.ExecuteAsync(_outputPortMock.Object, changeLogLine.Id);
 
             // assert
-            _outputPortMock.Verify(m => m.ChangeLogLineIsAlreadyPending(It.Is<Guid>(x => x == changeLogLine.Id)), Times.Once);
+            _outputPortMock.Verify(m => m.ChangeLogLineIsAlreadyPending(It.Is<Guid>(x => x == changeLogLine.Id)),
+                Times.Once);
         }
 
         [Fact]
@@ -143,13 +144,13 @@ namespace ChangeTracker.Application.Tests.UseCaseTests.Commands.MakeChangeLogLin
 
             var makeLinePendingInteractor = CreateInteractor();
 
-            _outputPortMock.Setup(m => m.VersionClosed(It.IsAny<Guid>()));
+            _outputPortMock.Setup(m => m.VersionDeleted(It.IsAny<Guid>()));
 
             // act
             await makeLinePendingInteractor.ExecuteAsync(_outputPortMock.Object, changeLogLine.Id);
 
             // assert
-            _outputPortMock.Verify(m => m.VersionClosed(It.Is<Guid>(x => x == clVersion.Id)), Times.Once);
+            _outputPortMock.Verify(m => m.VersionDeleted(It.Is<Guid>(x => x == clVersion.Id)), Times.Once);
         }
 
         [Fact]
@@ -214,18 +215,21 @@ namespace ChangeTracker.Application.Tests.UseCaseTests.Commands.MakeChangeLogLin
             var changeLogLine = new ChangeLogLine(clVersion.Id, TestAccount.Product.Id,
                 ChangeLogText.Parse("some text"), 0, TestAccount.UserId);
             _changeLogDaoStub.ChangeLogs.Add(changeLogLine);
-            _changeLogDaoStub.ChangeLogs.Add(new ChangeLogLine(null, TestAccount.Product.Id,
-                ChangeLogText.Parse("some text"), 0, TestAccount.UserId));
+            var pendingLine = new ChangeLogLine(null, TestAccount.Product.Id,
+                ChangeLogText.Parse("some text"), 0, TestAccount.UserId);
+            _changeLogDaoStub.ChangeLogs.Add(pendingLine);
 
             var makeLinePendingInteractor = CreateInteractor();
 
-            _outputPortMock.Setup(m => m.LineWithSameTextAlreadyExists(It.IsAny<string>()));
+            _outputPortMock.Setup(m => m.LineWithSameTextAlreadyExists(It.IsAny<Guid>(), It.IsAny<string>()));
 
             // act
             await makeLinePendingInteractor.ExecuteAsync(_outputPortMock.Object, changeLogLine.Id);
 
             // assert
-            _outputPortMock.Verify(m => m.LineWithSameTextAlreadyExists(It.Is<string>(x => x == "some text")),
+            _outputPortMock.Verify(
+                m => m.LineWithSameTextAlreadyExists(It.Is<Guid>(x => x == pendingLine.Id),
+                    It.Is<string>(x => x == "some text")),
                 Times.Once);
         }
     }

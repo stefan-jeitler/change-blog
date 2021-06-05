@@ -7,8 +7,11 @@ using ChangeTracker.Application.UseCases.Commands.CloseProduct;
 using ChangeTracker.Application.UseCases.Commands.DeleteAllPendingChangeLogLines;
 using ChangeTracker.Application.UseCases.Commands.DeleteChangeLogLine;
 using ChangeTracker.Application.UseCases.Commands.DeleteVersion;
+using ChangeTracker.Application.UseCases.Commands.MakeAllChangeLogLinesPending;
+using ChangeTracker.Application.UseCases.Commands.MakeChangeLogLinePending;
 using ChangeTracker.Application.UseCases.Commands.ReleaseVersion;
 using ChangeTracker.Application.UseCases.Queries.GetAccounts;
+using ChangeTracker.Application.UseCases.Queries.GetChangeLogLine;
 using ChangeTracker.Application.UseCases.Queries.GetPendingChangeLogs;
 using ChangeTracker.Application.UseCases.Queries.GetProducts;
 using ChangeTracker.Application.UseCases.Queries.GetRoles;
@@ -25,6 +28,7 @@ namespace ChangeTracker.Api.Extensions
                 .AddAccountUseCases()
                 .AddProductUseCases()
                 .AddVersionUseCases()
+                .AddPendingChangeLogLineUseCases()
                 .AddChangeLogLineUseCases();
 
         public static IServiceCollection AddAccountUseCases(this IServiceCollection services) =>
@@ -50,15 +54,21 @@ namespace ChangeTracker.Api.Extensions
                 .AddScoped<IReleaseVersion, ReleaseVersionInteractor>()
                 .AddScoped<IDeleteVersion, DeleteVersionInteractor>();
 
-        public static IServiceCollection AddChangeLogLineUseCases(this IServiceCollection services) =>
+        public static IServiceCollection AddPendingChangeLogLineUseCases(this IServiceCollection services) =>
             services
                 .AddScoped<IAddPendingChangeLogLine, AddPendingChangeLogLineInteractor>()
                 .AddScoped<IGetPendingChangeLogLine, GetPendingChangeLogLineInteractor>()
                 .AddScoped<IGetPendingChangeLogLines, GetPendingChangeLogLinesInteractor>()
                 .AddScoped<IAssignPendingLineToVersion, AssignPendingLineToVersionInteractor>()
                 .AddScoped<IAssignAllPendingLinesToVersion, AssignAllPendingLinesToVersionInteractor>()
-                .AddScoped<IDeleteChangeLogLine, DeleteChangeLogLineInteractor>()
                 .AddScoped<IDeleteAllPendingChangeLogLines, DeleteAllPendingChangeLogLinesInteractor>()
-            ;
+                ;
+
+        public static IServiceCollection AddChangeLogLineUseCases(this IServiceCollection services) =>
+            services
+                .AddScoped<IMakeChangeLogLinePending, MakeChangeLogLinePendingInteractor>()
+                .AddScoped<IMakeAllChangeLogLinesPending, MakeAllChangeLogLinesPendingInteractor>()
+                .AddScoped<IGetChangeLogLine, GetChangeLogLineInteractor>()
+                .AddScoped<IDeleteChangeLogLine, DeleteChangeLogLineInteractor>();
     }
 }

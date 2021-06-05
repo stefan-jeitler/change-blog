@@ -5,10 +5,10 @@ namespace ChangeTracker.Application.UseCases.Commands.AddChangeLogLine
 {
     public interface IAddChangeLogLine
     {
-        Task ExecuteAsync(IAddLineOutputPort output,
-            VersionChangeLogLineRequestModelRequestModel requestModelRequestModel);
+        Task ExecuteAsync(IAddChangeLogLineOutputPort output,
+            VersionChangeLogLineRequestModel requestModel);
 
-        Task ExecuteAsync(IAddLineOutputPort output,
-            VersionIdChangeLogLineRequestModelRequestModel requestModelRequestModel);
+        Task ExecuteAsync(IAddChangeLogLineOutputPort output,
+            VersionIdChangeLogLineRequestModel requestModel);
     }
 }

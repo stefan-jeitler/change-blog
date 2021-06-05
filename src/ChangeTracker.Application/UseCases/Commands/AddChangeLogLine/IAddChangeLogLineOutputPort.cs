@@ -4,13 +4,13 @@ using ChangeTracker.Application.Services.ChangeLogLineParsing;
 
 namespace ChangeTracker.Application.UseCases.Commands.AddChangeLogLine
 {
-    public interface IAddLineOutputPort : ILineParserOutput
+    public interface IAddChangeLogLineOutputPort : ILineParserOutput
     {
-        void InvalidVersionFormat();
+        void InvalidVersionFormat(string version);
         void Created(Guid changeLogLineId);
         void Conflict(Conflict conflict);
         void VersionDoesNotExist();
         void TooManyLines(int maxChangeLogLines);
-        void LineWithSameTextAlreadyExists(string text);
+        void LineWithSameTextAlreadyExists(Guid changeLogLineId, string duplicate);
     }
 }

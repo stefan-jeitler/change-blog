@@ -3,9 +3,11 @@ using System.Collections.Generic;
 
 namespace ChangeTracker.Application.UseCases.Commands.AddChangeLogLine.Models
 {
-    public class VersionIdChangeLogLineRequestModelRequestModel : IChangeLogLineRequestModel
+    public class VersionChangeLogLineRequestModel : IChangeLogLineRequestModel
     {
-        public VersionIdChangeLogLineRequestModelRequestModel(Guid userId, Guid versionId,
+        public VersionChangeLogLineRequestModel(Guid userId,
+            Guid productId,
+            string version,
             string text,
             List<string> labels,
             List<string> issues)
@@ -15,16 +17,19 @@ namespace ChangeTracker.Application.UseCases.Commands.AddChangeLogLine.Models
 
             UserId = userId;
 
-            if (versionId == Guid.Empty)
-                throw new ArgumentException("VersionId cannot be empty.");
+            if (productId == Guid.Empty)
+                throw new ArgumentException("ProductId cannot be empty.");
 
-            VersionId = versionId;
+            ProductId = productId;
+
+            Version = version ?? throw new ArgumentNullException(nameof(version));
             Text = text ?? throw new ArgumentNullException(nameof(text));
             Labels = labels ?? throw new ArgumentNullException(nameof(labels));
             Issues = issues ?? throw new ArgumentNullException(nameof(issues));
         }
 
-        public Guid VersionId { get; }
+        public Guid ProductId { get; }
+        public string Version { get; }
 
         public Guid UserId { get; }
         public string Text { get; }

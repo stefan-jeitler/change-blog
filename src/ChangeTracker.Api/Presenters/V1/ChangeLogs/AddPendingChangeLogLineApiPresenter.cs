@@ -12,11 +12,11 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace ChangeTracker.Api.Presenters.V1.ChangeLogs
 {
-    public class AddPendingLineApiPresenter : BaseApiPresenter, IAddPendingLineOutputPort
+    public class AddPendingChangeLogLineApiPresenter : BaseApiPresenter, IAddPendingChangeLogLineOutputPort
     {
         private readonly HttpContext _httpContext;
 
-        public AddPendingLineApiPresenter(HttpContext httpContext)
+        public AddPendingChangeLogLineApiPresenter(HttpContext httpContext)
         {
             _httpContext = httpContext;
         }
@@ -53,10 +53,15 @@ namespace ChangeTracker.Api.Presenters.V1.ChangeLogs
                 DefaultResponse.Create($"Too many lines. Max lines: {maxChangeLogLines}"));
         }
 
-        public void LinesWithSameTextsAreNotAllowed(string duplicate)
+        public void LinesWithSameTextsAreNotAllowed(Guid changeLogLineId, string duplicate)
         {
+            var resourceIds = new Dictionary<string, string>
+            {
+                [nameof(changeLogLineId)] = changeLogLineId.ToString()
+            };
+
             Response = new UnprocessableEntityObjectResult(
-                DefaultResponse.Create($"Lines with the same text are not allowed. Duplicate: '{duplicate}'"));
+                DefaultResponse.Create($"Lines with same text are not allowed. Duplicate: '{duplicate}'", resourceIds));
         }
 
         public void InvalidChangeLogLineText(string text)

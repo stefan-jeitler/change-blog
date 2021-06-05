@@ -114,5 +114,61 @@ namespace ChangeTracker.Domain.Tests.ChangeLogTests
 
             labelStringified.Should().Be(text.Value);
         }
+
+        [Fact]
+        public void Equals_TwoIdenticalLinesWithDifferentCasing_ReturnsTrue()
+        {
+            var text1 = ChangeLogText.Parse("new feature added");
+            var text2 = ChangeLogText.Parse("NEW FEATURE ADDED");
+
+            var equals = text1.Equals(text2);
+
+            equals.Should().BeTrue();
+        }
+
+        [Fact]
+        public void Equals_TwoDifferentLines_ReturnsFalse()
+        {
+            var text1 = ChangeLogText.Parse("new feature added");
+            var text2 = ChangeLogText.Parse("Some bug fix");
+
+            var equals = text1.Equals(text2);
+
+            equals.Should().BeFalse();
+        }
+
+        [Fact]
+        public void Equals_SecondArgumentIsNull_ReturnsFalse()
+        {
+            var text1 = ChangeLogText.Parse("new feature added");
+
+            var equals = text1.Equals(null);
+
+            equals.Should().BeFalse();
+        }
+
+        [Fact]
+        public void GetHashCode_TwoIdenticalLines_SameHashCodes()
+        {
+            var text1 = ChangeLogText.Parse("new feature added");
+            var text2 = ChangeLogText.Parse("new feature added");
+
+            var hashCode1 = text1.GetHashCode();
+            var hashCode2 = text2.GetHashCode();
+
+            hashCode1.Should().Be(hashCode2);
+        }
+
+        [Fact]
+        public void GetHashCode_TwoDifferentLines_DifferentHashCodes()
+        {
+            var text1 = ChangeLogText.Parse("new feature added");
+            var text2 = ChangeLogText.Parse("Some bug fix");
+
+            var hashCode1 = text1.GetHashCode();
+            var hashCode2 = text2.GetHashCode();
+
+            hashCode1.Should().NotBe(hashCode2);
+        }
     }
 }

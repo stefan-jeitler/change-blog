@@ -1,4 +1,5 @@
 using System;
+using System.Linq;
 using System.Threading.Tasks;
 using ChangeTracker.Application.DataAccess;
 using ChangeTracker.Application.DataAccess.ChangeLog;
@@ -29,31 +30,31 @@ namespace ChangeTracker.Application.UseCases.Commands.AddChangeLogLine
             _changeLogCommands = changeLogCommands ?? throw new ArgumentNullException(nameof(changeLogCommands));
         }
 
-        public async Task ExecuteAsync(IAddLineOutputPort output,
-            VersionChangeLogLineRequestModelRequestModel requestModelRequestModel)
+        public async Task ExecuteAsync(IAddChangeLogLineOutputPort output,
+            VersionChangeLogLineRequestModel requestModel)
         {
-            if (!ClVersionValue.TryParse(requestModelRequestModel.Version, out var versionValue))
+            if (!ClVersionValue.TryParse(requestModel.Version, out var versionValue))
             {
-                output.InvalidVersionFormat();
+                output.InvalidVersionFormat(requestModel.Version);
                 return;
             }
 
             _unitOfWork.Start();
 
-            var version = await _versionDao.FindVersionAsync(requestModelRequestModel.ProductId, versionValue);
+            var version = await _versionDao.FindVersionAsync(requestModel.ProductId, versionValue);
             if (version.HasNoValue)
             {
                 output.VersionDoesNotExist();
                 return;
             }
 
-            await AddLineAsync(output, requestModelRequestModel, version.Value);
+            await AddLineAsync(output, requestModel, version.Value);
         }
 
-        public async Task ExecuteAsync(IAddLineOutputPort output,
-            VersionIdChangeLogLineRequestModelRequestModel requestModelRequestModel)
+        public async Task ExecuteAsync(IAddChangeLogLineOutputPort output,
+            VersionIdChangeLogLineRequestModel requestModel)
         {
-            var version = await _versionDao.FindVersionAsync(requestModelRequestModel.VersionId);
+            var version = await _versionDao.FindVersionAsync(requestModel.VersionId);
             if (version.HasNoValue)
             {
                 output.VersionDoesNotExist();
@@ -62,10 +63,10 @@ namespace ChangeTracker.Application.UseCases.Commands.AddChangeLogLine
 
             _unitOfWork.Start();
 
-            await AddLineAsync(output, requestModelRequestModel, version.Value);
+            await AddLineAsync(output, requestModel, version.Value);
         }
 
-        private async Task AddLineAsync(IAddLineOutputPort output, IChangeLogLineRequestModel requestModel,
+        private async Task AddLineAsync(IAddChangeLogLineOutputPort output, IChangeLogLineRequestModel requestModel,
             ClVersion clVersion)
         {
             var line = await CreateChangeLogLineAsync(output, requestModel, clVersion);
@@ -75,7 +76,7 @@ namespace ChangeTracker.Application.UseCases.Commands.AddChangeLogLine
             await SaveChangeLogLineAsync(output, line.Value);
         }
 
-        private async Task<Maybe<ChangeLogLine>> CreateChangeLogLineAsync(IAddLineOutputPort output,
+        private async Task<Maybe<ChangeLogLine>> CreateChangeLogLineAsync(IAddChangeLogLineOutputPort output,
             IChangeLogLineRequestModel requestModel, ClVersion clVersion)
         {
             var parsedLine = ParseLine(output, requestModel);
@@ -89,9 +90,10 @@ namespace ChangeTracker.Application.UseCases.Commands.AddChangeLogLine
                 return Maybe<ChangeLogLine>.None;
             }
 
-            if (changeLogs.ContainsText(parsedLine.Value.Text))
+            var existingLineWithSameText = changeLogs.Lines.FirstOrDefault(x => x.Text.Equals(parsedLine.Value.Text));
+            if (existingLineWithSameText is not null)
             {
-                output.LineWithSameTextAlreadyExists(parsedLine.Value.Text);
+                output.LineWithSameTextAlreadyExists(existingLineWithSameText.Id, parsedLine.Value.Text);
                 return Maybe<ChangeLogLine>.None;
             }
 
@@ -112,7 +114,7 @@ namespace ChangeTracker.Application.UseCases.Commands.AddChangeLogLine
             return LineParser.Parse(output, lineParsingRequestModel);
         }
 
-        private async Task SaveChangeLogLineAsync(IAddLineOutputPort output, ChangeLogLine changeLogLine)
+        private async Task SaveChangeLogLineAsync(IAddChangeLogLineOutputPort output, ChangeLogLine changeLogLine)
         {
             await _changeLogCommands
                 .AddOrUpdateLineAsync(changeLogLine)

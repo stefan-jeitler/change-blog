@@ -102,20 +102,20 @@ namespace ChangeTracker.Application.UseCases.Commands.MakeAllChangeLogLinesPendi
                 x.Text, nextFreePosition + (uint) i,
                 x.CreatedAt, x.Labels, x.Issues, x.CreatedByUser, x.DeletedAt));
 
-            await MoveLinesAsync(output, lines);
+            await MoveLinesAsync(output, productId, lines);
         }
 
         private static bool IsVersionReadOnly(IMakeAllChangeLogLinesPendingOutputPort output, ClVersion clVersion)
         {
             if (clVersion.IsReleased)
             {
-                output.VersionAlreadyReleased();
+                output.VersionAlreadyReleased(clVersion.Id);
                 return true;
             }
 
             if (clVersion.IsDeleted)
             {
-                output.VersionClosed();
+                output.VersionDeleted(clVersion.Id);
                 return true;
             }
 
@@ -123,6 +123,7 @@ namespace ChangeTracker.Application.UseCases.Commands.MakeAllChangeLogLinesPendi
         }
 
         private async Task MoveLinesAsync(IMakeAllChangeLogLinesPendingOutputPort output,
+            Guid productId,
             IEnumerable<ChangeLogLine> lines)
         {
             var changeLogLines = lines.ToList();
@@ -133,7 +134,7 @@ namespace ChangeTracker.Application.UseCases.Commands.MakeAllChangeLogLinesPendi
             void Finish(int count)
             {
                 _unitOfWork.Commit();
-                output.MadePending(count);
+                output.MadePending(productId, count);
             }
         }
     }

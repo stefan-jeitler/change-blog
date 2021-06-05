@@ -72,13 +72,13 @@ namespace ChangeTracker.Api.Controllers.v1
             [FromBody] AddOrUpdateChangeLogLineDto pendingChangeLogLine)
         {
             var userId = HttpContext.GetUserId();
-            var requestModel = new PendingLineRequestModel(userId,
+            var requestModel = new PendingChangeLogLineRequestModel(userId,
                 productId,
                 pendingChangeLogLine.Text,
                 pendingChangeLogLine.Labels ?? new List<string>(0),
                 pendingChangeLogLine.Issues ?? new List<string>(0));
 
-            var presenter = new AddPendingLineApiPresenter(HttpContext);
+            var presenter = new AddPendingChangeLogLineApiPresenter(HttpContext);
             await addPendingChangeLogLine.ExecuteAsync(presenter, requestModel);
 
             return presenter.Response;
@@ -129,9 +129,6 @@ namespace ChangeTracker.Api.Controllers.v1
             [FromServices] IDeleteChangeLogLine deleteChangeLogLine,
             Guid changeLogLineId)
         {
-            if (changeLogLineId == Guid.Empty)
-                return BadRequest(DefaultResponse.Create("ChangeLogLineId cannot be empty."));
-
             var presenter = new DeleteChangeLogLineApiPresenter();
             await deleteChangeLogLine.ExecuteAsync(presenter, changeLogLineId);
 

@@ -7,12 +7,12 @@ namespace ChangeTracker.Application.UseCases.Commands.MakeAllChangeLogLinesPendi
     public interface IMakeAllChangeLogLinesPendingOutputPort
     {
         void VersionDoesNotExist();
-        void VersionAlreadyReleased();
-        void VersionClosed();
+        void VersionAlreadyReleased(Guid versionId);
+        void VersionDeleted(Guid versionId);
         void TooManyPendingLines(int maxChangeLogLines);
         void LineWithSameTextAlreadyExists(List<string> text);
         void Conflict(Conflict conflict);
-        void MadePending(int count);
+        void MadePending(Guid productId, int count);
         void InvalidVersionFormat(string version);
     }
 }

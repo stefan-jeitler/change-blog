@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Linq;
 using System.Threading.Tasks;
 using ChangeTracker.Application.DataAccess;
 using ChangeTracker.Application.DataAccess.ChangeLog;
@@ -26,8 +27,8 @@ namespace ChangeTracker.Application.UseCases.Commands.AddPendingChangeLogLine
             _changeLogCommands = changeLogCommands ?? throw new ArgumentNullException(nameof(changeLogCommands));
         }
 
-        public async Task ExecuteAsync(IAddPendingLineOutputPort output,
-            PendingLineRequestModel lineRequestModel)
+        public async Task ExecuteAsync(IAddPendingChangeLogLineOutputPort output,
+            PendingChangeLogLineRequestModel lineRequestModel)
         {
             _unitOfWork.Start();
 
@@ -45,8 +46,8 @@ namespace ChangeTracker.Application.UseCases.Commands.AddPendingChangeLogLine
             await SaveChangeLogLineAsync(output, line.Value);
         }
 
-        private async Task<Maybe<ChangeLogLine>> CreateChangeLogLineAsync(IAddPendingLineOutputPort output,
-            PendingLineRequestModel requestModel,
+        private async Task<Maybe<ChangeLogLine>> CreateChangeLogLineAsync(IAddPendingChangeLogLineOutputPort output,
+            PendingChangeLogLineRequestModel requestModel,
             Product product)
         {
             var parsedLine = ParseLine(output, requestModel);
@@ -61,9 +62,10 @@ namespace ChangeTracker.Application.UseCases.Commands.AddPendingChangeLogLine
                 return Maybe<ChangeLogLine>.None;
             }
 
-            if (changeLogs.ContainsText(parsedLine.Value.Text))
+            var existingLineWithSameText = changeLogs.Lines.FirstOrDefault(x => x.Text.Equals(parsedLine.Value.Text));
+            if (existingLineWithSameText is not null)
             {
-                output.LinesWithSameTextsAreNotAllowed(parsedLine.Value.Text);
+                output.LinesWithSameTextsAreNotAllowed(existingLineWithSameText.Id, parsedLine.Value.Text);
                 return Maybe<ChangeLogLine>.None;
             }
 
@@ -81,7 +83,7 @@ namespace ChangeTracker.Application.UseCases.Commands.AddPendingChangeLogLine
         }
 
         private static Maybe<LineParserResponseModel> ParseLine(ILineParserOutput output,
-            PendingLineRequestModel requestModel)
+            PendingChangeLogLineRequestModel requestModel)
         {
             var lineParsingRequestModel =
                 new LineParserRequestModel(requestModel.Text, requestModel.Labels, requestModel.Issues);
@@ -89,7 +91,7 @@ namespace ChangeTracker.Application.UseCases.Commands.AddPendingChangeLogLine
             return LineParser.Parse(output, lineParsingRequestModel);
         }
 
-        private async Task SaveChangeLogLineAsync(IAddPendingLineOutputPort outputPort, ChangeLogLine line)
+        private async Task SaveChangeLogLineAsync(IAddPendingChangeLogLineOutputPort outputPort, ChangeLogLine line)
         {
             await _changeLogCommands
                 .AddOrUpdateLineAsync(line)

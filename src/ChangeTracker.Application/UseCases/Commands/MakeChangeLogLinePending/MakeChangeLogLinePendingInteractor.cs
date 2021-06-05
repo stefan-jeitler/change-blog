@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Linq;
 using System.Threading.Tasks;
 using ChangeTracker.Application.DataAccess;
 using ChangeTracker.Application.DataAccess.ChangeLog;
@@ -42,7 +43,7 @@ namespace ChangeTracker.Application.UseCases.Commands.MakeChangeLogLinePending
             if (clVersion.HasNoValue)
                 return;
 
-            var pendingChangeLogMetadata = await GetChangeLogsMetadataAsync(output, line.Value);
+            var pendingChangeLogMetadata = await GetChangeLogsAsync(output, line.Value);
             if (pendingChangeLogMetadata.HasNoValue)
                 return;
 
@@ -83,14 +84,14 @@ namespace ChangeTracker.Application.UseCases.Commands.MakeChangeLogLinePending
 
             if (clVersion.IsDeleted)
             {
-                output.VersionClosed(versionId);
+                output.VersionDeleted(versionId);
                 return Maybe<ClVersion>.None;
             }
 
             return Maybe<ClVersion>.From(clVersion);
         }
 
-        private async Task<Maybe<ChangeLogs>> GetChangeLogsMetadataAsync(
+        private async Task<Maybe<ChangeLogs>> GetChangeLogsAsync(
             IMakeChangeLogLinePendingOutputPort output,
             ChangeLogLine line)
         {
@@ -101,9 +102,10 @@ namespace ChangeTracker.Application.UseCases.Commands.MakeChangeLogLinePending
                 return Maybe<ChangeLogs>.None;
             }
 
-            if (pendingChangeLogs.ContainsText(line.Text))
+            var existingLineWithSameText = pendingChangeLogs.Lines.FirstOrDefault(x => x.Text.Equals(line.Text));
+            if (existingLineWithSameText is not null)
             {
-                output.LineWithSameTextAlreadyExists(line.Text);
+                output.LineWithSameTextAlreadyExists(existingLineWithSameText.Id, line.Text);
                 return Maybe<ChangeLogs>.None;
             }
 

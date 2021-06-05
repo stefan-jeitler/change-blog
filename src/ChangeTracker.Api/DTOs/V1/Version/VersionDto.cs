@@ -8,7 +8,7 @@ namespace ChangeTracker.Api.DTOs.V1.Version
 {
     public class VersionDto
     {
-        public Guid VersionId { get; set; }
+        public Guid Id { get; set; }
         public string Version { get; set; }
         public string Name { get; set; }
         public Guid ProductId { get; set; }
@@ -22,7 +22,7 @@ namespace ChangeTracker.Api.DTOs.V1.Version
         public static VersionDto FromResponseModel(VersionResponseModel model) =>
             new()
             {
-                VersionId = model.VersionId,
+                Id = model.VersionId,
                 Version = model.Version,
                 Name = model.Name,
                 ProductId = model.ProductId,

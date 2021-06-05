@@ -89,7 +89,7 @@ namespace ChangeTracker.Api.Controllers.v1
             return presenter.Response;
         }
 
-        [HttpPost("versions/{versionId:Guid}/make-pending")]
+        [HttpPost("versions/{versionId:Guid}/changelogs/make-pending")]
         [NeedsPermission(Permission.MoveChangeLogLines)]
         public async Task<ActionResult> MakeVersionChangeLogLinesPendingAsync(
             [FromServices] IMakeAllChangeLogLinesPending makeAllChangeLogLinesPending,

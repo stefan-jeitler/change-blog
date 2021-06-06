@@ -26,7 +26,7 @@ namespace ChangeTracker.Api.Presenters.V1.ChangeLogs
                 [nameof(changeLogLineId)] = changeLogLineId.ToString()
             };
 
-            Response = new ConflictObjectResult(DefaultResponse.Create("The requested change log line is pending.", resourceIds));
+            Response = new NotFoundObjectResult(DefaultResponse.Create("The requested change log line is pending.", resourceIds));
         }
 
         public void LineFound(ChangeLogLineResponseModel responseModel)

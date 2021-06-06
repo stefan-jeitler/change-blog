@@ -31,14 +31,11 @@ namespace ChangeTracker.Api.Controllers.V1
             return Ok(labels);
         }
 
-        [HttpPost]
+        [HttpPatch("{label}")]
         [NeedsPermission(Permission.AddOrUpdateChangeLogLine)]
         public async Task<ActionResult> AddLabelAsync(
             [FromServices] IAddChangeLogLineLabel addChangeLogLineLabel,
-            Guid changeLogLineId,
-            [FromBody]
-            [Required]
-            string label)
+            Guid changeLogLineId, string label)
         {
             var requestModel = new ChangeLogLineLabelRequestModel(changeLogLineId, label);
 
@@ -48,14 +45,11 @@ namespace ChangeTracker.Api.Controllers.V1
             return presenter.Response;
         }
 
-        [HttpDelete]
+        [HttpDelete("{label}")]
         [NeedsPermission(Permission.AddOrUpdateChangeLogLine)]
         public async Task<ActionResult> DeleteLabelAsync(
             [FromServices] IDeleteChangeLogLineLabel deleteChangeLogLineLabel, 
-            Guid changeLogLineId,
-            [FromBody] 
-            [Required]
-            string label)
+            Guid changeLogLineId, string label)
         {
             var requestModel = new ChangeLogLineLabelRequestModel(changeLogLineId, label);
 

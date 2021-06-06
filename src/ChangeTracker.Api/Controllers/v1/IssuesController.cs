@@ -31,12 +31,11 @@ namespace ChangeTracker.Api.Controllers.V1
             return Ok(issues);
         }
 
-        [HttpPost]
+        [HttpPatch("{issue}")]
         [NeedsPermission(Permission.AddOrUpdateChangeLogLine)]
         public async Task<ActionResult> AddIssueAsync(
             [FromServices] IAddChangeLogLineIssue addChangeLogLineIssue,
-            Guid changeLogLineId,
-            [FromBody] [Required] string issue)
+            Guid changeLogLineId, string issue)
         {
             var requestModel = new ChangeLogLineIssueRequestModel(changeLogLineId, issue);
 
@@ -46,12 +45,11 @@ namespace ChangeTracker.Api.Controllers.V1
             return presenter.Response;
         }
 
-        [HttpDelete]
+        [HttpDelete("{issue}")]
         [NeedsPermission(Permission.AddOrUpdateChangeLogLine)]
         public async Task<ActionResult> DeleteIssueAsync(
             [FromServices] IDeleteChangeLogLineIssue deleteChangeLogLineIssue,
-            Guid changeLogLineId,
-            [FromBody] [Required] string issue)
+            Guid changeLogLineId, string issue)
         {
             var requestModel = new ChangeLogLineIssueRequestModel(changeLogLineId, issue);
 

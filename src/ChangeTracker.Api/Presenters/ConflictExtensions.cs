@@ -99,7 +99,7 @@ namespace ChangeTracker.Api.Presenters
             }
 
             var responseMessage =
-                DefaultResponse.Create("Error while inserting or updating ChangeLogLines. Please try again later",
+                DefaultResponse.Create("Error while inserting or updating ChangeLogLines. Please try again later.",
                     resourceIds);
 
             return new ConflictObjectResult(responseMessage);

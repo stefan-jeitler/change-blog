@@ -23,11 +23,6 @@ namespace ChangeTracker.Api
             _configuration = configuration;
         }
 
-        private static void AddUseCases(IServiceCollection services)
-        {
-            services.AddUseCases();
-        }
-
         private static void ConfigureControllers(IServiceCollection services)
         {
             services
@@ -40,9 +35,7 @@ namespace ChangeTracker.Api
             ConfigureControllers(services);
 
             services.AddSwagger();
-
             services.AddApplicationInsightsTelemetry();
-
             services.AddApiKeyAuthentication();
             services.AddPermissionCheck();
 
@@ -50,8 +43,7 @@ namespace ChangeTracker.Api
             services.AddPostgresDataAccess(connectionString);
 
             services.AddMemoryCache();
-
-            AddUseCases(services);
+            services.AddUseCases();
         }
 
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)

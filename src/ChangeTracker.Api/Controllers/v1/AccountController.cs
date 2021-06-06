@@ -17,7 +17,7 @@ using ChangeTracker.Application.UseCases.Queries.GetRoles;
 using ChangeTracker.Application.UseCases.Queries.GetUsers;
 using Microsoft.AspNetCore.Mvc;
 
-namespace ChangeTracker.Api.Controllers.v1
+namespace ChangeTracker.Api.Controllers.V1
 {
     [ApiController]
     [Route("api/v1/accounts")]

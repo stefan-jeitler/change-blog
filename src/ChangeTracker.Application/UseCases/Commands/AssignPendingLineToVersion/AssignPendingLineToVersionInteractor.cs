@@ -43,7 +43,8 @@ namespace ChangeTracker.Application.UseCases.Commands.AssignPendingLineToVersion
             await AssignToVersionAsync(output, version.Value, requestModel.ChangeLogLineId);
         }
 
-        public async Task ExecuteAsync(IAssignPendingLineToVersionOutputPort output, VersionAssignmentRequestModel requestModel)
+        public async Task ExecuteAsync(IAssignPendingLineToVersionOutputPort output,
+            VersionAssignmentRequestModel requestModel)
         {
             if (!ClVersionValue.TryParse(requestModel.Version, out var versionValue))
             {

@@ -79,7 +79,8 @@ namespace ChangeTracker.Application.UseCases.Commands.AddProduct
 
             if (langCode.HasNoValue)
             {
-                output.NotSupportedLanguageCode(productLangCode.Value, supportedLangCodes.Select(x => x.Value).ToList());
+                output.NotSupportedLanguageCode(productLangCode.Value,
+                    supportedLangCodes.Select(x => x.Value).ToList());
                 return Maybe<Name>.None;
             }
 

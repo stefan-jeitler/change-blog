@@ -18,7 +18,7 @@ using ChangeTracker.Application.UseCases.Commands.ReleaseVersion;
 using ChangeTracker.Application.UseCases.Queries.GetVersions;
 using Microsoft.AspNetCore.Mvc;
 
-namespace ChangeTracker.Api.Controllers.v1
+namespace ChangeTracker.Api.Controllers.V1
 {
     [ApiController]
     [Route("api/v1")]

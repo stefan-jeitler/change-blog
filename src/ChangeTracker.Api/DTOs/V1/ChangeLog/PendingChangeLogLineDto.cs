@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using ChangeTracker.Application.UseCases.Queries.GetPendingChangeLogLine;
 using ChangeTracker.Application.UseCases.Queries.GetPendingChangeLogs;
 
 namespace ChangeTracker.Api.DTOs.V1.ChangeLog

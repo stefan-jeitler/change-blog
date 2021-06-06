@@ -3,6 +3,8 @@ using System.Threading.Tasks;
 using ChangeTracker.Application.DataAccess.ChangeLog;
 using CSharpFunctionalExtensions;
 
+// ReSharper disable SwitchStatementHandlesSomeKnownEnumValuesWithDefault
+
 namespace ChangeTracker.Application.UseCases.Commands.DeleteChangeLogLine
 {
     public class DeleteChangeLogLineInteractor : IDeleteChangeLogLine
@@ -17,14 +19,25 @@ namespace ChangeTracker.Application.UseCases.Commands.DeleteChangeLogLine
             _changeLogQueries = changeLogQueries ?? throw new ArgumentNullException(nameof(changeLogQueries));
         }
 
-        public async Task ExecuteAsync(IDeleteChangeLogLineOutputPort output, Guid changeLogLineId)
+        public async Task ExecuteAsync(IDeleteChangeLogLineOutputPort output,
+            DeleteChangeLogLineRequestModel requestModel)
         {
-            var existingLine = await _changeLogQueries.FindLineAsync(changeLogLineId);
+            var existingLine = await _changeLogQueries.FindLineAsync(requestModel.ChangeLogLineId);
 
             if (existingLine.HasNoValue)
             {
-                output.LineDoesNotExist(changeLogLineId);
+                output.LineDoesNotExist(requestModel.ChangeLogLineId);
                 return;
+            }
+
+            switch (requestModel.ChangeLogLineType)
+            {
+                case ChangeLogLineType.Pending when !existingLine.Value.IsPending:
+                    output.RequestedLineIsNotPending(existingLine.Value.Id);
+                    return;
+                case ChangeLogLineType.NotPending when existingLine.Value.IsPending:
+                    output.RequestedLineIsPending(existingLine.Value.Id);
+                    return;
             }
 
             if (existingLine.Value.DeletedAt.HasValue)
@@ -34,9 +47,7 @@ namespace ChangeTracker.Application.UseCases.Commands.DeleteChangeLogLine
             }
 
             await _changeLogCommands.DeleteLineAsync(existingLine.Value)
-                .Match(
-                    l => output.LineDeleted(l.Id),
-                    output.Conflict);
+                .Match(l => output.LineDeleted(l.Id), output.Conflict);
         }
     }
 }

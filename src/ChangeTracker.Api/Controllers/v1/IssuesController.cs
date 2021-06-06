@@ -13,7 +13,7 @@ using ChangeTracker.Application.UseCases.Commands.Issues.SharedModels;
 using ChangeTracker.Application.UseCases.Queries.GetIssues;
 using Microsoft.AspNetCore.Mvc;
 
-namespace ChangeTracker.Api.Controllers.v1
+namespace ChangeTracker.Api.Controllers.V1
 {
     [ApiController]
     [Route("api/v1/changelogs/{changeLogLineId:Guid}/issues")]

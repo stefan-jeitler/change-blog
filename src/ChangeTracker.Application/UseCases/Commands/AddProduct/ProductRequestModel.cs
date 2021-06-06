@@ -4,7 +4,8 @@ namespace ChangeTracker.Application.UseCases.Commands.AddProduct
 {
     public class ProductRequestModel
     {
-        public ProductRequestModel(Guid accountId, string name, Guid? versioningSchemeId, string languageCode, Guid userId)
+        public ProductRequestModel(Guid accountId, string name, Guid? versioningSchemeId, string languageCode,
+            Guid userId)
         {
             if (accountId == Guid.Empty)
                 throw new ArgumentException("AccountId cannot be empty.");

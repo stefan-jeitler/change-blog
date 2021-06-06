@@ -19,6 +19,7 @@ using ChangeTracker.Application.UseCases.Queries.GetAccounts;
 using ChangeTracker.Application.UseCases.Queries.GetChangeLogLine;
 using ChangeTracker.Application.UseCases.Queries.GetIssues;
 using ChangeTracker.Application.UseCases.Queries.GetLabels;
+using ChangeTracker.Application.UseCases.Queries.GetPendingChangeLogLine;
 using ChangeTracker.Application.UseCases.Queries.GetPendingChangeLogs;
 using ChangeTracker.Application.UseCases.Queries.GetProducts;
 using ChangeTracker.Application.UseCases.Queries.GetRoles;
@@ -67,7 +68,7 @@ namespace ChangeTracker.Api.Extensions
             services
                 .AddScoped<IAddPendingChangeLogLine, AddPendingChangeLogLineInteractor>()
                 .AddScoped<IGetPendingChangeLogLine, GetPendingChangeLogLineInteractor>()
-                .AddScoped<IGetPendingChangeLogLines, GetPendingChangeLogLinesInteractor>()
+                .AddScoped<IGetPendingChangeLogs, GetPendingChangeLogsInteractor>()
                 .AddScoped<IAssignPendingLineToVersion, AssignPendingLineToVersionInteractor>()
                 .AddScoped<IAssignAllPendingLinesToVersion, AssignAllPendingLinesToVersionInteractor>()
                 .AddScoped<IDeleteAllPendingChangeLogLines, DeleteAllPendingChangeLogLinesInteractor>()

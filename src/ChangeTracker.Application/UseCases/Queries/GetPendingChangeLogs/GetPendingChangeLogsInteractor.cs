@@ -9,13 +9,13 @@ using ChangeTracker.Application.UseCases.Queries.SharedModels;
 
 namespace ChangeTracker.Application.UseCases.Queries.GetPendingChangeLogs
 {
-    public class GetPendingChangeLogLinesInteractor : IGetPendingChangeLogLines
+    public class GetPendingChangeLogsInteractor : IGetPendingChangeLogs
     {
         private readonly IChangeLogQueriesDao _changeLogQueries;
         private readonly IProductDao _productDao;
         private readonly IUserDao _userDao;
 
-        public GetPendingChangeLogLinesInteractor(IChangeLogQueriesDao changeLogQueries, IUserDao userDao,
+        public GetPendingChangeLogsInteractor(IChangeLogQueriesDao changeLogQueries, IUserDao userDao,
             IProductDao productDao)
         {
             _changeLogQueries = changeLogQueries ?? throw new ArgumentNullException(nameof(changeLogQueries));
@@ -44,16 +44,16 @@ namespace ChangeTracker.Application.UseCases.Queries.GetPendingChangeLogs
             var lines = pendingChangeLogs
                 .Lines
                 .Select(x => new ChangeLogLineResponseModel(x.Id,
-                x.Text,
-                x.Labels.Select(l => l.Value).ToList(),
-                x.Issues.Select(i => i.Value).ToList(),
-                x.CreatedAt.ToLocal(currentUser.TimeZone)
-            )).ToList();
+                    x.Text,
+                    x.Labels.Select(l => l.Value).ToList(),
+                    x.Issues.Select(i => i.Value).ToList(),
+                    x.CreatedAt.ToLocal(currentUser.TimeZone)
+                )).ToList();
 
 
             return new PendingChangeLogsResponseModel(product.Id,
                 product.Name,
-                product.AccountId, 
+                product.AccountId,
                 lines);
         }
     }

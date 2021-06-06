@@ -17,7 +17,7 @@ using ChangeTracker.Application.UseCases.Commands.MakeChangeLogLinePending;
 using ChangeTracker.Application.UseCases.Queries.GetChangeLogLine;
 using Microsoft.AspNetCore.Mvc;
 
-namespace ChangeTracker.Api.Controllers.v1
+namespace ChangeTracker.Api.Controllers.V1
 {
     [ApiController]
     [Route("api/v1")]
@@ -31,18 +31,12 @@ namespace ChangeTracker.Api.Controllers.v1
             [FromServices] IGetChangeLogLine getChangeLogLine,
             Guid changeLogLineId)
         {
-
-            var resourceIds = new Dictionary<string, string>
-            {
-                [nameof(changeLogLineId)] = changeLogLineId.ToString()
-            };
-
             var userId = HttpContext.GetUserId();
-            var line = await getChangeLogLine.ExecuteAsync(userId, changeLogLineId);
 
-            return line.HasValue
-                ? Ok(ChangeLogLineDto.FromResponseModel(line.Value))
-                : NotFound(DefaultResponse.Create("ChangeLogLine not found.", resourceIds));
+            var presenter = new GetChangeLogLineApiPresenter();
+            await getChangeLogLine.ExecuteAsync(presenter, userId, changeLogLineId);
+
+            return presenter.Response;
         }
         
         [HttpDelete("changelogs/{changeLogLineId:Guid}")]
@@ -51,8 +45,10 @@ namespace ChangeTracker.Api.Controllers.v1
             [FromServices] IDeleteChangeLogLine deleteChangeLogLine, 
             Guid changeLogLineId)
         {
+            var requestModel = new DeleteChangeLogLineRequestModel(changeLogLineId, ChangeLogLineType.NotPending);
+
             var presenter = new DeleteChangeLogLineApiPresenter();
-            await deleteChangeLogLine.ExecuteAsync(presenter, changeLogLineId);
+            await deleteChangeLogLine.ExecuteAsync(presenter, requestModel);
 
             return presenter.Response;
         }        

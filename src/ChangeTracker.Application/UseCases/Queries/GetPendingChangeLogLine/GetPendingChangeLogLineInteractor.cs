@@ -8,7 +8,7 @@ using ChangeTracker.Application.Extensions;
 using ChangeTracker.Application.UseCases.Queries.SharedModels;
 using CSharpFunctionalExtensions;
 
-namespace ChangeTracker.Application.UseCases.Queries.GetPendingChangeLogs
+namespace ChangeTracker.Application.UseCases.Queries.GetPendingChangeLogLine
 {
     public class GetPendingChangeLogLineInteractor : IGetPendingChangeLogLine
     {
@@ -24,7 +24,8 @@ namespace ChangeTracker.Application.UseCases.Queries.GetPendingChangeLogs
             _productDao = productDao ?? throw new ArgumentNullException(nameof(productDao));
         }
 
-        public async Task<Maybe<PendingChangeLogLineResponseModel>> ExecuteAsync(Guid userId, Guid changeLogLineId)
+        public async Task ExecuteAsync(IGetPendingChangeLogLineOutputPort output,
+            Guid userId, Guid changeLogLineId)
         {
             if (userId == Guid.Empty)
                 throw new ArgumentException("UserId cannot be empty.");
@@ -32,19 +33,25 @@ namespace ChangeTracker.Application.UseCases.Queries.GetPendingChangeLogs
             if (changeLogLineId == Guid.Empty)
                 throw new ArgumentException("ChangeLogLineId cannot be empty.");
 
-            return await GetChangeLogLineAsync(userId, changeLogLineId);
+            await GetChangeLogLineAsync(output, userId, changeLogLineId);
         }
 
-        private async Task<Maybe<PendingChangeLogLineResponseModel>> GetChangeLogLineAsync(Guid userId,
+        private async Task GetChangeLogLineAsync(
+            IGetPendingChangeLogLineOutputPort output,
+            Guid userId,
             Guid changeLogLineId)
         {
             var line = await _changeLogQueries.FindLineAsync(changeLogLineId);
 
             if (line.HasNoValue)
-                return Maybe<PendingChangeLogLineResponseModel>.None;
+            {
+                output.LineDoesNotExists(changeLogLineId);
+            }
 
             if (!line.Value.IsPending)
-                return Maybe<PendingChangeLogLineResponseModel>.None;
+            {
+                output.LineIsNotPending(changeLogLineId);
+            }
 
             var currentUser = await _userDao.GetUserAsync(userId);
             var product = await _productDao.GetProductAsync(line.Value.ProductId);
@@ -57,11 +64,10 @@ namespace ChangeTracker.Application.UseCases.Queries.GetPendingChangeLogs
                 l.Issues.Select(i => i.Value).ToList(),
                 l.CreatedAt.ToLocal(currentUser.TimeZone));
 
-            return Maybe<PendingChangeLogLineResponseModel>.From(
-                new PendingChangeLogLineResponseModel(product.Id,
-                    product.Name,
-                    product.AccountId,
-                    lineResponseModel));
+            output.LineFound(new PendingChangeLogLineResponseModel(product.Id,
+                product.Name,
+                product.AccountId,
+                lineResponseModel));
         }
     }
 }

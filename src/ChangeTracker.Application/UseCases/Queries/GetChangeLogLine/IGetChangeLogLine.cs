@@ -7,6 +7,6 @@ namespace ChangeTracker.Application.UseCases.Queries.GetChangeLogLine
 {
     public interface IGetChangeLogLine
     {
-        Task<Maybe<ChangeLogLineResponseModel>> ExecuteAsync(Guid userId, Guid changeLogLineId);
+        Task ExecuteAsync(IGetChangeLogLineOutputPort output, Guid userId, Guid changeLogLineId);
     }
 }

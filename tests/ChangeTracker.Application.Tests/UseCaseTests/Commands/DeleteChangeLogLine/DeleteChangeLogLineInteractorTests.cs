@@ -25,18 +25,24 @@ namespace ChangeTracker.Application.Tests.UseCaseTests.Commands.DeleteChangeLogL
         [Fact]
         public async Task DeleteLine_LinesDoesNotExist_LineDoesNotExistOutput()
         {
+            // arrange
             var notExistingLineId = Guid.Parse("11cbae99-5cc0-4268-8d3f-31961822133c");
             var interactor = CreateInteractor();
             _outputPortMock.Setup(m => m.LineDoesNotExist(It.IsAny<Guid>()));
 
-            await interactor.ExecuteAsync(_outputPortMock.Object, notExistingLineId);
+            var requestModel = new DeleteChangeLogLineRequestModel(notExistingLineId, ChangeLogLineType.NotPending);
 
+            // act
+            await interactor.ExecuteAsync(_outputPortMock.Object, requestModel);
+
+            // assert
             _outputPortMock.Verify(m => m.LineDoesNotExist(It.Is<Guid>(x => x == notExistingLineId)), Times.Once);
         }
 
         [Fact]
-        public async Task DeleteLine_ExistingLine_LineDeletedOutput()
+        public async Task DeletePendingLine_ExistingLine_LineDeletedOutput()
         {
+            // arrange
             var existingLineId = Guid.Parse("11cbae99-5cc0-4268-8d3f-31961822133c");
             var interactor = CreateInteractor();
             _outputPortMock.Setup(m => m.LineDeleted(It.IsAny<Guid>()));
@@ -44,14 +50,19 @@ namespace ChangeTracker.Application.Tests.UseCaseTests.Commands.DeleteChangeLogL
             _changeLogDaoStub.ChangeLogs.Add(new ChangeLogLine(existingLineId, null, TestAccount.Product.Id,
                 ChangeLogText.Parse("some feature added"), 0, TestAccount.UserId, DateTime.Parse("2021-05-13")));
 
-            await interactor.ExecuteAsync(_outputPortMock.Object, existingLineId);
+            var requestModel = new DeleteChangeLogLineRequestModel(existingLineId, ChangeLogLineType.Pending);
 
+            // act
+            await interactor.ExecuteAsync(_outputPortMock.Object, requestModel);
+
+            // assert
             _outputPortMock.Verify(m => m.LineDeleted(It.Is<Guid>(x => x == existingLineId)), Times.Once);
         }
 
         [Fact]
-        public async Task DeleteLine_ConflictWhenDelete_ConflictOutput()
+        public async Task DeletePendingLine_ConflictWhenDelete_ConflictOutput()
         {
+            // arrange
             var existingLineId = Guid.Parse("11cbae99-5cc0-4268-8d3f-31961822133c");
             var interactor = CreateInteractor();
             _outputPortMock.Setup(m => m.Conflict(It.IsAny<Conflict>()));
@@ -60,9 +71,55 @@ namespace ChangeTracker.Application.Tests.UseCaseTests.Commands.DeleteChangeLogL
                 ChangeLogText.Parse("some feature added"), 0, TestAccount.UserId, DateTime.Parse("2021-05-13")));
             _changeLogDaoStub.Conflict = new ConflictStub();
 
-            await interactor.ExecuteAsync(_outputPortMock.Object, existingLineId);
+            var requestModel = new DeleteChangeLogLineRequestModel(existingLineId, ChangeLogLineType.Pending);
 
+            // act
+            await interactor.ExecuteAsync(_outputPortMock.Object, requestModel);
+
+            // assert
             _outputPortMock.Verify(m => m.Conflict(It.IsAny<Conflict>()), Times.Once);
+        }
+
+        [Fact]
+        public async Task DeletePendingLine_LineIsNotPending_RequestedLineIsNotPendingOutput()
+        {
+            // arrange
+            var existingLineId = Guid.Parse("11cbae99-5cc0-4268-8d3f-31961822133c");
+            var interactor = CreateInteractor();
+            _outputPortMock.Setup(m => m.RequestedLineIsNotPending(It.IsAny<Guid>()));
+
+            _changeLogDaoStub.ChangeLogs.Add(new ChangeLogLine(existingLineId, Guid.NewGuid(), TestAccount.Product.Id,
+                ChangeLogText.Parse("some feature added"), 0, TestAccount.UserId, DateTime.Parse("2021-05-13")));
+            _changeLogDaoStub.Conflict = new ConflictStub();
+
+            var requestModel = new DeleteChangeLogLineRequestModel(existingLineId, ChangeLogLineType.Pending);
+
+            // act
+            await interactor.ExecuteAsync(_outputPortMock.Object, requestModel);
+
+            // assert
+            _outputPortMock.Verify(m => m.RequestedLineIsNotPending(It.Is<Guid>(x => x == existingLineId)), Times.Once);
+        }
+
+        [Fact]
+        public async Task DeleteLine_LineIsPending_RequestedLineIsNotPendingOutput()
+        {
+            // arrange
+            var existingLineId = Guid.Parse("11cbae99-5cc0-4268-8d3f-31961822133c");
+            var interactor = CreateInteractor();
+            _outputPortMock.Setup(m => m.RequestedLineIsPending(It.IsAny<Guid>()));
+
+            _changeLogDaoStub.ChangeLogs.Add(new ChangeLogLine(existingLineId, null, TestAccount.Product.Id,
+                ChangeLogText.Parse("some feature added"), 0, TestAccount.UserId, DateTime.Parse("2021-05-13")));
+            _changeLogDaoStub.Conflict = new ConflictStub();
+
+            var requestModel = new DeleteChangeLogLineRequestModel(existingLineId, ChangeLogLineType.NotPending);
+
+            // act
+            await interactor.ExecuteAsync(_outputPortMock.Object, requestModel);
+
+            // assert
+            _outputPortMock.Verify(m => m.RequestedLineIsPending(It.Is<Guid>(x => x == existingLineId)), Times.Once);
         }
     }
 }

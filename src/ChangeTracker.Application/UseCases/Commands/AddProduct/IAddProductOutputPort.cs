@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using ChangeTracker.Application.DataAccess;
-using ChangeTracker.Domain.Common;
 
 namespace ChangeTracker.Application.UseCases.Commands.AddProduct
 {

@@ -15,10 +15,11 @@ using ChangeTracker.Application.UseCases.Commands.AssignPendingLineToVersion;
 using ChangeTracker.Application.UseCases.Commands.AssignPendingLineToVersion.Models;
 using ChangeTracker.Application.UseCases.Commands.DeleteAllPendingChangeLogLines;
 using ChangeTracker.Application.UseCases.Commands.DeleteChangeLogLine;
+using ChangeTracker.Application.UseCases.Queries.GetPendingChangeLogLine;
 using ChangeTracker.Application.UseCases.Queries.GetPendingChangeLogs;
 using Microsoft.AspNetCore.Mvc;
 
-namespace ChangeTracker.Api.Controllers.v1
+namespace ChangeTracker.Api.Controllers.V1
 {
     [ApiController]
     [Route("api/v1")]
@@ -29,14 +30,14 @@ namespace ChangeTracker.Api.Controllers.v1
         [HttpGet("products/{productId:Guid}/pending-changelogs")]
         [NeedsPermission(Permission.ViewPendingChangeLogLines)]
         public async Task<ActionResult<List<ChangeLogLineDto>>> GetPendingChangeLogsAsync(
-            [FromServices] IGetPendingChangeLogLines getPendingChangeLogLines,
+            [FromServices] IGetPendingChangeLogs getPendingChangeLogs,
             Guid productId)
         {
             if (productId == Guid.Empty)
                 return BadRequest(DefaultResponse.Create("ProductId cannot be empty."));
 
             var userId = HttpContext.GetUserId();
-            var pendingChangeLogs = await getPendingChangeLogLines.ExecuteAsync(userId, productId);
+            var pendingChangeLogs = await getPendingChangeLogs.ExecuteAsync(userId, productId);
 
             return Ok(PendingChangeLogsDto.FromResponseModel(pendingChangeLogs));
         }
@@ -47,21 +48,12 @@ namespace ChangeTracker.Api.Controllers.v1
             [FromServices] IGetPendingChangeLogLine getPendingChangeLogLine,
             Guid changeLogLineId)
         {
-            if (changeLogLineId == Guid.Empty)
-                return BadRequest(DefaultResponse.Create("ChangeLogLineId cannot be empty."));
-
             var userId = HttpContext.GetUserId();
-            var pendingLine = await getPendingChangeLogLine.ExecuteAsync(userId, changeLogLineId);
 
-            var resourceIds = new Dictionary<string, string>
-            {
-                [nameof(changeLogLineId)] = changeLogLineId.ToString()
-            };
+            var presenter = new GetPendingChangeLogLineApiPresenter();
+            await getPendingChangeLogLine.ExecuteAsync(presenter, userId, changeLogLineId);
 
-            return pendingLine.HasValue
-                ? Ok(PendingChangeLogLineDto.FromResponseModel(pendingLine.Value))
-                : NotFound(DefaultResponse.Create("Pending ChangeLogLine not found. Maybe it isn't pending.",
-                    resourceIds));
+            return presenter.Response;
         }
 
         [HttpPost("products/{productId:Guid}/pending-changelogs")]
@@ -129,8 +121,10 @@ namespace ChangeTracker.Api.Controllers.v1
             [FromServices] IDeleteChangeLogLine deleteChangeLogLine,
             Guid changeLogLineId)
         {
+            var requestModel = new DeleteChangeLogLineRequestModel(changeLogLineId, ChangeLogLineType.Pending);
+
             var presenter = new DeleteChangeLogLineApiPresenter();
-            await deleteChangeLogLine.ExecuteAsync(presenter, changeLogLineId);
+            await deleteChangeLogLine.ExecuteAsync(presenter, requestModel);
 
             return presenter.Response;
         }

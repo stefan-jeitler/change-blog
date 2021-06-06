@@ -20,7 +20,7 @@ namespace ChangeTracker.Application.UseCases.Queries.GetChangeLogLine
             _userDao = userDao ?? throw new ArgumentNullException(nameof(userDao));
         }
 
-        public Task<Maybe<ChangeLogLineResponseModel>> ExecuteAsync(Guid userId, Guid changeLogLineId)
+        public Task ExecuteAsync(IGetChangeLogLineOutputPort output, Guid userId, Guid changeLogLineId)
         {
             if (userId == Guid.Empty)
                 throw new ArgumentException("UserId cannot be empty.");
@@ -28,29 +28,35 @@ namespace ChangeTracker.Application.UseCases.Queries.GetChangeLogLine
             if (changeLogLineId == Guid.Empty)
                 throw new ArgumentException("ChangeLogLineId cannot be empty.");
 
-            return FindChangeLogLineAsync(userId, changeLogLineId);
+            return FindChangeLogLineAsync(output, userId, changeLogLineId);
         }
 
-        private async Task<Maybe<ChangeLogLineResponseModel>> FindChangeLogLineAsync(Guid userId, Guid changeLogLineId)
+        private async Task FindChangeLogLineAsync(IGetChangeLogLineOutputPort output, Guid userId, Guid changeLogLineId)
         {
             var currentUser = await _userDao.GetUserAsync(userId);
 
             var line = await _changeLogQueries.FindLineAsync(changeLogLineId);
 
             if (line.HasNoValue)
-                return Maybe<ChangeLogLineResponseModel>.None;
+            {
+                output.LineDoesNotExists(changeLogLineId);
+                return;
+            }
 
-            if(line.Value.IsPending)
-                return Maybe<ChangeLogLineResponseModel>.None;
+            if (line.Value.IsPending)
+            {
+                output.LineIsPending(changeLogLineId);
+                return;
+            }
 
             var l = line.Value;
             var responseModel = new ChangeLogLineResponseModel(l.Id,
-                l.Text, 
+                l.Text,
                 l.Labels.Select(ll => ll.Value).ToList(),
                 l.Issues.Select(i => i.Value).ToList(),
                 l.CreatedAt.ToLocal(currentUser.TimeZone));
 
-            return Maybe<ChangeLogLineResponseModel>.From(responseModel);
+            output.LineFound(responseModel);
         }
     }
 }

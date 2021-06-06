@@ -22,6 +22,7 @@
                      JOIN account a on p.account_id = a.id
                      JOIN versioning_scheme vs on p.versioning_scheme_id = vs.id
             WHERE a.id = @accountId
+              AND a.deleted_at is null
               AND LOWER(p.name) = @name";
 
         public const string FindProductByProductIdSql = @"
@@ -100,40 +101,42 @@
                    p.closed_at        AS closedAt
             FROM product p
                      JOIN versioning_scheme vs on p.versioning_scheme_id = vs.id
-            WHERE      -- permission on product level
-                         (exists(select null
-                                 from product_user pu
-                                 where pu.product_id = p.id
-                                   and pu.user_id = @userId)
-                             and exists(select null
-                                        from product_user pu1
-                                                 join role r on pu1.role_id = r.id and
-                                                                pu1.user_id = @userId
-                                                 join role_permission rp
-                                                      on r.id = rp.role_id and rp.permission = @permission
-                                             -- needs at least 'DefaultUser' role on account
-                                        where exists(select null
-                                                     from account_user aui
-                                                              join role r3
-                                                                   on aui.role_id = r3.id and r3.name = 'DefaultUser' and
-                                                                      aui.user_id = @userId and
-                                                                      aui.account_id = p.account_id))
-                             )
-                         -- permission on account level
-                         or (
-                                 not exists(select null
-                                            from product_user pu
-                                            where pu.product_id = p.id
-                                              and pu.user_id = @userId)
-                                 and exists(select null
-                                            from account_user au
-                                                     join role r2
-                                                          on au.role_id = r2.id and
-                                                             au.user_id = @userId
-                                                     join role_permission rp2 on r2.id = rp2.role_id
-                                            where au.account_id = p.account_id
-                                              and rp2.permission = @permission)
-                             )
+            WHERE  -- permission on product level overrides account permissions
+                      (exists(select null
+                              from product_user pu
+                              where pu.product_id = p.id
+                                and pu.user_id = @userId)
+                          and exists(select null
+                                     from product_user pu1
+                                              join role r on pu1.role_id = r.id and
+                                                             pu1.user_id = @userId
+                                              join role_permission rp
+                                                   on r.id = rp.role_id and rp.permission = @permission
+                                          -- needs at least 'DefaultUser' role on account
+                                     where exists(select null
+                                                  from account ai
+                                                           join account_user aui on ai.id = aui.account_id and ai.deleted_at is null
+                                                           join role r3
+                                                                on aui.role_id = r3.id and r3.name = 'DefaultUser' and
+                                                                   aui.user_id = @userId and
+                                                                   aui.account_id = p.account_id))
+                          )
+                      -- permission on account level
+                      or (
+                              not exists(select null
+                                         from product_user pu
+                                         where pu.product_id = p.id
+                                           and pu.user_id = @userId)
+                              and exists(select null
+                                         from account a
+                                                  join account_user au on a.id = au.account_id and a.deleted_at is null
+                                                  join role r2
+                                                       on au.role_id = r2.id and
+                                                          au.user_id = @userId
+                                                  join role_permission rp2 on r2.id = rp2.role_id
+                                         where au.account_id = p.account_id
+                                           and rp2.permission = @permission)
+                          )
               {accountFilter}
               {pagingFilter}
               {includeClosedProductsFilter}

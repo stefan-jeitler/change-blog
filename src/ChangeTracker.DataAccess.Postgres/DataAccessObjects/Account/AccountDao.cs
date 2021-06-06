@@ -26,7 +26,8 @@ namespace ChangeTracker.DataAccess.Postgres.DataAccessObjects.Account
                        created_at AS createdAt,
                        deleted_at AS deletedAt
                 FROM account
-                WHERE id = @accountId";
+                WHERE id = @accountId
+                and deleted_at is null ";
 
             var dbConnection = _dbAccessor.DbConnection;
             var account = await dbConnection.QuerySingleOrDefaultAsync<Domain.Account>(findAccountSql, new
@@ -63,6 +64,7 @@ namespace ChangeTracker.DataAccess.Postgres.DataAccessObjects.Account
                          JOIN role r on au.role_id = r.id
                          JOIN role_permission rp on r.id = rp.role_id
                 WHERE au.user_id = @userId
+                AND a.deleted_at is null
                 AND rp.permission = @permission";
 
             var accounts = await _dbAccessor.DbConnection
@@ -84,7 +86,8 @@ namespace ChangeTracker.DataAccess.Postgres.DataAccessObjects.Account
                        a.created_at                   AS createdAt,
                        a.deleted_at                   AS deletedAt
                 from account a
-                where a.id = ANY (@accountIds)";
+                where a.id = ANY (@accountIds)
+                and a.deleted_at is null";
 
             var accounts = await _dbAccessor.DbConnection
                 .QueryAsync<Domain.Account>(getAccountsSql, new {accountIds});

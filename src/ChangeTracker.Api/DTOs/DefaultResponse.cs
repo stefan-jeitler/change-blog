@@ -13,7 +13,7 @@ namespace ChangeTracker.Api.DTOs
 
             Message = message;
 
-            ResourceIds = resourceIds ?? new Dictionary<string, string>();
+            ResourceIds = resourceIds;
         }
 
         public string Message { get; }

@@ -27,7 +27,7 @@ namespace ChangeTracker.Api.Presenters.V1.Version
             };
 
             Response = new ConflictObjectResult(
-                DefaultResponse.Create("Version has been released and can no longer be modified.", resourceIds));
+                DefaultResponse.Create("The version has already been released.", resourceIds));
         }
 
         public void VersionReleased(Guid versionId)

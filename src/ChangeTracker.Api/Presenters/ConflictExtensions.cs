@@ -31,7 +31,7 @@ namespace ChangeTracker.Api.Presenters
                 [nameof(versionId)] = versionId.ToString()
             };
 
-            var responseMessage = DefaultResponse.Create("The requested version has already been released.", resourceIds);
+            var responseMessage = DefaultResponse.Create("The related version has already been released.", resourceIds);
 
             return new ConflictObjectResult(responseMessage);
         }
@@ -44,7 +44,7 @@ namespace ChangeTracker.Api.Presenters
                 [nameof(versionId)] = versionId.ToString()
             };
 
-            var responseMessage = DefaultResponse.Create("The requested version has been deleted.",
+            var responseMessage = DefaultResponse.Create("The related version has been deleted.",
                 resourceIds);
 
             return new ConflictObjectResult(responseMessage);

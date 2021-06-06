@@ -4,7 +4,6 @@ using ChangeTracker.Api.DTOs;
 using ChangeTracker.Api.Extensions;
 using ChangeTracker.Application.DataAccess;
 using ChangeTracker.Application.UseCases.Commands.AddProduct;
-using ChangeTracker.Domain.Common;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
@@ -87,7 +86,8 @@ namespace ChangeTracker.Api.Presenters.V1.Product
         public void NotSupportedLanguageCode(string languageCode, IList<string> supportedLangCodes)
         {
             Response = new UnprocessableEntityObjectResult(
-                DefaultResponse.Create($"The given LanguageCode {languageCode} is not supported. Supported Codes are {string.Join(", ", supportedLangCodes)}"));
+                DefaultResponse.Create(
+                    $"The given LanguageCode {languageCode} is not supported. Supported Codes are {string.Join(", ", supportedLangCodes)}"));
         }
     }
 }

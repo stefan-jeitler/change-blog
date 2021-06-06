@@ -131,7 +131,8 @@ namespace ChangeTracker.Application.Tests.UseCaseTests.Commands.AssignAllPending
             await assignAllPendingLinesInteractor.ExecuteAsync(_outputPortMock.Object, requestModel);
 
             // assert
-            _outputPortMock.Verify(m => m.NoPendingChangeLogLines(It.Is<Guid>(x => x == TestAccount.Product.Id)), Times.Once);
+            _outputPortMock.Verify(m => m.NoPendingChangeLogLines(It.Is<Guid>(x => x == TestAccount.Product.Id)),
+                Times.Once);
         }
 
         [Fact]

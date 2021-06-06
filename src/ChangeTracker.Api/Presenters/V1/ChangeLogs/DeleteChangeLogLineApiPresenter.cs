@@ -16,7 +16,8 @@ namespace ChangeTracker.Api.Presenters.V1.ChangeLogs
                 [nameof(changeLogLineId)] = changeLogLineId.ToString()
             };
 
-            Response = new NotFoundObjectResult(DefaultResponse.Create("The requested ChangeLogLine does not exist.", resourceIds));
+            Response = new NotFoundObjectResult(DefaultResponse.Create("The requested ChangeLogLine does not exist.",
+                resourceIds));
         }
 
         public void LineDeleted(Guid changeLogLineId)
@@ -41,7 +42,8 @@ namespace ChangeTracker.Api.Presenters.V1.ChangeLogs
                 [nameof(changeLogLineId)] = changeLogLineId.ToString()
             };
 
-            Response = new ConflictObjectResult(DefaultResponse.Create("The requested change log line is not pending.", resourceIds));
+            Response = new ConflictObjectResult(DefaultResponse.Create("The requested change log line is not pending.",
+                resourceIds));
         }
 
         public void RequestedLineIsPending(Guid changeLogLineId)
@@ -51,7 +53,8 @@ namespace ChangeTracker.Api.Presenters.V1.ChangeLogs
                 [nameof(changeLogLineId)] = changeLogLineId.ToString()
             };
 
-            Response = new ConflictObjectResult(DefaultResponse.Create("The requested change log line is pending.", resourceIds));
+            Response = new ConflictObjectResult(DefaultResponse.Create("The requested change log line is pending.",
+                resourceIds));
         }
     }
 }

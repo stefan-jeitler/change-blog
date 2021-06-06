@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Runtime.CompilerServices;
 using System.Threading.Tasks;
 using ChangeTracker.Application.DataAccess;
 using ChangeTracker.Application.DataAccess.Products;
@@ -151,7 +150,6 @@ namespace ChangeTracker.DataAccess.Postgres.DataAccessObjects.Products
 
             var langCodes = await _dbAccessor.DbConnection.QueryAsync<Name>(getSupportedLangCodesSql);
             return langCodes.AsList();
-
         }
     }
 }

@@ -23,7 +23,8 @@ namespace ChangeTracker.Domain
         {
         }
 
-        public Product(Guid id, Guid accountId, Name name, VersioningScheme versioningScheme, Name languageCode, Guid createdByUser,
+        public Product(Guid id, Guid accountId, Name name, VersioningScheme versioningScheme, Name languageCode,
+            Guid createdByUser,
             DateTime createdAt,
             DateTime? closedAt)
         {
@@ -69,6 +70,7 @@ namespace ChangeTracker.Domain
 
         public bool IsClosed => ClosedAt.HasValue;
 
-        public Product Close() => new(Id, AccountId, Name, VersioningScheme, LanguageCode, CreatedByUser, CreatedAt, DateTime.UtcNow);
+        public Product Close() => new(Id, AccountId, Name, VersioningScheme, LanguageCode, CreatedByUser, CreatedAt,
+            DateTime.UtcNow);
     }
 }

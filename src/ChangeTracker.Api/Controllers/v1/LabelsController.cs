@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations;
 using System.Net.Mime;
 using System.Threading.Tasks;
 using ChangeTracker.Api.Authorization;
@@ -48,7 +47,7 @@ namespace ChangeTracker.Api.Controllers.V1
         [HttpDelete("{label}")]
         [NeedsPermission(Permission.AddOrUpdateChangeLogLine)]
         public async Task<ActionResult> DeleteLabelAsync(
-            [FromServices] IDeleteChangeLogLineLabel deleteChangeLogLineLabel, 
+            [FromServices] IDeleteChangeLogLineLabel deleteChangeLogLineLabel,
             Guid changeLogLineId, string label)
         {
             var requestModel = new ChangeLogLineLabelRequestModel(changeLogLineId, label);

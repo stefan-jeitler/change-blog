@@ -10,7 +10,6 @@ using ChangeTracker.Domain;
 using ChangeTracker.Domain.Common;
 using ChangeTracker.Domain.Version;
 using FluentAssertions;
-using Microsoft.VisualStudio.TestPlatform.ObjectModel.Client;
 using Moq;
 using Xunit;
 

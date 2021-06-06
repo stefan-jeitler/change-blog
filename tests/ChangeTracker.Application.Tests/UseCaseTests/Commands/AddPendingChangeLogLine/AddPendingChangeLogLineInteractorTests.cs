@@ -38,7 +38,8 @@ namespace ChangeTracker.Application.Tests.UseCaseTests.Commands.AddPendingChange
             var labels = new List<string> {"Bugfix", "ProxyIssue"};
             var issues = new List<string> {"#1234", "#12345"};
             var lineRequestModel =
-                new PendingChangeLogLineRequestModel(TestAccount.UserId, TestAccount.Product.Id, changeLogLine, labels, issues);
+                new PendingChangeLogLineRequestModel(TestAccount.UserId, TestAccount.Product.Id, changeLogLine, labels,
+                    issues);
 
             var addPendingLineInteractor = CreateInteractor();
 
@@ -60,7 +61,8 @@ namespace ChangeTracker.Application.Tests.UseCaseTests.Commands.AddPendingChange
             var labels = new List<string> {"Bugfix", "ProxyIssue"};
             var issues = new List<string> {"#1234", "#12345"};
             var lineRequestModel =
-                new PendingChangeLogLineRequestModel(TestAccount.UserId, TestAccount.Product.Id, changeLogLine, labels, issues);
+                new PendingChangeLogLineRequestModel(TestAccount.UserId, TestAccount.Product.Id, changeLogLine, labels,
+                    issues);
 
             _productDaoStub.Products.Add(new Product(TestAccount.Product.Id, TestAccount.Id, TestAccount.Product.Name,
                 TestAccount.CustomVersioningScheme, TestAccount.Product.LanguageCode, TestAccount.UserId,
@@ -94,7 +96,8 @@ namespace ChangeTracker.Application.Tests.UseCaseTests.Commands.AddPendingChange
             var labels = new List<string> {"Bugfix", "ProxyIssue"};
             var issues = new List<string> {"#1234", "#12345"};
             var lineRequestModel =
-                new PendingChangeLogLineRequestModel(TestAccount.UserId, TestAccount.Product.Id, changeLogLine, labels, issues);
+                new PendingChangeLogLineRequestModel(TestAccount.UserId, TestAccount.Product.Id, changeLogLine, labels,
+                    issues);
 
             _productDaoStub.Products.Add(new Product(TestAccount.Product.Id, TestAccount.Id, TestAccount.Product.Name,
                 TestAccount.CustomVersioningScheme, TestAccount.Product.LanguageCode, TestAccount.UserId,
@@ -131,7 +134,8 @@ namespace ChangeTracker.Application.Tests.UseCaseTests.Commands.AddPendingChange
             var labels = new List<string> {"Bugfix", "ProxyIssue"};
             var issues = new List<string> {"#1234", "#12345"};
             var lineRequestModel =
-                new PendingChangeLogLineRequestModel(TestAccount.UserId, TestAccount.Product.Id, changeLogLine, labels, issues);
+                new PendingChangeLogLineRequestModel(TestAccount.UserId, TestAccount.Product.Id, changeLogLine, labels,
+                    issues);
 
             _productDaoStub.Products.Add(new Product(TestAccount.Product.Id, TestAccount.Id, TestAccount.Product.Name,
                 TestAccount.CustomVersioningScheme, TestAccount.Product.LanguageCode, TestAccount.UserId,
@@ -162,7 +166,8 @@ namespace ChangeTracker.Application.Tests.UseCaseTests.Commands.AddPendingChange
             var labels = new List<string> {"Bugfix", "ProxyIssue"};
             var issues = new List<string> {"#1234", "#12345"};
             var lineRequestModel =
-                new PendingChangeLogLineRequestModel(TestAccount.UserId, TestAccount.Product.Id, changeLogLine, labels, issues);
+                new PendingChangeLogLineRequestModel(TestAccount.UserId, TestAccount.Product.Id, changeLogLine, labels,
+                    issues);
 
             _productDaoStub.Products.Add(new Product(TestAccount.Product.Id, TestAccount.Id, TestAccount.Product.Name,
                 TestAccount.CustomVersioningScheme, TestAccount.Product.LanguageCode, TestAccount.UserId,

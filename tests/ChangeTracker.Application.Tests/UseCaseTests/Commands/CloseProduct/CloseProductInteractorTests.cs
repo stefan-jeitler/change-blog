@@ -41,7 +41,8 @@ namespace ChangeTracker.Application.Tests.UseCaseTests.Commands.CloseProduct
         {
             // arrange
             var product = new Product(TestAccount.Product.Id, TestAccount.Id, TestAccount.Product.Name,
-                TestAccount.CustomVersioningScheme, TestAccount.Product.LanguageCode, TestAccount.UserId, TestAccount.Product.CreatedAt,
+                TestAccount.CustomVersioningScheme, TestAccount.Product.LanguageCode, TestAccount.UserId,
+                TestAccount.Product.CreatedAt,
                 DateTime.Parse("2021-05-13"));
             _productDaoStub.Products.Add(product);
             _outputPortMock.Setup(m => m.ProductAlreadyClosed(It.IsAny<Guid>()));
@@ -59,7 +60,8 @@ namespace ChangeTracker.Application.Tests.UseCaseTests.Commands.CloseProduct
         {
             // arrange
             var product = new Product(TestAccount.Product.Id, TestAccount.Id, TestAccount.Product.Name,
-                TestAccount.CustomVersioningScheme, TestAccount.Product.LanguageCode, TestAccount.UserId, TestAccount.Product.CreatedAt, null);
+                TestAccount.CustomVersioningScheme, TestAccount.Product.LanguageCode, TestAccount.UserId,
+                TestAccount.Product.CreatedAt, null);
             _productDaoStub.Products.Add(product);
 
             _outputPortMock.Setup(m => m.ProductClosed(It.IsAny<Guid>()));

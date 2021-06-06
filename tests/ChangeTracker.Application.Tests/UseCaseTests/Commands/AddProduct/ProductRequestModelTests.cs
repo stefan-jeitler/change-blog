@@ -8,10 +8,10 @@ namespace ChangeTracker.Application.Tests.UseCaseTests.Commands.AddProduct
     public class ProductRequestModelTests
     {
         private Guid _testAccountId;
+        private string _testLangCode;
         private string _testName;
         private Guid? _testSchemeId;
         private Guid _testUserId;
-        private string _testLangCode;
 
         public ProductRequestModelTests()
         {
@@ -22,7 +22,8 @@ namespace ChangeTracker.Application.Tests.UseCaseTests.Commands.AddProduct
             _testLangCode = "en";
         }
 
-        private ProductRequestModel CreateRequestModel() => new(_testAccountId, _testName, _testSchemeId, _testLangCode, _testUserId);
+        private ProductRequestModel CreateRequestModel() =>
+            new(_testAccountId, _testName, _testSchemeId, _testLangCode, _testUserId);
 
         [Fact]
         public void Create_HappyPath_Successful()

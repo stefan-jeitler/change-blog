@@ -13,9 +13,9 @@ namespace ChangeTracker.Domain.Tests.ProductTests
         private DateTime? _testClosedDate;
         private DateTime _testCreationDate;
         private Guid _testId;
+        private Name _testLangCode;
         private Name _testName;
         private Guid _testUserId;
-        private Name _testLangCode;
         private VersioningScheme _testVersioningScheme;
 
         public ProductTests()

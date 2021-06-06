@@ -21,7 +21,6 @@ namespace ChangeTracker.Api.Controllers.V1
     [SwaggerControllerOrder(3)]
     public class ProductController : ControllerBase
     {
-
         [HttpGet("{productId:Guid}")]
         [NeedsPermission(Permission.ViewAccountProducts)]
         public async Task<ActionResult<ProductDto>> GetProductAsync([FromServices] IGetProduct getProduct,
@@ -47,10 +46,10 @@ namespace ChangeTracker.Api.Controllers.V1
             var presenter = new AddProductApiPresenter(HttpContext);
             var userId = HttpContext.GetUserId();
 
-            var requestModel = new ProductRequestModel(addOrUpdateProductDto.AccountId, 
+            var requestModel = new ProductRequestModel(addOrUpdateProductDto.AccountId,
                 addOrUpdateProductDto.Name,
-                addOrUpdateProductDto.VersioningSchemeId, 
-                addOrUpdateProductDto.LanguageCode, 
+                addOrUpdateProductDto.VersioningSchemeId,
+                addOrUpdateProductDto.LanguageCode,
                 userId);
 
             await addProduct.ExecuteAsync(presenter, requestModel);

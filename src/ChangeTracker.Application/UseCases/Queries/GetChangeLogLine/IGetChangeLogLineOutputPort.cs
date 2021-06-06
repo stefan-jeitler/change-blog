@@ -1,5 +1,4 @@
 ﻿using System;
-using ChangeTracker.Application.UseCases.Queries.GetPendingChangeLogLine;
 using ChangeTracker.Application.UseCases.Queries.SharedModels;
 
 namespace ChangeTracker.Application.UseCases.Queries.GetChangeLogLine

@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.Net.Mime;
 using System.Threading.Tasks;
 using ChangeTracker.Api.Authorization;
-using ChangeTracker.Api.DTOs;
 using ChangeTracker.Api.DTOs.V1.ChangeLog;
 using ChangeTracker.Api.Extensions;
 using ChangeTracker.Api.Presenters.V1.ChangeLogs;
@@ -38,11 +37,11 @@ namespace ChangeTracker.Api.Controllers.V1
 
             return presenter.Response;
         }
-        
+
         [HttpDelete("changelogs/{changeLogLineId:Guid}")]
         [NeedsPermission(Permission.DeleteChangeLogLine)]
         public async Task<ActionResult> DeleteChangeLogLineAsync(
-            [FromServices] IDeleteChangeLogLine deleteChangeLogLine, 
+            [FromServices] IDeleteChangeLogLine deleteChangeLogLine,
             Guid changeLogLineId)
         {
             var requestModel = new DeleteChangeLogLineRequestModel(changeLogLineId, ChangeLogLineType.NotPending);
@@ -51,24 +50,24 @@ namespace ChangeTracker.Api.Controllers.V1
             await deleteChangeLogLine.ExecuteAsync(presenter, requestModel);
 
             return presenter.Response;
-        }        
+        }
 
         [HttpPost("versions/{versionId:Guid}/changelogs")]
         [NeedsPermission(Permission.AddOrUpdateChangeLogLine)]
         public async Task<ActionResult> AddChangeLogLineAsync(
-            [FromServices] IAddChangeLogLine addChangeLogLine, 
+            [FromServices] IAddChangeLogLine addChangeLogLine,
             Guid versionId,
             [FromBody] AddOrUpdateChangeLogLineDto addChangeLogLineDto)
         {
             var userId = HttpContext.GetUserId();
             var requestModel = new VersionIdChangeLogLineRequestModel(userId,
-                versionId, 
+                versionId,
                 addChangeLogLineDto.Text,
                 addChangeLogLineDto.Labels ?? new List<string>(0),
                 addChangeLogLineDto.Issues ?? new List<string>(0));
-            
+
             var presenter = new AddChangeLogLineApiPresenter(HttpContext);
-            await addChangeLogLine.ExecuteAsync(presenter,requestModel);
+            await addChangeLogLine.ExecuteAsync(presenter, requestModel);
 
             return presenter.Response;
         }

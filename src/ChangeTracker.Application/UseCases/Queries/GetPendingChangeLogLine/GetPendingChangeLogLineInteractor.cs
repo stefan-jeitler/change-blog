@@ -6,7 +6,6 @@ using ChangeTracker.Application.DataAccess.Products;
 using ChangeTracker.Application.DataAccess.Users;
 using ChangeTracker.Application.Extensions;
 using ChangeTracker.Application.UseCases.Queries.SharedModels;
-using CSharpFunctionalExtensions;
 
 namespace ChangeTracker.Application.UseCases.Queries.GetPendingChangeLogLine
 {

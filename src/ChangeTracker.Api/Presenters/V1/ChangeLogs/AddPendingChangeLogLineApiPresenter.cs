@@ -1,8 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using ChangeTracker.Api.DTOs;
 using ChangeTracker.Api.Extensions;
 using ChangeTracker.Application.DataAccess;
@@ -39,7 +36,8 @@ namespace ChangeTracker.Api.Presenters.V1.ChangeLogs
             };
 
             var location = _httpContext.CreateLinkTo($"api/v1/pending-changelogs/{changeLogLineId}");
-            Response = new CreatedResult(location, DefaultResponse.Create("Pending ChangeLogLine successfully added.", resourceIds));
+            Response = new CreatedResult(location,
+                DefaultResponse.Create("Pending ChangeLogLine successfully added.", resourceIds));
         }
 
         public void Conflict(Conflict conflict)

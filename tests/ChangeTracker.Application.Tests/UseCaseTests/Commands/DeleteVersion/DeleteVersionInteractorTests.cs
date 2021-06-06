@@ -87,7 +87,8 @@ namespace ChangeTracker.Application.Tests.UseCaseTests.Commands.DeleteVersion
             _outputPortMock.Setup(m => m.RelatedProductClosed(It.IsAny<Guid>()));
 
             _productDaoStub.Products.Add(new Product(TestAccount.Product.Id, TestAccount.Id, Name.Parse("test product"),
-                TestAccount.CustomVersioningScheme, TestAccount.Product.LanguageCode, TestAccount.UserId, DateTime.Parse("2021-05-13"),
+                TestAccount.CustomVersioningScheme, TestAccount.Product.LanguageCode, TestAccount.UserId,
+                DateTime.Parse("2021-05-13"),
                 DateTime.Parse("2021-05-13")));
             _versionDaoStub.Versions.Add(version);
 

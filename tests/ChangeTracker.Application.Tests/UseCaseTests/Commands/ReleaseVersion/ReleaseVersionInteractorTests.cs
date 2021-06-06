@@ -84,7 +84,8 @@ namespace ChangeTracker.Application.Tests.UseCaseTests.Commands.ReleaseVersion
             var version = new ClVersion(TestAccount.Product.Id, ClVersionValue.Parse("1.23"), OptionalName.Empty,
                 TestAccount.UserId);
             var product = new Product(TestAccount.Product.Id, TestAccount.Id, TestAccount.Product.Name,
-                TestAccount.CustomVersioningScheme, TestAccount.Product.LanguageCode, TestAccount.UserId, TestAccount.Product.CreatedAt,
+                TestAccount.CustomVersioningScheme, TestAccount.Product.LanguageCode, TestAccount.UserId,
+                TestAccount.Product.CreatedAt,
                 DateTime.Parse("2021-05-13"));
             var interactor = CreateInteractor();
             _outputPortMock.Setup(m => m.RelatedProductClosed(It.IsAny<Guid>()));
@@ -105,7 +106,8 @@ namespace ChangeTracker.Application.Tests.UseCaseTests.Commands.ReleaseVersion
             var version = new ClVersion(TestAccount.Product.Id, ClVersionValue.Parse("1.23"), OptionalName.Empty,
                 TestAccount.UserId);
             var product = new Product(TestAccount.Product.Id, TestAccount.Id, TestAccount.Product.Name,
-                TestAccount.CustomVersioningScheme, TestAccount.Product.LanguageCode, TestAccount.UserId, TestAccount.Product.CreatedAt, null);
+                TestAccount.CustomVersioningScheme, TestAccount.Product.LanguageCode, TestAccount.UserId,
+                TestAccount.Product.CreatedAt, null);
             var interactor = CreateInteractor();
             _outputPortMock.Setup(m => m.Conflict(It.IsAny<Conflict>()));
             _versionDaoStub.Versions.Add(version);
@@ -126,7 +128,8 @@ namespace ChangeTracker.Application.Tests.UseCaseTests.Commands.ReleaseVersion
             var version = new ClVersion(TestAccount.Product.Id, ClVersionValue.Parse("1.23"), OptionalName.Empty,
                 TestAccount.UserId);
             var product = new Product(TestAccount.Product.Id, TestAccount.Id, TestAccount.Product.Name,
-                TestAccount.CustomVersioningScheme, TestAccount.Product.LanguageCode, TestAccount.UserId, TestAccount.Product.CreatedAt, null);
+                TestAccount.CustomVersioningScheme, TestAccount.Product.LanguageCode, TestAccount.UserId,
+                TestAccount.Product.CreatedAt, null);
             var interactor = CreateInteractor();
             _outputPortMock.Setup(m => m.VersionReleased(It.IsAny<Guid>()));
             _versionDaoStub.Versions.Add(version);

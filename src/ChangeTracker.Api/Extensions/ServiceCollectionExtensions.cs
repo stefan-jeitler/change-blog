@@ -71,8 +71,7 @@ namespace ChangeTracker.Api.Extensions
                 .AddScoped<IGetPendingChangeLogs, GetPendingChangeLogsInteractor>()
                 .AddScoped<IAssignPendingLineToVersion, AssignPendingLineToVersionInteractor>()
                 .AddScoped<IAssignAllPendingLinesToVersion, AssignAllPendingLinesToVersionInteractor>()
-                .AddScoped<IDeleteAllPendingChangeLogLines, DeleteAllPendingChangeLogLinesInteractor>()
-                ;
+                .AddScoped<IDeleteAllPendingChangeLogLines, DeleteAllPendingChangeLogLinesInteractor>();
 
         public static IServiceCollection AddChangeLogLineUseCases(this IServiceCollection services) =>
             services
@@ -82,18 +81,16 @@ namespace ChangeTracker.Api.Extensions
                 .AddScoped<IDeleteChangeLogLine, DeleteChangeLogLineInteractor>()
                 .AddScoped<IAddChangeLogLine, AddChangeLogLineInteractor>();
 
-        public static IServiceCollection AddLabelUseCases(this IServiceCollection services) => 
+        public static IServiceCollection AddLabelUseCases(this IServiceCollection services) =>
             services
                 .AddScoped<IGetLabels, GetLabelsInteractor>()
                 .AddScoped<IDeleteChangeLogLineLabel, DeleteChangeLogLineLabelInteractor>()
-                .AddScoped<IAddChangeLogLineLabel, AddChangeLogLineLabelInteractor>()
-            ;
+                .AddScoped<IAddChangeLogLineLabel, AddChangeLogLineLabelInteractor>();
 
-        public static IServiceCollection AddIssueUseCases(this IServiceCollection services) => 
+        public static IServiceCollection AddIssueUseCases(this IServiceCollection services) =>
             services
                 .AddScoped<IGetIssues, GetIssuesInteractor>()
                 .AddScoped<IDeleteChangeLogLineIssue, DeleteChangeLogLineIssueInteractor>()
-                .AddScoped<IAddChangeLogLineIssue, AddChangeLogLineIssueInteractor>()
-            ;
+                .AddScoped<IAddChangeLogLineIssue, AddChangeLogLineIssueInteractor>();
     }
 }

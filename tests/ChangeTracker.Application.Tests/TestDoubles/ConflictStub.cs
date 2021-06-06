@@ -4,6 +4,5 @@ namespace ChangeTracker.Application.Tests.TestDoubles
 {
     public class ConflictStub : Conflict
     {
-        
     }
 }

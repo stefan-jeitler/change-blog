@@ -1,8 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using ChangeTracker.Api.DTOs;
 using ChangeTracker.Application.DataAccess;
 using ChangeTracker.Application.UseCases.Commands.AssignPendingLineToVersion;
@@ -10,7 +7,8 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace ChangeTracker.Api.Presenters.V1.ChangeLogs
 {
-    public class AssignPendingLineToVersionToVersionApiPresenter : BaseApiPresenter, IAssignPendingLineToVersionOutputPort
+    public class AssignPendingLineToVersionToVersionApiPresenter : BaseApiPresenter,
+        IAssignPendingLineToVersionOutputPort
     {
         public void InvalidVersionFormat(string version)
         {
@@ -26,7 +24,8 @@ namespace ChangeTracker.Api.Presenters.V1.ChangeLogs
         public void MaxChangeLogLinesReached(int maxChangeLogLines)
         {
             Response = new ConflictObjectResult(
-                DefaultResponse.Create($"The target version has reached the max lines count. Max lines: {maxChangeLogLines}"));
+                DefaultResponse.Create(
+                    $"The target version has reached the max lines count. Max lines: {maxChangeLogLines}"));
         }
 
         public void ChangeLogLineDoesNotExist(Guid changeLogLineId)
@@ -43,7 +42,7 @@ namespace ChangeTracker.Api.Presenters.V1.ChangeLogs
         {
             Response = conflict.ToResponse();
         }
-        
+
         public void Assigned(Guid versionId, Guid changeLogLineId)
         {
             var resourceIds = new Dictionary<string, string>
@@ -69,7 +68,8 @@ namespace ChangeTracker.Api.Presenters.V1.ChangeLogs
         public void LineWithSameTextAlreadyExists(string text)
         {
             Response = new UnprocessableEntityObjectResult(
-                DefaultResponse.Create($"The target version contains already lines with an identical text. Duplicate: {text}"));
+                DefaultResponse.Create(
+                    $"The target version contains already lines with an identical text. Duplicate: {text}"));
         }
     }
 }

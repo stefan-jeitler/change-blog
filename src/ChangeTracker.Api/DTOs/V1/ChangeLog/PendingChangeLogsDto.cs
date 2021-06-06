@@ -1,8 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using ChangeTracker.Application.UseCases.Queries.GetPendingChangeLogs;
 
 namespace ChangeTracker.Api.DTOs.V1.ChangeLog
@@ -20,7 +18,7 @@ namespace ChangeTracker.Api.DTOs.V1.ChangeLog
                 ProductId = m.ProductId,
                 ProductName = m.ProductName,
                 AccountId = m.AccountId,
-                ChangeLogLines = m.ChangeLogs.Select(ChangeLogLineDto.FromResponseModel).ToList(),
+                ChangeLogLines = m.ChangeLogs.Select(ChangeLogLineDto.FromResponseModel).ToList()
             };
     }
 }

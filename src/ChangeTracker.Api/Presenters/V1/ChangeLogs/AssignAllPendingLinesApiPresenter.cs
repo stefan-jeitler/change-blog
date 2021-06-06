@@ -54,7 +54,8 @@ namespace ChangeTracker.Api.Presenters.V1.ChangeLogs
         public void LineWithSameTextAlreadyExists(List<string> texts)
         {
             Response = new UnprocessableEntityObjectResult(
-                DefaultResponse.Create($"The target version contains already lines with an identical text. Duplicates: {string.Join(", ", texts)}"));
+                DefaultResponse.Create(
+                    $"The target version contains already lines with an identical text. Duplicates: {string.Join(", ", texts)}"));
         }
     }
 }

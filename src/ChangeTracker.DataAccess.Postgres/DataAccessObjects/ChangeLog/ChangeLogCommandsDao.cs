@@ -63,8 +63,8 @@ namespace ChangeTracker.DataAccess.Postgres.DataAccessObjects.ChangeLog
             catch (PostgresException postgresException) when (postgresException.SqlState == "23505")
             {
                 return Result.Failure<ChangeLogLine, Conflict>(
-                    new AddOrUpdateChangeLogLineConcurrencyConflict(changeLogLine.ProductId, 
-                        changeLogLine.VersionId, 
+                    new AddOrUpdateChangeLogLineConcurrencyConflict(changeLogLine.ProductId,
+                        changeLogLine.VersionId,
                         changeLogLine.Id));
             }
             catch (Exception e)
@@ -151,7 +151,8 @@ namespace ChangeTracker.DataAccess.Postgres.DataAccessObjects.ChangeLog
 
         public Task DeletePendingChangeLogs(Guid productId)
         {
-            const string deletePendingChangeLogsSql = "update changelog_line set deleted_at = now() where product_id = @productId and version_id is null";
+            const string deletePendingChangeLogsSql =
+                "update changelog_line set deleted_at = now() where product_id = @productId and version_id is null";
 
             return _dbAccessor.DbConnection.ExecuteAsync(deletePendingChangeLogsSql, new
             {

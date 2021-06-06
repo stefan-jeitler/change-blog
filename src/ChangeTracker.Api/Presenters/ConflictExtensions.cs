@@ -13,11 +13,13 @@ namespace ChangeTracker.Api.Presenters
         {
             return conflict switch
             {
-                AddOrUpdateChangeLogLineConcurrencyConflict concurrencyConflict => CreateConcurrencyIssueResponse(concurrencyConflict),
+                AddOrUpdateChangeLogLineConcurrencyConflict concurrencyConflict => CreateConcurrencyIssueResponse(
+                    concurrencyConflict),
                 ChangeLogLineDeletedConflict lineDeleteConflict => CreateLineDeletedResponse(lineDeleteConflict),
                 ProductClosedConflict closedConflict => CreateProductClosedResponse(closedConflict),
                 VersionDeletedConflict versionDeletedConflict => CreateVersionDeletedResponse(versionDeletedConflict),
-                VersionReleasedConflict versionReleasedConflict => CreateVersionReleasedResponse(versionReleasedConflict),
+                VersionReleasedConflict versionReleasedConflict => CreateVersionReleasedResponse(
+                    versionReleasedConflict),
                 _ => throw new ArgumentOutOfRangeException(nameof(conflict))
             };
         }
@@ -97,7 +99,8 @@ namespace ChangeTracker.Api.Presenters
             }
 
             var responseMessage =
-                DefaultResponse.Create("Error while inserting or updating ChangeLogLines. Please try again later", resourceIds);
+                DefaultResponse.Create("Error while inserting or updating ChangeLogLines. Please try again later",
+                    resourceIds);
 
             return new ConflictObjectResult(responseMessage);
         }

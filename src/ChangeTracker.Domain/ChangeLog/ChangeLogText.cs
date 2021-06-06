@@ -14,6 +14,15 @@ namespace ChangeTracker.Domain.ChangeLog
 
         public string Value { get; }
 
+        public virtual bool Equals(ChangeLogText other)
+        {
+            if (other is null)
+                return false;
+
+            return ReferenceEquals(this, other) ||
+                   string.Equals(Value, other.Value, StringComparison.OrdinalIgnoreCase);
+        }
+
         public static ChangeLogText Parse(string candidate)
         {
             var exception = ParseInternal(candidate, out var text);
@@ -52,15 +61,6 @@ namespace ChangeTracker.Domain.ChangeLog
                     text = new ChangeLogText(c);
                     return null;
             }
-        }
-
-        public virtual bool Equals(ChangeLogText other)
-        {
-            if (other is null) 
-                return false;
-
-            return ReferenceEquals(this, other) ||
-                   string.Equals(Value, other.Value, StringComparison.OrdinalIgnoreCase);
         }
 
         public override int GetHashCode() => StringComparer.OrdinalIgnoreCase.GetHashCode(Value);

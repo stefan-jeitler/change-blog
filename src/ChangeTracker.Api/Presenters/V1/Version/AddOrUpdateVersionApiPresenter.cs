@@ -96,7 +96,7 @@ namespace ChangeTracker.Api.Presenters.V1.Version
                 [nameof(versionId)] = versionId.ToString()
             };
 
-            Response = new ConflictObjectResult(DefaultResponse.Create($"Version already exists.", resourceIds));
+            Response = new ConflictObjectResult(DefaultResponse.Create("Version already exists.", resourceIds));
         }
 
         public void TooManyLines(int maxChangeLogLines)

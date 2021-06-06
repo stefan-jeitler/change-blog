@@ -4,10 +4,6 @@ namespace ChangeTracker.Application.DataAccess.Conflicts
 {
     public class AddOrUpdateChangeLogLineConcurrencyConflict : Conflict
     {
-        public Guid ProductId { get; }
-        public Guid? VersionId { get;  }
-        public Guid ChangeLogLineId { get; }
-
         public AddOrUpdateChangeLogLineConcurrencyConflict(Guid productId, Guid? versionId, Guid changeLogLineId)
         {
             if (productId == Guid.Empty)
@@ -25,5 +21,9 @@ namespace ChangeTracker.Application.DataAccess.Conflicts
 
             ChangeLogLineId = changeLogLineId;
         }
+
+        public Guid ProductId { get; }
+        public Guid? VersionId { get; }
+        public Guid ChangeLogLineId { get; }
     }
 }

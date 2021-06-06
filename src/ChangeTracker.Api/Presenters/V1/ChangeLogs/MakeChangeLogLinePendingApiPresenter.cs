@@ -41,7 +41,8 @@ namespace ChangeTracker.Api.Presenters.V1.ChangeLogs
                 [nameof(versionId)] = versionId.ToString()
             };
 
-            Response = new ConflictObjectResult(DefaultResponse.Create("The related version has already been released.", resourceIds));
+            Response = new ConflictObjectResult(DefaultResponse.Create("The related version has already been released.",
+                resourceIds));
         }
 
         public void VersionDeleted(Guid versionId)

@@ -258,7 +258,8 @@ namespace ChangeTracker.Application.Tests.UseCaseTests.Commands.MakeAllChangeLog
             await makeAllLinesPendingInteractor.ExecuteAsync(_outputPortMock.Object, clVersion.Id);
 
             // assert
-            _outputPortMock.Verify(m => m.MadePending(It.Is<Guid>(x => x == TestAccount.Product.Id), It.Is<int>(x => x == 1)), Times.Once);
+            _outputPortMock.Verify(
+                m => m.MadePending(It.Is<Guid>(x => x == TestAccount.Product.Id), It.Is<int>(x => x == 1)), Times.Once);
             _unitOfWorkMock.Verify(m => m.Start(), Times.Once);
             _unitOfWorkMock.Verify(m => m.Commit(), Times.Once);
         }

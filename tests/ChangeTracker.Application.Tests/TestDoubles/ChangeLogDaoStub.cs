@@ -4,7 +4,6 @@ using System.Linq;
 using System.Threading.Tasks;
 using ChangeTracker.Application.DataAccess;
 using ChangeTracker.Application.DataAccess.ChangeLog;
-using ChangeTracker.Application.DataAccess.Conflicts;
 using ChangeTracker.Domain.ChangeLog;
 using CSharpFunctionalExtensions;
 
@@ -19,7 +18,7 @@ namespace ChangeTracker.Application.Tests.TestDoubles
         {
             await Task.Yield();
 
-            if (Conflict is not null) 
+            if (Conflict is not null)
                 return Result.Failure<ChangeLogLine, Conflict>(Conflict);
 
             ChangeLogs.Add(changeLogLine);
@@ -92,7 +91,6 @@ namespace ChangeTracker.Application.Tests.TestDoubles
 
         public Task DeletePendingChangeLogs(Guid productId)
         {
-
             ChangeLogs.RemoveAll(x => x.ProductId == productId && !x.VersionId.HasValue);
 
             return Task.CompletedTask;

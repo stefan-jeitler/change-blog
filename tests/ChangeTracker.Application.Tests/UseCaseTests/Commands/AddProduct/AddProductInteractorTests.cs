@@ -2,11 +2,9 @@
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using ChangeTracker.Application.DataAccess;
-using ChangeTracker.Application.DataAccess.Conflicts;
 using ChangeTracker.Application.Tests.TestDoubles;
 using ChangeTracker.Application.UseCases.Commands.AddProduct;
 using ChangeTracker.Domain;
-using ChangeTracker.Domain.Common;
 using Moq;
 using Xunit;
 
@@ -184,7 +182,8 @@ namespace ChangeTracker.Application.Tests.UseCaseTests.Commands.AddProduct
 
             // assert
             _outputPortMock.Verify(
-                m => m.NotSupportedLanguageCode(It.Is<string>(x => x == string.Empty), It.IsAny<IList<string>>()), Times.Once);
+                m => m.NotSupportedLanguageCode(It.Is<string>(x => x == string.Empty), It.IsAny<IList<string>>()),
+                Times.Once);
         }
 
         [Fact]
@@ -194,7 +193,7 @@ namespace ChangeTracker.Application.Tests.UseCaseTests.Commands.AddProduct
             _accountDaoStub.Accounts.Add(new Account(TestAccount.Id, TestAccount.Name, null, TestAccount.CreationDate,
                 null));
             _versioningSchemeDaoStub.VersioningSchemes.Add(TestAccount.DefaultScheme);
-            
+
             var productRequestModel =
                 new ProductRequestModel(TestAccount.Id, TestAccount.Name.Value, null, "Deitsch",
                     TestAccount.UserId);
@@ -207,7 +206,8 @@ namespace ChangeTracker.Application.Tests.UseCaseTests.Commands.AddProduct
 
             // assert
             _outputPortMock.Verify(
-                m => m.NotSupportedLanguageCode(It.Is<string>(x => x == "deitsch"), It.IsAny<IList<string>>()), Times.Once);
+                m => m.NotSupportedLanguageCode(It.Is<string>(x => x == "deitsch"), It.IsAny<IList<string>>()),
+                Times.Once);
         }
 
         [Fact]

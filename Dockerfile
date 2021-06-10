@@ -2,20 +2,13 @@ FROM mcr.microsoft.com/dotnet/sdk:5.0 AS build-env
 ARG Version
 WORKDIR /app
 
-COPY ./*.sln  ./
+COPY src/*/*.csproj ./
+RUN for file in $(ls *.csproj); do mkdir -p src/${file%.*}/ && mv $file src/${file%.*}/; done
 
-# Copy the main source project files
-COPY src/*/*.*proj ./
-RUN for file in $(ls *.*proj); do mkdir -p src/${file%.*}/ && mv $file src/${file%.*}/; done
-
-# Copy the test project files
-COPY tests/*/*.*proj ./
-RUN for file in $(ls *.*proj); do mkdir -p tests/${file%.*}/ && mv $file tests/${file%.*}/; done
-
-RUN dotnet restore
+RUN dotnet restore src/ChangeTracker.Api/ChangeTracker.Api.csproj
 
 COPY . .
-RUN dotnet publish src/ChangeTracker.Api/*.csproj \
+RUN dotnet publish src/ChangeTracker.Api/ChangeTracker.Api.csproj \
   --configuration Release \
   --output publish \
   -p:Version=$Version \

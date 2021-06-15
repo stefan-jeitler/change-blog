@@ -1,12 +1,13 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Collections.Immutable;
 using ChangeTracker.Domain.ChangeLog;
 
 namespace ChangeTracker.Application.Services.ChangeLogLineParsing
 {
     public class LineParserResponseModel
     {
-        public LineParserResponseModel(ChangeLogText text, List<Label> labels, List<Issue> issues)
+        public LineParserResponseModel(ChangeLogText text, IImmutableSet<Label> labels, IImmutableSet<Issue> issues)
         {
             Text = text ?? throw new ArgumentNullException(nameof(text));
             Labels = labels ?? throw new ArgumentNullException(nameof(labels));
@@ -14,7 +15,7 @@ namespace ChangeTracker.Application.Services.ChangeLogLineParsing
         }
 
         public ChangeLogText Text { get; }
-        public List<Label> Labels { get; }
-        public List<Issue> Issues { get; }
+        public IImmutableSet<Label> Labels { get; }
+        public IImmutableSet<Issue> Issues { get; }
     }
 }

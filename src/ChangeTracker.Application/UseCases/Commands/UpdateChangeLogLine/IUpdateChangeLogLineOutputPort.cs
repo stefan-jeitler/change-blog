@@ -4,11 +4,13 @@ using ChangeTracker.Application.Services.ChangeLogLineParsing;
 
 namespace ChangeTracker.Application.UseCases.Commands.UpdateChangeLogLine
 {
-    public interface IUpdateLineOutputPort : ILineParserOutput
+    public interface IUpdateChangeLogLineOutputPort : ILineParserOutput
     {
-        void Updated(Guid lineId);
+        void Updated(Guid changeLogLineId);
         void ChangeLogLineDoesNotExist();
         void Conflict(Conflict conflict);
         void LineWithSameTextAlreadyExists(string text);
+        void RequestedLineIsNotPending(Guid changeLogLineId);
+        void RequestedLineIsPending(Guid changeLogLineId);
     }
 }

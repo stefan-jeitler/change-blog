@@ -4,6 +4,6 @@ namespace ChangeTracker.Application.UseCases.Commands.UpdateChangeLogLine
 {
     public interface IUpdateChangeLogLine
     {
-        Task ExecuteAsync(IUpdateLineOutputPort output, ChangeLogLineRequestModel requestModel);
+        Task ExecuteAsync(IUpdateChangeLogLineOutputPort output, UpdateChangeLogLineRequestModel requestModel);
     }
 }

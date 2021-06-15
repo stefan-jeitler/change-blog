@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using ChangeTracker.Application.UseCases.Commands.DeleteChangeLogLine;
 using ChangeTracker.Application.UseCases.Commands.UpdateChangeLogLine;
 using FluentAssertions;
 using Xunit;
@@ -8,10 +9,11 @@ namespace ChangeTracker.Application.Tests.UseCaseTests.Commands.UpdateChangeLogL
 {
     public class ChangeLogLineRequestModelTests
     {
-        private IList<string> _testIssues;
-        private IList<string> _testLabels;
+        private readonly IList<string> _testIssues;
+        private readonly IList<string> _testLabels;
         private Guid _testLineId;
-        private string _testText;
+        private readonly string _testText;
+        private readonly ChangeLogLineType _changeLogLineType;
 
         public ChangeLogLineRequestModelTests()
         {
@@ -19,9 +21,10 @@ namespace ChangeTracker.Application.Tests.UseCaseTests.Commands.UpdateChangeLogL
             _testText = "some features added";
             _testLabels = Array.Empty<string>();
             _testIssues = Array.Empty<string>();
+            _changeLogLineType = ChangeLogLineType.NotPending;
         }
 
-        private ChangeLogLineRequestModel CreateRequestModel() => new(_testLineId, _testText, _testLabels, _testIssues);
+        private UpdateChangeLogLineRequestModel CreateRequestModel() => new(_testLineId, _changeLogLineType, _testText, _testLabels, _testIssues);
 
         [Fact]
         public void Create_HappyPath_Successful()
@@ -39,39 +42,9 @@ namespace ChangeTracker.Application.Tests.UseCaseTests.Commands.UpdateChangeLogL
         {
             _testLineId = Guid.Empty;
 
-            Func<ChangeLogLineRequestModel> act = CreateRequestModel;
+            Func<UpdateChangeLogLineRequestModel> act = CreateRequestModel;
 
             act.Should().ThrowExactly<ArgumentException>();
-        }
-
-        [Fact]
-        public void Create_WithNullText_ArgumentNullException()
-        {
-            _testText = null;
-
-            Func<ChangeLogLineRequestModel> act = CreateRequestModel;
-
-            act.Should().ThrowExactly<ArgumentNullException>();
-        }
-
-        [Fact]
-        public void Create_WithNullLabels_ArgumentNullException()
-        {
-            _testLabels = null;
-
-            Func<ChangeLogLineRequestModel> act = CreateRequestModel;
-
-            act.Should().ThrowExactly<ArgumentNullException>();
-        }
-
-        [Fact]
-        public void Create_WithNullIssues_ArgumentNullException()
-        {
-            _testIssues = null;
-
-            Func<ChangeLogLineRequestModel> act = CreateRequestModel;
-
-            act.Should().ThrowExactly<ArgumentNullException>();
         }
     }
 }

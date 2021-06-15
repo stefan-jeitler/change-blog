@@ -2,6 +2,7 @@
 using System.Threading.Tasks;
 using ChangeTracker.Application.DataAccess;
 using ChangeTracker.Application.Tests.TestDoubles;
+using ChangeTracker.Application.UseCases.Commands.DeleteChangeLogLine;
 using ChangeTracker.Application.UseCases.Commands.UpdateChangeLogLine;
 using ChangeTracker.Domain.ChangeLog;
 using Moq;
@@ -12,12 +13,12 @@ namespace ChangeTracker.Application.Tests.UseCaseTests.Commands.UpdateChangeLogL
     public class UpdateChangeLogLineInteractorTests
     {
         private readonly ChangeLogDaoStub _changeLogDaoStub;
-        private readonly Mock<IUpdateLineOutputPort> _outputPortMock;
+        private readonly Mock<IUpdateChangeLogLineOutputPort> _outputPortMock;
         private readonly Mock<IUnitOfWork> _unitOfWorkMock;
 
         public UpdateChangeLogLineInteractorTests()
         {
-            _outputPortMock = new Mock<IUpdateLineOutputPort>(MockBehavior.Strict);
+            _outputPortMock = new Mock<IUpdateChangeLogLineOutputPort>(MockBehavior.Strict);
             _changeLogDaoStub = new ChangeLogDaoStub();
             _unitOfWorkMock = new Mock<IUnitOfWork>();
         }
@@ -32,7 +33,11 @@ namespace ChangeTracker.Application.Tests.UseCaseTests.Commands.UpdateChangeLogL
             var lineId = Guid.Parse("0683e1e1-0e0d-405c-b77e-a6d0d5141b67");
             const string text = "feature added";
             var requestModel =
-                new ChangeLogLineRequestModel(lineId, text, Array.Empty<string>(), Array.Empty<string>());
+                new UpdateChangeLogLineRequestModel(lineId,
+                    ChangeLogLineType.Pending,
+                    text,
+                    Array.Empty<string>(),
+                    Array.Empty<string>());
             var updateLineInteractor = CreateInteractor();
 
             _changeLogDaoStub.ChangeLogs.Add(new ChangeLogLine(lineId, null, TestAccount.Product.Id,
@@ -53,13 +58,44 @@ namespace ChangeTracker.Application.Tests.UseCaseTests.Commands.UpdateChangeLogL
         }
 
         [Fact]
+        public async Task UpdateLine_PendingLinePassed_LineIsPendingOutput()
+        {
+            // arrange
+            var lineId = Guid.Parse("0683e1e1-0e0d-405c-b77e-a6d0d5141b67");
+            const string text = "feature added";
+            var requestModel =
+                new UpdateChangeLogLineRequestModel(lineId,
+                    ChangeLogLineType.NotPending,
+                    text,
+                    Array.Empty<string>(),
+                    Array.Empty<string>());
+            var updateLineInteractor = CreateInteractor();
+
+            _changeLogDaoStub.ChangeLogs.Add(new ChangeLogLine(lineId, null, TestAccount.Product.Id,
+                ChangeLogText.Parse("some feature added"), 0, DateTime.Parse("2021-04-17"), Array.Empty<Label>(),
+                Array.Empty<Issue>(), TestAccount.UserId));
+
+            _outputPortMock.Setup(m => m.RequestedLineIsPending(It.IsAny<Guid>()));
+
+            // act
+            await updateLineInteractor.ExecuteAsync(_outputPortMock.Object, requestModel);
+
+            // assert
+            _outputPortMock.Verify(m => m.RequestedLineIsPending(It.Is<Guid>(x => x == lineId)), Times.Once);
+        }
+
+        [Fact]
         public async Task UpdateLine_ConflictWhileSaving_ConflictOutput()
         {
             // arrange
             var lineId = Guid.Parse("0683e1e1-0e0d-405c-b77e-a6d0d5141b67");
             const string text = "feature added";
             var requestModel =
-                new ChangeLogLineRequestModel(lineId, text, Array.Empty<string>(), Array.Empty<string>());
+                new UpdateChangeLogLineRequestModel(lineId,
+                    ChangeLogLineType.Pending,
+                    text, 
+                    Array.Empty<string>(),
+                    Array.Empty<string>());
             var updateLineInteractor = CreateInteractor();
 
             _changeLogDaoStub.ChangeLogs.Add(new ChangeLogLine(lineId, null, TestAccount.Product.Id,
@@ -84,7 +120,11 @@ namespace ChangeTracker.Application.Tests.UseCaseTests.Commands.UpdateChangeLogL
             var lineId = Guid.Parse("0683e1e1-0e0d-405c-b77e-a6d0d5141b67");
             const string text = "feature added";
             var requestModel =
-                new ChangeLogLineRequestModel(lineId, text, Array.Empty<string>(), Array.Empty<string>());
+                new UpdateChangeLogLineRequestModel(lineId,
+                    ChangeLogLineType.Pending,
+                    text,
+                    Array.Empty<string>(),
+                    Array.Empty<string>());
             var updateLineInteractor = CreateInteractor();
 
             _changeLogDaoStub.ChangeLogs.Add(new ChangeLogLine(lineId, null, TestAccount.Product.Id,
@@ -109,7 +149,11 @@ namespace ChangeTracker.Application.Tests.UseCaseTests.Commands.UpdateChangeLogL
             var lineId = Guid.Parse("0683e1e1-0e0d-405c-b77e-a6d0d5141b67");
             const string text = "some features added";
             var requestModel =
-                new ChangeLogLineRequestModel(lineId, text, Array.Empty<string>(), Array.Empty<string>());
+                new UpdateChangeLogLineRequestModel(lineId,
+                    ChangeLogLineType.Pending,
+                    text, 
+                    Array.Empty<string>(),
+                    Array.Empty<string>());
             var updateLineInteractor = CreateInteractor();
 
             _outputPortMock.Setup(m => m.ChangeLogLineDoesNotExist());

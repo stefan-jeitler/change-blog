@@ -1,22 +1,26 @@
 ﻿using System;
 using System.Collections.Generic;
+using ChangeTracker.Application.UseCases.Commands.DeleteChangeLogLine;
 
 namespace ChangeTracker.Application.UseCases.Commands.UpdateChangeLogLine
 {
-    public class ChangeLogLineRequestModel
+    public class UpdateChangeLogLineRequestModel
     {
-        public ChangeLogLineRequestModel(Guid changeLogLineId, string text, IList<string> labels, IList<string> issues)
+        public UpdateChangeLogLineRequestModel(Guid changeLogLineId, ChangeLogLineType changeLogLineType, string text,
+            IList<string> labels, IList<string> issues)
         {
             if (changeLogLineId == Guid.Empty)
                 throw new ArgumentException("ChangeLogLineId cannot be empty.");
 
             ChangeLogLineId = changeLogLineId;
-            Text = text ?? throw new ArgumentNullException(nameof(text));
-            Labels = labels ?? throw new ArgumentNullException(nameof(labels));
-            Issues = issues ?? throw new ArgumentNullException(nameof(issues));
+            ChangeLogLineType = changeLogLineType;
+            Text = text;
+            Labels = labels;
+            Issues = issues;
         }
 
         public Guid ChangeLogLineId { get; }
+        public ChangeLogLineType ChangeLogLineType { get; }
         public string Text { get; }
         public IList<string> Labels { get; }
         public IList<string> Issues { get; }

@@ -25,15 +25,10 @@ namespace ChangeTracker.Api.Controllers.V1
     [SwaggerControllerOrder(1)]
     public class AccountController : ControllerBase
     {
-        private readonly IGetAccountProducts _getAccountProducts;
         private readonly IGetAccounts _getAccounts;
-        private readonly IGetUsers _getUsers;
-
-        public AccountController(IGetAccountProducts getAccountProducts, IGetAccounts getAccounts, IGetUsers getUsers)
+        public AccountController(IGetAccounts getAccounts)
         {
-            _getAccountProducts = getAccountProducts;
             _getAccounts = getAccounts;
-            _getUsers = getUsers;
         }
 
         [HttpGet]
@@ -58,7 +53,9 @@ namespace ChangeTracker.Api.Controllers.V1
 
         [HttpGet("{accountId:Guid}/users")]
         [NeedsPermission(Permission.ViewAccountUsers)]
-        public async Task<ActionResult<List<UserDto>>> GetAccountUsersAsync(Guid accountId,
+        public async Task<ActionResult<List<UserDto>>> GetAccountUsersAsync(
+            [FromServices] IGetUsers getUsers,
+            Guid accountId,
             Guid? lastUserId = null,
             ushort limit = UsersQueryRequestModel.MaxLimit)
         {
@@ -68,14 +65,16 @@ namespace ChangeTracker.Api.Controllers.V1
                 limit
             );
 
-            var products = await _getUsers.ExecuteAsync(requestModel);
+            var products = await getUsers.ExecuteAsync(requestModel);
 
             return Ok(products.Select(UserDto.FromResponseModel));
         }
 
         [HttpGet("{accountId:Guid}/products")]
         [NeedsPermission(Permission.ViewAccountProducts)]
-        public async Task<ActionResult<List<ProductDto>>> GetAccountProductsAsync(Guid accountId,
+        public async Task<ActionResult<List<ProductDto>>> GetAccountProductsAsync(
+            [FromServices] IGetAccountProducts getAccountProducts,
+            Guid accountId,
             Guid? lastProductId = null,
             [Range(1, AccountProductQueryRequestModel.MaxLimit)]
             ushort limit = AccountProductQueryRequestModel.MaxLimit,
@@ -88,7 +87,7 @@ namespace ChangeTracker.Api.Controllers.V1
                 includeClosedProducts
             );
 
-            var products = await _getAccountProducts.ExecuteAsync(requestModel);
+            var products = await getAccountProducts.ExecuteAsync(requestModel);
 
             return Ok(products.Select(ProductDto.FromResponseModel));
         }

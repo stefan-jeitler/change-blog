@@ -15,6 +15,7 @@ using ChangeTracker.Application.UseCases.Commands.AssignPendingLineToVersion;
 using ChangeTracker.Application.UseCases.Commands.AssignPendingLineToVersion.Models;
 using ChangeTracker.Application.UseCases.Commands.DeleteAllPendingChangeLogLines;
 using ChangeTracker.Application.UseCases.Commands.DeleteChangeLogLine;
+using ChangeTracker.Application.UseCases.Commands.UpdateChangeLogLine;
 using ChangeTracker.Application.UseCases.Queries.GetPendingChangeLogLine;
 using ChangeTracker.Application.UseCases.Queries.GetPendingChangeLogs;
 using Microsoft.AspNetCore.Mvc;
@@ -72,6 +73,26 @@ namespace ChangeTracker.Api.Controllers.V1
 
             var presenter = new AddPendingChangeLogLineApiPresenter(HttpContext);
             await addPendingChangeLogLine.ExecuteAsync(presenter, requestModel);
+
+            return presenter.Response;
+        }
+
+
+        [HttpPatch("pending-changelogs/{changeLogLineId:Guid}")]
+        [NeedsPermission(Permission.AddOrUpdateChangeLogLine)]
+        public async Task<ActionResult> UpdateChangeLogLine(
+            [FromServices] IUpdateChangeLogLine updateChangeLogLine,
+            Guid changeLogLineId,
+            [FromBody] PatchChangeLogLineDto patchChangeLogLineDto)
+        {
+            var requestModel = new UpdateChangeLogLineRequestModel(changeLogLineId,
+                ChangeLogLineType.Pending,
+                patchChangeLogLineDto.Text,
+                patchChangeLogLineDto.Labels,
+                patchChangeLogLineDto.Issues);
+
+            var presenter = new UpdateChangeLogLineApiPresenter();
+            await updateChangeLogLine.ExecuteAsync(presenter, requestModel);
 
             return presenter.Response;
         }

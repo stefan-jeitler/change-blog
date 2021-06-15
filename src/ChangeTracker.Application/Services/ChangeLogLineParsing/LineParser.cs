@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Collections.Immutable;
 using ChangeTracker.Domain.ChangeLog;
 using CSharpFunctionalExtensions;
 
@@ -26,7 +27,9 @@ namespace ChangeTracker.Application.Services.ChangeLogLineParsing
             if (issues.HasNoValue)
                 return Maybe<LineParserResponseModel>.None;
 
-            return Maybe<LineParserResponseModel>.From(new LineParserResponseModel(text, labels.Value, issues.Value));
+            return Maybe<LineParserResponseModel>.From(new LineParserResponseModel(text,
+                labels.Value.ToImmutableHashSet(),
+                issues.Value.ToImmutableHashSet()));
         }
 
         private static Maybe<List<Issue>> ExtractIssues(ILineParserOutput output, IEnumerable<string> issues,

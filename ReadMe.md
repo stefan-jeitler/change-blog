@@ -29,6 +29,7 @@ This is a side project and should not be used in a productive environment.
 The architecture of the app is mainly influenced by:
 
 * Robert C. Martin's book Clean Architecture
+* Mark Seemann's book Dependency Injection Principles, practices and patterns
 * Plainionist's article series [Implementing-Clean-Architecture](http://www.plainionist.net/Implementing-Clean-Architecture-Overview/)
 * [CandiedOrange's](https://softwareengineering.stackexchange.com/users/131624/candied-orange) [answers](https://softwareengineering.stackexchange.com/search?q=user:131624+[clean-architecture]) on softwareengineering.stackexchange
 

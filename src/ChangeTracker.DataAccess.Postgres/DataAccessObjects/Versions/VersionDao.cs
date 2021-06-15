@@ -148,7 +148,8 @@ namespace ChangeTracker.DataAccess.Postgres.DataAccessObjects.Versions
 
         public async Task<Result<ClVersion, Conflict>> ReleaseVersionAsync(ClVersion version)
         {
-            if (!version.IsReleased) throw new Exception("Only release versions can be marked as released.");
+            if (!version.IsReleased) 
+                throw new Exception("Only release versions can be marked as released.");
 
             await _dbAccessor.DbConnection
                 .ExecuteAsync("update version set released_at = @releasedAt where id = @versionId", new

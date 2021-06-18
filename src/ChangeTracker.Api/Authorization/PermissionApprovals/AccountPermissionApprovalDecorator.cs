@@ -7,16 +7,16 @@ using Microsoft.AspNetCore.Mvc.Filters;
 
 // ReSharper disable ClassNeverInstantiated.Global
 
-namespace ChangeTracker.Api.Authorization.PermissionChecks
+namespace ChangeTracker.Api.Authorization.PermissionApprovals
 {
-    public class AccountPermissionCheckDecorator : PermissionCheck
+    public class AccountPermissionApprovalDecorator : PermissionApproval
     {
-        private readonly PermissionCheck _permissionCheckComponent;
+        private readonly PermissionApproval _permissionApprovalComponent;
         private readonly UserAccessDao _userAccessDao;
 
-        public AccountPermissionCheckDecorator(PermissionCheck permissionCheckComponent, UserAccessDao userAccessDao)
+        public AccountPermissionApprovalDecorator(PermissionApproval permissionApprovalComponent, UserAccessDao userAccessDao)
         {
-            _permissionCheckComponent = permissionCheckComponent;
+            _permissionApprovalComponent = permissionApprovalComponent;
             _userAccessDao = userAccessDao;
         }
 
@@ -31,7 +31,7 @@ namespace ChangeTracker.Api.Authorization.PermissionChecks
             if (accountIdInBody is not null)
                 return await _userAccessDao.HasAccountPermissionAsync(userId, accountIdInBody.AccountId, permission);
 
-            return await _permissionCheckComponent.HasPermission(context, userId, permission);
+            return await _permissionApprovalComponent.HasPermission(context, userId, permission);
         }
     }
 }

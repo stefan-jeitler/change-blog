@@ -42,7 +42,7 @@ namespace ChangeTracker.Api.Authorization
             var userId = context.HttpContext.GetUserId();
             var permissionCheck = context
                 .HttpContext.RequestServices
-                .GetRequiredService<PermissionCheck>();
+                .GetRequiredService<PermissionApproval>();
 
             return await permissionCheck.HasPermission(context, userId, permission);
         }

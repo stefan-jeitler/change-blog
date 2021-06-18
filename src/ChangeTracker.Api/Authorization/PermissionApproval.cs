@@ -7,7 +7,7 @@ using Microsoft.AspNetCore.Mvc.Filters;
 
 namespace ChangeTracker.Api.Authorization
 {
-    public abstract class PermissionCheck
+    public abstract class PermissionApproval
     {
         public abstract Task<bool> HasPermission(ActionExecutingContext context, Guid userId, Permission permission);
 

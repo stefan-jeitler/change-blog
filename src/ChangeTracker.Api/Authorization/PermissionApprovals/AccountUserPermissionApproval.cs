@@ -4,16 +4,16 @@ using ChangeTracker.Application.UseCases;
 using ChangeTracker.DataAccess.Postgres.DataAccessObjects.Users;
 using Microsoft.AspNetCore.Mvc.Filters;
 
-namespace ChangeTracker.Api.Authorization.PermissionChecks
+namespace ChangeTracker.Api.Authorization.PermissionApprovals
 {
     /// <summary>
     ///     Check if the user has any permission within its accounts
     /// </summary>
-    public class AccountUserPermissionCheck : PermissionCheck
+    public class AccountUserPermissionApproval : PermissionApproval
     {
         private readonly UserAccessDao _userAccessDao;
 
-        public AccountUserPermissionCheck(UserAccessDao userAccessDao)
+        public AccountUserPermissionApproval(UserAccessDao userAccessDao)
         {
             _userAccessDao = userAccessDao;
         }

@@ -4,17 +4,17 @@ using ChangeTracker.Application.UseCases;
 using ChangeTracker.DataAccess.Postgres.DataAccessObjects.Users;
 using Microsoft.AspNetCore.Mvc.Filters;
 
-namespace ChangeTracker.Api.Authorization.PermissionChecks
+namespace ChangeTracker.Api.Authorization.PermissionApprovals
 {
-    public class ChangeLogLinePermissionCheckDecorator : PermissionCheck
+    public class ChangeLogLinePermissionApprovalDecorator : PermissionApproval
     {
-        private readonly PermissionCheck _permissionCheckComponent;
+        private readonly PermissionApproval _permissionApprovalComponent;
         private readonly UserAccessDao _userAccessDao;
 
-        public ChangeLogLinePermissionCheckDecorator(PermissionCheck permissionCheckComponent,
+        public ChangeLogLinePermissionApprovalDecorator(PermissionApproval permissionApprovalComponent,
             UserAccessDao userAccessDao)
         {
-            _permissionCheckComponent = permissionCheckComponent;
+            _permissionApprovalComponent = permissionApprovalComponent;
             _userAccessDao = userAccessDao;
         }
 
@@ -25,7 +25,7 @@ namespace ChangeTracker.Api.Authorization.PermissionChecks
             if (changeLogLineId.HasValue)
                 return await _userAccessDao.HasChangeLogLinePermissionAsync(userId, changeLogLineId.Value, permission);
 
-            return await _permissionCheckComponent.HasPermission(context, userId, permission);
+            return await _permissionApprovalComponent.HasPermission(context, userId, permission);
         }
     }
 }

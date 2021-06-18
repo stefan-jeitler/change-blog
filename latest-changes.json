@@ -1,17 +1,17 @@
 {
-  "version": "1.0.0-cicdTest.5",
+  "version": "1.0.0-dev.26",
   "name": "",
   "changeLogLines": [
     {
       "text": "Changes get published automatically during deployment.",
       "labels": [
-        "CiCdImprovements"
+        "CiCdImprovements", "DevOps"
       ],
       "issues": []
     },
     {
-      "text": "Another test line.",
-      "labels": [],
+      "text": "Documentation about endpoint response types added.",
+      "labels": ["Swagger"],
       "issues": []
     }
   ],

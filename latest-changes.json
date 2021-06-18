@@ -1,17 +1,10 @@
 {
-  "version": "1.0.0-dev.26",
+  "version": "",
   "name": "",
   "changeLogLines": [
     {
-      "text": "Changes get published automatically during deployment.",
-      "labels": [
-        "CiCdImprovements", "DevOps"
-      ],
-      "issues": []
-    },
-    {
-      "text": "Documentation about endpoint response types added.",
-      "labels": ["Swagger"],
+      "text": "",
+      "labels": [],
       "issues": []
     }
   ],

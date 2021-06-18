@@ -70,8 +70,8 @@ stages:
 
   jobs:
 
-    - job: prepare_changes
-      displayName: Prepare Release Changes
+    - job: prepare_changeslogs
+      displayName: Prepare ChangeLogs
       steps:
       - task: PowerShell@2
         displayName: Approve Version
@@ -82,7 +82,7 @@ stages:
             Approve-LatestVersion -Version $(Version)
           pwsh: true
       - task: PowerShell@2
-        displayName: Create Changes artifacts
+        displayName: Create Changes Artifacts
         inputs:
           targetType: inline
           script: |
@@ -91,7 +91,7 @@ stages:
             Move-Item ./latest-changes.json ./changes
           pwsh: true
       - task: PublishPipelineArtifact@1
-        displayName: Publish Changes Artifact
+        displayName: Publish Changes Artifacts
         inputs:
           targetPath: '$(Build.SourcesDirectory)/changes'
           artifact: 'LatestChanges'
@@ -99,7 +99,7 @@ stages:
 
     - job: publish_image
       displayName: Publish Image
-      dependsOn: prepare_changes
+      dependsOn: prepare_changeslogs
       steps:
       - task: PowerShell@2
         displayName: Build & Push Image
@@ -119,7 +119,7 @@ stages:
 
     - job: publish_dbUpdater
       displayName: Publish DbUpdater
-      dependsOn: prepare_changes
+      dependsOn: prepare_changeslogs
       steps:
       - task: DotNetCoreCLI@2
         displayName: Build

@@ -12,6 +12,9 @@ function Approve-LatestVersion {
     Exit -1
   }
 
+  Write-Host "Latest changes version: $($latestChanges.Version)"
+  Write-Host "Release version: $Version"
+
   Exit 0
 }
 
@@ -44,4 +47,6 @@ function Publish-LatestChanges {
     Write-Host "StatusCode:" $_.Exception.Response.StatusCode.value__
     Exit -1
   }
+
+  Write-Host "LatestChanges successfully published."
 }

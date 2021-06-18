@@ -15,6 +15,7 @@ using ChangeTracker.Application.UseCases.Queries.GetAccounts;
 using ChangeTracker.Application.UseCases.Queries.GetProducts;
 using ChangeTracker.Application.UseCases.Queries.GetRoles;
 using ChangeTracker.Application.UseCases.Queries.GetUsers;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
 namespace ChangeTracker.Api.Controllers.V1
@@ -22,6 +23,8 @@ namespace ChangeTracker.Api.Controllers.V1
     [ApiController]
     [Route("api/v1/accounts")]
     [Produces(MediaTypeNames.Application.Json)]
+    [ProducesResponseType(typeof(DefaultResponse), StatusCodes.Status401Unauthorized)]
+    [ProducesResponseType(typeof(DefaultResponse), StatusCodes.Status403Forbidden)]
     [SwaggerControllerOrder(1)]
     public class AccountController : ControllerBase
     {
@@ -32,6 +35,7 @@ namespace ChangeTracker.Api.Controllers.V1
         }
 
         [HttpGet]
+        [ProducesResponseType(StatusCodes.Status200OK)]
         [NeedsPermission(Permission.ViewAccount)]
         public async Task<ActionResult<List<AccountDto>>> GetAccountsAsync()
         {
@@ -42,6 +46,8 @@ namespace ChangeTracker.Api.Controllers.V1
         }
 
         [HttpGet("{accountId:Guid}")]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(typeof(DefaultResponse), StatusCodes.Status400BadRequest)]
         [NeedsPermission(Permission.ViewAccount)]
         public async Task<ActionResult<AccountDto>> GetAccountAsync(Guid accountId)
         {
@@ -52,6 +58,8 @@ namespace ChangeTracker.Api.Controllers.V1
         }
 
         [HttpGet("{accountId:Guid}/users")]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(typeof(DefaultResponse), StatusCodes.Status400BadRequest)]
         [NeedsPermission(Permission.ViewAccountUsers)]
         public async Task<ActionResult<List<UserDto>>> GetAccountUsersAsync(
             [FromServices] IGetUsers getUsers,
@@ -59,7 +67,8 @@ namespace ChangeTracker.Api.Controllers.V1
             Guid? lastUserId = null,
             ushort limit = UsersQueryRequestModel.MaxLimit)
         {
-            var requestModel = new UsersQueryRequestModel(HttpContext.GetUserId(),
+            var userId = HttpContext.GetUserId();
+            var requestModel = new UsersQueryRequestModel(userId,
                 accountId,
                 lastUserId,
                 limit
@@ -71,6 +80,8 @@ namespace ChangeTracker.Api.Controllers.V1
         }
 
         [HttpGet("{accountId:Guid}/products")]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(typeof(DefaultResponse), StatusCodes.Status400BadRequest)]
         [NeedsPermission(Permission.ViewAccountProducts)]
         public async Task<ActionResult<List<ProductDto>>> GetAccountProductsAsync(
             [FromServices] IGetAccountProducts getAccountProducts,
@@ -93,6 +104,8 @@ namespace ChangeTracker.Api.Controllers.V1
         }
 
         [HttpGet("roles")]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(typeof(DefaultResponse), StatusCodes.Status400BadRequest)]
         [NeedsPermission(Permission.ViewRoles)]
         public async Task<ActionResult<List<RoleDto>>> GetRolesAsync([FromServices] IGetRoles getRoles,
             string filter = null,

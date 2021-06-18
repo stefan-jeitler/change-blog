@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Net.Mime;
 using System.Threading.Tasks;
 using ChangeTracker.Api.Authorization;
+using ChangeTracker.Api.DTOs;
 using ChangeTracker.Api.Presenters.V1.ChangeLogs;
 using ChangeTracker.Api.SwaggerUI;
 using ChangeTracker.Application.UseCases;
@@ -10,6 +11,7 @@ using ChangeTracker.Application.UseCases.Commands.Issues.AddChangeLogLineIssue;
 using ChangeTracker.Application.UseCases.Commands.Issues.DeleteChangeLogLineIssue;
 using ChangeTracker.Application.UseCases.Commands.Issues.SharedModels;
 using ChangeTracker.Application.UseCases.Queries.GetIssues;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
 namespace ChangeTracker.Api.Controllers.V1
@@ -17,10 +19,14 @@ namespace ChangeTracker.Api.Controllers.V1
     [ApiController]
     [Route("api/v1/changelogs/{changeLogLineId:Guid}/issues")]
     [Produces(MediaTypeNames.Application.Json)]
+    [ProducesResponseType(typeof(DefaultResponse), StatusCodes.Status400BadRequest)]
+    [ProducesResponseType(typeof(DefaultResponse), StatusCodes.Status401Unauthorized)]
+    [ProducesResponseType(typeof(DefaultResponse), StatusCodes.Status403Forbidden)]
     [SwaggerControllerOrder(8)]
     public class IssuesController : ControllerBase
     {
         [HttpGet]
+        [ProducesResponseType(StatusCodes.Status200OK)]
         [NeedsPermission(Permission.ViewChangeLogLines)]
         public async Task<ActionResult<List<string>>> GetChangeLogLineIssuesAsync([FromServices] IGetIssues getIssues,
             Guid changeLogLineId)
@@ -31,6 +37,10 @@ namespace ChangeTracker.Api.Controllers.V1
         }
 
         [HttpPatch("{issue}")]
+        [ProducesResponseType(typeof(DefaultResponse), StatusCodes.Status200OK)]
+        [ProducesResponseType(typeof(DefaultResponse), StatusCodes.Status404NotFound)]
+        [ProducesResponseType(typeof(DefaultResponse), StatusCodes.Status409Conflict)]
+        [ProducesResponseType(typeof(DefaultResponse), StatusCodes.Status422UnprocessableEntity)]
         [NeedsPermission(Permission.AddOrUpdateChangeLogLine)]
         public async Task<ActionResult> AddIssueAsync(
             [FromServices] IAddChangeLogLineIssue addChangeLogLineIssue,
@@ -45,6 +55,9 @@ namespace ChangeTracker.Api.Controllers.V1
         }
 
         [HttpDelete("{issue}")]
+        [ProducesResponseType(typeof(DefaultResponse), StatusCodes.Status200OK)]
+        [ProducesResponseType(typeof(DefaultResponse), StatusCodes.Status404NotFound)]
+        [ProducesResponseType(typeof(DefaultResponse), StatusCodes.Status409Conflict)]
         [NeedsPermission(Permission.AddOrUpdateChangeLogLine)]
         public async Task<ActionResult> DeleteIssueAsync(
             [FromServices] IDeleteChangeLogLineIssue deleteChangeLogLineIssue,

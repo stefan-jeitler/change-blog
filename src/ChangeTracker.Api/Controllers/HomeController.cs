@@ -10,6 +10,7 @@ using ChangeTracker.Api.DTOs.V1.Version;
 using ChangeTracker.Api.SwaggerUI;
 using ChangeTracker.Application.UseCases.Queries.GetVersions;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Hosting;
 
@@ -48,8 +49,9 @@ namespace ChangeTracker.Api.Controllers
         }
 
         [HttpGet("info")]
+        [ProducesResponseType(StatusCodes.Status200OK)]
         [AllowAnonymous]
-        public ActionResult Info()
+        public ActionResult<ApiInfo> Info()
         {
             var apiInfo = new ApiInfo(AssemblyName.Value,
                 AssemblyVersion.Value,
@@ -59,6 +61,7 @@ namespace ChangeTracker.Api.Controllers
         }
 
         [HttpGet("changes")]
+        [ProducesResponseType(StatusCodes.Status200OK)]
         [AllowAnonymous]
         public async Task<ActionResult<List<VersionDto>>> GetChangesAsync(
             [MaxLength(VersionsQueryRequestModel.MaxSearchTermLength)]

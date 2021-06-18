@@ -1,8 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
 using ChangeTracker.Api.DTOs;
+using ChangeTracker.Api.DTOs.V1.ChangeLog;
 using ChangeTracker.Application.UseCases.Queries.GetChangeLogLine;
 using ChangeTracker.Application.UseCases.Queries.SharedModels;
+using ChangeTracker.Domain.ChangeLog;
 using Microsoft.AspNetCore.Mvc;
 
 namespace ChangeTracker.Api.Presenters.V1.ChangeLogs
@@ -32,7 +34,7 @@ namespace ChangeTracker.Api.Presenters.V1.ChangeLogs
 
         public void LineFound(ChangeLogLineResponseModel responseModel)
         {
-            Response = new OkObjectResult(responseModel);
+            Response = new OkObjectResult(ChangeLogLineDto.FromResponseModel(responseModel));
         }
     }
 }

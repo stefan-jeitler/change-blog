@@ -18,6 +18,7 @@ using ChangeTracker.Application.UseCases.Commands.DeleteChangeLogLine;
 using ChangeTracker.Application.UseCases.Commands.UpdateChangeLogLine;
 using ChangeTracker.Application.UseCases.Queries.GetPendingChangeLogLine;
 using ChangeTracker.Application.UseCases.Queries.GetPendingChangeLogs;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
 namespace ChangeTracker.Api.Controllers.V1
@@ -25,10 +26,14 @@ namespace ChangeTracker.Api.Controllers.V1
     [ApiController]
     [Route("api/v1")]
     [Produces(MediaTypeNames.Application.Json)]
+    [ProducesResponseType(typeof(DefaultResponse), StatusCodes.Status400BadRequest)]
+    [ProducesResponseType(typeof(DefaultResponse), StatusCodes.Status401Unauthorized)]
+    [ProducesResponseType(typeof(DefaultResponse), StatusCodes.Status403Forbidden)]
     [SwaggerControllerOrder(5)]
     public class PendingChangeLogsController : ControllerBase
     {
         [HttpGet("products/{productId:Guid}/pending-changelogs")]
+        [ProducesResponseType(StatusCodes.Status200OK)]
         [NeedsPermission(Permission.ViewPendingChangeLogLines)]
         public async Task<ActionResult<List<ChangeLogLineDto>>> GetPendingChangeLogsAsync(
             [FromServices] IGetPendingChangeLogs getPendingChangeLogs,
@@ -44,8 +49,10 @@ namespace ChangeTracker.Api.Controllers.V1
         }
 
         [HttpGet("pending-changelogs/{changeLogLineId:Guid}")]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(typeof(DefaultResponse), StatusCodes.Status404NotFound)]
         [NeedsPermission(Permission.ViewPendingChangeLogLines)]
-        public async Task<ActionResult<List<ChangeLogLineDto>>> GetPendingChangeLogLineAsync(
+        public async Task<ActionResult<PendingChangeLogLineDto>> GetPendingChangeLogLineAsync(
             [FromServices] IGetPendingChangeLogLine getPendingChangeLogLine,
             Guid changeLogLineId)
         {
@@ -58,6 +65,10 @@ namespace ChangeTracker.Api.Controllers.V1
         }
 
         [HttpPost("products/{productId:Guid}/pending-changelogs")]
+        [ProducesResponseType(typeof(DefaultResponse), StatusCodes.Status201Created)]
+        [ProducesResponseType(typeof(DefaultResponse), StatusCodes.Status404NotFound)]
+        [ProducesResponseType(typeof(DefaultResponse), StatusCodes.Status409Conflict)]
+        [ProducesResponseType(typeof(DefaultResponse), StatusCodes.Status422UnprocessableEntity)]
         [NeedsPermission(Permission.AddOrUpdateChangeLogLine)]
         public async Task<ActionResult> AddPendingChangeLogLineAsync(
             [FromServices] IAddPendingChangeLogLine addPendingChangeLogLine,
@@ -79,6 +90,10 @@ namespace ChangeTracker.Api.Controllers.V1
 
 
         [HttpPatch("pending-changelogs/{changeLogLineId:Guid}")]
+        [ProducesResponseType(typeof(DefaultResponse), StatusCodes.Status200OK)]
+        [ProducesResponseType(typeof(DefaultResponse), StatusCodes.Status404NotFound)]
+        [ProducesResponseType(typeof(DefaultResponse), StatusCodes.Status409Conflict)]
+        [ProducesResponseType(typeof(DefaultResponse), StatusCodes.Status422UnprocessableEntity)]
         [NeedsPermission(Permission.AddOrUpdateChangeLogLine)]
         public async Task<ActionResult> UpdateChangeLogLine(
             [FromServices] IUpdateChangeLogLine updateChangeLogLine,
@@ -98,6 +113,10 @@ namespace ChangeTracker.Api.Controllers.V1
         }
 
         [HttpPost("pending-changelogs/{changeLogLineId:Guid}/move")]
+        [ProducesResponseType(typeof(DefaultResponse), StatusCodes.Status200OK)]
+        [ProducesResponseType(typeof(DefaultResponse), StatusCodes.Status404NotFound)]
+        [ProducesResponseType(typeof(DefaultResponse), StatusCodes.Status409Conflict)]
+        [ProducesResponseType(typeof(DefaultResponse), StatusCodes.Status422UnprocessableEntity)]
         [NeedsPermission(Permission.MoveChangeLogLines)]
         public async Task<ActionResult> MovePendingChangeLogLineAsync(
             [FromServices] IAssignPendingLineToVersion assignPendingLineToVersion,
@@ -117,6 +136,10 @@ namespace ChangeTracker.Api.Controllers.V1
         }
 
         [HttpPost("products/{productId:Guid}/pending-changelogs/move")]
+        [ProducesResponseType(typeof(DefaultResponse), StatusCodes.Status200OK)]
+        [ProducesResponseType(typeof(DefaultResponse), StatusCodes.Status404NotFound)]
+        [ProducesResponseType(typeof(DefaultResponse), StatusCodes.Status409Conflict)]
+        [ProducesResponseType(typeof(DefaultResponse), StatusCodes.Status422UnprocessableEntity)]
         [NeedsPermission(Permission.MoveChangeLogLines)]
         public async Task<ActionResult> MoveAllPendingChangeLogLineAsync(
             [FromServices] IAssignAllPendingLinesToVersion assignAllPendingLinesToVersion,
@@ -137,6 +160,9 @@ namespace ChangeTracker.Api.Controllers.V1
         }
 
         [HttpDelete("pending-changelogs/{changeLogLineId:Guid}")]
+        [ProducesResponseType(typeof(DefaultResponse), StatusCodes.Status200OK)]
+        [ProducesResponseType(typeof(DefaultResponse), StatusCodes.Status404NotFound)]
+        [ProducesResponseType(typeof(DefaultResponse), StatusCodes.Status409Conflict)]
         [NeedsPermission(Permission.DeleteChangeLogLine)]
         public async Task<ActionResult> DeletePendingChangeLogLineAsync(
             [FromServices] IDeleteChangeLogLine deleteChangeLogLine,
@@ -151,6 +177,7 @@ namespace ChangeTracker.Api.Controllers.V1
         }
 
         [HttpDelete("products/{productId:Guid}/pending-changelogs")]
+        [ProducesResponseType(typeof(DefaultResponse), StatusCodes.Status200OK)]
         [NeedsPermission(Permission.DeleteChangeLogLine)]
         public async Task<ActionResult> DeleteAllPendingChangeLogLineAsync(
             [FromServices] IDeleteAllPendingChangeLogLines deleteAllPendingChangeLogLines,

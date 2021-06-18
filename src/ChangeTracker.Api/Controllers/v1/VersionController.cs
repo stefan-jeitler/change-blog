@@ -16,6 +16,7 @@ using ChangeTracker.Application.UseCases.Commands.AddOrUpdateVersion.Models;
 using ChangeTracker.Application.UseCases.Commands.DeleteVersion;
 using ChangeTracker.Application.UseCases.Commands.ReleaseVersion;
 using ChangeTracker.Application.UseCases.Queries.GetVersions;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
 namespace ChangeTracker.Api.Controllers.V1
@@ -23,6 +24,9 @@ namespace ChangeTracker.Api.Controllers.V1
     [ApiController]
     [Route("api/v1")]
     [Produces(MediaTypeNames.Application.Json)]
+    [ProducesResponseType(typeof(DefaultResponse), StatusCodes.Status400BadRequest)]
+    [ProducesResponseType(typeof(DefaultResponse), StatusCodes.Status401Unauthorized)]
+    [ProducesResponseType(typeof(DefaultResponse), StatusCodes.Status403Forbidden)]
     [SwaggerControllerOrder(4)]
     public class VersionController : ControllerBase
     {
@@ -34,6 +38,8 @@ namespace ChangeTracker.Api.Controllers.V1
         }
 
         [HttpGet("versions/{versionId:Guid}")]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(typeof(DefaultResponse), StatusCodes.Status404NotFound)]
         [NeedsPermission(Permission.ViewVersions)]
         public async Task<ActionResult<VersionDto>> GetVersionAsync(
             Guid versionId,
@@ -49,6 +55,7 @@ namespace ChangeTracker.Api.Controllers.V1
         }
 
         [HttpGet("products/{productId:Guid}/versions")]
+        [ProducesResponseType(StatusCodes.Status200OK)]
         [NeedsPermission(Permission.ViewVersions)]
         public async Task<ActionResult<List<VersionDto>>> GetProductVersionsAsync(Guid productId,
             [MaxLength(VersionsQueryRequestModel.MaxSearchTermLength)]
@@ -72,6 +79,8 @@ namespace ChangeTracker.Api.Controllers.V1
         }
 
         [HttpGet("products/{productId:Guid}/versions/{version}")]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(typeof(DefaultResponse), StatusCodes.Status404NotFound)]
         [NeedsPermission(Permission.ViewVersions)]
         public async Task<ActionResult<List<VersionDto>>> GetProductVersionAsync(
             [FromServices] IGetVersion getVersion,
@@ -88,6 +97,10 @@ namespace ChangeTracker.Api.Controllers.V1
         }
 
         [HttpPost("products/{productId:Guid}/versions")]
+        [ProducesResponseType(typeof(DefaultResponse), StatusCodes.Status201Created)]
+        [ProducesResponseType(typeof(DefaultResponse), StatusCodes.Status404NotFound)]
+        [ProducesResponseType(typeof(DefaultResponse), StatusCodes.Status409Conflict)]
+        [ProducesResponseType(typeof(DefaultResponse), StatusCodes.Status422UnprocessableEntity)]
         [NeedsPermission(Permission.AddVersion)]
         public async Task<ActionResult> AddVersionAsync([FromServices] IAddVersion addVersion,
             Guid productId,
@@ -114,6 +127,9 @@ namespace ChangeTracker.Api.Controllers.V1
         }
 
         [HttpPost("versions/{versionId:Guid}/release")]
+        [ProducesResponseType(typeof(DefaultResponse), StatusCodes.Status200OK)]
+        [ProducesResponseType(typeof(DefaultResponse), StatusCodes.Status404NotFound)]
+        [ProducesResponseType(typeof(DefaultResponse), StatusCodes.Status409Conflict)]
         [NeedsPermission(Permission.ReleaseVersion)]
         public async Task<ActionResult> ReleaseVersionAsync([FromServices] IReleaseVersion releaseVersion,
             Guid versionId)
@@ -125,6 +141,11 @@ namespace ChangeTracker.Api.Controllers.V1
         }
 
         [HttpPut("products/{productId:Guid}/versions/{version}")]
+        [ProducesResponseType(typeof(DefaultResponse), StatusCodes.Status200OK)]
+        [ProducesResponseType(typeof(DefaultResponse), StatusCodes.Status201Created)]
+        [ProducesResponseType(typeof(DefaultResponse), StatusCodes.Status404NotFound)]
+        [ProducesResponseType(typeof(DefaultResponse), StatusCodes.Status409Conflict)]
+        [ProducesResponseType(typeof(DefaultResponse), StatusCodes.Status422UnprocessableEntity)]
         [NeedsPermission(Permission.AddOrUpdateVersion)]
         public async Task<ActionResult> AddOrUpdateVersionAsync([FromServices] IAddOrUpdateVersion addOrUpdateVersion,
             Guid productId,
@@ -155,6 +176,9 @@ namespace ChangeTracker.Api.Controllers.V1
         }
 
         [HttpDelete("versions/{versionId:Guid}")]
+        [ProducesResponseType(typeof(DefaultResponse), StatusCodes.Status200OK)]
+        [ProducesResponseType(typeof(DefaultResponse), StatusCodes.Status404NotFound)]
+        [ProducesResponseType(typeof(DefaultResponse), StatusCodes.Status409Conflict)]
         [NeedsPermission(Permission.DeleteVersion)]
         public async Task<ActionResult> DeleteVersionAsync([FromServices] IDeleteVersion deleteVersion, Guid versionId)
         {

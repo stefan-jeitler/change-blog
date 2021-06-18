@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using ChangeTracker.Api.DTOs;
+using ChangeTracker.Api.DTOs.V1.ChangeLog;
 using ChangeTracker.Application.UseCases.Queries.GetPendingChangeLogLine;
 using Microsoft.AspNetCore.Mvc;
 
@@ -31,7 +32,7 @@ namespace ChangeTracker.Api.Presenters.V1.ChangeLogs
 
         public void LineFound(PendingChangeLogLineResponseModel responseModel)
         {
-            Response = new OkObjectResult(responseModel);
+            Response = new OkObjectResult(PendingChangeLogLineDto.FromResponseModel(responseModel));
         }
     }
 }

@@ -1,14 +1,19 @@
 {
-  "version": "1.0.0-dev.27",
+  "version": "1.0.0-cicdTest.5",
   "name": "",
   "changeLogLines": [
     {
-      "text": "Endpoint response type documentation added",
+      "text": "Changes get published automatically during deployment.",
       "labels": [
-        "Documentation"
+        "CiCdImprovements"
       ],
+      "issues": []
+    },
+    {
+      "text": "Another test line.",
+      "labels": [],
       "issues": []
     }
   ],
-  "releaseImmediately": false
+  "releaseImmediately": true
 }

@@ -69,8 +69,37 @@ stages:
     ImageName: change-tracker-api
 
   jobs:
+
+    - job: prepare_changes
+      displayName: Prepare Release Changes
+      steps:
+      - task: PowerShell@2
+        displayName: Approve Version
+        inputs:
+          targetType: inline
+          script: >
+            . ./changes.ps1
+            Approve-LatestVersion -Version $(Version)
+          pwsh: true
+      - task: PowerShell@2
+        displayName: Create Changes artifacts
+        inputs:
+          targetType: inline
+          script: >
+            New-Item -ItemType Directory -Force -Path ./changes
+            Move-Item ./changes.ps1 ./changes
+            Move-Item ./latest-changes.json ./changes
+          pwsh: true
+      - task: PublishPipelineArtifact@1
+        displayName: Publish Changes Artifact
+        inputs:
+          targetPath: '$(Build.SourcesDirectory)/changes'
+          artifact: 'LatestChanges'
+          publishLocation: 'pipeline'
+
     - job: publish_image
       displayName: Publish Image
+      dependsOn: prepare_changes
       steps:
       - task: PowerShell@2
         displayName: Build & Push Image
@@ -90,6 +119,7 @@ stages:
 
     - job: publish_dbUpdater
       displayName: Publish DbUpdater
+      dependsOn: prepare_changes
       steps:
       - task: DotNetCoreCLI@2
         displayName: Build

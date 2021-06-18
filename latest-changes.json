@@ -1,0 +1,14 @@
+{
+  "version": "1.0.0-dev.27",
+  "name": "",
+  "changeLogLines": [
+    {
+      "text": "Endpoint response type documentation added",
+      "labels": [
+        "Documentation"
+      ],
+      "issues": []
+    }
+  ],
+  "releaseImmediately": false
+}

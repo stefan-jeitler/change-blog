@@ -7,7 +7,9 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution 
 		.gitignore = .gitignore
 		azure-pipelines.yml = azure-pipelines.yml
 		build.ps1 = build.ps1
+		changes.ps1 = changes.ps1
 		Dockerfile = Dockerfile
+		latest-changes.json = latest-changes.json
 		publish-image.ps1 = publish-image.ps1
 		ReadMe.md = ReadMe.md
 	EndProjectSection

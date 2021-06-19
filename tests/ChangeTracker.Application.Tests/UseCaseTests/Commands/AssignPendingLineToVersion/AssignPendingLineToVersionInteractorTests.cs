@@ -72,6 +72,44 @@ namespace ChangeTracker.Application.Tests.UseCaseTests.Commands.AssignPendingLin
         }
 
         [Fact]
+        public async Task AssignPendingLineByVersionId_ProductIdMismatch_TargetVersionBelongsToDifferentProductOutput()
+        {
+            // arrange
+            var targetVersionId = Guid.Parse("ab9bff5f-3484-451e-b4ab-80aa6511c8c7");
+            var targetVersionsProductId = Guid.Parse("f05ff0ef-5af5-4944-af69-12517412ce0f");
+
+            _productDaoStub.Products.Add(new Product(TestAccount.Id,
+                Name.Parse("Test Product"),
+                TestAccount.CustomVersioningScheme,
+                TestAccount.UserId,
+                TestAccount.Product.LanguageCode,
+                TestAccount.CreationDate));
+
+            var clVersion = new ClVersion(targetVersionsProductId, targetVersionsProductId, ClVersionValue.Parse("1.2"), OptionalName.Empty,
+                null, TestAccount.UserId, DateTime.UtcNow, null);
+            _versionDaoStub.Versions.Add(clVersion);
+
+            var line = new ChangeLogLine(Guid.NewGuid(), null, TestAccount.Product.Id,
+                ChangeLogText.Parse("Some new changes"), 0, TestAccount.UserId, DateTime.Parse("2021-04-12"));
+            _changeLogDaoStub.ChangeLogs.Add(line);
+
+            var assignmentRequestModel =
+                new VersionIdAssignmentRequestModel(clVersion.Id, line.Id);
+            var assignToVersionInteractor = CreateInteractor();
+
+            _outputPortMock.Setup(m => m.TargetVersionBelongsToDifferentProduct(It.IsAny<Guid>(), It.IsAny<Guid>()));
+
+            // act
+            await assignToVersionInteractor.ExecuteAsync(_outputPortMock.Object, assignmentRequestModel);
+
+            // assert
+            _outputPortMock.Verify(m => m.TargetVersionBelongsToDifferentProduct(It.Is<Guid>(x => x == line.ProductId),
+                It.Is<Guid>(x => x == targetVersionsProductId)), Times.Once);
+
+        }
+
+
+        [Fact]
         public async Task AssignPendingLineByVersionValue_InvalidVersionFormat_InvalidVersionFormatOutput()
         {
             // arrange

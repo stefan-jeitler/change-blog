@@ -71,5 +71,15 @@ namespace ChangeTracker.Api.Presenters.V1.ChangeLogs
                 DefaultResponse.Create(
                     $"The target version contains already lines with an identical text. Duplicate: {text}"));
         }
+
+        public void TargetVersionBelongsToDifferentProduct(Guid changeLogLineProductId, Guid targetVersionProductId)
+        {
+            var resourceIds = new Dictionary<string, string>
+            {
+                ["productId"] = targetVersionProductId.ToString()
+            };
+
+            Response = new ConflictObjectResult(DefaultResponse.Create("The target version belongs to a different product.", resourceIds));
+        }
     }
 }

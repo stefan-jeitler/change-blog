@@ -39,6 +39,12 @@ namespace ChangeTracker.Application.UseCases.Commands.AssignAllPendingLinesToVer
                 return;
             }
 
+            if (requestModel.ProductId != clVersion.Value.ProductId)
+            {
+                output.TargetVersionBelongsToDifferentProduct(requestModel.ProductId, clVersion.Value.ProductId);
+                return;
+            }
+
             await AssignAllPendingLinesToVersionAsync(output, clVersion.Value);
         }
 

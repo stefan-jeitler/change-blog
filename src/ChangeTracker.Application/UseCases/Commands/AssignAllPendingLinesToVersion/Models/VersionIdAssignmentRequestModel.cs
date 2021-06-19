@@ -12,7 +12,7 @@ namespace ChangeTracker.Application.UseCases.Commands.AssignAllPendingLinesToVer
             ProductId = productId;
 
             if (versionId == Guid.Empty)
-                throw new ArgumentException("VersionId cannot be empty.");
+                throw new ArgumentException("TargetVersionId cannot be empty.");
 
             VersionId = versionId;
         }

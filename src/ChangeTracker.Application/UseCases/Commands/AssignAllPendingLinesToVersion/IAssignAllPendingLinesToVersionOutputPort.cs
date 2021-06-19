@@ -13,5 +13,6 @@ namespace ChangeTracker.Application.UseCases.Commands.AssignAllPendingLinesToVer
         void Conflict(Conflict conflict);
         void NoPendingChangeLogLines(Guid productId);
         void LineWithSameTextAlreadyExists(List<string> texts);
+        void TargetVersionBelongsToDifferentProduct(Guid productId, Guid targetVersionProductId);
     }
 }

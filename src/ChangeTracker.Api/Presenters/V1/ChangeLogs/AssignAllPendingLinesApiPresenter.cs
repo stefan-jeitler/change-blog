@@ -4,6 +4,7 @@ using ChangeTracker.Api.DTOs;
 using ChangeTracker.Application.DataAccess;
 using ChangeTracker.Application.UseCases.Commands.AssignAllPendingLinesToVersion;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Primitives;
 
 namespace ChangeTracker.Api.Presenters.V1.ChangeLogs
 {
@@ -56,6 +57,16 @@ namespace ChangeTracker.Api.Presenters.V1.ChangeLogs
             Response = new UnprocessableEntityObjectResult(
                 DefaultResponse.Create(
                     $"The target version contains already lines with an identical text. Duplicates: {string.Join(", ", texts)}"));
+        }
+
+        public void TargetVersionBelongsToDifferentProduct(Guid productId, Guid targetVersionProductId)
+        {
+            var resourceIds = new Dictionary<string, string>
+            {
+                ["productId"] = targetVersionProductId.ToString()
+            };
+
+            Response = new ConflictObjectResult(DefaultResponse.Create("The target version belongs to a different product.", resourceIds));
         }
     }
 }

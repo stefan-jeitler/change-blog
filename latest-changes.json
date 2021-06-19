@@ -3,8 +3,8 @@
   "name": "",
   "changeLogLines": [
     {
-      "text": "",
-      "labels": [],
+      "text": "Moving change log lines to a version of a different product is no longer possible.",
+      "labels": ["Bugfix", "Security"],
       "issues": []
     }
   ],

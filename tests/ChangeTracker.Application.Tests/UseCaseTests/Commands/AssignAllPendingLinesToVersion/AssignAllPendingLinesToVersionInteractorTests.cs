@@ -36,7 +36,7 @@ namespace ChangeTracker.Application.Tests.UseCaseTests.Commands.AssignAllPending
                 _changeLogDaoStub, _changeLogDaoStub);
 
         [Fact]
-        public async Task AssignAllPendingLines_HappyPath_AssignAndUowCommitted()
+        public async Task AssignAllPendingLines_HappyPath_AssignedAndUowCommitted()
         {
             // arrange
             var requestModel = new VersionAssignmentRequestModel(TestAccount.Product.Id, "1.2.3");
@@ -62,6 +62,34 @@ namespace ChangeTracker.Application.Tests.UseCaseTests.Commands.AssignAllPending
             _unitOfWork.Verify(m => m.Commit(), Times.Once);
             _changeLogDaoStub.ChangeLogs.Should().HaveCount(3);
             _changeLogDaoStub.ChangeLogs.All(x => x.VersionId == clVersion.Id).Should().BeTrue();
+        }
+
+        [Fact]
+        public async Task AssignAllPendingLines_ProductIdMismatch_TargetVersionBelongsToDifferentProductOutput()
+        {
+            // arrange
+            var targetVersionId = Guid.Parse("ab9bff5f-3484-451e-b4ab-80aa6511c8c7");
+            var targetVersionsProductId = Guid.Parse("f05ff0ef-5af5-4944-af69-12517412ce0f");
+            var requestModel = new VersionIdAssignmentRequestModel(TestAccount.Product.Id, targetVersionId);
+            var assignAllPendingLinesInteractor = CreateInteractor();
+
+            var pendingLines = Enumerable.Range(0, 3)
+                .Select(x => new ChangeLogLine(null, TestAccount.Product.Id, ChangeLogText.Parse($"{x:D5}"), (uint) x,
+                    TestAccount.UserId));
+            _changeLogDaoStub.ChangeLogs.AddRange(pendingLines);
+
+            var clVersion = new ClVersion(targetVersionId, targetVersionsProductId, ClVersionValue.Parse("1.2.3"), OptionalName.Empty,
+                null, TestAccount.UserId, DateTime.UtcNow, null);
+            _versionDaoStub.Versions.Add(clVersion);
+
+            _outputPortMock.Setup(m => m.TargetVersionBelongsToDifferentProduct(It.IsAny<Guid>(), It.IsAny<Guid>()));
+
+            // act
+            await assignAllPendingLinesInteractor.ExecuteAsync(_outputPortMock.Object, requestModel);
+
+            // assert
+            _outputPortMock.Verify(m => m.TargetVersionBelongsToDifferentProduct(It.Is<Guid>(x => x == TestAccount.Product.Id),
+                It.Is<Guid>(x => x == targetVersionsProductId)), Times.Once);
         }
 
         [Fact]

@@ -81,6 +81,12 @@ namespace ChangeTracker.Application.UseCases.Commands.AssignPendingLineToVersion
                 return;
             }
 
+            if (pendingLine.Value.ProductId != version.ProductId)
+            {
+                output.TargetVersionBelongsToDifferentProduct(pendingLine.Value.ProductId, version.ProductId);
+                return;
+            }
+
             if (!pendingLine.Value.IsPending)
             {
                 output.ChangeLogLineIsNotPending(pendingLine.Value.Id);
@@ -94,7 +100,6 @@ namespace ChangeTracker.Application.UseCases.Commands.AssignPendingLineToVersion
             }
 
             var assignedLine = pendingLine.Value.AssignToVersion(version.Id, changeLogs.NextFreePosition);
-
             await SaveAssignmentAsync(output, assignedLine);
         }
 

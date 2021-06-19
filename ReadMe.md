@@ -13,7 +13,7 @@ After that, you check what's inside this release in your ticket system to be inf
 This can be quite cumbersome with an increasing number of products.  
 
 A possible solution is to invert the dependencies.  
-The management team where the product owner belongs to should not depend on developers,  
+The management team where the product owner belongs should not depend on developers,  
 both should depend on a web service.  
 
 ![Dependencies](./docs/assets/ChangeTracker.png)  
@@ -40,24 +40,28 @@ _tbd_
 
 ### Version
 
-A version can have three different states  
+A version is a unique string assigned to a product.  
+There are three states that a version can have.  
 
 * Not Released and Not Deleted
 * Released (read-only)
 * Deleted (read-only)
 
-The latter two make versions read-only.  
-Version properties including its change log lines can be modified as long it hasn't been deleted or released.  
+The last two make versions read-only.  
+Version properties including the change log lines can be modified as long it hasn't been deleted or released.  
 Deleted versions can still be fetched from the api.  
-The appropriate endpoints provide a switch **IncludeDeleted** to get these versions.
+The appropriate endpoints provide a switch **IncludeDeleted** to include these versions in the response.
 
 ### Pending ChangeLogs
 
-_tbd_
+When developing software, you often don't know to which version your changes belong.  
+In order to delay this decision, you can add pending change logs.  
 
 ### ChangeLogs
 
 _tbd_
+
+### Overview
 
 ![Concept](./docs/assets/ChangeTrackerConcept.png)
 

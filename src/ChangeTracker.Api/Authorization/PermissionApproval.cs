@@ -26,8 +26,7 @@ namespace ChangeTracker.Api.Authorization
 
         protected static T TryFindInBody<T>(ActionExecutingContext context)
         {
-            var id = context.ActionArguments
-                .Values.SingleOrDefault(x => x is T);
+            var id = context.ActionArguments.Values.SingleOrDefault(x => x is T);
 
             return (T) id;
         }

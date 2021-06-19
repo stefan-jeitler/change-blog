@@ -11,7 +11,7 @@ using Microsoft.Extensions.DependencyInjection;
 
 namespace ChangeTracker.Api.Authorization
 {
-    public class PermissionAuthorizationFilter : IAsyncActionFilter
+    public class PermissionFilter : IAsyncActionFilter
     {
         public async Task OnActionExecutionAsync(ActionExecutingContext context, ActionExecutionDelegate next)
         {

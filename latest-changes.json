@@ -1,10 +1,10 @@
 {
-  "version": "1.0.0-dev.27",
+  "version": "",
   "name": "",
   "changeLogLines": [
     {
-      "text": "Moving change log lines to a version of a different product is no longer possible.",
-      "labels": ["Bugfix", "Security"],
+      "text": "",
+      "labels": [],
       "issues": []
     }
   ],

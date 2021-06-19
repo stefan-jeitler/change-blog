@@ -262,7 +262,7 @@ insert into product values ('139a2e54-e9be-4168-98b4-2839d9b3db04',
                             '4091b948-9bc5-43ee-9f98-df3d27853565',
                             't_ua_account_01_proj_01',
                             'f575503e-4eee-4d6d-b2c1-f11d8fc3da76',
-                            null, now()
+                            null, now(), 'en'
                            ) on conflict (id) do nothing ;
 
 insert into product values ('0614f8d6-8895-4c74-bcbe-8a3c26076e1b',
@@ -270,16 +270,16 @@ insert into product values ('0614f8d6-8895-4c74-bcbe-8a3c26076e1b',
                             '4091b948-9bc5-43ee-9f98-df3d27853565',
                             't_ua_account_01_proj_02',
                             'f575503e-4eee-4d6d-b2c1-f11d8fc3da76',
-                            null, now()
+                            null, now(), 'en'
                            ) on conflict (id) do nothing ;
 
-                           
+
 insert into product values ('04482211-eda1-4748-9818-9f74c105609c',
                             (select id from account where name = 't_ua_account_02'),
                             '4091b948-9bc5-43ee-9f98-df3d27853565',
                             't_ua_account_02_proj_01',
                             'f575503e-4eee-4d6d-b2c1-f11d8fc3da76',
-                            null, now()
+                            null, now(), 'en'
                            ) on conflict (id) do nothing ;
 
 insert into product values ('35c5df1a-079e-4b8c-87c5-09b30e52a82f',
@@ -287,7 +287,7 @@ insert into product values ('35c5df1a-079e-4b8c-87c5-09b30e52a82f',
                             '4091b948-9bc5-43ee-9f98-df3d27853565',
                             't_ua_account_02_proj_02',
                             'f575503e-4eee-4d6d-b2c1-f11d8fc3da76',
-                            null, now()
+                            null, now(), 'en'
                            ) on conflict (id) do nothing ;
 
 insert into product_user values (
@@ -302,6 +302,5 @@ insert into product_user values (
                                  (select id from "user" where email = 't_ua_account_02_user_03@change-tracker.com'),
                                  (select id from role where name = 'Developer'),
                                  now()
-                                ) on conflict (product_id, user_id, role_id) do nothing ;
-                                
+                                ) on conflict (product_id, user_id, role_id) do nothing ;                            
 ```

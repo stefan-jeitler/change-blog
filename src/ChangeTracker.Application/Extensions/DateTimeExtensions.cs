@@ -13,7 +13,7 @@ namespace ChangeTracker.Application.Extensions
             var timeZone = DateTimeZoneProviders.Tzdb.GetZoneOrNull(olsonId);
 
             if (timeZone is null)
-                throw new Exception($"TimeZone could not be found: {olsonId}");
+                throw new Exception($"TimeZone not found: {olsonId}");
 
             var instant = Instant.FromDateTimeUtc(DateTime.SpecifyKind(dateTime, DateTimeKind.Utc));
 

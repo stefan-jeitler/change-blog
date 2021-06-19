@@ -19,7 +19,7 @@ namespace ChangeTracker.DataAccess.Postgres
 
         private static int AppSchemaVersion => 39;
 
-        public async Task VerifySchemaVersionAsync()
+        public async Task ApproveAsync()
         {
             using var dbConnection = _acquireDbConnection();
             const string schemaVersionSql = "SELECT version from schema_Version";

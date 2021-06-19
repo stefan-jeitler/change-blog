@@ -12,15 +12,15 @@ namespace ChangeTracker.Api
         public static async Task Main(string[] args)
         {
             var host = CreateHostBuilder(args).Build();
-            await VerifyDbSchemaVersionAsync(host);
+            await ApproveDbSchemaVersionAsync(host);
             await host.RunAsync();
         }
 
-        private static async Task VerifyDbSchemaVersionAsync(IHost host)
+        private static async Task ApproveDbSchemaVersionAsync(IHost host)
         {
             using var scope = host.Services.CreateScope();
             var schemaVersion = scope.ServiceProvider.GetRequiredService<SchemaVersion>();
-            await schemaVersion.VerifySchemaVersionAsync();
+            await schemaVersion.ApproveAsync();
         }
 
         private static IHostBuilder CreateHostBuilder(string[] args)

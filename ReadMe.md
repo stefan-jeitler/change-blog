@@ -22,21 +22,43 @@ The development team automatically pushes its changes during deployment with all
 
 ## Disclaimer
 
-This is a side project and should not be used in a productive environment.  
+This is a side project that should not be used in productive environment.  
 
 ## Basic Concept
 
 ### Account
 
-_tbd_
+An Account is a grouping of users and prodcuts.  
+User permissions can granted on account and product level.  
+Product permissions have precedence over account permissions.  
+
+e.g.  
+A user can have a developer role on account level and a support role for one specific product within the account.  
+In this case the user has for all account products developer permissions expect the one specific product.  
+This is restricted to support permissions.  
+
+This works the other way around as well.  
+You can grant support permissions on account level and developer permissions for specific products.  
+So the user has more permission for the specific products.  
+
+However, there is not yet a user interface to do this. (future extension)
 
 ### User
 
-_tbd_
+Right now, the following user information are stored
+
+* Email
+* Firstname
+* Lastname
+* Timezone(IANA)
 
 ### Product
 
-_tbd_
+A product is the software on which developers work.  
+It has no end date, but it can be closed.  
+By closing a product you stop working on that software.  
+The product will still exist but it becomes read-only  
+with all its versions and change logs.
 
 ### Version
 
@@ -44,11 +66,11 @@ A version is a unique string assigned to a product.
 There are three states that a version can have.  
 
 * Not Released and Not Deleted
-* Released (read-only)
-* Deleted (read-only)
+* Released
+* Deleted
 
 The last two make versions read-only.  
-Version properties including the change log lines can be modified as long it hasn't been deleted or released.  
+Version properties including the change logs can be modified as long it hasn't been deleted or released.  
 Deleted versions can still be fetched from the api.  
 The appropriate endpoints provide a switch **IncludeDeleted** to include these versions in the response.
 
@@ -56,10 +78,14 @@ The appropriate endpoints provide a switch **IncludeDeleted** to include these v
 
 When developing software, you often don't know to which version your changes belong.  
 In order to delay this decision, you can add pending change logs.  
+The change logs belong to the product only and can assigned to a version later.  
+The max number of pending change logs is 100.
 
 ### ChangeLogs
 
-_tbd_
+Change logs are always assigned to a version  
+and can be modified as long as the related version isn't released or deleted.  
+The max number of change logs is 100.
 
 ### Overview
 
@@ -93,7 +119,7 @@ Tag names must be a valid SemVer 2.0.0.
 The version in `latest-changes.json` will be compared to the tag name while deploying.  
 If these values are different, the pipeline fails.  
 
-### Overview
+### CiCd Overview
 
 ![CICD](./docs/assets/CI_CD.png)
 
@@ -168,3 +194,12 @@ Things to keep in mind when working with `IDbAccessor`
 * Do not begin transactions
 * Do not use it in concurrent scenarios
 * Use it with Dapper only
+
+## Next Steps
+
+* Refactor Deployment: use continuous deployment instead of continuous delivery
+* Refactor Permission queries: return a more verbose output about not found resources
+* Experimental: write the domain in `F#` since it is a better domain language
+* Build a management api for accounts and users that uses OAuth 2.0
+* Frontend (Needs to be learnt): build an angular app for managing accounts & users and working with releases and changes
+* Authentication: extend the api to deal with Jwt access tokens and the existing api key header

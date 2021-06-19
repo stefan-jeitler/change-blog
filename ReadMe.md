@@ -3,7 +3,7 @@
 ChangeTracker is a web service that enables you to keep track of your releases and changes.  
 
 Due to the continuous movement towards microservices, releases are harder to track.  
-Often monoliths get subdivided into many micro/nano services, each of them are deployed independently with its own versioning.  
+Often monoliths get subdivided into many micro/nano services, each of them is deployed independently with its own versioning.  
 
 Imagine you're a product owner who is responsible for many products.  
 In order to communicate changes to the customer you need to be up-to-date about releases.  
@@ -23,6 +23,43 @@ The development team automatically pushes its changes during deployment with all
 ## Disclaimer
 
 This is a side project and should not be used in a productive environment.  
+
+## Basic Concept
+
+### Account
+
+_tbd_
+
+### User
+
+_tbd_
+
+### Product
+
+_tbd_
+
+### Version
+
+A version can have three different states  
+
+* Not Released and Not Deleted
+* Released (read-only)
+* Deleted (read-only)
+
+The latter two make versions read-only.  
+Version properties including its change log lines can be modified as long it hasn't been deleted or released.  
+Deleted versions can still be fetched from the api.  
+The appropriate endpoints provide a switch **IncludeDeleted** to get these versions.
+
+### Pending ChangeLogs
+
+_tbd_
+
+### ChangeLogs
+
+_tbd_
+
+![Concept](./docs/assets/ChangeTrackerConcept.png)
 
 ## Architecture
 
@@ -45,10 +82,12 @@ Every commit pushed to the remote repo triggers the **Continuous Integration** s
 where the app is built and all tests are executed.  
 
 The **Continuous Delivery** stage will run afterwards if the commit was tagged.  
-By doing so the app gets deployed to the staging environment  
+By doing so, the app gets deployed to the staging environment  
 and after a manual approval to the production environment.  
 
-Tag names must be a valid SemVer 2.0.0
+Tag names must be a valid SemVer 2.0.0.  
+The version in `latest-changes.json` will be compared to the tag name while deploying.  
+If these values are different, the pipeline fails.  
 
 ### Overview
 

@@ -43,6 +43,16 @@ So the user has more permission for the specific products.
 
 However, there is not yet a user interface to do this. (future extension)
 
+Available roles:
+
+* DefaultUser
+* Support
+* Developer
+* ScrumMaster
+* ProductOwner
+* ProductManager
+* PlatformManager
+
 ### User
 
 Right now, the following user information are stored
@@ -57,8 +67,7 @@ Right now, the following user information are stored
 A product is the software on which developers work.  
 It has no end date, but it can be closed.  
 By closing a product you stop working on that software.  
-The product will still exist but it becomes read-only  
-with all its versions and change logs.
+The product will still exist but it becomes read-only with all its versions and change logs.
 
 ### Version
 
@@ -98,7 +107,7 @@ The architecture of the app is mainly influenced by:
 * Robert C. Martin's book Clean Architecture
 * Mark Seemann's book Dependency Injection Principles, Practices, and Patterns
 * Plainionist's article series [Implementing-Clean-Architecture](http://www.plainionist.net/Implementing-Clean-Architecture-Overview/)
-* [CandiedOrange's](https://softwareengineering.stackexchange.com/users/131624/candied-orange) [answers](https://softwareengineering.stackexchange.com/search?q=user:131624+[clean-architecture]) on softwareengineering.stackexchange
+* CandiedOrange's [answers](https://softwareengineering.stackexchange.com/search?q=user:131624+[clean-architecture]) on [softwareengineering.stackexchange](https://softwareengineering.stackexchange.com/)
 
 ## Key Features
 
@@ -199,7 +208,7 @@ Things to keep in mind when working with `IDbAccessor`
 
 * Refactor Deployment: use continuous deployment instead of continuous delivery
 * Refactor Permission queries: return a more verbose output about not found resources
-* Experimental: write the domain in `F#` since it is a better domain language
+* Experimental: re-write the domain in `F#` since it is a better domain language
 * Build a management api for accounts and users that uses OAuth 2.0
 * Frontend (Needs to be learnt): build an angular app for managing accounts & users and working with releases and changes
 * Authentication: extend the api to deal with Jwt access tokens and the existing api key header

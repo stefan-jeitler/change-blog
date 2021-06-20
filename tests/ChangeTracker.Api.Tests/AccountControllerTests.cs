@@ -55,7 +55,7 @@ namespace ChangeTracker.Api.Tests
         }
 
         [Fact]
-        public async Task Account_GetAccountProducts_Successful()
+        public async Task Account_GetAccountProducts_ReturnsTwoProducts()
         {
             // arrange
             var client = _factory.CreateClient();
@@ -64,7 +64,7 @@ namespace ChangeTracker.Api.Tests
             // act
             var response =
                 await client.GetAsync(
-                    "/api/v1/accounts/ec3a44cc-0ba4-4c97-ad7f-911e9f6a73bc/products?includeClosedProducts=true");
+                    "/api/v1/accounts/ec3a44cc-0ba4-4c97-ad7f-911e9f6a73bc/products?includeClosed=true");
             var content = await response.Content.ReadFromJsonAsync<List<ProductDto>>();
 
             // assert

@@ -45,7 +45,7 @@ namespace ChangeTracker.DataAccess.Postgres.DataAccessObjects.Users
             $@"select exists(select null
               from product p
               where p.id = {selectProductId}
-                and (
+                and ((
                   -- permission on product level overrides account permissions
                       (exists(select null
                               from product_user pu
@@ -54,7 +54,8 @@ namespace ChangeTracker.DataAccess.Postgres.DataAccessObjects.Users
                           and exists(select null
                                      from product_user pu1
                                               join role r on pu1.role_id = r.id and
-                                                             pu1.user_id = @userId
+                                                             pu1.user_id = @userId and 
+                                                             pu1.product_id = p.id
                                               join role_permission rp
                                                    on r.id = rp.role_id and rp.permission = @permission
                                           -- needs at least 'DefaultUser' role on account
@@ -79,6 +80,6 @@ namespace ChangeTracker.DataAccess.Postgres.DataAccessObjects.Users
                                                   join role_permission rp2 on r2.id = rp2.role_id
                                          where au.account_id = p.account_id
                                            and rp2.permission = @permission)
-                          )))";
+                          ))))";
     }
 }

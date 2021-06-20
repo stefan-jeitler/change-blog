@@ -11,9 +11,6 @@ namespace ChangeTracker.Api.Tests
 {
     public class ProductControllerTests : IClassFixture<WebApplicationFactory<Startup>>
     {
-        private const string TestProductName = "AddProduct Controller Test";
-        private static readonly Guid TestAccountId = Guid.Parse("ec3a44cc-0ba4-4c97-ad7f-911e9f6a73bc");
-
         private readonly WebApplicationFactory<Startup> _factory;
 
         public ProductControllerTests(WebApplicationFactory<Startup> factory)

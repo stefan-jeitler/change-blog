@@ -42,13 +42,13 @@ namespace ChangeTracker.Api.Controllers.V1
         public async Task<ActionResult<List<ProductDto>>> GetUserProductsAsync(Guid? lastProductId = null,
             [Range(1, UserProductQueryRequestModel.MaxLimit)]
             ushort limit = UserProductQueryRequestModel.MaxLimit,
-            bool includeClosedProducts = false)
+            bool includeClosed = false)
         {
             var userId = HttpContext.GetUserId();
             var requestModel = new UserProductQueryRequestModel(userId,
                 lastProductId,
                 limit,
-                includeClosedProducts);
+                includeClosed);
 
             var products = await _getUserProducts.ExecuteAsync(requestModel);
 

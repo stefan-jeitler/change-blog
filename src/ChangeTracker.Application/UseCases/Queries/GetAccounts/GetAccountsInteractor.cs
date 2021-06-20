@@ -11,7 +11,7 @@ using ChangeTracker.Domain.Version;
 
 namespace ChangeTracker.Application.UseCases.Queries.GetAccounts
 {
-    public class GetAccountsInteractor : IGetAccounts
+    public class GetAccountsInteractor : IGetAccounts, IGetAccount
     {
         private readonly IAccountDao _accountDao;
         private readonly IUserDao _userDao;

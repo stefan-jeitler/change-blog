@@ -58,9 +58,12 @@ namespace ChangeTracker.Application.UseCases.Commands.AddProduct
             if (langCode.HasNoValue)
                 return;
 
-            var product = new Product(account.Value.Id, name, versioningSchemeId.Value, productRequestModel.UserId,
+            var product = new Product(account.Value.Id,
+                name, versioningSchemeId.Value,
+                productRequestModel.UserId,
                 langCode.Value,
                 DateTime.UtcNow);
+
             await SaveProductAsync(output, product);
         }
 

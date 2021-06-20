@@ -8,23 +8,21 @@ function Approve-LatestVersion {
   $latestChanges = Get-Content -Raw -Path ./latest-changes.json | ConvertFrom-Json
 
   if ($latestChanges.Version -ne $Version) {
-    Write-Error "Version mismatch: latest-changes version $($latestChanges.version), release version $Version"
+    Write-Error "Version mismatch: latest-changes.json version $($latestChanges.version), release version $Version"
     Exit -1
   }
 
   Write-Host "Latest changes version: $($latestChanges.Version)"
   Write-Host "Release version: $Version"
-
-  Exit 0
 }
 
 function Publish-LatestChanges {
   param (  
-    [Parameter(Position = 0, Mandatory = $true)]
+    [Parameter(Mandatory = $true)]
     [string]$BaseUrl,  
-    [Parameter(Position = 1, Mandatory = $true)]
+    [Parameter(Mandatory = $true)]
     [string]$ProductId,
-    [Parameter(Position = 2, Mandatory = $true)]
+    [Parameter(Mandatory = $true)]
     [string]$ApiKey
   )
 
@@ -42,11 +40,10 @@ function Publish-LatestChanges {
 
   try {
     Invoke-RestMethod @parameters
+    Write-Host "LatestChanges successfully published."
   }
   catch {
     Write-Host "StatusCode:" $_.Exception.Response.StatusCode.value__
-    Exit -1
+    Write-Host "StatusDescription:" $_.Exception.Response.StatusDescription
   }
-
-  Write-Host "LatestChanges successfully published."
 }

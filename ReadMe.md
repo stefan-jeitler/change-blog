@@ -29,8 +29,8 @@ This is a side project that should not be used in productive environment.
 ### Account
 
 An Account is a grouping of users and prodcuts.  
-User permissions can granted on account and product level.  
-Product permissions have precedence over account permissions.  
+User roles can be granted on account and product level.  
+Product roles have precedence over account roles.  
 
 e.g.  
 A user can have a developer role on account level and a support role for one specific product within the account.  
@@ -211,4 +211,4 @@ Things to keep in mind when working with `IDbAccessor`
 * Experimental: re-write the domain in `F#` since it is a better domain language
 * Build a management api for accounts and users that uses OAuth 2.0
 * Frontend (Needs to be learnt): build an angular app for managing accounts & users and working with releases and changes
-* Authentication: extend the api to deal with Jwt access tokens and the existing api key header
+* Authentication: extend the api to deal with JWT access tokens and the existing api key header

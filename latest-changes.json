@@ -1,6 +1,6 @@
 {
-  "version": "",
-  "name": "",
+  "version": "1.0.0-dev.29",
+  "name": "MVP get closer",
   "changeLogLines": [
     {
       "text": "Fix product queries to get correct paging result",

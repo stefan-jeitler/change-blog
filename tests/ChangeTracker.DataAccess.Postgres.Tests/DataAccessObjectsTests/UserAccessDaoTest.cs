@@ -2,7 +2,11 @@
 using System.Threading.Tasks;
 using ChangeTracker.Application.UseCases;
 using ChangeTracker.DataAccess.Postgres.DataAccessObjects.Users;
+using ChangeTracker.Domain;
+using ChangeTracker.Domain.Authorization;
+using Dapper;
 using FluentAssertions;
+using Microsoft.Extensions.Logging.Abstractions;
 using Npgsql;
 using Xunit;
 
@@ -14,7 +18,7 @@ namespace ChangeTracker.DataAccess.Postgres.Tests.DataAccessObjectsTests
     {
         private static UserAccessDao CreateDao()
         {
-            return new(() => new NpgsqlConnection(Configuration.ConnectionString));
+            return new(() => new NpgsqlConnection(Configuration.ConnectionString), NullLogger<UserAccessDao>.Instance);
         }
 
         [Fact]
@@ -40,59 +44,57 @@ namespace ChangeTracker.DataAccess.Postgres.Tests.DataAccessObjectsTests
         }
 
         [Fact]
-        public async Task HasAccountPermission_DefaultUser_ReturnsFalse()
+        public async Task GetAccountRoles_DefaultUser_ReturnsDefaultUserRole()
         {
             var userAccessDao = CreateDao();
             var t_ua_account_01_user_01 = Guid.Parse("f575503e-4eee-4d6d-b2c1-f11d8fc3da76");
             var t_ua_account_01 = Guid.Parse("ec3a44cc-0ba4-4c97-ad7f-911e9f6a73bc");
 
-            var hasPermission =
-                await userAccessDao.HasAccountPermissionAsync(t_ua_account_01_user_01, t_ua_account_01,
-                    Permission.ViewAccountUsers);
+            var accountRoles = (await userAccessDao.GetAccountRolesAsync(t_ua_account_01, t_ua_account_01_user_01))
+                .AsList();
 
-            hasPermission.Should().BeFalse();
+            accountRoles.Should().HaveCount(1);
+            accountRoles.Should().Contain(x => x.Name.Value == Role.DefaultUser);
         }
 
         [Fact]
-        public async Task HasAccountPermission_PlatformManager_ReturnsTrue()
+        public async Task GetAccountRoles_DefaultUserAndPlatformManager_ReturnsDefaultUserAndPlatformManagerRole()
         {
             var userAccessDao = CreateDao();
             var t_ua_account_01_user_02 = Guid.Parse("7aa9004b-ed6f-4862-8307-579030c860be");
             var t_ua_account_01 = Guid.Parse("ec3a44cc-0ba4-4c97-ad7f-911e9f6a73bc");
 
-            var hasPermission =
-                await userAccessDao.HasAccountPermissionAsync(t_ua_account_01_user_02, t_ua_account_01,
-                    Permission.ViewAccountUsers);
+            var accountRoles = (await userAccessDao.GetAccountRolesAsync(t_ua_account_01, t_ua_account_01_user_02))
+                .AsList();
 
-            hasPermission.Should().BeTrue();
+            accountRoles.Should().HaveCount(2);
+            accountRoles.Should().Contain(x => x.Name.Value == Role.DefaultUser);
+            accountRoles.Should().Contain(x => x.Name.Value == Role.PlatformManager);
         }
 
         [Fact]
-        public async Task HasProductPermission_PlatformManager_ReturnsTrue()
+        public async Task GetAccountAndProductRoles_NoProductRolesExists_ReturnsEmptyProductRoles()
         {
             var userAccessDao = CreateDao();
             var t_ua_account_01_user_02 = Guid.Parse("7aa9004b-ed6f-4862-8307-579030c860be");
             var t_ua_account_01_proj_02 = Guid.Parse("0614f8d6-8895-4c74-bcbe-8a3c26076e1b");
 
-            var hasPermission =
-                await userAccessDao.HasProductPermissionAsync(t_ua_account_01_user_02, t_ua_account_01_proj_02,
-                    Permission.ViewChangeLogLines);
+            var (_, productRoles) = 
+                await userAccessDao.GetRolesByProductIdAsync(t_ua_account_01_user_02, t_ua_account_01_proj_02);
 
-            hasPermission.Should().BeTrue();
+            productRoles.Should().BeEmpty();
         }
 
         [Fact]
-        public async Task HasProductPermission_DefaultUser_ReturnsFalse()
+        public async Task GetAccountAndProductRoles_ProductRoleExists_ReturnsProductRole()
         {
             var userAccessDao = CreateDao();
+            var t_ua_account_01_proj_01 = Guid.Parse("139a2e54-e9be-4168-98b4-2839d9b3db04");
             var t_ua_account_01_user_01 = Guid.Parse("f575503e-4eee-4d6d-b2c1-f11d8fc3da76");
-            var t_ua_account_01_proj_02 = Guid.Parse("0614f8d6-8895-4c74-bcbe-8a3c26076e1b");
 
-            var hasPermission =
-                await userAccessDao.HasProductPermissionAsync(t_ua_account_01_user_01, t_ua_account_01_proj_02,
-                    Permission.ViewChangeLogLines);
+            var (_, productRoles) = await userAccessDao.GetRolesByProductIdAsync(t_ua_account_01_user_01, t_ua_account_01_proj_01);
 
-            hasPermission.Should().BeFalse();
+            productRoles.Should().ContainSingle(x => x.Name.Value == Role.ProductManager);
         }
     }
 }

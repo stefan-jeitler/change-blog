@@ -64,7 +64,7 @@ namespace ChangeTracker.Application.Tests.UseCaseTests.Queries.GetRoles
             developerRole.Permissions.Should().HaveCount(4);
             developerRole.Permissions.Should().Contain("ViewOwnUser");
             developerRole.Permissions.Should().Contain("ViewAccount");
-            developerRole.Permissions.Should().Contain("AddProduct");
+            developerRole.Permissions.Should().Contain("AddOrUpdateProduct");
             developerRole.Permissions.Should().Contain("ViewChangeLogLines");
         }
     }

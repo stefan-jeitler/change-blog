@@ -27,6 +27,7 @@ namespace ChangeTracker.DataAccess.Postgres
             services
                 .AddDbSession(connectionString)
                 .AddScoped<UserAccessDao>()
+                .AddScoped<IUserAccessDao>(sp => sp.GetRequiredService<UserAccessDao>())
                 .AddScoped<SchemaVersion>()
                 .AddDataAccessObjects();
 

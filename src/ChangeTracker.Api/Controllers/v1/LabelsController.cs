@@ -11,6 +11,7 @@ using ChangeTracker.Application.UseCases.Commands.Labels.AddChangeLogLineLabel;
 using ChangeTracker.Application.UseCases.Commands.Labels.DeleteChangeLogLineLabel;
 using ChangeTracker.Application.UseCases.Commands.Labels.SharedModels;
 using ChangeTracker.Application.UseCases.Queries.GetLabels;
+using ChangeTracker.Domain.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 

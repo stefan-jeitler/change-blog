@@ -26,7 +26,7 @@ namespace ChangeTracker.Api
         private static void ConfigureControllers(IServiceCollection services)
         {
             services
-                .AddControllers(o => { o.Filters.Add(typeof(PermissionFilter)); })
+                .AddControllers(o => { o.Filters.Add(typeof(AuthorizationFilter)); })
                 .ConfigureApiBehaviorOptions(o => o.InvalidModelStateResponseFactory = CustomErrorMessage);
         }
 

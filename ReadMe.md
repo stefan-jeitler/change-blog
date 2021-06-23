@@ -207,7 +207,6 @@ Things to keep in mind when working with `IDbAccessor`
 ## Next Steps
 
 * Refactor Deployment: use continuous deployment instead of continuous delivery
-* Refactor Permission queries: return a more verbose output about not found resources
 * Experimental: re-write the domain in `F#` since it is a better domain language
 * Build a management api for accounts and users that uses OAuth 2.0
 * Frontend (Needs to be learnt): build an angular app for managing accounts & users and working with releases and changes

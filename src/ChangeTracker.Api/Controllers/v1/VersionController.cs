@@ -16,6 +16,7 @@ using ChangeTracker.Application.UseCases.Commands.AddOrUpdateVersion.Models;
 using ChangeTracker.Application.UseCases.Commands.DeleteVersion;
 using ChangeTracker.Application.UseCases.Commands.ReleaseVersion;
 using ChangeTracker.Application.UseCases.Queries.GetVersions;
+using ChangeTracker.Domain.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 

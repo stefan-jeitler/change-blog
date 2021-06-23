@@ -1,11 +1,11 @@
-﻿namespace ChangeTracker.Application.UseCases
+﻿namespace ChangeTracker.Domain.Authorization
 {
     public enum Permission
     {
-        ViewRoles,
+        ViewOwnUser,
         ViewAccount,
         ViewAccountUsers,
-        ViewOwnUser,
+        ViewRoles,
 
         ViewUserProducts,
         ViewAccountProducts,

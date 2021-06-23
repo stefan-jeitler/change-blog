@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Threading.Tasks;
 using ChangeTracker.Application.DataAccess.Accounts;
 using ChangeTracker.Application.UseCases;
+using ChangeTracker.Domain.Authorization;
 using CSharpFunctionalExtensions;
 using Dapper;
 

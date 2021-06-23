@@ -5,6 +5,7 @@ using ChangeTracker.Application.DataAccess;
 using ChangeTracker.Application.DataAccess.Products;
 using ChangeTracker.Application.UseCases;
 using ChangeTracker.Domain;
+using ChangeTracker.Domain.Authorization;
 using ChangeTracker.Domain.Common;
 using CSharpFunctionalExtensions;
 using Dapper;

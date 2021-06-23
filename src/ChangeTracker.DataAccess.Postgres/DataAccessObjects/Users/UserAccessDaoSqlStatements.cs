@@ -12,74 +12,71 @@ namespace ChangeTracker.DataAccess.Postgres.DataAccessObjects.Users
                             AND ak.deleted_at IS NULL
                             AND ak.expires_at > now()";
 
-        public const string AccountPermissionSql = @"
-             SELECT EXISTS(SELECT NULL
-                          FROM account a
-                                   JOIN account_user au ON au.account_id = a.id
-                                   JOIN ""role"" r ON r.id = au.role_id
-                                   JOIN role_permission rp ON rp.role_id = r.id
-                          WHERE au.account_id = @accountId
-                            AND au.user_id = @userId
-                            AND rp.permission = @permission
-                            AND a.deleted_at is null)";
+        public const string GetAccountPermissionsSql = @"
+            SELECT distinct '' as type,
+                            r.id,
+                            r.name,
+                            r.description,
+                            rp.permission,
+                            r.created_at AS createdAt
+            from account a
+            join account_user au on au.account_id = a.id
+            join role r on au.role_id = r.id
+            join role_permission rp on r.id = rp.role_id
+            where au.account_id = @accountId
+            and au.user_id = @userId
+            and a.deleted_at is null";
 
-        public const string AccountUserPermission = @"
-              SELECT EXISTS(SELECT null from ""user"" u
-                          join account_user au on u.id = au.user_id
-                          join account a on au.account_id = a.id
-                          join role r on au.role_id = r.id
-                          join role_permission rp on r.id = rp.role_id
-                          where u.id = @userId
-                              and a.deleted_at is null
-                              and rp.permission = @permission)";
+        public const string GetUserAccountsPermissionsSql = @"
+            SELECT distinct '' as type,
+                            r.id,
+                            r.name,
+                            r.description,
+                            rp.permission,
+                            r.created_at AS createdAt
+            from account a
+            join account_user au on au.account_id = a.id
+            join role r on au.role_id = r.id
+            join role_permission rp on r.id = rp.role_id
+            where au.user_id = @userId
+            and a.deleted_at is null";
 
-        public static string ProductPermissionsSql => BaseQuery("@productId");
+        public static string GetPermissionsByProductIdSql => BaseQuery("@productId", "select p.account_id from product p where p.id = @productId");
 
-        public static string VersionPermissionSql =>
-            BaseQuery("(select p.id from version v join product p on v.product_id = p.id where v.id = @versionId)");
+        public static string GetPermissionsByVersionIdSql =>
+            BaseQuery("select v.product_id from version v where v.id = @versionId", 
+                "select p.account_id from version v join product p on v.product_id = p.id where v.id = @versionId");
 
-        public static string ChangeLogLinePermissionSql => BaseQuery(
-            "(select p.id from changelog_line chl join product p on chl.product_id = p.id where chl.id = @changeLogLineId and chl.deleted_at is null)");
+        public static string GetPermissionsByChangeLogLineIdSql => BaseQuery("select chl.product_id from changelog_line chl where chl.id = @changeLogLineId and chl.deleted_at is null",
+            "select p.account_id from changelog_line chl join product p on chl.product_id = p.id where chl.id = @changeLogLineId and chl.deleted_at is null");
 
-        private static string BaseQuery(string selectProductId) =>
-            $@"select exists(select null
-              from product p
-              where p.id = {selectProductId}
-                and ((
-                  -- permission on product level overrides account permissions
-                      (exists(select null
-                              from product_user pu
-                              where pu.product_id = p.id
-                                and pu.user_id = @userId)
-                          and exists(select null
-                                     from product_user pu1
-                                              join role r on pu1.role_id = r.id and
-                                                             pu1.user_id = @userId and 
-                                                             pu1.product_id = p.id
-                                              join role_permission rp
-                                                   on r.id = rp.role_id and rp.permission = @permission
-                                          -- needs at least 'DefaultUser' role on account
-                                     where exists(select null
-                                                  from account ai
-                                                           join account_user aui on ai.id = aui.account_id and ai.deleted_at is null
-                                                           join role r3
-                                                                on aui.role_id = r3.id and r3.name = 'DefaultUser' and
-                                                                   aui.user_id = @userId and
-                                                                   aui.account_id = p.account_id))
-                          )
-                      -- permission on account level
-                      or (
-                              not exists(select null
-                                         from product_user pu
-                                         where pu.product_id = p.id
-                                           and pu.user_id = @userId)
-                              and exists(select null
-                                         from account a
-                                                  join account_user au on a.id = au.account_id and a.deleted_at is null
-                                                  join role r2 on au.role_id = r2.id and au.user_id = @userId
-                                                  join role_permission rp2 on r2.id = rp2.role_id
-                                         where au.account_id = p.account_id
-                                           and rp2.permission = @permission)
-                          ))))";
+        private static string BaseQuery(string selectProductId, string selectAccountId) =>
+            $@"select distinct 'Product' as type,
+                                r.id,
+                                r.name,
+                                r.description,
+                                rp.permission,
+                                pu.created_at as createdAt
+                from product p
+                         join product_user pu on p.id = pu.product_id
+                         join role r on pu.role_id = r.id
+                         join role_permission rp on r.id = rp.role_id
+                where pu.user_id = @userId
+                  and pu.product_id = ({selectProductId})
+                  and exists(select null from account a where a.id = p.account_id and a.deleted_at is null)
+                UNION ALL
+                SELECT distinct 'Account' as type,
+                                r.id,
+                                r.name,
+                                r.description,
+                                rp.permission,
+                                au.created_at as createdAt
+                from account a
+                         join account_user au on a.id = au.account_id
+                         join role r on au.role_id = r.id
+                         join role_permission rp on r.id = rp.role_id
+                where a.id = ({selectAccountId})
+                  and au.user_id = @userId
+                  and a.deleted_at is null";
     }
 }

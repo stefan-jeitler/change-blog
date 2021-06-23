@@ -16,6 +16,7 @@ using ChangeTracker.Application.UseCases.Commands.MakeAllChangeLogLinesPending;
 using ChangeTracker.Application.UseCases.Commands.MakeChangeLogLinePending;
 using ChangeTracker.Application.UseCases.Commands.UpdateChangeLogLine;
 using ChangeTracker.Application.UseCases.Queries.GetChangeLogLine;
+using ChangeTracker.Domain.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 

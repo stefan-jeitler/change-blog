@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using ChangeTracker.Domain.Authorization;
 using ChangeTracker.Domain.Common;
 using FluentAssertions;
 using Xunit;
@@ -13,7 +14,7 @@ namespace ChangeTracker.Domain.Tests
         private Text _testDescription;
         private Guid _testId;
         private Name _testName;
-        private IList<Name> _testPermissions;
+        private IList<Permission> _testPermissions;
 
         public RoleTests()
         {
@@ -21,7 +22,7 @@ namespace ChangeTracker.Domain.Tests
             _testName = Name.Parse("Tester");
             _testDescription = Text.Parse("Tester role.");
             _testCreationDate = DateTime.Parse("2021-05-14");
-            _testPermissions = new List<Name>(2) {Name.Parse("TestApi"), Name.Parse("TestUi")};
+            _testPermissions = new List<Permission>(2) {Permission.AddVersion, Permission.CloseProduct};
         }
 
         private Role CreateRole() => new(_testId, _testName, _testDescription, _testCreationDate, _testPermissions);

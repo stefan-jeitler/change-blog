@@ -16,7 +16,7 @@ namespace ChangeTracker.Api.Presenters.V1.Version
                 [nameof(versionId)] = versionId.ToString()
             };
 
-            Response = new OkObjectResult(DefaultResponse.Create("Version successfully released.", resourceIds));
+            Response = new ConflictObjectResult(DefaultResponse.Create("The version has been deleted.", resourceIds));
         }
 
         public void VersionAlreadyReleased(Guid versionId)

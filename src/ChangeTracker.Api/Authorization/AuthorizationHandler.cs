@@ -2,14 +2,15 @@
 using System.Linq;
 using System.Threading.Tasks;
 using ChangeTracker.Application.UseCases;
+using ChangeTracker.Domain.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc.Filters;
 
 namespace ChangeTracker.Api.Authorization
 {
-    public abstract class PermissionApproval
+    public abstract class AuthorizationHandler
     {
-        public abstract Task<bool> HasPermission(ActionExecutingContext context, Guid userId, Permission permission);
+        public abstract Task<AuthorizationState> GetAuthorizationState(ActionExecutingContext context, Guid userId, Permission permission);
 
         protected static Guid? TryFindIdInHeader(HttpContext httpContext, string key)
         {

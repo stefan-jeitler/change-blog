@@ -11,6 +11,7 @@ using ChangeTracker.Application.UseCases.Commands.Issues.AddChangeLogLineIssue;
 using ChangeTracker.Application.UseCases.Commands.Issues.DeleteChangeLogLineIssue;
 using ChangeTracker.Application.UseCases.Commands.Issues.SharedModels;
 using ChangeTracker.Application.UseCases.Queries.GetIssues;
+using ChangeTracker.Domain.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 

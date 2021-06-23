@@ -206,7 +206,7 @@ Things to keep in mind when working with `IDbAccessor`
 
 ## Next Steps
 
-* Add missing tests (integration test with a broad scope)
+* Add missing tests
 * Refactor Deployment: use continuous deployment instead of continuous delivery
 * Experimental: re-write the domain in `F#` since it is a better domain language
 * Build a management api for accounts and users that uses OAuth 2.0

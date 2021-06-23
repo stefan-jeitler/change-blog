@@ -1,20 +1,10 @@
 {
-  "version": "1.0.0-dev.29",
-  "name": "MVP get closer",
+  "version": "",
+  "name": "",
   "changeLogLines": [
     {
-      "text": "Fix product queries to get correct paging result",
-      "labels": [ "Bugfix" ],
-      "issues": []
-    },
-    {
-      "text": "Authorization filter returns 'NotFound' if the resource does not exists within the account",
-      "labels": [ "Security" ],
-      "issues": []
-    },
-    {
-      "text": "Release version endpoint returns no longer 200 when the version has been deleted. 409 will be returned now.",
-      "labels": [ "Bugfix" ],
+      "text": "",
+      "labels": [],
       "issues": []
     }
   ],

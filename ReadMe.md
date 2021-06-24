@@ -151,6 +151,13 @@ Actual app
 
 [Production](https://app-change-tracker.azurewebsites.net/)
 
+**Demo User**  
+ApiKey: dEmOkEy!  
+Assigned Roles:
+
+* DefaultUser
+* Developer
+
 ## Database
 
 I decided to use a SQL database rather than a NoSQL db,  

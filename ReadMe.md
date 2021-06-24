@@ -209,6 +209,24 @@ Things to keep in mind when working with `IDbAccessor`
 * Add missing tests
 * Refactor Deployment: use continuous deployment instead of continuous delivery
 * Experimental: re-write the domain in `F#` since it is a better domain language
-* Build a management api for accounts and users that uses OAuth 2.0
-* Frontend (Needs to be learnt): build an angular app for managing accounts & users and working with releases and changes
-* Authentication: extend the api to deal with JWT access tokens and the existing api key header
+
+## Future Extensions
+
+### Management Api
+
+Build a management api for users and accounts.  
+Do not use api key authentication for this api.  
+It should be secured by using OAuth2.0 and Microsoft as service provider.  
+
+### Frontend (needs to be learnt)
+
+Create an angular app that is responsible for
+
+* managing accounts and users
+* working with releases and changes
+* user registration with Microsoft accounts
+
+### Existing Api
+
+Extend authentication to deal with JWT access tokens.  
+So it can be used with both access tokens and api keys.  

@@ -62,11 +62,11 @@ namespace ChangeTracker.Api.Authorization
         private static async Task<AuthorizationState> GetAuthorizationStateAsync(ActionExecutingContext context, Permission permission)
         {
             var userId = context.HttpContext.GetUserId();
-            var permissionCheck = context
+            var authorizationHandler = context
                 .HttpContext.RequestServices
                 .GetRequiredService<AuthorizationHandler>();
 
-            return await permissionCheck.GetAuthorizationState(context, userId, permission);
+            return await authorizationHandler.GetAuthorizationState(context, userId, permission);
         }
     }
 }

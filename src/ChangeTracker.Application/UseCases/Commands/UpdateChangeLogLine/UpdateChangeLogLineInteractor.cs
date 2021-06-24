@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 using ChangeTracker.Application.DataAccess;
 using ChangeTracker.Application.DataAccess.ChangeLog;
@@ -57,8 +58,11 @@ namespace ChangeTracker.Application.UseCases.Commands.UpdateChangeLogLine
             var changeLogs = await _changeLogQueries.GetChangeLogsAsync(existingLine.Value.ProductId,
                 existingLine.Value.VersionId);
 
+            var lineWithSameTextExists = changeLogs.Lines.Any(x => x.Text.Equals(parsedNewLine.Value.Text) &&
+                                                               x.Id != existingLine.Value.Id);
+
             if (requestModel.Text is not null &&
-                changeLogs.ContainsText(parsedNewLine.Value.Text))
+                lineWithSameTextExists)
             {
                 output.LineWithSameTextAlreadyExists(requestModel.Text);
                 return;

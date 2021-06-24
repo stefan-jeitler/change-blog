@@ -45,11 +45,13 @@ namespace ChangeTracker.Application.UseCases.Queries.GetPendingChangeLogLine
             if (line.HasNoValue)
             {
                 output.LineDoesNotExists(changeLogLineId);
+                return;
             }
 
             if (!line.Value.IsPending)
             {
                 output.LineIsNotPending(changeLogLineId);
+                return;
             }
 
             var currentUser = await _userDao.GetUserAsync(userId);

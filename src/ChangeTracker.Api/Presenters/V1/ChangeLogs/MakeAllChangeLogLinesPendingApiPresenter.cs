@@ -63,7 +63,7 @@ namespace ChangeTracker.Api.Presenters.V1.ChangeLogs
                 [nameof(productId)] = productId.ToString()
             };
 
-            Response = new OkObjectResult(DefaultResponse.Create($"{count} Lines was made pending.", resourceIds));
+            Response = new OkObjectResult(DefaultResponse.Create($"{count} Lines were made pending.", resourceIds));
         }
 
         public void InvalidVersionFormat(string version)

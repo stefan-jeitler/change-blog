@@ -1,10 +1,7 @@
-﻿using System;
-using System.Linq;
-using System.Net;
+﻿using System.Linq;
 using System.Threading.Tasks;
 using ChangeTracker.Api.DTOs;
 using ChangeTracker.Api.Extensions;
-using ChangeTracker.Application.UseCases;
 using ChangeTracker.Domain.Authorization;
 using CSharpFunctionalExtensions;
 using Microsoft.AspNetCore.Authorization;
@@ -12,19 +9,21 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Filters;
 using Microsoft.Extensions.DependencyInjection;
+
 // ReSharper disable InconsistentNaming
 
 namespace ChangeTracker.Api.Authorization
 {
     public class AuthorizationFilter : IAsyncActionFilter
     {
-        private static readonly ActionResult UnauthorizedResult = 
-                new ObjectResult(DefaultResponse.Create("You don't have permission to access this resource."))
-                {
-                    StatusCode = 403
-                };
+        private static readonly ActionResult UnauthorizedResult =
+            new ObjectResult(DefaultResponse.Create("You don't have permission to access this resource."))
+            {
+                StatusCode = 403
+            };
 
-        private static readonly ActionResult NotFoundResult = new NotFoundObjectResult(DefaultResponse.Create("Requested resource not found."));
+        private static readonly ActionResult NotFoundResult =
+            new NotFoundObjectResult(DefaultResponse.Create("Requested resource not found."));
 
         private static readonly ActionResult InternalServerError =
             new StatusCodeResult(StatusCodes.Status500InternalServerError);
@@ -59,7 +58,8 @@ namespace ChangeTracker.Api.Authorization
             }
         }
 
-        private static async Task<AuthorizationState> GetAuthorizationStateAsync(ActionExecutingContext context, Permission permission)
+        private static async Task<AuthorizationState> GetAuthorizationStateAsync(ActionExecutingContext context,
+            Permission permission)
         {
             var userId = context.HttpContext.GetUserId();
             var authorizationHandler = context

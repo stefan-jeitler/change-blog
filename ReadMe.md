@@ -87,7 +87,7 @@ The appropriate endpoints provide a switch **IncludeDeleted** to include these v
 
 When developing software, you often don't know to which version your changes belong.  
 In order to delay this decision, you can add pending change logs.  
-The change logs belong to the product only and can assigned to a version later.  
+The change logs belong to the product only and can be moved to a version later.  
 The max number of pending change logs is 100.
 
 ### ChangeLogs

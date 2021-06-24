@@ -1,10 +1,10 @@
 {
-  "version": "",
+  "version": "1.0.0-dev.30",
   "name": "",
   "changeLogLines": [
     {
-      "text": "",
-      "labels": [],
+      "text": "A change log line patch update with the same text will no longer result in an error.",
+      "labels": [ "Bugfix" ],
       "issues": []
     }
   ],

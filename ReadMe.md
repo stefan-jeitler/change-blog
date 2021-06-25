@@ -13,7 +13,7 @@ After that, you check what's inside this release in your ticket system to be inf
 This can be quite cumbersome with an increasing number of products.  
 
 A possible solution is to invert the dependencies.  
-The management team where the product owner belongs should not depend on developers,  
+The management team should not depend on developers,  
 both should depend on a web service.  
 
 ![Dependencies](./docs/assets/ChangeTracker.png)  
@@ -55,7 +55,7 @@ Available roles:
 
 ### User
 
-Right now, the following user information are stored
+Currently, the following user information are stored
 
 * Email
 * Firstname

@@ -1,4 +1,5 @@
-﻿using System.Linq;
+﻿using System;
+using System.Linq;
 using System.Threading.Tasks;
 using ChangeTracker.Api.DTOs;
 using ChangeTracker.Api.Extensions;
@@ -8,9 +9,9 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Filters;
-using Microsoft.Extensions.DependencyInjection;
-
+using Microsoft.Extensions.Logging;
 // ReSharper disable InconsistentNaming
+// ReSharper disable ConvertIfStatementToSwitchStatement
 
 namespace ChangeTracker.Api.Authorization
 {
@@ -28,6 +29,16 @@ namespace ChangeTracker.Api.Authorization
         private static readonly ActionResult InternalServerError =
             new StatusCodeResult(StatusCodes.Status500InternalServerError);
 
+        private readonly AuthorizationHandler _authorizationHandler;
+        private readonly ILogger<AuthorizationFilter> _logger;
+
+        public AuthorizationFilter(ILogger<AuthorizationFilter> logger, AuthorizationHandler authorizationHandler)
+        {
+            _logger = logger ?? throw new ArgumentNullException(nameof(logger));
+            _authorizationHandler =
+                authorizationHandler ?? throw new ArgumentNullException(nameof(authorizationHandler));
+        }
+
         public async Task OnActionExecutionAsync(ActionExecutingContext context, ActionExecutionDelegate next)
         {
             var allowAnonymous = context.ActionDescriptor.EndpointMetadata.OfType<AllowAnonymousAttribute>().Any();
@@ -39,6 +50,22 @@ namespace ChangeTracker.Api.Authorization
                 return;
             }
 
+            if (permission.HasNoValue && !allowAnonymous)
+            {
+                var actionName = context.ActionDescriptor.DisplayName;
+                _logger.LogError(
+                    $"The requested action '{actionName}' has no {nameof(NeedsPermissionAttribute)} and no {nameof(AllowAnonymousAttribute)}.");
+
+                context.Result = new StatusCodeResult(StatusCodes.Status500InternalServerError);
+                return;
+            }
+
+            await HandleAuthorizationAsync(context, next, permission);
+        }
+
+        private async Task HandleAuthorizationAsync(ActionExecutingContext context, ActionExecutionDelegate next,
+            Maybe<NeedsPermissionAttribute> permission)
+        {
             var authState = await GetAuthorizationStateAsync(context, permission.Value.Permission);
 
             switch (authState)
@@ -53,20 +80,17 @@ namespace ChangeTracker.Api.Authorization
                     context.Result = NotFoundResult;
                     break;
                 default:
+                    _logger.LogCritical("AuthorizationState is not supported.", authState);
                     context.Result = InternalServerError;
                     break;
             }
         }
 
-        private static async Task<AuthorizationState> GetAuthorizationStateAsync(ActionExecutingContext context,
+        private async Task<AuthorizationState> GetAuthorizationStateAsync(ActionExecutingContext context,
             Permission permission)
         {
             var userId = context.HttpContext.GetUserId();
-            var authorizationHandler = context
-                .HttpContext.RequestServices
-                .GetRequiredService<AuthorizationHandler>();
-
-            return await authorizationHandler.GetAuthorizationState(context, userId, permission);
+            return await _authorizationHandler.GetAuthorizationState(context, userId, permission);
         }
     }
 }

@@ -17,12 +17,12 @@ namespace ChangeTracker.Domain.Authorization
         public AuthorizationService(IEnumerable<Role> accountRoles,
             IEnumerable<Role> productRoles)
         {
-            if (accountRoles == null)
+            if (accountRoles is null)
                 throw new ArgumentNullException(nameof(accountRoles));
 
             _accountRoles = accountRoles.ToList();
 
-            if (productRoles == null)
+            if (productRoles is null)
                 throw new ArgumentNullException(nameof(productRoles));
 
             _productRoles = productRoles.ToList();

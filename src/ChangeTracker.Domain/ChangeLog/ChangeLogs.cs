@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Collections.Immutable;
+using System.Globalization;
 using System.Linq;
 
 namespace ChangeTracker.Domain.ChangeLog
@@ -49,10 +50,10 @@ namespace ChangeTracker.Domain.ChangeLog
         public IEnumerable<ChangeLogLine> FindDuplicateTexts(IEnumerable<ChangeLogLine> others)
         {
             var texts = others
-                .Select(x => x.Text.Value.ToLower())
+                .Select(x => x.Text.Value.ToLower(CultureInfo.InvariantCulture))
                 .ToHashSet();
 
-            return Lines.Where(x => texts.Contains(x.Text.Value.ToLower()));
+            return Lines.Where(x => texts.Contains(x.Text.Value.ToLower(CultureInfo.InvariantCulture)));
         }
 
         private static Guid? GetVersionId(IReadOnlyCollection<ChangeLogLine> lines)

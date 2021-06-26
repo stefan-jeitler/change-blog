@@ -23,6 +23,7 @@ The development team automatically pushes its changes during deployment with all
 ## Disclaimer
 
 This is a side project that should not be used in productive environment.  
+The basic idea for this project comes from [Keep a changelog](https://keepachangelog.com/en/1.1.0/).  
 
 ## Basic Concept
 
@@ -38,7 +39,7 @@ In this case the user has for all account products developer permissions expect 
 This is restricted to support permissions.  
 
 This works the other way around as well.  
-You can grant support permissions on account level and developer permissions for specific products.  
+You can have a support role on account level and a developer role for specific products.  
 So the user has more permission for the specific products.  
 
 However, there is not yet a user interface to do this. (future extension)
@@ -111,7 +112,7 @@ The architecture of the app is mainly influenced by:
 
 ## Key Features
 
-* Multi-tenant capabilities
+* Multi-tenant app (single database, single schema)
 * Role-based access control
 * Full-text Search for versions and change logs
 

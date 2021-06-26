@@ -114,13 +114,12 @@ namespace ChangeTracker.DataAccess.Postgres.DataAccessObjects.Users
 
         private IEnumerable<Role> ParseRoleDtos(IReadOnlyCollection<RolePermissionDto> rolePermissions)
         {
-            var notSupportedRoles = rolePermissions
-                .Where(x => !x.Permission.HasValue)
-                .ToList();
+            var notSupportedPermissionsExists = rolePermissions
+                .Any(x => !x.Permission.HasValue);
 
-            if (notSupportedRoles.Any())
+            if (notSupportedPermissionsExists)
             {
-                _logger.LogWarning("There are permissions that are not supported by the app.", string.Join(", ", notSupportedRoles));
+                _logger.LogWarning("There are permissions that are not supported by the app.");
             }
 
             return rolePermissions

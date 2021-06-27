@@ -59,7 +59,7 @@ namespace ChangeTracker.Application.UseCases.Commands.UpdateChangeLogLine
                 existingLine.Value.VersionId);
 
             var lineWithSameTextExists = changeLogs.Lines.Any(x => x.Text.Equals(parsedNewLine.Value.Text) &&
-                                                               x.Id != existingLine.Value.Id);
+                                                                   x.Id != existingLine.Value.Id);
 
             if (requestModel.Text is not null &&
                 lineWithSameTextExists)

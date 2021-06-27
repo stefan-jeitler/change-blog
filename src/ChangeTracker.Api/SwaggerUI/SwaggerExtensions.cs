@@ -45,8 +45,11 @@ namespace ChangeTracker.Api.SwaggerUI
                         return string.Empty;
                     }
 
-                    var orderAttribute = descriptor.EndpointMetadata.OfType<SwaggerControllerOrderAttribute>()
+                    var orderAttribute = descriptor
+                        .EndpointMetadata
+                        .OfType<SwaggerControllerOrderAttribute>()
                         .FirstOrDefault();
+
                     return orderAttribute is null
                         ? descriptor.ControllerName
                         : orderAttribute.Position.ToString();

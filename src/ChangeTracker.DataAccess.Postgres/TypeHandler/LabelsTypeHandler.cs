@@ -1,5 +1,4 @@
 using System.Collections.Generic;
-using System.Collections.Immutable;
 using System.Data;
 using System.Linq;
 using System.Text.Json;
@@ -20,7 +19,7 @@ namespace ChangeTracker.DataAccess.Postgres.TypeHandler
             var json = value.ToString();
 
             if (json is null)
-                return ImmutableHashSet<Label>.Empty;
+                return Enumerable.Empty<Label>();
 
             var labels = JsonSerializer
                 .Deserialize<List<string>>(json)?

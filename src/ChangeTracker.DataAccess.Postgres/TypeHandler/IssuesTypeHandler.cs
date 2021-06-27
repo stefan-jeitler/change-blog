@@ -20,7 +20,7 @@ namespace ChangeTracker.DataAccess.Postgres.TypeHandler
             var json = value.ToString();
 
             if (json is null)
-                return ImmutableHashSet<Issue>.Empty;
+                return Enumerable.Empty<Issue>();
 
             var issues = JsonSerializer
                 .Deserialize<List<string>>(json)?

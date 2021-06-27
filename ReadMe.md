@@ -61,7 +61,7 @@ Currently, the following user information are stored
 * Email
 * Firstname
 * Lastname
-* Timezone(IANA)
+* Timezone (olson id)
 
 ### Product
 
@@ -106,14 +106,14 @@ The max number of change logs is 100.
 The architecture of the app is mainly influenced by:
 
 * Robert C. Martin's book Clean Architecture
-* Mark Seemann's book Dependency Injection Principles, Practices, and Patterns
+* Mark Seemann's book Dependency Injection Principles, Practices and Patterns
 * Plainionist's article series [Implementing-Clean-Architecture](http://www.plainionist.net/Implementing-Clean-Architecture-Overview/)
 * CandiedOrange's [answers](https://softwareengineering.stackexchange.com/search?q=user:131624+[clean-architecture]) on [softwareengineering.stackexchange](https://softwareengineering.stackexchange.com/)
 
 ## Key Features
 
-* Multi-tenant app (single database, single schema)
 * Role-based access control
+* Multitenancy (single database, single schema)
 * Full-text Search for versions and change logs
 
 ## CI/CD
@@ -161,7 +161,7 @@ Assigned Roles:
 
 ## Database
 
-I decided to use a SQL database rather than a NoSQL db,  
+I have chosen a SQL database rather than a NoSQL db,  
 because relational databases are a mature technology that meet most of my requirements.
 
 [Database Schema](./docs/assets/ChangeTrackerDbSchema.png)

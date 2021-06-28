@@ -108,7 +108,7 @@ The architecture of the app is mainly influenced by:
 * Robert C. Martin's book Clean Architecture
 * Mark Seemann's book Dependency Injection Principles, Practices and Patterns
 * Plainionist's article series [Implementing-Clean-Architecture](http://www.plainionist.net/Implementing-Clean-Architecture-Overview/)
-* CandiedOrange's [answers](https://softwareengineering.stackexchange.com/search?q=user:131624+[clean-architecture]) on [softwareengineering.stackexchange](https://softwareengineering.stackexchange.com/)
+* candied_orange's [answers](https://softwareengineering.stackexchange.com/search?q=user:131624+[clean-architecture]) on [softwareengineering.stackexchange](https://softwareengineering.stackexchange.com/)
 
 ## Key Features
 

@@ -148,34 +148,5 @@ namespace ChangeTracker.Application.Tests.ServicesTests.ChangeLogLineParsing
             _outputPortMock.Verify(m => m.InvalidChangeLogLineText(It.Is<string>(x => x == text)), Times.Once);
             parsedLine.HasValue.Should().BeFalse();
         }
-
-
-        //[Fact]
-        //public async Task ParseChangeLogLine_NoMoreLinesAvailable_TooManyChangeLogLinesOutput()
-        //{
-        //    // arrange
-        //    const string text = "Some Bug fixed";
-        //    var service = new LineParser(_changeLogDaoStub);
-        //    var lineParsingRequestModel = new LineParserRequestModel(TestAccount.Product.Id,
-        //        null, text, Array.Empty<string>(), Array.Empty<string>());
-
-        //    _changeLogDaoStub.ChangeLogs.AddRange(Enumerable.Range(0, 100)
-        //        .Select(x => new ChangeLogLine(Guid.NewGuid(),
-        //            null,
-        //            TestAccount.Product.Id,
-        //            ChangeLogText.Parse($"{x:D5}"),
-        //            (uint) x,
-        //            DateTime.Parse("2021-04-09"))));
-
-        //    _outputPortMock.Setup(m => m.TooManyLines(It.IsAny<int>()));
-
-        //    // act
-        //    var parseLine = await service.Parse(_outputPortMock.Object, lineParsingRequestModel);
-
-        //    // assert
-        //    _outputPortMock.Verify(m => m.TooManyLines(
-        //        It.Is<int>(x => x == ChangeLogs.MaxLines)), Times.Once);
-        //    parseLine.HasValue.Should().BeFalse();
-        //}
     }
 }

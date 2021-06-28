@@ -10,6 +10,7 @@ namespace ChangeTracker.Domain
     {
         public const string DefaultUser = nameof(DefaultUser);
         public const string Support = nameof(Support);
+        public const string ScrumMaster = nameof(ScrumMaster);
         public const string Developer = nameof(Developer);
         public const string ProductOwner = nameof(ProductOwner);
         public const string ProductManager = nameof(ProductManager);

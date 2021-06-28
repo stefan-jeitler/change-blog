@@ -46,5 +46,5 @@ let dbUpdates: DbUpdate list = [
     { Version = 35; Update = RolePermissionTable.addChangeLogLinePermissions}
     { Version = 36; Update = LanguageTable.addLanguageTableWithBasicLanguages}
     { Version = 37; Update = ProductTable.addLanguageCodes}
-    { Version = 38; Update = VersionTable.makeUpdateSearchVectorsProcedureLangauageAware}
+    { Version = 38; Update = VersionTable.makeUpdateSearchVectorsProcedureLanguageAware}
     { Version = 39; Update = ChangeLogLineTable.addPartialUniqueIndexOnProductIdVersionIdPositionDeletedAt}]

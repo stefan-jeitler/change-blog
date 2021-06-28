@@ -148,7 +148,7 @@ let addTextSearch (dbConnection: IDbConnection) =
 
     ()
 
-let makeUpdateSearchVectorsProcedureLangauageAware (dbConnection: IDbConnection) = 
+let makeUpdateSearchVectorsProcedureLanguageAware (dbConnection: IDbConnection) = 
     dbConnection.Execute(makeUpdateSearchVectorsProcedureLanguageAwareSql) |> ignore
 
     ()

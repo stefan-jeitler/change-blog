@@ -1,4 +1,4 @@
-# ChangeTracker - empower your releases
+# ChangeTracker - enhance your releases
 
 ChangeTracker is a web service that enables you to keep track of your releases and changes.  
 

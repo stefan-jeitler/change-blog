@@ -40,7 +40,7 @@ This is restricted to support permissions.
 
 This works the other way around as well.  
 You can have a support role on account level and a developer role for specific products.  
-So the user has more permission for the specific products.  
+So the user has more permissions for the specific products.  
 
 However, there is not yet a user interface to do this. (future extension)
 

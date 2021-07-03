@@ -7,7 +7,7 @@ using ChangeTracker.Application.DataAccess.ChangeLog;
 using ChangeTracker.Application.DataAccess.Products;
 using ChangeTracker.Application.DataAccess.Users;
 using ChangeTracker.Application.DataAccess.Versions;
-using ChangeTracker.Application.Decorators;
+using ChangeTracker.Application.Proxies;
 using ChangeTracker.DataAccess.Postgres.DataAccessObjects.Account;
 using ChangeTracker.DataAccess.Postgres.DataAccessObjects.ChangeLog;
 using ChangeTracker.DataAccess.Postgres.DataAccessObjects.Products;
@@ -69,7 +69,7 @@ namespace ChangeTracker.DataAccess.Postgres
                 .AddScoped<IChangeLogQueriesDao, ChangeLogQueriesDao>();
 
             services.AddScoped<IChangeLogCommandsDao, ChangeLogCommandsDao>()
-                .Decorate<IChangeLogCommandsDao, ChangeLogLineReadonlyCheckDecorator>();
+                .Decorate<IChangeLogCommandsDao, ChangeLogLineReadonlyCheckProxy>();
 
             return services;
         }

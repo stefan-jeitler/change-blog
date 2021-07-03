@@ -4,7 +4,7 @@ using ChangeTracker.Application.UseCases.Commands.AddOrUpdateVersion.Models;
 using FluentAssertions;
 using Xunit;
 
-namespace ChangeTracker.Application.Tests.UseCaseTests.Commands.AddCompleteVersion
+namespace ChangeTracker.Application.Tests.UseCaseTests.Commands.AddVersion
 {
     public class VersionRequestModelTests
     {

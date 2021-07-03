@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using ChangeTracker.Application.DataAccess.Conflicts;
-using ChangeTracker.Application.Decorators;
+using ChangeTracker.Application.Proxies;
 using ChangeTracker.Application.Tests.TestDoubles;
 using ChangeTracker.Domain;
 using ChangeTracker.Domain.ChangeLog;
@@ -13,16 +13,16 @@ using FluentAssertions;
 using Microsoft.Extensions.Caching.Memory;
 using Xunit;
 
-namespace ChangeTracker.Application.Tests.DecoratorTests
+namespace ChangeTracker.Application.Tests.ProxyTests
 {
-    public class ReadOnlyCheckDecoratorTests
+    public class ReadOnlyCheckProxyTests
     {
         private readonly ChangeLogDaoStub _changeLogDaoStub;
         private readonly IMemoryCache _memoryCache;
         private readonly ProductDaoStub _productDaoStub;
         private readonly VersionDaoStub _versionDaoStub;
 
-        public ReadOnlyCheckDecoratorTests()
+        public ReadOnlyCheckProxyTests()
         {
             _changeLogDaoStub = new ChangeLogDaoStub();
             _versionDaoStub = new VersionDaoStub();
@@ -30,7 +30,7 @@ namespace ChangeTracker.Application.Tests.DecoratorTests
             _memoryCache = new MemoryCache(new MemoryCacheOptions());
         }
 
-        private ChangeLogLineReadonlyCheckDecorator CreateDecorator() =>
+        private ChangeLogLineReadonlyCheckProxy CreateProxy() =>
             new(_changeLogDaoStub, _versionDaoStub, _memoryCache, _productDaoStub);
 
         [Fact]
@@ -47,10 +47,10 @@ namespace ChangeTracker.Application.Tests.DecoratorTests
             var line = new ChangeLogLine(lineId, versionId, TestAccount.Product.Id, ChangeLogText.Parse("some text"),
                 0U, TestAccount.UserId, DateTime.Parse("2021-04-17"));
 
-            var decorator = CreateDecorator();
+            var proxy = CreateProxy();
 
             // act
-            var result = await decorator.AddOrUpdateLineAsync(line);
+            var result = await proxy.AddOrUpdateLineAsync(line);
 
             // assert
             result.IsFailure.Should().BeTrue();
@@ -72,10 +72,10 @@ namespace ChangeTracker.Application.Tests.DecoratorTests
             var line = new ChangeLogLine(lineId, versionId, TestAccount.Product.Id, ChangeLogText.Parse("some text"),
                 0U, TestAccount.UserId, DateTime.Parse("2021-04-17"), DateTime.Parse("2021-04-17"));
 
-            var decorator = CreateDecorator();
+            var proxy = CreateProxy();
 
             // act
-            var result = await decorator.AddOrUpdateLineAsync(line);
+            var result = await proxy.AddOrUpdateLineAsync(line);
 
             // assert
             result.IsFailure.Should().BeTrue();
@@ -97,10 +97,10 @@ namespace ChangeTracker.Application.Tests.DecoratorTests
             var line = new ChangeLogLine(lineId, versionId, TestAccount.Product.Id, ChangeLogText.Parse("some text"),
                 0U, TestAccount.UserId, DateTime.Parse("2021-04-17"));
 
-            var decorator = CreateDecorator();
+            var proxy = CreateProxy();
 
             // act
-            var result = await decorator.AddOrUpdateLineAsync(line);
+            var result = await proxy.AddOrUpdateLineAsync(line);
 
             // assert
             result.IsFailure.Should().BeTrue();
@@ -128,10 +128,10 @@ namespace ChangeTracker.Application.Tests.DecoratorTests
             var line = new ChangeLogLine(lineId, versionId, TestAccount.Product.Id, ChangeLogText.Parse("some text"),
                 0U, TestAccount.UserId, DateTime.Parse("2021-04-17"));
 
-            var decorator = CreateDecorator();
+            var proxy = CreateProxy();
 
             // act
-            var result = await decorator.AddOrUpdateLineAsync(line);
+            var result = await proxy.AddOrUpdateLineAsync(line);
 
             // assert
             result.IsFailure.Should().BeTrue();
@@ -155,10 +155,10 @@ namespace ChangeTracker.Application.Tests.DecoratorTests
             var line = new ChangeLogLine(lineId, versionId, TestAccount.Product.Id, ChangeLogText.Parse("some text"),
                 0U, TestAccount.UserId, DateTime.Parse("2021-04-17"));
 
-            var decorator = CreateDecorator();
+            var proxy = CreateProxy();
 
             // act
-            var result = await decorator.AddOrUpdateLineAsync(line);
+            var result = await proxy.AddOrUpdateLineAsync(line);
 
             // assert
             result.IsSuccess.Should().BeTrue();
@@ -173,10 +173,10 @@ namespace ChangeTracker.Application.Tests.DecoratorTests
             var line = new ChangeLogLine(lineId, null, TestAccount.Product.Id, ChangeLogText.Parse("some text"),
                 0U, TestAccount.UserId, DateTime.Parse("2021-04-17"));
 
-            var decorator = CreateDecorator();
+            var proxy = CreateProxy();
 
             // act
-            var result = await decorator.AddOrUpdateLineAsync(line);
+            var result = await proxy.AddOrUpdateLineAsync(line);
 
             // assert
             result.IsSuccess.Should().BeTrue();
@@ -191,10 +191,10 @@ namespace ChangeTracker.Application.Tests.DecoratorTests
             var line = new ChangeLogLine(lineId, null, TestAccount.Product.Id, ChangeLogText.Parse("some text"),
                 0U, TestAccount.UserId, DateTime.Parse("2021-04-17"));
 
-            var decorator = CreateDecorator();
+            var proxy = CreateProxy();
 
             // act
-            var result = await decorator.UpdateLineAsync(line);
+            var result = await proxy.UpdateLineAsync(line);
 
             // assert
             result.IsSuccess.Should().BeTrue();
@@ -209,10 +209,10 @@ namespace ChangeTracker.Application.Tests.DecoratorTests
             var line = new ChangeLogLine(lineId, null, TestAccount.Product.Id, ChangeLogText.Parse("some text"),
                 0U, TestAccount.UserId, DateTime.Parse("2021-04-17"));
             _changeLogDaoStub.ChangeLogs.Add(line);
-            var decorator = CreateDecorator();
+            var proxy = CreateProxy();
 
             // act
-            var result = await decorator.DeleteLineAsync(line);
+            var result = await proxy.DeleteLineAsync(line);
 
             // assert
             result.IsSuccess.Should().BeTrue();
@@ -234,10 +234,10 @@ namespace ChangeTracker.Application.Tests.DecoratorTests
                 DateTime.Parse("2021-05-15"), TestAccount.UserId, DateTime.Parse("2021-04-17"), null);
             _versionDaoStub.Versions.Add(version);
 
-            var decorator = CreateDecorator();
+            var proxy = CreateProxy();
 
             // act
-            var result = await decorator.DeleteLineAsync(line);
+            var result = await proxy.DeleteLineAsync(line);
 
             // assert
             result.IsSuccess.Should().BeFalse();
@@ -258,10 +258,10 @@ namespace ChangeTracker.Application.Tests.DecoratorTests
                 ChangeLogText.Parse("some other text"),
                 0U, TestAccount.UserId, DateTime.Parse("2021-04-17"));
 
-            var decorator = CreateDecorator();
+            var proxy = CreateProxy();
 
             // act
-            var result = await decorator.AddOrUpdateLinesAsync(new List<ChangeLogLine>(2) {firstLine, secondLine});
+            var result = await proxy.AddOrUpdateLinesAsync(new List<ChangeLogLine>(2) {firstLine, secondLine});
 
             // assert
             result.IsSuccess.Should().BeTrue();
@@ -290,10 +290,10 @@ namespace ChangeTracker.Application.Tests.DecoratorTests
                 ChangeLogText.Parse("some other text"),
                 0U, TestAccount.UserId, DateTime.Parse("2021-04-17"));
 
-            var decorator = CreateDecorator();
+            var proxy = CreateProxy();
 
             // act
-            var result = await decorator.AddOrUpdateLinesAsync(new List<ChangeLogLine>(2) {firstLine, secondLine});
+            var result = await proxy.AddOrUpdateLinesAsync(new List<ChangeLogLine>(2) {firstLine, secondLine});
 
             // assert
             result.IsSuccess.Should().BeFalse();
@@ -321,10 +321,10 @@ namespace ChangeTracker.Application.Tests.DecoratorTests
 
             var lineAssigned = lineUnassigned.AssignToVersion(versionId, 0);
 
-            var decorator = CreateDecorator();
+            var proxy = CreateProxy();
 
             // act
-            var result = await decorator.MoveLineAsync(lineAssigned);
+            var result = await proxy.MoveLineAsync(lineAssigned);
 
             // assert
             result.IsSuccess.Should().BeTrue();
@@ -358,10 +358,10 @@ namespace ChangeTracker.Application.Tests.DecoratorTests
             var firstLineAssigned = firstLineUnassigned.AssignToVersion(versionId, 0);
             var secondLineAssigned = secondLineUnassigned.AssignToVersion(versionId, 1);
 
-            var decorator = CreateDecorator();
+            var proxy = CreateProxy();
 
             // act
-            var result = await decorator.MoveLinesAsync(new List<ChangeLogLine>(2)
+            var result = await proxy.MoveLinesAsync(new List<ChangeLogLine>(2)
                 {firstLineAssigned, secondLineAssigned});
 
             // assert
@@ -394,10 +394,10 @@ namespace ChangeTracker.Application.Tests.DecoratorTests
             var firstLineAssigned = firstLineUnassigned.AssignToVersion(versionId, 0);
             var secondLineAssigned = secondLineUnassigned.AssignToVersion(versionId, 1);
 
-            var decorator = CreateDecorator();
+            var proxy = CreateProxy();
 
             // act
-            var result = await decorator.MoveLinesAsync(new List<ChangeLogLine>(2)
+            var result = await proxy.MoveLinesAsync(new List<ChangeLogLine>(2)
                 {firstLineAssigned, secondLineAssigned});
 
             // assert

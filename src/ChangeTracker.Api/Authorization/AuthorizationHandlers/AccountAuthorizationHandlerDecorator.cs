@@ -4,6 +4,7 @@ using ChangeTracker.Api.Authorization.RequestBodyIdentifiers;
 using ChangeTracker.Application.UseCases.Queries.GetAuthorizationState;
 using ChangeTracker.Domain.Authorization;
 using Microsoft.AspNetCore.Mvc.Filters;
+// ReSharper disable ConvertIfStatementToReturnStatement
 
 // ReSharper disable ClassNeverInstantiated.Global
 
@@ -20,18 +21,18 @@ namespace ChangeTracker.Api.Authorization.AuthorizationHandlers
             _getAuthorizationState = getAuthorizationState;
         }
 
-        public override async Task<AuthorizationState> GetAuthorizationState(ActionExecutingContext context, Guid userId,
+        public override Task<AuthorizationState> GetAuthorizationState(ActionExecutingContext context, Guid userId,
             Permission permission)
         {
             var accountIdInRoute = TryFindIdInHeader(context.HttpContext, KnownIdentifiers.AccountId);
             if (accountIdInRoute.HasValue)
-                return await _getAuthorizationState.GetAuthStateByAccountIdAsync(userId, accountIdInRoute.Value, permission);
+                return _getAuthorizationState.GetAuthStateByAccountIdAsync(userId, accountIdInRoute.Value, permission);
 
             var accountIdInBody = TryFindInBody<IContainsAccountId>(context);
             if (accountIdInBody is not null)
-                return await _getAuthorizationState.GetAuthStateByAccountIdAsync(userId, accountIdInBody.AccountId, permission);
+                return _getAuthorizationState.GetAuthStateByAccountIdAsync(userId, accountIdInBody.AccountId, permission);
 
-            return await _authorizationHandlerComponent.GetAuthorizationState(context, userId, permission);
+            return _authorizationHandlerComponent.GetAuthorizationState(context, userId, permission);
         }
     }
 }

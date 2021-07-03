@@ -4,6 +4,7 @@ using ChangeTracker.Api.Authorization.RequestBodyIdentifiers;
 using ChangeTracker.Application.UseCases.Queries.GetAuthorizationState;
 using ChangeTracker.Domain.Authorization;
 using Microsoft.AspNetCore.Mvc.Filters;
+// ReSharper disable ConvertIfStatementToReturnStatement
 
 namespace ChangeTracker.Api.Authorization.AuthorizationHandlers
 {
@@ -18,18 +19,18 @@ namespace ChangeTracker.Api.Authorization.AuthorizationHandlers
             _getAuthorizationState = getAuthorizationState;
         }
 
-        public override async Task<AuthorizationState> GetAuthorizationState(ActionExecutingContext context, Guid userId,
+        public override Task<AuthorizationState> GetAuthorizationState(ActionExecutingContext context, Guid userId,
             Permission permission)
         {
             var productIdInRoute = TryFindIdInHeader(context.HttpContext, KnownIdentifiers.ProductId);
             if (productIdInRoute.HasValue)
-                return await _getAuthorizationState.GetAuthStateByProductIdAsync(userId, productIdInRoute.Value, permission);
+                return _getAuthorizationState.GetAuthStateByProductIdAsync(userId, productIdInRoute.Value, permission);
 
             var productIdInBody = TryFindInBody<IContainsProductId>(context);
             if (productIdInBody is not null)
-                return await _getAuthorizationState.GetAuthStateByProductIdAsync(userId, productIdInBody.ProductId, permission);
+                return _getAuthorizationState.GetAuthStateByProductIdAsync(userId, productIdInBody.ProductId, permission);
 
-            return await _authorizationHandlerComponent.GetAuthorizationState(context, userId, permission);
+            return _authorizationHandlerComponent.GetAuthorizationState(context, userId, permission);
         }
     }
 }

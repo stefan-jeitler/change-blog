@@ -17,14 +17,13 @@ namespace ChangeTracker.Api.Authorization.AuthorizationHandlers
             _getAuthorizationState = getAuthorizationState;
         }
 
-        public override async Task<AuthorizationState> GetAuthorizationState(ActionExecutingContext context, Guid userId,
+        public override Task<AuthorizationState> GetAuthorizationState(ActionExecutingContext context, Guid userId,
             Permission permission)
         {
             var versionId = TryFindIdInHeader(context.HttpContext, KnownIdentifiers.VersionId);
-            if (versionId.HasValue)
-                return await _getAuthorizationState.GetAuthStateByVersionIdAsync(userId, versionId.Value, permission);
-
-            return await _authorizationHandlerComponent.GetAuthorizationState(context, userId, permission);
+            return versionId.HasValue 
+                ? _getAuthorizationState.GetAuthStateByVersionIdAsync(userId, versionId.Value, permission) 
+                : _authorizationHandlerComponent.GetAuthorizationState(context, userId, permission);
         }
     }
 }

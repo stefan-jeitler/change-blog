@@ -70,10 +70,10 @@ namespace ChangeTracker.DataAccess.Postgres.DataAccessObjects.Products
             var products = await _dbAccessor.DbConnection
                 .QueryAsync<Product>(sql, new
                 {
-                    querySettings.AccountId,
-                    querySettings.UserId,
+                    accountId = querySettings.AccountId,
+                    userId = querySettings.UserId,
                     permission = Permission.ViewAccountProducts.ToString(),
-                    querySettings.LastProductId,
+                    lastProductId = querySettings.LastProductId,
                     limit = (int) querySettings.Limit
                 });
 
@@ -88,9 +88,9 @@ namespace ChangeTracker.DataAccess.Postgres.DataAccessObjects.Products
             var products = await _dbAccessor.DbConnection
                 .QueryAsync<Product>(sql, new
                 {
-                    querySettings.UserId,
+                    userId = querySettings.UserId,
                     permission = Permission.ViewUserProducts.ToString(),
-                    querySettings.LastProductId,
+                    lastProductId = querySettings.LastProductId,
                     limit = (int) querySettings.Limit
                 });
 

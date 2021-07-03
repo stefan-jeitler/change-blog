@@ -15,12 +15,12 @@ if ($Version -notmatch $semVersionRegExPattern) {
 
 $buildArgs = @(
   $Project
-  "-Restore",
-  "-MaxCpuCount",
+  "-Restore"
+  "-MaxCpuCount"
   "-Property:Configuration=$Configuration"
-  "-Property:Version=$Version",
-  "-ConsoleLoggerParameters:Summary",
-  "-Verbosity:Minimal",
+  "-Property:Version=$Version"
+  "-ConsoleLoggerParameters:Summary"
+  "-Verbosity:Minimal"
   "-NoLogo"
 )
 

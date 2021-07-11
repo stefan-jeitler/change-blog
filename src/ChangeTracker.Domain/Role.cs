@@ -35,7 +35,7 @@ namespace ChangeTracker.Domain
         public Guid Id { get; }
         public Name Name { get; }
         public Text Description { get; }
-        public IImmutableSet<Permission> Permissions { get; set; }
+        public IImmutableSet<Permission> Permissions { get; }
         public DateTime CreatedAt { get; }
     }
 }

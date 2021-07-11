@@ -19,7 +19,6 @@ namespace ChangeTracker.Domain.ChangeLog
         {
         }
 
-        // Dapper constructor
         public ChangeLogLine(Guid id, Guid? versionId, Guid productId, ChangeLogText text, int position,
             DateTime createdAt, IEnumerable<Label> labels, IEnumerable<Issue> issues, Guid createdByUser,
             DateTime? deletedAt = null)

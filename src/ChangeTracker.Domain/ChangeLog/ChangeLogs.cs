@@ -38,7 +38,7 @@ namespace ChangeTracker.Domain.ChangeLog
                 .Select(x => x);
 
             if (duplicates.Any())
-                throw new ArgumentException("Lines with same text are not allowed");
+                throw new ArgumentException("Lines with same text are not allowed.");
         }
 
         public bool ContainsText(ChangeLogText other)
@@ -59,7 +59,7 @@ namespace ChangeTracker.Domain.ChangeLog
         private static Guid? GetVersionId(IReadOnlyCollection<ChangeLogLine> lines)
         {
             if (lines.Any(x => x.VersionId.HasValue && x.VersionId.Value == Guid.Empty))
-                throw new ArgumentException("Empty VersionId is not allowed.");
+                throw new ArgumentException("VersionId must not be empty.");
 
             var versionId = lines
                 .Select(x => x.VersionId ?? Guid.Empty)

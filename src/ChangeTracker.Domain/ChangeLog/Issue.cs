@@ -43,7 +43,7 @@ namespace ChangeTracker.Domain.ChangeLog
                 return new ArgumentException("Issue number cannot be empty.");
 
             if (c.Contains(' '))
-                return new ArgumentException("Whitespaces are not allowed.");
+                return new ArgumentException("Whitespaces not allowed.");
 
             if (c.Length > MaxLength)
                 return new ArgumentException($"Issue number cannot have more than {MaxLength} characters.");

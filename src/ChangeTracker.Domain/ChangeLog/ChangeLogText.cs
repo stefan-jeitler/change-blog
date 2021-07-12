@@ -56,7 +56,7 @@ namespace ChangeTracker.Domain.ChangeLog
             {
                 case > MaxLength:
                     return new ArgumentException($"The text must not contain more than {MaxLength} characters.");
-                case < MinLength: return new ArgumentException($"A Label needs at least {MinLength} characters");
+                case < MinLength: return new ArgumentException($"A Label needs at least {MinLength} characters.");
                 default:
                     text = new ChangeLogText(c);
                     return null;

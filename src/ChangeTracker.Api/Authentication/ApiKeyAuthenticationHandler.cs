@@ -61,7 +61,7 @@ namespace ChangeTracker.Api.Authentication
 
         protected override async Task HandleChallengeAsync(AuthenticationProperties properties)
         {
-            Response.StatusCode = 401;
+            Response.StatusCode = StatusCodes.Status401Unauthorized;
             Response.ContentType = MediaTypeNames.Application.Json;
             var responseBody = DefaultResponse.Create("You are not authenticated. Please enter a valid api key.");
 

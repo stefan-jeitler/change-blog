@@ -31,7 +31,7 @@ namespace ChangeTracker.Domain.ChangeLog
             DateTime? deletedAt = null)
         {
             if (id == Guid.Empty)
-                throw new ArgumentException("Id must not be empty", nameof(id));
+                throw new ArgumentException("Id must not be empty.", nameof(id));
 
             Id = id;
 
@@ -55,7 +55,7 @@ namespace ChangeTracker.Domain.ChangeLog
             CreatedByUser = createdByUser;
 
             if (createdAt == DateTime.MinValue || createdAt == DateTime.MaxValue)
-                throw new ArgumentException("Invalid creation date", nameof(createdAt));
+                throw new ArgumentException("Invalid creation date.", nameof(createdAt));
 
             CreatedAt = createdAt;
 

@@ -20,7 +20,7 @@ namespace ChangeTracker.Api.Authorization
         private static readonly ActionResult UnauthorizedResult =
             new ObjectResult(DefaultResponse.Create("You don't have permission to access this resource."))
             {
-                StatusCode = 403
+                StatusCode = StatusCodes.Status403Forbidden
             };
 
         private static readonly ActionResult NotFoundResult =
@@ -56,7 +56,7 @@ namespace ChangeTracker.Api.Authorization
                 _logger.LogError(
                     $"The requested action '{actionName}' has no {nameof(NeedsPermissionAttribute)} and no {nameof(AllowAnonymousAttribute)}.");
 
-                context.Result = new StatusCodeResult(StatusCodes.Status500InternalServerError);
+                context.Result = InternalServerError;
                 return;
             }
 

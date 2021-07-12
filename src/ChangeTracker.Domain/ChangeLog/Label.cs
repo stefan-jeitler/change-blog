@@ -42,17 +42,17 @@ namespace ChangeTracker.Domain.ChangeLog
             var c = candidate.Trim();
 
             if (c.Contains(' '))
-                return new ArgumentException("Use single words only");
+                return new ArgumentException("Use single words only.");
 
             if (c == string.Empty)
                 return new ArgumentException("Label must not be empty.");
 
             if (!Regex.IsMatch(c, @"^[a-zA-Z0-9]+$"))
-                return new ArgumentException("Label contains invalid characters. Only letters and numbers are allowed");
+                return new ArgumentException("Label contains invalid characters. Only letters and numbers allowed.");
 
             switch (c.Length)
             {
-                case < MinLength: return new ArgumentException("A Label needs at least one character");
+                case < MinLength: return new ArgumentException("A Label needs at least one character.");
                 case > MaxLength: return new ArgumentException("A label must not contain more than 50 characters.");
                 default:
                     label = new Label(c);

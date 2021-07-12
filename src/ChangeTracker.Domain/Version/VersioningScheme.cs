@@ -36,7 +36,7 @@ namespace ChangeTracker.Domain.Version
 
             if (deletedAt.HasValue &&
                 (deletedAt.Value == DateTime.MinValue || deletedAt.Value == DateTime.MaxValue))
-                throw new ArgumentException("Invalid deletion date");
+                throw new ArgumentException("Invalid deletion date.");
 
             DeletedAt = deletedAt;
         }

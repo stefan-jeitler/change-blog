@@ -36,13 +36,12 @@ namespace ChangeTracker.DataAccess.Postgres.DataAccessObjects.Users
             var permissions = (await _dbAccessor.DbConnection.QueryAsync<RolePermissionDto>(GetRolePermissionsSql))
                 .AsList();
 
-            var notSupportedPermissions = permissions
-                .Where(x => x.Permission is null)
-                .ToList();
+            var notSupportedPermissionsExists = permissions
+                .Any(x => !x.Permission.HasValue);
 
-            if (notSupportedPermissions.Any())
+            if (notSupportedPermissionsExists)
             {
-                _logger.LogWarning("There are permissions that are not supported by the app.", string.Join(", ", notSupportedPermissions));
+                _logger.LogWarning("There are permissions that are not supported by the app.");
             }
 
             return permissions

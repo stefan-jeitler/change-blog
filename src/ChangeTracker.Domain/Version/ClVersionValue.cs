@@ -54,7 +54,7 @@ namespace ChangeTracker.Domain.Version
                 return new ArgumentException("Whitespaces in a versionValue are not allowed.");
 
             if (c.Length > MaxLength)
-                return new ArgumentException($"Version too long. max length {MaxLength}");
+                return new ArgumentException($"Version too long. max length {MaxLength}.");
 
             versionValue = new ClVersionValue(c);
             return null;

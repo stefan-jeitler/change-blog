@@ -39,7 +39,9 @@ let private addLanguageCodeColumnSql = """
         ADD COLUMN IF NOT EXISTS language_code char(2)
     """
 
-let private setDefaultLanguageSql = "UPDATE product set language_code = 'en' where language_code is null"
+let private addDefaultLanguageCodeSql = """ALTER TABLE product ALTER COLUMN language_code SET DEFAULT 'en'"""
+
+let private setLanguageForExistingEntriesSql = "UPDATE product set language_code = 'en' where language_code is null"
 
 let private addLanguageCodeForeignKeySql = """
         ALTER TABLE product
@@ -57,14 +59,15 @@ let addUniqueIndexOnAccountIdAndName (dbConnection: IDbConnection) =
     dbConnection.Execute(addUniqueIndexOnAccountIdAndNameSql)
     |> ignore
 
-    
 let addProductForAppChanges (dbConnection: IDbConnection) =
     dbConnection.Execute(addProductForAppChangesSql)
     |> ignore
     
 let addLanguageCodes (dbConnection: IDbConnection) = 
+
     dbConnection.Execute(addLanguageCodeColumnSql) |> ignore
-    dbConnection.Execute(setDefaultLanguageSql) |> ignore
+    dbConnection.Execute(addDefaultLanguageCodeSql) |> ignore
+    dbConnection.Execute(setLanguageForExistingEntriesSql) |> ignore
 
     let langCodeForeignKeyConstraintExists = Db.constraintExists dbConnection "product_languagecode_fkey"
     match langCodeForeignKeyConstraintExists with

@@ -13,7 +13,6 @@
 
   <ItemGroup>
     <Compile Include="Db.fs" />
-    <Compile Include="DbUpdates\CommonFunctions.fs" />
     <Compile Include="DbUpdates/AccountTable.fs" />
     <Compile Include="DbUpdates\AccountUserTable.fs" />
     <Compile Include="DbUpdates\AccountViews.fs" />

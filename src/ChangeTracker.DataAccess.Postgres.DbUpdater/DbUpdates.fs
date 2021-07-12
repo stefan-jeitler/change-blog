@@ -35,16 +35,14 @@ let dbUpdates: DbUpdate list = [
     { Version = 24; Update = RolePermissionTable.addSomeViewPermissions}
     { Version = 25; Update = AccountViews.createAccountUserRolesView}
     { Version = 26; Update = ProductViews.createProductUserRolesView}
-    { Version = 27; Update = CommonFunctions.addGuidFunction}
-    { Version = 28; Update = UserTable.fixEmailUniqeConstraint}
-    { Version = 29; Update = VersionTable.addTextSearch}
-    { Version = 30; Update = AccountUserTable.createIndexOnUserIdAndRoleId}
-    { Version = 31; Update = RolePermissionTable.addVersionPermissions}
-    { Version = 32; Update = UserTable.addUserForAppChanges}
-    { Version = 33; Update = ProductTable.addProductForAppChanges}
-    { Version = 34; Update = ProductTable.addProductForAppChanges}
-    { Version = 35; Update = RolePermissionTable.addChangeLogLinePermissions}
-    { Version = 36; Update = LanguageTable.addLanguageTableWithBasicLanguages}
-    { Version = 37; Update = ProductTable.addLanguageCodes}
-    { Version = 38; Update = VersionTable.makeUpdateSearchVectorsProcedureLanguageAware}
-    { Version = 39; Update = ChangeLogLineTable.addPartialUniqueIndexOnProductIdVersionIdPositionDeletedAt}]
+    { Version = 27; Update = UserTable.fixEmailUniqeConstraint}
+    { Version = 28; Update = VersionTable.addTextSearch}
+    { Version = 29; Update = AccountUserTable.createIndexOnUserIdAndRoleId}
+    { Version = 30; Update = RolePermissionTable.addVersionPermissions}
+    { Version = 31; Update = UserTable.addUserForAppChanges}
+    { Version = 32; Update = ProductTable.addProductForAppChanges}
+    { Version = 33; Update = RolePermissionTable.addChangeLogLinePermissions}
+    { Version = 34; Update = LanguageTable.addLanguageTableWithBasicLanguages}
+    { Version = 35; Update = ProductTable.addLanguageCodes}
+    { Version = 36; Update = VersionTable.makeUpdateSearchVectorsProcedureLanguageAware}
+    { Version = 37; Update = ChangeLogLineTable.addPartialUniqueIndexOnProductIdVersionIdPositionDeletedAt}]

@@ -1,12 +1,6 @@
 {
   "version": "1.0.0-dev.31",
   "name": "",
-  "changeLogLines": [
-    {
-      "text": "",
-      "labels": [],
-      "issues": []
-    }
-  ],
+  "changeLogLines": [],
   "releaseImmediately": true
 }

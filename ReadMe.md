@@ -103,7 +103,7 @@ The max number of change logs is 100.
 
 ## Architecture
 
-The architecture of the app is mainly influenced by:
+The architecture of the app is strongly influenced by
 
 * Robert C. Martin's book Clean Architecture
 * Mark Seemann's book Dependency Injection Principles, Practices and Patterns

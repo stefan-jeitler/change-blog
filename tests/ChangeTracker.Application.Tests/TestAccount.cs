@@ -5,7 +5,7 @@ using ChangeTracker.Domain.Version;
 
 // ReSharper disable InconsistentNaming
 
-namespace ChangeTracker.Application.Tests.TestDoubles
+namespace ChangeTracker.Application.Tests
 {
     public static class TestAccount
     {

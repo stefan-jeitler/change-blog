@@ -4,7 +4,7 @@ using ChangeTracker.Domain;
 using ChangeTracker.Domain.Authorization;
 using ChangeTracker.Domain.Common;
 
-namespace ChangeTracker.Application.Tests.TestDoubles
+namespace ChangeTracker.Application.Tests
 {
     public static class TestRoles
     {

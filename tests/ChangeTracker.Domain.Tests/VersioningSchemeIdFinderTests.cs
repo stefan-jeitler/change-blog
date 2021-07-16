@@ -1,5 +1,4 @@
 ﻿using System;
-using ChangeTracker.Domain.Tests.TestDoubles;
 using FluentAssertions;
 using Xunit;
 

@@ -1,6 +1,5 @@
 ﻿using System;
 using ChangeTracker.Domain.Common;
-using ChangeTracker.Domain.Tests.TestDoubles;
 using ChangeTracker.Domain.Version;
 using FluentAssertions;
 using Xunit;

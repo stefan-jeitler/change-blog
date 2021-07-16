@@ -3,7 +3,7 @@ using ChangeTracker.Domain;
 using ChangeTracker.Domain.Common;
 using ChangeTracker.Domain.Version;
 
-namespace ChangeTracker.DataAccess.Postgres.Tests.TestDoubles
+namespace ChangeTracker.DataAccess.Postgres.Tests
 {
     public static class TestData
     {

@@ -2,7 +2,7 @@
 using ChangeTracker.Domain.Common;
 using ChangeTracker.Domain.Version;
 
-namespace ChangeTracker.Domain.Tests.TestDoubles
+namespace ChangeTracker.Domain.Tests
 {
     public class TestAccount
     {

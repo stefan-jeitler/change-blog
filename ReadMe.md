@@ -22,7 +22,7 @@ The development team automatically pushes its changes during deployment with all
 
 ## Disclaimer
 
-This is a side project that should not be used in productive environment.  
+This is a side project and should not be used in productive environment.  
 The basic idea for this project comes from [Keep a changelog](https://keepachangelog.com/en/1.1.0/).  
 
 ## Basic Concept
@@ -183,9 +183,7 @@ Two types were designed to work with db connections.
 These two types can be injected into the constructor  
 but only in the data access layer.
 
-### `Func<IDbConnection>`
-
-This factory should be used in situations where no transaction is required.  
+`Func<IDbConnection>` should be used in situations where no transaction is required.  
 An example is the authentication handler that verifies the user's identity.  
 This will never be part of a transaction.  
 
@@ -195,9 +193,7 @@ Things to keep in mind when working with `Func<IDbConnection>`.
 * Does not work with `IUnitOfWork`
 * Can be used in concurrent situations
 
-### `IDbAccessor`
-
-Contains only the property `DbConnection` that can be used safely  
+`IDbAccessor` contains the property `DbConnection` only that can be used safely  
 without worrying about opening or closing/disposing connections or transactions.  
 This is handled by the DbSession, Dapper and the DI Container.  
 
@@ -224,7 +220,7 @@ Things to keep in mind when working with `IDbAccessor`
 
 Build a management api for users and accounts.  
 Do not use api key authentication for this api.  
-It should be secured by using OAuth2.0 and Microsoft as service provider.  
+It should be secured by using OAuth 2.0 and Microsoft as service provider.  
 
 ### Frontend (needs to be learnt)
 

@@ -20,6 +20,19 @@ both should depend on a web service.
 
 The development team automatically pushes its changes during deployment with all the information the management team needs.
 
+<!-- ## Table of Contents
+
+1. [Disclaimer](#disclaimer)
+2. [Basic Concept](#basic-concept)
+3. [Architecture](#architecture)
+4. [Testing](#testing)
+5. [Key Features](#key-features)
+6. [CI/CD](#ci-cd)
+7. [Environments](#environments)
+8. [Database](#database)
+9. [Next Steps](#next-steps)
+10. [Future Extenions](#future-extensions) -->
+
 ## Disclaimer
 
 This is a side project and should not be used in productive environment.  
@@ -110,13 +123,108 @@ The architecture of the app is strongly influenced by
 * Plainionist's article series [Implementing-Clean-Architecture](http://www.plainionist.net/Implementing-Clean-Architecture-Overview/)
 * candied_orange's [answers](https://softwareengineering.stackexchange.com/search?q=user:131624+[clean-architecture]) on [softwareengineering.stackexchange](https://softwareengineering.stackexchange.com/)
 
+### Distinction from Clean Architecture
+
+I would like to point out that I don't implement the Clean Architecture strictly.  
+My goal is to apply the principles and practices described in the book properly.
+
+There are two major deviations from the Clean Architecture.  
+
+**First**  
+My solution contains only three layers and not four as shown [here](https://blog.cleancoder.com/uncle-bob/images/2012-08-13-the-clean-architecture/CleanArchitecture.jpg).  
+I brought together the two outermost circles.  
+
+* Domain: **Enterprise Business Rules**
+* Application: **Application Business Rules**
+* WebAPI and DataAccess: **Interface Adapters** and **Framework & Drivers**
+
+The main reason for this decision was convenience.  
+Controllers in the Clean Architecture are located in the **Interface Adapters** circle.  
+Since dependencies can only point inwards, this layer is not allowed to know about **Frameworks & Drivers**.  
+`ASP.NET` is such a **Framework** and implementing it strictly means controllers must not know about `ASP.NET`.  
+Some things I would highly miss in my controllers are
+
+* HttpContext
+* ActionResult
+* Response methods like `Ok`, `NotFound`, `BadRequest`, ...
+* Model validation
+* Routing
+
+So it was clear to not follow the clean architecture here.  
+Maybe I don't keep the Framework **at arm's length** in my solution,  
+but `ASP.NET` is a mature web framework and I can rely upon it.
+
+**Second**  
+Controllers return responses.  
+
+In theory, controllers and presenters don't know anything about each other  
+and controllers return nothing.  
+AFAIK this is not possible with `ASP.NET` actions,  
+they have to return something, e.g. `ActionResult`.  
+Therefore I'm not able to follow the Clean Architecture here as well.  
+
+The simplest approach that came to mind was to create the concrete presenter in the controller  
+and pass it to the interactor through the input boundary.  
+This introduced a depedency from controllers to presenters  
+and the controller decide which presenters to use.  
+
+Maybe I can't see it but let controllers know about presenters is not that bad in my opinion.  
+However, you might wonder why not inject presenters?  
+
+Mark Seeman states in his book:  
+>Volatile Dependencies are the focal point of DI. It’s for Volatile
+>Dependencies rather than Stable Dependencies that you introduce Seams
+>into your application. Again, this obligates you to compose them using DI.
+
+I don't see presenters as being that volatile.  
+
+### Third party dependencies
+
+tbd
+
+### Design Patterns
+
+tbd
+
+### Monads
+
+tbd
+
+### Control flow
+
+tbd
+
+## Testing
+
+Some parts of the app were developed using TDD.  
+This includes the Domain layer and the commands in the Application layer.  
+
+Sometimes it's quite hard to do TDD,  
+especially when it comes to components where the first design is barely the final one.  
+An example is the authorization mechanism in the Web Api.  
+While developing it I was quite unsure wheter I'm on the right track.  
+In these situations I like to experiment and this often leads to frequent changes in my design.  
+
+On the other hand, pure functions are qualified for TDD.  
+Pure functions have often a stable API that is not likely to change frequently.  
+This prevents me from the **Oh No** moment  
+where you change something in the api of your implementation and many tests will no longer compile.  
+
+However, there is one test approach I like the most.  
+
+**Test First**  
+First write a bunch of tests and then implement the functionality  
+until all the previously written tests are green.  
+But this is not always suitable.  
+It works best if you know in advance exactly how the component should work.
+
 ## Key Features
 
 * Role-based access control
 * Multitenancy (single database, single schema)
 * Full-text Search for versions and change logs
 
-## CI/CD
+## CI CD
 
 Every commit pushed to the remote repo triggers the **Continuous Integration** stage  
 where the app is built and all tests are executed.  
@@ -129,32 +237,30 @@ Tag names must be a valid SemVer 2.0.0.
 The version in `latest-changes.json` will be compared to the tag name while deploying.  
 If these values are different, the pipeline fails.  
 
-### CiCd Overview
+### CI/CD Overview
 
 ![CICD](./docs/assets/CI_CD.png)
 
 ## Environments
 
-### Testing
+**Testing**  
+This environment consists of a database only that is used by integration tests.
 
-This environment consists only of a database that is used by integration tests.
-
-### Staging
-
+**Staging**  
 Is a replica of the production environment.  
 Uses the same Docker registry and App Service Plan as the production system.  
 
 [Staging](https://app-change-tracker-staging.azurewebsites.net/)
 
-### Production
-
+**Production**  
 Actual app
 
 [Production](https://app-change-tracker.azurewebsites.net/)
 
-**Demo User**  
-ApiKey: dEmOkEy!  
-Assigned Roles:
+Demo User:  
+
+&nbsp;&nbsp;&nbsp;&nbsp;ApiKey: dEmOkEy!  
+&nbsp;&nbsp;&nbsp;&nbsp;Assigned Roles:
 
 * DefaultUser
 * Developer
@@ -166,14 +272,14 @@ because relational databases are a mature technology that meet most of my requir
 
 [Database Schema](./docs/assets/ChangeTrackerDbSchema.png)
 
-## DbConnection
+### DbConnection
 
 There are two rules of thumb when working with db connections
 
 * Open it as late as possible (during an http request)
 * Close it as soon as possible
 
-### How to get a db connection?  
+**How to get a db connection?**  
 
 Two types were designed to work with db connections.  
 
@@ -193,7 +299,7 @@ Things to keep in mind when working with `Func<IDbConnection>`.
 * Does not work with `IUnitOfWork`
 * Can be used in concurrent situations
 
-`IDbAccessor` contains the property `DbConnection` only that can be used safely  
+`IDbAccessor` contains only the property `DbConnection` that can be used safely  
 without worrying about opening or closing/disposing connections or transactions.  
 This is handled by the DbSession, Dapper and the DI Container.  
 
@@ -212,7 +318,7 @@ Things to keep in mind when working with `IDbAccessor`
 
 * Add missing tests
 * Refactor Deployment: use continuous deployment instead of continuous delivery
-* Experimental: re-write the domain in `F#` since it is a better domain language
+* Experimental: re-write the domain in `F#` because it is a better domain language
 
 ## Future Extensions
 
@@ -226,9 +332,9 @@ It should be secured by using OAuth 2.0 and Microsoft as service provider.
 
 Create an angular app that is responsible for
 
+* user registration with Microsoft accounts
 * managing accounts and users
 * working with releases and changes
-* user registration with Microsoft accounts
 
 ### Existing Api
 

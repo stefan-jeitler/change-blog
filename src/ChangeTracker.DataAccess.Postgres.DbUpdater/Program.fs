@@ -20,8 +20,8 @@ let runDbUpdates dbConnection =
     |> Seq.toList
     |> ignore
 
-let findDuplicates (u: DbUpdate list) =
-    u
+let findDuplicates (updates: DbUpdate list) =
+    updates
     |> List.groupBy (fun x -> x.Version)
     |> List.choose
         (function
@@ -36,7 +36,7 @@ let main _ =
 
     match duplicates with
     | [] -> ()
-    | d -> failwith (sprintf "Duplicate updates exists. Version(s) %s" (d |> String.concat ", "))
+    | d -> failwith (sprintf "Duplicate updates exist. Version(s) %s" (d |> String.concat ", "))
 
     let config =
         ConfigurationBuilder()

@@ -56,6 +56,8 @@ let create (dbConnection: IDbConnection) =
     dbConnection.Execute(createLowerEmailIndexSql)
     |> ignore
 
+    ()
+
 let addUserForDefaultVersioningSchemes (dbConnection: IDbConnection) = 
     dbConnection.Execute(addUserForDefaultVersioningSchemesSql)
     |> ignore
@@ -64,8 +66,6 @@ let fixEmailUniqeConstraint (dbConnection: IDbConnection) =
     fixEmailUniqueConstraintSql
     |> List.map (fun x -> dbConnection.Execute(x))
     |> ignore
-
-    ()
 
 let addUserForAppChanges (dbConnection: IDbConnection) = 
     dbConnection.Execute(addUserForAppChangesSql)

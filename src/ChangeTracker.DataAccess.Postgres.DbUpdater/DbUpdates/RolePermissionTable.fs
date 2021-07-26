@@ -141,11 +141,7 @@ let addVersionPermissions (dbConnection: IDbConnection) =
     |> List.map (fun x -> dbConnection.Execute(x))
     |> ignore
 
-    ()
-
 let addChangeLogLinePermissions (dbConnection: IDbConnection) = 
     addChangeLogLinesPermissionSql
     |> List.map (fun x -> dbConnection.Execute(x))
     |> ignore
-
-    ()

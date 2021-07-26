@@ -42,7 +42,6 @@ namespace ChangeTracker.DataAccess.Postgres
             _transaction.Commit();
             _transaction.Dispose();
             _dbConnection.Value.Close();
-            _dbConnection.Value.Dispose();
         }
 
         private void BeginTransaction()

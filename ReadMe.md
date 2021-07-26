@@ -231,7 +231,7 @@ where the app is built and all tests are executed.
 
 The **Continuous Delivery** stage will run afterwards if the commit was tagged.  
 By doing so, the app gets deployed to the staging environment  
-and after a manual approval to the production environment.  
+and ~~after a manual approval~~ to the production environment.  
 
 Tag names must be a valid SemVer 2.0.0.  
 The version in `latest-changes.json` will be compared to the tag name while deploying.  

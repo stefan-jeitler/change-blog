@@ -1,12 +1,6 @@
 {
-  "version": "1.0.0-dev.34",
+  "version": "",
   "name": "",
-  "changeLogLines": [
-    {
-      "text": "Manual approvals for production deployment removed.",
-      "labels": [ "Deployment" ],
-      "issues": [] 
-    }
-  ],
+  "changeLogLines": [],
   "releaseImmediately": true
 }

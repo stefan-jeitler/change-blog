@@ -166,7 +166,7 @@ Therefore I'm not able to follow the Clean Architecture here as well.
 The simplest approach that came to mind was to create the concrete presenter in the controller  
 and pass it to the interactor through the input boundary.  
 This introduced a depedency from controllers to presenters  
-and the controller decide which presenters to use.  
+and the controller decide which presenter to use.  
 
 Maybe I can't see it but let controllers know about presenters is not that bad in my opinion.  
 However, you might wonder why not inject presenters?  

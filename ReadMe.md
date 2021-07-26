@@ -128,7 +128,7 @@ The architecture of the app is strongly influenced by
 I would like to point out that I don't implement the Clean Architecture strictly.  
 My goal is to apply the principles and practices described in the book properly.
 
-There are two major deviations from the Clean Architecture.  
+There are two major differences to the Clean Architecture.  
 
 **First**  
 My solution contains only three layers and not four as shown [here](https://blog.cleancoder.com/uncle-bob/images/2012-08-13-the-clean-architecture/CleanArchitecture.jpg).  

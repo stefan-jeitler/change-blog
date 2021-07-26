@@ -16,7 +16,7 @@ namespace ChangeTracker.Api.DTOs.V1.ChangeLog
                 ProductId = m.ProductId,
                 ProductName = m.ProductName,
                 AccountId = m.AccountId,
-                ChangeLogLine = ChangeLogLineDto.FromResponseModel(m.ChangeLogs)
+                ChangeLogLine = ChangeLogLineDto.FromResponseModel(m.ChangeLogLine)
             };
     }
 }

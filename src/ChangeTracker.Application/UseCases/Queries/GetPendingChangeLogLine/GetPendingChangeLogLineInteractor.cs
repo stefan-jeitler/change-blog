@@ -44,7 +44,7 @@ namespace ChangeTracker.Application.UseCases.Queries.GetPendingChangeLogLine
 
             if (line.HasNoValue)
             {
-                output.LineDoesNotExists(changeLogLineId);
+                output.LineDoesNotExist(changeLogLineId);
                 return;
             }
 

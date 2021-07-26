@@ -6,7 +6,7 @@ namespace ChangeTracker.Application.UseCases.Queries.GetPendingChangeLogLine
     public class PendingChangeLogLineResponseModel
     {
         public PendingChangeLogLineResponseModel(Guid productId, string productName, Guid accountId,
-            ChangeLogLineResponseModel changeLogs)
+            ChangeLogLineResponseModel changeLogLine)
         {
             if (productId == Guid.Empty)
                 throw new ArgumentException("ProductId cannot be empty.");
@@ -19,12 +19,12 @@ namespace ChangeTracker.Application.UseCases.Queries.GetPendingChangeLogLine
 
             AccountId = accountId;
 
-            ChangeLogs = changeLogs ?? throw new ArgumentNullException(nameof(changeLogs));
+            ChangeLogLine = changeLogLine ?? throw new ArgumentNullException(nameof(changeLogLine));
         }
 
         public Guid ProductId { get; }
         public string ProductName { get; }
         public Guid AccountId { get; }
-        public ChangeLogLineResponseModel ChangeLogs { get; }
+        public ChangeLogLineResponseModel ChangeLogLine { get; }
     }
 }

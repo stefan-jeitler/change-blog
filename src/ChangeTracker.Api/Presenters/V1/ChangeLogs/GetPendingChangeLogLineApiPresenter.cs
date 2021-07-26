@@ -9,7 +9,7 @@ namespace ChangeTracker.Api.Presenters.V1.ChangeLogs
 {
     public class GetPendingChangeLogLineApiPresenter : BaseApiPresenter, IGetPendingChangeLogLineOutputPort
     {
-        public void LineDoesNotExists(Guid changeLogLineId)
+        public void LineDoesNotExist(Guid changeLogLineId)
         {
             var resourceIds = new Dictionary<string, string>
             {

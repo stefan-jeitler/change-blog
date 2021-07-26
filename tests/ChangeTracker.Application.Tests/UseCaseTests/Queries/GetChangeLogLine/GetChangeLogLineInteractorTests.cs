@@ -5,6 +5,7 @@ using ChangeTracker.Application.Tests.TestDoubles;
 using ChangeTracker.Application.UseCases.Queries.GetChangeLogLine;
 using ChangeTracker.Application.UseCases.Queries.SharedModels;
 using ChangeTracker.Domain.ChangeLog;
+using FluentAssertions;
 using Moq;
 using Xunit;
 
@@ -80,6 +81,28 @@ namespace ChangeTracker.Application.Tests.UseCaseTests.Queries.GetChangeLogLine
 
             // assert
             _outputPortMock.Verify(m => m.LineDoesNotExists(It.Is<Guid>(x => x == changeLogLineId)), Times.Once);
+        }
+
+
+        [Fact]
+        public void GetChangeLogLine_EmptyProductId_ArgumentException()
+        {
+            var interactor = CreateInteractor();
+            var changeLogLineId = Guid.Parse("bf621860-3fa3-40d4-92ac-530cc57a1a98");
+
+            Func<Task> act = () => interactor.ExecuteAsync(_outputPortMock.Object, Guid.Empty, changeLogLineId);
+
+            act.Should().ThrowExactly<ArgumentException>();
+        }
+
+        [Fact]
+        public void GetChangeLogLine_EmptyChangeLogLineId_ArgumentException()
+        {
+            var interactor = CreateInteractor();
+
+            Func<Task> act = () => interactor.ExecuteAsync(_outputPortMock.Object, TestAccount.Product.Id, Guid.Empty);
+
+            act.Should().ThrowExactly<ArgumentException>();
         }
     }
 }

@@ -1,7 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
 using ChangeTracker.Application.Tests.TestDoubles;
 using ChangeTracker.Application.UseCases.Queries.GetPendingChangeLogLine;
@@ -15,9 +12,9 @@ namespace ChangeTracker.Application.Tests.UseCaseTests.Queries.GetPendingChangeL
     public class GetPendingChangeLogLineInteractorTests
     {
         private readonly ChangeLogDaoStub _changeLogDaoStub;
+        private readonly Mock<IGetPendingChangeLogLineOutputPort> _outputPortMock;
         private readonly ProductDaoStub _productDaoStub;
         private readonly UserDaoStub _userDaoStub;
-        private readonly Mock<IGetPendingChangeLogLineOutputPort> _outputPortMock;
 
         public GetPendingChangeLogLineInteractorTests()
         {
@@ -27,7 +24,8 @@ namespace ChangeTracker.Application.Tests.UseCaseTests.Queries.GetPendingChangeL
             _outputPortMock = new Mock<IGetPendingChangeLogLineOutputPort>(MockBehavior.Strict);
         }
 
-        private GetPendingChangeLogLineInteractor CreateInteractor() => new(_changeLogDaoStub, _userDaoStub, _productDaoStub);
+        private GetPendingChangeLogLineInteractor CreateInteractor() =>
+            new(_changeLogDaoStub, _userDaoStub, _productDaoStub);
 
         [Fact]
         public async Task GetPendingChangeLogLine_HappyPath_Successful()
@@ -46,7 +44,33 @@ namespace ChangeTracker.Application.Tests.UseCaseTests.Queries.GetPendingChangeL
             await interactor.ExecuteAsync(_outputPortMock.Object, TestAccount.UserId, changeLogLineId);
 
             // assert
-            _outputPortMock.Verify(m => m.LineFound(It.Is<PendingChangeLogLineResponseModel>(r => r.ChangeLogLine.Id == changeLogLineId)),
+            _outputPortMock.Verify(
+                m => m.LineFound(It.Is<PendingChangeLogLineResponseModel>(r => r.ChangeLogLine.Id == changeLogLineId)),
+                Times.Once);
+        }
+
+
+        [Fact]
+        public async Task GetChangeLogLine_UserTimezone2HoursAheadOfUtc_CreatedAtProperlyConverted()
+        {
+            // arrange
+            var interactor = CreateInteractor();
+            _userDaoStub.Users.Add(TestAccount.User);
+            _productDaoStub.Products.Add(TestAccount.Product);
+            var changeLogLineId = Guid.Parse("bf621860-3fa3-40d4-92ac-530cc57a1a98");
+            _changeLogDaoStub.ChangeLogs.Add(new ChangeLogLine(changeLogLineId, null, TestAccount.Product.Id,
+                ChangeLogText.Parse("Test line."), 0, TestAccount.UserId, DateTime.Parse("2021-07-26")));
+
+            _outputPortMock.Setup(m => m.LineFound(It.IsAny<PendingChangeLogLineResponseModel>()));
+
+            // act
+            await interactor.ExecuteAsync(_outputPortMock.Object, TestAccount.UserId, changeLogLineId);
+
+            // assert
+            var expectedCreatedAt = DateTime.SpecifyKind(DateTime.Parse("2021-07-26T02:00:00"), DateTimeKind.Local);
+            _outputPortMock.Verify(
+                m => m.LineFound(It.Is<PendingChangeLogLineResponseModel>(r =>
+                    r.ChangeLogLine.CreatedAt.LocalDateTime == expectedCreatedAt)),
                 Times.Once);
         }
 
@@ -108,7 +132,7 @@ namespace ChangeTracker.Application.Tests.UseCaseTests.Queries.GetPendingChangeL
             var interactor = CreateInteractor();
 
             Func<Task> act = () => interactor.ExecuteAsync(_outputPortMock.Object, TestAccount.Product.Id, Guid.Empty);
-            
+
             act.Should().ThrowExactly<ArgumentException>();
         }
     }

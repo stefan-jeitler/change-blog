@@ -65,7 +65,7 @@ namespace ChangeTracker.Application.Tests.UseCaseTests.Queries.GetChangeLogLine
             await interactor.ExecuteAsync(_outputPortMock.Object, TestAccount.UserId, changeLogLineId);
 
             // assert
-            var expectedCreatedAt = DateTime.SpecifyKind(DateTime.Parse("2021-07-26T02:00:00"), DateTimeKind.Local);
+            var expectedCreatedAt = DateTime.SpecifyKind(DateTime.Parse("2021-07-26T02:00:00"), DateTimeKind.Unspecified);
             _outputPortMock.Verify(
                 m => m.LineFound(It.Is<ChangeLogLineResponseModel>(r => r.CreatedAt.LocalDateTime == expectedCreatedAt)), Times.Once);
         }

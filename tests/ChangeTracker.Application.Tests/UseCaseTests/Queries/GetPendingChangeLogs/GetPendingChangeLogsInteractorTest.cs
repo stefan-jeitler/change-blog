@@ -64,7 +64,7 @@ namespace ChangeTracker.Application.Tests.UseCaseTests.Queries.GetPendingChangeL
             var changeLogs = await interactor.ExecuteAsync(TestAccount.UserId, TestAccount.Product.Id);
 
             // assert
-            var expectedCreatedAt = DateTime.SpecifyKind(DateTime.Parse("2021-07-26T02:00:00"), DateTimeKind.Local);
+            var expectedCreatedAt = DateTime.SpecifyKind(DateTime.Parse("2021-07-26T02:00:00"), DateTimeKind.Unspecified);
             changeLogs.ProductId.Should().Be(TestAccount.Product.Id);
             changeLogs.ChangeLogs.Should().HaveCount(1);
             changeLogs.ChangeLogs.Should().ContainSingle(x => x.CreatedAt.LocalDateTime == expectedCreatedAt);

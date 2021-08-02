@@ -6,7 +6,8 @@ open Dapper
 let inline (=>) a b = a, box b
 
 let tableExists (dbConnection: IDbConnection) (tableName: string) =
-    let tableExistsSql = """
+    let tableExistsSql =
+        """
         SELECT EXISTS (
             SELECT FROM information_schema.tables
             WHERE table_name = @tableName
@@ -18,7 +19,8 @@ let tableExists (dbConnection: IDbConnection) (tableName: string) =
     dbConnection.ExecuteScalar<bool>(tableExistsSql, parameters)
 
 let constraintExists (dbConnection: IDbConnection) (constraintName: string) =
-    let constraintExistsSql = """
+    let constraintExistsSql =
+        """
         SELECT EXISTS(SELECT NULL
         FROM information_schema.constraint_column_usage
         WHERE CONSTRAINT_NAME = @constraintName)

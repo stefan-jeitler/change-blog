@@ -3,7 +3,8 @@ module ProductViews
 open System.Data
 open Dapper
 
-let private createProductUserRolesViewSql = """
+let private createProductUserRolesViewSql =
+    """
     CREATE OR REPLACE VIEW product_user_roles AS
     select p.account_id,
             (select name from account where id = p.account_id) as account_name,

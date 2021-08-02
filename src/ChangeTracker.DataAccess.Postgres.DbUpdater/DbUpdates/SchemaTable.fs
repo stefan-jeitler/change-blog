@@ -3,7 +3,8 @@ module SchemaTable
 open System.Data
 open Dapper
 
-let private createSchemaSql = """
+let private createSchemaSql =
+    """
     CREATE TABLE IF NOT EXISTS schema_version
     (
         version INT NOT NULL,

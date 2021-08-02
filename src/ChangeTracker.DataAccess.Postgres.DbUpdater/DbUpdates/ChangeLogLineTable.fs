@@ -3,7 +3,8 @@
 open System.Data
 open Dapper
 
-let private createLineSql = """
+let private createLineSql =
+    """
     CREATE TABLE IF NOT EXISTS changelog_line
     (
         id UUID CONSTRAINT changelogline_id_pkey PRIMARY KEY,
@@ -22,15 +23,17 @@ let private createLineSql = """
      )
     """
 
-let private addPartialUniqueIndexOnProductIdVersionIdTextDeletedAtSql = """
+let private addPartialUniqueIndexOnProductIdVersionIdTextDeletedAtSql =
+    """
         CREATE UNIQUE INDEX IF NOT EXISTS changelogline_productid_versionid_text_deletedat_unique
             ON changelog_line (product_id, coalesce(version_id, '00000000-0000-0000-0000-000000000000'), LOWER("text"),
                                (deleted_at is null)) where deleted_at is null
     """
 
-let private addPartialUniqueIndexOnProductIdVersionIdPositionDeletedAtSql = """
-        CREATE UNIQUE INDEX IF NOT EXISTS changelogline_productid_versionid_position_deletedat_unique 
-        ON changelog_line (product_id, coalesce(version_id, '00000000-0000-0000-0000-000000000000'), position, ((deleted_at IS NULL))) 
+let private addPartialUniqueIndexOnProductIdVersionIdPositionDeletedAtSql =
+    """
+        CREATE UNIQUE INDEX IF NOT EXISTS changelogline_productid_versionid_position_deletedat_unique
+        ON changelog_line (product_id, coalesce(version_id, '00000000-0000-0000-0000-000000000000'), position, ((deleted_at IS NULL)))
         WHERE (deleted_at IS NULL)
 """
 
@@ -44,4 +47,3 @@ let addPartialUniqueIndexOnProductIdVersionIdTextDeletedAt (dbConnection: IDbCon
 let addPartialUniqueIndexOnProductIdVersionIdPositionDeletedAt (dbConnection: IDbConnection) =
     dbConnection.Execute(addPartialUniqueIndexOnProductIdVersionIdPositionDeletedAtSql)
     |> ignore
-

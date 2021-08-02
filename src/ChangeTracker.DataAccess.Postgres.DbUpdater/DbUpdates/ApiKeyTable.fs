@@ -3,7 +3,8 @@
 open System.Data
 open Dapper
 
-let private createApiKeySql = """
+let private createApiKeySql =
+    """
         CREATE TABLE IF NOT EXISTS api_key
         (
         	id UUID CONSTRAINT apikey_id_pkey PRIMARY KEY,

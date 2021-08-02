@@ -49,7 +49,7 @@ let main _ =
     use dbConnection =
         new NpgsqlConnection(config.GetConnectionString("ChangeTrackerDb"))
 
-    printf "Run db updates ...\n"
+    printfn "Run db updates ...\n" 
 
     runDbUpdates dbConnection |> ignore
 

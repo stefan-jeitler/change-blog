@@ -3,7 +3,8 @@
 open System.Data
 open Dapper
 
-let private createVersioningSchemeSql = """
+let private createVersioningSchemeSql =
+    """
         CREATE TABLE IF NOT EXISTS versioning_scheme (
             id UUID CONSTRAINT versioningscheme_id_pkey PRIMARY KEY,
             "name" TEXT CONSTRAINT versioningscheme_name_nn NOT NULL,
@@ -18,7 +19,8 @@ let private createVersioningSchemeSql = """
         )
     """
 
-let private insertSemVer2SchemeSql = """
+let private insertSemVer2SchemeSql =
+    """
         INSERT INTO versioning_scheme VALUES ('4091b948-9bc5-43ee-9f98-df3d27853565',
         'SemVer 2.0.0',
         '^(0|[1-9]\d*)\.(0|[1-9]\d*)\.(0|[1-9]\d*)(?:-((?:0|[1-9]\d*|\d*[a-zA-Z-][0-9a-zA-Z-]*)(?:\.(?:0|[1-9]\d*|\d*[a-zA-Z-][0-9a-zA-Z-]*))*))?(?:\+([0-9a-zA-Z-]+(?:\.[0-9a-zA-Z-]+)*))?$',
@@ -31,7 +33,8 @@ let private insertSemVer2SchemeSql = """
         DO NOTHING
     """
 
-let private addUniqueIndexOnNameAccountIdDeletedAtSql = """
+let private addUniqueIndexOnNameAccountIdDeletedAtSql =
+    """
          CREATE UNIQUE INDEX IF NOT EXISTS versioningscheme_name_accountId_deleted_unique
          on versioning_scheme (Lower("name"), account_id, (deleted_at is null)) where deleted_at is null
     """

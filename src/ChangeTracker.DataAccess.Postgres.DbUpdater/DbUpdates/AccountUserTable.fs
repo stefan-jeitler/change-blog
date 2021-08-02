@@ -3,7 +3,8 @@
 open System.Data
 open Dapper
 
-let private createAccountUserSql = """
+let private createAccountUserSql =
+    """
 		CREATE TABLE IF NOT EXISTS account_user
 		(
 			account_id UUID CONSTRAINT accountuser_accountid_nn NOT NULL,
@@ -17,7 +18,8 @@ let private createAccountUserSql = """
 		)
     """
 
-let private createIndexOnUserIdAndRoleIdSql = """
+let private createIndexOnUserIdAndRoleIdSql =
+    """
 		CREATE INDEX IF NOT EXISTS accountuser_userid_roleid_idx on account_user(user_id, role_id)
 	"""
 
@@ -25,6 +27,6 @@ let create (dbConnection: IDbConnection) =
     dbConnection.Execute(createAccountUserSql)
     |> ignore
 
-let createIndexOnUserIdAndRoleId (dbConnection: IDbConnection) = 
+let createIndexOnUserIdAndRoleId (dbConnection: IDbConnection) =
     dbConnection.Execute(createIndexOnUserIdAndRoleIdSql)
     |> ignore

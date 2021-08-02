@@ -3,7 +3,8 @@ module AccountTable
 open System.Data
 open Dapper
 
-let private createAccountSql = """
+let private createAccountSql =
+    """
     CREATE TABLE IF NOT EXISTS account
     (
         id UUID CONSTRAINT account_id_pkey PRIMARY KEY,
@@ -13,7 +14,8 @@ let private createAccountSql = """
         created_at timestamp CONSTRAINT account_createdat_nn NOT NULL
     )"""
 
-let private createConstraintSql = """
+let private createConstraintSql =
+    """
     ALTER TABLE account ADD CONSTRAINT account_versioningschemeid_fkey
     	FOREIGN KEY (default_versioning_scheme_id)
     		REFERENCES versioning_scheme(id)

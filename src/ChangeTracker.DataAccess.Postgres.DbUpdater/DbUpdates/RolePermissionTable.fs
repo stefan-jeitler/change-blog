@@ -3,7 +3,8 @@
 open System.Data
 open Dapper
 
-let private createRolePermissionSql = """
+let private createRolePermissionSql =
+    """
 		CREATE TABLE IF NOT EXISTS role_permission
 		(
 			role_id UUID,
@@ -14,13 +15,15 @@ let private createRolePermissionSql = """
 		)
     """
 
-let private addPermissionAddOrUpdateProductSql = """
+let private addPermissionAddOrUpdateProductSql =
+    """
 		INSERT INTO role_permission
 		SELECT id, 'AddOrUpdateProduct', now() from role where name in ('ProductOwner', 'PlatformManager', 'Developer')
 		ON CONFLICT (role_id, permission) DO NOTHING
 	"""
 
-let private addPermissionViewChangeLogLinesSql = """
+let private addPermissionViewChangeLogLinesSql =
+    """
 		INSERT INTO role_permission
 		SELECT id, 'ViewChangeLogLines', now() FROM role where name <> 'DefaultUser'
 		ON CONFLICT (role_id, permission) DO NOTHING
@@ -78,41 +81,39 @@ let private addSomeViewPermissionsSql =
   	  ON CONFLICT (role_id, permission) DO NOTHING
 	""" ]
 
-let private addVersionPermissionsSql = [
-    """
+let private addVersionPermissionsSql =
+    [ """
 	  INSERT INTO role_permission
 	  SELECT id, 'ReleaseVersion', now() from role where name in ('ScrumMaster', 'ProductOwner', 'PlatformManager', 'Developer')
 	  ON CONFLICT (role_id, permission) DO NOTHING
    """
-    """
+      """
 	  INSERT INTO role_permission
 	  SELECT id, 'DeleteVersion', now() from role where name in ('ProductOwner', 'PlatformManager', 'Developer')
 	  ON CONFLICT (role_id, permission) DO NOTHING
-   """
-]
+   """ ]
 
-let private addChangeLogLinesPermissionSql = [
-    """
+let private addChangeLogLinesPermissionSql =
+    [ """
     INSERT INTO role_permission
     SELECT id, 'ViewPendingChangeLogLines', now() from role where name in ('ScrumMaster', 'ProductOwner', 'ProductManager', 'PlatformManager', 'Developer')
     ON CONFLICT (role_id, permission) DO NOTHING
    """
-    """
+      """
     INSERT INTO role_permission
     SELECT id, 'AddOrUpdateChangeLogLine', now() from role where name in ('ScrumMaster', 'ProductOwner', 'PlatformManager', 'Developer')
     ON CONFLICT (role_id, permission) DO NOTHING
    """
-    """
+      """
     INSERT INTO role_permission
     SELECT id, 'DeleteChangeLogLine', now() from role where name in ('ProductOwner', 'PlatformManager', 'Developer')
     ON CONFLICT (role_id, permission) DO NOTHING
    """
-    """
+      """
     INSERT INTO role_permission
     SELECT id, 'MoveChangeLogLines', now() from role where name in ('ProductOwner', 'PlatformManager', 'Developer')
     ON CONFLICT (role_id, permission) DO NOTHING
-   """
-]
+   """ ]
 
 let create (dbConnection: IDbConnection) =
     dbConnection.Execute(createRolePermissionSql)
@@ -136,12 +137,12 @@ let addSomeViewPermissions (dbConnection: IDbConnection) =
 
     insertPermissions addSomeViewPermissionsSql
 
-let addVersionPermissions (dbConnection: IDbConnection) = 
+let addVersionPermissions (dbConnection: IDbConnection) =
     addVersionPermissionsSql
     |> List.map (fun x -> dbConnection.Execute(x))
     |> ignore
 
-let addChangeLogLinePermissions (dbConnection: IDbConnection) = 
+let addChangeLogLinePermissions (dbConnection: IDbConnection) =
     addChangeLogLinesPermissionSql
     |> List.map (fun x -> dbConnection.Execute(x))
     |> ignore

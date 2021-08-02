@@ -3,7 +3,8 @@
 open System.Data
 open Dapper
 
-let private createProductUserRoleSql = """
+let private createProductUserRoleSql =
+    """
 		CREATE TABLE IF NOT EXISTS product_user
 		(
 			product_id UUID,

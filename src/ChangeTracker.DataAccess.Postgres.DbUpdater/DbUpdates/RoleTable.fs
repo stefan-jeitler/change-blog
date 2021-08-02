@@ -3,7 +3,8 @@
 open System.Data
 open Dapper
 
-let private createRoleSql = """
+let private createRoleSql =
+    """
         CREATE TABLE IF NOT EXISTS "role"
         (
         	id UUID CONSTRAINT role_id_pkey PRIMARY KEY,

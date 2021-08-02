@@ -5,7 +5,8 @@ open Dapper
 open System
 open Db
 
-let private createVersionSql = """
+let private createVersionSql =
+    """
 		CREATE TABLE IF NOT EXISTS "version"
 		(
 			id UUID CONSTRAINT version_id_pkey PRIMARY KEY,
@@ -21,18 +22,23 @@ let private createVersionSql = """
 		)
     """
 
-let private addUniqueIndexProductIdValueDeletedAtSql = """
+let private addUniqueIndexProductIdValueDeletedAtSql =
+    """
         CREATE UNIQUE INDEX IF NOT EXISTS version_productid_value_deletedatnull_unique
         ON "version" (product_id, lower(value), (deleted_at IS NULL)) WHERE deleted_at is null
     """
 
-let private addSearchVectorsColumnSql = """ALTER TABLE version ADD COLUMN IF NOT EXISTS "search_vectors" tsvector"""
+let private addSearchVectorsColumnSql =
+    """ALTER TABLE version ADD COLUMN IF NOT EXISTS "search_vectors" tsvector"""
 
-let private createSearchVectorsIndexSql = """CREATE INDEX IF NOT EXISTS version_searchvector_idx ON version USING gin (search_vectors)"""
+let private createSearchVectorsIndexSql =
+    """CREATE INDEX IF NOT EXISTS version_searchvector_idx ON version USING gin (search_vectors)"""
 
-let private dropTsVectorAggregateSql = "DROP AGGREGATE IF EXISTS tsvector_agg(tsvector)"
+let private dropTsVectorAggregateSql =
+    "DROP AGGREGATE IF EXISTS tsvector_agg(tsvector)"
 
-let private addTsVectorAggregateSql = """
+let private addTsVectorAggregateSql =
+    """
         CREATE AGGREGATE tsvector_agg(tsvector) (
             STYPE = pg_catalog.tsvector,
             SFUNC = pg_catalog.tsvector_concat,
@@ -40,7 +46,8 @@ let private addTsVectorAggregateSql = """
             )
     """
 
-let private createUpdateSearchVectorsProcedureSql = """
+let private createUpdateSearchVectorsProcedureSql =
+    """
         CREATE OR REPLACE PROCEDURE update_version_searchvectors_proc(versionId uuid)
         LANGUAGE SQL
         AS
@@ -65,7 +72,8 @@ let private createUpdateSearchVectorsProcedureSql = """
         $$
 	"""
 
-let private createUpdateAllSearchVectorsProcedureSql = """
+let private createUpdateAllSearchVectorsProcedureSql =
+    """
         CREATE OR REPLACE PROCEDURE update_all_version_searchvectors_proc()
         LANGUAGE plpgsql
         AS
@@ -81,7 +89,8 @@ let private createUpdateAllSearchVectorsProcedureSql = """
         $$
     """
 
-let private makeUpdateSearchVectorsProcedureLanguageAwareSql = """
+let private makeUpdateSearchVectorsProcedureLanguageAwareSql =
+    """
         CREATE OR REPLACE PROCEDURE update_version_searchvectors_proc(versionId uuid)
         LANGUAGE plpgsql
         AS
@@ -139,8 +148,8 @@ let addTextSearch (dbConnection: IDbConnection) =
       dropTsVectorAggregateSql
       createSearchVectorsIndexSql
       addTsVectorAggregateSql
-      createUpdateSearchVectorsProcedureSql 
-      createUpdateAllSearchVectorsProcedureSql]
+      createUpdateSearchVectorsProcedureSql
+      createUpdateAllSearchVectorsProcedureSql ]
     |> executeSql
 
     dbConnection.Execute("CALL update_all_version_searchvectors_proc()")
@@ -148,6 +157,6 @@ let addTextSearch (dbConnection: IDbConnection) =
 
     ()
 
-let makeUpdateSearchVectorsProcedureLanguageAware (dbConnection: IDbConnection) = 
+let makeUpdateSearchVectorsProcedureLanguageAware (dbConnection: IDbConnection) =
     dbConnection.Execute(makeUpdateSearchVectorsProcedureLanguageAwareSql)
     |> ignore

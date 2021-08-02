@@ -3,7 +3,8 @@
 open System.Data
 open Dapper
 
-let private createProductSql = """
+let private createProductSql =
+    """
         CREATE TABLE IF NOT EXISTS product
         (
         	id UUID CONSTRAINT product_id_pkey PRIMARY KEY,
@@ -22,7 +23,8 @@ let private createProductSql = """
 let private addUniqueIndexOnAccountIdAndNameSql =
     "CREATE UNIQUE INDEX IF NOT EXISTS product_accountid_name_unique ON product (account_id, LOWER(name))"
 
-let private addProductForAppChangesSql = """
+let private addProductForAppChangesSql =
+    """
         INSERT INTO product
         VALUES ('5701bbed-83f5-4551-afaf-9ac546636473',
                 'a00788cb-03f8-4a8c-84b6-756622550e8c',
@@ -31,26 +33,31 @@ let private addProductForAppChangesSql = """
                 '8e983811-7d39-4fe2-9373-1c6b0e4eb360',
                 null,
                 '2021-05-29 10:45:44.737828')
-        ON CONFLICT (id) do nothing 
+        ON CONFLICT (id) do nothing
     """
 
-let private addLanguageCodeColumnSql = """
+let private addLanguageCodeColumnSql =
+    """
         ALTER TABLE product
         ADD COLUMN IF NOT EXISTS language_code char(2)
     """
 
-let private addDefaultLanguageCodeSql = """ALTER TABLE product ALTER COLUMN language_code SET DEFAULT 'en'"""
+let private addDefaultLanguageCodeSql =
+    """ALTER TABLE product ALTER COLUMN language_code SET DEFAULT 'en'"""
 
-let private setLanguageForExistingEntriesSql = "UPDATE product set language_code = 'en' where language_code is null"
+let private setLanguageForExistingEntriesSql =
+    "UPDATE product set language_code = 'en' where language_code is null"
 
-let private addLanguageCodeForeignKeySql = """
+let private addLanguageCodeForeignKeySql =
+    """
         ALTER TABLE product
         ADD CONSTRAINT product_languagecode_fkey
         FOREIGN KEY (language_code)
         REFERENCES language(code)
     """
 
-let private addLanguageCodeNotNullConstraintSql = "ALTER TABLE product ALTER COLUMN language_code SET NOT NULL"
+let private addLanguageCodeNotNullConstraintSql =
+    "ALTER TABLE product ALTER COLUMN language_code SET NOT NULL"
 
 let create (dbConnection: IDbConnection) =
     dbConnection.Execute(createProductSql) |> ignore
@@ -62,18 +69,28 @@ let addUniqueIndexOnAccountIdAndName (dbConnection: IDbConnection) =
 let addProductForAppChanges (dbConnection: IDbConnection) =
     dbConnection.Execute(addProductForAppChangesSql)
     |> ignore
-    
-let addLanguageCodes (dbConnection: IDbConnection) = 
 
-    dbConnection.Execute(addLanguageCodeColumnSql) |> ignore
-    dbConnection.Execute(addDefaultLanguageCodeSql) |> ignore
-    dbConnection.Execute(setLanguageForExistingEntriesSql) |> ignore
+let addLanguageCodes (dbConnection: IDbConnection) =
 
-    let langCodeForeignKeyConstraintExists = Db.constraintExists dbConnection "product_languagecode_fkey"
+    dbConnection.Execute(addLanguageCodeColumnSql)
+    |> ignore
+
+    dbConnection.Execute(addDefaultLanguageCodeSql)
+    |> ignore
+
+    dbConnection.Execute(setLanguageForExistingEntriesSql)
+    |> ignore
+
+    let langCodeForeignKeyConstraintExists =
+        Db.constraintExists dbConnection "product_languagecode_fkey"
+
     match langCodeForeignKeyConstraintExists with
     | true -> ()
-    | false -> dbConnection.Execute(addLanguageCodeForeignKeySql) |> ignore
+    | false ->
+        dbConnection.Execute(addLanguageCodeForeignKeySql)
+        |> ignore
 
-    dbConnection.Execute(addLanguageCodeNotNullConstraintSql) |> ignore
+    dbConnection.Execute(addLanguageCodeNotNullConstraintSql)
+    |> ignore
 
     ()

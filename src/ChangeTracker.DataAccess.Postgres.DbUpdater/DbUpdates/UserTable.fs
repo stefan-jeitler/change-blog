@@ -3,7 +3,8 @@
 open System.Data
 open Dapper
 
-let private createUserSql = """
+let private createUserSql =
+    """
         CREATE TABLE IF NOT EXISTS "user"
         (
             id UUID CONSTRAINT user_id_pkey PRIMARY KEY,
@@ -20,7 +21,8 @@ let private createUserSql = """
 let private createLowerEmailIndexSql =
     """CREATE INDEX IF NOT EXISTS user_email_idx ON "user" (lower(email))"""
 
-let private addUserForDefaultVersioningSchemesSql = """
+let private addUserForDefaultVersioningSchemesSql =
+    """
         insert into "user" (id, email, first_name, last_name, timezone, deleted_at, created_at)
         values ('a17f556c-14c3-4bc2-bfa7-3c0811fd75b8',
                 'versioning.scheme@change-tracker.com',
@@ -29,16 +31,16 @@ let private addUserForDefaultVersioningSchemesSql = """
                 'Europe/Berlin',
                 null,
                 now())
-        on conflict (id) do nothing 
+        on conflict (id) do nothing
     """
 
-let private fixEmailUniqueConstraintSql = [
-    "ALTER TABLE \"user\" DROP CONSTRAINT IF EXISTS user_email_unique"
-    "DROP INDEX IF EXISTS user_email_idx"
-    "CREATE UNIQUE INDEX IF NOT EXISTS user_email_idx ON \"user\" (lower(email))"
-]
+let private fixEmailUniqueConstraintSql =
+    [ "ALTER TABLE \"user\" DROP CONSTRAINT IF EXISTS user_email_unique"
+      "DROP INDEX IF EXISTS user_email_idx"
+      "CREATE UNIQUE INDEX IF NOT EXISTS user_email_idx ON \"user\" (lower(email))" ]
 
-let private addUserForAppChangesSql = """
+let private addUserForAppChangesSql =
+    """
         insert into "user"
         values ('c1db054a-a07c-4712-9c69-86e0806a89a0',
                 'changes@change-tracker.com',
@@ -58,15 +60,15 @@ let create (dbConnection: IDbConnection) =
 
     ()
 
-let addUserForDefaultVersioningSchemes (dbConnection: IDbConnection) = 
+let addUserForDefaultVersioningSchemes (dbConnection: IDbConnection) =
     dbConnection.Execute(addUserForDefaultVersioningSchemesSql)
     |> ignore
-    
-let fixEmailUniqeConstraint (dbConnection: IDbConnection) = 
+
+let fixEmailUniqeConstraint (dbConnection: IDbConnection) =
     fixEmailUniqueConstraintSql
     |> List.map (fun x -> dbConnection.Execute(x))
     |> ignore
 
-let addUserForAppChanges (dbConnection: IDbConnection) = 
+let addUserForAppChanges (dbConnection: IDbConnection) =
     dbConnection.Execute(addUserForAppChangesSql)
     |> ignore

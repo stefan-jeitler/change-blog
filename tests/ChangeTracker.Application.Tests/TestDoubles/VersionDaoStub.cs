@@ -26,6 +26,11 @@ namespace ChangeTracker.Application.Tests.TestDoubles
             return Task.FromResult(Versions.TryFirst(x => x.Id == versionId));
         }
 
+        public Task<Maybe<ClVersion>> FindLatestAsync(Guid productId)
+        {
+            return Task.FromResult(Versions.OrderByDescending(x => x.CreatedAt).TryFirst());
+        }
+
         public Task<ClVersion> GetVersionAsync(Guid versionId)
         {
             return Task.FromResult(Versions.Single(x => x.Id == versionId));

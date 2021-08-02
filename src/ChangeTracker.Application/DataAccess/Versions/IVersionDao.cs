@@ -10,6 +10,7 @@ namespace ChangeTracker.Application.DataAccess.Versions
     {
         Task<Maybe<ClVersion>> FindVersionAsync(Guid productId, ClVersionValue versionValue);
         Task<Maybe<ClVersion>> FindVersionAsync(Guid versionId);
+        Task<Maybe<ClVersion>> FindLatestAsync(Guid productId);
         Task<ClVersion> GetVersionAsync(Guid versionId);
         Task<IList<ClVersion>> GetVersionsAsync(VersionQuerySettings querySettings);
         Task<Result<ClVersion, Conflict>> AddVersionAsync(ClVersion version);

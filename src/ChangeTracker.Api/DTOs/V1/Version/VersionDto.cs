@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using ChangeTracker.Api.DTOs.V1.ChangeLog;
 using ChangeTracker.Application.UseCases.Queries.GetVersions;
+using ChangeTracker.Application.UseCases.Queries.SharedModels;
 
 namespace ChangeTracker.Api.DTOs.V1.Version
 {

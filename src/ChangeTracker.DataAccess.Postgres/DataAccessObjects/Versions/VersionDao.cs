@@ -71,6 +71,25 @@ namespace ChangeTracker.DataAccess.Postgres.DataAccessObjects.Versions
                 : Maybe<ClVersion>.From(version);
         }
 
+        public async Task<Maybe<ClVersion>> FindLatestAsync(Guid productId)
+        {
+            var findVersionSql = $@"
+                {SelectVersion}
+                where v.product_id = @productId
+                order by v.created_at desc
+                fetch first 1 row only";    
+
+            var version = await _dbAccessor.DbConnection
+                .QuerySingleOrDefaultAsync<ClVersion>(findVersionSql, new
+                {
+                    productId
+                });
+
+            return version == default
+                ? Maybe<ClVersion>.None
+                : Maybe<ClVersion>.From(version);
+        }
+
         public async Task<ClVersion> GetVersionAsync(Guid versionId)
         {
             var version = await FindVersionAsync(versionId);

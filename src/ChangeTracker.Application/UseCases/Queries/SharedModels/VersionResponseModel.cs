@@ -1,8 +1,7 @@
 using System;
 using System.Collections.Generic;
-using ChangeTracker.Application.UseCases.Queries.SharedModels;
 
-namespace ChangeTracker.Application.UseCases.Queries.GetVersions
+namespace ChangeTracker.Application.UseCases.Queries.SharedModels
 {
     public class VersionResponseModel
     {

@@ -15,6 +15,7 @@ using ChangeTracker.Application.UseCases.Commands.AddOrUpdateVersion;
 using ChangeTracker.Application.UseCases.Commands.AddOrUpdateVersion.Models;
 using ChangeTracker.Application.UseCases.Commands.DeleteVersion;
 using ChangeTracker.Application.UseCases.Commands.ReleaseVersion;
+using ChangeTracker.Application.UseCases.Queries.GetLatestVersion;
 using ChangeTracker.Application.UseCases.Queries.GetVersions;
 using ChangeTracker.Domain.Authorization;
 using Microsoft.AspNetCore.Http;
@@ -77,6 +78,21 @@ namespace ChangeTracker.Api.Controllers.V1
             var versions = await _getVersions.ExecuteAsync(requestModel);
 
             return Ok(versions.Select(VersionDto.FromResponseModel));
+        }
+
+        [HttpGet("products/{productId:Guid}/versions/latest")]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(typeof(DefaultResponse), StatusCodes.Status404NotFound)]
+        [NeedsPermission(Permission.ViewVersions)]
+        public async Task<ActionResult<VersionDto>> GetLatestProductVersionAsync(
+            [FromServices] IGetLatestVersion getLatestVersion,
+            Guid productId)
+        {
+            var userId = HttpContext.GetUserId();
+            var presenter = new GetLatestVersionApiPresenter();
+            await getLatestVersion.ExecuteAsync(presenter, userId, productId);
+
+            return presenter.Response;
         }
 
         [HttpGet("products/{productId:Guid}/versions/{version}")]

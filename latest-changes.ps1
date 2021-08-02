@@ -45,5 +45,7 @@ function Publish-LatestChanges {
   catch {
     Write-Host "StatusCode:" $_.Exception.Response.StatusCode.value__
     Write-Host "StatusDescription:" $_.Exception.Response.StatusDescription
+
+    EXIT -1
   }
 }

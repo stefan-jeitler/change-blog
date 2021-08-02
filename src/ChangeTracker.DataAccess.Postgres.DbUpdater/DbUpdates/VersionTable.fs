@@ -129,6 +129,9 @@ let private makeUpdateSearchVectorsProcedureLanguageAwareSql =
         $$
     """
 
+let private dropUpdateAllVersionSearchVectorsProcedureSql = 
+    "drop procedure if exists update_all_version_searchvectors_proc()"
+
 let create (dbConnection: IDbConnection) =
     dbConnection.Execute(createVersionSql) |> ignore
 
@@ -160,3 +163,7 @@ let addTextSearch (dbConnection: IDbConnection) =
 let makeUpdateSearchVectorsProcedureLanguageAware (dbConnection: IDbConnection) =
     dbConnection.Execute(makeUpdateSearchVectorsProcedureLanguageAwareSql)
     |> ignore
+
+let dropUpdateAllVersionSearchVectorsProcedure (dbConnection: IDbConnection) = 
+  dbConnection.Execute(dropUpdateAllVersionSearchVectorsProcedureSql)
+  |> ignore

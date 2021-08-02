@@ -1,6 +1,12 @@
 {
-  "version": "1.0.0-dev.38",
+  "version": "1.0.0-dev.39",
   "name": "",
-  "changeLogLines": [],
+  "changeLogLines": [
+    {
+      "text": "New endpoint added to get the latest product version.",
+      "labels": ["Added", "VersionEndpoints"],
+      "issues":  [] 
+    }
+  ],
   "releaseImmediately": true
 }

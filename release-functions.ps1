@@ -11,7 +11,7 @@ function Create-ReleaseConfig {
   
   New-Item -ItemType Directory -Force -Path $OutputDir
   Copy-Item ./release-functions.ps1 $OutputDir
-  Write-Host "'release-config' artifact created."
+  Write-Host "'release config' artifact created."
 
   $latestChanges = Get-Content -Raw -Path ./latest-changes.json | ConvertFrom-Json -AsHashtable
   $latestChanges.Add("version", $Version)

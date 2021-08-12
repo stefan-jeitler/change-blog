@@ -5,7 +5,7 @@ open DbUpdates
 
 let executeUpdate dbConnection dbUpdate =
     let version = dbUpdate.Version
-    printf $"Update database to Version %i{version}\n"
+    printf $"Update database to Version %s{version.ToString()}\n"
     dbUpdate.Update dbConnection
     Db.updateSchemaVersion dbConnection version
 

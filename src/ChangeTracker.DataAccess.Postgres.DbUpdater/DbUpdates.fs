@@ -1,49 +1,50 @@
 module DbUpdates
 
 open System.Data
+open Semver
 
 type DbUpdate = { 
-    Version: int
+    Version: SemVersion
     Update: IDbConnection -> unit
 }
 
 let dbUpdates: DbUpdate list = [
-    { Version = 0; Update = SchemaTable.create }
-    { Version = 1; Update = AccountTable.create }
-    { Version = 2; Update = AccountTable.addPartialUniqueIndexOnNameAndDeletedAt}
-    { Version = 3; Update = UserTable.create }
-    { Version = 4; Update = UserTable.addUserForDefaultVersioningSchemes}
-    { Version = 5; Update = VersioningSchemeTable.create }
-    { Version = 6; Update = AccountTable.addVersioningSchemeForeignKey }
-    { Version = 7; Update = VersioningSchemeTable.addSemVer2DefaultScheme }
-    { Version = 8; Update = RoleTable.create }
-    { Version = 9; Update = RolePermissionTable.create } 
-    { Version = 10; Update = ApiKeyTable.create }
-    { Version = 11; Update = AccountUserTable.create }
-    { Version = 12; Update = ProductTable.create }
-    { Version = 13; Update = ProductTable.addUniqueIndexOnAccountIdAndName}
-    { Version = 14; Update = ProductUserTable.create}
-    { Version = 15; Update = VersionTable.create}
-    { Version = 16; Update = VersionTable.addUniqueIndexProductIdValueDeletedAt}
-    { Version = 17; Update = ChangeLogLineTable.create}
-    { Version = 18; Update = ChangeLogLineTable.addPartialUniqueIndexOnProductIdVersionIdTextDeletedAt}
-    { Version = 19; Update = Functions.createGuidFunction}
-    { Version = 20; Update = RoleTable.addBasicRoles}
-    { Version = 21; Update = VersioningSchemeTable.addUniqueIndexOnNameAccountIdDeletedAt}
-    { Version = 22; Update = RolePermissionTable.addPermissionAddOrUpdateProduct}
-    { Version = 23; Update = RolePermissionTable.addPermissionViewChangeLogLines}
-    { Version = 24; Update = RolePermissionTable.addSomeViewPermissions}
-    { Version = 25; Update = AccountViews.createAccountUserRolesView}
-    { Version = 26; Update = ProductViews.createProductUserRolesView}
-    { Version = 27; Update = UserTable.fixEmailUniqeConstraint}
-    { Version = 28; Update = VersionTable.addTextSearch}
-    { Version = 29; Update = AccountUserTable.createIndexOnUserIdAndRoleId}
-    { Version = 30; Update = RolePermissionTable.addVersionPermissions}
-    { Version = 31; Update = UserTable.addUserForAppChanges}
-    { Version = 32; Update = ProductTable.addProductForAppChanges}
-    { Version = 33; Update = RolePermissionTable.addChangeLogLinePermissions}
-    { Version = 34; Update = LanguageTable.addLanguageTableWithBasicLanguages}
-    { Version = 35; Update = ProductTable.addLanguageCodes}
-    { Version = 36; Update = VersionTable.makeUpdateSearchVectorsProcedureLanguageAware}
-    { Version = 37; Update = ChangeLogLineTable.addPartialUniqueIndexOnProductIdVersionIdPositionDeletedAt}
-    { Version = 38; Update = VersionTable.dropUpdateAllVersionSearchVectorsProcedure}]
+    { Version = SemVersion.Parse("1.0.0"); Update = SchemaTable.create }
+    { Version = SemVersion.Parse("1.1.0"); Update = AccountTable.create }
+    { Version = SemVersion.Parse("2.0.0"); Update = AccountTable.addPartialUniqueIndexOnNameAndDeletedAt}
+    { Version = SemVersion.Parse("2.1.0"); Update = UserTable.create }
+    { Version = SemVersion.Parse("2.2.0"); Update = UserTable.addUserForDefaultVersioningSchemes}
+    { Version = SemVersion.Parse("2.3.0"); Update = VersioningSchemeTable.create }
+    { Version = SemVersion.Parse("3.0.0"); Update = AccountTable.addVersioningSchemeForeignKey }
+    { Version = SemVersion.Parse("3.0.1"); Update = VersioningSchemeTable.addSemVer2DefaultScheme }
+    { Version = SemVersion.Parse("3.1.0"); Update = RoleTable.create }
+    { Version = SemVersion.Parse("3.2.0"); Update = RolePermissionTable.create } 
+    { Version = SemVersion.Parse("3.3.0"); Update = ApiKeyTable.create }
+    { Version = SemVersion.Parse("3.4.0"); Update = AccountUserTable.create }
+    { Version = SemVersion.Parse("3.5.0"); Update = ProductTable.create }
+    { Version = SemVersion.Parse("4.0.0"); Update = ProductTable.addUniqueIndexOnAccountIdAndName}
+    { Version = SemVersion.Parse("4.1.0"); Update = ProductUserTable.create}
+    { Version = SemVersion.Parse("4.2.0"); Update = VersionTable.create}
+    { Version = SemVersion.Parse("5.0.0"); Update = VersionTable.addUniqueIndexProductIdValueDeletedAt}
+    { Version = SemVersion.Parse("5.1.0"); Update = ChangeLogLineTable.create}
+    { Version = SemVersion.Parse("6.0.0"); Update = ChangeLogLineTable.addPartialUniqueIndexOnProductIdVersionIdTextDeletedAt}
+    { Version = SemVersion.Parse("6.1.0"); Update = Functions.createGuidFunction}
+    { Version = SemVersion.Parse("6.2.0"); Update = RoleTable.addBasicRoles}
+    { Version = SemVersion.Parse("7.0.0"); Update = VersioningSchemeTable.addUniqueIndexOnNameAccountIdDeletedAt}
+    { Version = SemVersion.Parse("7.1.0"); Update = RolePermissionTable.addPermissionAddOrUpdateProduct}
+    { Version = SemVersion.Parse("7.2.0"); Update = RolePermissionTable.addPermissionViewChangeLogLines}
+    { Version = SemVersion.Parse("7.3.0"); Update = RolePermissionTable.addSomeViewPermissions}
+    { Version = SemVersion.Parse("7.4.0"); Update = AccountViews.createAccountUserRolesView}
+    { Version = SemVersion.Parse("7.5.0"); Update = ProductViews.createProductUserRolesView}
+    { Version = SemVersion.Parse("8.0.0"); Update = UserTable.fixEmailUniqeConstraint}
+    { Version = SemVersion.Parse("8.1.0"); Update = VersionTable.addTextSearch}
+    { Version = SemVersion.Parse("8.2.0"); Update = AccountUserTable.createIndexOnUserIdAndRoleId}
+    { Version = SemVersion.Parse("8.3.0"); Update = RolePermissionTable.addVersionPermissions}
+    { Version = SemVersion.Parse("8.4.0"); Update = UserTable.addUserForAppChanges}
+    { Version = SemVersion.Parse("8.5.0"); Update = ProductTable.addProductForAppChanges}
+    { Version = SemVersion.Parse("8.6.0"); Update = RolePermissionTable.addChangeLogLinePermissions}
+    { Version = SemVersion.Parse("8.7.0"); Update = LanguageTable.addLanguageTableWithBasicLanguages}
+    { Version = SemVersion.Parse("8.8.0"); Update = ProductTable.addLanguageCodes}
+    { Version = SemVersion.Parse("9.0.0"); Update = VersionTable.makeUpdateSearchVectorsProcedureLanguageAware}
+    { Version = SemVersion.Parse("10.0.0"); Update = ChangeLogLineTable.addPartialUniqueIndexOnProductIdVersionIdPositionDeletedAt}
+    { Version = SemVersion.Parse("11.0.0"); Update = VersionTable.dropUpdateAllVersionSearchVectorsProcedure}]

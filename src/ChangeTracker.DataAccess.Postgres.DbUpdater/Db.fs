@@ -2,6 +2,7 @@ module Db
 
 open System.Data
 open Dapper
+open Semver
 
 let inline (=>) a b = a, box b
 
@@ -37,19 +38,20 @@ let getLatestSchemaVersion (dbConnection: IDbConnection) =
         tableExists dbConnection "schema_version"
 
     match tableExists with
-    | false -> -1
+    | false -> SemVersion.Parse("0.0.0")
     | true ->
         let versionSql = "SELECT version FROM schema_version"
-        dbConnection.ExecuteScalar<int>(versionSql)
+        let latestVersion = dbConnection.ExecuteScalar<string>(versionSql)
+        SemVersion.Parse(latestVersion)
 
-let updateSchemaVersion (dbConnection: IDbConnection) (version: int) =
+let updateSchemaVersion (dbConnection: IDbConnection) (version: SemVersion) =
     let updateSchemaVersionSql =
         "UPDATE schema_version SET version = @version, updated_at = now()"
 
     let insertSchemaVersionSql =
         "INSERT INTO schema_version (version, updated_at) VALUES(@version, now())"
 
-    let param = dict [ "version" => version ]
+    let param = dict [ "version" => version.ToString() ]
 
     let c =
         dbConnection.Execute(updateSchemaVersionSql, param)

@@ -73,6 +73,15 @@ stages:
     - job: prepare_release
       displayName: Prepare Release
       steps:
+      - task: DotNetCoreCLI@2
+        displayName: Build DbUpdater
+        inputs:
+          command: 'build'
+          projects: './src/ChangeTracker.DataAccess.Postgres.DbUpdater/ChangeTracker.DataAccess.Postgres.DbUpdater.fsproj'
+          arguments: >-
+            --configuration Release 
+            -p:Version=$(Version) 
+            --output $(Build.SourcesDirectory)/dbUpdater
       - task: PowerShell@2
         displayName: Create Release Config
         inputs:
@@ -82,7 +91,7 @@ stages:
             Create-ReleaseConfig `
                 -Version $(Version) `
                 -OutputDir ./release-config `
-                -DbUpdaterProjectFile ./src/ChangeTracker.DataAccess.Postgres.DbUpdater/ChangeTracker.DataAccess.Postgres.DbUpdater.fsproj
+                -DbUpdaterDir $(Build.SourcesDirectory)/dbUpdater
           pwsh: true
       - task: PublishPipelineArtifact@1
         displayName: Publish Release Config Artifact
@@ -115,15 +124,6 @@ stages:
       displayName: Publish DbUpdater
       dependsOn: prepare_release
       steps:
-      - task: DotNetCoreCLI@2
-        displayName: Build
-        inputs:
-          command: 'build'
-          projects: './src/ChangeTracker.DataAccess.Postgres.DbUpdater/ChangeTracker.DataAccess.Postgres.DbUpdater.fsproj'
-          arguments: >-
-            --configuration Release 
-            -p:Version=$(Version) 
-            --output $(Build.SourcesDirectory)/dbUpdater
       - task: PublishPipelineArtifact@1
         displayName: Publish DbUpdater Artifact
         inputs:

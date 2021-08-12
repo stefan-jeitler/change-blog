@@ -6,7 +6,7 @@ function Create-ReleaseConfig {
     [Parameter(Position = 1, Mandatory = $true)]
     [string]$OutputDir,
     [Parameter(Position = 2, Mandatory = $true)]
-    [string]$DbUpdaterProjectFile
+    [string]$DbUpdaterDir
   )
   
   New-Item -ItemType Directory -Force -Path $OutputDir

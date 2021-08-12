@@ -1,11 +1,12 @@
 ﻿
-function Approve-LatestVersion {
+function Create-LatestChanges {
   param (  
     [Parameter(Position = 0, Mandatory = $true)]
     [string]$Version
   )
   
   $latestChanges = Get-Content -Raw -Path ./latest-changes.json | ConvertFrom-Json
+
 
   if ($latestChanges.Version -ne $Version) {
     Write-Error "Version mismatch: latest-changes.json version $($latestChanges.version), release version $Version"

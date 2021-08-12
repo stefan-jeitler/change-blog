@@ -88,7 +88,7 @@ stages:
           script: |
             New-Item -ItemType Directory -Force -Path ./changes
             Move-Item ./release-functions.ps1 ./changes
-            Move-Item ./latest-changes.json ./changes
+            Move-Item ./release-functions.json ./changes
             Write-Host "'changes' artifact created."
           pwsh: true
       - task: PublishPipelineArtifact@1

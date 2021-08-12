@@ -1,25 +1,20 @@
 ﻿
-function Create-ReleaseConfig {
+function Create-LatestChanges {
   param (  
     [Parameter(Position = 0, Mandatory = $true)]
     [string]$Version,
     [Parameter(Position = 1, Mandatory = $true)]
-    [string]$OutputDir,
-    [Parameter(Position = 2, Mandatory = $true)]
-    [string]$DbUpdaterDir
+    [string]$OutputDir
   )
   
   New-Item -ItemType Directory -Force -Path $OutputDir
-  Copy-Item ./release-functions.ps1 $OutputDir
-  Write-Host "'release config' artifact created."
+  Write-Host "latest changes artifact created."
 
   $latestChanges = Get-Content -Raw -Path ./latest-changes.json | ConvertFrom-Json -AsHashtable
   $latestChanges.Add("version", $Version)
 
   $latestChanges | ConvertTo-Json -depth 100 | Out-File (Join-Path $OutputDir "latest-changes.json")
   Write-Host "Latest changes created in $OutputDir"
-
-
 }
 
 function Publish-LatestChanges {

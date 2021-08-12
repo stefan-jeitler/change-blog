@@ -9,7 +9,22 @@ let executeUpdate dbConnection dbUpdate =
     dbUpdate.Update dbConnection
     Db.updateSchemaVersion dbConnection version
 
+let findDuplicates (updates: DbUpdate list) =
+    updates
+    |> List.groupBy (fun x -> x.Version)
+    |> List.choose
+        (function
+        | v, u when u.Length > 1 -> Some v
+        | _ -> None)
+
 let runDbUpdates dbConnection =
+    let duplicates =
+        findDuplicates dbUpdates |> List.map string
+
+    match duplicates with
+    | [] -> ()
+    | d -> failwith (sprintf "Duplicate updates exist. Version(s) %s" (d |> String.concat ", "))
+
     let latestSchemaVersion = Db.getLatestSchemaVersion dbConnection
     let dbName = Db.getDbName dbConnection
     printf $"Selected database: %s{dbName}\n"
@@ -20,23 +35,8 @@ let runDbUpdates dbConnection =
     |> Seq.toList
     |> ignore
 
-let findDuplicates (updates: DbUpdate list) =
-    updates
-    |> List.groupBy (fun x -> x.Version)
-    |> List.choose
-        (function
-        | v, u when u.Length > 1 -> Some v
-        | _ -> None)
-
 [<EntryPoint>]
 let main _ =
-
-    let duplicates =
-        findDuplicates dbUpdates |> List.map string
-
-    match duplicates with
-    | [] -> ()
-    | d -> failwith (sprintf "Duplicate updates exist. Version(s) %s" (d |> String.concat ", "))
 
     let config =
         ConfigurationBuilder()

@@ -89,21 +89,21 @@ stages:
           artifact: 'DbUpdater'
           publishLocation: 'pipeline'
       - task: PowerShell@2
-        displayName: Create Release Config
+        displayName: Create Latest Changes
         inputs:
           targetType: inline
           script: |
-            . ./release-functions.ps1
-            Create-ReleaseConfig `
+            . ./latest-changes.ps1
+            Create-LatestChanges `
                 -Version $(Version) `
-                -OutputDir ./releaseConfig `
-                -DbUpdaterDir $(Build.SourcesDirectory)/dbUpdater
+                -OutputDir ./latestChanges
+            Move-Item ./latest-changes.ps1 ./latestChanges
           pwsh: true
       - task: PublishPipelineArtifact@1
-        displayName: Publish Release Config Artifact
+        displayName: Publish Latest Changes Artifact
         inputs:
-          targetPath: '$(Build.SourcesDirectory)/releaseConfig'
-          artifact: 'ReleaseConfig'
+          targetPath: '$(Build.SourcesDirectory)/latestChanges'
+          artifact: 'LatestChanges'
           publishLocation: 'pipeline'
 
     - job: publish_image

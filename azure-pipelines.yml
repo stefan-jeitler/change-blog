@@ -78,7 +78,7 @@ stages:
         inputs:
           targetType: inline
           script: |
-            . ./latest-changes.ps1
+            . ./release-functions.ps1
             Approve-LatestVersion -Version $(Version)
           pwsh: true
       - task: PowerShell@2
@@ -87,7 +87,7 @@ stages:
           targetType: inline
           script: |
             New-Item -ItemType Directory -Force -Path ./changes
-            Move-Item ./latest-changes.ps1 ./changes
+            Move-Item ./release-functions.ps1 ./changes
             Move-Item ./latest-changes.json ./changes
             Write-Host "'changes' artifact created."
           pwsh: true

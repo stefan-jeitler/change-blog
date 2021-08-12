@@ -33,7 +33,7 @@ function Publish-LatestChanges {
   $parameters = @{
     Method      = "POST"
     Uri         = $endpoint
-    Headers     = @{"X-API-KEY" = $ApiKey }
+    Headers     = @{"X-API-KEY" = $ApiKey } 
     ContentType = "application/json"
     Body        = $latestChanges
   }
@@ -44,7 +44,6 @@ function Publish-LatestChanges {
   }
   catch {
     Write-Host "StatusCode:" $_.Exception.Response.StatusCode.value__
-    Write-Host "StatusDescription:" $_.Exception.Response.StatusDescription
 
     EXIT -1
   }

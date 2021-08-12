@@ -82,6 +82,12 @@ stages:
             --configuration Release 
             -p:Version=$(Version) 
             --output $(Build.SourcesDirectory)/dbUpdater
+      - task: PublishPipelineArtifact@1
+        displayName: Publish DbUpdater Artifact
+        inputs:
+          targetPath: '$(Build.SourcesDirectory)/dbUpdater'
+          artifact: 'DbUpdater'
+          publishLocation: 'pipeline'
       - task: PowerShell@2
         displayName: Create Release Config
         inputs:
@@ -119,14 +125,3 @@ stages:
             -RegistryUsername $(AZ_SP_Deploy_ClientId) 
             -RegistryPwd '$(AZ_SP_Deploy_Secret)'
           pwsh: true
-
-    - job: publish_dbUpdater
-      displayName: Publish DbUpdater
-      dependsOn: prepare_release
-      steps:
-      - task: PublishPipelineArtifact@1
-        displayName: Publish DbUpdater Artifact
-        inputs:
-          targetPath: '$(Build.SourcesDirectory)/dbUpdater'
-          artifact: 'DbUpdater'
-          publishLocation: 'pipeline'

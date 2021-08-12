@@ -74,28 +74,21 @@ stages:
       displayName: Prepare Release
       steps:
       - task: PowerShell@2
-        displayName: Approve Version
+        displayName: Create Release Config
         inputs:
           targetType: inline
           script: |
             . ./release-functions.ps1
-            Approve-LatestVersion -Version $(Version)
-          pwsh: true
-      - task: PowerShell@2
-        displayName: Create Changes Artifacts
-        inputs:
-          targetType: inline
-          script: |
-            New-Item -ItemType Directory -Force -Path ./changes
-            Move-Item ./release-functions.ps1 ./changes
-            Move-Item ./release-functions.json ./changes
-            Write-Host "'changes' artifact created."
+            Create-ReleaseConfig `
+                -Version $(Version) `
+                -OutputDir ./release-config `
+                -DbUpdaterProjectFile ./src/ChangeTracker.DataAccess.Postgres.DbUpdater/ChangeTracker.DataAccess.Postgres.DbUpdater.fsproj
           pwsh: true
       - task: PublishPipelineArtifact@1
-        displayName: Publish Changes Artifacts
+        displayName: Publish Release Config Artifact
         inputs:
-          targetPath: '$(Build.SourcesDirectory)/changes'
-          artifact: 'LatestChanges'
+          targetPath: '$(Build.SourcesDirectory)/release-config'
+          artifact: 'ReleaseConfig'
           publishLocation: 'pipeline'
 
     - job: publish_image

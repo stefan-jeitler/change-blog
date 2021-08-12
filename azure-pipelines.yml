@@ -70,8 +70,8 @@ stages:
 
   jobs:
 
-    - job: prepare_changeslogs
-      displayName: Prepare ChangeLogs
+    - job: prepare_release
+      displayName: Prepare Release
       steps:
       - task: PowerShell@2
         displayName: Approve Version
@@ -100,7 +100,7 @@ stages:
 
     - job: publish_image
       displayName: Publish Image
-      dependsOn: prepare_changeslogs
+      dependsOn: prepare_release
       steps:
       - task: PowerShell@2
         displayName: Build & Push Image
@@ -120,7 +120,7 @@ stages:
 
     - job: publish_dbUpdater
       displayName: Publish DbUpdater
-      dependsOn: prepare_changeslogs
+      dependsOn: prepare_release
       steps:
       - task: DotNetCoreCLI@2
         displayName: Build

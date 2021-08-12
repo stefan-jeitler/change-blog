@@ -3,6 +3,7 @@ using System.Data;
 using System.Threading.Tasks;
 using Dapper;
 using Microsoft.Extensions.Logging;
+using Semver;
 
 namespace ChangeTracker.DataAccess.Postgres
 {
@@ -17,17 +18,24 @@ namespace ChangeTracker.DataAccess.Postgres
             _logger = logger;
         }
 
-        private static int AppSchemaVersion => 37;
+        private static SemVersion AppSchemaVersion => SemVersion.Parse("11.0.0");
 
         public async Task ApproveAsync()
         {
             using var dbConnection = _acquireDbConnection();
             const string schemaVersionSql = "SELECT version from schema_Version";
-            var dbSchemaVersion = await dbConnection.ExecuteScalarAsync<int>(schemaVersionSql);
+            var dbSchemaVersionValue = await dbConnection.ExecuteScalarAsync<string>(schemaVersionSql);
+            var dbSchemaVersion = SemVersion.Parse(dbSchemaVersionValue);
 
-            if (AppSchemaVersion != dbSchemaVersion)
+            if (AppSchemaVersion.Major != dbSchemaVersion.Major)
+            {
+                throw new Exception($"Schema version mismatch: App {AppSchemaVersion}; Database {dbSchemaVersion}");
+            }
+            else if (AppSchemaVersion != dbSchemaVersion)
+            {
                 _logger.LogWarning("Schema version mismatch: App {AppSchemaVersion}; Database {dbSchemaVersion}",
                     AppSchemaVersion, dbSchemaVersion);
+            }
         }
     }
 }

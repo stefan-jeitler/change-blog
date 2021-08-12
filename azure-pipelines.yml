@@ -96,13 +96,13 @@ stages:
             . ./release-functions.ps1
             Create-ReleaseConfig `
                 -Version $(Version) `
-                -OutputDir ./release-config `
+                -OutputDir ./releaseConfig `
                 -DbUpdaterDir $(Build.SourcesDirectory)/dbUpdater
           pwsh: true
       - task: PublishPipelineArtifact@1
         displayName: Publish Release Config Artifact
         inputs:
-          targetPath: '$(Build.SourcesDirectory)/release-config'
+          targetPath: '$(Build.SourcesDirectory)/releaseConfig'
           artifact: 'ReleaseConfig'
           publishLocation: 'pipeline'
 

@@ -13,6 +13,8 @@ let detectBreakingChanges (logger: Logger) (dbConnection: IDbConnection) =
         |> List.map (fun x -> x.Version)
         |> List.max
 
+    failwith "something went badly wrong."
+
     logger.Information("Selected database: {dbName}", dbName)
     logger.Verbose("Latest db version: {dbVersion}", latestDbVersion.ToString())
     logger.Verbose("Latest update version: {updatesVersion}", latestDbUpdatesVersion.ToString())

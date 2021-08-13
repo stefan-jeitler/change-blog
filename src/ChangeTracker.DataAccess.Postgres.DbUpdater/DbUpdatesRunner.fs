@@ -47,6 +47,5 @@ let runDbUpdates (logger: Logger) dbConnection =
         runUniqueUpdates logger dbConnection dbUpdates
         0
     | d ->
-        let duplicateVersions = d |> String.concat ", "
-        logger.Error("There are duplicate updates. Version(s) {duplicates}", duplicateVersions)
+        logger.Error("There are duplicate updates. Version(s) {duplicates}", (d |> String.concat ", "))
         -1

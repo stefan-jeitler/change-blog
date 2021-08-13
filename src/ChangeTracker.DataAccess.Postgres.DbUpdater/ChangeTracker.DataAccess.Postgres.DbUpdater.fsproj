@@ -30,6 +30,8 @@
     <Compile Include="DbUpdates/VersioningSchemeTable.fs" />
     <Compile Include="DbUpdates\VersionTable.fs" />
     <Compile Include="DbUpdates.fs" />
+    <Compile Include="DbUpdatesRunner.fs" />
+    <Compile Include="DbUpdatesAnalysis.fs" />
     <Compile Include="Program.fs" />
   </ItemGroup>
 
@@ -41,6 +43,9 @@
     <PackageReference Include="Microsoft.Extensions.Configuration.UserSecrets" Version="5.0.0" />
     <PackageReference Include="Microsoft.Extensions.Configuration.EnvironmentVariables" Version="5.0.0" />
     <PackageReference Include="semver" Version="2.0.6" />
+    <PackageReference Include="System.CommandLine" Version="2.0.0-beta1.21308.1" />
+    <PackageReference Include="Serilog" Version="2.10.1-dev-01343" />
+    <PackageReference Include="Serilog.Sinks.Console" Version="4.0.1-dev-00876" />
   </ItemGroup>
 
   <ItemGroup>

@@ -1,42 +1,66 @@
 open System
+open System.Data
 open Microsoft.Extensions.Configuration
 open Npgsql
-open DbUpdates
+open System.CommandLine
+open System.CommandLine.Invocation
+open Serilog
+open Serilog.Events
 
-let executeUpdate dbConnection dbUpdate =
-    let version = dbUpdate.Version
-    printf $"Update database to Version %s{version.ToString()}\n"
-    dbUpdate.Update dbConnection
-    Db.updateSchemaVersion dbConnection version
+let verboseSwitch = Option<bool>([|"--verbose"; "-v"|], "Detailed output.")
 
-let findDuplicates (updates: DbUpdate list) =
-    updates
-    |> List.groupBy (fun x -> x.Version)
-    |> List.choose
-        (function
-        | v, u when u.Length > 1 -> Some v
-        | _ -> None)
+let createLogger (verbose: bool) =
 
-let runDbUpdates dbConnection =
-    let duplicates =
-        findDuplicates dbUpdates |> List.map string
+    let logLevel =
+        if verbose then
+            LogEventLevel.Verbose
+        else
+            LogEventLevel.Information
 
-    match duplicates with
-    | [] -> ()
-    | d -> failwith (sprintf "Duplicate updates exist. Version(s) %s" (d |> String.concat ", "))
+    LoggerConfiguration()
+      .MinimumLevel.Verbose()
+      .WriteTo.Console(restrictedToMinimumLevel = logLevel)
+      .CreateLogger()
 
-    let latestSchemaVersion = Db.getLatestSchemaVersion dbConnection
-    let dbName = Db.getDbName dbConnection
-    printf $"Selected database: %s{dbName}\n"
+let createDbUpdatesCommand (dbConnection: IDbConnection) =
+    let runUpdatesCommand =
+        Command("run-updates", "executes all new db updates")
 
-    dbUpdates
-    |> Seq.skipWhile (fun x -> x.Version <= latestSchemaVersion)
-    |> Seq.map (executeUpdate dbConnection)
-    |> Seq.toList
-    |> ignore
+    let handler (verbose: bool) =
+        try
+            use logger = createLogger verbose
+            DbUpdatesRunner.runDbUpdates logger dbConnection
+        with ex ->
+            printf "%s" ex.Message
+            -1
+
+    runUpdatesCommand.AddOption verboseSwitch
+    runUpdatesCommand.Handler <- CommandHandler.Create<bool>((fun (verbose) -> handler verbose))
+
+    runUpdatesCommand
+
+let createDetectBreakingChangesCommand (dbConnection: IDbConnection) =
+    let description =
+        "examines whether the db updates contain any breaking changes. If it does the return code is set to 1 otherwise to 0."
+
+    let containsBreakingChangesCommand =
+        Command("detect-breakingchanges", description)
+
+    let handler (verbose: bool) =
+      try 
+          use logger = createLogger verbose
+          DbUpdatesAnalysis.detectBreakingChanges logger dbConnection
+      with ex ->
+          printf "%s" ex.Message
+          -1
+
+    containsBreakingChangesCommand.AddOption verboseSwitch
+    containsBreakingChangesCommand.Handler <- CommandHandler.Create<bool>((fun (verbose) -> handler verbose))
+
+    containsBreakingChangesCommand
 
 [<EntryPoint>]
-let main _ =
+let main args =
 
     let config =
         ConfigurationBuilder()
@@ -49,8 +73,8 @@ let main _ =
     use dbConnection =
         new NpgsqlConnection(config.GetConnectionString("ChangeTrackerDb"))
 
-    printfn "Run db updates ...\n" 
+    let rootCommand = RootCommand()
+    rootCommand.Add(createDbUpdatesCommand dbConnection)
+    rootCommand.Add(createDetectBreakingChangesCommand dbConnection)
 
-    runDbUpdates dbConnection |> ignore
-
-    0
+    rootCommand.Invoke args

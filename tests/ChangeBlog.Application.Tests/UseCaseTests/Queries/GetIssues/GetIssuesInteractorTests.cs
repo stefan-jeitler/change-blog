@@ -78,13 +78,13 @@ namespace ChangeBlog.Application.Tests.UseCaseTests.Queries.GetIssues
         }
 
         [Fact]
-        public void GetIssues_ChangeLogLineIdIsEmpty_ArgumentException()
+        public async Task GetIssues_ChangeLogLineIdIsEmpty_ArgumentException()
         {
             var interactor = CreateInteractor();
 
             Func<Task<IList<string>>> act = () => interactor.ExecuteAsync(Guid.Empty);
 
-            act.Should().ThrowExactly<ArgumentException>();
+            await act.Should().ThrowExactlyAsync<ArgumentException>();
         }
     }
 }

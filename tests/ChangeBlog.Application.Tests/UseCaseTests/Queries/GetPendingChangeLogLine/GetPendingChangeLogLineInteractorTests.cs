@@ -116,24 +116,24 @@ namespace ChangeBlog.Application.Tests.UseCaseTests.Queries.GetPendingChangeLogL
         }
 
         [Fact]
-        public void GetPendingChangeLogLine_EmptyProductId_ArgumentException()
+        public async Task GetPendingChangeLogLine_EmptyProductId_ArgumentException()
         {
             var interactor = CreateInteractor();
             var changeLogLineId = Guid.Parse("bf621860-3fa3-40d4-92ac-530cc57a1a98");
 
             Func<Task> act = () => interactor.ExecuteAsync(_outputPortMock.Object, Guid.Empty, changeLogLineId);
 
-            act.Should().ThrowExactly<ArgumentException>();
+            await act.Should().ThrowExactlyAsync<ArgumentException>();
         }
 
         [Fact]
-        public void GetPendingChangeLogLine_EmptyChangeLogLineId_ArgumentException()
+        public async Task GetPendingChangeLogLine_EmptyChangeLogLineId_ArgumentException()
         {
             var interactor = CreateInteractor();
 
             Func<Task> act = () => interactor.ExecuteAsync(_outputPortMock.Object, TestAccount.Product.Id, Guid.Empty);
 
-            act.Should().ThrowExactly<ArgumentException>();
+            await act.Should().ThrowExactlyAsync<ArgumentException>();
         }
     }
 }

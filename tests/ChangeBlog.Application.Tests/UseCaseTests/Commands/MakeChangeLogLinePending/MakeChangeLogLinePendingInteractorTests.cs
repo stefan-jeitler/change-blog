@@ -58,13 +58,13 @@ namespace ChangeBlog.Application.Tests.UseCaseTests.Commands.MakeChangeLogLinePe
         }
 
         [Fact]
-        public void MakeLinePending_LineIdIsEmpty_ArgumentException()
+        public async Task MakeLinePending_LineIdIsEmpty_ArgumentException()
         {
             var makeLinePendingInteractor = CreateInteractor();
 
             Func<Task> act = () => makeLinePendingInteractor.ExecuteAsync(_outputPortMock.Object, Guid.Empty);
 
-            act.Should().ThrowExactly<ArgumentException>();
+            await act.Should().ThrowExactlyAsync<ArgumentException>();
         }
 
         [Fact]

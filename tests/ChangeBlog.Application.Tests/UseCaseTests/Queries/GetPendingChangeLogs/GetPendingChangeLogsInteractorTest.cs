@@ -71,23 +71,23 @@ namespace ChangeBlog.Application.Tests.UseCaseTests.Queries.GetPendingChangeLogs
         }
 
         [Fact]
-        public void GetPendingChangeLogs_EmptyProductId_ArgumentException()
+        public async Task GetPendingChangeLogs_EmptyProductId_ArgumentException()
         {
             var interactor = CreateInteractor();
 
             Func<Task<PendingChangeLogsResponseModel>> act = () => interactor.ExecuteAsync(TestAccount.UserId, Guid.Empty);
 
-            act.Should().ThrowExactly<ArgumentException>();
+            await act.Should().ThrowExactlyAsync<ArgumentException>();
         }
 
         [Fact]
-        public void GetPendingChangeLogs_EmptyUserId_ArgumentException()
+        public async Task GetPendingChangeLogs_EmptyUserId_ArgumentException()
         {
             var interactor = CreateInteractor();
 
             Func<Task<PendingChangeLogsResponseModel>> act = () => interactor.ExecuteAsync(Guid.Empty, TestAccount.Product.Id);
 
-            act.Should().ThrowExactly<ArgumentException>();
+            await act.Should().ThrowExactlyAsync<ArgumentException>();
         }
     }
 }

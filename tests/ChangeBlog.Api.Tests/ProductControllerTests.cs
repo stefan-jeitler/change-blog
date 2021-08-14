@@ -1,4 +1,5 @@
 using System;
+using System.Net;
 using System.Net.Http.Json;
 using System.Threading.Tasks;
 using ChangeBlog.Api.DTOs.V1.Product;
@@ -30,7 +31,7 @@ namespace ChangeBlog.Api.Tests
             var content = await response.Content.ReadFromJsonAsync<ProductDto>();
 
             // assert
-            response.StatusCode.Should().Be(StatusCodes.Status200OK);
+            response.StatusCode.Should().Be(HttpStatusCode.OK);
             content.Id.Should().Be(Guid.Parse("139a2e54-e9be-4168-98b4-2839d9b3db04"));
         }
 
@@ -45,7 +46,7 @@ namespace ChangeBlog.Api.Tests
             var response = await client.PostAsync("api/v1/products/139a2e54-e9be-4168-98b4-2839d9b3db04/close", null!);
 
             // arrange
-            response.StatusCode.Should().Be(StatusCodes.Status200OK);
+            response.StatusCode.Should().Be(HttpStatusCode.OK);
         }
     }
 }

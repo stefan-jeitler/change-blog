@@ -102,23 +102,23 @@ namespace ChangeBlog.Application.Tests.UseCaseTests.Queries.GetLatestVersion
         }
 
         [Fact]
-        public void GetLatestVersion_ProductIdIsEmpty_ArgumentException()
+        public async Task GetLatestVersion_ProductIdIsEmpty_ArgumentException()
         {
             var interactor = CreateInteractor();
 
             Func<Task> act = () => interactor.ExecuteAsync(_outputPortMock.Object, TestAccount.UserId, Guid.Empty);
 
-            act.Should().ThrowExactly<ArgumentException>();
+            await act.Should().ThrowExactlyAsync<ArgumentException>();
         }
 
         [Fact]
-        public void GetLatestVersion_UserIdIsEmpty_ArgumentException()
+        public async Task GetLatestVersion_UserIdIsEmpty_ArgumentException()
         {
             var interactor = CreateInteractor();
 
             Func<Task> act = () => interactor.ExecuteAsync(_outputPortMock.Object, Guid.Empty, TestAccount.Product.Id);
 
-            act.Should().ThrowExactly<ArgumentException>();
+            await act.Should().ThrowExactlyAsync<ArgumentException>();
         }
     }
 }

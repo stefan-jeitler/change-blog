@@ -34,35 +34,35 @@ namespace ChangeBlog.Application.Tests.UseCaseTests.Commands.MakeAllChangeLogLin
             _changeLogDaoStub, _unitOfWorkMock.Object);
 
         [Fact]
-        public void MakeAllLinesPending_EmptyVersionId_ArgumentException()
+        public async Task MakeAllLinesPending_EmptyVersionId_ArgumentException()
         {
             var makeAllLinesPendingInteractor = CreateInteractor();
 
             Func<Task> act = () => makeAllLinesPendingInteractor.ExecuteAsync(_outputPortMock.Object, Guid.Empty);
 
-            act.Should().ThrowExactly<ArgumentException>();
+            await act.Should().ThrowExactlyAsync<ArgumentException>();
         }
 
         [Fact]
-        public void MakeAllLinesPending_EmptyProductId_ArgumentException()
+        public async Task MakeAllLinesPending_EmptyProductId_ArgumentException()
         {
             var makeAllLinesPendingInteractor = CreateInteractor();
 
             Func<Task> act = () =>
                 makeAllLinesPendingInteractor.ExecuteAsync(_outputPortMock.Object, Guid.Empty, "1.2.3");
 
-            act.Should().ThrowExactly<ArgumentException>();
+            await act.Should().ThrowExactlyAsync<ArgumentException>();
         }
 
         [Fact]
-        public void MakeAllLinesPending_VersionIsNull_ArgumentNullException()
+        public async Task MakeAllLinesPending_VersionIsNull_ArgumentNullException()
         {
             var makeAllLinesPendingInteractor = CreateInteractor();
 
             Func<Task> act = () =>
                 makeAllLinesPendingInteractor.ExecuteAsync(_outputPortMock.Object, TestAccount.Product.Id, null);
 
-            act.Should().ThrowExactly<ArgumentNullException>();
+            await act.Should().ThrowExactlyAsync<ArgumentNullException>();
         }
 
         [Fact]

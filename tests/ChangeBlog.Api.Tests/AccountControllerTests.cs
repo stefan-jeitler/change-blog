@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Net;
 using System.Net.Http.Json;
 using System.Threading.Tasks;
 using ChangeBlog.Api.DTOs;
@@ -33,7 +34,7 @@ namespace ChangeBlog.Api.Tests
             var content = await response.Content.ReadFromJsonAsync<List<AccountDto>>();
 
             // assert
-            response.StatusCode.Should().Be(StatusCodes.Status200OK);
+            response.StatusCode.Should().Be(HttpStatusCode.OK);
             content.Should().HaveCount(1);
             content.Should().Contain(x => x.Id == Guid.Parse("ec3a44cc-0ba4-4c97-ad7f-911e9f6a73bc"));
         }
@@ -50,7 +51,7 @@ namespace ChangeBlog.Api.Tests
             var content = await response.Content.ReadFromJsonAsync<AccountDto>();
 
             // assert
-            response.StatusCode.Should().Be(StatusCodes.Status200OK);
+            response.StatusCode.Should().Be(HttpStatusCode.OK);
             content.Id.Should().Be(Guid.Parse("ec3a44cc-0ba4-4c97-ad7f-911e9f6a73bc"));
         }
 
@@ -68,7 +69,7 @@ namespace ChangeBlog.Api.Tests
             var content = await response.Content.ReadFromJsonAsync<List<ProductDto>>();
 
             // assert
-            response.StatusCode.Should().Be(StatusCodes.Status200OK);
+            response.StatusCode.Should().Be(HttpStatusCode.OK);
             content.Should().HaveCount(2);
         }
 
@@ -84,7 +85,7 @@ namespace ChangeBlog.Api.Tests
             var content = await response.Content.ReadFromJsonAsync<List<UserDto>>();
 
             // assert
-            response.StatusCode.Should().Be(StatusCodes.Status200OK);
+            response.StatusCode.Should().Be(HttpStatusCode.OK);
             content.Should().HaveCount(2);
         }
 
@@ -100,7 +101,7 @@ namespace ChangeBlog.Api.Tests
             var content = await response.Content.ReadFromJsonAsync<List<RoleDto>>();
 
             // assert
-            response.StatusCode.Should().Be(StatusCodes.Status200OK);
+            response.StatusCode.Should().Be(HttpStatusCode.OK);
             content.Should().HaveCount(7);
         }
     }

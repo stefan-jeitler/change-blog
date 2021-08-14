@@ -108,24 +108,24 @@ namespace ChangeBlog.Application.Tests.UseCaseTests.Queries.GetChangeLogLine
 
 
         [Fact]
-        public void GetChangeLogLine_EmptyProductId_ArgumentException()
+        public async Task GetChangeLogLine_EmptyProductId_ArgumentException()
         {
             var interactor = CreateInteractor();
             var changeLogLineId = Guid.Parse("bf621860-3fa3-40d4-92ac-530cc57a1a98");
 
             Func<Task> act = () => interactor.ExecuteAsync(_outputPortMock.Object, Guid.Empty, changeLogLineId);
 
-            act.Should().ThrowExactly<ArgumentException>();
+            await act.Should().ThrowExactlyAsync<ArgumentException>();
         }
 
         [Fact]
-        public void GetChangeLogLine_EmptyChangeLogLineId_ArgumentException()
+        public async Task GetChangeLogLine_EmptyChangeLogLineId_ArgumentException()
         {
             var interactor = CreateInteractor();
 
             Func<Task> act = () => interactor.ExecuteAsync(_outputPortMock.Object, TestAccount.Product.Id, Guid.Empty);
 
-            act.Should().ThrowExactly<ArgumentException>();
+            await act.Should().ThrowExactlyAsync<ArgumentException>();
         }
     }
 }

@@ -1,3 +1,4 @@
+using System.Net;
 using System.Threading.Tasks;
 using FluentAssertions;
 using Microsoft.AspNetCore.Http;
@@ -23,7 +24,7 @@ namespace ChangeBlog.Api.Tests
 
             var response = await client.GetAsync("/api/v1/accounts/roles?includePermissions=false");
 
-            response.StatusCode.Should().Be(StatusCodes.Status200OK);
+            response.StatusCode.Should().Be(HttpStatusCode.OK);
         }
 
         [Fact]
@@ -34,7 +35,7 @@ namespace ChangeBlog.Api.Tests
 
             var response = await client.GetAsync("/api/v1/accounts/roles?includePermissions=false");
 
-            response.StatusCode.Should().Be(StatusCodes.Status403Forbidden);
+            response.StatusCode.Should().Be(HttpStatusCode.Forbidden);
         }
 
         [Fact]
@@ -45,7 +46,7 @@ namespace ChangeBlog.Api.Tests
 
             var response = await client.GetAsync("/api/v1/accounts/roles");
 
-            response.StatusCode.Should().Be(StatusCodes.Status401Unauthorized);
+            response.StatusCode.Should().Be(HttpStatusCode.Unauthorized);
         }
 
         [Fact]
@@ -55,7 +56,7 @@ namespace ChangeBlog.Api.Tests
 
             var response = await client.GetAsync("/api/v1/accounts/roles");
 
-            response.StatusCode.Should().Be(StatusCodes.Status401Unauthorized);
+            response.StatusCode.Should().Be(HttpStatusCode.Unauthorized);
         }
 
         [Fact]
@@ -67,7 +68,7 @@ namespace ChangeBlog.Api.Tests
             // product: t_ua_account_01_proj_02
             var response = await client.GetAsync("/api/v1/products/0614f8d6-8895-4c74-bcbe-8a3c26076e1b");
 
-            response.StatusCode.Should().Be(StatusCodes.Status403Forbidden);
+            response.StatusCode.Should().Be(HttpStatusCode.Forbidden);
         }
 
         [Fact]
@@ -79,7 +80,7 @@ namespace ChangeBlog.Api.Tests
             // product: t_ua_account_01_proj_01
             var response = await client.GetAsync("/api/v1/products/139a2e54-e9be-4168-98b4-2839d9b3db04");
 
-            response.StatusCode.Should().Be(StatusCodes.Status200OK);
+            response.StatusCode.Should().Be(HttpStatusCode.OK);
         }
 
         [Fact]
@@ -91,7 +92,7 @@ namespace ChangeBlog.Api.Tests
             // product: t_ua_account_01_proj_01
             var response = await client.GetAsync("/api/v1/products/35c5df1a-079e-4b8c-87c5-09b30e52a82f");
 
-            response.StatusCode.Should().Be(StatusCodes.Status200OK);
+            response.StatusCode.Should().Be(HttpStatusCode.OK);
         }
     }
 }

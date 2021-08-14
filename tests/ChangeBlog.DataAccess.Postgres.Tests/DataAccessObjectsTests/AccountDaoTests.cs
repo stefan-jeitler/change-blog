@@ -60,14 +60,14 @@ namespace ChangeBlog.DataAccess.Postgres.Tests.DataAccessObjectsTests
         }
 
         [Fact]
-        public void GetAccount_NotExistingAccount_Exception()
+        public async Task GetAccount_NotExistingAccount_Exception()
         {
             var accountDao = CreateDao();
             var notExistingAccountId = Guid.Parse("d6f4d5cd-e0b0-43e8-b05b-46b55eb0d529");
 
             Func<Task<Account>> act = () => accountDao.GetAccountAsync(notExistingAccountId);
 
-            act.Should().ThrowExactly<Exception>();
+            await act.Should().ThrowExactlyAsync<Exception>();
         }
 
         [Fact]

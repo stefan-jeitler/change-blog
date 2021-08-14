@@ -38,13 +38,13 @@ namespace ChangeBlog.Application.Tests.UseCaseTests.Commands.DeleteAllPendingCha
         }
 
         [Fact]
-        public void DeleteAllPendingLines_WithEmptyProductId_ArgumentException()
+        public async Task DeleteAllPendingLines_WithEmptyProductId_ArgumentException()
         {
             var interactor = new DeleteAllPendingChangeLogLinesInteractor(_changeLogDaoStub);
 
             Func<Task> act = () => interactor.ExecuteAsync(Guid.Empty);
 
-            act.Should().ThrowExactly<ArgumentException>();
+            await act.Should().ThrowExactlyAsync<ArgumentException>();
         }
     }
 }

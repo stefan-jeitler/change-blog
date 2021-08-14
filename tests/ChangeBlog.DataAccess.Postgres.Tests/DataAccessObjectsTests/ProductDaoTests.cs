@@ -76,14 +76,14 @@ namespace ChangeBlog.DataAccess.Postgres.Tests.DataAccessObjectsTests
         }
 
         [Fact]
-        public void GetProduct_NotExistingProduct_Exception()
+        public async Task GetProduct_NotExistingProduct_Exception()
         {
             var productDao = CreateDao();
             var notExistingProductId = Guid.Parse("21f05095-c016-4f60-b98a-03c037b6cc8c");
 
             Func<Task<Product>> act = () => productDao.GetProductAsync(notExistingProductId);
 
-            act.Should().ThrowExactly<Exception>();
+            await act.Should().ThrowExactlyAsync<Exception>();
         }
 
         [Fact]

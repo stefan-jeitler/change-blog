@@ -16,7 +16,7 @@ namespace ChangeBlog.DataAccess.Postgres.Tests
 
         public static readonly User User = new(
             Guid.Parse("9e13bbfc-451b-450e-a73a-72b6b23df64d"),
-            Email.Parse("test.dataAccess@change-tracker.com"),
+            Email.Parse("test.dataAccess@change-blog.com"),
             Name.Parse("test"),
             Name.Parse("dataAccess"),
             Name.Parse("Europe/Berlin"),

@@ -10,9 +10,9 @@ namespace ChangeBlog.Domain.Tests
         [Fact]
         public void Parse_ValidEmailAddress_Successful()
         {
-            var email = Email.Parse("stefan@changeTracker");
+            var email = Email.Parse("stefan@changeBlog");
 
-            email.Value.Should().Be("stefan@changeTracker");
+            email.Value.Should().Be("stefan@changeBlog");
         }
 
         [Fact]
@@ -52,9 +52,9 @@ namespace ChangeBlog.Domain.Tests
         }
 
         [Theory]
-        [InlineData("stefan@changeTracker ")]
-        [InlineData(" stefan@changeTracker")]
-        [InlineData(" stefan@changeTracker ")]
+        [InlineData("stefan@changeBlog ")]
+        [InlineData(" stefan@changeBlog")]
+        [InlineData(" stefan@changeBlog ")]
         public void Parse_WithLeadingAndTrailingWhitespaces_WhitespacesRemoved(string e)
         {
             var email = Email.Parse(e);
@@ -73,10 +73,10 @@ namespace ChangeBlog.Domain.Tests
         [Fact]
         public void TryParse_ValidEmail_Successful()
         {
-            var isSuccess = Email.TryParse("stefan@changeTracker", out var email);
+            var isSuccess = Email.TryParse("stefan@changeBlog", out var email);
 
             isSuccess.Should().BeTrue();
-            email.Value.Should().Be("stefan@changeTracker");
+            email.Value.Should().Be("stefan@changeBlog");
         }
 
         [Fact]
@@ -91,11 +91,11 @@ namespace ChangeBlog.Domain.Tests
         [Fact]
         public void ImplicitCast_CastToStringExists()
         {
-            var email = Email.Parse("stefan@changeTracker");
+            var email = Email.Parse("stefan@changeBlog");
 
             string e = email;
 
-            e.Should().Be("stefan@changeTracker");
+            e.Should().Be("stefan@changeBlog");
         }
     }
 }

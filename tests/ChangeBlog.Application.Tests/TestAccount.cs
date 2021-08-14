@@ -52,7 +52,7 @@ namespace ChangeBlog.Application.Tests
             null);
 
         public static readonly User User = new(UserId,
-            Email.Parse("test@change-tracker.com"),
+            Email.Parse("test@change-blog.com"),
             Name.Parse("test"),
             Name.Parse("user"),
             Name.Parse("Europe/Berlin"),

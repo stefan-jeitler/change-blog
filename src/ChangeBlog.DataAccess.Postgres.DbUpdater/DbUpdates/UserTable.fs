@@ -25,7 +25,7 @@ let private addUserForDefaultVersioningSchemesSql =
     """
         insert into "user" (id, email, first_name, last_name, timezone, deleted_at, created_at)
         values ('a17f556c-14c3-4bc2-bfa7-3c0811fd75b8',
-                'versioning.scheme@change-tracker.com',
+                'versioning.scheme@change-blog.com',
                 'versioning',
                 'scheme',
                 'Europe/Berlin',
@@ -43,7 +43,7 @@ let private addUserForAppChangesSql =
     """
         insert into "user"
         values ('c1db054a-a07c-4712-9c69-86e0806a89a0',
-                'changes@change-tracker.com',
+                'changes@change-blog.com',
                 'change',
                 'tracker',
                 'UTC',

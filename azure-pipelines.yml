@@ -52,7 +52,7 @@ stages:
             --logger trx --no-build -nologo
           publishTestResults: true
         env: 
-          ConnectionStrings__ChangeTrackerDb: $(ConnectionStringChangeTrackerDb)
+          ConnectionStrings__ChangeBlogDb: $(ConnectionStringChangeBlogDb)
 
       - task: PublishCodeCoverageResults@1
         displayName: 'Publish code coverage'
@@ -77,7 +77,7 @@ stages:
         displayName: Build DbUpdater
         inputs:
           command: 'build'
-          projects: './src/ChangeTracker.DataAccess.Postgres.DbUpdater/ChangeTracker.DataAccess.Postgres.DbUpdater.fsproj'
+          projects: './src/ChangeBlog.DataAccess.Postgres.DbUpdater/ChangeBlog.DataAccess.Postgres.DbUpdater.fsproj'
           arguments: >-
             --configuration Release 
             -p:Version=$(Version) 

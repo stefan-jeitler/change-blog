@@ -13,7 +13,10 @@ function Create-LatestChanges {
   $latestChanges = Get-Content -Raw -Path ./latest-changes.json | ConvertFrom-Json -AsHashtable
   $latestChanges.Add("version", $Version)
 
-  $latestChanges | ConvertTo-Json -depth 100 | Out-File (Join-Path $OutputDir "latest-changes.json")
+  $latestChanges `
+    | ConvertTo-Json `
+    | Out-File (Join-Path $OutputDir "latest-changes.json")
+
   Write-Host "Latest changes created in $OutputDir"
 }
 

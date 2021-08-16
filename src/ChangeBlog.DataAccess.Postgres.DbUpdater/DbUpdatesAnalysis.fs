@@ -2,7 +2,6 @@ module DbUpdatesAnalysis
 
 open System.Data
 open Serilog.Core
-open System
 
 let detectBreakingChanges (logger: Logger) (dbConnection: IDbConnection) =
     let dbName = Db.getDbName dbConnection

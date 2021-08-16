@@ -7,7 +7,6 @@ open System.CommandLine.Invocation
 open Serilog
 open Serilog.Events
 
-let verboseSwitch = Option<bool>([|"--verbose"; "-v"|], "Detailed output.")
 
 let createLogger (verbose: bool) =
 
@@ -22,10 +21,9 @@ let createLogger (verbose: bool) =
       .WriteTo.Console(restrictedToMinimumLevel = logLevel)
       .CreateLogger()
 
-let createDbUpdatesCommand (dbConnection: IDbConnection) =
-    let runUpdatesCommand =
-        Command("run-updates", "executes all new db updates")
+let verboseSwitch = Option<bool>([|"--verbose"; "-v"|], "Detailed output.")
 
+let createDbUpdatesCommand (dbConnection: IDbConnection) =
     let handler (verbose: bool) =
         try
             use logger = createLogger verbose
@@ -34,18 +32,15 @@ let createDbUpdatesCommand (dbConnection: IDbConnection) =
             printf "%s" ex.Message
             -1
 
+    let runUpdatesCommand =
+        Command("run-updates", "execute all new db updates")
+
     runUpdatesCommand.AddOption verboseSwitch
     runUpdatesCommand.Handler <- CommandHandler.Create<bool>((fun (verbose) -> handler verbose))
 
     runUpdatesCommand
 
 let createDetectBreakingChangesCommand (dbConnection: IDbConnection) =
-    let description =
-        "examines whether the db updates contain any breaking changes. If it does the return code is set to 1 otherwise to 0."
-
-    let containsBreakingChangesCommand =
-        Command("detect-breakingchanges", description)
-
     let handler (verbose: bool) =
       try 
           use logger = createLogger verbose
@@ -53,11 +48,15 @@ let createDetectBreakingChangesCommand (dbConnection: IDbConnection) =
       with ex ->
           printf "%s" ex.Message
           -1
+    
+    let description =
+        "examines whether the db updates contain any breaking changes. If it does the return code is set to 1 otherwise to 0."
 
-    containsBreakingChangesCommand.AddOption verboseSwitch
-    containsBreakingChangesCommand.Handler <- CommandHandler.Create<bool>((fun (verbose) -> handler verbose))
-
-    containsBreakingChangesCommand
+    let detectBreakingChangesCommand = Command("detect-breakingchanges", description)
+    detectBreakingChangesCommand.AddOption verboseSwitch
+    detectBreakingChangesCommand.Handler <- CommandHandler.Create<bool>((fun (verbose) -> handler verbose))
+    
+    detectBreakingChangesCommand
 
 [<EntryPoint>]
 let main args =

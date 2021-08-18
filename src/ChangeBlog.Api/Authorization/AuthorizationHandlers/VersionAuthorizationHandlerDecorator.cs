@@ -21,6 +21,7 @@ namespace ChangeBlog.Api.Authorization.AuthorizationHandlers
             Permission permission)
         {
             var versionId = TryFindIdInHeader(context.HttpContext, KnownIdentifiers.VersionId);
+
             return versionId.HasValue 
                 ? _getAuthorizationState.GetAuthStateByVersionIdAsync(userId, versionId.Value, permission) 
                 : _authorizationHandlerComponent.GetAuthorizationState(context, userId, permission);

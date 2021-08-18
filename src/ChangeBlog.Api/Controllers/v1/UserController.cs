@@ -39,7 +39,7 @@ namespace ChangeBlog.Api.Controllers.V1
         [HttpGet("products")]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(typeof(DefaultResponse), StatusCodes.Status400BadRequest)]
-        [NeedsPermission(Permission.ViewUserProducts)]
+        [SkipAuthorization]
         public async Task<ActionResult<List<ProductDto>>> GetUserProductsAsync(Guid? lastProductId = null,
             [Range(1, UserProductQueryRequestModel.MaxLimit)]
             ushort limit = UserProductQueryRequestModel.MaxLimit,
@@ -58,7 +58,7 @@ namespace ChangeBlog.Api.Controllers.V1
 
         [HttpGet("info")]
         [ProducesResponseType(StatusCodes.Status200OK)]
-        [NeedsPermission(Permission.ViewOwnUser)]
+        [SkipAuthorization]
         public async Task<ActionResult<UserDto>> GetUserInfoAsync()
         {
             var userId = HttpContext.GetUserId();

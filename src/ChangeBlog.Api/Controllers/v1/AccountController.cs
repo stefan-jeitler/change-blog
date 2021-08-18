@@ -30,7 +30,7 @@ namespace ChangeBlog.Api.Controllers.V1
     {
         [HttpGet]
         [ProducesResponseType(StatusCodes.Status200OK)]
-        [NeedsPermission(Permission.ViewAccount)]
+        [SkipAuthorization]
         public async Task<ActionResult<List<AccountDto>>> GetAccountsAsync(
             [FromServices] IGetAccounts getAccounts)
         {
@@ -103,7 +103,7 @@ namespace ChangeBlog.Api.Controllers.V1
         [HttpGet("roles")]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(typeof(DefaultResponse), StatusCodes.Status400BadRequest)]
-        [NeedsPermission(Permission.ViewRoles)]
+        [SkipAuthorization]
         public async Task<ActionResult<List<RoleDto>>> GetRolesAsync([FromServices] IGetRoles getRoles,
             string filter = null,
             bool includePermissions = false)

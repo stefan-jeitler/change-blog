@@ -3,7 +3,8 @@
   "changeLogLines": [
     {
       "text": "Adding pending change logs to already closed products is no longer possible.",
-      "labels":  ["Bugfix", "Security"] 
+      "labels": [ "Bugfix", "Security" ],
+      "issues":  [] 
     }
   ],
   "releaseImmediately": true

@@ -15,7 +15,7 @@ namespace ChangeBlog.Domain.Tests.Authorization
                 Name.Parse(Role.DefaultUser),
                 Text.Parse("Basic User"),
                 DateTime.Parse("2021-05-21"),
-                new[] {Permission.ViewOwnUser, Permission.ViewAccount});
+                new[] {Permission.ViewAccount});
 
         private static readonly Role TestDeveloperUserRole =
             new(Guid.Parse("ad7b83ed-8fce-4341-978b-8d1eae66f346"),
@@ -24,7 +24,7 @@ namespace ChangeBlog.Domain.Tests.Authorization
                 DateTime.Parse("2021-05-21"),
                 new[]
                 {
-                    Permission.ViewOwnUser, Permission.ViewAccount, Permission.AddOrUpdateProduct,
+                    Permission.ViewAccount, Permission.AddOrUpdateProduct,
                     Permission.ViewChangeLogLines
                 });
 
@@ -35,7 +35,7 @@ namespace ChangeBlog.Domain.Tests.Authorization
                 DateTime.Parse("2021-05-21"),
                 new[]
                 {
-                    Permission.ViewOwnUser, Permission.ViewAccount, Permission.AddOrUpdateProduct,
+                    Permission.ViewAccount, Permission.AddOrUpdateProduct,
                     Permission.ViewChangeLogLines, Permission.AddOrUpdateChangeLogLine, Permission.AddOrUpdateVersion
                 });
 
@@ -95,7 +95,7 @@ namespace ChangeBlog.Domain.Tests.Authorization
         {
             var authService = new AuthorizationService(Enumerable.Empty<Role>(), Enumerable.Empty<Role>());
 
-            var authorizationState = authService.GetAuthorizationState(Permission.ViewOwnUser);
+            var authorizationState = authService.GetAuthorizationState(Permission.ViewChangeLogLines);
 
             authorizationState.Should().Be(AuthorizationState.Inaccessible);
         }

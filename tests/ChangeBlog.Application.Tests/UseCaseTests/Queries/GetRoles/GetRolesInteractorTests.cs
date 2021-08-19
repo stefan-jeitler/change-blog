@@ -61,8 +61,7 @@ namespace ChangeBlog.Application.Tests.UseCaseTests.Queries.GetRoles
             // assert
             var developerRole = roles.Single();
             developerRole.Name.Should().Be("Developer");
-            developerRole.Permissions.Should().HaveCount(4);
-            developerRole.Permissions.Should().Contain("ViewOwnUser");
+            developerRole.Permissions.Should().HaveCount(3);
             developerRole.Permissions.Should().Contain("ViewAccount");
             developerRole.Permissions.Should().Contain("AddOrUpdateProduct");
             developerRole.Permissions.Should().Contain("ViewChangeLogLines");

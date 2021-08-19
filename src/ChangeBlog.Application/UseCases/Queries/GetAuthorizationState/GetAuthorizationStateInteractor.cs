@@ -24,15 +24,6 @@ namespace ChangeBlog.Application.UseCases.Queries.GetAuthorizationState
             return authService.GetAuthorizationState(permission);
         }
 
-        public async Task<AuthorizationState> GetAuthStateByUserAccountsAsync(Guid userId, Permission permission)
-        {
-            var accountPermissions = await _userAccessDao.GetAccountsRolesAsync(userId);
-
-            var authService = new AuthorizationService(accountPermissions);
-
-            return authService.GetAuthorizationState(permission);
-        }
-
         public async Task<AuthorizationState> GetAuthStateByProductIdAsync(Guid userId, Guid productId, Permission permission)
         {
             var (account, product) = await _userAccessDao.GetRolesByProductIdAsync(userId, productId);

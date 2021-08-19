@@ -41,20 +41,22 @@ namespace ChangeBlog.Api.Authorization
 
         public async Task OnActionExecutionAsync(ActionExecutingContext context, ActionExecutionDelegate next)
         {
-            var allowAnonymous = context.ActionDescriptor.EndpointMetadata.OfType<AllowAnonymousAttribute>().Any();
+            var skipAuthorization = context.ActionDescriptor.EndpointMetadata.OfType<AllowAnonymousAttribute>().Any() ||
+                                    context.ActionDescriptor.EndpointMetadata.OfType<SkipAuthorizationAttribute>().Any();
+
             var permission = context.ActionDescriptor.EndpointMetadata.OfType<NeedsPermissionAttribute>().TryFirst();
 
-            if (permission.HasNoValue && allowAnonymous)
+            if (permission.HasNoValue && skipAuthorization)
             {
                 await next();
                 return;
             }
 
-            if (permission.HasNoValue && !allowAnonymous)
+            if (permission.HasNoValue && !skipAuthorization)
             {
                 var actionName = context.ActionDescriptor.DisplayName;
                 _logger.LogError(
-                    $"The requested action '{actionName}' has no {nameof(NeedsPermissionAttribute)} and no {nameof(AllowAnonymousAttribute)}.");
+                    $"The requested action '{actionName}' hasn't one of the attributes: {nameof(NeedsPermissionAttribute)}, {nameof(AllowAnonymousAttribute)} or {nameof(SkipAuthorizationAttribute)}.");
 
                 context.Result = InternalServerError;
                 return;

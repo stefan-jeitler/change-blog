@@ -2,12 +2,9 @@ namespace ChangeBlog.Domain.Authorization
 {
     public enum Permission
     {
-        ViewOwnUser,
         ViewAccount,
         ViewAccountUsers,
-        ViewRoles,
-
-        ViewUserProducts,
+        
         ViewAccountProducts,
         CloseProduct,
         AddOrUpdateProduct,

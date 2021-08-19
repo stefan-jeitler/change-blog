@@ -72,7 +72,6 @@ namespace ChangeBlog.DataAccess.Postgres.DataAccessObjects.Products
                 {
                     accountId = querySettings.AccountId,
                     userId = querySettings.UserId,
-                    permission = Permission.ViewAccountProducts.ToString(),
                     lastProductId = querySettings.LastProductId,
                     limit = (int) querySettings.Limit
                 });
@@ -89,7 +88,6 @@ namespace ChangeBlog.DataAccess.Postgres.DataAccessObjects.Products
                 .QueryAsync<Product>(sql, new
                 {
                     userId = querySettings.UserId,
-                    permission = Permission.ViewUserProducts.ToString(),
                     lastProductId = querySettings.LastProductId,
                     limit = (int) querySettings.Limit
                 });

@@ -1,4 +1,5 @@
 using System.Net;
+using System.Net.Http;
 using System.Threading.Tasks;
 using FluentAssertions;
 using Microsoft.AspNetCore.Http;
@@ -28,12 +29,12 @@ namespace ChangeBlog.Api.Tests
         }
 
         [Fact]
-        public async Task UserAccess_DefaultUser_Unauthorized()
+        public async Task UserAccess_ProductManagerClosesProduct_Unauthorized()
         {
             var client = _factory.CreateClient();
             client.DefaultRequestHeaders.Add("X-API-KEY", new[] {"acc01usr01"});
 
-            var response = await client.GetAsync("/api/v1/accounts/roles?includePermissions=false");
+            var response = await client.PostAsync("/api/v1/products/139a2e54-e9be-4168-98b4-2839d9b3db04/close", new StringContent(""));
 
             response.StatusCode.Should().Be(HttpStatusCode.Forbidden);
         }

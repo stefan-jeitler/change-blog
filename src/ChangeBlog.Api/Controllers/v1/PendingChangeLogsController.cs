@@ -40,9 +40,6 @@ namespace ChangeBlog.Api.Controllers.V1
             [FromServices] IGetPendingChangeLogs getPendingChangeLogs,
             Guid productId)
         {
-            if (productId == Guid.Empty)
-                return BadRequest(DefaultResponse.Create("ProductId cannot be empty."));
-
             var userId = HttpContext.GetUserId();
             var pendingChangeLogs = await getPendingChangeLogs.ExecuteAsync(userId, productId);
 
@@ -184,9 +181,6 @@ namespace ChangeBlog.Api.Controllers.V1
             [FromServices] IDeleteAllPendingChangeLogLines deleteAllPendingChangeLogLines,
             Guid productId)
         {
-            if (productId == Guid.Empty)
-                return BadRequest(DefaultResponse.Create("ProductId cannot be empty."));
-
             await deleteAllPendingChangeLogLines.ExecuteAsync(productId);
 
             return Ok(DefaultResponse.Create("Pending ChangeLogLines successfully deleted."));

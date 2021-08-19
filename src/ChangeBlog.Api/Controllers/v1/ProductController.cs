@@ -75,9 +75,6 @@ namespace ChangeBlog.Api.Controllers.V1
         public async Task<ActionResult> CloseProductAsync([FromServices] ICloseProduct closeProduct,
             Guid productId)
         {
-            if (productId == Guid.Empty)
-                return BadRequest(DefaultResponse.Create("Missing productId."));
-
             var presenter = new CloseProductApiPresenter();
             await closeProduct.ExecuteAsync(presenter, productId);
 

@@ -14,7 +14,7 @@ function Create-LatestChanges {
   $latestChanges.Add("version", $Version)
 
   $latestChanges `
-    | ConvertTo-Json `
+    | ConvertTo-Json -Depth 100`
     | Out-File (Join-Path $OutputDir "latest-changes.json")
 
   Write-Host "Latest changes created in $OutputDir"
@@ -31,6 +31,10 @@ function Publish-LatestChanges {
   )
 
   $latestChanges = Get-Content -Raw -Path ./latest-changes.json
+
+  Write-Host "latest changes:"
+  Write-Host $latestChanges
+
 
   $endpoint = "$($BaseUrl.TrimEnd("/"))/api/v1/products/$ProductId/versions"
 

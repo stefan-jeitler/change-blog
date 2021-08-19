@@ -108,7 +108,6 @@ namespace ChangeBlog.Application.Tests.ProxyTests
             _changeLogDaoStub.ChangeLogs.Should().BeEmpty();
         }
 
-
         [Fact]
         public async Task AddLine_RelatedProductIsClosed_Conflict()
         {
@@ -126,6 +125,30 @@ namespace ChangeBlog.Application.Tests.ProxyTests
 
             var lineId = Guid.Parse("0683e1e1-0e0d-405c-b77e-a6d0d5141b67");
             var line = new ChangeLogLine(lineId, versionId, TestAccount.Product.Id, ChangeLogText.Parse("some text"),
+                0U, TestAccount.UserId, DateTime.Parse("2021-04-17"));
+
+            var proxy = CreateProxy();
+
+            // act
+            var result = await proxy.AddOrUpdateLineAsync(line);
+
+            // assert
+            result.IsFailure.Should().BeTrue();
+            result.Error.Should().BeOfType<ProductClosedConflict>();
+            _changeLogDaoStub.ChangeLogs.Should().BeEmpty();
+        }
+
+        [Fact]
+        public async Task AddPendingLine_RelatedProductIsClosed_Conflict()
+        {
+            // arrange
+            _productDaoStub.Products.Add(new Product(TestAccount.Product.Id, TestAccount.Id, Name.Parse("Test product"),
+                TestAccount.CustomVersioningScheme, TestAccount.Product.LanguageCode, TestAccount.UserId,
+                DateTime.Parse("2021-05-13"),
+                DateTime.Parse("2021-05-13")));
+
+            var lineId = Guid.Parse("0683e1e1-0e0d-405c-b77e-a6d0d5141b67");
+            var line = new ChangeLogLine(lineId, null, TestAccount.Product.Id, ChangeLogText.Parse("some text"),
                 0U, TestAccount.UserId, DateTime.Parse("2021-04-17"));
 
             var proxy = CreateProxy();
@@ -173,6 +196,8 @@ namespace ChangeBlog.Application.Tests.ProxyTests
             var line = new ChangeLogLine(lineId, null, TestAccount.Product.Id, ChangeLogText.Parse("some text"),
                 0U, TestAccount.UserId, DateTime.Parse("2021-04-17"));
 
+            _productDaoStub.Products.Add(TestAccount.Product);
+
             var proxy = CreateProxy();
 
             // act
@@ -191,6 +216,8 @@ namespace ChangeBlog.Application.Tests.ProxyTests
             var line = new ChangeLogLine(lineId, null, TestAccount.Product.Id, ChangeLogText.Parse("some text"),
                 0U, TestAccount.UserId, DateTime.Parse("2021-04-17"));
 
+            _productDaoStub.Products.Add(TestAccount.Product);
+
             var proxy = CreateProxy();
 
             // act
@@ -208,7 +235,10 @@ namespace ChangeBlog.Application.Tests.ProxyTests
             var lineId = Guid.Parse("0683e1e1-0e0d-405c-b77e-a6d0d5141b67");
             var line = new ChangeLogLine(lineId, null, TestAccount.Product.Id, ChangeLogText.Parse("some text"),
                 0U, TestAccount.UserId, DateTime.Parse("2021-04-17"));
+            
             _changeLogDaoStub.ChangeLogs.Add(line);
+            _productDaoStub.Products.Add(TestAccount.Product);
+
             var proxy = CreateProxy();
 
             // act
@@ -258,6 +288,8 @@ namespace ChangeBlog.Application.Tests.ProxyTests
                 ChangeLogText.Parse("some other text"),
                 0U, TestAccount.UserId, DateTime.Parse("2021-04-17"));
 
+            _productDaoStub.Products.Add(TestAccount.Product);
+
             var proxy = CreateProxy();
 
             // act
@@ -289,6 +321,8 @@ namespace ChangeBlog.Application.Tests.ProxyTests
             var secondLine = new ChangeLogLine(secondLineId, versionId, TestAccount.Product.Id,
                 ChangeLogText.Parse("some other text"),
                 0U, TestAccount.UserId, DateTime.Parse("2021-04-17"));
+
+            _productDaoStub.Products.Add(TestAccount.Product);
 
             var proxy = CreateProxy();
 

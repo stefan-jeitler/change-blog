@@ -97,19 +97,20 @@ namespace ChangeBlog.Application.Proxies
                 return Result.Failure<ChangeLogLine, Conflict>(
                     new ChangeLogLineDeletedConflict(line.Id));
 
-            if (line.IsPending) return Result.Success<ChangeLogLine, Conflict>(line);
+            if (!line.IsPending)
+            {
+                var version = await GetVersionAsync(line.VersionId!.Value);
 
-            var version = await GetVersionAsync(line.VersionId!.Value);
+                if (version.IsDeleted)
+                    return Result.Failure<ChangeLogLine, Conflict>(
+                        new VersionDeletedConflict(version.Id));
 
-            if (version.IsDeleted)
-                return Result.Failure<ChangeLogLine, Conflict>(
-                    new VersionDeletedConflict(version.Id));
+                if (version.IsReleased)
+                    return Result.Failure<ChangeLogLine, Conflict>(
+                        new VersionReleasedConflict(version.Id));
+            }
 
-            if (version.IsReleased)
-                return Result.Failure<ChangeLogLine, Conflict>(
-                    new VersionReleasedConflict(version.Id));
-
-            var product = await GetProductAsync(version.ProductId);
+            var product = await GetProductAsync(line.ProductId);
 
             if (product.IsClosed)
                 return Result.Failure<ChangeLogLine, Conflict>(

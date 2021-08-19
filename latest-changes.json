@@ -1,5 +1,10 @@
 {
-  "name": "",
-  "changeLogLines": [],
+  "name": "Random release",
+  "changeLogLines": [
+    {
+      "text": "Adding pending change logs to already closed products is no longer possible.",
+      "labels":  ["Bugfix", "Security"] 
+    }
+  ],
   "releaseImmediately": true
 }

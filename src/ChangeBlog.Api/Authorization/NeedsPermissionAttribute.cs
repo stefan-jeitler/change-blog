@@ -1,5 +1,4 @@
 using System;
-using ChangeBlog.Application.UseCases;
 using ChangeBlog.Domain.Authorization;
 
 namespace ChangeBlog.Api.Authorization

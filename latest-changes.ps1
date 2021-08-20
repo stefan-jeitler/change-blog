@@ -14,7 +14,7 @@ function Create-LatestChanges {
   $latestChanges.Add("version", $Version)
 
   $latestChanges `
-    | ConvertTo-Json -Depth 100`
+    | ConvertTo-Json -Depth 100 `
     | Out-File (Join-Path $OutputDir "latest-changes.json")
 
   Write-Host "Latest changes created in $OutputDir"

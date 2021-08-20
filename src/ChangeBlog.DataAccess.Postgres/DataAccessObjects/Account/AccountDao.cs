@@ -2,7 +2,6 @@ using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using ChangeBlog.Application.DataAccess.Accounts;
-using ChangeBlog.Application.UseCases;
 using ChangeBlog.Domain.Authorization;
 using CSharpFunctionalExtensions;
 using Dapper;

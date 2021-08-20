@@ -11,7 +11,8 @@ namespace ChangeBlog.Api.Authorization.AuthorizationHandlers
         private readonly AuthorizationHandler _authorizationHandlerComponent;
         private readonly IGetAuthorizationState _getAuthorizationState;
 
-        public ChangeLogLineAuthorizationHandlerDecorator(AuthorizationHandler authorizationHandlerComponent, IGetAuthorizationState getAuthorizationState)
+        public ChangeLogLineAuthorizationHandlerDecorator(AuthorizationHandler authorizationHandlerComponent,
+            IGetAuthorizationState getAuthorizationState)
         {
             _authorizationHandlerComponent = authorizationHandlerComponent;
             _getAuthorizationState = getAuthorizationState;
@@ -22,8 +23,8 @@ namespace ChangeBlog.Api.Authorization.AuthorizationHandlers
         {
             var changeLogLineId = TryFindIdInHeader(context.HttpContext, KnownIdentifiers.ChangeLogLineId);
 
-            return changeLogLineId.HasValue 
-                ? _getAuthorizationState.GetAuthStateByChangeLogLineIdAsync(userId, changeLogLineId.Value, permission) 
+            return changeLogLineId.HasValue
+                ? _getAuthorizationState.GetAuthStateByChangeLogLineIdAsync(userId, changeLogLineId.Value, permission)
                 : _authorizationHandlerComponent.GetAuthorizationState(context, userId, permission);
         }
     }

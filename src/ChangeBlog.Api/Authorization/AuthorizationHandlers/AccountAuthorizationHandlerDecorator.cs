@@ -4,6 +4,7 @@ using ChangeBlog.Api.Authorization.RequestBodyIdentifiers;
 using ChangeBlog.Application.UseCases.Queries.GetAuthorizationState;
 using ChangeBlog.Domain.Authorization;
 using Microsoft.AspNetCore.Mvc.Filters;
+
 // ReSharper disable ConvertIfStatementToReturnStatement
 
 // ReSharper disable ClassNeverInstantiated.Global
@@ -15,7 +16,8 @@ namespace ChangeBlog.Api.Authorization.AuthorizationHandlers
         private readonly AuthorizationHandler _authorizationHandlerComponent;
         private readonly IGetAuthorizationState _getAuthorizationState;
 
-        public AccountAuthorizationHandlerDecorator(AuthorizationHandler authorizationHandlerComponent, IGetAuthorizationState getAuthorizationState)
+        public AccountAuthorizationHandlerDecorator(AuthorizationHandler authorizationHandlerComponent,
+            IGetAuthorizationState getAuthorizationState)
         {
             _authorizationHandlerComponent = authorizationHandlerComponent;
             _getAuthorizationState = getAuthorizationState;
@@ -30,7 +32,8 @@ namespace ChangeBlog.Api.Authorization.AuthorizationHandlers
 
             var accountIdInBody = TryFindInBody<IContainsAccountId>(context);
             if (accountIdInBody is not null)
-                return _getAuthorizationState.GetAuthStateByAccountIdAsync(userId, accountIdInBody.AccountId, permission);
+                return _getAuthorizationState.GetAuthStateByAccountIdAsync(userId, accountIdInBody.AccountId,
+                    permission);
 
             return _authorizationHandlerComponent.GetAuthorizationState(context, userId, permission);
         }

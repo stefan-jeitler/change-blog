@@ -10,6 +10,7 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Filters;
 using Microsoft.Extensions.Logging;
+
 // ReSharper disable InconsistentNaming
 // ReSharper disable ConvertIfStatementToSwitchStatement
 
@@ -42,7 +43,8 @@ namespace ChangeBlog.Api.Authorization
         public async Task OnActionExecutionAsync(ActionExecutingContext context, ActionExecutionDelegate next)
         {
             var skipAuthorization = context.ActionDescriptor.EndpointMetadata.OfType<AllowAnonymousAttribute>().Any() ||
-                                    context.ActionDescriptor.EndpointMetadata.OfType<SkipAuthorizationAttribute>().Any();
+                                    context.ActionDescriptor.EndpointMetadata.OfType<SkipAuthorizationAttribute>()
+                                        .Any();
 
             var permission = context.ActionDescriptor.EndpointMetadata.OfType<NeedsPermissionAttribute>().TryFirst();
 
@@ -69,7 +71,8 @@ namespace ChangeBlog.Api.Authorization
             Maybe<NeedsPermissionAttribute> permission)
         {
             var userId = context.HttpContext.GetUserId();
-            var authState = await _authorizationHandler.GetAuthorizationState(context, userId, permission.Value.Permission);
+            var authState =
+                await _authorizationHandler.GetAuthorizationState(context, userId, permission.Value.Permission);
 
             switch (authState)
             {

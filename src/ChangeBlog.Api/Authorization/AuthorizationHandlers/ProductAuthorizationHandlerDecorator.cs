@@ -4,6 +4,7 @@ using ChangeBlog.Api.Authorization.RequestBodyIdentifiers;
 using ChangeBlog.Application.UseCases.Queries.GetAuthorizationState;
 using ChangeBlog.Domain.Authorization;
 using Microsoft.AspNetCore.Mvc.Filters;
+
 // ReSharper disable ConvertIfStatementToReturnStatement
 
 namespace ChangeBlog.Api.Authorization.AuthorizationHandlers
@@ -13,7 +14,8 @@ namespace ChangeBlog.Api.Authorization.AuthorizationHandlers
         private readonly AuthorizationHandler _authorizationHandlerComponent;
         private readonly IGetAuthorizationState _getAuthorizationState;
 
-        public ProductAuthorizationHandlerDecorator(AuthorizationHandler authorizationHandlerComponent, IGetAuthorizationState getAuthorizationState)
+        public ProductAuthorizationHandlerDecorator(AuthorizationHandler authorizationHandlerComponent,
+            IGetAuthorizationState getAuthorizationState)
         {
             _authorizationHandlerComponent = authorizationHandlerComponent;
             _getAuthorizationState = getAuthorizationState;
@@ -28,7 +30,8 @@ namespace ChangeBlog.Api.Authorization.AuthorizationHandlers
 
             var productIdInBody = TryFindInBody<IContainsProductId>(context);
             if (productIdInBody is not null)
-                return _getAuthorizationState.GetAuthStateByProductIdAsync(userId, productIdInBody.ProductId, permission);
+                return _getAuthorizationState.GetAuthStateByProductIdAsync(userId, productIdInBody.ProductId,
+                    permission);
 
             return _authorizationHandlerComponent.GetAuthorizationState(context, userId, permission);
         }

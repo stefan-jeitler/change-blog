@@ -11,7 +11,8 @@ namespace ChangeBlog.Api.Authorization.AuthorizationHandlers
         private readonly AuthorizationHandler _authorizationHandlerComponent;
         private readonly IGetAuthorizationState _getAuthorizationState;
 
-        public VersionAuthorizationHandlerDecorator(AuthorizationHandler authorizationHandlerComponent, IGetAuthorizationState getAuthorizationState)
+        public VersionAuthorizationHandlerDecorator(AuthorizationHandler authorizationHandlerComponent,
+            IGetAuthorizationState getAuthorizationState)
         {
             _authorizationHandlerComponent = authorizationHandlerComponent;
             _getAuthorizationState = getAuthorizationState;
@@ -22,8 +23,8 @@ namespace ChangeBlog.Api.Authorization.AuthorizationHandlers
         {
             var versionId = TryFindIdInHeader(context.HttpContext, KnownIdentifiers.VersionId);
 
-            return versionId.HasValue 
-                ? _getAuthorizationState.GetAuthStateByVersionIdAsync(userId, versionId.Value, permission) 
+            return versionId.HasValue
+                ? _getAuthorizationState.GetAuthStateByVersionIdAsync(userId, versionId.Value, permission)
                 : _authorizationHandlerComponent.GetAuthorizationState(context, userId, permission);
         }
     }

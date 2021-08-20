@@ -22,7 +22,7 @@ namespace ChangeBlog.Api.Presenters.V1.ChangeLogs
         {
             var resourceIds = new Dictionary<string, string>
             {
-                [nameof(productId)] = productId.ToString()
+                [KnownIdentifiers.ProductId] = productId.ToString()
             };
 
             Response = new NotFoundObjectResult(DefaultResponse.Create("Product does not exist.", resourceIds));
@@ -32,7 +32,7 @@ namespace ChangeBlog.Api.Presenters.V1.ChangeLogs
         {
             var resourceIds = new Dictionary<string, string>
             {
-                [nameof(changeLogLineId)] = changeLogLineId.ToString()
+                [KnownIdentifiers.ChangeLogLineId] = changeLogLineId.ToString()
             };
 
             var location = _httpContext.CreateLinkTo($"api/v1/pending-changelogs/{changeLogLineId}");
@@ -55,7 +55,7 @@ namespace ChangeBlog.Api.Presenters.V1.ChangeLogs
         {
             var resourceIds = new Dictionary<string, string>
             {
-                [nameof(changeLogLineId)] = changeLogLineId.ToString()
+                [KnownIdentifiers.ChangeLogLineId] = changeLogLineId.ToString()
             };
 
             Response = new UnprocessableEntityObjectResult(

@@ -30,7 +30,7 @@ namespace ChangeBlog.Api.Presenters
             var versionId = versionReleasedConflict.VersionId;
             var resourceIds = new Dictionary<string, string>
             {
-                [nameof(versionId)] = versionId.ToString()
+                [KnownIdentifiers.VersionId] = versionId.ToString()
             };
 
             var responseMessage = DefaultResponse.Create("The related version has already been released.", resourceIds);
@@ -43,7 +43,7 @@ namespace ChangeBlog.Api.Presenters
             var versionId = versionDeletedConflict.VersionId;
             var resourceIds = new Dictionary<string, string>
             {
-                [nameof(versionId)] = versionId.ToString()
+                [KnownIdentifiers.VersionId] = versionId.ToString()
             };
 
             var responseMessage = DefaultResponse.Create("The related version has been deleted.",
@@ -57,7 +57,7 @@ namespace ChangeBlog.Api.Presenters
             var productId = closedConflict.ProductId;
             var resourceIds = new Dictionary<string, string>
             {
-                [nameof(productId)] = productId.ToString()
+                [KnownIdentifiers.ProductId] = productId.ToString()
             };
 
             var responseMessage =
@@ -71,7 +71,7 @@ namespace ChangeBlog.Api.Presenters
             var changeLogLineId = lineDeleteConflict.ChangeLogLineId;
             var resourceIds = new Dictionary<string, string>
             {
-                [nameof(changeLogLineId)] = changeLogLineId.ToString()
+                [KnownIdentifiers.ChangeLogLineId] = changeLogLineId.ToString()
             };
 
             var responseMessage = DefaultResponse.Create(
@@ -89,13 +89,13 @@ namespace ChangeBlog.Api.Presenters
 
             var resourceIds = new Dictionary<string, string>
             {
-                [nameof(productId)] = productId.ToString(),
-                [nameof(changeLogLineId)] = changeLogLineId.ToString()
+                [KnownIdentifiers.ProductId] = productId.ToString(),
+                [KnownIdentifiers.ChangeLogLineId] = changeLogLineId.ToString()
             };
 
             if (versionId.HasValue)
             {
-                resourceIds.Add(nameof(versionId), versionId.Value.ToString());
+                resourceIds.Add(KnownIdentifiers.VersionId, versionId.Value.ToString());
             }
 
             var responseMessage =

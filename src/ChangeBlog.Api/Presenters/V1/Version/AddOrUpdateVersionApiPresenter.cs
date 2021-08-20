@@ -22,7 +22,7 @@ namespace ChangeBlog.Api.Presenters.V1.Version
         {
             var resourceIds = new Dictionary<string, string>
             {
-                [nameof(versionId)] = versionId.ToString()
+                [KnownIdentifiers.VersionId] = versionId.ToString()
             };
 
             Response = new ConflictObjectResult(
@@ -33,7 +33,7 @@ namespace ChangeBlog.Api.Presenters.V1.Version
         {
             var resourceIds = new Dictionary<string, string>
             {
-                [nameof(versionId)] = versionId.ToString()
+                [KnownIdentifiers.VersionId] = versionId.ToString()
             };
 
             var location = _httpContext.CreateLinkTo($"api/v1/versions/{versionId}");
@@ -73,7 +73,7 @@ namespace ChangeBlog.Api.Presenters.V1.Version
         {
             var resourceIds = new Dictionary<string, string>
             {
-                [nameof(versionId)] = versionId.ToString()
+                [KnownIdentifiers.VersionId] = versionId.ToString()
             };
 
             Response = new OkObjectResult(DefaultResponse.Create("Version successfully updated.", resourceIds));
@@ -83,7 +83,7 @@ namespace ChangeBlog.Api.Presenters.V1.Version
         {
             var resourceIds = new Dictionary<string, string>
             {
-                [nameof(productId)] = productId.ToString()
+                [KnownIdentifiers.ProductId] = productId.ToString()
             };
 
             Response = new NotFoundObjectResult(DefaultResponse.Create("Product does not exist", resourceIds));
@@ -93,7 +93,7 @@ namespace ChangeBlog.Api.Presenters.V1.Version
         {
             var resourceIds = new Dictionary<string, string>
             {
-                [nameof(versionId)] = versionId.ToString()
+                [KnownIdentifiers.VersionId] = versionId.ToString()
             };
 
             Response = new ConflictObjectResult(DefaultResponse.Create("Version already exists.", resourceIds));
@@ -109,7 +109,7 @@ namespace ChangeBlog.Api.Presenters.V1.Version
         {
             var resourceIds = new Dictionary<string, string>
             {
-                [nameof(productId)] = productId.ToString()
+                [KnownIdentifiers.ProductId] = productId.ToString()
             };
 
             Response = new ConflictObjectResult(
@@ -125,7 +125,7 @@ namespace ChangeBlog.Api.Presenters.V1.Version
         {
             var resourceIds = new Dictionary<string, string>
             {
-                [nameof(versionId)] = versionId.ToString()
+                [KnownIdentifiers.VersionId] = versionId.ToString()
             };
 
             Response = new ConflictObjectResult(

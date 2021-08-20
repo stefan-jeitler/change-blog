@@ -14,7 +14,7 @@ namespace ChangeBlog.Api.Presenters.V1.ChangeLogs
         {
             var resourceIds = new Dictionary<string, string>
             {
-                [nameof(versionId)] = versionId.ToString()
+                [KnownIdentifiers.VersionId] = versionId.ToString()
             };
 
             Response = new OkObjectResult(DefaultResponse.Create("Lines successfully moved.", resourceIds));
@@ -46,7 +46,7 @@ namespace ChangeBlog.Api.Presenters.V1.ChangeLogs
         {
             var resourceIds = new Dictionary<string, string>
             {
-                [nameof(productId)] = productId.ToString()
+                [KnownIdentifiers.ProductId] = productId.ToString()
             };
 
             Response = new OkObjectResult(DefaultResponse.Create("There are no Lines to assign.", resourceIds));

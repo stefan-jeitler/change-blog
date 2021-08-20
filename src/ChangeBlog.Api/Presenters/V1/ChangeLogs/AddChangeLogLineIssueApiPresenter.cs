@@ -13,7 +13,7 @@ namespace ChangeBlog.Api.Presenters.V1.ChangeLogs
         {
             var resourceIds = new Dictionary<string, string>
             {
-                [nameof(changeLogLineId)] = changeLogLineId.ToString()
+                [KnownIdentifiers.ChangeLogLineId] = changeLogLineId.ToString()
             };
 
             Response = new OkObjectResult(DefaultResponse.Create("Issue successfully added.", resourceIds));

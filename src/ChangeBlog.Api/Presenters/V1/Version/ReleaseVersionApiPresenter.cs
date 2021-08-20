@@ -13,7 +13,7 @@ namespace ChangeBlog.Api.Presenters.V1.Version
         {
             var resourceIds = new Dictionary<string, string>
             {
-                [nameof(versionId)] = versionId.ToString()
+                [KnownIdentifiers.VersionId] = versionId.ToString()
             };
 
             Response = new ConflictObjectResult(DefaultResponse.Create("The version has been deleted.", resourceIds));
@@ -23,7 +23,7 @@ namespace ChangeBlog.Api.Presenters.V1.Version
         {
             var resourceIds = new Dictionary<string, string>
             {
-                [nameof(versionId)] = versionId.ToString()
+                [KnownIdentifiers.VersionId] = versionId.ToString()
             };
 
             Response = new ConflictObjectResult(
@@ -34,7 +34,7 @@ namespace ChangeBlog.Api.Presenters.V1.Version
         {
             var resourceIds = new Dictionary<string, string>
             {
-                [nameof(versionId)] = versionId.ToString()
+                [KnownIdentifiers.VersionId] = versionId.ToString()
             };
 
             Response = new OkObjectResult(DefaultResponse.Create("Version successfully released.", resourceIds));
@@ -49,7 +49,7 @@ namespace ChangeBlog.Api.Presenters.V1.Version
         {
             var resourceIds = new Dictionary<string, string>
             {
-                [nameof(versionId)] = versionId.ToString()
+                [KnownIdentifiers.VersionId] = versionId.ToString()
             };
 
             Response = new NotFoundObjectResult(DefaultResponse.Create("Version not found", resourceIds));
@@ -59,7 +59,7 @@ namespace ChangeBlog.Api.Presenters.V1.Version
         {
             var resourceIds = new Dictionary<string, string>
             {
-                [nameof(productId)] = productId.ToString()
+                [KnownIdentifiers.ProductId] = productId.ToString()
             };
 
             Response = new ConflictObjectResult(

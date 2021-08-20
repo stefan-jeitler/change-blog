@@ -44,7 +44,7 @@ namespace ChangeBlog.Api.Presenters.V1.ChangeLogs
         {
             var resourceIds = new Dictionary<string, string>
             {
-                [nameof(changeLogLineId)] = changeLogLineId.ToString()
+                [KnownIdentifiers.ChangeLogLineId] = changeLogLineId.ToString()
             };
 
             Response = new OkObjectResult(DefaultResponse.Create("ChangeLogLine successfully updated.", resourceIds));
@@ -70,7 +70,7 @@ namespace ChangeBlog.Api.Presenters.V1.ChangeLogs
         {
             var resourceIds = new Dictionary<string, string>
             {
-                [nameof(changeLogLineId)] = changeLogLineId.ToString()
+                [KnownIdentifiers.ChangeLogLineId] = changeLogLineId.ToString()
             };
 
             Response = new ConflictObjectResult(DefaultResponse.Create("The requested change log line is not pending.",
@@ -81,7 +81,7 @@ namespace ChangeBlog.Api.Presenters.V1.ChangeLogs
         {
             var resourceIds = new Dictionary<string, string>
             {
-                [nameof(changeLogLineId)] = changeLogLineId.ToString()
+                [KnownIdentifiers.ChangeLogLineId] = changeLogLineId.ToString()
             };
 
             Response = new ConflictObjectResult(DefaultResponse.Create("The requested change log line is pending.",

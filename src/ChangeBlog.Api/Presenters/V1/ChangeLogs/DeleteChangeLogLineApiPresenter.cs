@@ -13,7 +13,7 @@ namespace ChangeBlog.Api.Presenters.V1.ChangeLogs
         {
             var resourceIds = new Dictionary<string, string>
             {
-                [nameof(changeLogLineId)] = changeLogLineId.ToString()
+                [KnownIdentifiers.ChangeLogLineId] = changeLogLineId.ToString()
             };
 
             Response = new NotFoundObjectResult(DefaultResponse.Create("The requested ChangeLogLine does not exist.",
@@ -24,7 +24,7 @@ namespace ChangeBlog.Api.Presenters.V1.ChangeLogs
         {
             var resourceIds = new Dictionary<string, string>
             {
-                [nameof(changeLogLineId)] = changeLogLineId.ToString()
+                [KnownIdentifiers.ChangeLogLineId] = changeLogLineId.ToString()
             };
 
             Response = new OkObjectResult(DefaultResponse.Create("Line successfully deleted.", resourceIds));
@@ -39,7 +39,7 @@ namespace ChangeBlog.Api.Presenters.V1.ChangeLogs
         {
             var resourceIds = new Dictionary<string, string>
             {
-                [nameof(changeLogLineId)] = changeLogLineId.ToString()
+                [KnownIdentifiers.ChangeLogLineId] = changeLogLineId.ToString()
             };
 
             Response = new ConflictObjectResult(DefaultResponse.Create("The requested change log line is not pending.",
@@ -50,7 +50,7 @@ namespace ChangeBlog.Api.Presenters.V1.ChangeLogs
         {
             var resourceIds = new Dictionary<string, string>
             {
-                [nameof(changeLogLineId)] = changeLogLineId.ToString()
+                [KnownIdentifiers.ChangeLogLineId] = changeLogLineId.ToString()
             };
 
             Response = new ConflictObjectResult(DefaultResponse.Create("The requested change log line is pending.",

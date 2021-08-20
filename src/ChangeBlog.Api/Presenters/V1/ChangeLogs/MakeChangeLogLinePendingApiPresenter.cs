@@ -13,7 +13,7 @@ namespace ChangeBlog.Api.Presenters.V1.ChangeLogs
         {
             var resourceIds = new Dictionary<string, string>
             {
-                [nameof(changeLogLineId)] = changeLogLineId.ToString()
+                [KnownIdentifiers.ChangeLogLineId] = changeLogLineId.ToString()
             };
 
             Response = new OkObjectResult(DefaultResponse.Create("Line was made pending.", resourceIds));
@@ -28,7 +28,7 @@ namespace ChangeBlog.Api.Presenters.V1.ChangeLogs
         {
             var resourceIds = new Dictionary<string, string>
             {
-                [nameof(changeLogLineId)] = changeLogLineId.ToString()
+                [KnownIdentifiers.ChangeLogLineId] = changeLogLineId.ToString()
             };
 
             Response = new OkObjectResult(DefaultResponse.Create("Line was made pending.", resourceIds));
@@ -38,7 +38,7 @@ namespace ChangeBlog.Api.Presenters.V1.ChangeLogs
         {
             var resourceIds = new Dictionary<string, string>
             {
-                [nameof(versionId)] = versionId.ToString()
+                [KnownIdentifiers.VersionId] = versionId.ToString()
             };
 
             Response = new ConflictObjectResult(DefaultResponse.Create("The related version has already been released.",
@@ -49,7 +49,7 @@ namespace ChangeBlog.Api.Presenters.V1.ChangeLogs
         {
             var resourceIds = new Dictionary<string, string>
             {
-                [nameof(versionId)] = versionId.ToString()
+                [KnownIdentifiers.VersionId] = versionId.ToString()
             };
 
             Response = new ConflictObjectResult(DefaultResponse.Create("The related version has been deleted.",
@@ -71,7 +71,7 @@ namespace ChangeBlog.Api.Presenters.V1.ChangeLogs
         {
             var resourceIds = new Dictionary<string, string>
             {
-                [nameof(changeLogLineId)] = changeLogLineId.ToString()
+                [KnownIdentifiers.ChangeLogLineId] = changeLogLineId.ToString()
             };
 
             Response = new UnprocessableEntityObjectResult(

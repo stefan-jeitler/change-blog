@@ -22,7 +22,7 @@ namespace ChangeBlog.Api.Presenters.V1.Product
         {
             var resourceIds = new Dictionary<string, string>
             {
-                [nameof(accountId)] = accountId.ToString()
+                [KnownIdentifiers.AccountId] = accountId.ToString()
             };
 
             Response = new NotFoundObjectResult(DefaultResponse.Create("Account not found.", resourceIds));
@@ -32,7 +32,7 @@ namespace ChangeBlog.Api.Presenters.V1.Product
         {
             var resourceIds = new Dictionary<string, string>
             {
-                [nameof(accountId)] = accountId.ToString()
+                [KnownIdentifiers.AccountId] = accountId.ToString()
             };
 
             Response = new UnprocessableEntityObjectResult(
@@ -48,7 +48,7 @@ namespace ChangeBlog.Api.Presenters.V1.Product
         {
             var resourceIds = new Dictionary<string, string>
             {
-                [nameof(productId)] = productId.ToString()
+                [KnownIdentifiers.ProductId] = productId.ToString()
             };
 
             Response = new ConflictObjectResult(
@@ -75,8 +75,8 @@ namespace ChangeBlog.Api.Presenters.V1.Product
         {
             var resourceIds = new Dictionary<string, string>
             {
-                [nameof(accountId)] = accountId.ToString(),
-                [nameof(productId)] = productId.ToString()
+                [KnownIdentifiers.AccountId] = accountId.ToString(),
+                [KnownIdentifiers.ProductId] = productId.ToString()
             };
 
             var location = _httpContext.CreateLinkTo($"api/v1/products/{productId}");

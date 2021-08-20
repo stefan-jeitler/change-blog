@@ -22,7 +22,7 @@ namespace ChangeBlog.Api.Presenters.V1.Version
         {
             var resourceIds = new Dictionary<string, string>
             {
-                [nameof(productId)] = productId.ToString()
+                [KnownIdentifiers.ProductId] = productId.ToString()
             };
 
             Response = new NotFoundObjectResult(DefaultResponse.Create("Product does not contain any version.", resourceIds));

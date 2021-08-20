@@ -12,7 +12,7 @@ namespace ChangeBlog.Api.Presenters.V1.Product
         {
             var resourceIds = new Dictionary<string, string>
             {
-                [nameof(productId)] = productId.ToString()
+                [KnownIdentifiers.ProductId] = productId.ToString()
             };
 
             Response = new OkObjectResult(DefaultResponse.Create("Project successfully closed.", resourceIds));
@@ -22,7 +22,7 @@ namespace ChangeBlog.Api.Presenters.V1.Product
         {
             var resourceIds = new Dictionary<string, string>
             {
-                [nameof(productId)] = productId.ToString()
+                [KnownIdentifiers.ProductId] = productId.ToString()
             };
 
             Response = new NotFoundObjectResult(DefaultResponse.Create("Product not found.", resourceIds));
@@ -32,7 +32,7 @@ namespace ChangeBlog.Api.Presenters.V1.Product
         {
             var resourceIds = new Dictionary<string, string>
             {
-                [nameof(productId)] = productId.ToString()
+                [KnownIdentifiers.ProductId] = productId.ToString()
             };
 
             Response = new OkObjectResult(DefaultResponse.Create("Project successfully closed.", resourceIds));

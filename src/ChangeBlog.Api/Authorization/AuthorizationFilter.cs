@@ -68,7 +68,8 @@ namespace ChangeBlog.Api.Authorization
         private async Task HandleAuthorizationAsync(ActionExecutingContext context, ActionExecutionDelegate next,
             Maybe<NeedsPermissionAttribute> permission)
         {
-            var authState = await GetAuthorizationStateAsync(context, permission.Value.Permission);
+            var userId = context.HttpContext.GetUserId();
+            var authState = await _authorizationHandler.GetAuthorizationState(context, userId, permission.Value.Permission);
 
             switch (authState)
             {
@@ -86,13 +87,6 @@ namespace ChangeBlog.Api.Authorization
                     context.Result = InternalServerError;
                     break;
             }
-        }
-
-        private async Task<AuthorizationState> GetAuthorizationStateAsync(ActionExecutingContext context,
-            Permission permission)
-        {
-            var userId = context.HttpContext.GetUserId();
-            return await _authorizationHandler.GetAuthorizationState(context, userId, permission);
         }
     }
 }

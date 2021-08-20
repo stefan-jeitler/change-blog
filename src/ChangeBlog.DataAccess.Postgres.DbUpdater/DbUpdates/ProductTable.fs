@@ -30,7 +30,7 @@ let private addProductForAppChangesSql =
                 'a00788cb-03f8-4a8c-84b6-756622550e8c',
                 '4091b948-9bc5-43ee-9f98-df3d27853565',
                 'ChangeBlog.Api',
-                '8e983811-7d39-4fe2-9373-1c6b0e4eb360',
+                'a17f556c-14c3-4bc2-bfa7-3c0811fd75b8',
                 null,
                 '2021-05-29 10:45:44.737828')
         ON CONFLICT (id) do nothing

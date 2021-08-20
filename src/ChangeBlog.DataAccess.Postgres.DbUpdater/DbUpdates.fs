@@ -22,6 +22,7 @@ let dbUpdates: DbUpdate list = [
     { Version = SemVersion.Parse("3.3.0"); Update = ApiKeyTable.create }
     { Version = SemVersion.Parse("3.4.0"); Update = AccountUserTable.create }
     { Version = SemVersion.Parse("3.5.0"); Update = ProductTable.create }
+    { Version = SemVersion.Parse("3.6.0"); Update = AccountTable.addChangeTrackerAccount }
     { Version = SemVersion.Parse("4.0.0"); Update = ProductTable.addUniqueIndexOnAccountIdAndName}
     { Version = SemVersion.Parse("4.1.0"); Update = ProductUserTable.create}
     { Version = SemVersion.Parse("4.2.0"); Update = VersionTable.create}

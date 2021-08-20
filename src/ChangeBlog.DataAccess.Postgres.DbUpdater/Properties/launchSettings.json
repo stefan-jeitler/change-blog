@@ -1,0 +1,8 @@
+{
+  "profiles": {
+    "ChangeBlog.DataAccess.Postgres.DbUpdater": {
+      "commandName": "Project",
+      "commandLineArgs": "run-updates -v"
+    }
+  }
+}

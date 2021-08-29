@@ -22,7 +22,14 @@ import { ProfileComponent } from './components/profile/profile.component';
     BrowserModule,
     HttpClientModule,
     AppRoutingModule,
-    OAuthModule.forRoot()
+    OAuthModule.forRoot({
+      resourceServer: {
+        sendAccessToken: true,
+        allowedUrls: [
+          "http://localhost:6230/api"
+        ]
+      }
+    })
   ],
   providers: [
     { provide: AuthConfig, useValue: authConfig }

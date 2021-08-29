@@ -8,7 +8,10 @@ import { AuthConfig, OAuthService } from 'angular-oauth2-oidc';
 })
 export class HeaderComponent implements OnInit {
 
-  constructor(private authService: OAuthService, private authConfig: AuthConfig) { }
+  constructor(private authService: OAuthService, private authConfig: AuthConfig) {
+    this.authService.events.subscribe(e => console.table(e))
+
+   }
 
   ngOnInit() {
     this.authService.configure(this.authConfig);

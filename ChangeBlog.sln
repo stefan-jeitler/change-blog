@@ -36,6 +36,8 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ChangeBlog.Domain.Tests", "
 EndProject
 Project("{6EC3EE1D-3C4E-46DD-8F32-0CC8E7565705}") = "ChangeBlog.DataAccess.Postgres.DbUpdater", "src\ChangeBlog.DataAccess.Postgres.DbUpdater\ChangeBlog.DataAccess.Postgres.DbUpdater.fsproj", "{A06DD069-5241-40DA-98D9-A9317B36A2C0}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ChangeBlog.Management.Api", "src\ChangeBlog.Management.Api\ChangeBlog.Management.Api.csproj", "{F9A8EB60-2746-465B-BB1E-0196F3815125}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -154,6 +156,18 @@ Global
 		{A06DD069-5241-40DA-98D9-A9317B36A2C0}.Release|x64.Build.0 = Release|Any CPU
 		{A06DD069-5241-40DA-98D9-A9317B36A2C0}.Release|x86.ActiveCfg = Release|Any CPU
 		{A06DD069-5241-40DA-98D9-A9317B36A2C0}.Release|x86.Build.0 = Release|Any CPU
+		{F9A8EB60-2746-465B-BB1E-0196F3815125}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{F9A8EB60-2746-465B-BB1E-0196F3815125}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{F9A8EB60-2746-465B-BB1E-0196F3815125}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{F9A8EB60-2746-465B-BB1E-0196F3815125}.Debug|x64.Build.0 = Debug|Any CPU
+		{F9A8EB60-2746-465B-BB1E-0196F3815125}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{F9A8EB60-2746-465B-BB1E-0196F3815125}.Debug|x86.Build.0 = Debug|Any CPU
+		{F9A8EB60-2746-465B-BB1E-0196F3815125}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{F9A8EB60-2746-465B-BB1E-0196F3815125}.Release|Any CPU.Build.0 = Release|Any CPU
+		{F9A8EB60-2746-465B-BB1E-0196F3815125}.Release|x64.ActiveCfg = Release|Any CPU
+		{F9A8EB60-2746-465B-BB1E-0196F3815125}.Release|x64.Build.0 = Release|Any CPU
+		{F9A8EB60-2746-465B-BB1E-0196F3815125}.Release|x86.ActiveCfg = Release|Any CPU
+		{F9A8EB60-2746-465B-BB1E-0196F3815125}.Release|x86.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -168,6 +182,7 @@ Global
 		{78BA5587-D5FC-4731-9668-B59FDFCD6BE6} = {6277CDA3-825B-4CFF-9012-5B2934F75BE6}
 		{F71B8E92-872E-499E-953A-6C1BD0DFB081} = {6277CDA3-825B-4CFF-9012-5B2934F75BE6}
 		{A06DD069-5241-40DA-98D9-A9317B36A2C0} = {423A20CE-5392-4973-8C90-C3BDEB319B05}
+		{F9A8EB60-2746-465B-BB1E-0196F3815125} = {423A20CE-5392-4973-8C90-C3BDEB319B05}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {6DCFFA94-033D-44D8-8DE2-6605E2E2C5D9}

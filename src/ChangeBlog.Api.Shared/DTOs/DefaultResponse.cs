@@ -2,7 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Text.Json.Serialization;
 
-namespace ChangeBlog.Api.DTOs
+namespace ChangeBlog.Api.Shared.DTOs
 {
     public class DefaultResponse
     {

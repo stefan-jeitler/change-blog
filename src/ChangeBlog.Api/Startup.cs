@@ -3,6 +3,7 @@ using ChangeBlog.Api.Authentication;
 using ChangeBlog.Api.Authorization;
 using ChangeBlog.Api.DTOs;
 using ChangeBlog.Api.Extensions;
+using ChangeBlog.Api.Shared.DTOs;
 using ChangeBlog.Api.SwaggerUI;
 using ChangeBlog.DataAccess.Postgres;
 using Microsoft.AspNetCore.Builder;

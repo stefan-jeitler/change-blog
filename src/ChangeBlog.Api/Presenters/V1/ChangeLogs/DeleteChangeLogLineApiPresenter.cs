@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using ChangeBlog.Api.DTOs;
+using ChangeBlog.Api.Shared.DTOs;
 using ChangeBlog.Application.DataAccess;
 using ChangeBlog.Application.UseCases.Commands.DeleteChangeLogLine;
 using Microsoft.AspNetCore.Mvc;

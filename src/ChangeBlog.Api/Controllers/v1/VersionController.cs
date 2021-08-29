@@ -9,6 +9,7 @@ using ChangeBlog.Api.DTOs;
 using ChangeBlog.Api.DTOs.V1.Version;
 using ChangeBlog.Api.Extensions;
 using ChangeBlog.Api.Presenters.V1.Version;
+using ChangeBlog.Api.Shared.DTOs;
 using ChangeBlog.Api.SwaggerUI;
 using ChangeBlog.Application.UseCases;
 using ChangeBlog.Application.UseCases.Commands.AddOrUpdateVersion;

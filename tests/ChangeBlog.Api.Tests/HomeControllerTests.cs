@@ -2,8 +2,6 @@ using System.Net;
 using System.Threading.Tasks;
 using ChangeBlog.Api.Authentication;
 using ChangeBlog.Api.Authentication.DataAccess;
-using ChangeBlog.Api.DTOs;
-using ChangeBlog.Api.Shared;
 using ChangeBlog.Api.Shared.DTOs;
 using FluentAssertions;
 using Microsoft.AspNetCore.Mvc.Testing;
@@ -44,21 +42,13 @@ namespace ChangeBlog.Api.Tests
         }
 
         [Fact]
-        public async Task ChangeLogEndpoint_HappyPath_Authorized()
+        public async Task ChangeLogEndpoint_Exists()
         {
-            // arrange
-            const string testApiKey = "test-api-key";
-            var client = _factory
-                .WithWebHostBuilder(whb => whb.ConfigureServices(s =>
-                    s.AddSingleton<IFindUserId>(_ => new FindUserIdInMemory(testApiKey))))
-                .CreateClient();
-            client.DefaultRequestHeaders.Add("X-API-KEY", new[] {testApiKey});
+            var client = _factory.CreateClient();
 
-            // act
             var response = await client.GetAsync("api/changes");
-
-            // assert
-            response.StatusCode.Should().NotBe(HttpStatusCode.Unauthorized);
+            
+            response.StatusCode.Should().Be(HttpStatusCode.OK);
         }
     }
 }

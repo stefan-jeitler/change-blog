@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using ChangeBlog.Api.Shared.DTOs;
+using ChangeBlog.Management.Api.SwaggerUI;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
@@ -37,33 +38,7 @@ namespace ChangeBlog.Management.Api
 
             services.AddSpaStaticFiles(configuration => { configuration.RootPath = "ClientApp/dist"; });
 
-            services.AddSwaggerGen(c =>
-            {
-                c.SwaggerDoc("v1", new OpenApiInfo {Title = "ChangeBlog.Management.Api", Version = "v1"});
-                c.AddSecurityDefinition("Bearer", new OpenApiSecurityScheme
-                {
-                    Name = "Bearer",
-                    In = ParameterLocation.Header,
-                    Description = "Please insert JsonWebToken",
-                    Type = SecuritySchemeType.Http,
-                    Scheme = "Bearer"
-                });
-
-                c.AddSecurityRequirement(new OpenApiSecurityRequirement
-                {
-                    {
-                        new OpenApiSecurityScheme
-                        {
-                            Reference = new OpenApiReference
-                            {
-                                Type = ReferenceType.SecurityScheme,
-                                Id = "Bearer"
-                            }
-                        },
-                        Array.Empty<string>()
-                    }
-                });
-            });
+            services.AddSwagger();
         }
 
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
@@ -71,14 +46,9 @@ namespace ChangeBlog.Management.Api
             if (env.IsDevelopment())
             {
                 app.UseDeveloperExceptionPage();
-                app.UseSwagger();
-                app.UseSwaggerUI(c =>
-                {
-                    c.SwaggerEndpoint("/swagger/v1/swagger.json", "ChangeBlog.Management.Api v1");
-                    c.RoutePrefix = "swagger";
-                });
             }
 
+            app.AddSwagger();
             app.UseStaticFiles();
             if (!env.IsDevelopment())
             {

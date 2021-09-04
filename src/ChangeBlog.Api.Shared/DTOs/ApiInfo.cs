@@ -4,7 +4,7 @@ using System;
 // ReSharper disable UnusedAutoPropertyAccessor.Global
 // ReSharper disable ConvertIfStatementToSwitchStatement
 
-namespace ChangeBlog.Api.DTOs
+namespace ChangeBlog.Api.Shared.DTOs
 {
     public class ApiInfo
     {

@@ -1,9 +1,9 @@
 using System;
-using ChangeBlog.Api.DTOs;
+using ChangeBlog.Api.Shared.DTOs;
 using FluentAssertions;
 using Xunit;
 
-namespace ChangeBlog.Api.Tests
+namespace ChangeBlog.Api.Shared.Tests
 {
     public class ApiInfoTests
     {

@@ -3,6 +3,8 @@ using System.Threading.Tasks;
 using ChangeBlog.Api.Authentication;
 using ChangeBlog.Api.Authentication.DataAccess;
 using ChangeBlog.Api.DTOs;
+using ChangeBlog.Api.Shared;
+using ChangeBlog.Api.Shared.DTOs;
 using FluentAssertions;
 using Microsoft.AspNetCore.Mvc.Testing;
 using Microsoft.Extensions.DependencyInjection;

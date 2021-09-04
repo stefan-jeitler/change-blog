@@ -1,5 +1,6 @@
 using System.Linq;
 using ChangeBlog.Api.Shared.DTOs;
+using ChangeBlog.Management.Api.Authentication;
 using ChangeBlog.Management.Api.SwaggerUI;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Builder;
@@ -9,7 +10,6 @@ using Microsoft.AspNetCore.SpaServices.AngularCli;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
-using Microsoft.Identity.Web;
 
 namespace ChangeBlog.Management.Api
 {
@@ -24,18 +24,23 @@ namespace ChangeBlog.Management.Api
 
         public void ConfigureServices(IServiceCollection services)
         {
-            services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
-                .AddMicrosoftIdentityWebApi(Configuration.GetSection("AzureAd"))
-                .EnableTokenAcquisitionToCallDownstreamApi()
-                .AddInMemoryTokenCaches();
+            var settings = Configuration
+                .GetSection("Authentication:MicrosoftIdentity")
+                .Get<MicrosoftIdentityAuthenticationSettings>();
 
-            services.AddControllers()
+            services
+                .AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
+                .AddMicrosoftIdentityAuthentication(settings);
+
+            services
+                .AddControllers()
                 .ConfigureApiBehaviorOptions(o => o.InvalidModelStateResponseFactory = CustomErrorMessage);
 
             services.AddSpaStaticFiles(configuration => { configuration.RootPath = "ClientApp/dist"; });
 
             services.AddSwagger();
         }
+
 
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
         {
@@ -45,6 +50,7 @@ namespace ChangeBlog.Management.Api
             }
 
             app.AddSwagger();
+
             app.UseStaticFiles();
             if (!env.IsDevelopment())
             {

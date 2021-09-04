@@ -20,10 +20,8 @@ namespace ChangeBlog.Management.Api.Controllers
             _tokenAcquisition = tokenAcquisition;
         }
 
-
         [HttpGet]
         public string GetProtectedString() => "Protected-String";
-
 
         [HttpGet("userprofile")]
         public async Task<ActionResult> GetUserProfileAsync()

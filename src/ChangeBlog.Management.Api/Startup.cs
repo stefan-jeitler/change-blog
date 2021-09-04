@@ -1,5 +1,3 @@
-using System;
-using System.Collections.Generic;
 using System.Linq;
 using ChangeBlog.Api.Shared.DTOs;
 using ChangeBlog.Management.Api.SwaggerUI;
@@ -11,9 +9,7 @@ using Microsoft.AspNetCore.SpaServices.AngularCli;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
-using Microsoft.Identity.Client;
 using Microsoft.Identity.Web;
-using Microsoft.OpenApi.Models;
 
 namespace ChangeBlog.Management.Api
 {

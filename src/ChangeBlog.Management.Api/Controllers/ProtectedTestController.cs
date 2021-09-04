@@ -1,12 +1,9 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Net.Http;
 using System.Net.Http.Headers;
 using System.Net.Mime;
 using System.Threading.Tasks;
-using ChangeBlog.Api.Shared.DTOs;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.Graph;
 using Microsoft.Identity.Web;
 
 namespace ChangeBlog.Management.Api.Controllers
@@ -16,7 +13,6 @@ namespace ChangeBlog.Management.Api.Controllers
     [Produces(MediaTypeNames.Application.Json)]
     public class ProtectedTestController : ControllerBase
     {
-
         private readonly ITokenAcquisition _tokenAcquisition;
 
         public ProtectedTestController(ITokenAcquisition tokenAcquisition)
@@ -32,30 +28,22 @@ namespace ChangeBlog.Management.Api.Controllers
         [HttpGet("userprofile")]
         public async Task<ActionResult> GetUserProfileAsync()
         {
-            try
-            {
-                var token = await _tokenAcquisition.GetAccessTokenForUserAsync(new[]
-                    {"openid", "profile", "email", "offline_access"});
+            var token = await _tokenAcquisition.GetAccessTokenForUserAsync(new[]
+                {"openid", "profile", "email", "offline_access"});
 
-                var httpClient = new HttpClient
+            var httpClient = new HttpClient
+            {
+                BaseAddress = new Uri("https://graph.microsoft.com/oidc/"),
+                DefaultRequestHeaders =
                 {
-                    BaseAddress = new Uri("https://graph.microsoft.com/oidc/"),
-                    DefaultRequestHeaders =
-                    {
-                        Authorization = new AuthenticationHeaderValue("Bearer", token)
-                    }
-                };
+                    Authorization = new AuthenticationHeaderValue("Bearer", token)
+                }
+            };
 
-                var response = await httpClient.GetAsync("userinfo");
-                var content = await response.Content.ReadAsStringAsync();
+            var response = await httpClient.GetAsync("userinfo");
+            var content = await response.Content.ReadAsStringAsync();
 
-                return Ok(content);
-            }
-            catch (Exception e)
-            {
-            }
-
-            return Conflict();
+            return Ok(content);
         }
     }
 }

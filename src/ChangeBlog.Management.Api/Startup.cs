@@ -61,8 +61,6 @@ namespace ChangeBlog.Management.Api
                 app.UseDeveloperExceptionPage();
             }
 
-            app.UseDeveloperExceptionPage();
-
             app.AddSwagger();
 
             app.UseStaticFiles();

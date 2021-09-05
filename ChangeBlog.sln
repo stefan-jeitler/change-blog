@@ -7,7 +7,6 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution 
 		.gitignore = .gitignore
 		azure-pipelines.yml = azure-pipelines.yml
 		build.ps1 = build.ps1
-		Dockerfile = Dockerfile
 		latest-changes.json = latest-changes.json
 		latest-changes.ps1 = latest-changes.ps1
 		publish-image.ps1 = publish-image.ps1
@@ -15,6 +14,9 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution 
 	EndProjectSection
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "src", "src", "{423A20CE-5392-4973-8C90-C3BDEB319B05}"
+	ProjectSection(SolutionItems) = preProject
+		src\.dockerignore = src\.dockerignore
+	EndProjectSection
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ChangeBlog.Api", "src\ChangeBlog.Api\ChangeBlog.Api.csproj", "{619C25E8-E2CB-4E62-8906-06C8209B7B2E}"
 EndProject
@@ -44,7 +46,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ChangeBlog.Api.Shared.Tests
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ChangeBlog.Management.Api.Tests", "tests\ChangeBlog.Management.Api.Tests\ChangeBlog.Management.Api.Tests.csproj", "{24E0C3F5-5357-4E48-9FD1-A4A405D5BA6B}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ChangeBlog.DataAccess.MicrosoftIdentity", "src\ChangeBlog.DataAccess.MicrosoftIdentity\ChangeBlog.DataAccess.MicrosoftIdentity.csproj", "{834CA75D-BEA1-407D-97E0-92340EC4FB6F}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ChangeBlog.DataAccess.MicrosoftIdentity", "src\ChangeBlog.DataAccess.MicrosoftIdentity\ChangeBlog.DataAccess.MicrosoftIdentity.csproj", "{834CA75D-BEA1-407D-97E0-92340EC4FB6F}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

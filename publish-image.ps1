@@ -18,7 +18,8 @@ if ($Version -NotMatch $semVersionRegExPattern) {
   Exit -1
 }
 
-$SourceDir = Split-Path -Parent $Dockerfile
+$SourceDir = (Get-Item $Dockerfile ).Directory.Parent.FullName
+Write-Host "SourceDir: $SourceDir"
 
 $LocalImageName = "$($ImageName):$Tag"
 

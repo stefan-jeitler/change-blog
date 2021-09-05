@@ -1,7 +1,6 @@
 using System.Net;
 using System.Threading.Tasks;
 using ChangeBlog.Api.Authentication;
-using ChangeBlog.Api.Authentication.DataAccess;
 using ChangeBlog.Api.Shared.DTOs;
 using FluentAssertions;
 using Microsoft.AspNetCore.Mvc.Testing;

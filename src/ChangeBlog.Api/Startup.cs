@@ -3,8 +3,11 @@ using ChangeBlog.Api.Authentication;
 using ChangeBlog.Api.Authorization;
 using ChangeBlog.Api.DTOs;
 using ChangeBlog.Api.Extensions;
+using ChangeBlog.Api.Shared;
 using ChangeBlog.Api.Shared.DTOs;
 using ChangeBlog.Api.SwaggerUI;
+using ChangeBlog.Application.DataAccess.ExternalIdentity;
+using ChangeBlog.DataAccess.MicrosoftIdentity;
 using ChangeBlog.DataAccess.Postgres;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
@@ -42,9 +45,10 @@ namespace ChangeBlog.Api
 
             var connectionString = _configuration.GetConnectionString("ChangeBlogDb");
             services.AddPostgresDataAccess(connectionString);
+            services.AddSingleton<IExternalUserInfoDao, ExternalUserInfoNullObject>();
 
             services.AddMemoryCache();
-            services.AddUseCases();
+            services.AddApplicationUseCases();
         }
 
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)

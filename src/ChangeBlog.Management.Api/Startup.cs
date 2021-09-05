@@ -1,5 +1,8 @@
 using System.Linq;
+using ChangeBlog.Api.Shared;
 using ChangeBlog.Api.Shared.DTOs;
+using ChangeBlog.DataAccess.MicrosoftIdentity;
+using ChangeBlog.DataAccess.Postgres;
 using ChangeBlog.Management.Api.Authentication;
 using ChangeBlog.Management.Api.SwaggerUI;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
@@ -29,8 +32,9 @@ namespace ChangeBlog.Management.Api
                 .Get<MicrosoftIdentityAuthenticationSettings>();
 
             services
+                .AddAuthenticationServices()
                 .AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
-                .AddMicrosoftIdentityAuthentication(settings);
+                .AddAppAuthentication(settings);
 
             services
                 .AddControllers()
@@ -38,7 +42,15 @@ namespace ChangeBlog.Management.Api
 
             services.AddSpaStaticFiles(configuration => { configuration.RootPath = "ClientApp/dist"; });
 
-            services.AddSwagger();
+            services
+                .AddSwagger()
+                .AddApplicationUseCases();
+
+            var connectionString = Configuration.GetConnectionString("ChangeBlogDb");
+            services.AddPostgresDataAccess(connectionString);
+
+            var userInfoEndpointBaseUrl = Configuration.GetValue<string>("UserInfoEndpointBaseUrl");
+            services.AddMicrosoftIdentityDataAccess(userInfoEndpointBaseUrl);
         }
 
 

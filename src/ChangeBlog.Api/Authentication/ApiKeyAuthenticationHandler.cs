@@ -6,7 +6,6 @@ using System.Security.Claims;
 using System.Text.Encodings.Web;
 using System.Text.Json;
 using System.Threading.Tasks;
-using ChangeBlog.Api.DTOs;
 using ChangeBlog.Api.Shared.DTOs;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Http;
@@ -20,13 +19,13 @@ namespace ChangeBlog.Api.Authentication
     public class ApiKeyAuthenticationHandler : AuthenticationHandler<ApiKeyAuthenticationOptions>
     {
         private const string ApiKeyHeaderName = "X-Api-Key";
-        private readonly IFindUserId _findUserId;
+        private readonly FindUserId _findUserId;
 
         public ApiKeyAuthenticationHandler(IOptionsMonitor<ApiKeyAuthenticationOptions> options,
             ILoggerFactory logger,
             UrlEncoder encoder,
             ISystemClock clock,
-            IFindUserId findUserId)
+            FindUserId findUserId)
             : base(options, logger, encoder, clock)
         {
             _findUserId = findUserId;
@@ -42,7 +41,7 @@ namespace ChangeBlog.Api.Authentication
             if (apiKeyInHeader is null)
                 return AuthenticateResult.NoResult();
 
-            var userId = await _findUserId.FindAsync(apiKeyInHeader);
+            var userId = await _findUserId.FindByApiKeyAsync(apiKeyInHeader);
             if (userId.HasValue && userId.Value != Guid.Empty)
             {
                 var identity = new ClaimsIdentity(new List<Claim>

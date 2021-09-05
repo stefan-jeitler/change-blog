@@ -4,9 +4,7 @@ using System.Data;
 using System.Linq;
 using System.Threading.Tasks;
 using ChangeBlog.Application.DataAccess.Users;
-using ChangeBlog.Application.UseCases;
 using ChangeBlog.Domain;
-using ChangeBlog.Domain.Authorization;
 using ChangeBlog.Domain.Common;
 using Dapper;
 using Microsoft.Extensions.Logging;
@@ -25,36 +23,14 @@ namespace ChangeBlog.DataAccess.Postgres.DataAccessObjects.Users
             _logger = logger;
         }
 
-        public async Task<Guid?> FindUserIdAsync(string apiKey)
-        {
-            if (string.IsNullOrEmpty(apiKey)) return null;
-
-            using var dbConnection = _acquireDbConnection();
-            return await dbConnection
-                .QueryFirstOrDefaultAsync<Guid?>(FindUserIdByApiKeySql,
-                    new {apiKey});
-        }
-
         public async Task<IEnumerable<Role>> GetAccountRolesAsync(Guid accountId, Guid userId)
         {
             using var dbConnection = _acquireDbConnection();
 
-            var rolePermissions =  await dbConnection.QueryAsync<RolePermissionDto>(GetAccountPermissionsSql, new
+            var rolePermissions = await dbConnection.QueryAsync<RolePermissionDto>(GetAccountPermissionsSql, new
             {
                 userId,
                 accountId
-            });
-
-            return ParseRoleDtos(rolePermissions.AsList());
-        }
-
-        public async Task<IEnumerable<Role>> GetAccountsRolesAsync(Guid userId)
-        {
-            using var dbConnection = _acquireDbConnection();
-
-            var rolePermissions = await dbConnection.QueryAsync<RolePermissionDto>(GetUserAccountsPermissionsSql, new
-            {
-                userId
             });
 
             return ParseRoleDtos(rolePermissions.AsList());
@@ -90,16 +66,39 @@ namespace ChangeBlog.DataAccess.Postgres.DataAccessObjects.Users
         {
             using var dbConnection = _acquireDbConnection();
 
-            var rolePermissions = await dbConnection.QueryAsync<RolePermissionDto>(GetPermissionsByChangeLogLineIdSql, new
-            {
-                userId,
-                changeLogLineId
-            });
+            var rolePermissions = await dbConnection.QueryAsync<RolePermissionDto>(GetPermissionsByChangeLogLineIdSql,
+                new
+                {
+                    userId,
+                    changeLogLineId
+                });
 
             return ParseAccountAndProductRoles(rolePermissions.AsList());
         }
 
-        private AccountProductRolesDto ParseAccountAndProductRoles(IReadOnlyCollection<RolePermissionDto> rolePermissions)
+        public async Task<Guid?> FindActiveUserIdByApiKeyAsync(string apiKey)
+        {
+            if (string.IsNullOrEmpty(apiKey)) return null;
+
+            using var dbConnection = _acquireDbConnection();
+            return await dbConnection
+                .QueryFirstOrDefaultAsync<Guid?>(FindActiveUserIdByApiKeySql,
+                    new {apiKey});
+        }
+
+        public async Task<Guid?> FindActiveUserByExternalUserId(string externalUserId)
+        {
+            if (string.IsNullOrEmpty(externalUserId))
+                return null;
+
+            using var dbConnection = _acquireDbConnection();
+            return await dbConnection
+                .QueryFirstOrDefaultAsync<Guid?>(FindActiveUserIdByExternalUserIdSql,
+                    new { externalUserId });
+        }
+
+        private AccountProductRolesDto ParseAccountAndProductRoles(
+            IReadOnlyCollection<RolePermissionDto> rolePermissions)
         {
             var accountRoles = rolePermissions
                 .Where(x => x.Type == "Account")

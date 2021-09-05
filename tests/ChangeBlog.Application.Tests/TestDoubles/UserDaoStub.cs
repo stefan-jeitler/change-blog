@@ -4,12 +4,27 @@ using System.Linq;
 using System.Threading.Tasks;
 using ChangeBlog.Application.DataAccess.Users;
 using ChangeBlog.Domain;
+using CSharpFunctionalExtensions;
 
 namespace ChangeBlog.Application.Tests.TestDoubles
 {
     public class UserDaoStub : IUserDao
     {
+        public class ExternalIdentity
+        {
+            public ExternalIdentity(string externalUserId, Guid userId)
+            {
+                ExternalUserId = externalUserId;
+                UserId = userId;
+            }
+
+            public string ExternalUserId { get; }
+            public Guid UserId { get; }
+        }
+        
         public List<User> Users { get; } = new();
+        public List<ExternalIdentity> ExternalIdentities { get; } = new();
+        public bool ProduceFailureWhileImporting { get; set; }
 
         public async Task<User> GetUserAsync(Guid userId)
         {
@@ -40,6 +55,45 @@ namespace ChangeBlog.Application.Tests.TestDoubles
             await Task.Yield();
 
             return Users;
+        }
+
+        public async Task<Maybe<User>> FindByExternalUserIdAsync(string externalUserId)
+        {
+            await Task.Yield();
+
+            return ExternalIdentities
+                .TryFirst(x => x.ExternalUserId == externalUserId)
+                .Bind(eu => Users.TryFirst(u => eu.UserId == u.Id));
+        }
+
+        public async Task<Result> AddExternalIdentity(string externalUserId, Guid userId)
+        {
+            await Task.Yield();
+
+            if(ProduceFailureWhileImporting)
+                return Result.Failure("Something went wrong.");
+
+            var externalIdentity = new ExternalIdentity(externalUserId, userId);
+            ExternalIdentities.Add(externalIdentity);
+
+            return Result.Success();
+        }
+
+        public async Task<Maybe<User>> FindByEmailAsync(string email)
+        {
+            await Task.Yield();
+
+            var user = Users.SingleOrDefault(x => x.Email == email);
+
+            return user == default
+                ? Maybe<User>.None
+                : Maybe<User>.From(user);
+        }
+
+        public Task<Result> AddAsync(User user)
+        {
+            Users.Add(user);
+            return Task.FromResult(Result.Success());
         }
     }
 }

@@ -3,17 +3,21 @@ using System.Collections.Generic;
 using System.Threading.Tasks;
 using ChangeBlog.Application.DataAccess.Users;
 using ChangeBlog.Domain;
+using CSharpFunctionalExtensions;
 using Dapper;
+using Microsoft.Extensions.Logging;
 
 namespace ChangeBlog.DataAccess.Postgres.DataAccessObjects.Users
 {
     public class UserDao : IUserDao
     {
         private readonly IDbAccessor _dbAccessor;
+        private readonly ILogger<UserDao> _logger;
 
-        public UserDao(IDbAccessor dbAccessor)
+        public UserDao(IDbAccessor dbAccessor, ILogger<UserDao> logger)
         {
             _dbAccessor = dbAccessor;
+            _logger = logger;
         }
 
         public async Task<User> GetUserAsync(Guid userId)
@@ -88,6 +92,114 @@ namespace ChangeBlog.DataAccess.Postgres.DataAccessObjects.Users
                 });
 
             return users.AsList();
+        }
+
+        public async Task<Maybe<User>> FindByExternalUserIdAsync(string externalUserId)
+        {
+            if (string.IsNullOrEmpty(externalUserId))
+                return Maybe<User>.None;
+
+            const string getUserSql = @"
+                SELECT u.id,
+                       u.email,
+                       u.first_name AS firstName,
+                       u.last_name  AS lastName,
+                       u.timezone,
+                       u.deleted_at AS deletedAt,
+                       u.created_at AS createdAt
+                FROM ""user"" u
+                JOIN external_identity ei on u.id = ei.user_id
+                WHERE ei.external_user_id = @externalUserId";
+
+            var user = await _dbAccessor.DbConnection
+                .QuerySingleOrDefaultAsync<User>(getUserSql, new
+                {
+                    externalUserId
+                });
+
+            return user == default
+                ? Maybe<User>.None
+                : Maybe<User>.From(user);
+        }
+
+        public async Task<Maybe<User>> FindByEmailAsync(string email)
+        {
+            if (string.IsNullOrEmpty(email))
+                return Maybe<User>.None;
+
+            const string getUserSql = @"
+                SELECT u.id,
+                       u.email,
+                       u.first_name AS firstName,
+                       u.last_name  AS lastName,
+                       u.timezone,
+                       u.deleted_at AS deletedAt,
+                       u.created_at AS createdAt
+                FROM ""user"" u
+                WHERE LOWER(u.email) = LOWER(@email)";
+
+            var user = await _dbAccessor.DbConnection
+                .QuerySingleOrDefaultAsync<User>(getUserSql, new
+                {
+                    email
+                });
+
+            return user == default
+                ? Maybe<User>.None
+                : Maybe<User>.From(user);
+        }
+
+        public async Task<Result> AddExternalIdentity(string externalUserId, Guid userId)
+        {
+            const string insertExternalIdentitySql = @"
+                INSERT INTO external_identity (id, user_id, external_user_id, created_at) 
+                VALUES (Guid(), @userId, @externalUserId, now());";
+
+            try
+            {
+                await _dbAccessor.DbConnection
+                    .ExecuteAsync(insertExternalIdentitySql, new
+                    {
+                        userId,
+                        externalUserId
+                    });
+
+                return Result.Success();
+            }
+            catch (Exception exception)
+            {
+                _logger.LogError(exception, exception.Message);
+                return Result.Failure(exception.Message);
+            }
+        }
+
+        public async Task<Result> AddAsync(User user)
+        {
+            const string insertUserSql = @"
+                INSERT INTO ""user"" (id, email, first_name, last_name, timezone, created_at)
+                VALUES (@userId, @email, @firstName, @lastName, @timeZone, @createdAt)
+                ";
+
+            try
+            {
+                await _dbAccessor.DbConnection
+                    .ExecuteAsync(insertUserSql, new
+                    {
+                        userId = user.Id,
+                        email = user.Email.Value,
+                        firstName = user.FirstName.Value,
+                        lastName = user.LastName.Value,
+                        timeZone = user.TimeZone.Value,
+                        createdAt = user.CreatedAt
+                    });
+
+                return Result.Success();
+            }
+            catch (Exception exception)
+            {
+                _logger.LogError(exception, exception.Message);
+                return Result.Failure(exception.Message);
+            }
         }
     }
 }

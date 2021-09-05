@@ -1,11 +1,11 @@
 using ChangeBlog.Application.UseCases.Queries.GetVersions;
 using Microsoft.Extensions.DependencyInjection;
 
-namespace ChangeBlog.Api.Extensions
+namespace ChangeBlog.Api.Shared
 {
     public static class ServiceCollectionExtensions
     {
-        public static IServiceCollection AddUseCases(this IServiceCollection services)
+        public static IServiceCollection AddApplicationUseCases(this IServiceCollection services)
         {
             return services.Scan(scan =>
                 scan.FromAssemblyOf<IGetVersion>()

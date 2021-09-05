@@ -49,4 +49,5 @@ let dbUpdates: DbUpdate list = [
     { Version = SemVersion.Parse("9.0.0"); Update = VersionTable.makeUpdateSearchVectorsProcedureLanguageAware}
     { Version = SemVersion.Parse("10.0.0"); Update = ChangeLogLineTable.addPartialUniqueIndexOnProductIdVersionIdPositionDeletedAt}
     { Version = SemVersion.Parse("11.0.0"); Update = VersionTable.dropUpdateAllVersionSearchVectorsProcedure}
-    { Version = SemVersion.Parse("12.0.0"); Update = RolePermissionTable.deleteObsoletePermissions}]
+    { Version = SemVersion.Parse("12.0.0"); Update = RolePermissionTable.deleteObsoletePermissions}
+    { Version = SemVersion.Parse("12.1.0"); Update = ExternalIdentityTable.create}]

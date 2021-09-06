@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using ChangeBlog.Application.DataAccess.Users;
+using ChangeBlog.Application.Models;
 using ChangeBlog.Domain;
 using CSharpFunctionalExtensions;
 using Dapper;
@@ -149,19 +150,22 @@ namespace ChangeBlog.DataAccess.Postgres.DataAccessObjects.Users
                 : Maybe<User>.From(user);
         }
 
-        public async Task<Result> AddExternalIdentity(string externalUserId, Guid userId)
+        public async Task<Result> AddExternalIdentity(ExternalIdentity externalIdentity)
         {
             const string insertExternalIdentitySql = @"
-                INSERT INTO external_identity (id, user_id, external_user_id, created_at) 
-                VALUES (Guid(), @userId, @externalUserId, now());";
+                INSERT INTO external_identity (id, user_id, external_user_id, identity_provider, created_at) 
+                VALUES (@id, @userId, @externalUserId, @identityProvider, @createdAt)";
 
             try
             {
                 await _dbAccessor.DbConnection
                     .ExecuteAsync(insertExternalIdentitySql, new
                     {
-                        userId,
-                        externalUserId
+                        id = externalIdentity.Id,
+                        userId = externalIdentity.UserId,
+                        externalUserId = externalIdentity.ExternalUserId,
+                        identityProvider = externalIdentity.IdentityProvider,
+                        createdAt = externalIdentity.CreatedAt
                     });
 
                 return Result.Success();

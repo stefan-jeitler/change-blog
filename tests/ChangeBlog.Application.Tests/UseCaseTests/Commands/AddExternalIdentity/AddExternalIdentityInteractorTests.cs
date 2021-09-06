@@ -2,6 +2,7 @@
 using System.Threading.Tasks;
 using ChangeBlog.Application.DataAccess;
 using ChangeBlog.Application.DataAccess.ExternalIdentity;
+using ChangeBlog.Application.Models;
 using ChangeBlog.Application.Tests.TestDoubles;
 using ChangeBlog.Application.UseCases.Commands.AddExternalIdentity;
 using ChangeBlog.Domain;
@@ -58,7 +59,8 @@ namespace ChangeBlog.Application.Tests.UseCaseTests.Commands.AddExternalIdentity
                 testUser.FirstName,
                 testUser.FirstName,
                 testUser.LastName,
-                testUser.Email);
+                testUser.Email,
+                "TestProvider");
             _userDaoStub.Users.Add(testUser);
 
             var interactor = CreateInteractor();
@@ -75,7 +77,8 @@ namespace ChangeBlog.Application.Tests.UseCaseTests.Commands.AddExternalIdentity
         {
             // arrange
             const string externalUserId = "123456";
-            _userDaoStub.ExternalIdentities.Add(new UserDaoStub.ExternalIdentity(externalUserId, TestAccount.UserId));
+            _userDaoStub.ExternalIdentities.Add(new ExternalIdentity(Guid.NewGuid(), TestAccount.UserId, 
+                externalUserId, "TestProvider", DateTime.Parse("2021-09-06")));
             _userDaoStub.Users.Add(TestAccount.User);
             var interactor = CreateInteractor();
 
@@ -104,7 +107,8 @@ namespace ChangeBlog.Application.Tests.UseCaseTests.Commands.AddExternalIdentity
                 testUser.FirstName,
                 testUser.FirstName,
                 testUser.LastName,
-                testUser.Email);
+                testUser.Email,
+                "TestProvider");
             _userDaoStub.Users.Add(testUser);
 
             var interactor = CreateInteractor();
@@ -134,9 +138,11 @@ namespace ChangeBlog.Application.Tests.UseCaseTests.Commands.AddExternalIdentity
                 testUser.FirstName,
                 testUser.FirstName,
                 testUser.LastName,
-                testUser.Email);
+                testUser.Email,
+                "TestProvider");
             _userDaoStub.Users.Add(testUser);
-            _userDaoStub.ExternalIdentities.Add(new UserDaoStub.ExternalIdentity(externalUserId, testUser.Id));
+            _userDaoStub.ExternalIdentities.Add(new ExternalIdentity(Guid.NewGuid(), TestAccount.UserId,
+                externalUserId, "TestProvider", DateTime.Parse("2021-09-06")));
 
             var interactor = CreateInteractor();
 
@@ -164,7 +170,8 @@ namespace ChangeBlog.Application.Tests.UseCaseTests.Commands.AddExternalIdentity
                 testUser.FirstName,
                 testUser.FirstName,
                 testUser.LastName,
-                testUser.Email);
+                testUser.Email,
+                "TestProvider");
 
             var interactor = CreateInteractor();
 
@@ -199,7 +206,8 @@ namespace ChangeBlog.Application.Tests.UseCaseTests.Commands.AddExternalIdentity
                 testUser.FirstName,
                 testUser.FirstName,
                 testUser.LastName,
-                testUser.Email);
+                testUser.Email,
+                "TestProvider");
 
             _userDaoStub.ProduceFailureWhileImporting = true;
             var interactor = CreateInteractor();

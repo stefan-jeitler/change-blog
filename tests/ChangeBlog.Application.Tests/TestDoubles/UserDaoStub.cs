@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using ChangeBlog.Application.DataAccess.Users;
+using ChangeBlog.Application.Models;
 using ChangeBlog.Domain;
 using CSharpFunctionalExtensions;
 
@@ -10,18 +11,7 @@ namespace ChangeBlog.Application.Tests.TestDoubles
 {
     public class UserDaoStub : IUserDao
     {
-        public class ExternalIdentity
-        {
-            public ExternalIdentity(string externalUserId, Guid userId)
-            {
-                ExternalUserId = externalUserId;
-                UserId = userId;
-            }
 
-            public string ExternalUserId { get; }
-            public Guid UserId { get; }
-        }
-        
         public List<User> Users { get; } = new();
         public List<ExternalIdentity> ExternalIdentities { get; } = new();
         public bool ProduceFailureWhileImporting { get; set; }
@@ -66,14 +56,13 @@ namespace ChangeBlog.Application.Tests.TestDoubles
                 .Bind(eu => Users.TryFirst(u => eu.UserId == u.Id));
         }
 
-        public async Task<Result> AddExternalIdentity(string externalUserId, Guid userId)
+        public async Task<Result> AddExternalIdentity(ExternalIdentity externalIdentity)
         {
             await Task.Yield();
 
             if(ProduceFailureWhileImporting)
                 return Result.Failure("Something went wrong.");
 
-            var externalIdentity = new ExternalIdentity(externalUserId, userId);
             ExternalIdentities.Add(externalIdentity);
 
             return Result.Success();

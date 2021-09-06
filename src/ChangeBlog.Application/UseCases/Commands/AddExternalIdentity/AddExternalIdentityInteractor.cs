@@ -3,6 +3,7 @@ using System.Threading.Tasks;
 using ChangeBlog.Application.DataAccess;
 using ChangeBlog.Application.DataAccess.ExternalIdentity;
 using ChangeBlog.Application.DataAccess.Users;
+using ChangeBlog.Application.Models;
 using ChangeBlog.Domain;
 using ChangeBlog.Domain.Common;
 using CSharpFunctionalExtensions;
@@ -64,7 +65,10 @@ namespace ChangeBlog.Application.UseCases.Commands.AddExternalIdentity
                 await _userDao.AddAsync(user);
             }
 
-            var (isSuccess, _, error) = await _userDao.AddExternalIdentity(externalUserId, user.Id);
+            var externalIdentity = new ExternalIdentity(Guid.NewGuid(), user.Id, externalUserId,
+                externalUserInfo.IdentityProvider, DateTime.UtcNow);
+
+            var (isSuccess, _, error) = await _userDao.AddExternalIdentity(externalIdentity);
 
             if (!isSuccess)
                 return Result.Failure<Guid>($"Error while importing the user into the database. {error}");

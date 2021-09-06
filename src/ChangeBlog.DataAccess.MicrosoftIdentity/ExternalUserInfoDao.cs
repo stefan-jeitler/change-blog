@@ -45,7 +45,8 @@ namespace ChangeBlog.DataAccess.MicrosoftIdentity
                 userDto.Name,
                 userDto.GivenName,
                 userDto.FamilyName,
-                userDto.Email);
+                userDto.Email,
+                "MicrosoftIdentityPlatform");
         }
     }
 }

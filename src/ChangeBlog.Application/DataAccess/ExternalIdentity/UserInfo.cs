@@ -10,5 +10,6 @@ namespace ChangeBlog.Application.DataAccess.ExternalIdentity
         string FullName,
         string FirstName,
         string LastName,
-        string Email);
+        string Email,
+        string IdentityProvider);
 }

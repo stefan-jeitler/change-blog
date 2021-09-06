@@ -15,7 +15,7 @@ namespace ChangeBlog.Application.DataAccess.Users
         Task<Maybe<User>> FindByExternalUserIdAsync(string externalUserId);
 
         Task<Result> AddAsync(User user);
-        Task<Result> AddExternalIdentity(string externalUserId, Guid userId);
+        Task<Result> AddExternalIdentity(Models.ExternalIdentity externalIdentity);
 
         Task<Maybe<User>> FindByEmailAsync(string email);
     }

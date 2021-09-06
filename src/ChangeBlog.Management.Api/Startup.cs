@@ -4,7 +4,7 @@ using ChangeBlog.Api.Shared.DTOs;
 using ChangeBlog.DataAccess.MicrosoftIdentity;
 using ChangeBlog.DataAccess.Postgres;
 using ChangeBlog.Management.Api.Authentication;
-using ChangeBlog.Management.Api.SwaggerUI;
+using ChangeBlog.Management.Api.Extensions;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;

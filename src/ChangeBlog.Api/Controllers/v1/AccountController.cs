@@ -10,7 +10,7 @@ using ChangeBlog.Api.DTOs.V1.Account;
 using ChangeBlog.Api.DTOs.V1.Product;
 using ChangeBlog.Api.Extensions;
 using ChangeBlog.Api.Shared.DTOs;
-using ChangeBlog.Api.SwaggerUI;
+using ChangeBlog.Api.Swagger;
 using ChangeBlog.Application.UseCases.Queries.GetAccounts;
 using ChangeBlog.Application.UseCases.Queries.GetProducts;
 using ChangeBlog.Application.UseCases.Queries.GetRoles;

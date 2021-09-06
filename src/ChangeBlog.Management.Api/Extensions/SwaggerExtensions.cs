@@ -3,7 +3,7 @@ using Microsoft.AspNetCore.Builder;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.OpenApi.Models;
 
-namespace ChangeBlog.Management.Api.SwaggerUI
+namespace ChangeBlog.Management.Api.Extensions
 {
     public static class SwaggerExtensions
     {

@@ -9,7 +9,7 @@ using ChangeBlog.Api.DTOs;
 using ChangeBlog.Api.DTOs.V1.Version;
 using ChangeBlog.Api.Shared;
 using ChangeBlog.Api.Shared.DTOs;
-using ChangeBlog.Api.SwaggerUI;
+using ChangeBlog.Api.Swagger;
 using ChangeBlog.Application.UseCases.Queries.GetVersions;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;

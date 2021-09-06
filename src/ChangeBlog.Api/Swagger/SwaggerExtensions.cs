@@ -5,7 +5,7 @@ using Microsoft.AspNetCore.Mvc.Controllers;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.OpenApi.Models;
 
-namespace ChangeBlog.Api.SwaggerUI
+namespace ChangeBlog.Api.Swagger
 {
     public static class SwaggerExtensions
     {

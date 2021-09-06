@@ -5,7 +5,7 @@ using ChangeBlog.Api.DTOs;
 using ChangeBlog.Api.Extensions;
 using ChangeBlog.Api.Shared;
 using ChangeBlog.Api.Shared.DTOs;
-using ChangeBlog.Api.SwaggerUI;
+using ChangeBlog.Api.Swagger;
 using ChangeBlog.Application.DataAccess.ExternalIdentity;
 using ChangeBlog.DataAccess.MicrosoftIdentity;
 using ChangeBlog.DataAccess.Postgres;

@@ -62,7 +62,7 @@ stages:
 - stage: continuous_delivery
   displayName: Continuous Delivery
   dependsOn: continuous_integration
-  condition: and(succeeded(), startsWith(variables['Build.SourceBranch'], 'refs/tags/'), contains(variables['Build.SourceVersionMessage'], 'api'))
+  condition: and(succeeded(), startsWith(variables['Build.SourceBranch'], 'refs/tags/'))
 
   variables:
     ImageNameApi: change-blog-api

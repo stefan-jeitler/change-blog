@@ -9,4 +9,5 @@ import { environment } from 'src/environments/environment';
 export class AppComponent {
   @HostBinding('attr.app-version') appVersionAttr = environment.appVersion;
   title = 'change-blog';
+  currentApplicationVersion = environment.appVersion;
 }

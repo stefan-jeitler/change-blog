@@ -18,6 +18,7 @@
     <Compile Include="DbUpdates\AccountViews.fs" />
     <Compile Include="DbUpdates\ApiKeyTable.fs" />
     <Compile Include="DbUpdates\ChangeLogLineTable.fs" />
+    <Compile Include="DbUpdates\ExternalIdentityTable.fs" />
     <Compile Include="DbUpdates\Functions.fs" />
     <Compile Include="DbUpdates\LanguageTable.fs" />
     <Compile Include="DbUpdates\ProductTable.fs" />

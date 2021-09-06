@@ -5,6 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using ChangeBlog.Api.DTOs;
 using ChangeBlog.Api.DTOs.V1.Version;
+using ChangeBlog.Api.Shared.DTOs;
 using ChangeBlog.Application.UseCases.Queries.GetLatestVersion;
 using ChangeBlog.Application.UseCases.Queries.SharedModels;
 using Microsoft.AspNetCore.Mvc;

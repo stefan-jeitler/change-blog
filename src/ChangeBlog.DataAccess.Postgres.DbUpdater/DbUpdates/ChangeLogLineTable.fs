@@ -3,7 +3,7 @@ module ChangeLogLineTable
 open System.Data
 open Dapper
 
-let private createLineSql =
+let private createSql =
     """
     CREATE TABLE IF NOT EXISTS changelog_line
     (
@@ -38,7 +38,7 @@ let private addPartialUniqueIndexOnProductIdVersionIdPositionDeletedAtSql =
 """
 
 let create (dbConnection: IDbConnection) =
-    dbConnection.Execute(createLineSql) |> ignore
+    dbConnection.Execute(createSql) |> ignore
 
 let addPartialUniqueIndexOnProductIdVersionIdTextDeletedAt (dbConnection: IDbConnection) =
     dbConnection.Execute(addPartialUniqueIndexOnProductIdVersionIdTextDeletedAtSql)

@@ -27,7 +27,7 @@ namespace ChangeBlog.DataAccess.Postgres.Tests.DataAccessObjectsTests
             var userAccessDao = CreateDao();
             var t_ua_account_01_user_01 = Guid.Parse("f575503e-4eee-4d6d-b2c1-f11d8fc3da76");
 
-            var userId = await userAccessDao.FindUserIdAsync("acc01usr01");
+            var userId = await userAccessDao.FindActiveUserIdByApiKeyAsync("acc01usr01");
 
             userId.Should().HaveValue();
             userId.Should().Be(t_ua_account_01_user_01);
@@ -38,7 +38,7 @@ namespace ChangeBlog.DataAccess.Postgres.Tests.DataAccessObjectsTests
         {
             var userAccessDao = CreateDao();
 
-            var userId = await userAccessDao.FindUserIdAsync("not-existing-api-key");
+            var userId = await userAccessDao.FindActiveUserIdByApiKeyAsync("not-existing-api-key");
 
             userId.Should().NotHaveValue();
         }

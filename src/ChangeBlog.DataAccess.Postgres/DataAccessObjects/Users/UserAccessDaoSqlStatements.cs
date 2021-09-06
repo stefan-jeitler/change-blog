@@ -2,7 +2,7 @@ namespace ChangeBlog.DataAccess.Postgres.DataAccessObjects.Users
 {
     public static class UserAccessDaoSqlStatements
     {
-        public const string FindUserIdByApiKeySql = @"
+        public const string FindActiveUserIdByApiKeySql = @"
             SELECT u.id
                 FROM api_key ak
                          JOIN ""user"" u
@@ -11,6 +11,14 @@ namespace ChangeBlog.DataAccess.Postgres.DataAccessObjects.Users
                             AND u.deleted_at IS NULL
                             AND ak.deleted_at IS NULL
                             AND ak.expires_at > now()";
+
+        public const string FindActiveUserIdByExternalUserIdSql = @"
+            SELECT u.id
+            FROM external_identity ei
+                     JOIN ""user"" u
+                          ON u.id = ei.user_id
+            WHERE ei.external_user_id = @externalUserId
+              AND u.deleted_at IS NULL";
 
         public const string GetAccountPermissionsSql = @"
             SELECT distinct '' as type,
@@ -25,20 +33,6 @@ namespace ChangeBlog.DataAccess.Postgres.DataAccessObjects.Users
             join role_permission rp on r.id = rp.role_id
             where au.account_id = @accountId
             and au.user_id = @userId
-            and a.deleted_at is null";
-
-        public const string GetUserAccountsPermissionsSql = @"
-            SELECT distinct '' as type,
-                            r.id,
-                            r.name,
-                            r.description,
-                            rp.permission,
-                            r.created_at AS createdAt
-            from account a
-            join account_user au on au.account_id = a.id
-            join role r on au.role_id = r.id
-            join role_permission rp on r.id = rp.role_id
-            where au.user_id = @userId
             and a.deleted_at is null";
 
         public static string GetPermissionsByProductIdSql => BaseQuery("@productId", "select p.account_id from product p where p.id = @productId");

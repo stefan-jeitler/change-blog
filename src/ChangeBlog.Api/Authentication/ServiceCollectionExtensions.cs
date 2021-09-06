@@ -1,4 +1,3 @@
-using ChangeBlog.Api.Authentication.DataAccess;
 using Microsoft.Extensions.DependencyInjection;
 
 namespace ChangeBlog.Api.Authentication
@@ -7,7 +6,7 @@ namespace ChangeBlog.Api.Authentication
     {
         public static IServiceCollection AddApiKeyAuthentication(this IServiceCollection services)
         {
-            services.AddScoped<IFindUserId, FindUserIdAdapter>();
+            services.AddScoped<FindUserId>();
             services.AddAuthentication(options =>
                 {
                     options.DefaultAuthenticateScheme = ApiKeyAuthenticationOptions.DefaultScheme;

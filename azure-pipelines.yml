@@ -33,8 +33,7 @@ stages:
   jobs:
     - job: build_n_test
       displayName: Build & Test
-      steps:
-
+      steps:        
       - pwsh: ./build.ps1 -Version $(Version) -Configuration $(BuildConfiguration) 
         displayName: Build
 
@@ -66,7 +65,8 @@ stages:
   condition: and(succeeded(), startsWith(variables['Build.SourceBranch'], 'refs/tags/'))
 
   variables:
-    ImageName: change-blog-api
+    ImageNameApi: change-blog-api
+    ImageNameManagementApi: change-blog-management-api
 
   jobs:
 
@@ -106,8 +106,8 @@ stages:
           artifact: 'LatestChanges'
           publishLocation: 'pipeline'
 
-    - job: publish_image
-      displayName: Publish Image
+    - job: publish_api_image
+      displayName: Publish Api
       dependsOn: prepare_release
       steps:
       - task: PowerShell@2
@@ -116,8 +116,28 @@ stages:
           targetType: filePath
           filePath: ./publish-image.ps1
           arguments: >-
-            -Dockerfile $(System.DefaultWorkingDirectory)/Dockerfile 
-            -ImageName $(ImageName) 
+            -Dockerfile $(System.DefaultWorkingDirectory)/src/ChangeBlog.Api/Dockerfile 
+            -ImageName $(ImageNameApi) 
+            -Version $(Version) 
+            -Tag $(Version) 
+            -PushToRegistry
+            -RegistryUrl $(AZ_ContainerRegistry_Url) 
+            -RegistryUsername $(AZ_SP_Deploy_ClientId) 
+            -RegistryPwd '$(AZ_SP_Deploy_Secret)'
+          pwsh: true
+
+    - job: publish_mngmt_api_image
+      displayName: Publish Management Api
+      dependsOn: prepare_release
+      steps:
+      - task: PowerShell@2
+        displayName: Build & Push Image
+        inputs:
+          targetType: filePath
+          filePath: ./publish-image.ps1
+          arguments: >-
+            -Dockerfile $(System.DefaultWorkingDirectory)/src/ChangeBlog.Management.Api/Dockerfile 
+            -ImageName $(ImageNameManagementApi) 
             -Version $(Version) 
             -Tag $(Version) 
             -PushToRegistry

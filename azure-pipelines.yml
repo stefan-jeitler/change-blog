@@ -34,7 +34,12 @@ stages:
     - job: build_n_test
       displayName: Build & Test
       steps:
-
+      
+      - task: Bash@3
+        inputs:
+          targetType: 'inline'
+          script: 'env | sort'
+        
       - pwsh: ./build.ps1 -Version $(Version) -Configuration $(BuildConfiguration) 
         displayName: Build
 

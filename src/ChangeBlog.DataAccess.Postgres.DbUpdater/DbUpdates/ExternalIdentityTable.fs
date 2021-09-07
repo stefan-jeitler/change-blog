@@ -4,7 +4,8 @@ open System.Data
 open Dapper
 
 
-let private createTableSql = """
+let private createTableSql =
+    """
     CREATE TABLE IF NOT EXISTS external_identity
     (
         id UUID CONSTRAINT externalidentity_id_pkey PRIMARY KEY,

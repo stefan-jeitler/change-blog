@@ -24,9 +24,9 @@ let private createConstraintSql =
 let private addUniqueIndexOnNameAndDeletedAtSql =
     "CREATE UNIQUE INDEX IF NOT EXISTS account_name_deletedat_unique ON account (LOWER(name), (deleted_at is null)) where deleted_at is null"
 
-let private addChangeTrackerAccountSql = 
-    """INSERT INTO account 
-    (id, name, default_versioning_scheme_id, deleted_at, created_at) 
+let private addChangeTrackerAccountSql =
+    """INSERT INTO account
+    (id, name, default_versioning_scheme_id, deleted_at, created_at)
     VALUES ('a00788cb-03f8-4a8c-84b6-756622550e8c', 'ChangeTracker', null, null, '2021-05-23 20:40:38.879023')"""
 
 let create (dbConnection: IDbConnection) =

@@ -17,7 +17,7 @@ let private findDuplicates (updates: DbUpdate list) =
         | v, u when u.Length > 1 -> Some v
         | _ -> None)
 
-let private runUniqueUpdates (logger: Logger) dbConnection dbUpdates = 
+let private runUniqueUpdates (logger: Logger) dbConnection dbUpdates =
     let latestSchemaVersion = Db.getLatestSchemaVersion dbConnection
     let dbName = Db.getDbName dbConnection
 
@@ -32,9 +32,9 @@ let private runUniqueUpdates (logger: Logger) dbConnection dbUpdates =
 
     match executedUpdates with
     | [] -> logger.Information("No database updates have to be executed.")
-    | u -> 
-          logger.Verbose("{count} db update(s) executed.", u.Length)
-          logger.Verbose("Latest schema version: {version}", (Db.getLatestSchemaVersion dbConnection))
+    | u ->
+        logger.Verbose("{count} db update(s) executed.", u.Length)
+        logger.Verbose("Latest schema version: {version}", (Db.getLatestSchemaVersion dbConnection))
 
     ()
 
@@ -43,7 +43,7 @@ let runDbUpdates (logger: Logger) dbConnection =
         findDuplicates dbUpdates |> List.map string
 
     match duplicates with
-    | [] -> 
+    | [] ->
         runUniqueUpdates logger dbConnection dbUpdates
         0
     | d ->

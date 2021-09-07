@@ -17,18 +17,20 @@ let createLogger (verbose: bool) =
             LogEventLevel.Information
 
     LoggerConfiguration()
-      .MinimumLevel.Verbose()
-      .WriteTo.Console(restrictedToMinimumLevel = logLevel)
-      .CreateLogger()
+        .MinimumLevel.Verbose()
+        .WriteTo.Console(restrictedToMinimumLevel = logLevel)
+        .CreateLogger()
 
-let verboseSwitch = Option<bool>([|"--verbose"; "-v"|], "Detailed output.")
+let verboseSwitch =
+    Option<bool>([| "--verbose"; "-v" |], "Detailed output.")
 
 let createDbUpdatesCommand (dbConnection: IDbConnection) =
     let handler (verbose: bool) =
         try
             use logger = createLogger verbose
             DbUpdatesRunner.runDbUpdates logger dbConnection
-        with ex ->
+        with
+        | ex ->
             printf "%s" ex.Message
             -1
 
@@ -42,20 +44,23 @@ let createDbUpdatesCommand (dbConnection: IDbConnection) =
 
 let createDetectBreakingChangesCommand (dbConnection: IDbConnection) =
     let handler (verbose: bool) =
-      try 
-          use logger = createLogger verbose
-          DbUpdatesAnalysis.detectBreakingChanges logger dbConnection
-      with ex ->
-          printf "%s" ex.Message
-          -1
-    
+        try
+            use logger = createLogger verbose
+            DbUpdatesAnalysis.detectBreakingChanges logger dbConnection
+        with
+        | ex ->
+            printf "%s" ex.Message
+            -1
+
     let description =
         "examines whether the db updates contain any breaking changes. If it does the return code is set to 1 otherwise to 0."
 
-    let detectBreakingChangesCommand = Command("detect-breakingchanges", description)
+    let detectBreakingChangesCommand =
+        Command("detect-breakingchanges", description)
+
     detectBreakingChangesCommand.AddOption verboseSwitch
     detectBreakingChangesCommand.Handler <- CommandHandler.Create<bool>((fun (verbose) -> handler verbose))
-    
+
     detectBreakingChangesCommand
 
 [<EntryPoint>]

@@ -4,7 +4,6 @@ using System.Threading.Tasks;
 using ChangeBlog.Application.DataAccess;
 using ChangeBlog.Application.DataAccess.Products;
 using ChangeBlog.Domain;
-using ChangeBlog.Domain.Authorization;
 using ChangeBlog.Domain.Common;
 using CSharpFunctionalExtensions;
 using Dapper;

@@ -2,7 +2,6 @@ using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using ChangeBlog.Domain;
-using ChangeBlog.Domain.Authorization;
 
 namespace ChangeBlog.Application.DataAccess.Users
 {

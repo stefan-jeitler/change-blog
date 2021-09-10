@@ -1,7 +1,6 @@
 using System;
 using System.Linq;
 using System.Threading.Tasks;
-using ChangeBlog.Api.DTOs;
 using ChangeBlog.Api.Extensions;
 using ChangeBlog.Api.Shared.DTOs;
 using ChangeBlog.Domain.Authorization;

@@ -11,11 +11,11 @@ namespace ChangeBlog.DataAccess.MicrosoftIdentity
     public class ExternalUserInfoDao : IExternalUserInfoDao
     {
         private const string IdentityProvider = "MicrosoftIdentityPlatform";
-        private readonly string[] _scopes = {"openid", "profile", "email", "offline_access"};
+        private readonly string _baseUrl;
 
         private readonly HttpClient _httpClient;
+        private readonly string[] _scopes = {"openid", "profile", "email", "offline_access"};
         private readonly ITokenAcquisition _tokenAcquisition;
-        private readonly string _baseUrl;
 
         public ExternalUserInfoDao(ITokenAcquisition tokenAcquisition, HttpClient httpClient, string baseUrl)
         {

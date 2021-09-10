@@ -1,7 +1,6 @@
 using System;
 using System.Collections.Generic;
 using ChangeBlog.Domain;
-using ChangeBlog.Domain.Authorization;
 
 namespace ChangeBlog.Application.DataAccess.Users
 {
@@ -17,7 +16,7 @@ namespace ChangeBlog.Application.DataAccess.Users
         public IEnumerable<Role> AccountRoles { get; }
         public IEnumerable<Role> ProductRoles { get; }
 
-        public void Deconstruct(out IEnumerable<Role> accountRoles, 
+        public void Deconstruct(out IEnumerable<Role> accountRoles,
             out IEnumerable<Role> productRoles)
         {
             (accountRoles, productRoles) = (AccountRoles, ProductRoles);

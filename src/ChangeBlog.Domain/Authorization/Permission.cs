@@ -4,7 +4,7 @@ namespace ChangeBlog.Domain.Authorization
     {
         ViewAccount,
         ViewAccountUsers,
-        
+
         ViewAccountProducts,
         CloseProduct,
         AddOrUpdateProduct,

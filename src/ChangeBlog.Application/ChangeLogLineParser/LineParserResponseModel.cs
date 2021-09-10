@@ -1,9 +1,8 @@
 using System;
-using System.Collections.Generic;
 using System.Collections.Immutable;
 using ChangeBlog.Domain.ChangeLog;
 
-namespace ChangeBlog.Application.Services.ChangeLogLineParsing
+namespace ChangeBlog.Application.ChangeLogLineParser
 {
     public class LineParserResponseModel
     {

@@ -1,7 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using ChangeBlog.Application.Services.ChangeLogLineParsing;
+using ChangeBlog.Application.ChangeLogLineParser;
 using ChangeBlog.Domain.ChangeLog;
 using FluentAssertions;
 using Moq;

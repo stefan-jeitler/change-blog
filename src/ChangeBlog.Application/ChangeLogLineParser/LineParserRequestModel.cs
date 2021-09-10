@@ -1,7 +1,7 @@
 using System;
 using System.Collections.Generic;
 
-namespace ChangeBlog.Application.Services.ChangeLogLineParsing
+namespace ChangeBlog.Application.ChangeLogLineParser
 {
     public class LineParserRequestModel
     {

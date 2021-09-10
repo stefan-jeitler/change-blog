@@ -1,6 +1,6 @@
 using System;
+using ChangeBlog.Application.ChangeLogLineParser;
 using ChangeBlog.Application.DataAccess;
-using ChangeBlog.Application.Services.ChangeLogLineParsing;
 
 namespace ChangeBlog.Application.UseCases.Commands.UpdateChangeLogLine
 {

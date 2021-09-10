@@ -1,10 +1,10 @@
 using System;
 using System.Linq;
 using System.Threading.Tasks;
+using ChangeBlog.Application.ChangeLogLineParser;
 using ChangeBlog.Application.DataAccess;
 using ChangeBlog.Application.DataAccess.ChangeLog;
 using ChangeBlog.Application.DataAccess.Products;
-using ChangeBlog.Application.Services.ChangeLogLineParsing;
 using ChangeBlog.Domain;
 using ChangeBlog.Domain.ChangeLog;
 using CSharpFunctionalExtensions;

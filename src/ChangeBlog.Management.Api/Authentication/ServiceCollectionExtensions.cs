@@ -1,7 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Net.Mime;
-using System.Security.Claims;
+﻿using System.Net.Mime;
 using System.Text.Json;
 using System.Threading.Tasks;
 using ChangeBlog.Api.Shared.DTOs;
@@ -10,7 +7,6 @@ using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Identity.Web;
-using Constants = ChangeBlog.Api.Shared.Constants;
 
 namespace ChangeBlog.Management.Api.Authentication
 {
@@ -31,7 +27,7 @@ namespace ChangeBlog.Management.Api.Authentication
                     o.ClientId = settings.ClientId;
                     o.ClientSecret = settings.ClientSecret;
                 })
-                .EnableTokenAcquisitionToCallDownstreamApi(o => { })
+                .EnableTokenAcquisitionToCallDownstreamApi(_ => { })
                 .AddInMemoryTokenCaches();
 
             return authBuilder;

@@ -1,10 +1,10 @@
 using System;
 using System.Linq;
 using System.Threading.Tasks;
+using ChangeBlog.Application.ChangeLogLineParser;
 using ChangeBlog.Application.DataAccess;
 using ChangeBlog.Application.DataAccess.ChangeLog;
 using ChangeBlog.Application.DataAccess.Versions;
-using ChangeBlog.Application.Services.ChangeLogLineParsing;
 using ChangeBlog.Application.UseCases.Commands.AddChangeLogLine.Models;
 using ChangeBlog.Domain.ChangeLog;
 using ChangeBlog.Domain.Version;

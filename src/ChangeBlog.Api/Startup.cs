@@ -45,7 +45,7 @@ namespace ChangeBlog.Api
 
             var connectionString = _configuration.GetConnectionString("ChangeBlogDb");
             services.AddPostgresDataAccess(connectionString);
-            services.AddSingleton<IExternalUserInfoDao, ExternalUserInfoNullObject>();
+            services.AddSingleton<IExternalUserInfoDao, ExternalUserInfoNotSupported>();
 
             services.AddMemoryCache();
             services.AddApplicationUseCases();

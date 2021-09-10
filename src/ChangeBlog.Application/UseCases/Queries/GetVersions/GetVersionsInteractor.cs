@@ -86,7 +86,7 @@ namespace ChangeBlog.Application.UseCases.Queries.GetVersions
                 .Select(x => CreateResponseModel(x,
                     product,
                     currentUser.TimeZone,
-                    changeLogsByVersionId.GetValueOrDefault(x.Id, new ChangeLogs(new ChangeLogLine[0]))))
+                    changeLogsByVersionId.GetValueOrDefault(x.Id, new ChangeLogs(Array.Empty<ChangeLogLine>()))))
                 .ToList();
         }
 

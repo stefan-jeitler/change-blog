@@ -1,5 +1,4 @@
 using System;
-using ChangeBlog.Application.Tests.TestDoubles;
 using ChangeBlog.Application.UseCases.Queries.GetUsers;
 using FluentAssertions;
 using Xunit;
@@ -38,39 +37,30 @@ namespace ChangeBlog.Application.Tests.UseCaseTests.Queries.GetUsers
         [Fact]
         public void Create_WithEmptyUserId_ArgumentException()
         {
-            // arrange
             _testUserId = Guid.Empty;
 
-            // act
             Func<UsersQueryRequestModel> act = CreateRequestModel;
 
-            // assert
             act.Should().ThrowExactly<ArgumentException>();
         }
 
         [Fact]
         public void Create_WithEmptyAccountId_ArgumentException()
         {
-            // arrange
             _testAccountId = Guid.Empty;
 
-            // act
             Func<UsersQueryRequestModel> act = CreateRequestModel;
 
-            // assert
             act.Should().ThrowExactly<ArgumentException>();
         }
 
         [Fact]
         public void Create_WithTooHighCountValue_ValueCapped()
         {
-            // arrange
             _testCount = 500;
 
-            // act
             var requestModel = CreateRequestModel();
 
-            // assert
             requestModel.Limit.Should().Be(UsersQueryRequestModel.MaxLimit);
         }
     }

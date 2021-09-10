@@ -25,6 +25,10 @@ namespace ChangeBlog.Application.UseCases.Queries.GetVersions
                 throw new ArgumentException($"SearchTerm is too long. Max length: {MaxSearchTermLength}");
 
             SearchTerm = searchTerm;
+
+            if (limit == 0)
+                throw new ArgumentException("Limit must not be 0");
+
             Limit = Math.Min(limit, MaxLimit);
             IncludeDeleted = includeDeleted;
         }

@@ -11,9 +11,7 @@ namespace ChangeBlog.Application.Tests.UseCaseTests.Queries.GetUsers
         private readonly Guid? _testLastUserId;
         private Guid _testAccountId;
         private ushort _testCount;
-
         private Guid _testUserId;
-
 
         public UsersQueryRequestModelTests()
         {

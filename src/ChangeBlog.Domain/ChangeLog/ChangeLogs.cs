@@ -33,7 +33,7 @@ namespace ChangeBlog.Domain.ChangeLog
         private static void VerifyNoDuplicatesExist(IEnumerable<ChangeLogLine> lines)
         {
             var duplicates = lines
-                .GroupBy(x => x.Text.Value.ToLower())
+                .GroupBy(x => x.Text.Value.ToLower(CultureInfo.InvariantCulture))
                 .Where(x => x.Skip(1).Any())
                 .Select(x => x);
 

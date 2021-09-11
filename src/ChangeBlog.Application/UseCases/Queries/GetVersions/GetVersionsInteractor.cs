@@ -28,7 +28,7 @@ namespace ChangeBlog.Application.UseCases.Queries.GetVersions
             _productDao = productDao ?? throw new ArgumentNullException(nameof(productDao));
             _versionDao = versionDao ?? throw new ArgumentNullException(nameof(versionDao));
             _changeLogQueriesDao = changeLogQueriesDao ?? throw new ArgumentNullException(nameof(changeLogQueriesDao));
-            _userDao = userDao;
+            _userDao = userDao ?? throw new ArgumentNullException(nameof(userDao));
         }
 
         public async Task<Maybe<VersionResponseModel>> ExecuteAsync(Guid userId, Guid versionId)

@@ -12,7 +12,7 @@ namespace ChangeBlog.Api.Authorization
         public abstract Task<AuthorizationState> GetAuthorizationState(ActionExecutingContext context, Guid userId,
             Permission permission);
 
-        protected static Guid? TryFindIdInHeader(HttpContext httpContext, string key)
+        protected static Guid? TryFindIdInRoute(HttpContext httpContext, string key)
         {
             if (httpContext.Request.RouteValues.TryGetValue(key, out var routeValue) &&
                 Guid.TryParse(routeValue?.ToString(), out var idInRoute))

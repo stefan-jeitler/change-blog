@@ -26,7 +26,7 @@ namespace ChangeBlog.Api.Authorization.AuthorizationHandlers
         public override Task<AuthorizationState> GetAuthorizationState(ActionExecutingContext context, Guid userId,
             Permission permission)
         {
-            var accountIdInRoute = TryFindIdInHeader(context.HttpContext, KnownIdentifiers.AccountId);
+            var accountIdInRoute = TryFindIdInRoute(context.HttpContext, KnownIdentifiers.AccountId);
             if (accountIdInRoute.HasValue)
                 return _getAuthorizationState.GetAuthStateByAccountIdAsync(userId, accountIdInRoute.Value, permission);
 

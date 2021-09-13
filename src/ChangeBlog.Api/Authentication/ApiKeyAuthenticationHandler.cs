@@ -12,8 +12,6 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 
-// ReSharper disable InvertIf
-
 namespace ChangeBlog.Api.Authentication
 {
     public class ApiKeyAuthenticationHandler : AuthenticationHandler<ApiKeyAuthenticationOptions>
@@ -42,21 +40,24 @@ namespace ChangeBlog.Api.Authentication
                 return AuthenticateResult.NoResult();
 
             var userId = await _findUserId.FindByApiKeyAsync(apiKeyInHeader);
-            if (userId.HasValue && userId.Value != Guid.Empty)
+            if (!userId.HasValue || userId.Value == Guid.Empty)
+                return AuthenticateResult.NoResult();
+
+            return IssueTicket(userId.Value);
+        }
+
+        private static AuthenticateResult IssueTicket(Guid userId)
+        {
+            var identity = new ClaimsIdentity(new List<Claim>
             {
-                var identity = new ClaimsIdentity(new List<Claim>
-                {
-                    new(ClaimTypes.NameIdentifier, userId.ToString())
-                }, ApiKeyAuthenticationOptions.AuthenticationType);
+                new(ClaimTypes.NameIdentifier, userId.ToString())
+            }, ApiKeyAuthenticationOptions.AuthenticationType);
 
-                var identities = new List<ClaimsIdentity> {identity};
-                var principal = new ClaimsPrincipal(identities);
-                var ticket = new AuthenticationTicket(principal, ApiKeyAuthenticationOptions.Scheme);
+            var identities = new List<ClaimsIdentity> {identity};
+            var principal = new ClaimsPrincipal(identities);
+            var ticket = new AuthenticationTicket(principal, ApiKeyAuthenticationOptions.Scheme);
 
-                return AuthenticateResult.Success(ticket);
-            }
-
-            return AuthenticateResult.NoResult();
+            return AuthenticateResult.Success(ticket);
         }
 
         protected override async Task HandleChallengeAsync(AuthenticationProperties properties)

@@ -13,6 +13,7 @@ schedules:
   branches:
     include:
     - main
+  always: true
 
 name: $(SourceBranchName)
 

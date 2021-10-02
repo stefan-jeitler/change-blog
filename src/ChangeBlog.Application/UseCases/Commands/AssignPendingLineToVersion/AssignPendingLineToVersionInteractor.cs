@@ -40,7 +40,7 @@ namespace ChangeBlog.Application.UseCases.Commands.AssignPendingLineToVersion
                 return;
             }
 
-            await AssignToVersionAsync(output, version.Value, requestModel.ChangeLogLineId);
+            await AssignToVersionAsync(output, version.GetValueOrThrow(), requestModel.ChangeLogLineId);
         }
 
         public async Task ExecuteAsync(IAssignPendingLineToVersionOutputPort output,
@@ -61,7 +61,7 @@ namespace ChangeBlog.Application.UseCases.Commands.AssignPendingLineToVersion
                 return;
             }
 
-            await AssignToVersionAsync(output, version.Value, requestModel.ChangeLogLineId);
+            await AssignToVersionAsync(output, version.GetValueOrThrow(), requestModel.ChangeLogLineId);
         }
 
         private async Task AssignToVersionAsync(IAssignPendingLineToVersionOutputPort output, ClVersion version,
@@ -81,25 +81,25 @@ namespace ChangeBlog.Application.UseCases.Commands.AssignPendingLineToVersion
                 return;
             }
 
-            if (pendingLine.Value.ProductId != version.ProductId)
+            if (pendingLine.GetValueOrThrow().ProductId != version.ProductId)
             {
-                output.TargetVersionBelongsToDifferentProduct(pendingLine.Value.ProductId, version.ProductId);
+                output.TargetVersionBelongsToDifferentProduct(pendingLine.GetValueOrThrow().ProductId, version.ProductId);
                 return;
             }
 
-            if (!pendingLine.Value.IsPending)
+            if (!pendingLine.GetValueOrThrow().IsPending)
             {
-                output.ChangeLogLineIsNotPending(pendingLine.Value.Id);
+                output.ChangeLogLineIsNotPending(pendingLine.GetValueOrThrow().Id);
                 return;
             }
 
-            if (changeLogs.ContainsText(pendingLine.Value.Text))
+            if (changeLogs.ContainsText(pendingLine.GetValueOrThrow().Text))
             {
-                output.LineWithSameTextAlreadyExists(pendingLine.Value.Text);
+                output.LineWithSameTextAlreadyExists(pendingLine.GetValueOrThrow().Text);
                 return;
             }
 
-            var assignedLine = pendingLine.Value.AssignToVersion(version.Id, changeLogs.NextFreePosition);
+            var assignedLine = pendingLine.GetValueOrThrow().AssignToVersion(version.Id, changeLogs.NextFreePosition);
             await SaveAssignmentAsync(output, assignedLine);
         }
 

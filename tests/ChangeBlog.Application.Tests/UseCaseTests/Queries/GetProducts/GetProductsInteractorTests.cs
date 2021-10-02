@@ -87,7 +87,7 @@ namespace ChangeBlog.Application.Tests.UseCaseTests.Queries.GetProducts
             var product = await interactor.ExecuteAsync(TestAccount.UserId, TestAccount.Product.Id);
 
             // assert
-            product.Value.CreatedAt.Should().Be(createdAtLocal);
+            product.GetValueOrThrow().CreatedAt.Should().Be(createdAtLocal);
         }
 
 

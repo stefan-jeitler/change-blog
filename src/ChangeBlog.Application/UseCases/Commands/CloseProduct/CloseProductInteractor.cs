@@ -22,13 +22,13 @@ namespace ChangeBlog.Application.UseCases.Commands.CloseProduct
                 return;
             }
 
-            if (product.Value.IsClosed)
+            if (product.GetValueOrThrow().IsClosed)
             {
                 output.ProductAlreadyClosed(productId);
                 return;
             }
 
-            var closedProduct = product.Value.Close();
+            var closedProduct = product.GetValueOrThrow().Close();
             await _productDao.CloseProductAsync(closedProduct);
             output.ProductClosed(closedProduct.Id);
         }

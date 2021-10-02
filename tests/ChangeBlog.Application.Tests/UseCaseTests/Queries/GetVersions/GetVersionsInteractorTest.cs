@@ -57,8 +57,8 @@ namespace ChangeBlog.Application.Tests.UseCaseTests.Queries.GetVersions
 
             // assert
             requestedVersion.HasValue.Should().BeTrue();
-            requestedVersion.Value.VersionId.Should().Be(version.Id);
-            requestedVersion.Value.Version.Should().Be(version.Value);
+            requestedVersion.GetValueOrThrow().VersionId.Should().Be(version.Id);
+            requestedVersion.GetValueOrThrow().Version.Should().Be(version.Value);
         }
         
         [Fact]
@@ -100,8 +100,8 @@ namespace ChangeBlog.Application.Tests.UseCaseTests.Queries.GetVersions
 
             // assert
             requestedVersion.HasValue.Should().BeTrue();
-            requestedVersion.Value.VersionId.Should().Be(version.Id);
-            requestedVersion.Value.Version.Should().Be(version.Value);
+            requestedVersion.GetValueOrThrow().VersionId.Should().Be(version.Id);
+            requestedVersion.GetValueOrThrow().Version.Should().Be(version.Value);
         }
 
         [Fact]
@@ -122,15 +122,15 @@ namespace ChangeBlog.Application.Tests.UseCaseTests.Queries.GetVersions
 
             // assert
             requestedVersion.HasValue.Should().BeTrue();
-            requestedVersion.Value.VersionId.Should().Be(version.Id);
-            requestedVersion.Value.Version.Should().Be(version.Value);
-            requestedVersion.Value.DeletedAt.HasValue.Should().BeFalse();
-            requestedVersion.Value.CreatedAt.Should().Be(DateTimeOffset.Parse("2021-09-10T16:00:00+02:00"));
-            requestedVersion.Value.ReleasedAt.HasValue.Should().BeTrue();
-            requestedVersion.Value.ReleasedAt.Should().Be(DateTimeOffset.Parse("2021-09-10T20:00:00+02:00"));
-            requestedVersion.Value.ProductId.Should().Be(TestAccount.Product.Id);
-            requestedVersion.Value.AccountId.Should().Be(TestAccount.Id);
-            requestedVersion.Value.ChangeLogs.Should().BeEmpty();
+            requestedVersion.GetValueOrThrow().VersionId.Should().Be(version.Id);
+            requestedVersion.GetValueOrThrow().Version.Should().Be(version.Value);
+            requestedVersion.GetValueOrThrow().DeletedAt.HasValue.Should().BeFalse();
+            requestedVersion.GetValueOrThrow().CreatedAt.Should().Be(DateTimeOffset.Parse("2021-09-10T16:00:00+02:00"));
+            requestedVersion.GetValueOrThrow().ReleasedAt.HasValue.Should().BeTrue();
+            requestedVersion.GetValueOrThrow().ReleasedAt.Should().Be(DateTimeOffset.Parse("2021-09-10T20:00:00+02:00"));
+            requestedVersion.GetValueOrThrow().ProductId.Should().Be(TestAccount.Product.Id);
+            requestedVersion.GetValueOrThrow().AccountId.Should().Be(TestAccount.Id);
+            requestedVersion.GetValueOrThrow().ChangeLogs.Should().BeEmpty();
         }
     }
 }

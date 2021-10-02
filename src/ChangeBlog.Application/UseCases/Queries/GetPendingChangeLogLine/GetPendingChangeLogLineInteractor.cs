@@ -48,16 +48,16 @@ namespace ChangeBlog.Application.UseCases.Queries.GetPendingChangeLogLine
                 return;
             }
 
-            if (!line.Value.IsPending)
+            if (!line.GetValueOrThrow().IsPending)
             {
                 output.LineIsNotPending(changeLogLineId);
                 return;
             }
 
             var currentUser = await _userDao.GetUserAsync(userId);
-            var product = await _productDao.GetProductAsync(line.Value.ProductId);
+            var product = await _productDao.GetProductAsync(line.GetValueOrThrow().ProductId);
 
-            var l = line.Value;
+            var l = line.GetValueOrThrow();
             var lineResponseModel = new ChangeLogLineResponseModel(
                 l.Id,
                 l.Text,

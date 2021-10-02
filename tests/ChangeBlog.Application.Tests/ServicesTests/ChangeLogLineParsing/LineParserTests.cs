@@ -31,8 +31,8 @@ namespace ChangeBlog.Application.Tests.ServicesTests.ChangeLogLineParsing
 
             // assert
             parseLine.HasValue.Should().BeTrue();
-            parseLine.Value.Issues.Count.Should().Be(1);
-            parseLine.Value.Issues.Should().Contain(Issue.Parse("#1234"));
+            parseLine.GetValueOrThrow().Issues.Count.Should().Be(1);
+            parseLine.GetValueOrThrow().Issues.Should().Contain(Issue.Parse("#1234"));
         }
 
         [Fact]
@@ -84,9 +84,9 @@ namespace ChangeBlog.Application.Tests.ServicesTests.ChangeLogLineParsing
 
             // assert
             parseLine.HasValue.Should().BeTrue();
-            parseLine.Value.Labels.Count.Should().Be(2);
-            parseLine.Value.Labels.Should().Contain(Label.Parse("Bugfix"));
-            parseLine.Value.Labels.Should().Contain(Label.Parse("ProxyIssue"));
+            parseLine.GetValueOrThrow().Labels.Count.Should().Be(2);
+            parseLine.GetValueOrThrow().Labels.Should().Contain(Label.Parse("Bugfix"));
+            parseLine.GetValueOrThrow().Labels.Should().Contain(Label.Parse("ProxyIssue"));
         }
 
         [Fact]

@@ -50,7 +50,7 @@ namespace ChangeBlog.Application.UseCases.Commands.MakeAllChangeLogLinesPending
                 return;
             }
 
-            await MakeAllLinesPendingAsync(output, clVersion.Value);
+            await MakeAllLinesPendingAsync(output, clVersion.GetValueOrThrow());
         }
 
         public async Task ExecuteAsync(IMakeAllChangeLogLinesPendingOutputPort output, Guid versionId)
@@ -65,7 +65,7 @@ namespace ChangeBlog.Application.UseCases.Commands.MakeAllChangeLogLinesPending
                 return;
             }
 
-            await MakeAllLinesPendingAsync(output, clVersion.Value);
+            await MakeAllLinesPendingAsync(output, clVersion.GetValueOrThrow());
         }
 
         private async Task MakeAllLinesPendingAsync(IMakeAllChangeLogLinesPendingOutputPort output, ClVersion clVersion)

@@ -39,11 +39,11 @@ namespace ChangeBlog.Application.UseCases.Commands.AddPendingChangeLogLine
                 return;
             }
 
-            var line = await CreateChangeLogLineAsync(output, lineRequestModel, product.Value);
+            var line = await CreateChangeLogLineAsync(output, lineRequestModel, product.GetValueOrThrow());
             if (line.HasNoValue)
                 return;
 
-            await SaveChangeLogLineAsync(output, line.Value);
+            await SaveChangeLogLineAsync(output, line.GetValueOrThrow());
         }
 
         private async Task<Maybe<ChangeLogLine>> CreateChangeLogLineAsync(IAddPendingChangeLogLineOutputPort output,
@@ -62,21 +62,21 @@ namespace ChangeBlog.Application.UseCases.Commands.AddPendingChangeLogLine
                 return Maybe<ChangeLogLine>.None;
             }
 
-            var existingLineWithSameText = changeLogs.Lines.FirstOrDefault(x => x.Text.Equals(parsedLine.Value.Text));
+            var existingLineWithSameText = changeLogs.Lines.FirstOrDefault(x => x.Text.Equals(parsedLine.GetValueOrThrow().Text));
             if (existingLineWithSameText is not null)
             {
-                output.LinesWithSameTextsAreNotAllowed(existingLineWithSameText.Id, parsedLine.Value.Text);
+                output.LinesWithSameTextsAreNotAllowed(existingLineWithSameText.Id, parsedLine.GetValueOrThrow().Text);
                 return Maybe<ChangeLogLine>.None;
             }
 
             var changeLogLine = new ChangeLogLine(Guid.NewGuid(),
                 null,
                 product.Id,
-                parsedLine.Value.Text,
+                parsedLine.GetValueOrThrow().Text,
                 changeLogs.NextFreePosition,
                 DateTime.UtcNow,
-                parsedLine.Value.Labels,
-                parsedLine.Value.Issues,
+                parsedLine.GetValueOrThrow().Labels,
+                parsedLine.GetValueOrThrow().Issues,
                 requestModel.UserId);
 
             return Maybe<ChangeLogLine>.From(changeLogLine);

@@ -40,7 +40,7 @@ namespace ChangeBlog.Application.UseCases.Commands.Issues.DeleteChangeLogLineIss
                 return;
             }
 
-            await RemoveIssueAsync(output, line.Value, issue);
+            await RemoveIssueAsync(output, line.GetValueOrThrow(), issue);
         }
 
         private async Task RemoveIssueAsync(IDeleteChangeLogLineIssueOutputPort output, ChangeLogLine line, Issue issue)

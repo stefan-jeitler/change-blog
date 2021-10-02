@@ -40,7 +40,7 @@ namespace ChangeBlog.Application.UseCases.Commands.Labels.DeleteChangeLogLineLab
                 return;
             }
 
-            await RemoveLabelAsync(output, line.Value, label);
+            await RemoveLabelAsync(output, line.GetValueOrThrow(), label);
         }
 
         private async Task RemoveLabelAsync(IDeleteChangeLogLineLabelOutputPort output, ChangeLogLine line, Label label)

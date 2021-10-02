@@ -45,21 +45,22 @@ namespace ChangeBlog.Application.UseCases.Commands.UpdateChangeLogLine
             if (parsedNewLine.HasNoValue)
                 return;
 
+            var changeLogLine = existingLine.GetValueOrThrow();
             switch (requestModel.ChangeLogLineType)
             {
-                case ChangeLogLineType.Pending when !existingLine.Value.IsPending:
-                    output.RequestedLineIsNotPending(existingLine.Value.Id);
+                case ChangeLogLineType.Pending when !changeLogLine.IsPending:
+                    output.RequestedLineIsNotPending(changeLogLine.Id);
                     return;
-                case ChangeLogLineType.NotPending when existingLine.Value.IsPending:
-                    output.RequestedLineIsPending(existingLine.Value.Id);
+                case ChangeLogLineType.NotPending when changeLogLine.IsPending:
+                    output.RequestedLineIsPending(changeLogLine.Id);
                     return;
             }
 
-            var changeLogs = await _changeLogQueries.GetChangeLogsAsync(existingLine.Value.ProductId,
-                existingLine.Value.VersionId);
+            var changeLogs = await _changeLogQueries.GetChangeLogsAsync(changeLogLine.ProductId,
+                changeLogLine.VersionId);
 
-            var lineWithSameTextExists = changeLogs.Lines.Any(x => x.Text.Equals(parsedNewLine.Value.Text) &&
-                                                                   x.Id != existingLine.Value.Id);
+            var lineWithSameTextExists = changeLogs.Lines.Any(x => x.Text.Equals(parsedNewLine.GetValueOrThrow().Text) &&
+                                                                   x.Id != changeLogLine.Id);
 
             if (requestModel.Text is not null &&
                 lineWithSameTextExists)
@@ -75,19 +76,20 @@ namespace ChangeBlog.Application.UseCases.Commands.UpdateChangeLogLine
         private static ChangeLogLine CreateUpdatedLine(UpdateChangeLogLineRequestModel requestModel,
             Maybe<ChangeLogLine> existingLine, Maybe<LineParserResponseModel> parsedNewLine)
         {
-            var existing = existingLine.Value;
+            var existing = existingLine.GetValueOrThrow();
+            var lineParserResponseModel = parsedNewLine.GetValueOrThrow();
 
             var newText = requestModel.Text is null
                 ? existing.Text
-                : parsedNewLine.Value.Text;
+                : lineParserResponseModel.Text;
 
             var newLabels = requestModel.Labels is null
                 ? existing.Labels
-                : parsedNewLine.Value.Labels;
+                : lineParserResponseModel.Labels;
 
             var newIssues = requestModel.Issues is null
                 ? existing.Issues
-                : parsedNewLine.Value.Issues;
+                : lineParserResponseModel.Issues;
 
             return new ChangeLogLine(existing.Id,
                 existing.VersionId,

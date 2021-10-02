@@ -38,12 +38,12 @@ namespace ChangeBlog.Application.UseCases.Queries.GetVersions
                 return Maybe<VersionResponseModel>.None;
 
             var currentUser = await _userDao.GetUserAsync(userId);
-            var product = await _productDao.GetProductAsync(clVersion.Value.ProductId);
+            var product = await _productDao.GetProductAsync(clVersion.GetValueOrThrow().ProductId);
 
             var changeLogs =
-                await _changeLogQueriesDao.GetChangeLogsAsync(clVersion.Value.ProductId, clVersion.Value.Id);
+                await _changeLogQueriesDao.GetChangeLogsAsync(clVersion.GetValueOrThrow().ProductId, clVersion.GetValueOrThrow().Id);
 
-            var responseModel = CreateResponseModel(clVersion.Value, product, currentUser.TimeZone, changeLogs);
+            var responseModel = CreateResponseModel(clVersion.GetValueOrThrow(), product, currentUser.TimeZone, changeLogs);
             return Maybe<VersionResponseModel>.From(responseModel);
         }
 
@@ -59,12 +59,12 @@ namespace ChangeBlog.Application.UseCases.Queries.GetVersions
                 return Maybe<VersionResponseModel>.None;
 
             var currentUser = await _userDao.GetUserAsync(userId);
-            var product = await _productDao.GetProductAsync(clVersion.Value.ProductId);
+            var product = await _productDao.GetProductAsync(clVersion.GetValueOrThrow().ProductId);
 
             var changeLogs =
-                await _changeLogQueriesDao.GetChangeLogsAsync(clVersion.Value.ProductId, clVersion.Value.Id);
+                await _changeLogQueriesDao.GetChangeLogsAsync(clVersion.GetValueOrThrow().ProductId, clVersion.GetValueOrThrow().Id);
 
-            var responseModel = CreateResponseModel(clVersion.Value, product, currentUser.TimeZone, changeLogs);
+            var responseModel = CreateResponseModel(clVersion.GetValueOrThrow(), product, currentUser.TimeZone, changeLogs);
             return Maybe<VersionResponseModel>.From(responseModel);
         }
 

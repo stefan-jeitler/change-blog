@@ -53,7 +53,7 @@ namespace ChangeBlog.Application.UseCases.Commands.AddOrUpdateVersion
 
             if (clVersion.HasValue)
             {
-                await UpdateExistingVersionAsync(output, clVersion.Value, clVersionValue, requestModel);
+                await UpdateExistingVersionAsync(output, clVersion.GetValueOrThrow(), clVersionValue, requestModel);
             }
             else
             {
@@ -69,14 +69,14 @@ namespace ChangeBlog.Application.UseCases.Commands.AddOrUpdateVersion
             if (product.HasNoValue)
                 return;
 
-            var newVersion = CreateNewVersion(output, product.Value, versionRequestModel);
+            var newVersion = CreateNewVersion(output, product.GetValueOrThrow(), versionRequestModel);
             if (newVersion.HasNoValue)
                 return;
 
-            var existingVersion = await _versionDao.FindVersionAsync(product.Value.Id, newVersion.Value.Value);
+            var existingVersion = await _versionDao.FindVersionAsync(product.GetValueOrThrow().Id, newVersion.GetValueOrThrow().Value);
             if (existingVersion.HasValue)
             {
-                output.VersionAlreadyExists(existingVersion.Value.Id);
+                output.VersionAlreadyExists(existingVersion.GetValueOrThrow().Id);
                 return;
             }
 
@@ -85,7 +85,7 @@ namespace ChangeBlog.Application.UseCases.Commands.AddOrUpdateVersion
                 return;
 
             _unitOfWork.Start();
-            await SaveVersionAsync(output, newVersion.Value, lines.Value, versionRequestModel.ReleaseImmediately);
+            await SaveVersionAsync(output, newVersion.GetValueOrThrow(), lines.GetValueOrThrow(), versionRequestModel.ReleaseImmediately);
         }
 
         private async Task<Maybe<Product>> GetProductAsync(IAddVersionOutputPort output, Guid productId)
@@ -97,7 +97,7 @@ namespace ChangeBlog.Application.UseCases.Commands.AddOrUpdateVersion
                 return Maybe<Product>.None;
             }
 
-            if (product.Value.IsClosed)
+            if (product.GetValueOrThrow().IsClosed)
             {
                 output.RelatedProductClosed(productId);
                 return Maybe<Product>.None;
@@ -176,7 +176,7 @@ namespace ChangeBlog.Application.UseCases.Commands.AddOrUpdateVersion
 
                 if (line.HasNoValue) return Maybe<IEnumerable<ChangeLogLine>>.None;
 
-                lines.Add(line.Value);
+                lines.Add(line.GetValueOrThrow());
             }
 
             return Maybe<IEnumerable<ChangeLogLine>>.From(lines);
@@ -194,11 +194,11 @@ namespace ChangeBlog.Application.UseCases.Commands.AddOrUpdateVersion
             var changeLogLine = new ChangeLogLine(Guid.NewGuid(),
                 clVersion.Id,
                 clVersion.ProductId,
-                parsedLine.Value.Text,
+                parsedLine.GetValueOrThrow().Text,
                 position,
                 DateTime.UtcNow,
-                parsedLine.Value.Labels,
-                parsedLine.Value.Issues,
+                parsedLine.GetValueOrThrow().Labels,
+                parsedLine.GetValueOrThrow().Issues,
                 clVersion.CreatedByUser);
 
             return Maybe<ChangeLogLine>.From(changeLogLine);
@@ -276,10 +276,10 @@ namespace ChangeBlog.Application.UseCases.Commands.AddOrUpdateVersion
                 v.CreatedByUser, v.CreatedAt, v.DeletedAt);
 
             var existingChangeLogs = await _changeLogQueriesDao.GetChangeLogsAsync(clVersion.ProductId, clVersion.Id);
-            var linesToDelete = existingChangeLogs.Lines.Where(x => !parsedChangeLogs.Value.ContainsText(x.Text));
+            var linesToDelete = existingChangeLogs.Lines.Where(x => !parsedChangeLogs.GetValueOrThrow().ContainsText(x.Text));
             await DeleteExistingLines(linesToDelete);
 
-            await _changeLogCommands.AddOrUpdateLinesAsync(parsedChangeLogs.Value.Lines)
+            await _changeLogCommands.AddOrUpdateLinesAsync(parsedChangeLogs.GetValueOrThrow().Lines)
                 .Bind(_ => _versionDao.UpdateVersionAsync(updatedVersion))
                 .Match(Finish, output.UpdateConflict);
 

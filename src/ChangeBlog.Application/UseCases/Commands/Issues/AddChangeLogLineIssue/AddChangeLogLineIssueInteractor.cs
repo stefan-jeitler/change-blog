@@ -40,13 +40,13 @@ namespace ChangeBlog.Application.UseCases.Commands.Issues.AddChangeLogLineIssue
                 return;
             }
 
-            if (line.Value.AvailableIssuePlaces <= 0)
+            if (line.GetValueOrThrow().AvailableIssuePlaces <= 0)
             {
                 output.MaxIssuesReached(ChangeLogLine.MaxIssues);
                 return;
             }
 
-            await AddIssueAsync(output, line.Value, issue);
+            await AddIssueAsync(output, line.GetValueOrThrow(), issue);
         }
 
         private async Task AddIssueAsync(IAddChangeLogLineIssueOutputPort output, ChangeLogLine line, Issue issue)

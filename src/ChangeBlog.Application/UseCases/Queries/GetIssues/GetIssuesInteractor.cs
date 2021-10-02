@@ -27,7 +27,7 @@ namespace ChangeBlog.Application.UseCases.Queries.GetIssues
             if (line.HasNoValue)
                 return Array.Empty<string>();
 
-            return line.Value.Issues
+            return line.GetValueOrThrow().Issues
                 .Select(x => x.Value)
                 .ToList();
         }

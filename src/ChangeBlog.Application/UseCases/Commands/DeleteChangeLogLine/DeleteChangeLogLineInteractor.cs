@@ -30,23 +30,25 @@ namespace ChangeBlog.Application.UseCases.Commands.DeleteChangeLogLine
                 return;
             }
 
+            var changeLogLine = existingLine.GetValueOrThrow();
+
             switch (requestModel.ChangeLogLineType)
             {
-                case ChangeLogLineType.Pending when !existingLine.Value.IsPending:
-                    output.RequestedLineIsNotPending(existingLine.Value.Id);
+                case ChangeLogLineType.Pending when !changeLogLine.IsPending:
+                    output.RequestedLineIsNotPending(changeLogLine.Id);
                     return;
-                case ChangeLogLineType.NotPending when existingLine.Value.IsPending:
-                    output.RequestedLineIsPending(existingLine.Value.Id);
+                case ChangeLogLineType.NotPending when changeLogLine.IsPending:
+                    output.RequestedLineIsPending(changeLogLine.Id);
                     return;
             }
 
-            if (existingLine.Value.DeletedAt.HasValue)
+            if (changeLogLine.DeletedAt.HasValue)
             {
-                output.LineDeleted(existingLine.Value.Id);
+                output.LineDeleted(changeLogLine.Id);
                 return;
             }
 
-            await _changeLogCommands.DeleteLineAsync(existingLine.Value)
+            await _changeLogCommands.DeleteLineAsync(changeLogLine)
                 .Match(l => output.LineDeleted(l.Id), output.Conflict);
         }
     }

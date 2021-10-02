@@ -19,6 +19,7 @@ using ChangeBlog.Application.UseCases.Commands.ReleaseVersion;
 using ChangeBlog.Application.UseCases.Queries.GetLatestVersion;
 using ChangeBlog.Application.UseCases.Queries.GetVersions;
 using ChangeBlog.Domain.Authorization;
+using CSharpFunctionalExtensions;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
@@ -54,7 +55,7 @@ namespace ChangeBlog.Api.Controllers.V1
             if (version.HasNoValue)
                 return new NotFoundObjectResult(DefaultResponse.Create("Version not found"));
 
-            return Ok(VersionDto.FromResponseModel(version.Value));
+            return Ok(VersionDto.FromResponseModel(version.GetValueOrThrow()));
         }
 
         [HttpGet("products/{productId:Guid}/versions")]
@@ -111,7 +112,7 @@ namespace ChangeBlog.Api.Controllers.V1
             if (clVersion.HasNoValue)
                 return new NotFoundObjectResult(DefaultResponse.Create("Version not found"));
 
-            return Ok(VersionDto.FromResponseModel(clVersion.Value));
+            return Ok(VersionDto.FromResponseModel(clVersion.GetValueOrThrow()));
         }
 
         [HttpPost("products/{productId:Guid}/versions")]

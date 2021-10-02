@@ -48,7 +48,7 @@ namespace ChangeBlog.Application.UseCases.Commands.AddChangeLogLine
                 return;
             }
 
-            await AddLineAsync(output, requestModel, version.Value);
+            await AddLineAsync(output, requestModel, version.GetValueOrThrow());
         }
 
         public async Task ExecuteAsync(IAddChangeLogLineOutputPort output,
@@ -63,7 +63,7 @@ namespace ChangeBlog.Application.UseCases.Commands.AddChangeLogLine
 
             _unitOfWork.Start();
 
-            await AddLineAsync(output, requestModel, version.Value);
+            await AddLineAsync(output, requestModel, version.GetValueOrThrow());
         }
 
         private async Task AddLineAsync(IAddChangeLogLineOutputPort output, IChangeLogLineRequestModel requestModel,
@@ -73,7 +73,7 @@ namespace ChangeBlog.Application.UseCases.Commands.AddChangeLogLine
             if (line.HasNoValue)
                 return;
 
-            await SaveChangeLogLineAsync(output, line.Value);
+            await SaveChangeLogLineAsync(output, line.GetValueOrThrow());
         }
 
         private async Task<Maybe<ChangeLogLine>> CreateChangeLogLineAsync(IAddChangeLogLineOutputPort output,
@@ -90,17 +90,17 @@ namespace ChangeBlog.Application.UseCases.Commands.AddChangeLogLine
                 return Maybe<ChangeLogLine>.None;
             }
 
-            var existingLineWithSameText = changeLogs.Lines.FirstOrDefault(x => x.Text.Equals(parsedLine.Value.Text));
+            var existingLineWithSameText = changeLogs.Lines.FirstOrDefault(x => x.Text.Equals(parsedLine.GetValueOrThrow().Text));
             if (existingLineWithSameText is not null)
             {
-                output.LineWithSameTextAlreadyExists(existingLineWithSameText.Id, parsedLine.Value.Text);
+                output.LineWithSameTextAlreadyExists(existingLineWithSameText.Id, parsedLine.GetValueOrThrow().Text);
                 return Maybe<ChangeLogLine>.None;
             }
 
             var changeLogLine = new ChangeLogLine(Guid.NewGuid(),
-                clVersion.Id, clVersion.ProductId, parsedLine.Value.Text,
+                clVersion.Id, clVersion.ProductId, parsedLine.GetValueOrThrow().Text,
                 changeLogs.NextFreePosition, DateTime.UtcNow,
-                parsedLine.Value.Labels, parsedLine.Value.Issues, requestModel.UserId);
+                parsedLine.GetValueOrThrow().Labels, parsedLine.GetValueOrThrow().Issues, requestModel.UserId);
 
             return Maybe<ChangeLogLine>.From(changeLogLine);
         }

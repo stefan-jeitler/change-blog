@@ -39,15 +39,15 @@ namespace ChangeBlog.Application.UseCases.Commands.MakeChangeLogLinePending
             if (line.HasNoValue)
                 return;
 
-            var clVersion = await GetVersionAsync(output, line.Value);
+            var clVersion = await GetVersionAsync(output, line.GetValueOrThrow());
             if (clVersion.HasNoValue)
                 return;
 
-            var pendingChangeLogMetadata = await GetChangeLogsAsync(output, line.Value);
+            var pendingChangeLogMetadata = await GetChangeLogsAsync(output, line.GetValueOrThrow());
             if (pendingChangeLogMetadata.HasNoValue)
                 return;
 
-            var pendingLine = MakeLinePending(line.Value, pendingChangeLogMetadata.Value);
+            var pendingLine = MakeLinePending(line.GetValueOrThrow(), pendingChangeLogMetadata.GetValueOrThrow());
             await MoveLineAsyncAsync(output, pendingLine);
         }
 
@@ -61,9 +61,9 @@ namespace ChangeBlog.Application.UseCases.Commands.MakeChangeLogLinePending
                 return Maybe<ChangeLogLine>.None;
             }
 
-            if (line.Value.IsPending)
+            if (line.GetValueOrThrow().IsPending)
             {
-                output.ChangeLogLineIsAlreadyPending(line.Value.Id);
+                output.ChangeLogLineIsAlreadyPending(line.GetValueOrThrow().Id);
                 return Maybe<ChangeLogLine>.None;
             }
 

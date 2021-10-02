@@ -43,14 +43,14 @@ namespace ChangeBlog.Application.UseCases.Commands.AddProduct
                 return;
             }
 
-            var existingProduct = await _productDao.FindProductAsync(account.Value.Id, name);
+            var existingProduct = await _productDao.FindProductAsync(account.GetValueOrThrow().Id, name);
             if (existingProduct.HasValue)
             {
-                output.ProductAlreadyExists(existingProduct.Value.Id);
+                output.ProductAlreadyExists(existingProduct.GetValueOrThrow().Id);
                 return;
             }
 
-            var versioningSchemeId = await GetVersioningSchemeIdAsync(output, productRequestModel, account.Value);
+            var versioningSchemeId = await GetVersioningSchemeIdAsync(output, productRequestModel, account.GetValueOrThrow());
             if (versioningSchemeId.HasNoValue)
                 return;
 
@@ -58,10 +58,10 @@ namespace ChangeBlog.Application.UseCases.Commands.AddProduct
             if (langCode.HasNoValue)
                 return;
 
-            var product = new Product(account.Value.Id,
-                name, versioningSchemeId.Value,
+            var product = new Product(account.GetValueOrThrow().Id,
+                name, versioningSchemeId.GetValueOrThrow(),
                 productRequestModel.UserId,
-                langCode.Value,
+                langCode.GetValueOrThrow(),
                 DateTime.UtcNow);
 
             await SaveProductAsync(output, product);
@@ -99,9 +99,9 @@ namespace ChangeBlog.Application.UseCases.Commands.AddProduct
                 return Maybe<Account>.None;
             }
 
-            if (account.Value.DeletedAt.HasValue)
+            if (account.GetValueOrThrow().DeletedAt.HasValue)
             {
-                output.AccountDeleted(account.Value.Id);
+                output.AccountDeleted(account.GetValueOrThrow().Id);
                 return Maybe<Account>.None;
             }
 
@@ -123,14 +123,14 @@ namespace ChangeBlog.Application.UseCases.Commands.AddProduct
                 return Maybe<VersioningScheme>.None;
             }
 
-            var isCommonScheme = !scheme.Value.AccountId.HasValue;
+            var isCommonScheme = !scheme.GetValueOrThrow().AccountId.HasValue;
             if (isCommonScheme)
                 return scheme;
 
-            var schemeBelongsToAccount = scheme.Value.AccountId == account.Id;
+            var schemeBelongsToAccount = scheme.GetValueOrThrow().AccountId == account.Id;
             if (!schemeBelongsToAccount)
             {
-                output.VersioningSchemeDoesNotExist(scheme.Value.Id);
+                output.VersioningSchemeDoesNotExist(scheme.GetValueOrThrow().Id);
                 return Maybe<VersioningScheme>.None;
             }
 

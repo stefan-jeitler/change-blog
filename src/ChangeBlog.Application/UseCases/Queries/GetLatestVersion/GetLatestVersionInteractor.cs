@@ -43,15 +43,15 @@ namespace ChangeBlog.Application.UseCases.Queries.GetLatestVersion
                 return;
             }
 
-            var clVersion = await _versionDao.FindLatestAsync(product.Value.Id);
+            var clVersion = await _versionDao.FindLatestAsync(product.GetValueOrThrow().Id);
 
             if (clVersion.HasNoValue)
             {
-                output.NoVersionExists(product.Value.Id);
+                output.NoVersionExists(product.GetValueOrThrow().Id);
                 return;
             }
 
-            var version = clVersion.Value;
+            var version = clVersion.GetValueOrThrow();
             var changeLogLines =
                 await _changeLogQueries.GetChangeLogsAsync(version.ProductId, version.Id);
 
@@ -59,8 +59,8 @@ namespace ChangeBlog.Application.UseCases.Queries.GetLatestVersion
                 version.Value,
                 version.Name,
                 version.ProductId,
-                product.Value.Name,
-                product.Value.AccountId,
+                product.GetValueOrThrow().Name,
+                product.GetValueOrThrow().AccountId,
                 changeLogLines.Lines.Select(x => new ChangeLogLineResponseModel(x.Id, x.Text,
                         x.Labels.Select(ll => ll.Value).ToList(),
                         x.Issues.Select(i => i.Value).ToList(),

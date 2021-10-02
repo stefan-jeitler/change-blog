@@ -40,7 +40,7 @@ namespace ChangeBlog.Api.Controllers.V1
             if (product.HasNoValue)
                 return NotFound(DefaultResponse.Create("Product not found"));
 
-            return Ok(ProductDto.FromResponseModel(product.Value));
+            return Ok(ProductDto.FromResponseModel(product.GetValueOrThrow()));
         }
 
         [HttpPost]

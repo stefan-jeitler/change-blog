@@ -72,7 +72,7 @@ namespace ChangeBlog.Api.Authorization
         {
             var userId = context.HttpContext.GetUserId();
             var authState =
-                await _authorizationHandler.GetAuthorizationState(context, userId, permission.Value.Permission);
+                await _authorizationHandler.GetAuthorizationState(context, userId, permission.GetValueOrThrow().Permission);
 
             switch (authState)
             {

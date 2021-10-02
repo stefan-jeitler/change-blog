@@ -58,7 +58,7 @@ namespace ChangeBlog.DataAccess.Postgres.DataAccessObjects.Products
                 throw new Exception(
                     "The requested product does not exist. If you are not sure whether the product exists use 'FindProduct' otherwise file an issue.");
 
-            return product.Value;
+            return product.GetValueOrThrow();
         }
 
         public async Task<IList<Product>> GetAccountProductsAsync(AccountProductsQuerySettings querySettings)

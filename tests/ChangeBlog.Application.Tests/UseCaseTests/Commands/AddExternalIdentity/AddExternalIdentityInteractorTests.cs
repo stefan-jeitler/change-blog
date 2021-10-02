@@ -182,9 +182,9 @@ namespace ChangeBlog.Application.Tests.UseCaseTests.Commands.AddExternalIdentity
             isSuccess.Should().BeTrue();
             var importedUser = await _userDaoStub.FindByExternalUserIdAsync(externalUserId);
             importedUser.HasValue.Should().BeTrue();
-            importedUser.Value.Email.Should().Be(testUser.Email);
-            importedUser.Value.TimeZone.Value.Should().Be("Etc/UTC");
-            userId.Should().Be(importedUser.Value.Id);
+            importedUser.GetValueOrThrow().Email.Should().Be(testUser.Email);
+            importedUser.GetValueOrThrow().TimeZone.Value.Should().Be("Etc/UTC");
+            userId.Should().Be(importedUser.GetValueOrThrow().Id);
 
             _unitOfWorkMock.Verify(m => m.Start(), Times.Once);
             _unitOfWorkMock.Verify(m => m.Commit(), Times.Once);

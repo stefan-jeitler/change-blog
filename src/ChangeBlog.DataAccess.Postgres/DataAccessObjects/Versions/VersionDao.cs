@@ -98,7 +98,7 @@ namespace ChangeBlog.DataAccess.Postgres.DataAccessObjects.Versions
                 throw new Exception(
                     "The requested version does not exist. If you are not sure whether the version exists use 'FindVersion' otherwise file an issue.");
 
-            return version.Value;
+            return version.GetValueOrThrow();
         }
 
         public async Task<IList<ClVersion>> GetVersionsAsync(VersionQuerySettings querySettings)

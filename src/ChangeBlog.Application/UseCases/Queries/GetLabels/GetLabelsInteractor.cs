@@ -27,7 +27,7 @@ namespace ChangeBlog.Application.UseCases.Queries.GetLabels
             if (line.HasNoValue)
                 return Array.Empty<string>();
 
-            return line.Value.Labels
+            return line.GetValueOrThrow().Labels
                 .Select(x => x.Value)
                 .ToList();
         }

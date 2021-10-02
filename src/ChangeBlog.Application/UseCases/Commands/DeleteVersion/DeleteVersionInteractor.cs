@@ -26,14 +26,14 @@ namespace ChangeBlog.Application.UseCases.Commands.DeleteVersion
             if (clVersion.HasNoValue)
                 return;
 
-            var product = await _productDao.GetProductAsync(clVersion.Value.ProductId);
+            var product = await _productDao.GetProductAsync(clVersion.GetValueOrThrow().ProductId);
             if (product.IsClosed)
             {
                 output.RelatedProductClosed(product.Id);
                 return;
             }
 
-            var deletedVersion = clVersion.Value.Delete();
+            var deletedVersion = clVersion.GetValueOrThrow().Delete();
             await _versionDao.DeleteVersionAsync(deletedVersion)
                 .Match(
                     v => output.VersionDeleted(v.Id),
@@ -49,15 +49,17 @@ namespace ChangeBlog.Application.UseCases.Commands.DeleteVersion
                 return Maybe<ClVersion>.None;
             }
 
-            if (clVersion.Value.IsDeleted)
+            var version = clVersion.GetValueOrThrow();
+
+            if (version.IsDeleted)
             {
-                output.VersionAlreadyDeleted(clVersion.Value.Id);
+                output.VersionAlreadyDeleted(version.Id);
                 return Maybe<ClVersion>.None;
             }
 
-            if (clVersion.Value.IsReleased)
+            if (version.IsReleased)
             {
-                output.VersionAlreadyReleased(clVersion.Value.Id);
+                output.VersionAlreadyReleased(version.Id);
                 return Maybe<ClVersion>.None;
             }
 

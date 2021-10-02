@@ -42,13 +42,13 @@ namespace ChangeBlog.Application.UseCases.Queries.GetChangeLogLine
                 return;
             }
 
-            if (line.Value.IsPending)
+            if (line.GetValueOrThrow().IsPending)
             {
                 output.LineIsPending(changeLogLineId);
                 return;
             }
 
-            var l = line.Value;
+            var l = line.GetValueOrThrow();
             var responseModel = new ChangeLogLineResponseModel(l.Id,
                 l.Text,
                 l.Labels.Select(ll => ll.Value).ToList(),

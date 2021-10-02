@@ -26,14 +26,14 @@ namespace ChangeBlog.Application.UseCases.Commands.ReleaseVersion
             if (clVersion.HasNoValue)
                 return;
 
-            var product = await _product.GetProductAsync(clVersion.Value.ProductId);
+            var product = await _product.GetProductAsync(clVersion.GetValueOrThrow().ProductId);
             if (product.IsClosed)
             {
                 output.RelatedProductClosed(product.Id);
                 return;
             }
 
-            var releaseVersion = clVersion.Value.Release();
+            var releaseVersion = clVersion.GetValueOrThrow().Release();
             await _versionDao.ReleaseVersionAsync(releaseVersion)
                 .Match(
                     v => output.VersionReleased(v.Id),
@@ -49,15 +49,17 @@ namespace ChangeBlog.Application.UseCases.Commands.ReleaseVersion
                 return Maybe<ClVersion>.None;
             }
 
-            if (clVersion.Value.IsDeleted)
+            var version = clVersion.GetValueOrThrow();
+
+            if (version.IsDeleted)
             {
-                output.VersionAlreadyDeleted(clVersion.Value.Id);
+                output.VersionAlreadyDeleted(version.Id);
                 return Maybe<ClVersion>.None;
             }
 
-            if (clVersion.Value.IsReleased)
+            if (version.IsReleased)
             {
-                output.VersionAlreadyReleased(clVersion.Value.Id);
+                output.VersionAlreadyReleased(version.Id);
                 return Maybe<ClVersion>.None;
             }
 

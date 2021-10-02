@@ -28,8 +28,8 @@ namespace ChangeBlog.Application.ChangeLogLineParser
                 return Maybe<LineParserResponseModel>.None;
 
             return Maybe<LineParserResponseModel>.From(new LineParserResponseModel(text,
-                labels.Value.ToImmutableHashSet(),
-                issues.Value.ToImmutableHashSet()));
+                labels.GetValueOrThrow().ToImmutableHashSet(),
+                issues.GetValueOrThrow().ToImmutableHashSet()));
         }
 
         private static Maybe<List<Issue>> ExtractIssues(ILineParserOutput output, IEnumerable<string> issues,

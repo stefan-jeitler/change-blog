@@ -42,13 +42,13 @@ namespace ChangeBlog.Application.UseCases.Commands.Labels.AddChangeLogLineLabel
                 return;
             }
 
-            if (line.Value.AvailableLabelPlaces <= 0)
+            if (line.GetValueOrThrow().AvailableLabelPlaces <= 0)
             {
                 output.MaxLabelsReached(ChangeLogLine.MaxLabels);
                 return;
             }
 
-            await AddLabelAsync(output, line.Value, label);
+            await AddLabelAsync(output, line.GetValueOrThrow(), label);
         }
 
         private async Task AddLabelAsync(IAddChangeLogLineLabelOutputPort output, ChangeLogLine line, Label label)

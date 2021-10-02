@@ -39,13 +39,13 @@ namespace ChangeBlog.Application.UseCases.Commands.AssignAllPendingLinesToVersio
                 return;
             }
 
-            if (requestModel.ProductId != clVersion.Value.ProductId)
+            if (requestModel.ProductId != clVersion.GetValueOrThrow().ProductId)
             {
-                output.TargetVersionBelongsToDifferentProduct(requestModel.ProductId, clVersion.Value.ProductId);
+                output.TargetVersionBelongsToDifferentProduct(requestModel.ProductId, clVersion.GetValueOrThrow().ProductId);
                 return;
             }
 
-            await AssignAllPendingLinesToVersionAsync(output, clVersion.Value);
+            await AssignAllPendingLinesToVersionAsync(output, clVersion.GetValueOrThrow());
         }
 
         public async Task ExecuteAsync(IAssignAllPendingLinesToVersionOutputPort output,
@@ -66,7 +66,7 @@ namespace ChangeBlog.Application.UseCases.Commands.AssignAllPendingLinesToVersio
                 return;
             }
 
-            await AssignAllPendingLinesToVersionAsync(output, clVersion.Value);
+            await AssignAllPendingLinesToVersionAsync(output, clVersion.GetValueOrThrow());
         }
 
         private async Task AssignAllPendingLinesToVersionAsync(IAssignAllPendingLinesToVersionOutputPort output,
@@ -78,7 +78,7 @@ namespace ChangeBlog.Application.UseCases.Commands.AssignAllPendingLinesToVersio
             if (assignedLines.HasNoValue)
                 return;
 
-            await SaveAssignmentsAsync(output, assignedLines.Value, clVersion);
+            await SaveAssignmentsAsync(output, assignedLines.GetValueOrThrow(), clVersion);
         }
 
         private async Task<Maybe<IEnumerable<ChangeLogLine>>> AssignLinesAsync(

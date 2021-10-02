@@ -48,7 +48,7 @@ namespace ChangeBlog.DataAccess.Postgres.DataAccessObjects.Account
                 throw new Exception(
                     "The requested account does not exist. If you are not sure whether the account exists use 'FindAccount' otherwise file an issue.");
 
-            return account.Value;
+            return account.GetValueOrThrow();
         }
 
         public async Task<IList<Domain.Account>> GetAccountsAsync(Guid userId)

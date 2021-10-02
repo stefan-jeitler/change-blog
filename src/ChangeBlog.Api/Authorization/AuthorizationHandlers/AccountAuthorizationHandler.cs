@@ -7,14 +7,16 @@ using Microsoft.AspNetCore.Mvc.Filters;
 
 // ReSharper disable ConvertIfStatementToReturnStatement
 
+// ReSharper disable ClassNeverInstantiated.Global
+
 namespace ChangeBlog.Api.Authorization.AuthorizationHandlers
 {
-    public class ProductAuthorizationHandlerDecorator : AuthorizationHandler
+    public class AccountAuthorizationHandler : AuthorizationHandler
     {
         private readonly AuthorizationHandler _authorizationHandlerComponent;
         private readonly IGetAuthorizationState _getAuthorizationState;
 
-        public ProductAuthorizationHandlerDecorator(AuthorizationHandler authorizationHandlerComponent,
+        public AccountAuthorizationHandler(AuthorizationHandler authorizationHandlerComponent,
             IGetAuthorizationState getAuthorizationState)
         {
             _authorizationHandlerComponent = authorizationHandlerComponent;
@@ -24,13 +26,13 @@ namespace ChangeBlog.Api.Authorization.AuthorizationHandlers
         public override Task<AuthorizationState> GetAuthorizationState(ActionExecutingContext context, Guid userId,
             Permission permission)
         {
-            var productIdInRoute = TryFindIdInRoute(context.HttpContext, KnownIdentifiers.ProductId);
-            if (productIdInRoute.HasValue)
-                return _getAuthorizationState.GetAuthStateByProductIdAsync(userId, productIdInRoute.Value, permission);
+            var accountIdInRoute = TryFindIdInRoute(context.HttpContext, KnownIdentifiers.AccountId);
+            if (accountIdInRoute.HasValue)
+                return _getAuthorizationState.GetAuthStateByAccountIdAsync(userId, accountIdInRoute.Value, permission);
 
-            var productIdInBody = TryFindInBody<IContainsProductId>(context);
-            if (productIdInBody is not null)
-                return _getAuthorizationState.GetAuthStateByProductIdAsync(userId, productIdInBody.ProductId,
+            var accountIdInBody = TryFindInBody<IContainsAccountId>(context);
+            if (accountIdInBody is not null)
+                return _getAuthorizationState.GetAuthStateByAccountIdAsync(userId, accountIdInBody.AccountId,
                     permission);
 
             return _authorizationHandlerComponent.GetAuthorizationState(context, userId, permission);

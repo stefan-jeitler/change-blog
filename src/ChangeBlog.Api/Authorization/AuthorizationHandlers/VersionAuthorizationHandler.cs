@@ -6,12 +6,12 @@ using Microsoft.AspNetCore.Mvc.Filters;
 
 namespace ChangeBlog.Api.Authorization.AuthorizationHandlers
 {
-    public class ChangeLogLineAuthorizationHandlerDecorator : AuthorizationHandler
+    public class VersionAuthorizationHandler : AuthorizationHandler
     {
         private readonly AuthorizationHandler _authorizationHandlerComponent;
         private readonly IGetAuthorizationState _getAuthorizationState;
 
-        public ChangeLogLineAuthorizationHandlerDecorator(AuthorizationHandler authorizationHandlerComponent,
+        public VersionAuthorizationHandler(AuthorizationHandler authorizationHandlerComponent,
             IGetAuthorizationState getAuthorizationState)
         {
             _authorizationHandlerComponent = authorizationHandlerComponent;
@@ -21,10 +21,10 @@ namespace ChangeBlog.Api.Authorization.AuthorizationHandlers
         public override Task<AuthorizationState> GetAuthorizationState(ActionExecutingContext context, Guid userId,
             Permission permission)
         {
-            var changeLogLineId = TryFindIdInRoute(context.HttpContext, KnownIdentifiers.ChangeLogLineId);
+            var versionId = TryFindIdInRoute(context.HttpContext, KnownIdentifiers.VersionId);
 
-            return changeLogLineId.HasValue
-                ? _getAuthorizationState.GetAuthStateByChangeLogLineIdAsync(userId, changeLogLineId.Value, permission)
+            return versionId.HasValue
+                ? _getAuthorizationState.GetAuthStateByVersionIdAsync(userId, versionId.Value, permission)
                 : _authorizationHandlerComponent.GetAuthorizationState(context, userId, permission);
         }
     }

@@ -48,7 +48,7 @@ namespace ChangeBlog.DataAccess.Postgres.Tests.DataAccessObjectsTests
                 await productDao.FindProductAsync(t_ua_account_01, Name.Parse(nameof(t_ua_account_01_proj_02)));
 
             product.HasValue.Should().BeTrue();
-            product.Value.Id.Should().Be(t_ua_account_01_proj_02);
+            product.GetValueOrThrow().Id.Should().Be(t_ua_account_01_proj_02);
         }
 
         [Fact]
@@ -61,7 +61,7 @@ namespace ChangeBlog.DataAccess.Postgres.Tests.DataAccessObjectsTests
                 await productDao.FindProductAsync(t_ua_account_01_proj_02);
 
             product.HasValue.Should().BeTrue();
-            product.Value.Id.Should().Be(t_ua_account_01_proj_02);
+            product.GetValueOrThrow().Id.Should().Be(t_ua_account_01_proj_02);
         }
 
         [Fact]

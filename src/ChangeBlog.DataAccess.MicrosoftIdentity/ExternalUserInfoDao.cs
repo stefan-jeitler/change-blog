@@ -27,13 +27,18 @@ namespace ChangeBlog.DataAccess.MicrosoftIdentity
         public async Task<UserInfo> GetAsync()
         {
             var token = await _tokenAcquisition.GetAccessTokenForUserAsync(_scopes);
-
-            var userInfoEndpoint = new Uri($"{_baseUrl.TrimEnd('/')}/userinfo");
-            var message = CreateMessage(userInfoEndpoint, token);
-
+            var message = CreateMessage(token);
+            
             var response = await _httpClient.SendAsync(message);
+            response.EnsureSuccessStatusCode();
+
             var userDto = await response.Content.ReadFromJsonAsync<UserInfoDto>();
 
+            return CreateUserInfo(userDto);
+        }
+
+        private static UserInfo CreateUserInfo(UserInfoDto userDto)
+        {
             if (userDto is null)
                 throw new ArgumentNullException(nameof(userDto));
 
@@ -45,13 +50,17 @@ namespace ChangeBlog.DataAccess.MicrosoftIdentity
                 IdentityProvider);
         }
 
-        private static HttpRequestMessage CreateMessage(Uri userInfoEndpoint, string token) =>
-            new(HttpMethod.Get, userInfoEndpoint)
+        private HttpRequestMessage CreateMessage(string token)
+        {
+            var userInfoEndpoint = new Uri($"{_baseUrl.TrimEnd('/')}/userinfo");
+
+            return new HttpRequestMessage(HttpMethod.Get, userInfoEndpoint)
             {
                 Headers =
                 {
                     Authorization = new AuthenticationHeaderValue("Bearer", token)
                 }
             };
+        }
     }
 }

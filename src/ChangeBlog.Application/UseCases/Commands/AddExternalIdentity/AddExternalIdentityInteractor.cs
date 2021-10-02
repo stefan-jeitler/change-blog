@@ -33,10 +33,10 @@ namespace ChangeBlog.Application.UseCases.Commands.AddExternalIdentity
             
             switch (userByExternalId.HasValue)
             {
-                case true when userByExternalId.Value.DeletedAt.HasValue:
+                case true when userByExternalId.GetValueOrThrow().DeletedAt.HasValue:
                     return Result.Failure<Guid>("User has been set to deleted in the App.");
                 case true:
-                    return Result.Success(userByExternalId.Value.Id);
+                    return Result.Success(userByExternalId.GetValueOrThrow().Id);
             }
 
             var externalUserInfo = await _externalUserInfoDao.GetAsync();
@@ -52,7 +52,7 @@ namespace ChangeBlog.Application.UseCases.Commands.AddExternalIdentity
             var userFoundByEmail = userByEmail.HasValue;
 
             var user = userByEmail.HasValue
-                ? userByEmail.Value
+                ? userByEmail.GetValueOrThrow()
                 : new User(Guid.NewGuid(), Email.Parse(externalUserInfo.Email),
                     Name.Parse(externalUserInfo.FirstName),
                     Name.Parse(externalUserInfo.LastName), Name.Parse("Etc/UTC"), null, DateTime.UtcNow);

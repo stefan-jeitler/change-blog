@@ -31,7 +31,7 @@ let private runUniqueUpdates (logger: Logger) dbConnection dbUpdates =
         |> Seq.toList
 
     match executedUpdates with
-    | [] -> logger.Information("No database updates have to be executed.")
+    | [] -> logger.Information("No database updates to execute.")
     | u ->
         logger.Verbose("{count} db update(s) executed.", u.Length)
         logger.Verbose("Latest schema version: {version}", (Db.getLatestSchemaVersion dbConnection))

@@ -2,7 +2,7 @@ using System;
 using System.Collections.Generic;
 using ChangeBlog.Domain;
 using ChangeBlog.Domain.Authorization;
-using ChangeBlog.Domain.Common;
+using ChangeBlog.Domain.Miscellaneous;
 
 namespace ChangeBlog.Application.Tests
 {

@@ -7,7 +7,7 @@ using ChangeBlog.Application.Proxies;
 using ChangeBlog.Application.Tests.TestDoubles;
 using ChangeBlog.Domain;
 using ChangeBlog.Domain.ChangeLog;
-using ChangeBlog.Domain.Common;
+using ChangeBlog.Domain.Miscellaneous;
 using ChangeBlog.Domain.Version;
 using FluentAssertions;
 using Microsoft.Extensions.Caching.Memory;

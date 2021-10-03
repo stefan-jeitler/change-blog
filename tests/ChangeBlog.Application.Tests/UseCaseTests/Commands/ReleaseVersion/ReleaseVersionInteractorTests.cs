@@ -4,7 +4,7 @@ using ChangeBlog.Application.DataAccess;
 using ChangeBlog.Application.Tests.TestDoubles;
 using ChangeBlog.Application.UseCases.Commands.ReleaseVersion;
 using ChangeBlog.Domain;
-using ChangeBlog.Domain.Common;
+using ChangeBlog.Domain.Miscellaneous;
 using ChangeBlog.Domain.Version;
 using Moq;
 using Xunit;

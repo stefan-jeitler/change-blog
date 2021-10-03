@@ -5,7 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using ChangeBlog.Application.Tests.TestDoubles;
 using ChangeBlog.Application.UseCases.Queries.GetVersions;
-using ChangeBlog.Domain.Common;
+using ChangeBlog.Domain.Miscellaneous;
 using ChangeBlog.Domain.Version;
 using FluentAssertions;
 using Xunit;

@@ -5,7 +5,7 @@ using ChangeBlog.Application.DataAccess;
 using ChangeBlog.Application.Tests.TestDoubles;
 using ChangeBlog.Application.UseCases.Commands.MakeChangeLogLinePending;
 using ChangeBlog.Domain.ChangeLog;
-using ChangeBlog.Domain.Common;
+using ChangeBlog.Domain.Miscellaneous;
 using ChangeBlog.Domain.Version;
 using FluentAssertions;
 using Moq;

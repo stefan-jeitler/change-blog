@@ -3,7 +3,7 @@ using System.Threading.Tasks;
 using ChangeBlog.Application.DataAccess.Products;
 using ChangeBlog.DataAccess.Postgres.DataAccessObjects.Products;
 using ChangeBlog.Domain;
-using ChangeBlog.Domain.Common;
+using ChangeBlog.Domain.Miscellaneous;
 using Dapper;
 using FluentAssertions;
 using Microsoft.Extensions.Logging.Abstractions;

@@ -9,7 +9,7 @@ using ChangeBlog.Application.UseCases.Commands.AddOrUpdateVersion.Models;
 using ChangeBlog.Application.UseCases.Commands.AddOrUpdateVersion.OutputPorts;
 using ChangeBlog.Domain;
 using ChangeBlog.Domain.ChangeLog;
-using ChangeBlog.Domain.Common;
+using ChangeBlog.Domain.Miscellaneous;
 using ChangeBlog.Domain.Version;
 using FluentAssertions;
 using Moq;

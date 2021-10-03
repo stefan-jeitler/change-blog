@@ -5,7 +5,7 @@ using ChangeBlog.Application.DataAccess;
 using ChangeBlog.Application.DataAccess.Accounts;
 using ChangeBlog.Application.DataAccess.Products;
 using ChangeBlog.Domain;
-using ChangeBlog.Domain.Common;
+using ChangeBlog.Domain.Miscellaneous;
 using ChangeBlog.Domain.Version;
 using CSharpFunctionalExtensions;
 

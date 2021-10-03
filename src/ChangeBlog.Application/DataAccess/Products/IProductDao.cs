@@ -2,7 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using ChangeBlog.Domain;
-using ChangeBlog.Domain.Common;
+using ChangeBlog.Domain.Miscellaneous;
 using CSharpFunctionalExtensions;
 
 namespace ChangeBlog.Application.DataAccess.Products

@@ -5,7 +5,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using ChangeBlog.Application.DataAccess.Users;
 using ChangeBlog.Domain;
-using ChangeBlog.Domain.Common;
+using ChangeBlog.Domain.Miscellaneous;
 using Dapper;
 using Microsoft.Extensions.Logging;
 using static ChangeBlog.DataAccess.Postgres.DataAccessObjects.Users.UserAccessDaoSqlStatements;

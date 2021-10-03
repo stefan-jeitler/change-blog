@@ -5,7 +5,7 @@ using ChangeBlog.Application.DataAccess.ExternalIdentity;
 using ChangeBlog.Application.DataAccess.Users;
 using ChangeBlog.Application.Models;
 using ChangeBlog.Domain;
-using ChangeBlog.Domain.Common;
+using ChangeBlog.Domain.Miscellaneous;
 using CSharpFunctionalExtensions;
 
 namespace ChangeBlog.Application.UseCases.Commands.AddExternalIdentity

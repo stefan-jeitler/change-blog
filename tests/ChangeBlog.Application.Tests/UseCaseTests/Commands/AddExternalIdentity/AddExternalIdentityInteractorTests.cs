@@ -6,7 +6,7 @@ using ChangeBlog.Application.Models;
 using ChangeBlog.Application.Tests.TestDoubles;
 using ChangeBlog.Application.UseCases.Commands.AddExternalIdentity;
 using ChangeBlog.Domain;
-using ChangeBlog.Domain.Common;
+using ChangeBlog.Domain.Miscellaneous;
 using CSharpFunctionalExtensions;
 using FluentAssertions;
 using Moq;

@@ -7,7 +7,7 @@ using ChangeBlog.Application.UseCases.Commands.AssignPendingLineToVersion;
 using ChangeBlog.Application.UseCases.Commands.AssignPendingLineToVersion.Models;
 using ChangeBlog.Domain;
 using ChangeBlog.Domain.ChangeLog;
-using ChangeBlog.Domain.Common;
+using ChangeBlog.Domain.Miscellaneous;
 using ChangeBlog.Domain.Version;
 using FluentAssertions;
 using Moq;

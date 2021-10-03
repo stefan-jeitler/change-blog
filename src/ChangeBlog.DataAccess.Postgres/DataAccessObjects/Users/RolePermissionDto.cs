@@ -1,6 +1,5 @@
 using System;
 using ChangeBlog.Domain.Authorization;
-using ChangeBlog.Domain.Common;
 
 namespace ChangeBlog.DataAccess.Postgres.DataAccessObjects.Users
 {

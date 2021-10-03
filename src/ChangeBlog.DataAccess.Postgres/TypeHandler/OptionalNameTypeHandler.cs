@@ -1,5 +1,5 @@
 using System.Data;
-using ChangeBlog.Domain.Common;
+using ChangeBlog.Domain.Miscellaneous;
 using Dapper;
 
 namespace ChangeBlog.DataAccess.Postgres.TypeHandler

@@ -4,7 +4,7 @@ using System.Threading.Tasks;
 using ChangeBlog.Application.DataAccess;
 using ChangeBlog.Application.DataAccess.Products;
 using ChangeBlog.Domain;
-using ChangeBlog.Domain.Common;
+using ChangeBlog.Domain.Miscellaneous;
 using CSharpFunctionalExtensions;
 using Dapper;
 using Microsoft.Extensions.Logging;

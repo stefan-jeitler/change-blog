@@ -4,7 +4,7 @@ using ChangeBlog.Application.Tests.TestDoubles;
 using ChangeBlog.Application.UseCases.Queries.GetLatestVersion;
 using ChangeBlog.Application.UseCases.Queries.SharedModels;
 using ChangeBlog.Domain.ChangeLog;
-using ChangeBlog.Domain.Common;
+using ChangeBlog.Domain.Miscellaneous;
 using ChangeBlog.Domain.Version;
 using FluentAssertions;
 using Moq;

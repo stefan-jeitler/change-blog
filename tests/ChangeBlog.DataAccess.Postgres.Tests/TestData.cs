@@ -1,6 +1,6 @@
 using System;
 using ChangeBlog.Domain;
-using ChangeBlog.Domain.Common;
+using ChangeBlog.Domain.Miscellaneous;
 using ChangeBlog.Domain.Version;
 
 namespace ChangeBlog.DataAccess.Postgres.Tests

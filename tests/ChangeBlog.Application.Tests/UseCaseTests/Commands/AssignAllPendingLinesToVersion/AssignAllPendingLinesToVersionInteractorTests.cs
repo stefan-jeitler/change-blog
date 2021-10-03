@@ -8,7 +8,7 @@ using ChangeBlog.Application.Tests.TestDoubles;
 using ChangeBlog.Application.UseCases.Commands.AssignAllPendingLinesToVersion;
 using ChangeBlog.Application.UseCases.Commands.AssignAllPendingLinesToVersion.Models;
 using ChangeBlog.Domain.ChangeLog;
-using ChangeBlog.Domain.Common;
+using ChangeBlog.Domain.Miscellaneous;
 using ChangeBlog.Domain.Version;
 using FluentAssertions;
 using Moq;

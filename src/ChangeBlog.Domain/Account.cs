@@ -1,5 +1,5 @@
 using System;
-using ChangeBlog.Domain.Common;
+using ChangeBlog.Domain.Miscellaneous;
 
 namespace ChangeBlog.Domain
 {

@@ -7,7 +7,7 @@ using ChangeBlog.Application.DataAccess.Products;
 using ChangeBlog.Application.DataAccess.Users;
 using ChangeBlog.Application.Extensions;
 using ChangeBlog.Domain;
-using ChangeBlog.Domain.Common;
+using ChangeBlog.Domain.Miscellaneous;
 using CSharpFunctionalExtensions;
 
 namespace ChangeBlog.Application.UseCases.Queries.GetProducts

@@ -1,4 +1,4 @@
-namespace ChangeBlog.Domain.Common
+namespace ChangeBlog.Domain.Miscellaneous
 {
     public record OptionalName
     {

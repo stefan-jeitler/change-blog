@@ -68,7 +68,7 @@ namespace ChangeBlog.DataAccess.Postgres.DataAccessObjects.Versions
                 from version v
                 where v.product_id = @productId
                   {predicates}
-                order by v.created_at desc
+                order by v.created_at desc, v.id
                 fetch first (@limit) rows only";
 
             _parameters.Add("limit", (int) limit);

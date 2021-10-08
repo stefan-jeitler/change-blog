@@ -103,7 +103,7 @@ namespace ChangeBlog.DataAccess.Postgres.DataAccessObjects.Products
             {accountFilter}
             {pagingFilter}
             {includeClosedProductsFilter}
-            ORDER BY p.name
+            ORDER BY p.name, p.id
             FETCH FIRST (@limit) ROWS ONLY";
     }
 }

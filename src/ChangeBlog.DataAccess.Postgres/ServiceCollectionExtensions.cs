@@ -32,7 +32,7 @@ namespace ChangeBlog.DataAccess.Postgres
                 .AddDataAccessObjects();
 
         [ModuleInitializer]
-        public static void RegisterTypeHandler()
+        public static void AddTypeHandler()
         {
             SqlMapper.AddTypeHandler(new NameTypeHandler());
             SqlMapper.AddTypeHandler(new OptionalNameTypeHandler());

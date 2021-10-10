@@ -132,6 +132,15 @@ let private makeUpdateSearchVectorsProcedureLanguageAwareSql =
 let private dropUpdateAllVersionSearchVectorsProcedureSql =
     "drop procedure if exists update_all_version_searchvectors_proc()"
 
+let private fixUniqueIndexOnProductIdAndValueSql = 
+    [
+        """
+            CREATE UNIQUE INDEX IF NOT EXISTS version_productid_value_unique
+            ON "version" (product_id, lower(value)) WHERE deleted_at is null
+        """
+        "drop index if exists version_productid_value_deletedatnull_unique"
+    ]
+
 let create (dbConnection: IDbConnection) =
     dbConnection.Execute(createVersionSql) |> ignore
 
@@ -166,4 +175,9 @@ let makeUpdateSearchVectorsProcedureLanguageAware (dbConnection: IDbConnection) 
 
 let dropUpdateAllVersionSearchVectorsProcedure (dbConnection: IDbConnection) =
     dbConnection.Execute(dropUpdateAllVersionSearchVectorsProcedureSql)
+    |> ignore
+
+let fixUniqueIndexOnProductIdAndValue (dbConnection: IDbConnection) =
+    fixUniqueIndexOnProductIdAndValueSql
+    |> List.map (fun x -> dbConnection.Execute(x))
     |> ignore

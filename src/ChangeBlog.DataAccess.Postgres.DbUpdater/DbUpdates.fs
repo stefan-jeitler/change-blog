@@ -50,4 +50,8 @@ let dbUpdates: DbUpdate list = [
     { Version = SemVersion.Parse("10.0.0"); Update = ChangeLogLineTable.addPartialUniqueIndexOnProductIdVersionIdPositionDeletedAt}
     { Version = SemVersion.Parse("11.0.0"); Update = VersionTable.dropUpdateAllVersionSearchVectorsProcedure}
     { Version = SemVersion.Parse("12.0.0"); Update = RolePermissionTable.deleteObsoletePermissions}
-    { Version = SemVersion.Parse("12.1.0"); Update = ExternalIdentityTable.create}]
+    { Version = SemVersion.Parse("12.1.0"); Update = ExternalIdentityTable.create}
+    { Version = SemVersion.Parse("12.1.1"); Update = AccountTable.fixUniqueIndexOnAccountName}
+    { Version = SemVersion.Parse("12.1.2"); Update = ChangeLogLineTable.fixUniqueIndices}
+    { Version = SemVersion.Parse("12.1.3"); Update = VersioningSchemeTable.fixUniqueIndexOnNameAndAccountId}
+    { Version = SemVersion.Parse("12.1.4"); Update = VersionTable.fixUniqueIndexOnProductIdAndValue}]

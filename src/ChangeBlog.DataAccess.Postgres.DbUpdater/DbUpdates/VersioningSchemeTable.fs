@@ -39,6 +39,15 @@ let private addUniqueIndexOnNameAccountIdDeletedAtSql =
          on versioning_scheme (Lower("name"), account_id, (deleted_at is null)) where deleted_at is null
     """
 
+let private fixUniqueIndexOnNameAndAccountIdSql = 
+    [
+        """
+            CREATE UNIQUE INDEX IF NOT EXISTS versioningscheme_name_accountId_unique
+            on versioning_scheme (Lower("name"), account_id) where deleted_at is null
+        """
+        "drop index if exists versioningscheme_name_accountId_deleted_unique"
+    ]
+
 let create (dbConnection: IDbConnection) =
     dbConnection.Execute(createVersioningSchemeSql)
     |> ignore
@@ -49,4 +58,9 @@ let addSemVer2DefaultScheme (dbConnection: IDbConnection) =
 
 let addUniqueIndexOnNameAccountIdDeletedAt (dbConnection: IDbConnection) =
     dbConnection.Execute(addUniqueIndexOnNameAccountIdDeletedAtSql)
+    |> ignore
+
+let fixUniqueIndexOnNameAndAccountId (dbConnection: IDbConnection) = 
+    fixUniqueIndexOnNameAndAccountIdSql
+    |> List.map (fun x -> dbConnection.Execute(x))
     |> ignore

@@ -35,7 +35,23 @@ let private addPartialUniqueIndexOnProductIdVersionIdPositionDeletedAtSql =
         CREATE UNIQUE INDEX IF NOT EXISTS changelogline_productid_versionid_position_deletedat_unique
         ON changelog_line (product_id, coalesce(version_id, '00000000-0000-0000-0000-000000000000'), position, ((deleted_at IS NULL)))
         WHERE (deleted_at IS NULL)
-"""
+    """
+
+let private fixUniqueIndicesSql =
+    [
+        """
+            CREATE UNIQUE INDEX IF NOT EXISTS changelogline_productid_versionid_text_unique
+            ON changelog_line (product_id, coalesce(version_id, '00000000-0000-0000-0000-000000000000'), LOWER("text"))
+            where deleted_at is null
+        """
+        "drop index if exists changelogline_productid_versionid_text_deletedat_unique"
+        """
+            CREATE UNIQUE INDEX IF NOT EXISTS changelogline_productid_versionid_position_unique
+            ON changelog_line (product_id, coalesce(version_id, '00000000-0000-0000-0000-000000000000'), position)
+            WHERE (deleted_at IS NULL)
+        """
+        "drop index if exists changelogline_productid_versionid_position_deletedat_unique"
+    ]
 
 let create (dbConnection: IDbConnection) =
     dbConnection.Execute(createSql) |> ignore
@@ -46,4 +62,10 @@ let addPartialUniqueIndexOnProductIdVersionIdTextDeletedAt (dbConnection: IDbCon
 
 let addPartialUniqueIndexOnProductIdVersionIdPositionDeletedAt (dbConnection: IDbConnection) =
     dbConnection.Execute(addPartialUniqueIndexOnProductIdVersionIdPositionDeletedAtSql)
+    |> ignore
+
+
+let fixUniqueIndices (dbConnection: IDbConnection) =
+    fixUniqueIndicesSql
+    |> List.map (fun x -> dbConnection.Execute(x))
     |> ignore

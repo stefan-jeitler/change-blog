@@ -77,7 +77,7 @@ namespace ChangeBlog.Api.Presenters.V1.ChangeLogs
         {
             var resourceIds = new Dictionary<string, string>
             {
-                ["productId"] = targetVersionProductId.ToString()
+                [KnownIdentifiers.ProductId] = targetVersionProductId.ToString()
             };
 
             Response = new ConflictObjectResult(DefaultResponse.Create("The target version belongs to a different product.", resourceIds));

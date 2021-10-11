@@ -20,7 +20,7 @@ namespace ChangeBlog.DataAccess.Postgres.DataAccessObjects.ChangeLog
             values (@id, @versionId, @productId, @text,
                     CAST(@labels AS json), CAST(@issues AS json), @position,
                     @createdByUser, @deletedAt, @createdAt)
-            on conflict (product_id, coalesce(version_id, '00000000-0000-0000-0000-000000000000'), lower(text), ((deleted_at IS NULL))) WHERE (deleted_at IS NULL) do update
+            on conflict (product_id, coalesce(version_id, '00000000-0000-0000-0000-000000000000'), lower(text)) WHERE (deleted_at IS NULL) do update
                 set text     = @text,
                     labels   = CAST(@labels AS json),
                     issues   = CAST(@issues AS json),

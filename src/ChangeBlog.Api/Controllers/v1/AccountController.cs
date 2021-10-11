@@ -71,9 +71,9 @@ namespace ChangeBlog.Api.Controllers.V1
                 limit
             );
 
-            var products = await getUsers.ExecuteAsync(requestModel);
+            var users = await getUsers.ExecuteAsync(requestModel);
 
-            return Ok(products.Select(UserDto.FromResponseModel));
+            return Ok(users.Select(UserDto.FromResponseModel));
         }
 
         [HttpGet("{accountId:Guid}/products")]

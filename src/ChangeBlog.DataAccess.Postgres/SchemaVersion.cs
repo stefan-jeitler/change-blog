@@ -18,7 +18,7 @@ namespace ChangeBlog.DataAccess.Postgres
             _logger = logger;
         }
 
-        private static SemVersion AppSchemaVersion => SemVersion.Parse("12.1.0");
+        private static SemVersion AppSchemaVersion => SemVersion.Parse("12.1.4");
 
         public async Task ApproveAsync()
         {

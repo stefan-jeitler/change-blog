@@ -35,7 +35,7 @@ let createDbUpdatesCommand (dbConnection: IDbConnection) =
             -1
 
     let runUpdatesCommand =
-        Command("run-updates", "execute all new db updates")
+        Command("run-updates", "execute all new db updates.")
 
     runUpdatesCommand.AddOption verboseSwitch
     runUpdatesCommand.Handler <- CommandHandler.Create<bool>((fun (verbose) -> handler verbose))

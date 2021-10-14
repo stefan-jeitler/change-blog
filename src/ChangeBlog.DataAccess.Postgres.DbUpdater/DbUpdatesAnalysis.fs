@@ -17,8 +17,8 @@ let detectBreakingChanges (logger: Logger) (dbConnection: IDbConnection) =
     logger.Verbose("Latest update version: {updatesVersion}", latestDbUpdatesVersion.ToString())
 
     if latestDbVersion.Major <> latestDbUpdatesVersion.Major then
-        logger.Information("DbUpdates contain breaking changes.")
+        logger.Information("Breaking changes detected.")
         1
     else
-        logger.Information("DbUpdates don't contain any breaking changes.")
+        logger.Information("There are no breaking changes.")
         0

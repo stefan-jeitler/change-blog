@@ -41,7 +41,7 @@ namespace ChangeBlog.Api
             services.AddSwagger();
             services.AddApplicationInsightsTelemetry();
             services.AddApiKeyAuthentication();
-            services.AddPermissionCheck();
+            services.AddPermissionHandler();
 
             var connectionString = _configuration.GetConnectionString("ChangeBlogDb");
             services.AddPostgresDataAccess(connectionString);

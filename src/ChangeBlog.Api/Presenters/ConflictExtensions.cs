@@ -1,10 +1,9 @@
-using System;
-using System.Collections.Generic;
-using ChangeBlog.Api.DTOs;
 using ChangeBlog.Api.Shared.DTOs;
 using ChangeBlog.Application.DataAccess;
 using ChangeBlog.Application.DataAccess.Conflicts;
 using Microsoft.AspNetCore.Mvc;
+using System;
+using System.Collections.Generic;
 
 namespace ChangeBlog.Api.Presenters
 {
@@ -14,13 +13,11 @@ namespace ChangeBlog.Api.Presenters
         {
             return conflict switch
             {
-                AddOrUpdateChangeLogLineConcurrencyConflict concurrencyConflict => CreateConcurrencyIssueResponse(
-                    concurrencyConflict),
+                AddOrUpdateChangeLogLineConcurrencyConflict concurrencyConflict => CreateConcurrencyIssueResponse(concurrencyConflict),
                 ChangeLogLineDeletedConflict lineDeleteConflict => CreateLineDeletedResponse(lineDeleteConflict),
                 ProductClosedConflict closedConflict => CreateProductClosedResponse(closedConflict),
                 VersionDeletedConflict versionDeletedConflict => CreateVersionDeletedResponse(versionDeletedConflict),
-                VersionReleasedConflict versionReleasedConflict => CreateVersionReleasedResponse(
-                    versionReleasedConflict),
+                VersionReleasedConflict versionReleasedConflict => CreateVersionReleasedResponse(versionReleasedConflict),
                 _ => throw new ArgumentOutOfRangeException(nameof(conflict))
             };
         }

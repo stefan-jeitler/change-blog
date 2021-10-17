@@ -5,7 +5,7 @@ namespace ChangeBlog.Api.Authorization
 {
     public static class ServiceCollectionExtensions
     {
-        public static IServiceCollection AddPermissionCheck(this IServiceCollection services) =>
+        public static IServiceCollection AddPermissionHandler(this IServiceCollection services) =>
             services.AddScoped<AuthorizationHandler, UnauthorizedHandler>()
                 .Decorate<AuthorizationHandler, AccountAuthorizationHandler>()
                 .Decorate<AuthorizationHandler, ProductAuthorizationHandler>()

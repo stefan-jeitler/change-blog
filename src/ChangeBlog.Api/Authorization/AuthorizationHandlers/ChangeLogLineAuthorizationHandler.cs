@@ -8,13 +8,13 @@ namespace ChangeBlog.Api.Authorization.AuthorizationHandlers
 {
     public class ChangeLogLineAuthorizationHandler : AuthorizationHandler
     {
-        private readonly AuthorizationHandler _authorizationHandlerComponent;
+        private readonly AuthorizationHandler _authorizationHandler;
         private readonly IGetAuthorizationState _getAuthorizationState;
 
         public ChangeLogLineAuthorizationHandler(AuthorizationHandler authorizationHandlerComponent,
             IGetAuthorizationState getAuthorizationState)
         {
-            _authorizationHandlerComponent = authorizationHandlerComponent;
+            _authorizationHandler = authorizationHandlerComponent;
             _getAuthorizationState = getAuthorizationState;
         }
 
@@ -25,7 +25,7 @@ namespace ChangeBlog.Api.Authorization.AuthorizationHandlers
 
             return changeLogLineId.HasValue
                 ? _getAuthorizationState.GetAuthStateByChangeLogLineIdAsync(userId, changeLogLineId.Value, permission)
-                : _authorizationHandlerComponent.GetAuthorizationState(context, userId, permission);
+                : _authorizationHandler.GetAuthorizationState(context, userId, permission);
         }
     }
 }

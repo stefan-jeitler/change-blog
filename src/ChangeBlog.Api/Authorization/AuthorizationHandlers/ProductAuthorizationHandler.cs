@@ -11,13 +11,13 @@ namespace ChangeBlog.Api.Authorization.AuthorizationHandlers
 {
     public class ProductAuthorizationHandler : AuthorizationHandler
     {
-        private readonly AuthorizationHandler _authorizationHandlerComponent;
+        private readonly AuthorizationHandler _authorizationHandler;
         private readonly IGetAuthorizationState _getAuthorizationState;
 
         public ProductAuthorizationHandler(AuthorizationHandler authorizationHandlerComponent,
             IGetAuthorizationState getAuthorizationState)
         {
-            _authorizationHandlerComponent = authorizationHandlerComponent;
+            _authorizationHandler = authorizationHandlerComponent;
             _getAuthorizationState = getAuthorizationState;
         }
 
@@ -33,7 +33,7 @@ namespace ChangeBlog.Api.Authorization.AuthorizationHandlers
                 return _getAuthorizationState.GetAuthStateByProductIdAsync(userId, productIdInBody.ProductId,
                     permission);
 
-            return _authorizationHandlerComponent.GetAuthorizationState(context, userId, permission);
+            return _authorizationHandler.GetAuthorizationState(context, userId, permission);
         }
     }
 }

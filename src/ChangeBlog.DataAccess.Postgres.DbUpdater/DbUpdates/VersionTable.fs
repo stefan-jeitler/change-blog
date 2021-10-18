@@ -141,6 +141,15 @@ let private fixUniqueIndexOnProductIdAndValueSql =
         "drop index if exists version_productid_value_deletedatnull_unique"
     ]
 
+let private addProductIdToSearchVectorIndexSql = 
+    [
+        "drop index if exists version_searchvector_idx"
+        """
+            CREATE INDEX IF NOT EXISTS version_productid_searchvectors_idx
+            ON version USING GIN (product_id, search_vectors)
+        """
+    ]
+
 let create (dbConnection: IDbConnection) =
     dbConnection.Execute(createVersionSql) |> ignore
 
@@ -179,5 +188,10 @@ let dropUpdateAllVersionSearchVectorsProcedure (dbConnection: IDbConnection) =
 
 let fixUniqueIndexOnProductIdAndValue (dbConnection: IDbConnection) =
     fixUniqueIndexOnProductIdAndValueSql
+    |> List.map (fun x -> dbConnection.Execute(x))
+    |> ignore
+
+let addProductIdToSearchVectorIndex (dbConnection: IDbConnection) =
+    addProductIdToSearchVectorIndexSql
     |> List.map (fun x -> dbConnection.Execute(x))
     |> ignore

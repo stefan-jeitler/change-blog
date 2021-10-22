@@ -17,21 +17,21 @@ namespace ChangeBlog.Application.Tests.ProxyTests
 {
     public class ReadOnlyCheckProxyTests
     {
-        private readonly ChangeLogDaoStub _changeLogDaoStub;
+        private readonly FakeChangeLogDao _fakeChangeLogDao;
         private readonly IMemoryCache _memoryCache;
-        private readonly ProductDaoStub _productDaoStub;
-        private readonly VersionDaoStub _versionDaoStub;
+        private readonly FakeProductDao _fakeProductDao;
+        private readonly FakeVersionDao _fakeVersionDao;
 
         public ReadOnlyCheckProxyTests()
         {
-            _changeLogDaoStub = new ChangeLogDaoStub();
-            _versionDaoStub = new VersionDaoStub();
-            _productDaoStub = new ProductDaoStub();
+            _fakeChangeLogDao = new FakeChangeLogDao();
+            _fakeVersionDao = new FakeVersionDao();
+            _fakeProductDao = new FakeProductDao();
             _memoryCache = new MemoryCache(new MemoryCacheOptions());
         }
 
         private ChangeLogLineReadonlyCheckProxy CreateProxy() =>
-            new(_changeLogDaoStub, _versionDaoStub, _memoryCache, _productDaoStub);
+            new(_fakeChangeLogDao, _fakeVersionDao, _memoryCache, _fakeProductDao);
 
         [Fact]
         public async Task AddLine_RelatedVersionAlreadyReleased_Conflict()
@@ -41,7 +41,7 @@ namespace ChangeBlog.Application.Tests.ProxyTests
             var version = new ClVersion(versionId, TestAccount.Product.Id, ClVersionValue.Parse("1.2.3"),
                 OptionalName.Empty, DateTime.Parse("2021-04-17"), TestAccount.UserId,
                 DateTime.Parse("2021-04-17"), null);
-            _versionDaoStub.Versions.Add(version);
+            _fakeVersionDao.Versions.Add(version);
 
             var lineId = Guid.Parse("0683e1e1-0e0d-405c-b77e-a6d0d5141b67");
             var line = new ChangeLogLine(lineId, versionId, TestAccount.Product.Id, ChangeLogText.Parse("some text"),
@@ -55,7 +55,7 @@ namespace ChangeBlog.Application.Tests.ProxyTests
             // assert
             result.IsFailure.Should().BeTrue();
             result.Error.Should().BeOfType<VersionReleasedConflict>();
-            _changeLogDaoStub.ChangeLogs.Should().BeEmpty();
+            _fakeChangeLogDao.ChangeLogs.Should().BeEmpty();
         }
 
         [Fact]
@@ -66,7 +66,7 @@ namespace ChangeBlog.Application.Tests.ProxyTests
             var version = new ClVersion(versionId, TestAccount.Product.Id, ClVersionValue.Parse("1.2.3"),
                 OptionalName.Empty,
                 DateTime.Parse("2021-04-17"), TestAccount.UserId, DateTime.Parse("2021-04-17"), null);
-            _versionDaoStub.Versions.Add(version);
+            _fakeVersionDao.Versions.Add(version);
 
             var lineId = Guid.Parse("0683e1e1-0e0d-405c-b77e-a6d0d5141b67");
             var line = new ChangeLogLine(lineId, versionId, TestAccount.Product.Id, ChangeLogText.Parse("some text"),
@@ -80,7 +80,7 @@ namespace ChangeBlog.Application.Tests.ProxyTests
             // assert
             result.IsFailure.Should().BeTrue();
             result.Error.Should().BeOfType<ChangeLogLineDeletedConflict>();
-            _changeLogDaoStub.ChangeLogs.Should().BeEmpty();
+            _fakeChangeLogDao.ChangeLogs.Should().BeEmpty();
         }
 
         [Fact]
@@ -91,7 +91,7 @@ namespace ChangeBlog.Application.Tests.ProxyTests
             var version = new ClVersion(versionId, TestAccount.Product.Id, ClVersionValue.Parse("1.2.3"),
                 OptionalName.Empty, null, TestAccount.UserId, DateTime.Parse("2021-04-17"),
                 DateTime.Parse("2021-04-17"));
-            _versionDaoStub.Versions.Add(version);
+            _fakeVersionDao.Versions.Add(version);
 
             var lineId = Guid.Parse("0683e1e1-0e0d-405c-b77e-a6d0d5141b67");
             var line = new ChangeLogLine(lineId, versionId, TestAccount.Product.Id, ChangeLogText.Parse("some text"),
@@ -105,7 +105,7 @@ namespace ChangeBlog.Application.Tests.ProxyTests
             // assert
             result.IsFailure.Should().BeTrue();
             result.Error.Should().BeOfType<VersionDeletedConflict>();
-            _changeLogDaoStub.ChangeLogs.Should().BeEmpty();
+            _fakeChangeLogDao.ChangeLogs.Should().BeEmpty();
         }
 
         [Fact]
@@ -116,9 +116,9 @@ namespace ChangeBlog.Application.Tests.ProxyTests
             var version = new ClVersion(versionId, TestAccount.Product.Id, ClVersionValue.Parse("1.2.3"),
                 OptionalName.Empty,
                 null, TestAccount.UserId, DateTime.Parse("2021-04-17"), null);
-            _versionDaoStub.Versions.Add(version);
+            _fakeVersionDao.Versions.Add(version);
 
-            _productDaoStub.Products.Add(new Product(TestAccount.Product.Id, TestAccount.Id, Name.Parse("Test product"),
+            _fakeProductDao.Products.Add(new Product(TestAccount.Product.Id, TestAccount.Id, Name.Parse("Test product"),
                 TestAccount.CustomVersioningScheme, TestAccount.Product.LanguageCode, TestAccount.UserId,
                 DateTime.Parse("2021-05-13"),
                 DateTime.Parse("2021-05-13")));
@@ -135,14 +135,14 @@ namespace ChangeBlog.Application.Tests.ProxyTests
             // assert
             result.IsFailure.Should().BeTrue();
             result.Error.Should().BeOfType<ProductClosedConflict>();
-            _changeLogDaoStub.ChangeLogs.Should().BeEmpty();
+            _fakeChangeLogDao.ChangeLogs.Should().BeEmpty();
         }
 
         [Fact]
         public async Task AddPendingLine_RelatedProductIsClosed_Conflict()
         {
             // arrange
-            _productDaoStub.Products.Add(new Product(TestAccount.Product.Id, TestAccount.Id, Name.Parse("Test product"),
+            _fakeProductDao.Products.Add(new Product(TestAccount.Product.Id, TestAccount.Id, Name.Parse("Test product"),
                 TestAccount.CustomVersioningScheme, TestAccount.Product.LanguageCode, TestAccount.UserId,
                 DateTime.Parse("2021-05-13"),
                 DateTime.Parse("2021-05-13")));
@@ -159,7 +159,7 @@ namespace ChangeBlog.Application.Tests.ProxyTests
             // assert
             result.IsFailure.Should().BeTrue();
             result.Error.Should().BeOfType<ProductClosedConflict>();
-            _changeLogDaoStub.ChangeLogs.Should().BeEmpty();
+            _fakeChangeLogDao.ChangeLogs.Should().BeEmpty();
         }
 
         [Fact]
@@ -170,9 +170,9 @@ namespace ChangeBlog.Application.Tests.ProxyTests
             var version = new ClVersion(versionId, TestAccount.Product.Id, ClVersionValue.Parse("1.2.3"),
                 OptionalName.Empty,
                 null, TestAccount.UserId, DateTime.Parse("2021-04-17"), null);
-            _versionDaoStub.Versions.Add(version);
+            _fakeVersionDao.Versions.Add(version);
 
-            _productDaoStub.Products.Add(TestAccount.Product);
+            _fakeProductDao.Products.Add(TestAccount.Product);
 
             var lineId = Guid.Parse("0683e1e1-0e0d-405c-b77e-a6d0d5141b67");
             var line = new ChangeLogLine(lineId, versionId, TestAccount.Product.Id, ChangeLogText.Parse("some text"),
@@ -185,7 +185,7 @@ namespace ChangeBlog.Application.Tests.ProxyTests
 
             // assert
             result.IsSuccess.Should().BeTrue();
-            _changeLogDaoStub.ChangeLogs.Should().Contain(x => x.Id == lineId);
+            _fakeChangeLogDao.ChangeLogs.Should().Contain(x => x.Id == lineId);
         }
 
         [Fact]
@@ -196,7 +196,7 @@ namespace ChangeBlog.Application.Tests.ProxyTests
             var line = new ChangeLogLine(lineId, null, TestAccount.Product.Id, ChangeLogText.Parse("some text"),
                 0U, TestAccount.UserId, DateTime.Parse("2021-04-17"));
 
-            _productDaoStub.Products.Add(TestAccount.Product);
+            _fakeProductDao.Products.Add(TestAccount.Product);
 
             var proxy = CreateProxy();
 
@@ -205,7 +205,7 @@ namespace ChangeBlog.Application.Tests.ProxyTests
 
             // assert
             result.IsSuccess.Should().BeTrue();
-            _changeLogDaoStub.ChangeLogs.Should().Contain(x => x.Id == lineId);
+            _fakeChangeLogDao.ChangeLogs.Should().Contain(x => x.Id == lineId);
         }
 
         [Fact]
@@ -216,7 +216,7 @@ namespace ChangeBlog.Application.Tests.ProxyTests
             var line = new ChangeLogLine(lineId, null, TestAccount.Product.Id, ChangeLogText.Parse("some text"),
                 0U, TestAccount.UserId, DateTime.Parse("2021-04-17"));
 
-            _productDaoStub.Products.Add(TestAccount.Product);
+            _fakeProductDao.Products.Add(TestAccount.Product);
 
             var proxy = CreateProxy();
 
@@ -225,7 +225,7 @@ namespace ChangeBlog.Application.Tests.ProxyTests
 
             // assert
             result.IsSuccess.Should().BeTrue();
-            _changeLogDaoStub.ChangeLogs.Should().Contain(x => x.Id == lineId);
+            _fakeChangeLogDao.ChangeLogs.Should().Contain(x => x.Id == lineId);
         }
 
         [Fact]
@@ -236,8 +236,8 @@ namespace ChangeBlog.Application.Tests.ProxyTests
             var line = new ChangeLogLine(lineId, null, TestAccount.Product.Id, ChangeLogText.Parse("some text"),
                 0U, TestAccount.UserId, DateTime.Parse("2021-04-17"));
             
-            _changeLogDaoStub.ChangeLogs.Add(line);
-            _productDaoStub.Products.Add(TestAccount.Product);
+            _fakeChangeLogDao.ChangeLogs.Add(line);
+            _fakeProductDao.Products.Add(TestAccount.Product);
 
             var proxy = CreateProxy();
 
@@ -246,7 +246,7 @@ namespace ChangeBlog.Application.Tests.ProxyTests
 
             // assert
             result.IsSuccess.Should().BeTrue();
-            _changeLogDaoStub.ChangeLogs.Should().HaveCount(0);
+            _fakeChangeLogDao.ChangeLogs.Should().HaveCount(0);
         }
 
         [Fact]
@@ -257,12 +257,12 @@ namespace ChangeBlog.Application.Tests.ProxyTests
             var lineId = Guid.Parse("0683e1e1-0e0d-405c-b77e-a6d0d5141b67");
             var line = new ChangeLogLine(lineId, versionId, TestAccount.Product.Id, ChangeLogText.Parse("some text"),
                 0U, TestAccount.UserId, DateTime.Parse("2021-04-17"));
-            _changeLogDaoStub.ChangeLogs.Add(line);
+            _fakeChangeLogDao.ChangeLogs.Add(line);
 
             var version = new ClVersion(versionId, TestAccount.Product.Id, ClVersionValue.Parse("1.2.3"),
                 OptionalName.Empty,
                 DateTime.Parse("2021-05-15"), TestAccount.UserId, DateTime.Parse("2021-04-17"), null);
-            _versionDaoStub.Versions.Add(version);
+            _fakeVersionDao.Versions.Add(version);
 
             var proxy = CreateProxy();
 
@@ -271,7 +271,7 @@ namespace ChangeBlog.Application.Tests.ProxyTests
 
             // assert
             result.IsSuccess.Should().BeFalse();
-            _changeLogDaoStub.ChangeLogs.Should().HaveCount(1);
+            _fakeChangeLogDao.ChangeLogs.Should().HaveCount(1);
         }
 
         [Fact]
@@ -288,7 +288,7 @@ namespace ChangeBlog.Application.Tests.ProxyTests
                 ChangeLogText.Parse("some other text"),
                 0U, TestAccount.UserId, DateTime.Parse("2021-04-17"));
 
-            _productDaoStub.Products.Add(TestAccount.Product);
+            _fakeProductDao.Products.Add(TestAccount.Product);
 
             var proxy = CreateProxy();
 
@@ -297,9 +297,9 @@ namespace ChangeBlog.Application.Tests.ProxyTests
 
             // assert
             result.IsSuccess.Should().BeTrue();
-            _changeLogDaoStub.ChangeLogs.Should().Contain(x => x.Id == firstLineId);
-            _changeLogDaoStub.ChangeLogs.Should().Contain(x => x.Id == secondLineId);
-            _changeLogDaoStub.ChangeLogs.Count.Should().Be(2);
+            _fakeChangeLogDao.ChangeLogs.Should().Contain(x => x.Id == firstLineId);
+            _fakeChangeLogDao.ChangeLogs.Should().Contain(x => x.Id == secondLineId);
+            _fakeChangeLogDao.ChangeLogs.Count.Should().Be(2);
         }
 
         [Fact]
@@ -310,7 +310,7 @@ namespace ChangeBlog.Application.Tests.ProxyTests
             var version = new ClVersion(versionId, TestAccount.Product.Id, ClVersionValue.Parse("1.2.3"),
                 OptionalName.Empty,
                 DateTime.Parse("2021-04-17"), TestAccount.UserId, DateTime.Parse("2021-04-17"), null);
-            _versionDaoStub.Versions.Add(version);
+            _fakeVersionDao.Versions.Add(version);
 
             var firstLineId = Guid.Parse("0683e1e1-0e0d-405c-b77e-a6d0d5141b67");
             var firstLine = new ChangeLogLine(firstLineId, null, TestAccount.Product.Id,
@@ -322,7 +322,7 @@ namespace ChangeBlog.Application.Tests.ProxyTests
                 ChangeLogText.Parse("some other text"),
                 0U, TestAccount.UserId, DateTime.Parse("2021-04-17"));
 
-            _productDaoStub.Products.Add(TestAccount.Product);
+            _fakeProductDao.Products.Add(TestAccount.Product);
 
             var proxy = CreateProxy();
 
@@ -332,7 +332,7 @@ namespace ChangeBlog.Application.Tests.ProxyTests
             // assert
             result.IsSuccess.Should().BeFalse();
             result.Error.Should().BeOfType<VersionReleasedConflict>();
-            _changeLogDaoStub.ChangeLogs.Should().BeEmpty();
+            _fakeChangeLogDao.ChangeLogs.Should().BeEmpty();
         }
 
         [Fact]
@@ -343,15 +343,15 @@ namespace ChangeBlog.Application.Tests.ProxyTests
             var version = new ClVersion(versionId, TestAccount.Product.Id, ClVersionValue.Parse("1.2.3"),
                 OptionalName.Empty,
                 null, TestAccount.UserId, DateTime.Parse("2021-04-17"), null);
-            _versionDaoStub.Versions.Add(version);
+            _fakeVersionDao.Versions.Add(version);
 
-            _productDaoStub.Products.Add(TestAccount.Product);
+            _fakeProductDao.Products.Add(TestAccount.Product);
 
             var lineId = Guid.Parse("0683e1e1-0e0d-405c-b77e-a6d0d5141b67");
             var lineUnassigned = new ChangeLogLine(lineId, null, TestAccount.Product.Id,
                 ChangeLogText.Parse("some text"),
                 0U, TestAccount.UserId, DateTime.Parse("2021-04-17"));
-            _changeLogDaoStub.ChangeLogs.Add(lineUnassigned);
+            _fakeChangeLogDao.ChangeLogs.Add(lineUnassigned);
 
             var lineAssigned = lineUnassigned.AssignToVersion(versionId, 0);
 
@@ -362,7 +362,7 @@ namespace ChangeBlog.Application.Tests.ProxyTests
 
             // assert
             result.IsSuccess.Should().BeTrue();
-            _changeLogDaoStub.ChangeLogs.Single().VersionId!.Value.Should().Be(versionId);
+            _fakeChangeLogDao.ChangeLogs.Single().VersionId!.Value.Should().Be(versionId);
         }
 
         [Fact]
@@ -373,21 +373,21 @@ namespace ChangeBlog.Application.Tests.ProxyTests
             var version = new ClVersion(versionId, TestAccount.Product.Id, ClVersionValue.Parse("1.2.3"),
                 OptionalName.Empty,
                 null, TestAccount.UserId, DateTime.Parse("2021-04-17"), null);
-            _versionDaoStub.Versions.Add(version);
+            _fakeVersionDao.Versions.Add(version);
 
-            _productDaoStub.Products.Add(TestAccount.Product);
+            _fakeProductDao.Products.Add(TestAccount.Product);
 
             var firstLineId = Guid.Parse("0683e1e1-0e0d-405c-b77e-a6d0d5141b67");
             var firstLineUnassigned = new ChangeLogLine(firstLineId, null, TestAccount.Product.Id,
                 ChangeLogText.Parse("some text"),
                 0U, TestAccount.UserId, DateTime.Parse("2021-04-17"));
-            _changeLogDaoStub.ChangeLogs.Add(firstLineUnassigned);
+            _fakeChangeLogDao.ChangeLogs.Add(firstLineUnassigned);
 
             var secondLineId = Guid.Parse("4d755355-b527-4a4d-afbe-ab00a025609e");
             var secondLineUnassigned = new ChangeLogLine(secondLineId, null, TestAccount.Product.Id,
                 ChangeLogText.Parse("some other text"),
                 1U, TestAccount.UserId, DateTime.Parse("2021-04-17"));
-            _changeLogDaoStub.ChangeLogs.Add(secondLineUnassigned);
+            _fakeChangeLogDao.ChangeLogs.Add(secondLineUnassigned);
 
             var firstLineAssigned = firstLineUnassigned.AssignToVersion(versionId, 0);
             var secondLineAssigned = secondLineUnassigned.AssignToVersion(versionId, 1);
@@ -400,7 +400,7 @@ namespace ChangeBlog.Application.Tests.ProxyTests
 
             // assert
             result.IsSuccess.Should().BeTrue();
-            _changeLogDaoStub.ChangeLogs.All(x => x.VersionId == versionId).Should().BeTrue();
+            _fakeChangeLogDao.ChangeLogs.All(x => x.VersionId == versionId).Should().BeTrue();
         }
 
         [Fact]
@@ -411,19 +411,19 @@ namespace ChangeBlog.Application.Tests.ProxyTests
             var version = new ClVersion(versionId, TestAccount.Product.Id, ClVersionValue.Parse("1.2.3"),
                 OptionalName.Empty,
                 DateTime.Parse("2021-04-17"), TestAccount.UserId, DateTime.Parse("2021-04-17"), null);
-            _versionDaoStub.Versions.Add(version);
+            _fakeVersionDao.Versions.Add(version);
 
             var firstLineId = Guid.Parse("0683e1e1-0e0d-405c-b77e-a6d0d5141b67");
             var firstLineUnassigned = new ChangeLogLine(firstLineId, null, TestAccount.Product.Id,
                 ChangeLogText.Parse("some text"),
                 0U, TestAccount.UserId, DateTime.Parse("2021-04-17"));
-            _changeLogDaoStub.ChangeLogs.Add(firstLineUnassigned);
+            _fakeChangeLogDao.ChangeLogs.Add(firstLineUnassigned);
 
             var secondLineId = Guid.Parse("4d755355-b527-4a4d-afbe-ab00a025609e");
             var secondLineUnassigned = new ChangeLogLine(secondLineId, null, TestAccount.Product.Id,
                 ChangeLogText.Parse("some other text"),
                 1U, TestAccount.UserId, DateTime.Parse("2021-04-17"));
-            _changeLogDaoStub.ChangeLogs.Add(secondLineUnassigned);
+            _fakeChangeLogDao.ChangeLogs.Add(secondLineUnassigned);
 
             var firstLineAssigned = firstLineUnassigned.AssignToVersion(versionId, 0);
             var secondLineAssigned = secondLineUnassigned.AssignToVersion(versionId, 1);

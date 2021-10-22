@@ -10,28 +10,28 @@ namespace ChangeBlog.Application.Tests.UseCaseTests.Queries.GetAccounts
 {
     public class GetAccountsInteractorTests
     {
-        private readonly AccountDaoStub _accountDaoStub;
-        private readonly UserDaoStub _userDaoStub;
-        private readonly VersioningSchemeDaoStub _versioningSchemeDaoStub;
+        private readonly FakeAccountDao _fakeAccountDao;
+        private readonly FakeUserDao _fakeUserDao;
+        private readonly FakeVersioningSchemeDao _fakeVersioningSchemeDao;
 
         public GetAccountsInteractorTests()
         {
-            _accountDaoStub = new AccountDaoStub();
-            _userDaoStub = new UserDaoStub();
-            _versioningSchemeDaoStub = new VersioningSchemeDaoStub();
+            _fakeAccountDao = new FakeAccountDao();
+            _fakeUserDao = new FakeUserDao();
+            _fakeVersioningSchemeDao = new FakeVersioningSchemeDao();
         }
 
         private GetAccountsInteractor CreateInteractor() =>
-            new(_accountDaoStub, _userDaoStub, _versioningSchemeDaoStub);
+            new(_fakeAccountDao, _fakeUserDao, _fakeVersioningSchemeDao);
 
         [Fact]
         public async Task GetAccounts_HappyPath_Successful()
         {
             // arrange
-            _userDaoStub.Users.Add(TestAccount.User);
-            _accountDaoStub.Accounts.Add(TestAccount.Account);
-            _versioningSchemeDaoStub.VersioningSchemes.Add(TestAccount.CustomVersioningScheme);
-            _versioningSchemeDaoStub.VersioningSchemes.Add(TestAccount.DefaultScheme);
+            _fakeUserDao.Users.Add(TestAccount.User);
+            _fakeAccountDao.Accounts.Add(TestAccount.Account);
+            _fakeVersioningSchemeDao.VersioningSchemes.Add(TestAccount.CustomVersioningScheme);
+            _fakeVersioningSchemeDao.VersioningSchemes.Add(TestAccount.DefaultScheme);
             var interactor = CreateInteractor();
 
             // act 
@@ -46,10 +46,10 @@ namespace ChangeBlog.Application.Tests.UseCaseTests.Queries.GetAccounts
         public async Task GetAccounts_CreatedAt_ConvertedToLocalTime()
         {
             // arrange
-            _userDaoStub.Users.Add(TestAccount.User);
-            _accountDaoStub.Accounts.Add(TestAccount.Account);
-            _versioningSchemeDaoStub.VersioningSchemes.Add(TestAccount.CustomVersioningScheme);
-            _versioningSchemeDaoStub.VersioningSchemes.Add(TestAccount.DefaultScheme);
+            _fakeUserDao.Users.Add(TestAccount.User);
+            _fakeAccountDao.Accounts.Add(TestAccount.Account);
+            _fakeVersioningSchemeDao.VersioningSchemes.Add(TestAccount.CustomVersioningScheme);
+            _fakeVersioningSchemeDao.VersioningSchemes.Add(TestAccount.DefaultScheme);
             var interactor = CreateInteractor();
             var createdAtLocal = TestAccount.CreationDate.ToLocal(TestAccount.User.TimeZone);
 
@@ -65,9 +65,9 @@ namespace ChangeBlog.Application.Tests.UseCaseTests.Queries.GetAccounts
         public async Task GetAccount_HappyPath_Successful()
         {
             // arrange
-            _userDaoStub.Users.Add(TestAccount.User);
-            _accountDaoStub.Accounts.Add(TestAccount.Account);
-            _versioningSchemeDaoStub.VersioningSchemes.Add(TestAccount.CustomVersioningScheme);
+            _fakeUserDao.Users.Add(TestAccount.User);
+            _fakeAccountDao.Accounts.Add(TestAccount.Account);
+            _fakeVersioningSchemeDao.VersioningSchemes.Add(TestAccount.CustomVersioningScheme);
             var interactor = CreateInteractor();
 
             // act 
@@ -81,10 +81,10 @@ namespace ChangeBlog.Application.Tests.UseCaseTests.Queries.GetAccounts
         public async Task GetAccount_AccountWithoutDefaultScheme_UsesGlobalDefaultScheme()
         {
             // arrange
-            _userDaoStub.Users.Add(TestAccount.User);
-            _accountDaoStub.Accounts.Add(new Account(TestAccount.Id, TestAccount.Name, null, TestAccount.CreationDate,
+            _fakeUserDao.Users.Add(TestAccount.User);
+            _fakeAccountDao.Accounts.Add(new Account(TestAccount.Id, TestAccount.Name, null, TestAccount.CreationDate,
                 null));
-            _versioningSchemeDaoStub.VersioningSchemes.Add(TestAccount.DefaultScheme);
+            _fakeVersioningSchemeDao.VersioningSchemes.Add(TestAccount.DefaultScheme);
             var interactor = CreateInteractor();
 
             // act 

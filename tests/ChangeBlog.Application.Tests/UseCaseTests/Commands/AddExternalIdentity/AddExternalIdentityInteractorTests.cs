@@ -17,20 +17,20 @@ namespace ChangeBlog.Application.Tests.UseCaseTests.Commands.AddExternalIdentity
     public class AddExternalIdentityInteractorTests
     {
 
-        private readonly ExternalUserInfoDaoStub _externalUserInfoDaoStub;
-        private readonly UserDaoStub _userDaoStub;
+        private readonly FakeExternalUserInfoDao _fakeExternalUserInfoDao;
+        private readonly FakeUserDao _fakeUserDao;
         private readonly Mock<IUnitOfWork> _unitOfWorkMock;
 
         public AddExternalIdentityInteractorTests()
         {
-            _externalUserInfoDaoStub = new ExternalUserInfoDaoStub();
-            _userDaoStub = new UserDaoStub();
+            _fakeExternalUserInfoDao = new FakeExternalUserInfoDao();
+            _fakeUserDao = new FakeUserDao();
             _unitOfWorkMock = new Mock<IUnitOfWork>();
         }
 
 
         private AddExternalIdentityInteractor CreateInteractor() =>
-            new(_externalUserInfoDaoStub, _userDaoStub, _unitOfWorkMock.Object);
+            new(_fakeExternalUserInfoDao, _fakeUserDao, _unitOfWorkMock.Object);
 
         [Fact]
         public async Task AddExternalIdentity_ExternalUserIdIsNull_Failure()
@@ -55,13 +55,13 @@ namespace ChangeBlog.Application.Tests.UseCaseTests.Commands.AddExternalIdentity
                 DateTime.Parse("2021-09-05"),
                 DateTime.Parse("2021-09-05"));
 
-            _externalUserInfoDaoStub.UserInfo = new UserInfo(externalUserId,
+            _fakeExternalUserInfoDao.UserInfo = new UserInfo(externalUserId,
                 testUser.FirstName,
                 testUser.FirstName,
                 testUser.LastName,
                 testUser.Email,
                 "TestProvider");
-            _userDaoStub.Users.Add(testUser);
+            _fakeUserDao.Users.Add(testUser);
 
             var interactor = CreateInteractor();
 
@@ -77,9 +77,9 @@ namespace ChangeBlog.Application.Tests.UseCaseTests.Commands.AddExternalIdentity
         {
             // arrange
             const string externalUserId = "123456";
-            _userDaoStub.ExternalIdentities.Add(new ExternalIdentity(Guid.NewGuid(), TestAccount.UserId, 
+            _fakeUserDao.ExternalIdentities.Add(new ExternalIdentity(Guid.NewGuid(), TestAccount.UserId, 
                 externalUserId, "TestProvider", DateTime.Parse("2021-09-06")));
-            _userDaoStub.Users.Add(TestAccount.User);
+            _fakeUserDao.Users.Add(TestAccount.User);
             var interactor = CreateInteractor();
 
             // act
@@ -103,13 +103,13 @@ namespace ChangeBlog.Application.Tests.UseCaseTests.Commands.AddExternalIdentity
                 null,
                 DateTime.Parse("2021-09-05"));
 
-            _externalUserInfoDaoStub.UserInfo = new UserInfo(externalUserId,
+            _fakeExternalUserInfoDao.UserInfo = new UserInfo(externalUserId,
                 testUser.FirstName,
                 testUser.FirstName,
                 testUser.LastName,
                 testUser.Email,
                 "TestProvider");
-            _userDaoStub.Users.Add(testUser);
+            _fakeUserDao.Users.Add(testUser);
 
             var interactor = CreateInteractor();
 
@@ -118,7 +118,7 @@ namespace ChangeBlog.Application.Tests.UseCaseTests.Commands.AddExternalIdentity
 
             // assert
             isSuccess.Should().BeTrue();
-            _userDaoStub.ExternalIdentities.Should().Contain(x => x.ExternalUserId == externalUserId);
+            _fakeUserDao.ExternalIdentities.Should().Contain(x => x.ExternalUserId == externalUserId);
         }
 
         [Fact]
@@ -134,14 +134,14 @@ namespace ChangeBlog.Application.Tests.UseCaseTests.Commands.AddExternalIdentity
                 DateTime.Parse("2021-09-05"),
                 DateTime.Parse("2021-09-05"));
 
-            _externalUserInfoDaoStub.UserInfo = new UserInfo(externalUserId,
+            _fakeExternalUserInfoDao.UserInfo = new UserInfo(externalUserId,
                 testUser.FirstName,
                 testUser.FirstName,
                 testUser.LastName,
                 testUser.Email,
                 "TestProvider");
-            _userDaoStub.Users.Add(testUser);
-            _userDaoStub.ExternalIdentities.Add(new ExternalIdentity(Guid.NewGuid(), TestAccount.UserId,
+            _fakeUserDao.Users.Add(testUser);
+            _fakeUserDao.ExternalIdentities.Add(new ExternalIdentity(Guid.NewGuid(), TestAccount.UserId,
                 externalUserId, "TestProvider", DateTime.Parse("2021-09-06")));
 
             var interactor = CreateInteractor();
@@ -166,7 +166,7 @@ namespace ChangeBlog.Application.Tests.UseCaseTests.Commands.AddExternalIdentity
                 DateTime.Parse("2021-09-05"),
                 DateTime.Parse("2021-09-05"));
 
-            _externalUserInfoDaoStub.UserInfo = new UserInfo(externalUserId,
+            _fakeExternalUserInfoDao.UserInfo = new UserInfo(externalUserId,
                 testUser.FirstName,
                 testUser.FirstName,
                 testUser.LastName,
@@ -180,7 +180,7 @@ namespace ChangeBlog.Application.Tests.UseCaseTests.Commands.AddExternalIdentity
 
             // assert
             isSuccess.Should().BeTrue();
-            var importedUser = await _userDaoStub.FindByExternalUserIdAsync(externalUserId);
+            var importedUser = await _fakeUserDao.FindByExternalUserIdAsync(externalUserId);
             importedUser.HasValue.Should().BeTrue();
             importedUser.GetValueOrThrow().Email.Should().Be(testUser.Email);
             importedUser.GetValueOrThrow().TimeZone.Value.Should().Be("Etc/UTC");
@@ -202,14 +202,14 @@ namespace ChangeBlog.Application.Tests.UseCaseTests.Commands.AddExternalIdentity
                 DateTime.Parse("2021-09-05"),
                 DateTime.Parse("2021-09-05"));
 
-            _externalUserInfoDaoStub.UserInfo = new UserInfo(externalUserId,
+            _fakeExternalUserInfoDao.UserInfo = new UserInfo(externalUserId,
                 testUser.FirstName,
                 testUser.FirstName,
                 testUser.LastName,
                 testUser.Email,
                 "TestProvider");
 
-            _userDaoStub.ProduceFailureWhileImporting = true;
+            _fakeUserDao.ProduceFailureWhileImporting = true;
             var interactor = CreateInteractor();
 
             // act

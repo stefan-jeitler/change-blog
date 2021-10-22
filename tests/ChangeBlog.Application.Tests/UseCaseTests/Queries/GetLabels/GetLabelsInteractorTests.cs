@@ -11,14 +11,14 @@ namespace ChangeBlog.Application.Tests.UseCaseTests.Queries.GetLabels
 {
     public class GetLabelsInteractorTests
     {
-        private readonly ChangeLogDaoStub _changeLogDaoStub;
+        private readonly FakeChangeLogDao _fakeChangeLogDao;
 
         public GetLabelsInteractorTests()
         {
-            _changeLogDaoStub = new ChangeLogDaoStub();
+            _fakeChangeLogDao = new FakeChangeLogDao();
         }
 
-        private GetLabelsInteractor CreateInteractor() => new(_changeLogDaoStub);
+        private GetLabelsInteractor CreateInteractor() => new(_fakeChangeLogDao);
 
         [Fact]
         public async Task GetLabels_HappyPath_Successful()
@@ -29,7 +29,7 @@ namespace ChangeBlog.Application.Tests.UseCaseTests.Queries.GetLabels
             var line = new ChangeLogLine(changeLogLineId, null, TestAccount.Product.Id,
                 ChangeLogText.Parse("Test line."), 0, DateTime.Parse("2021-07-26"),
                 labels, Array.Empty<Issue>(), TestAccount.UserId);
-            _changeLogDaoStub.ChangeLogs.Add(line);
+            _fakeChangeLogDao.ChangeLogs.Add(line);
 
             var interactor = CreateInteractor();
 
@@ -50,7 +50,7 @@ namespace ChangeBlog.Application.Tests.UseCaseTests.Queries.GetLabels
             var line = new ChangeLogLine(changeLogLineId, null, TestAccount.Product.Id,
                 ChangeLogText.Parse("Test line."), 0, DateTime.Parse("2021-07-26"),
                 Array.Empty<Label>(), Array.Empty<Issue>(), TestAccount.UserId);
-            _changeLogDaoStub.ChangeLogs.Add(line);
+            _fakeChangeLogDao.ChangeLogs.Add(line);
 
             var interactor = CreateInteractor();
 

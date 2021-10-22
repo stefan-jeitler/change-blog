@@ -15,22 +15,22 @@ namespace ChangeBlog.Application.Tests.UseCaseTests.Queries.GetLatestVersion
     public class GetLatestVersionInteractorTests
     {
         private readonly Mock<IGetLatestVersionOutputPort> _outputPortMock;
-        private readonly ChangeLogDaoStub _changeLogDaoStub;
-        private readonly VersionDaoStub _versionDaoStub;
-        private readonly ProductDaoStub _productDaoStub;
-        private readonly UserDaoStub _userDaoStub;
+        private readonly FakeChangeLogDao _fakeChangeLogDao;
+        private readonly FakeVersionDao _fakeVersionDao;
+        private readonly FakeProductDao _fakeProductDao;
+        private readonly FakeUserDao _fakeUserDao;
 
         public GetLatestVersionInteractorTests()
         {
             _outputPortMock = new Mock<IGetLatestVersionOutputPort>(MockBehavior.Strict);
-            _changeLogDaoStub = new ChangeLogDaoStub();
-            _versionDaoStub = new VersionDaoStub();
-            _productDaoStub = new ProductDaoStub();
-            _userDaoStub = new UserDaoStub();
+            _fakeChangeLogDao = new FakeChangeLogDao();
+            _fakeVersionDao = new FakeVersionDao();
+            _fakeProductDao = new FakeProductDao();
+            _fakeUserDao = new FakeUserDao();
         }
 
         private GetLatestVersionInteractor CreateInteractor() =>
-            new(_versionDaoStub, _changeLogDaoStub, _productDaoStub, _userDaoStub);
+            new(_fakeVersionDao, _fakeChangeLogDao, _fakeProductDao, _fakeUserDao);
 
         [Fact]
         public async Task GetLatestVersion_HappyPath_Successful()
@@ -44,8 +44,8 @@ namespace ChangeBlog.Application.Tests.UseCaseTests.Queries.GetLatestVersion
             var oldVersion = new ClVersion(versionId, TestAccount.Product.Id, ClVersionValue.Parse("1.1.1"), OptionalName.Empty,
                 null, TestAccount.UserId, DateTime.Parse("2021-08-01"), null);
 
-            _versionDaoStub.Versions.Add(latestVersion);
-            _versionDaoStub.Versions.Add(oldVersion);
+            _fakeVersionDao.Versions.Add(latestVersion);
+            _fakeVersionDao.Versions.Add(oldVersion);
 
             var lines = new[]
             {
@@ -53,9 +53,9 @@ namespace ChangeBlog.Application.Tests.UseCaseTests.Queries.GetLatestVersion
                 new ChangeLogLine(versionId, TestAccount.Product.Id, ChangeLogText.Parse("Test text 2"), 1, TestAccount.UserId)
             };
 
-            _changeLogDaoStub.ChangeLogs.AddRange(lines);
-            _productDaoStub.Products.Add(TestAccount.Product);
-            _userDaoStub.Users.Add(TestAccount.User);
+            _fakeChangeLogDao.ChangeLogs.AddRange(lines);
+            _fakeProductDao.Products.Add(TestAccount.Product);
+            _fakeUserDao.Users.Add(TestAccount.User);
 
             var interactor = CreateInteractor();
             _outputPortMock.Setup(x => x.VersionFound(It.IsAny<VersionResponseModel>()));
@@ -72,8 +72,8 @@ namespace ChangeBlog.Application.Tests.UseCaseTests.Queries.GetLatestVersion
         public async Task GetLatestVersion_ProductDoesNotContainAnyVersions_NoVersionAvailable()
         {
             // arrange
-            _productDaoStub.Products.Add(TestAccount.Product);
-            _userDaoStub.Users.Add(TestAccount.User);
+            _fakeProductDao.Products.Add(TestAccount.Product);
+            _fakeUserDao.Users.Add(TestAccount.User);
 
             var interactor = CreateInteractor();
             _outputPortMock.Setup(x => x.NoVersionExists(It.IsAny<Guid>()));
@@ -89,7 +89,7 @@ namespace ChangeBlog.Application.Tests.UseCaseTests.Queries.GetLatestVersion
         public async Task GetLatestVersion_ProductDoesNotExist_ProductDoesNotExistOutput()
         {
             // arrange
-            _userDaoStub.Users.Add(TestAccount.User);
+            _fakeUserDao.Users.Add(TestAccount.User);
 
             var interactor = CreateInteractor();
             _outputPortMock.Setup(x => x.ProductDoesNotExist());

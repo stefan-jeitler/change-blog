@@ -17,21 +17,21 @@ namespace ChangeBlog.Application.Tests.UseCaseTests.Commands.MakeAllChangeLogLin
 {
     public class MakeAllChangeLogLinesPendingInteractorTests
     {
-        private readonly ChangeLogDaoStub _changeLogDaoStub;
+        private readonly FakeChangeLogDao _fakeChangeLogDao;
         private readonly Mock<IMakeAllChangeLogLinesPendingOutputPort> _outputPortMock;
         private readonly Mock<IUnitOfWork> _unitOfWorkMock;
-        private readonly VersionDaoStub _versionDaoStub;
+        private readonly FakeVersionDao _fakeVersionDao;
 
         public MakeAllChangeLogLinesPendingInteractorTests()
         {
             _outputPortMock = new Mock<IMakeAllChangeLogLinesPendingOutputPort>(MockBehavior.Strict);
             _unitOfWorkMock = new Mock<IUnitOfWork>();
-            _versionDaoStub = new VersionDaoStub();
-            _changeLogDaoStub = new ChangeLogDaoStub();
+            _fakeVersionDao = new FakeVersionDao();
+            _fakeChangeLogDao = new FakeChangeLogDao();
         }
 
-        private MakeAllChangeLogLinesPendingInteractor CreateInteractor() => new(_versionDaoStub, _changeLogDaoStub,
-            _changeLogDaoStub, _unitOfWorkMock.Object);
+        private MakeAllChangeLogLinesPendingInteractor CreateInteractor() => new(_fakeVersionDao, _fakeChangeLogDao,
+            _fakeChangeLogDao, _unitOfWorkMock.Object);
 
         [Fact]
         public async Task MakeAllLinesPending_EmptyVersionId_ArgumentException()
@@ -119,7 +119,7 @@ namespace ChangeBlog.Application.Tests.UseCaseTests.Commands.MakeAllChangeLogLin
                 TestAccount.UserId,
                 DateTime.Parse("2021-04-24"));
 
-            _versionDaoStub.Versions.Add(clVersion);
+            _fakeVersionDao.Versions.Add(clVersion);
             _outputPortMock.Setup(m => m.VersionAlreadyReleased(It.IsAny<Guid>()));
 
             // act
@@ -139,7 +139,7 @@ namespace ChangeBlog.Application.Tests.UseCaseTests.Commands.MakeAllChangeLogLin
                 OptionalName.Empty,
                 null, TestAccount.UserId, DateTime.Parse("2021-04-24"), DateTime.Parse("2021-04-24"));
 
-            _versionDaoStub.Versions.Add(clVersion);
+            _fakeVersionDao.Versions.Add(clVersion);
             _outputPortMock.Setup(m => m.VersionDeleted(It.IsAny<Guid>()));
 
             // act
@@ -162,13 +162,13 @@ namespace ChangeBlog.Application.Tests.UseCaseTests.Commands.MakeAllChangeLogLin
             var versionLine =
                 new ChangeLogLine(clVersion.Id, TestAccount.Product.Id, ChangeLogText.Parse("some text"), 0,
                     TestAccount.UserId);
-            _changeLogDaoStub.ChangeLogs.Add(versionLine);
+            _fakeChangeLogDao.ChangeLogs.Add(versionLine);
             var pendingLines = Enumerable.Range(0, 100)
                 .Select(x => new ChangeLogLine(null, TestAccount.Product.Id, ChangeLogText.Parse($"{x:D5}"), (uint) x,
                     TestAccount.UserId));
-            _changeLogDaoStub.ChangeLogs.AddRange(pendingLines);
+            _fakeChangeLogDao.ChangeLogs.AddRange(pendingLines);
 
-            _versionDaoStub.Versions.Add(clVersion);
+            _fakeVersionDao.Versions.Add(clVersion);
             _outputPortMock.Setup(m => m.TooManyPendingLines(It.IsAny<int>()));
 
             // act
@@ -194,14 +194,14 @@ namespace ChangeBlog.Application.Tests.UseCaseTests.Commands.MakeAllChangeLogLin
                 TestAccount.UserId);
             var versionLine2 = new ChangeLogLine(clVersion.Id, TestAccount.Product.Id, ChangeLogText.Parse("00001"), 0,
                 TestAccount.UserId);
-            _changeLogDaoStub.ChangeLogs.Add(versionLine1);
-            _changeLogDaoStub.ChangeLogs.Add(versionLine2);
+            _fakeChangeLogDao.ChangeLogs.Add(versionLine1);
+            _fakeChangeLogDao.ChangeLogs.Add(versionLine2);
             var pendingLines = Enumerable.Range(0, 98)
                 .Select(x => new ChangeLogLine(null, TestAccount.Product.Id, ChangeLogText.Parse($"{x:D5}"), (uint) x,
                     TestAccount.UserId));
-            _changeLogDaoStub.ChangeLogs.AddRange(pendingLines);
+            _fakeChangeLogDao.ChangeLogs.AddRange(pendingLines);
 
-            _versionDaoStub.Versions.Add(clVersion);
+            _fakeVersionDao.Versions.Add(clVersion);
             _outputPortMock.Setup(m => m.LineWithSameTextAlreadyExists(It.IsAny<List<string>>()));
 
             // act
@@ -226,9 +226,9 @@ namespace ChangeBlog.Application.Tests.UseCaseTests.Commands.MakeAllChangeLogLin
             var versionLine1 =
                 new ChangeLogLine(clVersion.Id, TestAccount.Product.Id, ChangeLogText.Parse("some text"), 0,
                     TestAccount.UserId);
-            _changeLogDaoStub.ChangeLogs.Add(versionLine1);
-            _changeLogDaoStub.Conflict = new ConflictStub();
-            _versionDaoStub.Versions.Add(clVersion);
+            _fakeChangeLogDao.ChangeLogs.Add(versionLine1);
+            _fakeChangeLogDao.Conflict = new ConflictStub();
+            _fakeVersionDao.Versions.Add(clVersion);
             _outputPortMock.Setup(m => m.Conflict(It.IsAny<Conflict>()));
 
             // act
@@ -250,8 +250,8 @@ namespace ChangeBlog.Application.Tests.UseCaseTests.Commands.MakeAllChangeLogLin
             var versionLine =
                 new ChangeLogLine(clVersion.Id, TestAccount.Product.Id, ChangeLogText.Parse("some text"), 0,
                     TestAccount.UserId);
-            _changeLogDaoStub.ChangeLogs.Add(versionLine);
-            _versionDaoStub.Versions.Add(clVersion);
+            _fakeChangeLogDao.ChangeLogs.Add(versionLine);
+            _fakeVersionDao.Versions.Add(clVersion);
             _outputPortMock.Setup(m => m.MadePending(It.IsAny<Guid>(), It.IsAny<int>()));
 
             // act

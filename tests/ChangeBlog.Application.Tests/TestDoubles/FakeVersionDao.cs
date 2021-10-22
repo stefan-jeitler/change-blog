@@ -9,7 +9,7 @@ using CSharpFunctionalExtensions;
 
 namespace ChangeBlog.Application.Tests.TestDoubles
 {
-    public class VersionDaoStub : IVersionDao
+    public class FakeVersionDao : IVersionDao
     {
         public List<ClVersion> Versions { get; } = new();
         public Conflict Conflict { get; set; }

@@ -9,7 +9,7 @@ using CSharpFunctionalExtensions;
 
 namespace ChangeBlog.Application.Tests.TestDoubles
 {
-    public class UserDaoStub : IUserDao
+    public class FakeUserDao : IUserDao
     {
 
         public List<User> Users { get; } = new();

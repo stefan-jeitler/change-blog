@@ -9,7 +9,7 @@ using CSharpFunctionalExtensions;
 
 namespace ChangeBlog.Application.Tests.TestDoubles
 {
-    public class ChangeLogDaoStub : IChangeLogQueriesDao, IChangeLogCommandsDao
+    public class FakeChangeLogDao : IChangeLogQueriesDao, IChangeLogCommandsDao
     {
         public List<ChangeLogLine> ChangeLogs { get; set; } = new();
         public Conflict Conflict { get; set; }

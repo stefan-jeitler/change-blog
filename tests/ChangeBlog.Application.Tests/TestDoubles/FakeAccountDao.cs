@@ -8,7 +8,7 @@ using CSharpFunctionalExtensions;
 
 namespace ChangeBlog.Application.Tests.TestDoubles
 {
-    public class AccountDaoStub : IAccountDao
+    public class FakeAccountDao : IAccountDao
     {
         public List<Account> Accounts { get; } = new();
 

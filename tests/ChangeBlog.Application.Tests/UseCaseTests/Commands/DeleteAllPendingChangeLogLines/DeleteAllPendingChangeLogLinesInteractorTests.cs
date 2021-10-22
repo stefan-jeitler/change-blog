@@ -11,11 +11,11 @@ namespace ChangeBlog.Application.Tests.UseCaseTests.Commands.DeleteAllPendingCha
 {
     public class DeleteAllPendingChangeLogLinesInteractorTests
     {
-        private readonly ChangeLogDaoStub _changeLogDaoStub;
+        private readonly FakeChangeLogDao _fakeChangeLogDao;
 
         public DeleteAllPendingChangeLogLinesInteractorTests()
         {
-            _changeLogDaoStub = new ChangeLogDaoStub();
+            _fakeChangeLogDao = new FakeChangeLogDao();
         }
 
         [Fact]
@@ -27,20 +27,20 @@ namespace ChangeBlog.Application.Tests.UseCaseTests.Commands.DeleteAllPendingCha
                 .Select(x => new ChangeLogLine(null, TestAccount.Product.Id, ChangeLogText.Parse($"00000{x}"), (uint) x,
                     TestAccount.UserId));
 
-            _changeLogDaoStub.ChangeLogs.AddRange(pendingLines);
-            var interactor = new DeleteAllPendingChangeLogLinesInteractor(_changeLogDaoStub);
+            _fakeChangeLogDao.ChangeLogs.AddRange(pendingLines);
+            var interactor = new DeleteAllPendingChangeLogLinesInteractor(_fakeChangeLogDao);
 
             // act
             await interactor.ExecuteAsync(TestAccount.Product.Id);
 
             // assert
-            _changeLogDaoStub.ChangeLogs.Should().BeEmpty();
+            _fakeChangeLogDao.ChangeLogs.Should().BeEmpty();
         }
 
         [Fact]
         public async Task DeleteAllPendingLines_WithEmptyProductId_ArgumentException()
         {
-            var interactor = new DeleteAllPendingChangeLogLinesInteractor(_changeLogDaoStub);
+            var interactor = new DeleteAllPendingChangeLogLinesInteractor(_fakeChangeLogDao);
 
             Func<Task> act = () => interactor.ExecuteAsync(Guid.Empty);
 

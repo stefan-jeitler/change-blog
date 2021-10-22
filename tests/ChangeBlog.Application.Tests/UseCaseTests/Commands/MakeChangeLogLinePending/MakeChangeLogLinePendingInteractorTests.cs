@@ -15,22 +15,22 @@ namespace ChangeBlog.Application.Tests.UseCaseTests.Commands.MakeChangeLogLinePe
 {
     public class MakeChangeLogLinePendingInteractorTests
     {
-        private readonly ChangeLogDaoStub _changeLogDaoStub;
+        private readonly FakeChangeLogDao _fakeChangeLogDao;
         private readonly Mock<IMakeChangeLogLinePendingOutputPort> _outputPortMock;
         private readonly Mock<IUnitOfWork> _unitOfWorkMock;
-        private readonly VersionDaoStub _versionDaoStub;
+        private readonly FakeVersionDao _fakeVersionDao;
 
         public MakeChangeLogLinePendingInteractorTests()
         {
-            _versionDaoStub = new VersionDaoStub();
-            _changeLogDaoStub = new ChangeLogDaoStub();
+            _fakeVersionDao = new FakeVersionDao();
+            _fakeChangeLogDao = new FakeChangeLogDao();
             _unitOfWorkMock = new Mock<IUnitOfWork>();
             _outputPortMock = new Mock<IMakeChangeLogLinePendingOutputPort>(MockBehavior.Strict);
         }
 
         private MakeChangeLogLinePendingInteractor CreateInteractor() =>
-            new(_versionDaoStub, _changeLogDaoStub,
-                _changeLogDaoStub, _unitOfWorkMock.Object);
+            new(_fakeVersionDao, _fakeChangeLogDao,
+                _fakeChangeLogDao, _unitOfWorkMock.Object);
 
         [Fact]
         public async Task MakeLinePending_HappyPath_SuccessfullyAndUowStartedAndCommitted()
@@ -38,11 +38,11 @@ namespace ChangeBlog.Application.Tests.UseCaseTests.Commands.MakeChangeLogLinePe
             // arrange
             var clVersion = new ClVersion(TestAccount.Product.Id, ClVersionValue.Parse("1.2.3"), OptionalName.Empty,
                 TestAccount.UserId);
-            _versionDaoStub.Versions.Add(clVersion);
+            _fakeVersionDao.Versions.Add(clVersion);
 
             var changeLogLine = new ChangeLogLine(clVersion.Id, TestAccount.Product.Id,
                 ChangeLogText.Parse("some text"), 0, TestAccount.UserId);
-            _changeLogDaoStub.ChangeLogs.Add(changeLogLine);
+            _fakeChangeLogDao.ChangeLogs.Add(changeLogLine);
 
             var makeLinePendingInteractor = CreateInteractor();
 
@@ -54,7 +54,7 @@ namespace ChangeBlog.Application.Tests.UseCaseTests.Commands.MakeChangeLogLinePe
             // assert
             _unitOfWorkMock.Verify(x => x.Start(), Times.Once);
             _unitOfWorkMock.Verify(x => x.Commit(), Times.Once);
-            _changeLogDaoStub.ChangeLogs.Single().VersionId.Should().NotHaveValue();
+            _fakeChangeLogDao.ChangeLogs.Single().VersionId.Should().NotHaveValue();
         }
 
         [Fact]
@@ -90,7 +90,7 @@ namespace ChangeBlog.Application.Tests.UseCaseTests.Commands.MakeChangeLogLinePe
             // arrange
             var changeLogLine = new ChangeLogLine(null, TestAccount.Product.Id,
                 ChangeLogText.Parse("some text"), 0, TestAccount.UserId);
-            _changeLogDaoStub.ChangeLogs.Add(changeLogLine);
+            _fakeChangeLogDao.ChangeLogs.Add(changeLogLine);
 
             var makeLinePendingInteractor = CreateInteractor();
 
@@ -110,11 +110,11 @@ namespace ChangeBlog.Application.Tests.UseCaseTests.Commands.MakeChangeLogLinePe
             // arrange
             var clVersion = new ClVersion(TestAccount.Product.Id, ClVersionValue.Parse("1.2.3"), OptionalName.Empty,
                 TestAccount.UserId, DateTime.Parse("2021-04-18"));
-            _versionDaoStub.Versions.Add(clVersion);
+            _fakeVersionDao.Versions.Add(clVersion);
 
             var changeLogLine = new ChangeLogLine(clVersion.Id, TestAccount.Product.Id,
                 ChangeLogText.Parse("some text"), 0, TestAccount.UserId);
-            _changeLogDaoStub.ChangeLogs.Add(changeLogLine);
+            _fakeChangeLogDao.ChangeLogs.Add(changeLogLine);
 
             var makeLinePendingInteractor = CreateInteractor();
 
@@ -136,11 +136,11 @@ namespace ChangeBlog.Application.Tests.UseCaseTests.Commands.MakeChangeLogLinePe
                 DateTime.Parse("2021-04-18"),
                 DateTime.Parse("2021-04-18"));
 
-            _versionDaoStub.Versions.Add(clVersion);
+            _fakeVersionDao.Versions.Add(clVersion);
 
             var changeLogLine = new ChangeLogLine(clVersion.Id, TestAccount.Product.Id,
                 ChangeLogText.Parse("some text"), 0, TestAccount.UserId);
-            _changeLogDaoStub.ChangeLogs.Add(changeLogLine);
+            _fakeChangeLogDao.ChangeLogs.Add(changeLogLine);
 
             var makeLinePendingInteractor = CreateInteractor();
 
@@ -159,13 +159,13 @@ namespace ChangeBlog.Application.Tests.UseCaseTests.Commands.MakeChangeLogLinePe
             // arrange
             var clVersion = new ClVersion(TestAccount.Product.Id, ClVersionValue.Parse("1.2.3"), OptionalName.Empty,
                 TestAccount.UserId);
-            _versionDaoStub.Versions.Add(clVersion);
+            _fakeVersionDao.Versions.Add(clVersion);
 
             var changeLogLine = new ChangeLogLine(clVersion.Id, TestAccount.Product.Id,
                 ChangeLogText.Parse("some text"), 0, TestAccount.UserId);
-            _changeLogDaoStub.ChangeLogs.Add(changeLogLine);
+            _fakeChangeLogDao.ChangeLogs.Add(changeLogLine);
 
-            _changeLogDaoStub.ChangeLogs.AddRange(Enumerable.Range(0, 100)
+            _fakeChangeLogDao.ChangeLogs.AddRange(Enumerable.Range(0, 100)
                 .Select(x => new ChangeLogLine(null, TestAccount.Product.Id,
                     ChangeLogText.Parse($"{x:D5}"), 0, TestAccount.UserId)));
 
@@ -186,14 +186,14 @@ namespace ChangeBlog.Application.Tests.UseCaseTests.Commands.MakeChangeLogLinePe
             // arrange
             var clVersion = new ClVersion(TestAccount.Product.Id, ClVersionValue.Parse("1.2.3"), OptionalName.Empty,
                 TestAccount.UserId);
-            _versionDaoStub.Versions.Add(clVersion);
+            _fakeVersionDao.Versions.Add(clVersion);
 
             var changeLogLine = new ChangeLogLine(clVersion.Id, TestAccount.Product.Id,
                 ChangeLogText.Parse("some text"), 0, TestAccount.UserId);
-            _changeLogDaoStub.ChangeLogs.Add(changeLogLine);
+            _fakeChangeLogDao.ChangeLogs.Add(changeLogLine);
 
             var makeLinePendingInteractor = CreateInteractor();
-            _changeLogDaoStub.Conflict = new ConflictStub();
+            _fakeChangeLogDao.Conflict = new ConflictStub();
 
             _outputPortMock.Setup(m => m.Conflict(It.IsAny<Conflict>()));
 
@@ -210,14 +210,14 @@ namespace ChangeBlog.Application.Tests.UseCaseTests.Commands.MakeChangeLogLinePe
             // arrange
             var clVersion = new ClVersion(TestAccount.Product.Id, ClVersionValue.Parse("1.2.3"), OptionalName.Empty,
                 TestAccount.UserId);
-            _versionDaoStub.Versions.Add(clVersion);
+            _fakeVersionDao.Versions.Add(clVersion);
 
             var changeLogLine = new ChangeLogLine(clVersion.Id, TestAccount.Product.Id,
                 ChangeLogText.Parse("some text"), 0, TestAccount.UserId);
-            _changeLogDaoStub.ChangeLogs.Add(changeLogLine);
+            _fakeChangeLogDao.ChangeLogs.Add(changeLogLine);
             var pendingLine = new ChangeLogLine(null, TestAccount.Product.Id,
                 ChangeLogText.Parse("some text"), 0, TestAccount.UserId);
-            _changeLogDaoStub.ChangeLogs.Add(pendingLine);
+            _fakeChangeLogDao.ChangeLogs.Add(pendingLine);
 
             var makeLinePendingInteractor = CreateInteractor();
 

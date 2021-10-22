@@ -15,7 +15,7 @@ namespace ChangeBlog.Application.Tests.UseCaseTests.Commands.LabelsTests
 {
     public class RemoveChangeLogLineLabelInteractorTests
     {
-        private readonly ChangeLogDaoStub _changeLogDaoStub;
+        private readonly FakeChangeLogDao _fakeChangeLogDao;
         private readonly Mock<IDeleteChangeLogLineLabelOutputPort> _outputPortMock;
         private readonly Mock<IUnitOfWork> _unitOfWorkMock;
 
@@ -23,11 +23,11 @@ namespace ChangeBlog.Application.Tests.UseCaseTests.Commands.LabelsTests
         {
             _outputPortMock = new Mock<IDeleteChangeLogLineLabelOutputPort>(MockBehavior.Strict);
             _unitOfWorkMock = new Mock<IUnitOfWork>();
-            _changeLogDaoStub = new ChangeLogDaoStub();
+            _fakeChangeLogDao = new FakeChangeLogDao();
         }
 
         private DeleteChangeLogLineLabelInteractor CreateInteractor() =>
-            new(_unitOfWorkMock.Object, _changeLogDaoStub, _changeLogDaoStub);
+            new(_unitOfWorkMock.Object, _fakeChangeLogDao, _fakeChangeLogDao);
 
         [Fact]
         public async Task RemoveLabel_HappyPath_LabelRemovedAndUowCommitted()
@@ -40,7 +40,7 @@ namespace ChangeBlog.Application.Tests.UseCaseTests.Commands.LabelsTests
 
             var line = new ChangeLogLine(lineId, null, TestAccount.Product.Id, ChangeLogText.Parse("some valid text"),
                 0U, DateTime.Parse("2021-04-19"), new List<Label> {label}, Array.Empty<Issue>(), TestAccount.UserId);
-            _changeLogDaoStub.ChangeLogs.Add(line);
+            _fakeChangeLogDao.ChangeLogs.Add(line);
             _outputPortMock.Setup(m => m.Deleted(It.IsAny<Guid>()));
 
             // act
@@ -50,7 +50,7 @@ namespace ChangeBlog.Application.Tests.UseCaseTests.Commands.LabelsTests
             _outputPortMock.Verify(m => m.Deleted(It.Is<Guid>(x => x == lineId)), Times.Once);
             _unitOfWorkMock.Verify(m => m.Start(), Times.Once);
             _unitOfWorkMock.Verify(m => m.Commit(), Times.Once);
-            _changeLogDaoStub.ChangeLogs.Single().Labels.Should().BeEmpty();
+            _fakeChangeLogDao.ChangeLogs.Single().Labels.Should().BeEmpty();
         }
 
         [Fact]
@@ -95,11 +95,11 @@ namespace ChangeBlog.Application.Tests.UseCaseTests.Commands.LabelsTests
             var requestModel = new ChangeLogLineLabelRequestModel(lineId, "SomeLabel");
             var addLabelInteractor = CreateInteractor();
 
-            _changeLogDaoStub.ChangeLogs.Add(new ChangeLogLine(lineId, null, TestAccount.Product.Id,
+            _fakeChangeLogDao.ChangeLogs.Add(new ChangeLogLine(lineId, null, TestAccount.Product.Id,
                 ChangeLogText.Parse("Some text"), 0U, TestAccount.UserId, DateTime.Parse("2021-04-17")));
             _outputPortMock.Setup(m => m.Conflict(It.IsAny<Conflict>()));
 
-            _changeLogDaoStub.Conflict = new ConflictStub();
+            _fakeChangeLogDao.Conflict = new ConflictStub();
 
             // act
             await addLabelInteractor.ExecuteAsync(_outputPortMock.Object, requestModel);

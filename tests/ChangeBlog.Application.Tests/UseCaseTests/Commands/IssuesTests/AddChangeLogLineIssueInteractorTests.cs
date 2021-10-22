@@ -14,7 +14,7 @@ namespace ChangeBlog.Application.Tests.UseCaseTests.Commands.IssuesTests
 {
     public class AddChangeLogLineIssueInteractorTests
     {
-        private readonly ChangeLogDaoStub _changeLogDaoStub;
+        private readonly FakeChangeLogDao _fakeChangeLogDao;
         private readonly Mock<IAddChangeLogLineIssueOutputPort> _outputPortMock;
         private readonly Mock<IUnitOfWork> _unitOfWorkMock;
 
@@ -22,11 +22,11 @@ namespace ChangeBlog.Application.Tests.UseCaseTests.Commands.IssuesTests
         {
             _outputPortMock = new Mock<IAddChangeLogLineIssueOutputPort>(MockBehavior.Strict);
             _unitOfWorkMock = new Mock<IUnitOfWork>();
-            _changeLogDaoStub = new ChangeLogDaoStub();
+            _fakeChangeLogDao = new FakeChangeLogDao();
         }
 
         private AddChangeLogLineIssueInteractor CreateInteractor() =>
-            new(_unitOfWorkMock.Object, _changeLogDaoStub, _changeLogDaoStub);
+            new(_unitOfWorkMock.Object, _fakeChangeLogDao, _fakeChangeLogDao);
 
         [Fact]
         public async Task AddIssue_HappyPath_IssueAddedAndUowCommitted()
@@ -37,7 +37,7 @@ namespace ChangeBlog.Application.Tests.UseCaseTests.Commands.IssuesTests
             var requestModel = new ChangeLogLineIssueRequestModel(lineId, issue.Value);
             var addLabelInteractor = CreateInteractor();
 
-            _changeLogDaoStub.ChangeLogs.Add(new ChangeLogLine(lineId, null, TestAccount.Product.Id,
+            _fakeChangeLogDao.ChangeLogs.Add(new ChangeLogLine(lineId, null, TestAccount.Product.Id,
                 ChangeLogText.Parse("Some text"), 0U, TestAccount.UserId, DateTime.Parse("2021-04-17")));
             _outputPortMock.Setup(m => m.Added(It.IsAny<Guid>()));
 
@@ -48,7 +48,7 @@ namespace ChangeBlog.Application.Tests.UseCaseTests.Commands.IssuesTests
             _outputPortMock.Verify(m => m.Added(It.Is<Guid>(x => x == lineId)));
             _unitOfWorkMock.Verify(m => m.Start(), Times.Once);
             _unitOfWorkMock.Verify(m => m.Commit(), Times.Once);
-            _changeLogDaoStub.ChangeLogs.Single().Issues.Should().ContainSingle(x => x == issue);
+            _fakeChangeLogDao.ChangeLogs.Single().Issues.Should().ContainSingle(x => x == issue);
         }
 
         [Fact]
@@ -59,7 +59,7 @@ namespace ChangeBlog.Application.Tests.UseCaseTests.Commands.IssuesTests
             var requestModel = new ChangeLogLineIssueRequestModel(lineId, "# 234");
             var addLabelInteractor = CreateInteractor();
 
-            _changeLogDaoStub.ChangeLogs.Add(new ChangeLogLine(lineId, null, TestAccount.Product.Id,
+            _fakeChangeLogDao.ChangeLogs.Add(new ChangeLogLine(lineId, null, TestAccount.Product.Id,
                 ChangeLogText.Parse("Some text"), 0U, TestAccount.UserId, DateTime.Parse("2021-04-17")));
             _outputPortMock.Setup(m => m.InvalidIssue(It.IsAny<string>()));
 
@@ -78,11 +78,11 @@ namespace ChangeBlog.Application.Tests.UseCaseTests.Commands.IssuesTests
             var requestModel = new ChangeLogLineIssueRequestModel(lineId, "#1234");
             var addLabelInteractor = CreateInteractor();
 
-            _changeLogDaoStub.ChangeLogs.Add(new ChangeLogLine(lineId, null, TestAccount.Product.Id,
+            _fakeChangeLogDao.ChangeLogs.Add(new ChangeLogLine(lineId, null, TestAccount.Product.Id,
                 ChangeLogText.Parse("Some text"), 0U, TestAccount.UserId, DateTime.Parse("2021-04-17")));
             _outputPortMock.Setup(m => m.Conflict(It.IsAny<Conflict>()));
 
-            _changeLogDaoStub.Conflict = new ConflictStub();
+            _fakeChangeLogDao.Conflict = new ConflictStub();
 
             // act
             await addLabelInteractor.ExecuteAsync(_outputPortMock.Object, requestModel);
@@ -100,7 +100,7 @@ namespace ChangeBlog.Application.Tests.UseCaseTests.Commands.IssuesTests
             var addLabelInteractor = CreateInteractor();
 
             var existingIssues = Enumerable.Range(0, 10).Select(x => $"{x:D5}").Select(Issue.Parse);
-            _changeLogDaoStub.ChangeLogs.Add(new ChangeLogLine(lineId, null, TestAccount.Product.Id,
+            _fakeChangeLogDao.ChangeLogs.Add(new ChangeLogLine(lineId, null, TestAccount.Product.Id,
                 ChangeLogText.Parse("Some text"), 0U, DateTime.Parse("2021-04-17"), Array.Empty<Label>(),
                 existingIssues, TestAccount.UserId));
             _outputPortMock.Setup(m => m.MaxIssuesReached(It.IsAny<int>()));

@@ -14,20 +14,20 @@ namespace ChangeBlog.Application.Tests.UseCaseTests.Queries.GetVersions
 {
     public class GetVersionsInteractorTest
     {
-        private readonly ProductDaoStub _productDaoStub;
-        private readonly VersionDaoStub _versionDaoStub;
-        private readonly ChangeLogDaoStub _changeLogDao;
-        private readonly UserDaoStub _userDaoStub;
+        private readonly FakeProductDao _fakeProductDao;
+        private readonly FakeVersionDao _fakeVersionDao;
+        private readonly FakeChangeLogDao _changeLogDao;
+        private readonly FakeUserDao _fakeUserDao;
 
         public GetVersionsInteractorTest()
         {
-            _productDaoStub = new ProductDaoStub();
-            _versionDaoStub = new VersionDaoStub();
-            _changeLogDao = new ChangeLogDaoStub();
-            _userDaoStub = new UserDaoStub();
+            _fakeProductDao = new FakeProductDao();
+            _fakeVersionDao = new FakeVersionDao();
+            _changeLogDao = new FakeChangeLogDao();
+            _fakeUserDao = new FakeUserDao();
         }
 
-        private GetVersionsInteractor CreateInteractor() => new(_productDaoStub, _versionDaoStub, _changeLogDao, _userDaoStub);
+        private GetVersionsInteractor CreateInteractor() => new(_fakeProductDao, _fakeVersionDao, _changeLogDao, _fakeUserDao);
 
         [Fact]
         public async Task GetVersionByVersionId_VersionDoesNotExist_ReturnsNone()
@@ -44,11 +44,11 @@ namespace ChangeBlog.Application.Tests.UseCaseTests.Queries.GetVersions
         public async Task GetVersionByVersionId_HappyPath_ReturnsVersion()
         {
             // arrange
-            _userDaoStub.Users.Add(TestAccount.User);
+            _fakeUserDao.Users.Add(TestAccount.User);
             var version = new ClVersion(TestAccount.Product.Id, ClVersionValue.Parse("1.2.3"), OptionalName.Empty,
                 TestAccount.UserId);
-            _versionDaoStub.Versions.Add(version);
-            _productDaoStub.Products.Add(TestAccount.Product);
+            _fakeVersionDao.Versions.Add(version);
+            _fakeProductDao.Products.Add(TestAccount.Product);
 
             var interactor = CreateInteractor();
 
@@ -87,11 +87,11 @@ namespace ChangeBlog.Application.Tests.UseCaseTests.Queries.GetVersions
         public async Task GetVersionByProductIdAndVersion_HappyPath_ReturnsVersion()
         {
             // arrange
-            _userDaoStub.Users.Add(TestAccount.User);
+            _fakeUserDao.Users.Add(TestAccount.User);
             var version = new ClVersion(TestAccount.Product.Id, ClVersionValue.Parse("1.2.3"), OptionalName.Empty,
                 TestAccount.UserId);
-            _versionDaoStub.Versions.Add(version);
-            _productDaoStub.Products.Add(TestAccount.Product);
+            _fakeVersionDao.Versions.Add(version);
+            _fakeProductDao.Products.Add(TestAccount.Product);
 
             var interactor = CreateInteractor();
 
@@ -108,12 +108,12 @@ namespace ChangeBlog.Application.Tests.UseCaseTests.Queries.GetVersions
         public async Task GetVersionByProductIdAndVersion_HappyPath_ResponseModelProperlyPopulated()
         {
             // arrange
-            _userDaoStub.Users.Add(TestAccount.User);
+            _fakeUserDao.Users.Add(TestAccount.User);
             var versionId = Guid.Parse("d1959237-0253-42c8-a817-77fd7fa4f126");
             var version = new ClVersion(versionId, TestAccount.Product.Id, ClVersionValue.Parse("1.2.3"), OptionalName.Empty,
                 DateTime.Parse("2021-09-10T18:00:00"), TestAccount.UserId, DateTime.Parse("2021-09-10T14:00:00"), null);
-            _versionDaoStub.Versions.Add(version);
-            _productDaoStub.Products.Add(TestAccount.Product);
+            _fakeVersionDao.Versions.Add(version);
+            _fakeProductDao.Products.Add(TestAccount.Product);
 
             var interactor = CreateInteractor();
 

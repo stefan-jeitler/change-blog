@@ -19,24 +19,24 @@ namespace ChangeBlog.Application.Tests.UseCaseTests.Commands.AddChangeLogLine
 {
     public class AddChangeLogLineInteractorTests
     {
-        private readonly ChangeLogDaoStub _changeLogDaoStub;
+        private readonly FakeChangeLogDao _fakeChangeLogDao;
         private readonly Mock<IAddChangeLogLineOutputPort> _outputPortMock;
-        private readonly ProductDaoStub _productDaoStub;
+        private readonly FakeProductDao _fakeProductDao;
         private readonly Mock<IUnitOfWork> _unitOfWorkMock;
-        private readonly VersionDaoStub _versionDaoStub;
+        private readonly FakeVersionDao _fakeVersionDao;
 
         public AddChangeLogLineInteractorTests()
         {
-            _productDaoStub = new ProductDaoStub();
-            _versionDaoStub = new VersionDaoStub();
-            _changeLogDaoStub = new ChangeLogDaoStub();
+            _fakeProductDao = new FakeProductDao();
+            _fakeVersionDao = new FakeVersionDao();
+            _fakeChangeLogDao = new FakeChangeLogDao();
             _outputPortMock = new Mock<IAddChangeLogLineOutputPort>(MockBehavior.Strict);
             _unitOfWorkMock = new Mock<IUnitOfWork>();
         }
 
         private AddChangeLogLineInteractor CreateInteractor() =>
-            new(_changeLogDaoStub, _changeLogDaoStub,
-                _unitOfWorkMock.Object, _versionDaoStub);
+            new(_fakeChangeLogDao, _fakeChangeLogDao,
+                _unitOfWorkMock.Object, _fakeVersionDao);
 
         [Fact]
         public async Task AddChangeLogLine_InvalidVersion_InvalidVersionFormatOutput()
@@ -50,7 +50,7 @@ namespace ChangeBlog.Application.Tests.UseCaseTests.Commands.AddChangeLogLine
                     changeLogLine, labels,
                     issues);
 
-            _productDaoStub.Products.Add(new Product(TestAccount.Product.Id, TestAccount.Id, TestAccount.Product.Name,
+            _fakeProductDao.Products.Add(new Product(TestAccount.Product.Id, TestAccount.Id, TestAccount.Product.Name,
                 TestAccount.CustomVersioningScheme, TestAccount.Product.LanguageCode, TestAccount.UserId,
                 TestAccount.CreationDate, null));
 
@@ -77,15 +77,15 @@ namespace ChangeBlog.Application.Tests.UseCaseTests.Commands.AddChangeLogLine
                     changeLogLine, labels,
                     issues);
 
-            _productDaoStub.Products.Add(new Product(TestAccount.Product.Id, TestAccount.Id, TestAccount.Product.Name,
+            _fakeProductDao.Products.Add(new Product(TestAccount.Product.Id, TestAccount.Id, TestAccount.Product.Name,
                 TestAccount.CustomVersioningScheme, TestAccount.Product.LanguageCode, TestAccount.UserId,
                 TestAccount.CreationDate, null));
 
             var version = new ClVersion(TestAccount.Product.Id, ClVersionValue.Parse("1.2"), OptionalName.Empty,
                 TestAccount.UserId);
-            _versionDaoStub.Versions.Add(version);
+            _fakeVersionDao.Versions.Add(version);
 
-            _changeLogDaoStub.Conflict = new VersionDeletedConflict(version.Id);
+            _fakeChangeLogDao.Conflict = new VersionDeletedConflict(version.Id);
 
             var addLineInteractor = CreateInteractor();
 
@@ -111,17 +111,17 @@ namespace ChangeBlog.Application.Tests.UseCaseTests.Commands.AddChangeLogLine
                     changeLogLine, labels,
                     issues);
 
-            _productDaoStub.Products.Add(new Product(TestAccount.Product.Id, TestAccount.Id, TestAccount.Product.Name,
+            _fakeProductDao.Products.Add(new Product(TestAccount.Product.Id, TestAccount.Id, TestAccount.Product.Name,
                 TestAccount.CustomVersioningScheme, TestAccount.Product.LanguageCode, TestAccount.UserId,
                 TestAccount.CreationDate, null));
 
             var version = new ClVersion(TestAccount.Product.Id, ClVersionValue.Parse("1.2"), OptionalName.Empty,
                 TestAccount.UserId);
-            _versionDaoStub.Versions.Add(version);
+            _fakeVersionDao.Versions.Add(version);
 
             var existingLine = new ChangeLogLine(version.Id, TestAccount.Product.Id,
                 ChangeLogText.Parse(changeLogLine), 0, TestAccount.UserId);
-            _changeLogDaoStub.ChangeLogs.Add(existingLine);
+            _fakeChangeLogDao.ChangeLogs.Add(existingLine);
 
             var addLineInteractor = CreateInteractor();
 
@@ -149,7 +149,7 @@ namespace ChangeBlog.Application.Tests.UseCaseTests.Commands.AddChangeLogLine
                     changeLogLine, labels,
                     issues);
 
-            _productDaoStub.Products.Add(new Product(TestAccount.Product.Id, TestAccount.Id, TestAccount.Product.Name,
+            _fakeProductDao.Products.Add(new Product(TestAccount.Product.Id, TestAccount.Id, TestAccount.Product.Name,
                 TestAccount.CustomVersioningScheme, TestAccount.Product.LanguageCode, TestAccount.UserId,
                 TestAccount.CreationDate, null));
 
@@ -176,7 +176,7 @@ namespace ChangeBlog.Application.Tests.UseCaseTests.Commands.AddChangeLogLine
                 new VersionIdChangeLogLineRequestModel(TestAccount.UserId, notExistingVersionId,
                     changeLogLine, labels, issues);
 
-            _productDaoStub.Products.Add(new Product(TestAccount.Product.Id, TestAccount.Id, TestAccount.Product.Name,
+            _fakeProductDao.Products.Add(new Product(TestAccount.Product.Id, TestAccount.Id, TestAccount.Product.Name,
                 TestAccount.CustomVersioningScheme, TestAccount.Product.LanguageCode, TestAccount.UserId,
                 TestAccount.CreationDate, null));
 
@@ -204,7 +204,7 @@ namespace ChangeBlog.Application.Tests.UseCaseTests.Commands.AddChangeLogLine
                 new VersionIdChangeLogLineRequestModel(TestAccount.UserId, versionId, changeLogLine, labels,
                     issues);
 
-            _productDaoStub.Products.Add(new Product(TestAccount.Product.Id, TestAccount.Id, TestAccount.Product.Name,
+            _fakeProductDao.Products.Add(new Product(TestAccount.Product.Id, TestAccount.Id, TestAccount.Product.Name,
                 TestAccount.CustomVersioningScheme, TestAccount.Product.LanguageCode, TestAccount.UserId,
                 TestAccount.CreationDate, null));
 
@@ -216,7 +216,7 @@ namespace ChangeBlog.Application.Tests.UseCaseTests.Commands.AddChangeLogLine
                 TestAccount.UserId,
                 DateTime.Parse("2021-04-09"),
                 null);
-            _versionDaoStub.Versions.Add(version);
+            _fakeVersionDao.Versions.Add(version);
 
             var addLineInteractor = CreateInteractor();
 
@@ -246,7 +246,7 @@ namespace ChangeBlog.Application.Tests.UseCaseTests.Commands.AddChangeLogLine
                     changeLogLine, labels,
                     issues);
 
-            _productDaoStub.Products.Add(new Product(TestAccount.Product.Id, TestAccount.Id, TestAccount.Product.Name,
+            _fakeProductDao.Products.Add(new Product(TestAccount.Product.Id, TestAccount.Id, TestAccount.Product.Name,
                 TestAccount.CustomVersioningScheme, TestAccount.Product.LanguageCode, TestAccount.UserId,
                 TestAccount.CreationDate, null));
 
@@ -259,7 +259,7 @@ namespace ChangeBlog.Application.Tests.UseCaseTests.Commands.AddChangeLogLine
                 TestAccount.UserId,
                 DateTime.Parse("2021-04-09"),
                 null);
-            _versionDaoStub.Versions.Add(version);
+            _fakeVersionDao.Versions.Add(version);
 
             var addLineInteractor = CreateInteractor();
 
@@ -288,7 +288,7 @@ namespace ChangeBlog.Application.Tests.UseCaseTests.Commands.AddChangeLogLine
                     changeLogLine, labels,
                     issues);
 
-            _productDaoStub.Products.Add(new Product(TestAccount.Product.Id, TestAccount.Id, TestAccount.Product.Name,
+            _fakeProductDao.Products.Add(new Product(TestAccount.Product.Id, TestAccount.Id, TestAccount.Product.Name,
                 TestAccount.CustomVersioningScheme, TestAccount.Product.LanguageCode, TestAccount.UserId,
                 TestAccount.CreationDate, null));
 
@@ -296,9 +296,9 @@ namespace ChangeBlog.Application.Tests.UseCaseTests.Commands.AddChangeLogLine
             var version = new ClVersion(versionId,
                 TestAccount.Product.Id, ClVersionValue.Parse("1.2"), OptionalName.Empty, null, TestAccount.UserId,
                 DateTime.Parse("2021-04-09"), null);
-            _versionDaoStub.Versions.Add(version);
+            _fakeVersionDao.Versions.Add(version);
 
-            _changeLogDaoStub.ChangeLogs.AddRange(Enumerable.Range(0, 100)
+            _fakeChangeLogDao.ChangeLogs.AddRange(Enumerable.Range(0, 100)
                 .Select(x =>
                     new ChangeLogLine(versionId, TestAccount.Product.Id, ChangeLogText.Parse($"{x:D5}"), (uint) x,
                         TestAccount.UserId)));
@@ -326,7 +326,7 @@ namespace ChangeBlog.Application.Tests.UseCaseTests.Commands.AddChangeLogLine
                     changeLogLine, labels,
                     issues);
 
-            _productDaoStub.Products.Add(new Product(TestAccount.Product.Id, TestAccount.Id, TestAccount.Product.Name,
+            _fakeProductDao.Products.Add(new Product(TestAccount.Product.Id, TestAccount.Id, TestAccount.Product.Name,
                 TestAccount.CustomVersioningScheme, TestAccount.Product.LanguageCode, TestAccount.UserId,
                 TestAccount.CreationDate, null));
 
@@ -339,7 +339,7 @@ namespace ChangeBlog.Application.Tests.UseCaseTests.Commands.AddChangeLogLine
                 TestAccount.UserId,
                 DateTime.Parse("2021-04-09"),
                 null);
-            _versionDaoStub.Versions.Add(version);
+            _fakeVersionDao.Versions.Add(version);
 
             var addLineInteractor = CreateInteractor();
 
@@ -349,7 +349,7 @@ namespace ChangeBlog.Application.Tests.UseCaseTests.Commands.AddChangeLogLine
             await addLineInteractor.ExecuteAsync(_outputPortMock.Object, changeLogLineRequestModel);
 
             // assert
-            var savedLine = _changeLogDaoStub.ChangeLogs.Single(x =>
+            var savedLine = _fakeChangeLogDao.ChangeLogs.Single(x =>
                 x.ProductId == TestAccount.Product.Id && x.VersionId!.Value == versionId);
 
             savedLine.Position.Should().Be(0);

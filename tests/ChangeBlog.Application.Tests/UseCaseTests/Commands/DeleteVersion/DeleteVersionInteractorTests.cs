@@ -14,17 +14,17 @@ namespace ChangeBlog.Application.Tests.UseCaseTests.Commands.DeleteVersion
     public class DeleteVersionInteractorTests
     {
         private readonly Mock<IDeleteVersionOutputPort> _outputPortMock;
-        private readonly ProductDaoStub _productDaoStub;
-        private readonly VersionDaoStub _versionDaoStub;
+        private readonly FakeProductDao _fakeProductDao;
+        private readonly FakeVersionDao _fakeVersionDao;
 
         public DeleteVersionInteractorTests()
         {
-            _versionDaoStub = new VersionDaoStub();
-            _productDaoStub = new ProductDaoStub();
+            _fakeVersionDao = new FakeVersionDao();
+            _fakeProductDao = new FakeProductDao();
             _outputPortMock = new Mock<IDeleteVersionOutputPort>(MockBehavior.Strict);
         }
 
-        private DeleteVersionInteractor CreateInteractor() => new(_versionDaoStub, _productDaoStub);
+        private DeleteVersionInteractor CreateInteractor() => new(_fakeVersionDao, _fakeProductDao);
 
         [Fact]
         public async Task DeleteVersion_VersionDoesNotExist_VersionDoesNotExistOutput()
@@ -50,7 +50,7 @@ namespace ChangeBlog.Application.Tests.UseCaseTests.Commands.DeleteVersion
                 DateTime.Parse("2021-05-13"));
             var interactor = CreateInteractor();
             _outputPortMock.Setup(m => m.VersionAlreadyDeleted(It.IsAny<Guid>()));
-            _versionDaoStub.Versions.Add(version);
+            _fakeVersionDao.Versions.Add(version);
 
             // act
             await interactor.ExecuteAsync(_outputPortMock.Object, version.Id);
@@ -68,7 +68,7 @@ namespace ChangeBlog.Application.Tests.UseCaseTests.Commands.DeleteVersion
                 DateTime.Parse("2021-05-13"));
             var interactor = CreateInteractor();
             _outputPortMock.Setup(m => m.VersionAlreadyReleased(It.IsAny<Guid>()));
-            _versionDaoStub.Versions.Add(version);
+            _fakeVersionDao.Versions.Add(version);
 
             // act
             await interactor.ExecuteAsync(_outputPortMock.Object, version.Id);
@@ -86,11 +86,11 @@ namespace ChangeBlog.Application.Tests.UseCaseTests.Commands.DeleteVersion
             var interactor = CreateInteractor();
             _outputPortMock.Setup(m => m.RelatedProductClosed(It.IsAny<Guid>()));
 
-            _productDaoStub.Products.Add(new Product(TestAccount.Product.Id, TestAccount.Id, Name.Parse("test product"),
+            _fakeProductDao.Products.Add(new Product(TestAccount.Product.Id, TestAccount.Id, Name.Parse("test product"),
                 TestAccount.CustomVersioningScheme, TestAccount.Product.LanguageCode, TestAccount.UserId,
                 DateTime.Parse("2021-05-13"),
                 DateTime.Parse("2021-05-13")));
-            _versionDaoStub.Versions.Add(version);
+            _fakeVersionDao.Versions.Add(version);
 
             // act
             await interactor.ExecuteAsync(_outputPortMock.Object, version.Id);
@@ -108,9 +108,9 @@ namespace ChangeBlog.Application.Tests.UseCaseTests.Commands.DeleteVersion
             var interactor = CreateInteractor();
             _outputPortMock.Setup(m => m.Conflict(It.IsAny<Conflict>()));
 
-            _productDaoStub.Products.Add(TestAccount.Product);
-            _versionDaoStub.Versions.Add(version);
-            _versionDaoStub.Conflict = new ConflictStub();
+            _fakeProductDao.Products.Add(TestAccount.Product);
+            _fakeVersionDao.Versions.Add(version);
+            _fakeVersionDao.Conflict = new ConflictStub();
 
             // act
             await interactor.ExecuteAsync(_outputPortMock.Object, version.Id);
@@ -128,8 +128,8 @@ namespace ChangeBlog.Application.Tests.UseCaseTests.Commands.DeleteVersion
             var interactor = CreateInteractor();
             _outputPortMock.Setup(m => m.VersionDeleted(It.IsAny<Guid>()));
 
-            _productDaoStub.Products.Add(TestAccount.Product);
-            _versionDaoStub.Versions.Add(version);
+            _fakeProductDao.Products.Add(TestAccount.Product);
+            _fakeVersionDao.Versions.Add(version);
 
             // act
             await interactor.ExecuteAsync(_outputPortMock.Object, version.Id);

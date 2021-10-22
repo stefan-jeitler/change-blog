@@ -19,24 +19,24 @@ namespace ChangeBlog.Application.Tests.UseCaseTests.Commands.AddVersion
 {
     public class AddVersionInteractorTests
     {
-        private readonly ChangeLogDaoStub _changeLogDaoStub;
+        private readonly FakeChangeLogDao _fakeChangeLogDao;
         private readonly Mock<IAddVersionOutputPort> _outputPortMock;
-        private readonly ProductDaoStub _productDaoStub;
+        private readonly FakeProductDao _fakeProductDao;
         private readonly Mock<IUnitOfWork> _unitOfWorkMock;
-        private readonly VersionDaoStub _versionDaoStub;
+        private readonly FakeVersionDao _fakeVersionDao;
 
         public AddVersionInteractorTests()
         {
-            _productDaoStub = new ProductDaoStub();
-            _versionDaoStub = new VersionDaoStub();
-            _changeLogDaoStub = new ChangeLogDaoStub();
+            _fakeProductDao = new FakeProductDao();
+            _fakeVersionDao = new FakeVersionDao();
+            _fakeChangeLogDao = new FakeChangeLogDao();
             _unitOfWorkMock = new Mock<IUnitOfWork>();
             _outputPortMock = new Mock<IAddVersionOutputPort>(MockBehavior.Strict);
         }
 
         private AddOrUpdateVersionInteractor CreateInteractor() =>
-            new(_productDaoStub, _versionDaoStub,
-                _unitOfWorkMock.Object, _changeLogDaoStub, _changeLogDaoStub);
+            new(_fakeProductDao, _fakeVersionDao,
+                _unitOfWorkMock.Object, _fakeChangeLogDao, _fakeChangeLogDao);
 
         [Fact]
         public async Task AddVersion_ValidVersion_Successful()
@@ -51,7 +51,7 @@ namespace ChangeBlog.Application.Tests.UseCaseTests.Commands.AddVersion
             var versionRequestModel = new VersionRequestModel(TestAccount.UserId, TestAccount.Product.Id,
                 "1.23", "", changeLogLines);
 
-            _productDaoStub.Products.Add(TestAccount.Product);
+            _fakeProductDao.Products.Add(TestAccount.Product);
 
             _outputPortMock.Setup(m => m.Created(It.IsAny<Guid>()));
             var addVersionInteractor = CreateInteractor();
@@ -61,7 +61,7 @@ namespace ChangeBlog.Application.Tests.UseCaseTests.Commands.AddVersion
 
             // assert
             _outputPortMock.Verify(m => m.Created(It.IsAny<Guid>()), Times.Once);
-            var version = _versionDaoStub.Versions.Single(x => x.ProductId == TestAccount.Product.Id);
+            var version = _fakeVersionDao.Versions.Single(x => x.ProductId == TestAccount.Product.Id);
             version.Value.Should().Be(ClVersionValue.Parse("1.23"));
             version.IsDeleted.Should().BeFalse();
         }
@@ -102,7 +102,7 @@ namespace ChangeBlog.Application.Tests.UseCaseTests.Commands.AddVersion
             var versionRequestModel = new VersionRequestModel(TestAccount.UserId, TestAccount.Product.Id,
                 "1.23", OptionalName.Empty, changeLogLines);
 
-            _productDaoStub.Products.Add(new Product(TestAccount.Product.Id,
+            _fakeProductDao.Products.Add(new Product(TestAccount.Product.Id,
                 TestAccount.Id,
                 Name.Parse("Test product"),
                 TestAccount.CustomVersioningScheme,
@@ -133,10 +133,10 @@ namespace ChangeBlog.Application.Tests.UseCaseTests.Commands.AddVersion
             var versionRequestModel = new VersionRequestModel(TestAccount.UserId, TestAccount.Product.Id,
                 "1.23", OptionalName.Empty, changeLogLines);
 
-            _productDaoStub.Products.Add(TestAccount.Product);
+            _fakeProductDao.Products.Add(TestAccount.Product);
             var clVersion = new ClVersion(TestAccount.Product.Id, ClVersionValue.Parse("1.23"),
                 OptionalName.Empty, TestAccount.UserId);
-            _versionDaoStub.Versions.Add(clVersion);
+            _fakeVersionDao.Versions.Add(clVersion);
 
             _outputPortMock.Setup(m => m.VersionAlreadyExists(It.IsAny<Guid>()));
             var addVersionInteractor = CreateInteractor();
@@ -161,7 +161,7 @@ namespace ChangeBlog.Application.Tests.UseCaseTests.Commands.AddVersion
             var versionRequestModel = new VersionRequestModel(TestAccount.UserId, TestAccount.Product.Id,
                 "1. .2", OptionalName.Empty, changeLogLines);
 
-            _productDaoStub.Products.Add(TestAccount.Product);
+            _fakeProductDao.Products.Add(TestAccount.Product);
             _outputPortMock.Setup(m => m.InvalidVersionFormat(It.IsAny<string>()));
             var addVersionInteractor = CreateInteractor();
 
@@ -186,7 +186,7 @@ namespace ChangeBlog.Application.Tests.UseCaseTests.Commands.AddVersion
             var versionRequestModel = new VersionRequestModel(TestAccount.UserId, TestAccount.Product.Id,
                 "*.23", OptionalName.Empty, changeLogLines);
 
-            _productDaoStub.Products.Add(TestAccount.Product);
+            _fakeProductDao.Products.Add(TestAccount.Product);
             _outputPortMock.Setup(m => m.VersionDoesNotMatchScheme(It.IsAny<string>(), It.IsAny<string>()));
             var addVersionInteractor = CreateInteractor();
 
@@ -210,7 +210,7 @@ namespace ChangeBlog.Application.Tests.UseCaseTests.Commands.AddVersion
             var versionRequestModel = new VersionRequestModel(TestAccount.UserId, TestAccount.Product.Id,
                 "1.23", OptionalName.Empty, changeLogLines);
 
-            _productDaoStub.Products.Add(TestAccount.Product);
+            _fakeProductDao.Products.Add(TestAccount.Product);
             _outputPortMock.Setup(m => m.TooManyLines(It.IsAny<int>()));
             var addVersionInteractor = CreateInteractor();
 
@@ -236,7 +236,7 @@ namespace ChangeBlog.Application.Tests.UseCaseTests.Commands.AddVersion
                 new VersionRequestModel(TestAccount.UserId, TestAccount.Product.Id, "1.23", OptionalName.Empty,
                     changeLogLines, true);
 
-            _productDaoStub.Products.Add(TestAccount.Product);
+            _fakeProductDao.Products.Add(TestAccount.Product);
             _outputPortMock.Setup(m => m.Created(It.IsAny<Guid>()));
             var addVersionInteractor = CreateInteractor();
 
@@ -244,7 +244,7 @@ namespace ChangeBlog.Application.Tests.UseCaseTests.Commands.AddVersion
             await addVersionInteractor.ExecuteAsync(_outputPortMock.Object, versionRequestModel);
 
             // assert
-            _versionDaoStub.Versions.Single().ReleasedAt.HasValue.Should().BeTrue();
+            _fakeVersionDao.Versions.Single().ReleasedAt.HasValue.Should().BeTrue();
         }
 
         [Fact]
@@ -261,7 +261,7 @@ namespace ChangeBlog.Application.Tests.UseCaseTests.Commands.AddVersion
             var versionRequestModel = new VersionRequestModel(TestAccount.UserId, TestAccount.Product.Id,
                 "1.23", OptionalName.Empty, changeLogLines);
 
-            _productDaoStub.Products.Add(TestAccount.Product);
+            _fakeProductDao.Products.Add(TestAccount.Product);
             _outputPortMock.Setup(m => m.LinesWithSameTextsAreNotAllowed(It.IsAny<List<string>>()));
             var addVersionInteractor = CreateInteractor();
 
@@ -286,7 +286,7 @@ namespace ChangeBlog.Application.Tests.UseCaseTests.Commands.AddVersion
             var versionRequestModel = new VersionRequestModel(TestAccount.UserId, TestAccount.Product.Id,
                 "1.23", OptionalName.Empty, changeLogLines);
 
-            _productDaoStub.Products.Add(TestAccount.Product);
+            _fakeProductDao.Products.Add(TestAccount.Product);
             _outputPortMock.Setup(m => m.Created(It.IsAny<Guid>()));
             var addVersionInteractor = CreateInteractor();
 
@@ -294,7 +294,7 @@ namespace ChangeBlog.Application.Tests.UseCaseTests.Commands.AddVersion
             await addVersionInteractor.ExecuteAsync(_outputPortMock.Object, versionRequestModel);
 
             // assert
-            _versionDaoStub.Versions.Single().ReleasedAt.HasValue.Should().BeFalse();
+            _fakeVersionDao.Versions.Single().ReleasedAt.HasValue.Should().BeFalse();
         }
 
         [Fact]
@@ -309,7 +309,7 @@ namespace ChangeBlog.Application.Tests.UseCaseTests.Commands.AddVersion
             var versionRequestModel = new VersionRequestModel(TestAccount.UserId, TestAccount.Product.Id,
                 "1.23", OptionalName.Empty, changeLogLines);
 
-            _productDaoStub.Products.Add(TestAccount.Product);
+            _fakeProductDao.Products.Add(TestAccount.Product);
             _outputPortMock.Setup(m => m.Created(It.IsAny<Guid>()));
             var addVersionInteractor = CreateInteractor();
 
@@ -318,7 +318,7 @@ namespace ChangeBlog.Application.Tests.UseCaseTests.Commands.AddVersion
 
             // assert
             foreach (var (lineRequestModel, i) in changeLogLines.Select((x, i) => (x, i)))
-                _changeLogDaoStub.ChangeLogs[i].Position.Should().Be(uint.Parse(lineRequestModel.Text));
+                _fakeChangeLogDao.ChangeLogs[i].Position.Should().Be(uint.Parse(lineRequestModel.Text));
         }
 
         [Fact]
@@ -334,7 +334,7 @@ namespace ChangeBlog.Application.Tests.UseCaseTests.Commands.AddVersion
             var versionRequestModel = new VersionRequestModel(TestAccount.UserId, TestAccount.Product.Id,
                 "1.23", OptionalName.Empty, changeLogLines);
 
-            _productDaoStub.Products.Add(TestAccount.Product);
+            _fakeProductDao.Products.Add(TestAccount.Product);
             _outputPortMock.Setup(m => m.Created(It.IsAny<Guid>()));
             var addVersionInteractor = CreateInteractor();
 
@@ -359,8 +359,8 @@ namespace ChangeBlog.Application.Tests.UseCaseTests.Commands.AddVersion
             var versionRequestModel = new VersionRequestModel(TestAccount.UserId, TestAccount.Product.Id,
                 "1.23", OptionalName.Empty, changeLogLines);
 
-            _changeLogDaoStub.Conflict = new ConflictStub();
-            _productDaoStub.Products.Add(TestAccount.Product);
+            _fakeChangeLogDao.Conflict = new ConflictStub();
+            _fakeProductDao.Products.Add(TestAccount.Product);
             _outputPortMock.Setup(m => m.InsertConflict(It.IsAny<Conflict>()));
             _unitOfWorkMock.Setup(m => m.Start());
 

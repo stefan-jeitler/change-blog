@@ -8,7 +8,7 @@ using CSharpFunctionalExtensions;
 
 namespace ChangeBlog.Application.Tests.TestDoubles
 {
-    public class VersioningSchemeDaoStub : IVersioningSchemeDao
+    public class FakeVersioningSchemeDao : IVersioningSchemeDao
     {
         public List<VersioningScheme> VersioningSchemes { get; } = new();
 

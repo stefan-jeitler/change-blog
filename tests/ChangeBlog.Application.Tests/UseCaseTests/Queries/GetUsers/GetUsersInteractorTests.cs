@@ -9,21 +9,21 @@ namespace ChangeBlog.Application.Tests.UseCaseTests.Queries.GetUsers
 {
     public class GetUsersInteractorTests
     {
-        private readonly UserDaoStub _userDaoStub;
+        private readonly FakeUserDao _fakeUserDao;
 
         public GetUsersInteractorTests()
         {
-            _userDaoStub = new UserDaoStub();
+            _fakeUserDao = new FakeUserDao();
         }
 
-        private GetUsersInteractor CreateInteractor() => new(_userDaoStub);
+        private GetUsersInteractor CreateInteractor() => new(_fakeUserDao);
 
         [Fact]
         public async Task GetUsers_HappyPath_Successful()
         {
             // arrange
             var interactor = CreateInteractor();
-            _userDaoStub.Users.Add(TestAccount.User);
+            _fakeUserDao.Users.Add(TestAccount.User);
             var requestModel = new UsersQueryRequestModel(TestAccount.UserId, TestAccount.Id);
 
             // act
@@ -39,7 +39,7 @@ namespace ChangeBlog.Application.Tests.UseCaseTests.Queries.GetUsers
         {
             // arrange
             var interactor = CreateInteractor();
-            _userDaoStub.Users.Add(TestAccount.User);
+            _fakeUserDao.Users.Add(TestAccount.User);
             var createdAtLocal = TestAccount.User.CreatedAt.ToLocal(TestAccount.User.TimeZone);
 
             // act

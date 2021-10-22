@@ -17,29 +17,29 @@ namespace ChangeBlog.Application.Tests.UseCaseTests.Commands.AssignPendingLineTo
 {
     public class AssignPendingLineToVersionInteractorTests
     {
-        private readonly ChangeLogDaoStub _changeLogDaoStub;
+        private readonly FakeChangeLogDao _fakeChangeLogDao;
         private readonly Mock<IAssignPendingLineToVersionOutputPort> _outputPortMock;
-        private readonly ProductDaoStub _productDaoStub;
+        private readonly FakeProductDao _fakeProductDao;
         private readonly Mock<IUnitOfWork> _unitOfWorkMock;
-        private readonly VersionDaoStub _versionDaoStub;
+        private readonly FakeVersionDao _fakeVersionDao;
 
         public AssignPendingLineToVersionInteractorTests()
         {
-            _productDaoStub = new ProductDaoStub();
-            _versionDaoStub = new VersionDaoStub();
-            _changeLogDaoStub = new ChangeLogDaoStub();
+            _fakeProductDao = new FakeProductDao();
+            _fakeVersionDao = new FakeVersionDao();
+            _fakeChangeLogDao = new FakeChangeLogDao();
             _outputPortMock = new Mock<IAssignPendingLineToVersionOutputPort>(MockBehavior.Strict);
             _unitOfWorkMock = new Mock<IUnitOfWork>();
         }
 
-        private AssignPendingLineToVersionInteractor CreateInteractor() => new(_versionDaoStub, _changeLogDaoStub,
-            _changeLogDaoStub, _unitOfWorkMock.Object);
+        private AssignPendingLineToVersionInteractor CreateInteractor() => new(_fakeVersionDao, _fakeChangeLogDao,
+            _fakeChangeLogDao, _unitOfWorkMock.Object);
 
         [Fact]
         public async Task AssignPendingLineByVersionId_HappyPath_AssignedAndUowCommitted()
         {
             // arrange
-            _productDaoStub.Products.Add(new Product(TestAccount.Id,
+            _fakeProductDao.Products.Add(new Product(TestAccount.Id,
                 Name.Parse("Test Product"),
                 TestAccount.CustomVersioningScheme,
                 TestAccount.UserId,
@@ -48,11 +48,11 @@ namespace ChangeBlog.Application.Tests.UseCaseTests.Commands.AssignPendingLineTo
 
             var clVersion = new ClVersion(TestAccount.Product.Id, ClVersionValue.Parse("1.2"), OptionalName.Empty,
                 TestAccount.UserId);
-            _versionDaoStub.Versions.Add(clVersion);
+            _fakeVersionDao.Versions.Add(clVersion);
 
             var line = new ChangeLogLine(Guid.NewGuid(), null, TestAccount.Product.Id,
                 ChangeLogText.Parse("Some new changes"), 0, TestAccount.UserId, DateTime.Parse("2021-04-12"));
-            _changeLogDaoStub.ChangeLogs.Add(line);
+            _fakeChangeLogDao.ChangeLogs.Add(line);
 
             var assignmentRequestModel =
                 new VersionIdAssignmentRequestModel(clVersion.Id, line.Id);
@@ -64,7 +64,7 @@ namespace ChangeBlog.Application.Tests.UseCaseTests.Commands.AssignPendingLineTo
             await assignToVersionInteractor.ExecuteAsync(_outputPortMock.Object, assignmentRequestModel);
 
             // assert
-            _changeLogDaoStub.ChangeLogs.Should().ContainSingle(x => x.VersionId == clVersion.Id);
+            _fakeChangeLogDao.ChangeLogs.Should().ContainSingle(x => x.VersionId == clVersion.Id);
             _outputPortMock.Verify(m => m.Assigned(It.Is<Guid>(x => x == clVersion.Id), It.Is<Guid>(x => x == line.Id)),
                 Times.Once);
             _unitOfWorkMock.Verify(m => m.Start(), Times.Once);
@@ -78,7 +78,7 @@ namespace ChangeBlog.Application.Tests.UseCaseTests.Commands.AssignPendingLineTo
             var targetVersionId = Guid.Parse("ab9bff5f-3484-451e-b4ab-80aa6511c8c7");
             var targetVersionsProductId = Guid.Parse("f05ff0ef-5af5-4944-af69-12517412ce0f");
 
-            _productDaoStub.Products.Add(new Product(TestAccount.Id,
+            _fakeProductDao.Products.Add(new Product(TestAccount.Id,
                 Name.Parse("Test Product"),
                 TestAccount.CustomVersioningScheme,
                 TestAccount.UserId,
@@ -87,11 +87,11 @@ namespace ChangeBlog.Application.Tests.UseCaseTests.Commands.AssignPendingLineTo
 
             var clVersion = new ClVersion(targetVersionsProductId, targetVersionsProductId, ClVersionValue.Parse("1.2"), OptionalName.Empty,
                 null, TestAccount.UserId, DateTime.UtcNow, null);
-            _versionDaoStub.Versions.Add(clVersion);
+            _fakeVersionDao.Versions.Add(clVersion);
 
             var line = new ChangeLogLine(Guid.NewGuid(), null, TestAccount.Product.Id,
                 ChangeLogText.Parse("Some new changes"), 0, TestAccount.UserId, DateTime.Parse("2021-04-12"));
-            _changeLogDaoStub.ChangeLogs.Add(line);
+            _fakeChangeLogDao.ChangeLogs.Add(line);
 
             var assignmentRequestModel =
                 new VersionIdAssignmentRequestModel(clVersion.Id, line.Id);
@@ -113,7 +113,7 @@ namespace ChangeBlog.Application.Tests.UseCaseTests.Commands.AssignPendingLineTo
         public async Task AssignPendingLineByVersionValue_InvalidVersionFormat_InvalidVersionFormatOutput()
         {
             // arrange
-            _productDaoStub.Products.Add(new Product(TestAccount.Id,
+            _fakeProductDao.Products.Add(new Product(TestAccount.Id,
                 Name.Parse("Test Product"),
                 TestAccount.CustomVersioningScheme,
                 TestAccount.UserId,
@@ -122,7 +122,7 @@ namespace ChangeBlog.Application.Tests.UseCaseTests.Commands.AssignPendingLineTo
 
             var line = new ChangeLogLine(Guid.NewGuid(), null, TestAccount.Product.Id,
                 ChangeLogText.Parse("Some new changes"), 0, TestAccount.UserId, DateTime.Parse("2021-04-12"));
-            _changeLogDaoStub.ChangeLogs.Add(line);
+            _fakeChangeLogDao.ChangeLogs.Add(line);
 
             var assignmentRequestModel = new VersionAssignmentRequestModel(TestAccount.Product.Id, "1. .2", line.Id);
             var assignToVersionInteractor = CreateInteractor();
@@ -140,7 +140,7 @@ namespace ChangeBlog.Application.Tests.UseCaseTests.Commands.AssignPendingLineTo
         public async Task AssignPendingLineByVersionValue_NotExistingVersion_VersionDoesNotExistOutput()
         {
             // arrange
-            _productDaoStub.Products.Add(new Product(TestAccount.Id,
+            _fakeProductDao.Products.Add(new Product(TestAccount.Id,
                 Name.Parse("Test Product"),
                 TestAccount.CustomVersioningScheme,
                 TestAccount.UserId,
@@ -149,11 +149,11 @@ namespace ChangeBlog.Application.Tests.UseCaseTests.Commands.AssignPendingLineTo
 
             var clVersion = new ClVersion(TestAccount.Product.Id, ClVersionValue.Parse("1.2"), OptionalName.Empty,
                 TestAccount.UserId);
-            _versionDaoStub.Versions.Add(clVersion);
+            _fakeVersionDao.Versions.Add(clVersion);
 
             var line = new ChangeLogLine(Guid.NewGuid(), null, TestAccount.Product.Id,
                 ChangeLogText.Parse("Some new changes"), 0, TestAccount.UserId, DateTime.Parse("2021-04-12"));
-            _changeLogDaoStub.ChangeLogs.Add(line);
+            _fakeChangeLogDao.ChangeLogs.Add(line);
 
             var assignmentRequestModel = new VersionAssignmentRequestModel(TestAccount.Product.Id, "1.3", line.Id);
             var assignToVersionInteractor = CreateInteractor();
@@ -171,7 +171,7 @@ namespace ChangeBlog.Application.Tests.UseCaseTests.Commands.AssignPendingLineTo
         public async Task AssignPendingLine_NotExistingVersion_VersionDoesNotExistOutput()
         {
             // arrange
-            _productDaoStub.Products.Add(new Product(TestAccount.Id,
+            _fakeProductDao.Products.Add(new Product(TestAccount.Id,
                 Name.Parse("Test Product"),
                 TestAccount.CustomVersioningScheme,
                 TestAccount.UserId,
@@ -182,7 +182,7 @@ namespace ChangeBlog.Application.Tests.UseCaseTests.Commands.AssignPendingLineTo
 
             var line = new ChangeLogLine(Guid.NewGuid(), null, TestAccount.Product.Id,
                 ChangeLogText.Parse("Some new changes"), 0, TestAccount.UserId, DateTime.Parse("2021-04-12"));
-            _changeLogDaoStub.ChangeLogs.Add(line);
+            _fakeChangeLogDao.ChangeLogs.Add(line);
 
             var assignmentRequestModel =
                 new VersionIdAssignmentRequestModel(versionId, line.Id);
@@ -201,7 +201,7 @@ namespace ChangeBlog.Application.Tests.UseCaseTests.Commands.AssignPendingLineTo
         public async Task AssignPendingLine_NotExistingChangeLogLine_ChangeLogLineDoesNotExistOutput()
         {
             // arrange
-            _productDaoStub.Products.Add(new Product(TestAccount.Id,
+            _fakeProductDao.Products.Add(new Product(TestAccount.Id,
                 Name.Parse("Test Product"),
                 TestAccount.CustomVersioningScheme,
                 TestAccount.UserId,
@@ -210,7 +210,7 @@ namespace ChangeBlog.Application.Tests.UseCaseTests.Commands.AssignPendingLineTo
 
             var clVersion = new ClVersion(TestAccount.Product.Id, ClVersionValue.Parse("1.2"), OptionalName.Empty,
                 TestAccount.UserId);
-            _versionDaoStub.Versions.Add(clVersion);
+            _fakeVersionDao.Versions.Add(clVersion);
 
             var lineId = Guid.Parse("2b4b147a-9ebd-4350-a45b-aaae5d8d63de");
 
@@ -231,7 +231,7 @@ namespace ChangeBlog.Application.Tests.UseCaseTests.Commands.AssignPendingLineTo
         public async Task AssignPendingLine_TooManyLinesAssigned_ChangeLogLineDoesNotExistOutput()
         {
             // arrange
-            _productDaoStub.Products.Add(new Product(TestAccount.Id,
+            _fakeProductDao.Products.Add(new Product(TestAccount.Id,
                 Name.Parse("Test Product"),
                 TestAccount.CustomVersioningScheme,
                 TestAccount.UserId,
@@ -240,11 +240,11 @@ namespace ChangeBlog.Application.Tests.UseCaseTests.Commands.AssignPendingLineTo
 
             var clVersion = new ClVersion(TestAccount.Product.Id, ClVersionValue.Parse("1.2"), OptionalName.Empty,
                 TestAccount.UserId);
-            _versionDaoStub.Versions.Add(clVersion);
+            _fakeVersionDao.Versions.Add(clVersion);
 
             var lineId = Guid.Parse("2b4b147a-9ebd-4350-a45b-aaae5d8d63de");
 
-            _changeLogDaoStub.ChangeLogs.AddRange(Enumerable.Range(0, 100).Select(x =>
+            _fakeChangeLogDao.ChangeLogs.AddRange(Enumerable.Range(0, 100).Select(x =>
                 new ChangeLogLine(clVersion.Id, TestAccount.Product.Id, ChangeLogText.Parse($"{x:D5}"), (uint) x,
                     TestAccount.UserId)));
 
@@ -267,7 +267,7 @@ namespace ChangeBlog.Application.Tests.UseCaseTests.Commands.AssignPendingLineTo
         public async Task AssignPendingLine_VersionContainsALineWithSameText_LineWithSameTextAlreadyExistsOutput()
         {
             // arrange
-            _productDaoStub.Products.Add(new Product(TestAccount.Id,
+            _fakeProductDao.Products.Add(new Product(TestAccount.Id,
                 Name.Parse("Test Product"),
                 TestAccount.CustomVersioningScheme,
                 TestAccount.UserId,
@@ -276,13 +276,13 @@ namespace ChangeBlog.Application.Tests.UseCaseTests.Commands.AssignPendingLineTo
 
             var clVersion = new ClVersion(TestAccount.Product.Id, ClVersionValue.Parse("1.2"), OptionalName.Empty,
                 TestAccount.UserId);
-            _versionDaoStub.Versions.Add(clVersion);
+            _fakeVersionDao.Versions.Add(clVersion);
 
             var pendingLine = new ChangeLogLine(null, TestAccount.Product.Id, ChangeLogText.Parse("00000"), 0,
                 TestAccount.UserId);
-            _changeLogDaoStub.ChangeLogs.Add(pendingLine);
+            _fakeChangeLogDao.ChangeLogs.Add(pendingLine);
 
-            _changeLogDaoStub.ChangeLogs.AddRange(Enumerable.Range(0, 1).Select(x =>
+            _fakeChangeLogDao.ChangeLogs.AddRange(Enumerable.Range(0, 1).Select(x =>
                 new ChangeLogLine(clVersion.Id, TestAccount.Product.Id, ChangeLogText.Parse($"{x:D5}"), (uint) x,
                     TestAccount.UserId)));
 
@@ -303,7 +303,7 @@ namespace ChangeBlog.Application.Tests.UseCaseTests.Commands.AssignPendingLineTo
         public async Task AssignPendingLine_ExistingLineIsNotPending_ChangeLogLineIsNotPending()
         {
             // arrange
-            _productDaoStub.Products.Add(new Product(TestAccount.Id,
+            _fakeProductDao.Products.Add(new Product(TestAccount.Id,
                 Name.Parse("Test Product"),
                 TestAccount.CustomVersioningScheme,
                 TestAccount.UserId,
@@ -312,11 +312,11 @@ namespace ChangeBlog.Application.Tests.UseCaseTests.Commands.AssignPendingLineTo
 
             var clVersion = new ClVersion(TestAccount.Product.Id, ClVersionValue.Parse("1.2"), OptionalName.Empty,
                 TestAccount.UserId);
-            _versionDaoStub.Versions.Add(clVersion);
+            _fakeVersionDao.Versions.Add(clVersion);
 
             var line = new ChangeLogLine(Guid.NewGuid(), clVersion.Id, TestAccount.Product.Id,
                 ChangeLogText.Parse("Some new changes"), 0, TestAccount.UserId, DateTime.Parse("2021-04-12"));
-            _changeLogDaoStub.ChangeLogs.Add(line);
+            _fakeChangeLogDao.ChangeLogs.Add(line);
 
             var assignmentRequestModel =
                 new VersionIdAssignmentRequestModel(clVersion.Id, line.Id);
@@ -335,7 +335,7 @@ namespace ChangeBlog.Application.Tests.UseCaseTests.Commands.AssignPendingLineTo
         public async Task AssignPendingLine_ConflictWhileSaving_ConflictOutput()
         {
             // arrange
-            _productDaoStub.Products.Add(new Product(TestAccount.Id,
+            _fakeProductDao.Products.Add(new Product(TestAccount.Id,
                 Name.Parse("Test Product"),
                 TestAccount.CustomVersioningScheme,
                 TestAccount.UserId,
@@ -344,13 +344,13 @@ namespace ChangeBlog.Application.Tests.UseCaseTests.Commands.AssignPendingLineTo
 
             var clVersion = new ClVersion(TestAccount.Product.Id, ClVersionValue.Parse("1.2"), OptionalName.Empty,
                 TestAccount.UserId);
-            _versionDaoStub.Versions.Add(clVersion);
+            _fakeVersionDao.Versions.Add(clVersion);
 
             var line = new ChangeLogLine(Guid.NewGuid(), null, TestAccount.Product.Id,
                 ChangeLogText.Parse("Some new changes"), 0, TestAccount.UserId, DateTime.Parse("2021-04-12"));
-            _changeLogDaoStub.ChangeLogs.Add(line);
+            _fakeChangeLogDao.ChangeLogs.Add(line);
 
-            _changeLogDaoStub.Conflict = new ConflictStub();
+            _fakeChangeLogDao.Conflict = new ConflictStub();
 
             var assignmentRequestModel =
                 new VersionIdAssignmentRequestModel(clVersion.Id, line.Id);

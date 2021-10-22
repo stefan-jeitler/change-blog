@@ -12,25 +12,25 @@ namespace ChangeBlog.Application.Tests.UseCaseTests.Commands.AddProduct
 {
     public class AddProductInteractorTests
     {
-        private readonly AccountDaoStub _accountDaoStub;
+        private readonly FakeAccountDao _fakeAccountDao;
         private readonly Mock<IAddProductOutputPort> _outputPortMock;
-        private readonly ProductDaoStub _productDaoStub;
+        private readonly FakeProductDao _fakeProductDao;
         private readonly Mock<IUnitOfWork> _unitOfWorkMock;
-        private readonly VersioningSchemeDaoStub _versioningSchemeDaoStub;
+        private readonly FakeVersioningSchemeDao _fakeVersioningSchemeDao;
 
         public AddProductInteractorTests()
         {
-            _accountDaoStub = new AccountDaoStub();
-            _versioningSchemeDaoStub = new VersioningSchemeDaoStub();
-            _productDaoStub = new ProductDaoStub();
+            _fakeAccountDao = new FakeAccountDao();
+            _fakeVersioningSchemeDao = new FakeVersioningSchemeDao();
+            _fakeProductDao = new FakeProductDao();
             _unitOfWorkMock = new Mock<IUnitOfWork>();
             _outputPortMock = new Mock<IAddProductOutputPort>(MockBehavior.Strict);
         }
 
         private AddProductInteractor CreateInteractor() =>
-            new(_accountDaoStub,
-                _versioningSchemeDaoStub,
-                _productDaoStub,
+            new(_fakeAccountDao,
+                _fakeVersioningSchemeDao,
+                _fakeProductDao,
                 _unitOfWorkMock.Object);
 
         [Fact]
@@ -38,8 +38,8 @@ namespace ChangeBlog.Application.Tests.UseCaseTests.Commands.AddProduct
         {
             // arrange
             var account = new Account(TestAccount.Id, TestAccount.Name, null, TestAccount.CreationDate, null);
-            _accountDaoStub.Accounts.Add(account);
-            _versioningSchemeDaoStub.VersioningSchemes.Add(TestAccount.CustomVersioningScheme);
+            _fakeAccountDao.Accounts.Add(account);
+            _fakeVersioningSchemeDao.VersioningSchemes.Add(TestAccount.CustomVersioningScheme);
             var productRequestModel = new ProductRequestModel(TestAccount.Id, TestAccount.Name.Value,
                 TestAccount.CustomVersioningScheme.Id, "en", TestAccount.UserId);
             var createProductInteractor = CreateInteractor();
@@ -81,7 +81,7 @@ namespace ChangeBlog.Application.Tests.UseCaseTests.Commands.AddProduct
             // arrange
             var deletedAccount = new Account(TestAccount.Id, TestAccount.Name, null, TestAccount.CreationDate,
                 DateTime.Parse("2021-04-04"));
-            _accountDaoStub.Accounts.Add(deletedAccount);
+            _fakeAccountDao.Accounts.Add(deletedAccount);
 
             var productRequestModel =
                 new ProductRequestModel(TestAccount.Id, TestAccount.Name.Value, null, "en", TestAccount.UserId);
@@ -101,7 +101,7 @@ namespace ChangeBlog.Application.Tests.UseCaseTests.Commands.AddProduct
         public async Task CreateProduct_InvalidName_InvalidNameOutput()
         {
             // arrange
-            _accountDaoStub.Accounts.Add(new Account(TestAccount.Id, TestAccount.Name, null, TestAccount.CreationDate,
+            _fakeAccountDao.Accounts.Add(new Account(TestAccount.Id, TestAccount.Name, null, TestAccount.CreationDate,
                 null));
 
             var productRequestModel = new ProductRequestModel(TestAccount.Id, "", null, "en", TestAccount.UserId);
@@ -120,9 +120,9 @@ namespace ChangeBlog.Application.Tests.UseCaseTests.Commands.AddProduct
         public async Task CreateProduct_ProductExists_ProductAlreadyExistsOutput()
         {
             // arrange
-            _accountDaoStub.Accounts.Add(new Account(TestAccount.Id, TestAccount.Name, null, TestAccount.CreationDate,
+            _fakeAccountDao.Accounts.Add(new Account(TestAccount.Id, TestAccount.Name, null, TestAccount.CreationDate,
                 null));
-            _productDaoStub.Products.Add(new Product(TestAccount.Id, TestAccount.Name,
+            _fakeProductDao.Products.Add(new Product(TestAccount.Id, TestAccount.Name,
                 TestAccount.Product.VersioningScheme, TestAccount.UserId, TestAccount.Product.LanguageCode,
                 DateTime.Parse("2021-04-04")));
 
@@ -143,7 +143,7 @@ namespace ChangeBlog.Application.Tests.UseCaseTests.Commands.AddProduct
         public async Task CreateProduct_NotExistingVersioningScheme_VersioningSchemeDoesNotExistOutput()
         {
             // arrange
-            _accountDaoStub.Accounts.Add(new Account(TestAccount.Id, TestAccount.Name, null, TestAccount.CreationDate,
+            _fakeAccountDao.Accounts.Add(new Account(TestAccount.Id, TestAccount.Name, null, TestAccount.CreationDate,
                 null));
             var notExistingVersioningSchemeId = Guid.Parse("3984bcf2-9930-4d41-984e-b72ccc6d6c87");
 
@@ -166,9 +166,9 @@ namespace ChangeBlog.Application.Tests.UseCaseTests.Commands.AddProduct
         public async Task CreateProduct_EmptyLangCode_NotSupportedLanguageCodeOutput()
         {
             // arrange
-            _accountDaoStub.Accounts.Add(new Account(TestAccount.Id, TestAccount.Name, null, TestAccount.CreationDate,
+            _fakeAccountDao.Accounts.Add(new Account(TestAccount.Id, TestAccount.Name, null, TestAccount.CreationDate,
                 null));
-            _versioningSchemeDaoStub.VersioningSchemes.Add(TestAccount.DefaultScheme);
+            _fakeVersioningSchemeDao.VersioningSchemes.Add(TestAccount.DefaultScheme);
 
             var productRequestModel =
                 new ProductRequestModel(TestAccount.Id, TestAccount.Name.Value, null, "",
@@ -190,9 +190,9 @@ namespace ChangeBlog.Application.Tests.UseCaseTests.Commands.AddProduct
         public async Task CreateProduct_NotSupportedLangCode_NotSupportedLanguageCodeOutput()
         {
             // arrange
-            _accountDaoStub.Accounts.Add(new Account(TestAccount.Id, TestAccount.Name, null, TestAccount.CreationDate,
+            _fakeAccountDao.Accounts.Add(new Account(TestAccount.Id, TestAccount.Name, null, TestAccount.CreationDate,
                 null));
-            _versioningSchemeDaoStub.VersioningSchemes.Add(TestAccount.DefaultScheme);
+            _fakeVersioningSchemeDao.VersioningSchemes.Add(TestAccount.DefaultScheme);
 
             var productRequestModel =
                 new ProductRequestModel(TestAccount.Id, TestAccount.Name.Value, null, "Deitsch",
@@ -214,11 +214,11 @@ namespace ChangeBlog.Application.Tests.UseCaseTests.Commands.AddProduct
         public async Task CreateProduct_ConflictWhenSaving_ConflictOutput()
         {
             // arrange
-            _accountDaoStub.Accounts.Add(new Account(TestAccount.Id, TestAccount.Name, null, TestAccount.CreationDate,
+            _fakeAccountDao.Accounts.Add(new Account(TestAccount.Id, TestAccount.Name, null, TestAccount.CreationDate,
                 null));
 
-            _versioningSchemeDaoStub.VersioningSchemes.Add(TestAccount.CustomVersioningScheme);
-            _productDaoStub.Conflict = new ConflictStub();
+            _fakeVersioningSchemeDao.VersioningSchemes.Add(TestAccount.CustomVersioningScheme);
+            _fakeProductDao.Conflict = new ConflictStub();
 
             var productRequestModel = new ProductRequestModel(TestAccount.Id, TestAccount.Name.Value,
                 TestAccount.CustomVersioningScheme.Id, "en", TestAccount.UserId);

@@ -12,19 +12,19 @@ namespace ChangeBlog.Application.Tests.UseCaseTests.Commands.UpdateChangeLogLine
 {
     public class UpdateChangeLogLineInteractorTests
     {
-        private readonly ChangeLogDaoStub _changeLogDaoStub;
+        private readonly FakeChangeLogDao _fakeChangeLogDao;
         private readonly Mock<IUpdateChangeLogLineOutputPort> _outputPortMock;
         private readonly Mock<IUnitOfWork> _unitOfWorkMock;
 
         public UpdateChangeLogLineInteractorTests()
         {
             _outputPortMock = new Mock<IUpdateChangeLogLineOutputPort>(MockBehavior.Strict);
-            _changeLogDaoStub = new ChangeLogDaoStub();
+            _fakeChangeLogDao = new FakeChangeLogDao();
             _unitOfWorkMock = new Mock<IUnitOfWork>();
         }
 
         private UpdateChangeLogLineInteractor CreateInteractor() =>
-            new(_changeLogDaoStub, _changeLogDaoStub, _unitOfWorkMock.Object);
+            new(_fakeChangeLogDao, _fakeChangeLogDao, _unitOfWorkMock.Object);
 
         [Fact]
         public async Task UpdateLine_HappyPath_Successful()
@@ -40,7 +40,7 @@ namespace ChangeBlog.Application.Tests.UseCaseTests.Commands.UpdateChangeLogLine
                     Array.Empty<string>());
             var updateLineInteractor = CreateInteractor();
 
-            _changeLogDaoStub.ChangeLogs.Add(new ChangeLogLine(lineId, null, TestAccount.Product.Id,
+            _fakeChangeLogDao.ChangeLogs.Add(new ChangeLogLine(lineId, null, TestAccount.Product.Id,
                 ChangeLogText.Parse("some feature added"), 0, DateTime.Parse("2021-04-17"), Array.Empty<Label>(),
                 Array.Empty<Issue>(), TestAccount.UserId));
 
@@ -71,7 +71,7 @@ namespace ChangeBlog.Application.Tests.UseCaseTests.Commands.UpdateChangeLogLine
                     Array.Empty<string>());
             var updateLineInteractor = CreateInteractor();
 
-            _changeLogDaoStub.ChangeLogs.Add(new ChangeLogLine(lineId, null, TestAccount.Product.Id,
+            _fakeChangeLogDao.ChangeLogs.Add(new ChangeLogLine(lineId, null, TestAccount.Product.Id,
                 ChangeLogText.Parse("some feature added"), 0, DateTime.Parse("2021-04-17"), Array.Empty<Label>(),
                 Array.Empty<Issue>(), TestAccount.UserId));
 
@@ -98,11 +98,11 @@ namespace ChangeBlog.Application.Tests.UseCaseTests.Commands.UpdateChangeLogLine
                     Array.Empty<string>());
             var updateLineInteractor = CreateInteractor();
 
-            _changeLogDaoStub.ChangeLogs.Add(new ChangeLogLine(lineId, null, TestAccount.Product.Id,
+            _fakeChangeLogDao.ChangeLogs.Add(new ChangeLogLine(lineId, null, TestAccount.Product.Id,
                 ChangeLogText.Parse("some feature added"), 0, DateTime.Parse("2021-04-17"), Array.Empty<Label>(),
                 Array.Empty<Issue>(), TestAccount.UserId));
 
-            _changeLogDaoStub.Conflict = new ConflictStub();
+            _fakeChangeLogDao.Conflict = new ConflictStub();
 
             _outputPortMock.Setup(m => m.Conflict(It.IsAny<Conflict>()));
 
@@ -127,10 +127,10 @@ namespace ChangeBlog.Application.Tests.UseCaseTests.Commands.UpdateChangeLogLine
                     Array.Empty<string>());
             var updateLineInteractor = CreateInteractor();
 
-            _changeLogDaoStub.ChangeLogs.Add(new ChangeLogLine(lineId, null, TestAccount.Product.Id,
+            _fakeChangeLogDao.ChangeLogs.Add(new ChangeLogLine(lineId, null, TestAccount.Product.Id,
                 ChangeLogText.Parse("some feature added"), 0, DateTime.Parse("2021-04-17"), Array.Empty<Label>(),
                 Array.Empty<Issue>(), TestAccount.UserId));
-            _changeLogDaoStub.ChangeLogs.Add(new ChangeLogLine(null, TestAccount.Product.Id,
+            _fakeChangeLogDao.ChangeLogs.Add(new ChangeLogLine(null, TestAccount.Product.Id,
                 ChangeLogText.Parse("feature added"), 0, TestAccount.UserId));
 
             _outputPortMock.Setup(m => m.LineWithSameTextAlreadyExists(It.IsAny<string>()));

@@ -14,30 +14,30 @@ namespace ChangeBlog.Application.Tests.UseCaseTests.Queries.GetPendingChangeLogs
     public class GetPendingChangeLogsInteractorTest
     {
 
-        private readonly ChangeLogDaoStub _changeLogDaoStub;
-        private readonly UserDaoStub _userDaoStub;
-        private readonly ProductDaoStub _productDaoStub;
+        private readonly FakeChangeLogDao _fakeChangeLogDao;
+        private readonly FakeUserDao _fakeUserDao;
+        private readonly FakeProductDao _fakeProductDao;
 
         public GetPendingChangeLogsInteractorTest()
         {
-            _changeLogDaoStub = new ChangeLogDaoStub();
-            _userDaoStub = new UserDaoStub();
-            _productDaoStub = new ProductDaoStub();
+            _fakeChangeLogDao = new FakeChangeLogDao();
+            _fakeUserDao = new FakeUserDao();
+            _fakeProductDao = new FakeProductDao();
         }
 
         private GetPendingChangeLogsInteractor CreateInteractor() =>
-            new(_changeLogDaoStub, _userDaoStub, _productDaoStub);
+            new(_fakeChangeLogDao, _fakeUserDao, _fakeProductDao);
 
         [Fact]
         public async Task GetPendingChangeLogs_HappyPath_Successful()
         {
             // arrange
             var interactor = CreateInteractor();
-            _userDaoStub.Users.Add(TestAccount.User);
+            _fakeUserDao.Users.Add(TestAccount.User);
 
-            _productDaoStub.Products.Add(TestAccount.Product);
+            _fakeProductDao.Products.Add(TestAccount.Product);
             var changeLogLineId = Guid.Parse("bf621860-3fa3-40d4-92ac-530cc57a1a98");
-            _changeLogDaoStub.ChangeLogs.Add(new ChangeLogLine(changeLogLineId, null, TestAccount.Product.Id,
+            _fakeChangeLogDao.ChangeLogs.Add(new ChangeLogLine(changeLogLineId, null, TestAccount.Product.Id,
                 ChangeLogText.Parse("Test line."), 0, TestAccount.UserId, DateTime.Parse("2021-07-26")));
 
             // act
@@ -53,11 +53,11 @@ namespace ChangeBlog.Application.Tests.UseCaseTests.Queries.GetPendingChangeLogs
         {
             // arrange
             var interactor = CreateInteractor();
-            _userDaoStub.Users.Add(TestAccount.User);
+            _fakeUserDao.Users.Add(TestAccount.User);
 
-            _productDaoStub.Products.Add(TestAccount.Product);
+            _fakeProductDao.Products.Add(TestAccount.Product);
             var changeLogLineId = Guid.Parse("bf621860-3fa3-40d4-92ac-530cc57a1a98");
-            _changeLogDaoStub.ChangeLogs.Add(new ChangeLogLine(changeLogLineId, null, TestAccount.Product.Id,
+            _fakeChangeLogDao.ChangeLogs.Add(new ChangeLogLine(changeLogLineId, null, TestAccount.Product.Id,
                 ChangeLogText.Parse("Test line."), 0, TestAccount.UserId, DateTime.Parse("2021-07-26")));
 
             // act

@@ -17,24 +17,24 @@ namespace ChangeBlog.Application.Tests.UseCaseTests.Commands.AddOrUpdateVersion
 {
     public class AddOrUpdateVersionInteractorTests
     {
-        private readonly ChangeLogDaoStub _changeLogDaoStub;
+        private readonly FakeChangeLogDao _fakeChangeLogDao;
         private readonly Mock<IAddOrUpdateVersionOutputPort> _outputPortMock;
-        private readonly ProductDaoStub _productDaoStub;
+        private readonly FakeProductDao _fakeProductDao;
         private readonly Mock<IUnitOfWork> _unitOfWorkMock;
-        private readonly VersionDaoStub _versionDaoStub;
+        private readonly FakeVersionDao _fakeVersionDao;
 
         public AddOrUpdateVersionInteractorTests()
         {
-            _productDaoStub = new ProductDaoStub();
-            _versionDaoStub = new VersionDaoStub();
-            _changeLogDaoStub = new ChangeLogDaoStub();
+            _fakeProductDao = new FakeProductDao();
+            _fakeVersionDao = new FakeVersionDao();
+            _fakeChangeLogDao = new FakeChangeLogDao();
             _unitOfWorkMock = new Mock<IUnitOfWork>();
             _outputPortMock = new Mock<IAddOrUpdateVersionOutputPort>(MockBehavior.Strict);
         }
 
         private AddOrUpdateVersionInteractor CreateInteractor() =>
-            new(_productDaoStub, _versionDaoStub,
-                _unitOfWorkMock.Object, _changeLogDaoStub, _changeLogDaoStub);
+            new(_fakeProductDao, _fakeVersionDao,
+                _unitOfWorkMock.Object, _fakeChangeLogDao, _fakeChangeLogDao);
 
         [Fact]
         public async Task UpdateVersion_HappyPath_SuccessfullyUpdated()
@@ -47,8 +47,8 @@ namespace ChangeBlog.Application.Tests.UseCaseTests.Commands.AddOrUpdateVersion
             var existingVersion = new ClVersion(TestAccount.Product.Id, ClVersionValue.Parse("1.2.3"),
                 OptionalName.Empty, TestAccount.UserId);
 
-            _versionDaoStub.Versions.Add(existingVersion);
-            _productDaoStub.Products.Add(TestAccount.Product);
+            _fakeVersionDao.Versions.Add(existingVersion);
+            _fakeProductDao.Products.Add(TestAccount.Product);
             var interactor = CreateInteractor();
 
             _outputPortMock.Setup(m => m.VersionUpdated(It.IsAny<Guid>()));
@@ -58,8 +58,8 @@ namespace ChangeBlog.Application.Tests.UseCaseTests.Commands.AddOrUpdateVersion
 
             // assert
             _outputPortMock.Verify(m => m.VersionUpdated(It.Is<Guid>(x => x == existingVersion.Id)), Times.Once);
-            _versionDaoStub.Versions.Should().HaveCount(1);
-            _versionDaoStub.Versions.Should().Contain(x => x.Id == existingVersion.Id && x.Name == "catchy name");
+            _fakeVersionDao.Versions.Should().HaveCount(1);
+            _fakeVersionDao.Versions.Should().Contain(x => x.Id == existingVersion.Id && x.Name == "catchy name");
         }
 
         [Fact]
@@ -73,8 +73,8 @@ namespace ChangeBlog.Application.Tests.UseCaseTests.Commands.AddOrUpdateVersion
             var existingVersion = new ClVersion(TestAccount.Product.Id, ClVersionValue.Parse("1.2.3"),
                 OptionalName.Empty, TestAccount.UserId, null, DateTime.Parse("2021-06-03"));
 
-            _versionDaoStub.Versions.Add(existingVersion);
-            _productDaoStub.Products.Add(TestAccount.Product);
+            _fakeVersionDao.Versions.Add(existingVersion);
+            _fakeProductDao.Products.Add(TestAccount.Product);
             var interactor = CreateInteractor();
 
             _outputPortMock.Setup(m => m.VersionAlreadyDeleted(It.IsAny<Guid>()));
@@ -97,8 +97,8 @@ namespace ChangeBlog.Application.Tests.UseCaseTests.Commands.AddOrUpdateVersion
             var existingVersion = new ClVersion(TestAccount.Product.Id, ClVersionValue.Parse("1.2.3"),
                 OptionalName.Empty, TestAccount.UserId, DateTime.Parse("2021-06-03"));
 
-            _versionDaoStub.Versions.Add(existingVersion);
-            _productDaoStub.Products.Add(TestAccount.Product);
+            _fakeVersionDao.Versions.Add(existingVersion);
+            _fakeProductDao.Products.Add(TestAccount.Product);
             var interactor = CreateInteractor();
 
             _outputPortMock.Setup(m => m.VersionAlreadyReleased(It.IsAny<Guid>()));
@@ -126,10 +126,10 @@ namespace ChangeBlog.Application.Tests.UseCaseTests.Commands.AddOrUpdateVersion
             var existingVersion = new ClVersion(product.Id, ClVersionValue.Parse("1.2.3"),
                 OptionalName.Empty, TestAccount.UserId);
 
-            _versionDaoStub.Versions.Add(existingVersion);
+            _fakeVersionDao.Versions.Add(existingVersion);
 
 
-            _productDaoStub.Products.Add(product);
+            _fakeProductDao.Products.Add(product);
             var interactor = CreateInteractor();
 
             _outputPortMock.Setup(m => m.RelatedProductClosed(It.IsAny<Guid>()));
@@ -157,10 +157,10 @@ namespace ChangeBlog.Application.Tests.UseCaseTests.Commands.AddOrUpdateVersion
             var existingVersion = new ClVersion(product.Id, ClVersionValue.Parse("1.2.3"),
                 OptionalName.Empty, TestAccount.UserId);
 
-            _versionDaoStub.Versions.Add(existingVersion);
+            _fakeVersionDao.Versions.Add(existingVersion);
 
 
-            _productDaoStub.Products.Add(product);
+            _fakeProductDao.Products.Add(product);
             var interactor = CreateInteractor();
 
             _outputPortMock.Setup(m => m.VersionDoesNotMatchScheme(It.IsAny<string>(), It.IsAny<string>()));
@@ -188,10 +188,10 @@ namespace ChangeBlog.Application.Tests.UseCaseTests.Commands.AddOrUpdateVersion
             var existingVersion = new ClVersion(product.Id, ClVersionValue.Parse("1.2.3"),
                 OptionalName.Empty, TestAccount.UserId);
 
-            _versionDaoStub.Versions.Add(existingVersion);
+            _fakeVersionDao.Versions.Add(existingVersion);
 
 
-            _productDaoStub.Products.Add(product);
+            _fakeProductDao.Products.Add(product);
             var interactor = CreateInteractor();
 
             _outputPortMock.Setup(m => m.InvalidVersionName(It.IsAny<string>()));

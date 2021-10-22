@@ -10,7 +10,7 @@ using CSharpFunctionalExtensions;
 
 namespace ChangeBlog.Application.Tests.TestDoubles
 {
-    public class ProductDaoStub : IProductDao
+    public class FakeProductDao : IProductDao
     {
         public List<Product> Products { get; } = new();
         public Conflict Conflict { get; set; }

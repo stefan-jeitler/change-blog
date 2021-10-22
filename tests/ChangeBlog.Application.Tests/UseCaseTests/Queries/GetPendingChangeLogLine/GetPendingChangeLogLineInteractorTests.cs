@@ -11,31 +11,31 @@ namespace ChangeBlog.Application.Tests.UseCaseTests.Queries.GetPendingChangeLogL
 {
     public class GetPendingChangeLogLineInteractorTests
     {
-        private readonly ChangeLogDaoStub _changeLogDaoStub;
+        private readonly FakeChangeLogDao _fakeChangeLogDao;
         private readonly Mock<IGetPendingChangeLogLineOutputPort> _outputPortMock;
-        private readonly ProductDaoStub _productDaoStub;
-        private readonly UserDaoStub _userDaoStub;
+        private readonly FakeProductDao _fakeProductDao;
+        private readonly FakeUserDao _fakeUserDao;
 
         public GetPendingChangeLogLineInteractorTests()
         {
-            _changeLogDaoStub = new ChangeLogDaoStub();
-            _productDaoStub = new ProductDaoStub();
-            _userDaoStub = new UserDaoStub();
+            _fakeChangeLogDao = new FakeChangeLogDao();
+            _fakeProductDao = new FakeProductDao();
+            _fakeUserDao = new FakeUserDao();
             _outputPortMock = new Mock<IGetPendingChangeLogLineOutputPort>(MockBehavior.Strict);
         }
 
         private GetPendingChangeLogLineInteractor CreateInteractor() =>
-            new(_changeLogDaoStub, _userDaoStub, _productDaoStub);
+            new(_fakeChangeLogDao, _fakeUserDao, _fakeProductDao);
 
         [Fact]
         public async Task GetPendingChangeLogLine_HappyPath_Successful()
         {
             // arrange
             var interactor = CreateInteractor();
-            _userDaoStub.Users.Add(TestAccount.User);
-            _productDaoStub.Products.Add(TestAccount.Product);
+            _fakeUserDao.Users.Add(TestAccount.User);
+            _fakeProductDao.Products.Add(TestAccount.Product);
             var changeLogLineId = Guid.Parse("bf621860-3fa3-40d4-92ac-530cc57a1a98");
-            _changeLogDaoStub.ChangeLogs.Add(new ChangeLogLine(changeLogLineId, null, TestAccount.Product.Id,
+            _fakeChangeLogDao.ChangeLogs.Add(new ChangeLogLine(changeLogLineId, null, TestAccount.Product.Id,
                 ChangeLogText.Parse("Test line."), 0, TestAccount.UserId, DateTime.Parse("2021-07-26")));
 
             _outputPortMock.Setup(m => m.LineFound(It.IsAny<PendingChangeLogLineResponseModel>()));
@@ -55,10 +55,10 @@ namespace ChangeBlog.Application.Tests.UseCaseTests.Queries.GetPendingChangeLogL
         {
             // arrange
             var interactor = CreateInteractor();
-            _userDaoStub.Users.Add(TestAccount.User);
-            _productDaoStub.Products.Add(TestAccount.Product);
+            _fakeUserDao.Users.Add(TestAccount.User);
+            _fakeProductDao.Products.Add(TestAccount.Product);
             var changeLogLineId = Guid.Parse("bf621860-3fa3-40d4-92ac-530cc57a1a98");
-            _changeLogDaoStub.ChangeLogs.Add(new ChangeLogLine(changeLogLineId, null, TestAccount.Product.Id,
+            _fakeChangeLogDao.ChangeLogs.Add(new ChangeLogLine(changeLogLineId, null, TestAccount.Product.Id,
                 ChangeLogText.Parse("Test line."), 0, TestAccount.UserId, DateTime.Parse("2021-07-26")));
 
             _outputPortMock.Setup(m => m.LineFound(It.IsAny<PendingChangeLogLineResponseModel>()));
@@ -79,11 +79,11 @@ namespace ChangeBlog.Application.Tests.UseCaseTests.Queries.GetPendingChangeLogL
         {
             // arrange
             var interactor = CreateInteractor();
-            _userDaoStub.Users.Add(TestAccount.User);
-            _productDaoStub.Products.Add(TestAccount.Product);
+            _fakeUserDao.Users.Add(TestAccount.User);
+            _fakeProductDao.Products.Add(TestAccount.Product);
             var versionId = Guid.Parse("d8d1ab5d-670d-4370-84d5-2a260755e45c");
             var changeLogLineId = Guid.Parse("bf621860-3fa3-40d4-92ac-530cc57a1a98");
-            _changeLogDaoStub.ChangeLogs.Add(new ChangeLogLine(changeLogLineId, versionId, TestAccount.Product.Id,
+            _fakeChangeLogDao.ChangeLogs.Add(new ChangeLogLine(changeLogLineId, versionId, TestAccount.Product.Id,
                 ChangeLogText.Parse("Test line."), 0, TestAccount.UserId, DateTime.Parse("2021-07-26")));
 
             _outputPortMock.Setup(m => m.LineIsNotPending(It.IsAny<Guid>()));
@@ -101,8 +101,8 @@ namespace ChangeBlog.Application.Tests.UseCaseTests.Queries.GetPendingChangeLogL
         {
             // arrange
             var interactor = CreateInteractor();
-            _userDaoStub.Users.Add(TestAccount.User);
-            _productDaoStub.Products.Add(TestAccount.Product);
+            _fakeUserDao.Users.Add(TestAccount.User);
+            _fakeProductDao.Products.Add(TestAccount.Product);
             var changeLogLineId = Guid.Parse("bf621860-3fa3-40d4-92ac-530cc57a1a98");
 
             _outputPortMock.Setup(m => m.LineDoesNotExist(It.IsAny<Guid>()));

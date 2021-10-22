@@ -11,16 +11,16 @@ namespace ChangeBlog.Application.Tests.UseCaseTests.Commands.DeleteChangeLogLine
 {
     public class DeleteChangeLogLineInteractorTests
     {
-        private readonly ChangeLogDaoStub _changeLogDaoStub;
+        private readonly FakeChangeLogDao _fakeChangeLogDao;
         private readonly Mock<IDeleteChangeLogLineOutputPort> _outputPortMock;
 
         public DeleteChangeLogLineInteractorTests()
         {
-            _changeLogDaoStub = new ChangeLogDaoStub();
+            _fakeChangeLogDao = new FakeChangeLogDao();
             _outputPortMock = new Mock<IDeleteChangeLogLineOutputPort>(MockBehavior.Strict);
         }
 
-        private DeleteChangeLogLineInteractor CreateInteractor() => new(_changeLogDaoStub, _changeLogDaoStub);
+        private DeleteChangeLogLineInteractor CreateInteractor() => new(_fakeChangeLogDao, _fakeChangeLogDao);
 
         [Fact]
         public async Task DeleteLine_LinesDoesNotExist_LineDoesNotExistOutput()
@@ -47,7 +47,7 @@ namespace ChangeBlog.Application.Tests.UseCaseTests.Commands.DeleteChangeLogLine
             var interactor = CreateInteractor();
             _outputPortMock.Setup(m => m.LineDeleted(It.IsAny<Guid>()));
 
-            _changeLogDaoStub.ChangeLogs.Add(new ChangeLogLine(existingLineId, null, TestAccount.Product.Id,
+            _fakeChangeLogDao.ChangeLogs.Add(new ChangeLogLine(existingLineId, null, TestAccount.Product.Id,
                 ChangeLogText.Parse("some feature added"), 0, TestAccount.UserId, DateTime.Parse("2021-05-13")));
 
             var requestModel = new DeleteChangeLogLineRequestModel(existingLineId, ChangeLogLineType.Pending);
@@ -67,9 +67,9 @@ namespace ChangeBlog.Application.Tests.UseCaseTests.Commands.DeleteChangeLogLine
             var interactor = CreateInteractor();
             _outputPortMock.Setup(m => m.Conflict(It.IsAny<Conflict>()));
 
-            _changeLogDaoStub.ChangeLogs.Add(new ChangeLogLine(existingLineId, null, TestAccount.Product.Id,
+            _fakeChangeLogDao.ChangeLogs.Add(new ChangeLogLine(existingLineId, null, TestAccount.Product.Id,
                 ChangeLogText.Parse("some feature added"), 0, TestAccount.UserId, DateTime.Parse("2021-05-13")));
-            _changeLogDaoStub.Conflict = new ConflictStub();
+            _fakeChangeLogDao.Conflict = new ConflictStub();
 
             var requestModel = new DeleteChangeLogLineRequestModel(existingLineId, ChangeLogLineType.Pending);
 
@@ -88,9 +88,9 @@ namespace ChangeBlog.Application.Tests.UseCaseTests.Commands.DeleteChangeLogLine
             var interactor = CreateInteractor();
             _outputPortMock.Setup(m => m.RequestedLineIsNotPending(It.IsAny<Guid>()));
 
-            _changeLogDaoStub.ChangeLogs.Add(new ChangeLogLine(existingLineId, Guid.NewGuid(), TestAccount.Product.Id,
+            _fakeChangeLogDao.ChangeLogs.Add(new ChangeLogLine(existingLineId, Guid.NewGuid(), TestAccount.Product.Id,
                 ChangeLogText.Parse("some feature added"), 0, TestAccount.UserId, DateTime.Parse("2021-05-13")));
-            _changeLogDaoStub.Conflict = new ConflictStub();
+            _fakeChangeLogDao.Conflict = new ConflictStub();
 
             var requestModel = new DeleteChangeLogLineRequestModel(existingLineId, ChangeLogLineType.Pending);
 
@@ -109,9 +109,9 @@ namespace ChangeBlog.Application.Tests.UseCaseTests.Commands.DeleteChangeLogLine
             var interactor = CreateInteractor();
             _outputPortMock.Setup(m => m.RequestedLineIsPending(It.IsAny<Guid>()));
 
-            _changeLogDaoStub.ChangeLogs.Add(new ChangeLogLine(existingLineId, null, TestAccount.Product.Id,
+            _fakeChangeLogDao.ChangeLogs.Add(new ChangeLogLine(existingLineId, null, TestAccount.Product.Id,
                 ChangeLogText.Parse("some feature added"), 0, TestAccount.UserId, DateTime.Parse("2021-05-13")));
-            _changeLogDaoStub.Conflict = new ConflictStub();
+            _fakeChangeLogDao.Conflict = new ConflictStub();
 
             var requestModel = new DeleteChangeLogLineRequestModel(existingLineId, ChangeLogLineType.NotPending);
 

@@ -10,26 +10,26 @@ namespace ChangeBlog.Application.Tests.UseCaseTests.Queries.GetProducts
 {
     public class GetProductsInteractorTests
     {
-        private readonly AccountDaoStub _accountDaoStub;
-        private readonly ProductDaoStub _productDaoStub;
-        private readonly UserDaoStub _userDaoStub;
+        private readonly FakeAccountDao _fakeAccountDao;
+        private readonly FakeProductDao _fakeProductDao;
+        private readonly FakeUserDao _fakeUserDao;
 
         public GetProductsInteractorTests()
         {
-            _productDaoStub = new ProductDaoStub();
-            _userDaoStub = new UserDaoStub();
-            _accountDaoStub = new AccountDaoStub();
-            _accountDaoStub.Accounts.Add(TestAccount.Account);
+            _fakeProductDao = new FakeProductDao();
+            _fakeUserDao = new FakeUserDao();
+            _fakeAccountDao = new FakeAccountDao();
+            _fakeAccountDao.Accounts.Add(TestAccount.Account);
         }
 
-        private GetProductsInteractor CreateInteractor() => new(_productDaoStub, _userDaoStub, _accountDaoStub);
+        private GetProductsInteractor CreateInteractor() => new(_fakeProductDao, _fakeUserDao, _fakeAccountDao);
 
         [Fact]
         public async Task GetAccountProducts_HappyPath_Successful()
         {
             // arrange
-            _userDaoStub.Users.Add(TestAccount.User);
-            _productDaoStub.Products.Add(TestAccount.Product);
+            _fakeUserDao.Users.Add(TestAccount.User);
+            _fakeProductDao.Products.Add(TestAccount.Product);
             var interactor = CreateInteractor();
             var requestModel = new AccountProductQueryRequestModel(TestAccount.UserId, TestAccount.Id, null, 1, true);
 
@@ -45,8 +45,8 @@ namespace ChangeBlog.Application.Tests.UseCaseTests.Queries.GetProducts
         public async Task GetAccountProducts_NotExistingAccountId_EmptyResult()
         {
             // arrange
-            _userDaoStub.Users.Add(TestAccount.User);
-            _productDaoStub.Products.Add(TestAccount.Product);
+            _fakeUserDao.Users.Add(TestAccount.User);
+            _fakeProductDao.Products.Add(TestAccount.Product);
             var interactor = CreateInteractor();
             var notExistingAccountId = Guid.Parse("3639c610-bd58-4924-a5fa-ec19b3a324b0");
             var requestModel =
@@ -63,8 +63,8 @@ namespace ChangeBlog.Application.Tests.UseCaseTests.Queries.GetProducts
         public async Task GetProduct_HappyPath_Successful()
         {
             // arrange
-            _userDaoStub.Users.Add(TestAccount.User);
-            _productDaoStub.Products.Add(TestAccount.Product);
+            _fakeUserDao.Users.Add(TestAccount.User);
+            _fakeProductDao.Products.Add(TestAccount.Product);
             var interactor = CreateInteractor();
 
             // act
@@ -78,8 +78,8 @@ namespace ChangeBlog.Application.Tests.UseCaseTests.Queries.GetProducts
         public async Task GetProduct_CreateAt_ProperlyConvertedToUserTimeZone()
         {
             // arrange
-            _userDaoStub.Users.Add(TestAccount.User);
-            _productDaoStub.Products.Add(TestAccount.Product);
+            _fakeUserDao.Users.Add(TestAccount.User);
+            _fakeProductDao.Products.Add(TestAccount.Product);
             var interactor = CreateInteractor();
             var createdAtLocal = TestAccount.Product.CreatedAt.ToLocal(TestAccount.User.TimeZone);
 
@@ -95,8 +95,8 @@ namespace ChangeBlog.Application.Tests.UseCaseTests.Queries.GetProducts
         public async Task GetUserProducts_HappyPath_Successful()
         {
             // arrange
-            _userDaoStub.Users.Add(TestAccount.User);
-            _productDaoStub.Products.Add(TestAccount.Product);
+            _fakeUserDao.Users.Add(TestAccount.User);
+            _fakeProductDao.Products.Add(TestAccount.Product);
             var interactor = CreateInteractor();
             var requestModel = new UserProductQueryRequestModel(TestAccount.UserId, null, 1, true);
 
@@ -117,7 +117,7 @@ namespace ChangeBlog.Application.Tests.UseCaseTests.Queries.GetProducts
         public async Task GetUserProducts_NotProductsExist_EmptyResult()
         {
             // arrange
-            _userDaoStub.Users.Add(TestAccount.User);
+            _fakeUserDao.Users.Add(TestAccount.User);
             var interactor = CreateInteractor();
             var requestModel = new UserProductQueryRequestModel(TestAccount.User.Id, null, 1, true);
 

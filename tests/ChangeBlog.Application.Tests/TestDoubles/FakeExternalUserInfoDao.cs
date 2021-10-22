@@ -8,7 +8,7 @@ using ChangeBlog.Domain;
 
 namespace ChangeBlog.Application.Tests.TestDoubles
 {
-    public class ExternalUserInfoDaoStub : IExternalUserInfoDao
+    public class FakeExternalUserInfoDao : IExternalUserInfoDao
     {
 
         public UserInfo UserInfo { get; set; }

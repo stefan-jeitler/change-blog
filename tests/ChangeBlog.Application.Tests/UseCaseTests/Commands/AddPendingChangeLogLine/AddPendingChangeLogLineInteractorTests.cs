@@ -14,21 +14,21 @@ namespace ChangeBlog.Application.Tests.UseCaseTests.Commands.AddPendingChangeLog
 {
     public class AddPendingChangeLogLineInteractorTests
     {
-        private readonly ChangeLogDaoStub _changeLogDaoStub;
+        private readonly FakeChangeLogDao _fakeChangeLogDao;
         private readonly Mock<IAddPendingChangeLogLineOutputPort> _outputPortMock;
-        private readonly ProductDaoStub _productDaoStub;
+        private readonly FakeProductDao _fakeProductDao;
         private readonly Mock<IUnitOfWork> _unitOfWorkMock;
 
         public AddPendingChangeLogLineInteractorTests()
         {
-            _productDaoStub = new ProductDaoStub();
-            _changeLogDaoStub = new ChangeLogDaoStub();
+            _fakeProductDao = new FakeProductDao();
+            _fakeChangeLogDao = new FakeChangeLogDao();
             _outputPortMock = new Mock<IAddPendingChangeLogLineOutputPort>(MockBehavior.Strict);
             _unitOfWorkMock = new Mock<IUnitOfWork>();
         }
 
-        private AddPendingChangeLogLineInteractor CreateInteractor() => new(_productDaoStub, _changeLogDaoStub,
-            _changeLogDaoStub, _unitOfWorkMock.Object);
+        private AddPendingChangeLogLineInteractor CreateInteractor() => new(_fakeProductDao, _fakeChangeLogDao,
+            _fakeChangeLogDao, _unitOfWorkMock.Object);
 
         [Fact]
         public async Task AddPendingLine_NotExistingProduct_ProductDoesNotExistOutput()
@@ -64,12 +64,12 @@ namespace ChangeBlog.Application.Tests.UseCaseTests.Commands.AddPendingChangeLog
                 new PendingChangeLogLineRequestModel(TestAccount.UserId, TestAccount.Product.Id, changeLogLine, labels,
                     issues);
 
-            _productDaoStub.Products.Add(new Product(TestAccount.Product.Id, TestAccount.Id, TestAccount.Product.Name,
+            _fakeProductDao.Products.Add(new Product(TestAccount.Product.Id, TestAccount.Id, TestAccount.Product.Name,
                 TestAccount.CustomVersioningScheme, TestAccount.Product.LanguageCode, TestAccount.UserId,
                 TestAccount.CreationDate, null));
 
-            _changeLogDaoStub.Conflict = new ConflictStub();
-            _changeLogDaoStub.ChangeLogs.Add(new ChangeLogLine(Guid.NewGuid(),
+            _fakeChangeLogDao.Conflict = new ConflictStub();
+            _fakeChangeLogDao.ChangeLogs.Add(new ChangeLogLine(Guid.NewGuid(),
                 null,
                 TestAccount.Product.Id,
                 ChangeLogText.Parse("some-release"),
@@ -99,7 +99,7 @@ namespace ChangeBlog.Application.Tests.UseCaseTests.Commands.AddPendingChangeLog
                 new PendingChangeLogLineRequestModel(TestAccount.UserId, TestAccount.Product.Id, changeLogLine, labels,
                     issues);
 
-            _productDaoStub.Products.Add(new Product(TestAccount.Product.Id, TestAccount.Id, TestAccount.Product.Name,
+            _fakeProductDao.Products.Add(new Product(TestAccount.Product.Id, TestAccount.Id, TestAccount.Product.Name,
                 TestAccount.CustomVersioningScheme, TestAccount.Product.LanguageCode, TestAccount.UserId,
                 TestAccount.CreationDate, null));
 
@@ -110,7 +110,7 @@ namespace ChangeBlog.Application.Tests.UseCaseTests.Commands.AddPendingChangeLog
                 0,
                 TestAccount.UserId,
                 DateTime.Parse("2021-04-09"));
-            _changeLogDaoStub.ChangeLogs.Add(existingLineWithSameText);
+            _fakeChangeLogDao.ChangeLogs.Add(existingLineWithSameText);
 
             var addPendingLineInteractor = CreateInteractor();
 
@@ -137,11 +137,11 @@ namespace ChangeBlog.Application.Tests.UseCaseTests.Commands.AddPendingChangeLog
                 new PendingChangeLogLineRequestModel(TestAccount.UserId, TestAccount.Product.Id, changeLogLine, labels,
                     issues);
 
-            _productDaoStub.Products.Add(new Product(TestAccount.Product.Id, TestAccount.Id, TestAccount.Product.Name,
+            _fakeProductDao.Products.Add(new Product(TestAccount.Product.Id, TestAccount.Id, TestAccount.Product.Name,
                 TestAccount.CustomVersioningScheme, TestAccount.Product.LanguageCode, TestAccount.UserId,
                 TestAccount.CreationDate, null));
 
-            _changeLogDaoStub.ChangeLogs.AddRange(Enumerable.Range(0, 100)
+            _fakeChangeLogDao.ChangeLogs.AddRange(Enumerable.Range(0, 100)
                 .Select(x =>
                     new ChangeLogLine(null, TestAccount.Product.Id, ChangeLogText.Parse($"{x:D5}"), (uint) x,
                         TestAccount.UserId)));
@@ -169,11 +169,11 @@ namespace ChangeBlog.Application.Tests.UseCaseTests.Commands.AddPendingChangeLog
                 new PendingChangeLogLineRequestModel(TestAccount.UserId, TestAccount.Product.Id, changeLogLine, labels,
                     issues);
 
-            _productDaoStub.Products.Add(new Product(TestAccount.Product.Id, TestAccount.Id, TestAccount.Product.Name,
+            _fakeProductDao.Products.Add(new Product(TestAccount.Product.Id, TestAccount.Id, TestAccount.Product.Name,
                 TestAccount.CustomVersioningScheme, TestAccount.Product.LanguageCode, TestAccount.UserId,
                 TestAccount.CreationDate, null));
 
-            _changeLogDaoStub.ChangeLogs.Add(new ChangeLogLine(Guid.NewGuid(),
+            _fakeChangeLogDao.ChangeLogs.Add(new ChangeLogLine(Guid.NewGuid(),
                 null,
                 TestAccount.Product.Id,
                 ChangeLogText.Parse("some-release"),

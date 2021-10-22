@@ -15,19 +15,19 @@ namespace ChangeBlog.Application.Tests.UseCaseTests.Commands.IssuesTests
 {
     public class RemoveChangeLogLineIssueInteractorTests
     {
-        private readonly ChangeLogDaoStub _changeLogDaoStub;
+        private readonly FakeChangeLogDao _fakeChangeLogDao;
         private readonly Mock<IDeleteChangeLogLineIssueOutputPort> _outputPortMock;
         private readonly Mock<IUnitOfWork> _unitOfWorkMock;
 
         public RemoveChangeLogLineIssueInteractorTests()
         {
-            _changeLogDaoStub = new ChangeLogDaoStub();
+            _fakeChangeLogDao = new FakeChangeLogDao();
             _outputPortMock = new Mock<IDeleteChangeLogLineIssueOutputPort>(MockBehavior.Strict);
             _unitOfWorkMock = new Mock<IUnitOfWork>();
         }
 
         private DeleteChangeLogLineIssueInteractor CreateInteractor() =>
-            new(_changeLogDaoStub, _changeLogDaoStub, _unitOfWorkMock.Object);
+            new(_fakeChangeLogDao, _fakeChangeLogDao, _unitOfWorkMock.Object);
 
         [Fact]
         public async Task RemoveIssue_HappyPath_IssueAddedAndUowCommitted()
@@ -40,7 +40,7 @@ namespace ChangeBlog.Application.Tests.UseCaseTests.Commands.IssuesTests
 
             var line = new ChangeLogLine(lineId, null, TestAccount.Product.Id, ChangeLogText.Parse("some valid text"),
                 0U, DateTime.Parse("2021-04-19"), Array.Empty<Label>(), new List<Issue>(1) {issue}, TestAccount.UserId);
-            _changeLogDaoStub.ChangeLogs.Add(line);
+            _fakeChangeLogDao.ChangeLogs.Add(line);
 
             _outputPortMock.Setup(m => m.Removed(It.IsAny<Guid>()));
 
@@ -51,7 +51,7 @@ namespace ChangeBlog.Application.Tests.UseCaseTests.Commands.IssuesTests
             _unitOfWorkMock.Verify(m => m.Start(), Times.Once);
             _unitOfWorkMock.Verify(m => m.Commit(), Times.Once);
             _outputPortMock.Verify(m => m.Removed(It.Is<Guid>(x => x == lineId)));
-            _changeLogDaoStub.ChangeLogs.Single().Issues.Should().BeEmpty();
+            _fakeChangeLogDao.ChangeLogs.Single().Issues.Should().BeEmpty();
         }
 
         [Fact]
@@ -65,8 +65,8 @@ namespace ChangeBlog.Application.Tests.UseCaseTests.Commands.IssuesTests
 
             var line = new ChangeLogLine(lineId, null, TestAccount.Product.Id, ChangeLogText.Parse("some valid text"),
                 0U, DateTime.Parse("2021-04-19"), Array.Empty<Label>(), new List<Issue>(1) {issue}, TestAccount.UserId);
-            _changeLogDaoStub.ChangeLogs.Add(line);
-            _changeLogDaoStub.Conflict = new ConflictStub();
+            _fakeChangeLogDao.ChangeLogs.Add(line);
+            _fakeChangeLogDao.Conflict = new ConflictStub();
 
             _outputPortMock.Setup(m => m.Conflict(It.IsAny<Conflict>()));
 

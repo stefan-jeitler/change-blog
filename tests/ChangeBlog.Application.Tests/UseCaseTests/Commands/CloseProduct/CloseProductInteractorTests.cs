@@ -11,15 +11,15 @@ namespace ChangeBlog.Application.Tests.UseCaseTests.Commands.CloseProduct
     public class CloseProductInteractorTests
     {
         private readonly Mock<ICloseProductOutputPort> _outputPortMock;
-        private readonly ProductDaoStub _productDaoStub;
+        private readonly FakeProductDao _fakeProductDao;
 
         public CloseProductInteractorTests()
         {
-            _productDaoStub = new ProductDaoStub();
+            _fakeProductDao = new FakeProductDao();
             _outputPortMock = new Mock<ICloseProductOutputPort>(MockBehavior.Strict);
         }
 
-        private CloseProductInteractor CreateInteractor() => new(_productDaoStub);
+        private CloseProductInteractor CreateInteractor() => new(_fakeProductDao);
 
         [Fact]
         public async Task CloseProduct_ProductDoesNotExist_ProductDoesNotExistOutput()
@@ -44,7 +44,7 @@ namespace ChangeBlog.Application.Tests.UseCaseTests.Commands.CloseProduct
                 TestAccount.CustomVersioningScheme, TestAccount.Product.LanguageCode, TestAccount.UserId,
                 TestAccount.Product.CreatedAt,
                 DateTime.Parse("2021-05-13"));
-            _productDaoStub.Products.Add(product);
+            _fakeProductDao.Products.Add(product);
             _outputPortMock.Setup(m => m.ProductAlreadyClosed(It.IsAny<Guid>()));
             var interactor = CreateInteractor();
 
@@ -62,7 +62,7 @@ namespace ChangeBlog.Application.Tests.UseCaseTests.Commands.CloseProduct
             var product = new Product(TestAccount.Product.Id, TestAccount.Id, TestAccount.Product.Name,
                 TestAccount.CustomVersioningScheme, TestAccount.Product.LanguageCode, TestAccount.UserId,
                 TestAccount.Product.CreatedAt, null);
-            _productDaoStub.Products.Add(product);
+            _fakeProductDao.Products.Add(product);
 
             _outputPortMock.Setup(m => m.ProductClosed(It.IsAny<Guid>()));
             var interactor = CreateInteractor();

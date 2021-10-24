@@ -1,11 +1,5 @@
 {
   "name": "Preview",
-  "changeLogLines": [
-    {
-      "text": "Preview phase reached.",
-      "labels": [ "Preview" ],
-      "Issues": []
-    }
-  ],
+  "changeLogLines": [],
   "releaseImmediately": true
 }

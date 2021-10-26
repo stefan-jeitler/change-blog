@@ -17,6 +17,7 @@ $buildArgs = @(
   $Project
   "-Restore"
   "-MaxCpuCount"
+  "-Target:Build"
   "-Property:Configuration=$Configuration"
   "-Property:Version=$Version"
   "-ConsoleLoggerParameters:Summary"

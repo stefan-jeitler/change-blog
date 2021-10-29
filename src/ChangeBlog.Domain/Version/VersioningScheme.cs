@@ -15,7 +15,7 @@ namespace ChangeBlog.Domain.Version
             Id = id;
 
             Name = name ?? throw new ArgumentNullException(nameof(name));
-            RegexPattern = regexPattern ?? throw new ArgumentNullException(nameof(name));
+            RegexPattern = regexPattern ?? throw new ArgumentNullException(nameof(regexPattern));
 
             if (accountId.HasValue && accountId == Guid.Empty)
                 throw new ArgumentException("AccountId cannot be empty.");

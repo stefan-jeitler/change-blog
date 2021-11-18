@@ -64,6 +64,9 @@ stages:
   displayName: Continuous Delivery
   dependsOn: continuous_integration
   condition: and(succeeded(), startsWith(variables['Build.SourceBranch'], 'refs/tags/'))
+  
+  pool:
+    vmImage: 'ubuntu-latest'
 
   variables:
     ImageNameApi: change-blog-api

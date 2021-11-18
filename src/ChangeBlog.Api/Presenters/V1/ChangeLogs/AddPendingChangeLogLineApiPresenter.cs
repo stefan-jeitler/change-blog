@@ -63,11 +63,6 @@ namespace ChangeBlog.Api.Presenters.V1.ChangeLogs
                 DefaultResponse.Create($"Lines with same text are not allowed. Duplicate: '{duplicate}'", resourceIds));
         }
 
-        public void ProductClosed(Guid productId)
-        {
-            throw new NotImplementedException();
-        }
-
         public void InvalidChangeLogLineText(string text)
         {
             Response = new BadRequestObjectResult(DefaultResponse.Create($"Invalid change log text '{text}'."));

@@ -39,7 +39,7 @@ namespace ChangeBlog.Application.Tests.UseCaseTests.Queries.GetUsers
         {
             _testUserId = Guid.Empty;
 
-            Func<UsersQueryRequestModel> act = CreateRequestModel;
+            var act = CreateRequestModel;
 
             act.Should().ThrowExactly<ArgumentException>();
         }
@@ -49,7 +49,7 @@ namespace ChangeBlog.Application.Tests.UseCaseTests.Queries.GetUsers
         {
             _testAccountId = Guid.Empty;
 
-            Func<UsersQueryRequestModel> act = CreateRequestModel;
+            var act = CreateRequestModel;
 
             act.Should().ThrowExactly<ArgumentException>();
         }

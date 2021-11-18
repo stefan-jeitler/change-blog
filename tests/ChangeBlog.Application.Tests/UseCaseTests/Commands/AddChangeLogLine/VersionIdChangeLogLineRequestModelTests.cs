@@ -42,7 +42,7 @@ namespace ChangeBlog.Application.Tests.UseCaseTests.Commands.AddChangeLogLine
         {
             _testVersionId = Guid.Empty;
 
-            Func<VersionIdChangeLogLineRequestModel> act = CreateRequestModel;
+            var act = CreateRequestModel;
 
             act.Should().ThrowExactly<ArgumentException>();
         }
@@ -52,7 +52,7 @@ namespace ChangeBlog.Application.Tests.UseCaseTests.Commands.AddChangeLogLine
         {
             _testText = null;
 
-            Func<VersionIdChangeLogLineRequestModel> act = CreateRequestModel;
+            var act = CreateRequestModel;
 
             act.Should().ThrowExactly<ArgumentNullException>();
         }
@@ -62,7 +62,7 @@ namespace ChangeBlog.Application.Tests.UseCaseTests.Commands.AddChangeLogLine
         {
             _testLabels = null;
 
-            Func<VersionIdChangeLogLineRequestModel> act = CreateRequestModel;
+            var act = CreateRequestModel;
 
             act.Should().ThrowExactly<ArgumentNullException>();
         }
@@ -72,7 +72,7 @@ namespace ChangeBlog.Application.Tests.UseCaseTests.Commands.AddChangeLogLine
         {
             _testIssues = null;
 
-            Func<VersionIdChangeLogLineRequestModel> act = CreateRequestModel;
+            var act = CreateRequestModel;
 
             act.Should().ThrowExactly<ArgumentNullException>();
         }

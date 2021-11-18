@@ -43,7 +43,7 @@ namespace ChangeBlog.Application.Tests.UseCaseTests.Commands.AddPendingChangeLog
         {
             _testProductId = Guid.Empty;
 
-            var act = CreateRequestModel;
+            Func<PendingChangeLogLineRequestModel> act = CreateRequestModel;
 
             act.Should().ThrowExactly<ArgumentException>();
         }
@@ -53,7 +53,7 @@ namespace ChangeBlog.Application.Tests.UseCaseTests.Commands.AddPendingChangeLog
         {
             _testText = null;
 
-            var act = CreateRequestModel;
+            Func<PendingChangeLogLineRequestModel> act = CreateRequestModel;
 
             act.Should().ThrowExactly<ArgumentNullException>();
         }
@@ -63,7 +63,7 @@ namespace ChangeBlog.Application.Tests.UseCaseTests.Commands.AddPendingChangeLog
         {
             _testLabels = null;
 
-            var act = CreateRequestModel;
+            Func<PendingChangeLogLineRequestModel> act = CreateRequestModel;
 
             act.Should().ThrowExactly<ArgumentNullException>();
         }
@@ -73,7 +73,7 @@ namespace ChangeBlog.Application.Tests.UseCaseTests.Commands.AddPendingChangeLog
         {
             _testIssues = null;
 
-            var act = CreateRequestModel;
+            Func<PendingChangeLogLineRequestModel> act = CreateRequestModel;
 
             act.Should().ThrowExactly<ArgumentNullException>();
         }

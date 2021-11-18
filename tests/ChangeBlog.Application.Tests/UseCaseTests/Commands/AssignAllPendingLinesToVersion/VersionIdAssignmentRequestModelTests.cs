@@ -32,7 +32,7 @@ namespace ChangeBlog.Application.Tests.UseCaseTests.Commands.AssignAllPendingLin
         {
             _testProductId = Guid.Empty;
 
-            var act = CreateRequestModel;
+            Func<VersionIdAssignmentRequestModel> act = CreateRequestModel;
 
             act.Should().ThrowExactly<ArgumentException>();
         }
@@ -42,7 +42,7 @@ namespace ChangeBlog.Application.Tests.UseCaseTests.Commands.AssignAllPendingLin
         {
             _testVersionId = Guid.Empty;
 
-            var act = CreateRequestModel;
+            Func<VersionIdAssignmentRequestModel> act = CreateRequestModel;
 
             act.Should().ThrowExactly<ArgumentException>();
         }

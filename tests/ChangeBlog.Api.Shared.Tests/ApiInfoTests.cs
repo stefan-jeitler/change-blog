@@ -10,7 +10,7 @@ namespace ChangeBlog.Api.Shared.Tests
         [Fact]
         public void ApiInfo_NameIsNull_ArgumentNullException()
         {
-            var act = () => new ApiInfo(null,
+            Func<ApiInfo> act = () => new ApiInfo(null,
                 "1.0.0",
                 "net5.0");
 
@@ -20,7 +20,7 @@ namespace ChangeBlog.Api.Shared.Tests
         [Fact]
         public void ApiInfo_NameIsEmpty_ArgumentException()
         {
-            var act = () => new ApiInfo(string.Empty,
+            Func<ApiInfo> act = () => new ApiInfo(string.Empty,
                 "1.0.0",
                 "net5.0");
 
@@ -30,7 +30,7 @@ namespace ChangeBlog.Api.Shared.Tests
         [Fact]
         public void ApiInfo_VersionIsNull_ArgumentNullException()
         {
-            var act = () => new ApiInfo("ChangeBlog.Api",
+            Func<ApiInfo> act = () => new ApiInfo("ChangeBlog.Api",
                 null,
                 "net5.0");
 
@@ -40,7 +40,7 @@ namespace ChangeBlog.Api.Shared.Tests
         [Fact]
         public void ApiInfo_EnvironmentIsNull_ArgumentNullException()
         {
-            var act = () => new ApiInfo("ChangeBlog.Api",
+            Func<ApiInfo> act = () => new ApiInfo("ChangeBlog.Api",
                 "0.0.0",
                 null);
 
@@ -50,7 +50,7 @@ namespace ChangeBlog.Api.Shared.Tests
         [Fact]
         public void ApiInfo_EnvironmentIsEmpty_ArgumentException()
         {
-            var act = () => new ApiInfo("ChangeBlog.Api",
+            Func<ApiInfo> act = () => new ApiInfo("ChangeBlog.Api",
                 "0.0.0",
                 string.Empty);
 

@@ -1,11 +1,5 @@
 {
-  "name": "",
-  "changeLogLines": [
-    {
-      "text": "Update dotnet to version 6.",
-      "labels": ["DotnetUpdate"],
-      "issues": [] 
-    }
-  ],
+  "name": "Preview",
+  "changeLogLines": [],
   "releaseImmediately": true
 }

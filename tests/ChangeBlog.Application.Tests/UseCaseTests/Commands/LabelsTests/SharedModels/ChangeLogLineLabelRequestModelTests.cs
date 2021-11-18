@@ -12,7 +12,7 @@ namespace ChangeBlog.Application.Tests.UseCaseTests.Commands.LabelsTests.SharedM
         {
             var lineId = Guid.Empty;
 
-            var act = () => new ChangeLogLineLabelRequestModel(lineId, "someLabel");
+            Func<ChangeLogLineLabelRequestModel> act = () => new ChangeLogLineLabelRequestModel(lineId, "someLabel");
 
             act.Should().ThrowExactly<ArgumentException>();
         }
@@ -20,7 +20,7 @@ namespace ChangeBlog.Application.Tests.UseCaseTests.Commands.LabelsTests.SharedM
         [Fact]
         public void Create_WithNullLabel_ArgumentNullException()
         {
-            var act = () => new ChangeLogLineLabelRequestModel(Guid.NewGuid(), null);
+            Func<ChangeLogLineLabelRequestModel> act = () => new ChangeLogLineLabelRequestModel(Guid.NewGuid(), null);
 
             act.Should().ThrowExactly<ArgumentNullException>();
         }

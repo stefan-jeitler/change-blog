@@ -35,7 +35,7 @@ namespace ChangeBlog.Application.Tests.UseCaseTests.Commands.AssignPendingLineTo
         {
             _testProductId = Guid.Empty;
 
-            var act = CreateRequestModel;
+            Func<VersionAssignmentRequestModel> act = CreateRequestModel;
 
             act.Should().ThrowExactly<ArgumentException>();
         }
@@ -45,7 +45,7 @@ namespace ChangeBlog.Application.Tests.UseCaseTests.Commands.AssignPendingLineTo
         {
             _testVersion = null;
 
-            var act = CreateRequestModel;
+            Func<VersionAssignmentRequestModel> act = CreateRequestModel;
 
             act.Should().ThrowExactly<ArgumentNullException>();
         }
@@ -55,7 +55,7 @@ namespace ChangeBlog.Application.Tests.UseCaseTests.Commands.AssignPendingLineTo
         {
             _testLineId = Guid.Empty;
 
-            var act = CreateRequestModel;
+            Func<VersionAssignmentRequestModel> act = CreateRequestModel;
 
             act.Should().ThrowExactly<ArgumentException>();
         }

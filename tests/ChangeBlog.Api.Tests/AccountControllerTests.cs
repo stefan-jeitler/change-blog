@@ -7,6 +7,7 @@ using ChangeBlog.Api.DTOs;
 using ChangeBlog.Api.DTOs.V1.Account;
 using ChangeBlog.Api.DTOs.V1.Product;
 using FluentAssertions;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc.Testing;
 using Xunit;
 

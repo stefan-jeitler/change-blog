@@ -55,7 +55,7 @@ namespace ChangeBlog.Application.Tests.UseCaseTests.Queries.GetVersions
         {
             _testProductId = Guid.Empty;
 
-            var act = CreateRequestModel;
+            Func<VersionsQueryRequestModel> act = CreateRequestModel;
 
             act.Should().ThrowExactly<ArgumentException>();
         }
@@ -65,7 +65,7 @@ namespace ChangeBlog.Application.Tests.UseCaseTests.Queries.GetVersions
         {
             _testUserId = Guid.Empty;
 
-            var act = CreateRequestModel;
+            Func<VersionsQueryRequestModel> act = CreateRequestModel;
 
             act.Should().ThrowExactly<ArgumentException>();
         }
@@ -85,7 +85,7 @@ namespace ChangeBlog.Application.Tests.UseCaseTests.Queries.GetVersions
         {
             _testLimit = 0;
 
-            var act = CreateRequestModel;
+            Func<VersionsQueryRequestModel> act = CreateRequestModel;
 
             act.Should().ThrowExactly<ArgumentException>();
         }

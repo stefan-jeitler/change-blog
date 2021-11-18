@@ -12,7 +12,7 @@ namespace ChangeBlog.Application.Tests.UseCaseTests.Commands.IssuesTests.SharedM
         {
             var lineId = Guid.Empty;
 
-            var act = () => new ChangeLogLineIssueRequestModel(lineId, "#1234");
+            Func<ChangeLogLineIssueRequestModel> act = () => new ChangeLogLineIssueRequestModel(lineId, "#1234");
 
             act.Should().ThrowExactly<ArgumentException>();
         }
@@ -20,7 +20,7 @@ namespace ChangeBlog.Application.Tests.UseCaseTests.Commands.IssuesTests.SharedM
         [Fact]
         public void Create_WithNullIssue_ArgumentNullException()
         {
-            var act = () => new ChangeLogLineIssueRequestModel(Guid.NewGuid(), null);
+            Func<ChangeLogLineIssueRequestModel> act = () => new ChangeLogLineIssueRequestModel(Guid.NewGuid(), null);
 
             act.Should().ThrowExactly<ArgumentNullException>();
         }

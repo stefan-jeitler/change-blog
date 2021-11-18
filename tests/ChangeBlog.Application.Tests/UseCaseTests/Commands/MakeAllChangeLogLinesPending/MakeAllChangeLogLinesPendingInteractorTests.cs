@@ -38,7 +38,7 @@ namespace ChangeBlog.Application.Tests.UseCaseTests.Commands.MakeAllChangeLogLin
         {
             var makeAllLinesPendingInteractor = CreateInteractor();
 
-            var act = () => makeAllLinesPendingInteractor.ExecuteAsync(_outputPortMock.Object, Guid.Empty);
+            Func<Task> act = () => makeAllLinesPendingInteractor.ExecuteAsync(_outputPortMock.Object, Guid.Empty);
 
             await act.Should().ThrowExactlyAsync<ArgumentException>();
         }
@@ -48,7 +48,7 @@ namespace ChangeBlog.Application.Tests.UseCaseTests.Commands.MakeAllChangeLogLin
         {
             var makeAllLinesPendingInteractor = CreateInteractor();
 
-            var act = () =>
+            Func<Task> act = () =>
                 makeAllLinesPendingInteractor.ExecuteAsync(_outputPortMock.Object, Guid.Empty, "1.2.3");
 
             await act.Should().ThrowExactlyAsync<ArgumentException>();
@@ -59,7 +59,7 @@ namespace ChangeBlog.Application.Tests.UseCaseTests.Commands.MakeAllChangeLogLin
         {
             var makeAllLinesPendingInteractor = CreateInteractor();
 
-            var act = () =>
+            Func<Task> act = () =>
                 makeAllLinesPendingInteractor.ExecuteAsync(_outputPortMock.Object, TestAccount.Product.Id, null);
 
             await act.Should().ThrowExactlyAsync<ArgumentNullException>();

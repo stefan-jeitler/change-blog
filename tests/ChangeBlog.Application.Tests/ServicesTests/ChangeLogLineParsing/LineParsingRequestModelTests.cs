@@ -36,7 +36,7 @@ namespace ChangeBlog.Application.Tests.ServicesTests.ChangeLogLineParsing
         {
             _testText = null;
 
-            var act = CreateRequestModel;
+            Func<LineParserRequestModel> act = CreateRequestModel;
 
             act.Should().ThrowExactly<ArgumentNullException>();
         }
@@ -46,7 +46,7 @@ namespace ChangeBlog.Application.Tests.ServicesTests.ChangeLogLineParsing
         {
             _testIssues = null;
 
-            var act = CreateRequestModel;
+            Func<LineParserRequestModel> act = CreateRequestModel;
 
             act.Should().ThrowExactly<ArgumentNullException>();
         }
@@ -56,7 +56,7 @@ namespace ChangeBlog.Application.Tests.ServicesTests.ChangeLogLineParsing
         {
             _testLabels = null;
 
-            var act = CreateRequestModel;
+            Func<LineParserRequestModel> act = CreateRequestModel;
 
             act.Should().ThrowExactly<ArgumentNullException>();
         }

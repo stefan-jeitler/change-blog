@@ -82,7 +82,7 @@ namespace ChangeBlog.Application.Tests.UseCaseTests.Queries.GetIssues
         {
             var interactor = CreateInteractor();
 
-            var act = () => interactor.ExecuteAsync(Guid.Empty);
+            Func<Task<IList<string>>> act = () => interactor.ExecuteAsync(Guid.Empty);
 
             await act.Should().ThrowExactlyAsync<ArgumentException>();
         }

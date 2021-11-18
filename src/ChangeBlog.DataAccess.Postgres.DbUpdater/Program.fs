@@ -7,7 +7,6 @@ open System.CommandLine.Invocation
 open Serilog
 open Serilog.Events
 
-
 let createLogger (verbose: bool) =
 
     let logLevel =

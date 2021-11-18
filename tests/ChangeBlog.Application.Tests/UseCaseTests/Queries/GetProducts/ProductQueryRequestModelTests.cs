@@ -45,7 +45,7 @@ namespace ChangeBlog.Application.Tests.UseCaseTests.Queries.GetProducts
             _testUserId = Guid.Empty;
 
             // act
-            Func<AccountProductQueryRequestModel> act = CreateRequestModel;
+            var act = CreateRequestModel;
 
             // assert
             act.Should().ThrowExactly<ArgumentException>();
@@ -58,7 +58,7 @@ namespace ChangeBlog.Application.Tests.UseCaseTests.Queries.GetProducts
             _testAccountId = Guid.Empty;
 
             // act
-            Func<AccountProductQueryRequestModel> act = CreateRequestModel;
+            var act = CreateRequestModel;
 
             // assert
             act.Should().ThrowExactly<ArgumentException>();

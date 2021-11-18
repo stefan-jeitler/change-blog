@@ -44,7 +44,7 @@ namespace ChangeBlog.Application.Tests.UseCaseTests.Commands.AddVersion
         {
             _testProductId = Guid.Empty;
 
-            Func<VersionRequestModel> act = CreateRequestModel;
+            var act = CreateRequestModel;
 
             act.Should().ThrowExactly<ArgumentException>();
         }
@@ -54,7 +54,7 @@ namespace ChangeBlog.Application.Tests.UseCaseTests.Commands.AddVersion
         {
             _testVersion = null;
 
-            Func<VersionRequestModel> act = CreateRequestModel;
+            var act = CreateRequestModel;
 
             act.Should().ThrowExactly<ArgumentNullException>();
         }
@@ -64,7 +64,7 @@ namespace ChangeBlog.Application.Tests.UseCaseTests.Commands.AddVersion
         {
             _testLines = null;
 
-            Func<VersionRequestModel> act = CreateRequestModel;
+            var act = CreateRequestModel;
 
             act.Should().ThrowExactly<ArgumentNullException>();
         }

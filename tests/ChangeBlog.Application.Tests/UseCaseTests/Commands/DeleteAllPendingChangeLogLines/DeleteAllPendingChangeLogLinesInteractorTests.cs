@@ -42,7 +42,7 @@ namespace ChangeBlog.Application.Tests.UseCaseTests.Commands.DeleteAllPendingCha
         {
             var interactor = new DeleteAllPendingChangeLogLinesInteractor(_fakeChangeLogDao);
 
-            Func<Task> act = () => interactor.ExecuteAsync(Guid.Empty);
+            var act = () => interactor.ExecuteAsync(Guid.Empty);
 
             await act.Should().ThrowExactlyAsync<ArgumentException>();
         }

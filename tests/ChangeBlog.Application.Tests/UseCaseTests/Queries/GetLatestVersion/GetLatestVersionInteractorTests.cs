@@ -106,7 +106,7 @@ namespace ChangeBlog.Application.Tests.UseCaseTests.Queries.GetLatestVersion
         {
             var interactor = CreateInteractor();
 
-            Func<Task> act = () => interactor.ExecuteAsync(_outputPortMock.Object, TestAccount.UserId, Guid.Empty);
+            var act = () => interactor.ExecuteAsync(_outputPortMock.Object, TestAccount.UserId, Guid.Empty);
 
             await act.Should().ThrowExactlyAsync<ArgumentException>();
         }
@@ -116,7 +116,7 @@ namespace ChangeBlog.Application.Tests.UseCaseTests.Queries.GetLatestVersion
         {
             var interactor = CreateInteractor();
 
-            Func<Task> act = () => interactor.ExecuteAsync(_outputPortMock.Object, Guid.Empty, TestAccount.Product.Id);
+            var act = () => interactor.ExecuteAsync(_outputPortMock.Object, Guid.Empty, TestAccount.Product.Id);
 
             await act.Should().ThrowExactlyAsync<ArgumentException>();
         }

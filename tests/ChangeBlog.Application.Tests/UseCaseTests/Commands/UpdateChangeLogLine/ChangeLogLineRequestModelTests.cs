@@ -42,7 +42,7 @@ namespace ChangeBlog.Application.Tests.UseCaseTests.Commands.UpdateChangeLogLine
         {
             _testLineId = Guid.Empty;
 
-            Func<UpdateChangeLogLineRequestModel> act = CreateRequestModel;
+            var act = CreateRequestModel;
 
             act.Should().ThrowExactly<ArgumentException>();
         }

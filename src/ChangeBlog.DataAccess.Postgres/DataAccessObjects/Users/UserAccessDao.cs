@@ -118,7 +118,7 @@ public class UserAccessDao : IUserAccessDao
 
         if (notSupportedPermissionsExists)
         {
-            _logger.LogWarning("There are permissions that are not supported by the app.");
+            _logger.LogWarning("There are permissions that are not supported by the app");
         }
 
         return rolePermissions

@@ -41,7 +41,7 @@ public class SearchVersionQueryBuilder
             return this;
 
         var trimmedSearchTerm = searchTerm.Trim();
-        var finalSearchTerm = trimmedSearchTerm.Contains(" ")
+        var finalSearchTerm = trimmedSearchTerm.Contains(' ')
             ? string.Join(" & ", trimmedSearchTerm.Split(" "))
             : trimmedSearchTerm;
 

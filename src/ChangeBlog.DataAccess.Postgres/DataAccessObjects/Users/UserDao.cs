@@ -82,7 +82,7 @@ public class UserDao : IUserDao
                 WHERE au.account_id = @accountId
                   {pagingFilter}
                 ORDER BY u.email
-                    FETCH FIRST (@limit) ROWS ONLY";
+                FETCH FIRST (@limit) ROWS ONLY";
 
         var users = await _dbAccessor.DbConnection
             .QueryAsync<User>(getAccountUsersSql, new
@@ -172,7 +172,7 @@ public class UserDao : IUserDao
         }
         catch (Exception exception)
         {
-            _logger.LogError(exception, exception.Message);
+            _logger.LogError(exception, "Error while adding external identity");
             return Result.Failure(exception.Message);
         }
     }
@@ -201,7 +201,7 @@ public class UserDao : IUserDao
         }
         catch (Exception exception)
         {
-            _logger.LogError(exception, exception.Message);
+            _logger.LogError(exception, "Error while adding user");
             return Result.Failure(exception.Message);
         }
     }

@@ -30,14 +30,14 @@ let createDbUpdatesCommand (dbConnection: IDbConnection) =
             DbUpdatesRunner.runDbUpdates logger dbConnection
         with
         | ex ->
-            printf "%s" ex.Message
+            printf $"%s{ex.Message}"
             -1
 
     let runUpdatesCommand =
         Command("run-updates", "execute all new db updates.")
 
     runUpdatesCommand.AddOption verboseSwitch
-    runUpdatesCommand.Handler <- CommandHandler.Create<bool>((fun (verbose) -> handler verbose))
+    runUpdatesCommand.Handler <- CommandHandler.Create<bool>(handler)
 
     runUpdatesCommand
 
@@ -48,7 +48,7 @@ let createDetectBreakingChangesCommand (dbConnection: IDbConnection) =
             DbUpdatesAnalysis.detectBreakingChanges logger dbConnection
         with
         | ex ->
-            printf "%s" ex.Message
+            printf $"%s{ex.Message}"
             -1
 
     let description =
@@ -58,7 +58,7 @@ let createDetectBreakingChangesCommand (dbConnection: IDbConnection) =
         Command("detect-breakingchanges", description)
 
     detectBreakingChangesCommand.AddOption verboseSwitch
-    detectBreakingChangesCommand.Handler <- CommandHandler.Create<bool>((fun (verbose) -> handler verbose))
+    detectBreakingChangesCommand.Handler <- CommandHandler.Create<bool>(handler)
 
     detectBreakingChangesCommand
 

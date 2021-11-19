@@ -58,7 +58,8 @@ public class AuthorizationFilter : IAsyncActionFilter
         {
             var actionName = context.ActionDescriptor.DisplayName;
             _logger.LogError(
-                $"The requested action '{actionName}' hasn't one of the attributes: {nameof(NeedsPermissionAttribute)}, {nameof(AllowAnonymousAttribute)} or {nameof(SkipAuthorizationAttribute)}.");
+                "The requested action '{ActionName}' hasn't one of the attributes: {PermissionAttribute}, {AllowAnonymous} or {SkipAuthorization}", 
+                actionName, nameof(NeedsPermissionAttribute), nameof(AllowAnonymousAttribute), nameof(SkipAuthorizationAttribute));
 
             context.Result = InternalServerError;
             return;
@@ -86,7 +87,7 @@ public class AuthorizationFilter : IAsyncActionFilter
                 context.Result = NotFoundResult;
                 break;
             default:
-                _logger.LogCritical("AuthorizationState is not supported.", authState);
+                _logger.LogCritical("AuthorizationState is not supported. {AuthState}", authState);
                 context.Result = InternalServerError;
                 break;
         }

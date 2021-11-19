@@ -34,7 +34,7 @@ public class SchemaVersion
 
         if (AppSchemaVersion != dbSchemaVersion)
         {
-            _logger.LogWarning("Schema version mismatch: App {AppSchemaVersion}; Database {dbSchemaVersion}",
+            _logger.LogWarning("Schema version mismatch: App {AppSchemaVersion}; Database {DbSchemaVersion}",
                 AppSchemaVersion, dbSchemaVersion);
         }
     }

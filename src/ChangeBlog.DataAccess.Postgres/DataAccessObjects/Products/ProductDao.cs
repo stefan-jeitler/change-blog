@@ -117,9 +117,9 @@ public class ProductDao : IProductDao
 
             return Result.Success<Product, Conflict>(product);
         }
-        catch (Exception e)
+        catch (Exception exception)
         {
-            _logger.LogError(e, e.Message);
+            _logger.LogError(exception, "Error while adding product");
             throw;
         }
     }

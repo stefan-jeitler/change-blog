@@ -201,7 +201,7 @@ public class VersionDao : IVersionDao
         }
         catch (Exception exception)
         {
-            _logger.LogError(exception, exception.Message);
+            _logger.LogError(exception, "Error while updating Version");
             throw;
         }
     }

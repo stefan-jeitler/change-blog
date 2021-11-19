@@ -12,7 +12,7 @@ namespace ChangeBlog.DataAccess.Postgres.Tests
         private static IConfiguration BuildConfiguration() =>
             new ConfigurationBuilder()
                 .AddJsonFile("appsettings.json", false)
-                .AddUserSecrets<Configuration>()
+                .AddUserSecrets<Configuration>(true)
                 .AddEnvironmentVariables()
                 .Build();
     }

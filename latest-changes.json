@@ -1,5 +1,11 @@
 {
-  "name": "Preview",
-  "changeLogLines": [],
+  "name": "",
+  "changeLogLines": [
+    {
+      "text": "App runs now on dotnet 6.",
+      "labels": ["DotnetUpdate"],
+      "issues": [] 
+    }
+  ],
   "releaseImmediately": true
 }

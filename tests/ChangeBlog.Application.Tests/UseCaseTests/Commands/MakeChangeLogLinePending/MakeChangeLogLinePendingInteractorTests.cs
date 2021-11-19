@@ -62,7 +62,7 @@ namespace ChangeBlog.Application.Tests.UseCaseTests.Commands.MakeChangeLogLinePe
         {
             var makeLinePendingInteractor = CreateInteractor();
 
-            Func<Task> act = () => makeLinePendingInteractor.ExecuteAsync(_outputPortMock.Object, Guid.Empty);
+            var act = () => makeLinePendingInteractor.ExecuteAsync(_outputPortMock.Object, Guid.Empty);
 
             await act.Should().ThrowExactlyAsync<ArgumentException>();
         }

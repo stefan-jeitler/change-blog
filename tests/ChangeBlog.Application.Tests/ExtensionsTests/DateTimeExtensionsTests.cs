@@ -24,7 +24,7 @@ namespace ChangeBlog.Application.Tests.ExtensionsTests
         {
             var utc = DateTime.Parse("2021-05-14T12:00:00Z");
 
-            Func<DateTimeOffset> act = () => utc.ToLocal(null);
+            var act = () => utc.ToLocal(null);
 
             act.Should().ThrowExactly<ArgumentNullException>();
         }

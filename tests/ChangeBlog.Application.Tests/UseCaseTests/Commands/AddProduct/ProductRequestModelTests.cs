@@ -42,7 +42,7 @@ namespace ChangeBlog.Application.Tests.UseCaseTests.Commands.AddProduct
         {
             _testAccountId = Guid.Empty;
 
-            Func<ProductRequestModel> act = CreateRequestModel;
+            var act = CreateRequestModel;
 
             act.Should().ThrowExactly<ArgumentException>();
         }
@@ -52,7 +52,7 @@ namespace ChangeBlog.Application.Tests.UseCaseTests.Commands.AddProduct
         {
             _testName = null;
 
-            Func<ProductRequestModel> act = CreateRequestModel;
+            var act = CreateRequestModel;
 
             act.Should().ThrowExactly<ArgumentNullException>();
         }
@@ -62,7 +62,7 @@ namespace ChangeBlog.Application.Tests.UseCaseTests.Commands.AddProduct
         {
             _testSchemeId = Guid.Empty;
 
-            Func<ProductRequestModel> act = CreateRequestModel;
+            var act = CreateRequestModel;
 
             act.Should().ThrowExactly<ArgumentException>();
         }
@@ -72,7 +72,7 @@ namespace ChangeBlog.Application.Tests.UseCaseTests.Commands.AddProduct
         {
             _testLangCode = null;
 
-            Func<ProductRequestModel> act = CreateRequestModel;
+            var act = CreateRequestModel;
 
             act.Should().ThrowExactly<ArgumentNullException>();
         }
@@ -92,7 +92,7 @@ namespace ChangeBlog.Application.Tests.UseCaseTests.Commands.AddProduct
         {
             _testUserId = Guid.Empty;
 
-            Func<ProductRequestModel> act = CreateRequestModel;
+            var act = CreateRequestModel;
 
             act.Should().ThrowExactly<ArgumentException>();
         }

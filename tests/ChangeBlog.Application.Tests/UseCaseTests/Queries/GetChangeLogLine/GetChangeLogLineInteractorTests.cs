@@ -113,7 +113,7 @@ namespace ChangeBlog.Application.Tests.UseCaseTests.Queries.GetChangeLogLine
             var interactor = CreateInteractor();
             var changeLogLineId = Guid.Parse("bf621860-3fa3-40d4-92ac-530cc57a1a98");
 
-            Func<Task> act = () => interactor.ExecuteAsync(_outputPortMock.Object, Guid.Empty, changeLogLineId);
+            var act = () => interactor.ExecuteAsync(_outputPortMock.Object, Guid.Empty, changeLogLineId);
 
             await act.Should().ThrowExactlyAsync<ArgumentException>();
         }
@@ -123,7 +123,7 @@ namespace ChangeBlog.Application.Tests.UseCaseTests.Queries.GetChangeLogLine
         {
             var interactor = CreateInteractor();
 
-            Func<Task> act = () => interactor.ExecuteAsync(_outputPortMock.Object, TestAccount.Product.Id, Guid.Empty);
+            var act = () => interactor.ExecuteAsync(_outputPortMock.Object, TestAccount.Product.Id, Guid.Empty);
 
             await act.Should().ThrowExactlyAsync<ArgumentException>();
         }

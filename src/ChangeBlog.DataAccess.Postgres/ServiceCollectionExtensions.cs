@@ -23,25 +23,16 @@ namespace ChangeBlog.DataAccess.Postgres
     public static class ServiceCollectionExtensions
     {
         public static IServiceCollection AddPostgresDataAccess(this IServiceCollection services,
-            string connectionString) =>
-            services
+            string connectionString)
+        {
+            DapperTypeHandlers.Initialize();
+
+            return services
                 .AddDbSession(connectionString)
                 .AddScoped<UserAccessDao>()
                 .AddScoped<IUserAccessDao>(sp => sp.GetRequiredService<UserAccessDao>())
                 .AddScoped<SchemaVersion>()
                 .AddDataAccessObjects();
-
-        [ModuleInitializer]
-        public static void AddTypeHandler()
-        {
-            SqlMapper.AddTypeHandler(new NameTypeHandler());
-            SqlMapper.AddTypeHandler(new OptionalNameTypeHandler());
-            SqlMapper.AddTypeHandler(new TextTypeHandler());
-            SqlMapper.AddTypeHandler(new EmailTypeHandler());
-            SqlMapper.AddTypeHandler(new ChangeLogTextTypeHandler());
-            SqlMapper.AddTypeHandler(new ClVersionValueTypeHandler());
-            SqlMapper.AddTypeHandler(new LabelsTypeHandler());
-            SqlMapper.AddTypeHandler(new IssuesTypeHandler());
         }
 
         private static IServiceCollection AddDbSession(this IServiceCollection services, string connectionString)

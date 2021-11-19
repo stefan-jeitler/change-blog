@@ -49,7 +49,7 @@ stages:
             -p:CoverletOutput=$(Agent.TempDirectory)/TestResults/
             -p:CoverletOutputFormat="json%2cCobertura" 
             -p:MergeWith=$(Agent.TempDirectory)/TestResults/coverage.json
-            --logger trx --no-build -nologo
+            --logger trx --no-build
           publishTestResults: true
         env: 
           ConnectionStrings__ChangeBlogDb: $(ConnectionStringChangeBlogDb)

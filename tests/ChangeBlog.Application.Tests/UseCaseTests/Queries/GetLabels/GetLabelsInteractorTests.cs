@@ -1,5 +1,4 @@
 using System;
-using System.Collections.Generic;
 using System.Threading.Tasks;
 using ChangeBlog.Application.Tests.TestDoubles;
 using ChangeBlog.Application.UseCases.Queries.GetLabels;

@@ -1,6 +1,5 @@
 using System;
 using System.Collections.Generic;
-using ChangeBlog.Api.DTOs;
 using ChangeBlog.Api.Extensions;
 using ChangeBlog.Api.Shared.DTOs;
 using ChangeBlog.Application.DataAccess;

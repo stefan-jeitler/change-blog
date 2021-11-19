@@ -1,6 +1,5 @@
 using System;
 using System.Threading.Tasks;
-using ChangeBlog.DataAccess.Postgres.DataAccessObjects.Account;
 using ChangeBlog.DataAccess.Postgres.DataAccessObjects.Users;
 using FluentAssertions;
 using Microsoft.Extensions.Logging.Abstractions;

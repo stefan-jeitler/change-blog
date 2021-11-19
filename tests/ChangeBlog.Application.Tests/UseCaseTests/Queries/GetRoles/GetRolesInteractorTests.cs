@@ -1,7 +1,6 @@
 using System.Linq;
 using System.Threading.Tasks;
 using ChangeBlog.Application.DataAccess.Accounts;
-using ChangeBlog.Application.Tests.TestDoubles;
 using ChangeBlog.Application.UseCases.Queries.GetRoles;
 using FluentAssertions;
 using Moq;

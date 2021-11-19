@@ -1,5 +1,4 @@
 using System;
-using ChangeBlog.Application.Tests.TestDoubles;
 using ChangeBlog.Application.UseCases.Queries.GetProducts;
 using FluentAssertions;
 using Xunit;

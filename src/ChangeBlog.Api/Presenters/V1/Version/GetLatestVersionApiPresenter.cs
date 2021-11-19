@@ -1,9 +1,5 @@
 using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using ChangeBlog.Api.DTOs;
 using ChangeBlog.Api.DTOs.V1.Version;
 using ChangeBlog.Api.Shared.DTOs;
 using ChangeBlog.Application.UseCases.Queries.GetLatestVersion;

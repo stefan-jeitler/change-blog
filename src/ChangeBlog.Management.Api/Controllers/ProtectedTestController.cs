@@ -1,9 +1,4 @@
-﻿using System;
-using System.Net.Http;
-using System.Net.Http.Headers;
-using System.Net.Mime;
-using System.Threading.Tasks;
-using ChangeBlog.Management.Api.Extensions;
+﻿using System.Net.Mime;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Identity.Web;
 

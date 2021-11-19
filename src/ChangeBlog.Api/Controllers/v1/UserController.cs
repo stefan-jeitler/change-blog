@@ -5,16 +5,13 @@ using System.Linq;
 using System.Net.Mime;
 using System.Threading.Tasks;
 using ChangeBlog.Api.Authorization;
-using ChangeBlog.Api.DTOs;
 using ChangeBlog.Api.DTOs.V1.Account;
 using ChangeBlog.Api.DTOs.V1.Product;
 using ChangeBlog.Api.Extensions;
 using ChangeBlog.Api.Shared.DTOs;
 using ChangeBlog.Api.Swagger;
-using ChangeBlog.Application.UseCases;
 using ChangeBlog.Application.UseCases.Queries.GetProducts;
 using ChangeBlog.Application.UseCases.Queries.GetUsers;
-using ChangeBlog.Domain.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 

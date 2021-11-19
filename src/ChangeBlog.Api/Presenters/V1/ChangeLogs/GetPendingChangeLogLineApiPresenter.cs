@@ -1,6 +1,5 @@
 using System;
 using System.Collections.Generic;
-using ChangeBlog.Api.DTOs;
 using ChangeBlog.Api.DTOs.V1.ChangeLog;
 using ChangeBlog.Api.Shared.DTOs;
 using ChangeBlog.Application.UseCases.Queries.GetPendingChangeLogLine;

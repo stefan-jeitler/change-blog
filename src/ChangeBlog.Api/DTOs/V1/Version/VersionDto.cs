@@ -2,7 +2,6 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using ChangeBlog.Api.DTOs.V1.ChangeLog;
-using ChangeBlog.Application.UseCases.Queries.GetVersions;
 using ChangeBlog.Application.UseCases.Queries.SharedModels;
 
 namespace ChangeBlog.Api.DTOs.V1.Version;

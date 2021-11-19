@@ -1,9 +1,7 @@
 using System;
 using System.Threading.Tasks;
-using ChangeBlog.Application.UseCases;
 using ChangeBlog.DataAccess.Postgres.DataAccessObjects.Users;
 using ChangeBlog.Domain;
-using ChangeBlog.Domain.Authorization;
 using Dapper;
 using FluentAssertions;
 using Microsoft.Extensions.Logging.Abstractions;

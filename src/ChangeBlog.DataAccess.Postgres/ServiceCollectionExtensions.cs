@@ -1,6 +1,5 @@
 using System;
 using System.Data;
-using System.Runtime.CompilerServices;
 using ChangeBlog.Application.DataAccess;
 using ChangeBlog.Application.DataAccess.Accounts;
 using ChangeBlog.Application.DataAccess.ChangeLog;
@@ -13,8 +12,6 @@ using ChangeBlog.DataAccess.Postgres.DataAccessObjects.ChangeLog;
 using ChangeBlog.DataAccess.Postgres.DataAccessObjects.Products;
 using ChangeBlog.DataAccess.Postgres.DataAccessObjects.Users;
 using ChangeBlog.DataAccess.Postgres.DataAccessObjects.Versions;
-using ChangeBlog.DataAccess.Postgres.TypeHandler;
-using Dapper;
 using Microsoft.Extensions.DependencyInjection;
 using Npgsql;
 

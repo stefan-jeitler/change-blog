@@ -1,11 +1,9 @@
 using System;
 using System.Collections.Generic;
-using ChangeBlog.Api.DTOs;
 using ChangeBlog.Api.Shared.DTOs;
 using ChangeBlog.Application.DataAccess;
 using ChangeBlog.Application.UseCases.Commands.AssignAllPendingLinesToVersion;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.Extensions.Primitives;
 
 namespace ChangeBlog.Api.Presenters.V1.ChangeLogs;
 

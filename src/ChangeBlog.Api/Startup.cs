@@ -1,8 +1,6 @@
 using System.Linq;
 using ChangeBlog.Api.Authentication;
 using ChangeBlog.Api.Authorization;
-using ChangeBlog.Api.DTOs;
-using ChangeBlog.Api.Extensions;
 using ChangeBlog.Api.Shared;
 using ChangeBlog.Api.Shared.DTOs;
 using ChangeBlog.Api.Swagger;
@@ -69,8 +67,9 @@ namespace ChangeBlog.Api
         private static ActionResult CustomErrorMessage(ActionContext context)
         {
             var firstError = context.ModelState
-                .FirstOrDefault(modelError => modelError.Value.Errors.Count > 0)
-                .Value.Errors.FirstOrDefault()?
+                .Where(x => x.Value is not null)
+                .FirstOrDefault(x => x.Value.Errors.Count > 0)
+                .Value?.Errors.FirstOrDefault()?
                 .ErrorMessage ?? "Unknown";
 
             return new BadRequestObjectResult(DefaultResponse.Create(firstError));

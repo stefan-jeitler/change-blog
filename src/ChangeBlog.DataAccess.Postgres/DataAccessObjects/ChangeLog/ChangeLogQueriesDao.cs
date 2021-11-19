@@ -33,7 +33,7 @@ public class ChangeLogQueriesDao : IChangeLogQueriesDao
 
     public async Task<Maybe<ChangeLogLine>> FindLineAsync(Guid changeLogLineId)
     {
-        var findLineSql = @$"
+        const string findLineSql = @$"
                 {SelectChangeLogLine}
                 from changelog_line chl
                 where chl.id = @changeLogLineId
@@ -77,7 +77,7 @@ public class ChangeLogQueriesDao : IChangeLogQueriesDao
 
     public async Task<IList<ChangeLogs>> GetChangeLogsAsync(IList<Guid> versionIds)
     {
-        var getChangeLogLinesSql = @$"
+        const string getChangeLogLinesSql = @$"
                 {SelectChangeLogLine}
                 from changelog_line chl
                 where chl.version_id = ANY (@versionIds)

@@ -37,7 +37,7 @@ public class VersionDao : IVersionDao
 
     public async Task<Maybe<ClVersion>> FindVersionAsync(Guid productId, ClVersionValue versionValue)
     {
-        var findVersionSql = $@"
+        const string findVersionSql = $@"
                 {SelectVersion}
                 where v.product_id = @productId
                 and v.value = @versionValue";
@@ -56,7 +56,7 @@ public class VersionDao : IVersionDao
 
     public async Task<Maybe<ClVersion>> FindVersionAsync(Guid versionId)
     {
-        var findVersionSql = @$"
+        const string findVersionSql = @$"
                 {SelectVersion}
                 where v.id = @versionId";
 
@@ -73,7 +73,7 @@ public class VersionDao : IVersionDao
 
     public async Task<Maybe<ClVersion>> FindLatestAsync(Guid productId)
     {
-        var findVersionSql = $@"
+        const string findVersionSql = $@"
                 {SelectVersion}
                 where v.product_id = @productId
                 order by v.created_at desc

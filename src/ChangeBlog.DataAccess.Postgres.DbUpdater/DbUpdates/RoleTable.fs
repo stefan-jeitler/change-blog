@@ -61,6 +61,6 @@ let addBasicRoles (dbConnection: IDbConnection) =
         | [] -> ()
         | head :: tail ->
             dbConnection.Execute(head) |> ignore
-            insertRoles tail |> ignore
+            insertRoles tail
 
     insertRoles basicRolesInsertSql

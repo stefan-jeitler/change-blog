@@ -13,5 +13,5 @@ public interface IAddProductOutputPort
     void VersioningSchemeDoesNotExist(Guid versioningSchemeId);
     void Conflict(Conflict conflict);
     void Created(Guid accountId, Guid productId);
-    void NotSupportedLanguageCode(string languageCode, IList<string> supportedLangCodes);
+    void NotSupportedLanguageCode(string languageCode, IEnumerable<string> supportedLangCodes);
 }

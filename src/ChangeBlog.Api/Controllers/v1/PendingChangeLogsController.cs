@@ -126,7 +126,7 @@ public class PendingChangeLogsController : ControllerBase
         var requestModel =
             new VersionIdAssignmentRequestModel(moveChangeLogLineDto.TargetVersionId, changeLogLineId);
 
-        var presenter = new AssignPendingLineToVersionToVersionApiPresenter();
+        var presenter = new AssignPendingLineToVersionApiPresenter();
         await assignPendingLineToVersion.ExecuteAsync(presenter, requestModel);
 
         return presenter.Response;

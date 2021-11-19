@@ -37,7 +37,7 @@ let dbUpdates: DbUpdate list = [
     { Version = SemVersion.Parse("7.3.0"); Update = RolePermissionTable.addSomeViewPermissions}
     { Version = SemVersion.Parse("7.4.0"); Update = AccountViews.createAccountUserRolesView}
     { Version = SemVersion.Parse("7.5.0"); Update = ProductViews.createProductUserRolesView}
-    { Version = SemVersion.Parse("8.0.0"); Update = UserTable.fixEmailUniqeConstraint}
+    { Version = SemVersion.Parse("8.0.0"); Update = UserTable.fixEmailUniqueConstraint}
     { Version = SemVersion.Parse("8.1.0"); Update = VersionTable.addTextSearch}
     { Version = SemVersion.Parse("8.2.0"); Update = AccountUserTable.createIndexOnUserIdAndRoleId}
     { Version = SemVersion.Parse("8.3.0"); Update = RolePermissionTable.addVersionPermissions}

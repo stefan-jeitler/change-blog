@@ -139,18 +139,18 @@ let addSomeViewPermissions (dbConnection: IDbConnection) =
         | [] -> ()
         | head :: tail ->
             dbConnection.Execute(head) |> ignore
-            insertPermissions tail |> ignore
+            insertPermissions tail
 
     insertPermissions addSomeViewPermissionsSql
 
 let addVersionPermissions (dbConnection: IDbConnection) =
     addVersionPermissionsSql
-    |> List.map (fun x -> dbConnection.Execute(x))
+    |> List.map dbConnection.Execute
     |> ignore
 
 let addChangeLogLinePermissions (dbConnection: IDbConnection) =
     addChangeLogLinesPermissionSql
-    |> List.map (fun x -> dbConnection.Execute(x))
+    |> List.map dbConnection.Execute
     |> ignore
 
 let deleteObsoletePermissions (dbConnection: IDbConnection) =

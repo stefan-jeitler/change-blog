@@ -67,5 +67,5 @@ let addPartialUniqueIndexOnProductIdVersionIdPositionDeletedAt (dbConnection: ID
 
 let fixUniqueIndices (dbConnection: IDbConnection) =
     fixUniqueIndicesSql
-    |> List.map (fun x -> dbConnection.Execute(x))
+    |> List.map dbConnection.Execute
     |> ignore

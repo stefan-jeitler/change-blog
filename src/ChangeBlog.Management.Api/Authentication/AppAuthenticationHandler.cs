@@ -53,7 +53,7 @@ public class AppAuthenticationHandler
         var result = await _addExternalIdentity.ExecuteAsync(externalUserId);
         if (result.IsFailure)
         {
-            _logger.LogCritical(result.Error);
+            _logger.LogCritical("Error while adding app user. {Reason}", result.Error);
             context.Fail(string.Empty);
             return;
         }

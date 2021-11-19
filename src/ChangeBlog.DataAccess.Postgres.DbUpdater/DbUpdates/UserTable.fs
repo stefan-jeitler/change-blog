@@ -64,9 +64,9 @@ let addUserForDefaultVersioningSchemes (dbConnection: IDbConnection) =
     dbConnection.Execute(addUserForDefaultVersioningSchemesSql)
     |> ignore
 
-let fixEmailUniqeConstraint (dbConnection: IDbConnection) =
+let fixEmailUniqueConstraint (dbConnection: IDbConnection) =
     fixEmailUniqueConstraintSql
-    |> List.map (fun x -> dbConnection.Execute(x))
+    |> List.map dbConnection.Execute
     |> ignore
 
 let addUserForAppChanges (dbConnection: IDbConnection) =

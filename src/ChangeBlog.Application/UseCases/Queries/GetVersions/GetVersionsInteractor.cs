@@ -106,7 +106,7 @@ public class GetVersionsInteractor : IGetVersion, IGetVersions
     private static VersionResponseModel CreateResponseModel(ClVersion clVersion, Product product,
         string timeZone, ChangeLogs changeLogs)
     {
-        return new(clVersion.Id,
+        return new VersionResponseModel(clVersion.Id,
             clVersion.Value.Value,
             clVersion.Name.Value,
             clVersion.ProductId,

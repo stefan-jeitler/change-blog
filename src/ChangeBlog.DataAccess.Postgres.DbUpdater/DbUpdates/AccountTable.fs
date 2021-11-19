@@ -27,7 +27,8 @@ let private addUniqueIndexOnNameAndDeletedAtSql =
 let private addChangeTrackerAccountSql =
     """INSERT INTO account
     (id, name, default_versioning_scheme_id, deleted_at, created_at)
-    VALUES ('a00788cb-03f8-4a8c-84b6-756622550e8c', 'ChangeTracker', null, null, '2021-05-23 20:40:38.879023')"""
+    VALUES ('a00788cb-03f8-4a8c-84b6-756622550e8c', 'ChangeTracker', null, null, '2021-05-23 20:40:38.879023')
+    on conflict (id) do nothing"""
 
 let private fixUniqueIndexOnAccountNameSql = 
     [
@@ -60,5 +61,5 @@ let addChangeTrackerAccount (dbConnection: IDbConnection) =
 
 let fixUniqueIndexOnAccountName (dbConnection: IDbConnection) =
     fixUniqueIndexOnAccountNameSql
-    |> List.map (fun x -> dbConnection.Execute(x))
+    |> List.map dbConnection.Execute
     |> ignore

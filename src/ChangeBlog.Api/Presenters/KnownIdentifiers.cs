@@ -1,6 +1,6 @@
 ﻿namespace ChangeBlog.Api.Presenters;
 
-public class KnownIdentifiers
+public static class KnownIdentifiers
 {
     public const string AccountId = "accountId";
     public const string ProductId = "productId";

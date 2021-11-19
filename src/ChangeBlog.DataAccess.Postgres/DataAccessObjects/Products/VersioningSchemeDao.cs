@@ -31,7 +31,7 @@ public class VersioningSchemeDao : IVersioningSchemeDao
 
     public async Task<Maybe<VersioningScheme>> FindSchemeAsync(Guid versioningSchemeId)
     {
-        var findVersioningSchemeSql = @$"
+        const string findVersioningSchemeSql = @$"
                 {SelectVersioningScheme}
                 WHERE id = @versioningSchemeId";
 
@@ -48,7 +48,7 @@ public class VersioningSchemeDao : IVersioningSchemeDao
 
     public async Task<VersioningScheme> GetSchemeAsync(Guid versioningSchemeId)
     {
-        var getSchemeSql = @$"
+        const string getSchemeSql = @$"
                 {SelectVersioningScheme}
                 WHERE id = @schemeId";
 
@@ -61,7 +61,7 @@ public class VersioningSchemeDao : IVersioningSchemeDao
 
     public async Task<IList<VersioningScheme>> GetSchemesAsync(IList<Guid> versioningSchemeIds)
     {
-        var getSchemeSql = $@"
+        const string getSchemeSql = $@"
                 {SelectVersioningScheme}
                 WHERE id = ANY(@schemeIds)";
 

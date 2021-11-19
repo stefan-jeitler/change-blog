@@ -51,7 +51,7 @@ public class AssignAllPendingLinesApiPresenter : BaseApiPresenter, IAssignAllPen
         Response = new OkObjectResult(DefaultResponse.Create("There are no Lines to assign.", resourceIds));
     }
 
-    public void LineWithSameTextAlreadyExists(List<string> texts)
+    public void LineWithSameTextAlreadyExists(IEnumerable<string> texts)
     {
         Response = new UnprocessableEntityObjectResult(
             DefaultResponse.Create(

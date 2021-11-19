@@ -43,7 +43,7 @@ public class MakeAllChangeLogLinesPendingApiPresenter : BaseApiPresenter, IMakeA
             DefaultResponse.Create($"Too many lines. Max lines: {maxChangeLogLines}"));
     }
 
-    public void LineWithSameTextAlreadyExists(List<string> duplicates)
+    public void LineWithSameTextAlreadyExists(IEnumerable<string> duplicates)
     {
         var duplicatesFormatted = string.Join(", ", duplicates.Select(x => $"'{x}'"));
 

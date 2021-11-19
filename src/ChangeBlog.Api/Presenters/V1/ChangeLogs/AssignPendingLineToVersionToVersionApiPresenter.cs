@@ -7,7 +7,7 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace ChangeBlog.Api.Presenters.V1.ChangeLogs;
 
-public class AssignPendingLineToVersionToVersionApiPresenter : BaseApiPresenter,
+public class AssignPendingLineToVersionApiPresenter : BaseApiPresenter,
     IAssignPendingLineToVersionOutputPort
 {
     public void InvalidVersionFormat(string version)

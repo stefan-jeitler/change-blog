@@ -2,8 +2,6 @@ module VersionTable
 
 open System.Data
 open Dapper
-open System
-open Db
 
 let private createVersionSql =
     """
@@ -188,10 +186,10 @@ let dropUpdateAllVersionSearchVectorsProcedure (dbConnection: IDbConnection) =
 
 let fixUniqueIndexOnProductIdAndValue (dbConnection: IDbConnection) =
     fixUniqueIndexOnProductIdAndValueSql
-    |> List.map (fun x -> dbConnection.Execute(x))
+    |> List.map dbConnection.Execute
     |> ignore
 
 let addProductIdToSearchVectorIndex (dbConnection: IDbConnection) =
     addProductIdToSearchVectorIndexSql
-    |> List.map (fun x -> dbConnection.Execute(x))
+    |> List.map dbConnection.Execute
     |> ignore

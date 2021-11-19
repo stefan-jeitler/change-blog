@@ -12,6 +12,6 @@ public interface IAssignAllPendingLinesToVersionOutputPort
     void TooManyLinesToAdd(uint remainingLinesToAdd);
     void Conflict(Conflict conflict);
     void NoPendingChangeLogLines(Guid productId);
-    void LineWithSameTextAlreadyExists(List<string> texts);
+    void LineWithSameTextAlreadyExists(IEnumerable<string> texts);
     void TargetVersionBelongsToDifferentProduct(Guid productId, Guid targetVersionProductId);
 }

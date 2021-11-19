@@ -62,5 +62,5 @@ let addUniqueIndexOnNameAccountIdDeletedAt (dbConnection: IDbConnection) =
 
 let fixUniqueIndexOnNameAndAccountId (dbConnection: IDbConnection) = 
     fixUniqueIndexOnNameAndAccountIdSql
-    |> List.map (fun x -> dbConnection.Execute(x))
+    |> List.map dbConnection.Execute
     |> ignore

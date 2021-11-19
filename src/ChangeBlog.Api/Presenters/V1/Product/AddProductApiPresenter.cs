@@ -83,7 +83,7 @@ public class AddProductApiPresenter : BaseApiPresenter, IAddProductOutputPort
         Response = new CreatedResult(location, DefaultResponse.Create("Product added.", resourceIds));
     }
 
-    public void NotSupportedLanguageCode(string languageCode, IList<string> supportedLangCodes)
+    public void NotSupportedLanguageCode(string languageCode, IEnumerable<string> supportedLangCodes)
     {
         Response = new UnprocessableEntityObjectResult(
             DefaultResponse.Create(

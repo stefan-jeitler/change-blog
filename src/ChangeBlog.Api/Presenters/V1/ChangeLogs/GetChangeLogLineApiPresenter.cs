@@ -8,34 +8,33 @@ using ChangeBlog.Application.UseCases.Queries.SharedModels;
 using ChangeBlog.Domain.ChangeLog;
 using Microsoft.AspNetCore.Mvc;
 
-namespace ChangeBlog.Api.Presenters.V1.ChangeLogs
+namespace ChangeBlog.Api.Presenters.V1.ChangeLogs;
+
+public class GetChangeLogLineApiPresenter : BaseApiPresenter, IGetChangeLogLineOutputPort
 {
-    public class GetChangeLogLineApiPresenter : BaseApiPresenter, IGetChangeLogLineOutputPort
+    public void LineDoesNotExists(Guid changeLogLineId)
     {
-        public void LineDoesNotExists(Guid changeLogLineId)
+        var resourceIds = new Dictionary<string, string>
         {
-            var resourceIds = new Dictionary<string, string>
-            {
-                [KnownIdentifiers.ChangeLogLineId] = changeLogLineId.ToString()
-            };
+            [KnownIdentifiers.ChangeLogLineId] = changeLogLineId.ToString()
+        };
 
-            Response = new NotFoundObjectResult(DefaultResponse.Create("ChangeLogLine not found.", resourceIds));
-        }
+        Response = new NotFoundObjectResult(DefaultResponse.Create("ChangeLogLine not found.", resourceIds));
+    }
 
-        public void LineIsPending(Guid changeLogLineId)
+    public void LineIsPending(Guid changeLogLineId)
+    {
+        var resourceIds = new Dictionary<string, string>
         {
-            var resourceIds = new Dictionary<string, string>
-            {
-                [KnownIdentifiers.ChangeLogLineId] = changeLogLineId.ToString()
-            };
+            [KnownIdentifiers.ChangeLogLineId] = changeLogLineId.ToString()
+        };
 
-            Response = new NotFoundObjectResult(DefaultResponse.Create("The requested change log line is pending.",
-                resourceIds));
-        }
+        Response = new NotFoundObjectResult(DefaultResponse.Create("The requested change log line is pending.",
+            resourceIds));
+    }
 
-        public void LineFound(ChangeLogLineResponseModel responseModel)
-        {
-            Response = new OkObjectResult(ChangeLogLineDto.FromResponseModel(responseModel));
-        }
+    public void LineFound(ChangeLogLineResponseModel responseModel)
+    {
+        Response = new OkObjectResult(ChangeLogLineDto.FromResponseModel(responseModel));
     }
 }

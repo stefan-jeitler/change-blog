@@ -4,19 +4,18 @@ using System.Threading.Tasks;
 using ChangeBlog.Domain;
 using CSharpFunctionalExtensions;
 
-namespace ChangeBlog.Application.DataAccess.Users
+namespace ChangeBlog.Application.DataAccess.Users;
+
+public interface IUserDao
 {
-    public interface IUserDao
-    {
-        Task<User> GetUserAsync(Guid userId);
-        Task<IList<User>> GetUsersAsync(IList<Guid> userIds);
-        Task<IList<User>> GetUsersAsync(Guid accountId, ushort limit, Guid? lastUserId);
+    Task<User> GetUserAsync(Guid userId);
+    Task<IList<User>> GetUsersAsync(IList<Guid> userIds);
+    Task<IList<User>> GetUsersAsync(Guid accountId, ushort limit, Guid? lastUserId);
 
-        Task<Maybe<User>> FindByExternalUserIdAsync(string externalUserId);
+    Task<Maybe<User>> FindByExternalUserIdAsync(string externalUserId);
 
-        Task<Result> AddAsync(User user);
-        Task<Result> AddExternalIdentity(Models.ExternalIdentity externalIdentity);
+    Task<Result> AddAsync(User user);
+    Task<Result> AddExternalIdentity(Models.ExternalIdentity externalIdentity);
 
-        Task<Maybe<User>> FindByEmailAsync(string email);
-    }
+    Task<Maybe<User>> FindByEmailAsync(string email);
 }

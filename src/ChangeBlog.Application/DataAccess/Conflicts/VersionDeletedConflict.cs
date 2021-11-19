@@ -1,17 +1,16 @@
 using System;
 
-namespace ChangeBlog.Application.DataAccess.Conflicts
+namespace ChangeBlog.Application.DataAccess.Conflicts;
+
+public class VersionDeletedConflict : Conflict
 {
-    public class VersionDeletedConflict : Conflict
+    public VersionDeletedConflict(Guid versionId)
     {
-        public VersionDeletedConflict(Guid versionId)
-        {
-            if (versionId == Guid.Empty)
-                throw new ArgumentException("VersionId cannot be empty.");
+        if (versionId == Guid.Empty)
+            throw new ArgumentException("VersionId cannot be empty.");
 
-            VersionId = versionId;
-        }
-
-        public Guid VersionId { get; }
+        VersionId = versionId;
     }
+
+    public Guid VersionId { get; }
 }

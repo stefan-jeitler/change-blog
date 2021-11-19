@@ -7,11 +7,11 @@ using ChangeBlog.Domain.ChangeLog;
 using CSharpFunctionalExtensions;
 using Dapper;
 
-namespace ChangeBlog.DataAccess.Postgres.DataAccessObjects.ChangeLog
+namespace ChangeBlog.DataAccess.Postgres.DataAccessObjects.ChangeLog;
+
+public class ChangeLogQueriesDao : IChangeLogQueriesDao
 {
-    public class ChangeLogQueriesDao : IChangeLogQueriesDao
-    {
-        private const string SelectChangeLogLine = @"
+    private const string SelectChangeLogLine = @"
             select chl.id,
                    chl.version_id as versionId,
                    chl.product_id as productId,
@@ -24,40 +24,40 @@ namespace ChangeBlog.DataAccess.Postgres.DataAccessObjects.ChangeLog
                    chl.deleted_at as deletedAt
             ";
 
-        private readonly IDbAccessor _dbAccessor;
+    private readonly IDbAccessor _dbAccessor;
 
-        public ChangeLogQueriesDao(IDbAccessor dbAccessor)
-        {
-            _dbAccessor = dbAccessor;
-        }
+    public ChangeLogQueriesDao(IDbAccessor dbAccessor)
+    {
+        _dbAccessor = dbAccessor;
+    }
 
-        public async Task<Maybe<ChangeLogLine>> FindLineAsync(Guid changeLogLineId)
-        {
-            var findLineSql = @$"
+    public async Task<Maybe<ChangeLogLine>> FindLineAsync(Guid changeLogLineId)
+    {
+        var findLineSql = @$"
                 {SelectChangeLogLine}
                 from changelog_line chl
                 where chl.id = @changeLogLineId
                 and chl.deleted_at is null
                 order by chl.position";
 
-            var line = await _dbAccessor.DbConnection
-                .QuerySingleOrDefaultAsync<ChangeLogLine>(findLineSql, new
-                {
-                    changeLogLineId
-                });
+        var line = await _dbAccessor.DbConnection
+            .QuerySingleOrDefaultAsync<ChangeLogLine>(findLineSql, new
+            {
+                changeLogLineId
+            });
 
-            return line == default
-                ? Maybe<ChangeLogLine>.None
-                : Maybe<ChangeLogLine>.From(line);
-        }
+        return line == default
+            ? Maybe<ChangeLogLine>.None
+            : Maybe<ChangeLogLine>.From(line);
+    }
 
-        public async Task<ChangeLogs> GetChangeLogsAsync(Guid productId, Guid? versionId = null)
-        {
-            var versionIdFilter = versionId.HasValue
-                ? "and chl.version_id = @versionId"
-                : "and chl.version_id is null";
+    public async Task<ChangeLogs> GetChangeLogsAsync(Guid productId, Guid? versionId = null)
+    {
+        var versionIdFilter = versionId.HasValue
+            ? "and chl.version_id = @versionId"
+            : "and chl.version_id is null";
 
-            var getLinesSql = $@"
+        var getLinesSql = $@"
                 {SelectChangeLogLine}
                 from changelog_line chl
                 where chl.product_id = @productId
@@ -65,31 +65,30 @@ namespace ChangeBlog.DataAccess.Postgres.DataAccessObjects.ChangeLog
                 {versionIdFilter} 
                 order by chl.position";
 
-            var lines = await _dbAccessor.DbConnection
-                .QueryAsync<ChangeLogLine>(getLinesSql, new
-                {
-                    productId,
-                    versionId
-                });
+        var lines = await _dbAccessor.DbConnection
+            .QueryAsync<ChangeLogLine>(getLinesSql, new
+            {
+                productId,
+                versionId
+            });
 
-            return new ChangeLogs(lines.AsList());
-        }
+        return new ChangeLogs(lines.AsList());
+    }
 
-        public async Task<IList<ChangeLogs>> GetChangeLogsAsync(IList<Guid> versionIds)
-        {
-            var getChangeLogLinesSql = @$"
+    public async Task<IList<ChangeLogs>> GetChangeLogsAsync(IList<Guid> versionIds)
+    {
+        var getChangeLogLinesSql = @$"
                 {SelectChangeLogLine}
                 from changelog_line chl
                 where chl.version_id = ANY (@versionIds)
                 and chl.deleted_at is null";
 
-            var lines = await _dbAccessor.DbConnection
-                .QueryAsync<ChangeLogLine>(getChangeLogLinesSql, new {versionIds});
+        var lines = await _dbAccessor.DbConnection
+            .QueryAsync<ChangeLogLine>(getChangeLogLinesSql, new {versionIds});
 
-            return lines
-                .GroupBy(l => l.VersionId)
-                .Select(g => new ChangeLogs(g.ToList()))
-                .ToList();
-        }
+        return lines
+            .GroupBy(l => l.VersionId)
+            .Select(g => new ChangeLogs(g.ToList()))
+            .ToList();
     }
 }

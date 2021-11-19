@@ -1,55 +1,54 @@
 using System.Data;
 using ChangeBlog.Application.DataAccess;
 
-namespace ChangeBlog.DataAccess.Postgres
+namespace ChangeBlog.DataAccess.Postgres;
+
+public sealed class DbSession : IDbAccessor, IUnitOfWork
 {
-    public sealed class DbSession : IDbAccessor, IUnitOfWork
+    private readonly LazyDbConnection _dbConnection;
+    private uint _startedUows;
+    private IDbTransaction _transaction;
+
+    public DbSession(LazyDbConnection dbConnection)
     {
-        private readonly LazyDbConnection _dbConnection;
-        private uint _startedUows;
-        private IDbTransaction _transaction;
+        _dbConnection = dbConnection;
+    }
 
-        public DbSession(LazyDbConnection dbConnection)
+    public IDbConnection DbConnection => _dbConnection.Value;
+
+    public void Start()
+    {
+        if (_startedUows == 0)
         {
-            _dbConnection = dbConnection;
+            BeginTransaction();
         }
 
-        public IDbConnection DbConnection => _dbConnection.Value;
+        _startedUows++;
+    }
 
-        public void Start()
+    public void Commit()
+    {
+        if (_startedUows == 1)
         {
-            if (_startedUows == 0)
-            {
-                BeginTransaction();
-            }
-
-            _startedUows++;
+            CommitTransaction();
         }
 
-        public void Commit()
-        {
-            if (_startedUows == 1)
-            {
-                CommitTransaction();
-            }
+        if (_startedUows > 0)
+            _startedUows--;
+    }
 
-            if (_startedUows > 0)
-                _startedUows--;
-        }
+    private void CommitTransaction()
+    {
+        _transaction.Commit();
+        _transaction.Dispose();
+        _dbConnection.Value.Close();
+    }
 
-        private void CommitTransaction()
-        {
-            _transaction.Commit();
-            _transaction.Dispose();
-            _dbConnection.Value.Close();
-        }
+    private void BeginTransaction()
+    {
+        if (_dbConnection.Value.State != ConnectionState.Open)
+            _dbConnection.Value.Open();
 
-        private void BeginTransaction()
-        {
-            if (_dbConnection.Value.State != ConnectionState.Open)
-                _dbConnection.Value.Open();
-
-            _transaction = _dbConnection.Value.BeginTransaction(IsolationLevel.RepeatableRead);
-        }
+        _transaction = _dbConnection.Value.BeginTransaction(IsolationLevel.RepeatableRead);
     }
 }

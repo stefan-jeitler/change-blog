@@ -5,27 +5,26 @@ using ChangeBlog.Domain.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc.Filters;
 
-namespace ChangeBlog.Api.Authorization
+namespace ChangeBlog.Api.Authorization;
+
+public abstract class AuthorizationHandler
 {
-    public abstract class AuthorizationHandler
+    public abstract Task<AuthorizationState> GetAuthorizationState(ActionExecutingContext context, Guid userId,
+        Permission permission);
+
+    protected static Guid? TryFindIdInRoute(HttpContext httpContext, string key)
     {
-        public abstract Task<AuthorizationState> GetAuthorizationState(ActionExecutingContext context, Guid userId,
-            Permission permission);
+        if (httpContext.Request.RouteValues.TryGetValue(key, out var routeValue) &&
+            Guid.TryParse(routeValue?.ToString(), out var idInRoute))
+            return idInRoute;
 
-        protected static Guid? TryFindIdInRoute(HttpContext httpContext, string key)
-        {
-            if (httpContext.Request.RouteValues.TryGetValue(key, out var routeValue) &&
-                Guid.TryParse(routeValue?.ToString(), out var idInRoute))
-                return idInRoute;
+        return null;
+    }
 
-            return null;
-        }
+    protected static T TryFindInBody<T>(ActionExecutingContext context)
+    {
+        var id = context.ActionArguments.Values.SingleOrDefault(x => x is T);
 
-        protected static T TryFindInBody<T>(ActionExecutingContext context)
-        {
-            var id = context.ActionArguments.Values.SingleOrDefault(x => x is T);
-
-            return (T) id;
-        }
+        return (T) id;
     }
 }

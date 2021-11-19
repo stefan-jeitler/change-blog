@@ -5,38 +5,37 @@ using ChangeBlog.Api.Shared.DTOs;
 using ChangeBlog.Application.UseCases.Commands.CloseProduct;
 using Microsoft.AspNetCore.Mvc;
 
-namespace ChangeBlog.Api.Presenters.V1.Product
+namespace ChangeBlog.Api.Presenters.V1.Product;
+
+public class CloseProductApiPresenter : BaseApiPresenter, ICloseProductOutputPort
 {
-    public class CloseProductApiPresenter : BaseApiPresenter, ICloseProductOutputPort
+    public void ProductAlreadyClosed(Guid productId)
     {
-        public void ProductAlreadyClosed(Guid productId)
+        var resourceIds = new Dictionary<string, string>
         {
-            var resourceIds = new Dictionary<string, string>
-            {
-                [KnownIdentifiers.ProductId] = productId.ToString()
-            };
+            [KnownIdentifiers.ProductId] = productId.ToString()
+        };
 
-            Response = new OkObjectResult(DefaultResponse.Create("Project successfully closed.", resourceIds));
-        }
+        Response = new OkObjectResult(DefaultResponse.Create("Project successfully closed.", resourceIds));
+    }
 
-        public void ProductDoesNotExist(Guid productId)
+    public void ProductDoesNotExist(Guid productId)
+    {
+        var resourceIds = new Dictionary<string, string>
         {
-            var resourceIds = new Dictionary<string, string>
-            {
-                [KnownIdentifiers.ProductId] = productId.ToString()
-            };
+            [KnownIdentifiers.ProductId] = productId.ToString()
+        };
 
-            Response = new NotFoundObjectResult(DefaultResponse.Create("Product not found.", resourceIds));
-        }
+        Response = new NotFoundObjectResult(DefaultResponse.Create("Product not found.", resourceIds));
+    }
 
-        public void ProductClosed(Guid productId)
+    public void ProductClosed(Guid productId)
+    {
+        var resourceIds = new Dictionary<string, string>
         {
-            var resourceIds = new Dictionary<string, string>
-            {
-                [KnownIdentifiers.ProductId] = productId.ToString()
-            };
+            [KnownIdentifiers.ProductId] = productId.ToString()
+        };
 
-            Response = new OkObjectResult(DefaultResponse.Create("Project successfully closed.", resourceIds));
-        }
+        Response = new OkObjectResult(DefaultResponse.Create("Project successfully closed.", resourceIds));
     }
 }

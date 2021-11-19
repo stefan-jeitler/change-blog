@@ -14,92 +14,91 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 
-namespace ChangeBlog.Management.Api
+namespace ChangeBlog.Management.Api;
+
+public class Startup
 {
-    public class Startup
+    public Startup(IConfiguration configuration)
     {
-        public Startup(IConfiguration configuration)
+        Configuration = configuration;
+    }
+
+    public IConfiguration Configuration { get; }
+
+    public void ConfigureServices(IServiceCollection services)
+    {
+        var settings = Configuration
+            .GetSection("Authentication:MicrosoftIdentity")
+            .Get<MicrosoftIdentityAuthenticationSettings>();
+
+        services
+            .AddAuthenticationServices()
+            .AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
+            .AddAppAuthentication(settings);
+
+        services
+            .AddControllers()
+            .ConfigureApiBehaviorOptions(o => o.InvalidModelStateResponseFactory = CustomErrorMessage);
+
+        services.AddSpaStaticFiles(configuration => { configuration.RootPath = "ClientApp/dist"; });
+
+        services
+            .AddSwagger()
+            .AddApplicationUseCases();
+
+        var connectionString = Configuration.GetConnectionString("ChangeBlogDb");
+        services.AddPostgresDataAccess(connectionString);
+
+        var userInfoEndpointBaseUrl = Configuration.GetValue<string>("UserInfoEndpointBaseUrl");
+        services.AddMicrosoftIdentityDataAccess(userInfoEndpointBaseUrl);
+    }
+
+
+    public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
+    {
+        if (env.IsDevelopment())
         {
-            Configuration = configuration;
+            app.UseDeveloperExceptionPage();
         }
 
-        public IConfiguration Configuration { get; }
+        app.AddSwagger();
 
-        public void ConfigureServices(IServiceCollection services)
+        app.UseStaticFiles();
+        if (!env.IsDevelopment())
         {
-            var settings = Configuration
-                .GetSection("Authentication:MicrosoftIdentity")
-                .Get<MicrosoftIdentityAuthenticationSettings>();
-
-            services
-                .AddAuthenticationServices()
-                .AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
-                .AddAppAuthentication(settings);
-
-            services
-                .AddControllers()
-                .ConfigureApiBehaviorOptions(o => o.InvalidModelStateResponseFactory = CustomErrorMessage);
-
-            services.AddSpaStaticFiles(configuration => { configuration.RootPath = "ClientApp/dist"; });
-
-            services
-                .AddSwagger()
-                .AddApplicationUseCases();
-
-            var connectionString = Configuration.GetConnectionString("ChangeBlogDb");
-            services.AddPostgresDataAccess(connectionString);
-
-            var userInfoEndpointBaseUrl = Configuration.GetValue<string>("UserInfoEndpointBaseUrl");
-            services.AddMicrosoftIdentityDataAccess(userInfoEndpointBaseUrl);
+            app.UseSpaStaticFiles();
         }
 
+        app.UseRouting();
 
-        public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
+        app.UseAuthentication();
+        app.UseAuthorization();
+
+        app.UseEndpoints(endpoints =>
         {
+            endpoints
+                .MapControllers()
+                .RequireAuthorization();
+        });
+
+        app.UseSpa(spa =>
+        {
+            spa.Options.SourcePath = "ClientApp";
+
             if (env.IsDevelopment())
             {
-                app.UseDeveloperExceptionPage();
+                spa.UseAngularCliServer("start");
             }
+        });
+    }
 
-            app.AddSwagger();
+    private static ActionResult CustomErrorMessage(ActionContext context)
+    {
+        var firstError = context.ModelState
+            .FirstOrDefault(modelError => modelError.Value.Errors.Count > 0)
+            .Value.Errors.FirstOrDefault()?
+            .ErrorMessage ?? "Unknown";
 
-            app.UseStaticFiles();
-            if (!env.IsDevelopment())
-            {
-                app.UseSpaStaticFiles();
-            }
-
-            app.UseRouting();
-
-            app.UseAuthentication();
-            app.UseAuthorization();
-
-            app.UseEndpoints(endpoints =>
-            {
-                endpoints
-                    .MapControllers()
-                    .RequireAuthorization();
-            });
-
-            app.UseSpa(spa =>
-            {
-                spa.Options.SourcePath = "ClientApp";
-
-                if (env.IsDevelopment())
-                {
-                    spa.UseAngularCliServer("start");
-                }
-            });
-        }
-
-        private static ActionResult CustomErrorMessage(ActionContext context)
-        {
-            var firstError = context.ModelState
-                .FirstOrDefault(modelError => modelError.Value.Errors.Count > 0)
-                .Value.Errors.FirstOrDefault()?
-                .ErrorMessage ?? "Unknown";
-
-            return new BadRequestObjectResult(DefaultResponse.Create(firstError));
-        }
+        return new BadRequestObjectResult(DefaultResponse.Create(firstError));
     }
 }

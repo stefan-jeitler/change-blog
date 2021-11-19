@@ -1,13 +1,12 @@
 using System;
 using ChangeBlog.Application.DataAccess;
 
-namespace ChangeBlog.Application.UseCases.Commands.Issues.DeleteChangeLogLineIssue
+namespace ChangeBlog.Application.UseCases.Commands.Issues.DeleteChangeLogLineIssue;
+
+public interface IDeleteChangeLogLineIssueOutputPort
 {
-    public interface IDeleteChangeLogLineIssueOutputPort
-    {
-        void Removed(Guid changeLogLineId);
-        void Conflict(Conflict conflict);
-        void ChangeLogLineDoesNotExist();
-        void InvalidIssue(string issue);
-    }
+    void Removed(Guid changeLogLineId);
+    void Conflict(Conflict conflict);
+    void ChangeLogLineDoesNotExist();
+    void InvalidIssue(string issue);
 }

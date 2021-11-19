@@ -10,132 +10,131 @@ using Dapper;
 using Microsoft.Extensions.Logging;
 using static ChangeBlog.DataAccess.Postgres.DataAccessObjects.Users.UserAccessDaoSqlStatements;
 
-namespace ChangeBlog.DataAccess.Postgres.DataAccessObjects.Users
+namespace ChangeBlog.DataAccess.Postgres.DataAccessObjects.Users;
+
+public class UserAccessDao : IUserAccessDao
 {
-    public class UserAccessDao : IUserAccessDao
+    private readonly Func<IDbConnection> _acquireDbConnection;
+    private readonly ILogger<UserAccessDao> _logger;
+
+    public UserAccessDao(Func<IDbConnection> acquireDbConnection, ILogger<UserAccessDao> logger)
     {
-        private readonly Func<IDbConnection> _acquireDbConnection;
-        private readonly ILogger<UserAccessDao> _logger;
+        _acquireDbConnection = acquireDbConnection;
+        _logger = logger;
+    }
 
-        public UserAccessDao(Func<IDbConnection> acquireDbConnection, ILogger<UserAccessDao> logger)
+    public async Task<IEnumerable<Role>> GetAccountRolesAsync(Guid accountId, Guid userId)
+    {
+        using var dbConnection = _acquireDbConnection();
+
+        var rolePermissions = await dbConnection.QueryAsync<RolePermissionDto>(GetAccountPermissionsSql, new
         {
-            _acquireDbConnection = acquireDbConnection;
-            _logger = logger;
-        }
+            userId,
+            accountId
+        });
 
-        public async Task<IEnumerable<Role>> GetAccountRolesAsync(Guid accountId, Guid userId)
+        return ParseRoleDtos(rolePermissions.AsList());
+    }
+
+    public async Task<AccountProductRolesDto> GetRolesByProductIdAsync(Guid userId, Guid productId)
+    {
+        using var dbConnection = _acquireDbConnection();
+
+        var rolePermissions = await dbConnection.QueryAsync<RolePermissionDto>(GetPermissionsByProductIdSql, new
         {
-            using var dbConnection = _acquireDbConnection();
+            userId,
+            productId
+        });
 
-            var rolePermissions = await dbConnection.QueryAsync<RolePermissionDto>(GetAccountPermissionsSql, new
+        return ParseAccountAndProductRoles(rolePermissions.AsList());
+    }
+
+    public async Task<AccountProductRolesDto> GetRolesByVersionIdAsync(Guid userId, Guid versionId)
+    {
+        using var dbConnection = _acquireDbConnection();
+
+        var rolePermissions = await dbConnection.QueryAsync<RolePermissionDto>(GetPermissionsByVersionIdSql, new
+        {
+            userId,
+            versionId
+        });
+
+        return ParseAccountAndProductRoles(rolePermissions.AsList());
+    }
+
+    public async Task<AccountProductRolesDto> GetRolesByChangeLogLineIdAsync(Guid userId, Guid changeLogLineId)
+    {
+        using var dbConnection = _acquireDbConnection();
+
+        var rolePermissions = await dbConnection.QueryAsync<RolePermissionDto>(GetPermissionsByChangeLogLineIdSql,
+            new
             {
                 userId,
-                accountId
+                changeLogLineId
             });
 
-            return ParseRoleDtos(rolePermissions.AsList());
+        return ParseAccountAndProductRoles(rolePermissions.AsList());
+    }
+
+    public async Task<Guid?> FindActiveUserIdByApiKeyAsync(string apiKey)
+    {
+        if (string.IsNullOrEmpty(apiKey)) return null;
+
+        using var dbConnection = _acquireDbConnection();
+        return await dbConnection
+            .QueryFirstOrDefaultAsync<Guid?>(FindActiveUserIdByApiKeySql,
+                new {apiKey});
+    }
+
+    public async Task<Guid?> FindActiveUserByExternalUserId(string externalUserId)
+    {
+        if (string.IsNullOrEmpty(externalUserId))
+            return null;
+
+        using var dbConnection = _acquireDbConnection();
+        return await dbConnection
+            .QueryFirstOrDefaultAsync<Guid?>(FindActiveUserIdByExternalUserIdSql,
+                new { externalUserId });
+    }
+
+    private AccountProductRolesDto ParseAccountAndProductRoles(
+        IReadOnlyCollection<RolePermissionDto> rolePermissions)
+    {
+        var accountRoles = rolePermissions
+            .Where(x => x.Type == "Account")
+            .ToList();
+
+        var productRoles = rolePermissions
+            .Where(x => x.Type == "Product")
+            .ToList();
+
+        return new AccountProductRolesDto(ParseRoleDtos(accountRoles), ParseRoleDtos(productRoles));
+    }
+
+    private IEnumerable<Role> ParseRoleDtos(IReadOnlyCollection<RolePermissionDto> rolePermissions)
+    {
+        var notSupportedPermissionsExists = rolePermissions
+            .Any(x => !x.Permission.HasValue);
+
+        if (notSupportedPermissionsExists)
+        {
+            _logger.LogWarning("There are permissions that are not supported by the app.");
         }
 
-        public async Task<AccountProductRolesDto> GetRolesByProductIdAsync(Guid userId, Guid productId)
-        {
-            using var dbConnection = _acquireDbConnection();
-
-            var rolePermissions = await dbConnection.QueryAsync<RolePermissionDto>(GetPermissionsByProductIdSql, new
+        return rolePermissions
+            .Where(x => x.Permission is not null)
+            .GroupBy(x => x.Id)
+            .Select(x =>
             {
-                userId,
-                productId
-            });
+                var f = x.First();
+                var permissions = x.Select(p => p.Permission!.Value);
 
-            return ParseAccountAndProductRoles(rolePermissions.AsList());
-        }
-
-        public async Task<AccountProductRolesDto> GetRolesByVersionIdAsync(Guid userId, Guid versionId)
-        {
-            using var dbConnection = _acquireDbConnection();
-
-            var rolePermissions = await dbConnection.QueryAsync<RolePermissionDto>(GetPermissionsByVersionIdSql, new
-            {
-                userId,
-                versionId
-            });
-
-            return ParseAccountAndProductRoles(rolePermissions.AsList());
-        }
-
-        public async Task<AccountProductRolesDto> GetRolesByChangeLogLineIdAsync(Guid userId, Guid changeLogLineId)
-        {
-            using var dbConnection = _acquireDbConnection();
-
-            var rolePermissions = await dbConnection.QueryAsync<RolePermissionDto>(GetPermissionsByChangeLogLineIdSql,
-                new
-                {
-                    userId,
-                    changeLogLineId
-                });
-
-            return ParseAccountAndProductRoles(rolePermissions.AsList());
-        }
-
-        public async Task<Guid?> FindActiveUserIdByApiKeyAsync(string apiKey)
-        {
-            if (string.IsNullOrEmpty(apiKey)) return null;
-
-            using var dbConnection = _acquireDbConnection();
-            return await dbConnection
-                .QueryFirstOrDefaultAsync<Guid?>(FindActiveUserIdByApiKeySql,
-                    new {apiKey});
-        }
-
-        public async Task<Guid?> FindActiveUserByExternalUserId(string externalUserId)
-        {
-            if (string.IsNullOrEmpty(externalUserId))
-                return null;
-
-            using var dbConnection = _acquireDbConnection();
-            return await dbConnection
-                .QueryFirstOrDefaultAsync<Guid?>(FindActiveUserIdByExternalUserIdSql,
-                    new { externalUserId });
-        }
-
-        private AccountProductRolesDto ParseAccountAndProductRoles(
-            IReadOnlyCollection<RolePermissionDto> rolePermissions)
-        {
-            var accountRoles = rolePermissions
-                .Where(x => x.Type == "Account")
-                .ToList();
-
-            var productRoles = rolePermissions
-                .Where(x => x.Type == "Product")
-                .ToList();
-
-            return new AccountProductRolesDto(ParseRoleDtos(accountRoles), ParseRoleDtos(productRoles));
-        }
-
-        private IEnumerable<Role> ParseRoleDtos(IReadOnlyCollection<RolePermissionDto> rolePermissions)
-        {
-            var notSupportedPermissionsExists = rolePermissions
-                .Any(x => !x.Permission.HasValue);
-
-            if (notSupportedPermissionsExists)
-            {
-                _logger.LogWarning("There are permissions that are not supported by the app.");
-            }
-
-            return rolePermissions
-                .Where(x => x.Permission is not null)
-                .GroupBy(x => x.Id)
-                .Select(x =>
-                {
-                    var f = x.First();
-                    var permissions = x.Select(p => p.Permission!.Value);
-
-                    return new Role(x.Key,
-                        Name.Parse(f.Name),
-                        Text.Parse(f.Description),
-                        f.CreatedAt,
-                        permissions);
-                })
-                .ToList();
-        }
+                return new Role(x.Key,
+                    Name.Parse(f.Name),
+                    Text.Parse(f.Description),
+                    f.CreatedAt,
+                    permissions);
+            })
+            .ToList();
     }
 }

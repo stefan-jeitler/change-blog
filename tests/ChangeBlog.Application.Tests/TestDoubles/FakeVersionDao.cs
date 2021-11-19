@@ -7,104 +7,103 @@ using ChangeBlog.Application.DataAccess.Versions;
 using ChangeBlog.Domain.Version;
 using CSharpFunctionalExtensions;
 
-namespace ChangeBlog.Application.Tests.TestDoubles
+namespace ChangeBlog.Application.Tests.TestDoubles;
+
+public class FakeVersionDao : IVersionDao
 {
-    public class FakeVersionDao : IVersionDao
+    public List<ClVersion> Versions { get; } = new();
+    public Conflict Conflict { get; set; }
+
+    public Task<Maybe<ClVersion>> FindVersionAsync(Guid productId, ClVersionValue versionValue)
     {
-        public List<ClVersion> Versions { get; } = new();
-        public Conflict Conflict { get; set; }
+        var version = Versions.TryFirst(x => x.ProductId == productId && x.Value == versionValue);
 
-        public Task<Maybe<ClVersion>> FindVersionAsync(Guid productId, ClVersionValue versionValue)
+        return Task.FromResult(version);
+    }
+
+    public Task<Maybe<ClVersion>> FindVersionAsync(Guid versionId)
+    {
+        return Task.FromResult(Versions.TryFirst(x => x.Id == versionId));
+    }
+
+    public Task<Maybe<ClVersion>> FindLatestAsync(Guid productId)
+    {
+        return Task.FromResult(Versions.OrderByDescending(x => x.CreatedAt).TryFirst());
+    }
+
+    public Task<ClVersion> GetVersionAsync(Guid versionId)
+    {
+        return Task.FromResult(Versions.Single(x => x.Id == versionId));
+    }
+
+    /// <summary>
+    ///     Not properly implemented, but should be enough for use-case tests
+    ///     The actual implementation of IVersionDao is tested separately.
+    /// </summary>
+    /// <param name="querySettings"></param>
+    /// <returns></returns>
+    public async Task<IList<ClVersion>> GetVersionsAsync(VersionQuerySettings querySettings)
+    {
+        await Task.Yield();
+
+        return Versions
+            .Where(x => x.ProductId == querySettings.ProductId)
+            .Where(x => querySettings.IncludeDeleted || !x.IsDeleted)
+            .Take(querySettings.Limit)
+            .ToList();
+    }
+
+    public Task<Result<ClVersion, Conflict>> AddVersionAsync(ClVersion clVersion)
+    {
+        if (Conflict is not null)
         {
-            var version = Versions.TryFirst(x => x.ProductId == productId && x.Value == versionValue);
-
-            return Task.FromResult(version);
+            var conflict = Result.Failure<ClVersion, Conflict>(Conflict);
+            return Task.FromResult(conflict);
         }
 
-        public Task<Maybe<ClVersion>> FindVersionAsync(Guid versionId)
+        Versions.Add(clVersion);
+        return Task.FromResult(Result.Success<ClVersion, Conflict>(clVersion));
+    }
+
+    public async Task<Result<ClVersion, Conflict>> DeleteVersionAsync(ClVersion version)
+    {
+        await Task.Yield();
+
+        if (Conflict is not null)
         {
-            return Task.FromResult(Versions.TryFirst(x => x.Id == versionId));
+            return Result.Failure<ClVersion, Conflict>(Conflict);
         }
 
-        public Task<Maybe<ClVersion>> FindLatestAsync(Guid productId)
+        Versions.RemoveAll(x => x.Id == version.Id);
+        return Result.Success<ClVersion, Conflict>(version);
+    }
+
+    public async Task<Result<ClVersion, Conflict>> ReleaseVersionAsync(ClVersion version)
+    {
+        await Task.Yield();
+
+        if (Conflict is not null)
         {
-            return Task.FromResult(Versions.OrderByDescending(x => x.CreatedAt).TryFirst());
+            return Result.Failure<ClVersion, Conflict>(Conflict);
         }
 
-        public Task<ClVersion> GetVersionAsync(Guid versionId)
+        Versions.RemoveAll(x => x.Id == version.Id);
+        Versions.Add(version);
+        return Result.Success<ClVersion, Conflict>(version);
+    }
+
+    public async Task<Result<ClVersion, Conflict>> UpdateVersionAsync(ClVersion version)
+    {
+        await Task.Yield();
+
+        if (Conflict is not null)
         {
-            return Task.FromResult(Versions.Single(x => x.Id == versionId));
+            return Result.Failure<ClVersion, Conflict>(Conflict);
         }
 
-        /// <summary>
-        ///     Not properly implemented, but should be enough for use-case tests
-        ///     The actual implementation of IVersionDao is tested separately.
-        /// </summary>
-        /// <param name="querySettings"></param>
-        /// <returns></returns>
-        public async Task<IList<ClVersion>> GetVersionsAsync(VersionQuerySettings querySettings)
-        {
-            await Task.Yield();
+        Versions.RemoveAll(x => x.Id == version.Id);
+        Versions.Add(version);
 
-            return Versions
-                .Where(x => x.ProductId == querySettings.ProductId)
-                .Where(x => querySettings.IncludeDeleted || !x.IsDeleted)
-                .Take(querySettings.Limit)
-                .ToList();
-        }
-
-        public Task<Result<ClVersion, Conflict>> AddVersionAsync(ClVersion clVersion)
-        {
-            if (Conflict is not null)
-            {
-                var conflict = Result.Failure<ClVersion, Conflict>(Conflict);
-                return Task.FromResult(conflict);
-            }
-
-            Versions.Add(clVersion);
-            return Task.FromResult(Result.Success<ClVersion, Conflict>(clVersion));
-        }
-
-        public async Task<Result<ClVersion, Conflict>> DeleteVersionAsync(ClVersion version)
-        {
-            await Task.Yield();
-
-            if (Conflict is not null)
-            {
-                return Result.Failure<ClVersion, Conflict>(Conflict);
-            }
-
-            Versions.RemoveAll(x => x.Id == version.Id);
-            return Result.Success<ClVersion, Conflict>(version);
-        }
-
-        public async Task<Result<ClVersion, Conflict>> ReleaseVersionAsync(ClVersion version)
-        {
-            await Task.Yield();
-
-            if (Conflict is not null)
-            {
-                return Result.Failure<ClVersion, Conflict>(Conflict);
-            }
-
-            Versions.RemoveAll(x => x.Id == version.Id);
-            Versions.Add(version);
-            return Result.Success<ClVersion, Conflict>(version);
-        }
-
-        public async Task<Result<ClVersion, Conflict>> UpdateVersionAsync(ClVersion version)
-        {
-            await Task.Yield();
-
-            if (Conflict is not null)
-            {
-                return Result.Failure<ClVersion, Conflict>(Conflict);
-            }
-
-            Versions.RemoveAll(x => x.Id == version.Id);
-            Versions.Add(version);
-
-            return Result.Success<ClVersion, Conflict>(version);
-        }
+        return Result.Success<ClVersion, Conflict>(version);
     }
 }

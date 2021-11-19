@@ -6,65 +6,64 @@ using ChangeBlog.Application.DataAccess;
 using ChangeBlog.Application.UseCases.Commands.DeleteVersion;
 using Microsoft.AspNetCore.Mvc;
 
-namespace ChangeBlog.Api.Presenters.V1.Version
+namespace ChangeBlog.Api.Presenters.V1.Version;
+
+public class DeleteVersionApiPresenter : BaseApiPresenter, IDeleteVersionOutputPort
 {
-    public class DeleteVersionApiPresenter : BaseApiPresenter, IDeleteVersionOutputPort
+    public void VersionDoesNotExist(Guid versionId)
     {
-        public void VersionDoesNotExist(Guid versionId)
+        var resourceIds = new Dictionary<string, string>
         {
-            var resourceIds = new Dictionary<string, string>
-            {
-                [KnownIdentifiers.VersionId] = versionId.ToString()
-            };
+            [KnownIdentifiers.VersionId] = versionId.ToString()
+        };
 
-            Response = new NotFoundObjectResult(DefaultResponse.Create("Version not found.", resourceIds));
-        }
+        Response = new NotFoundObjectResult(DefaultResponse.Create("Version not found.", resourceIds));
+    }
 
-        public void RelatedProductClosed(Guid productId)
+    public void RelatedProductClosed(Guid productId)
+    {
+        var resourceIds = new Dictionary<string, string>
         {
-            var resourceIds = new Dictionary<string, string>
-            {
-                [KnownIdentifiers.ProductId] = productId.ToString()
-            };
+            [KnownIdentifiers.ProductId] = productId.ToString()
+        };
 
-            Response = new ConflictObjectResult(
-                DefaultResponse.Create("The related product has been closed.", resourceIds));
-        }
+        Response = new ConflictObjectResult(
+            DefaultResponse.Create("The related product has been closed.", resourceIds));
+    }
 
-        public void VersionAlreadyDeleted(Guid versionId)
+    public void VersionAlreadyDeleted(Guid versionId)
+    {
+        var resourceIds = new Dictionary<string, string>
         {
-            var resourceIds = new Dictionary<string, string>
-            {
-                [KnownIdentifiers.VersionId] = versionId.ToString()
-            };
+            [KnownIdentifiers.VersionId] = versionId.ToString()
+        };
 
-            Response = new OkObjectResult(DefaultResponse.Create("Version deleted.", resourceIds));
-        }
+        Response = new OkObjectResult(DefaultResponse.Create("Version deleted.", resourceIds));
+    }
 
-        public void VersionAlreadyReleased(Guid versionId)
+    public void VersionAlreadyReleased(Guid versionId)
+    {
+        var resourceIds = new Dictionary<string, string>
         {
-            var resourceIds = new Dictionary<string, string>
-            {
-                [KnownIdentifiers.VersionId] = versionId.ToString()
-            };
+            [KnownIdentifiers.VersionId] = versionId.ToString()
+        };
 
-            Response = new ConflictObjectResult(
-                DefaultResponse.Create("Version released. Released versions can no longer be modified.", resourceIds));
-        }
+        Response = new ConflictObjectResult(
+            DefaultResponse.Create("Version released. Released versions can no longer be modified.", resourceIds));
+    }
 
-        public void VersionDeleted(Guid versionId)
+    public void VersionDeleted(Guid versionId)
+    {
+        var resourceIds = new Dictionary<string, string>
         {
-            var resourceIds = new Dictionary<string, string>
-            {
-                [KnownIdentifiers.VersionId] = versionId.ToString()
-            };
+            [KnownIdentifiers.VersionId] = versionId.ToString()
+        };
 
-            Response = new OkObjectResult(DefaultResponse.Create("Version deleted.", resourceIds));
-        }
+        Response = new OkObjectResult(DefaultResponse.Create("Version deleted.", resourceIds));
+    }
 
-        public void Conflict(Conflict conflict)
-        {
-            Response = conflict.ToResponse();
-        }
+    public void Conflict(Conflict conflict)
+    {
+        Response = conflict.ToResponse();
     }
 }

@@ -2,10 +2,9 @@ using System.Collections.Generic;
 using System.Threading.Tasks;
 using ChangeBlog.Domain;
 
-namespace ChangeBlog.Application.DataAccess.Accounts
+namespace ChangeBlog.Application.DataAccess.Accounts;
+
+public interface IRolesDao
 {
-    public interface IRolesDao
-    {
-        Task<IList<Role>> GetRolesAsync();
-    }
+    Task<IList<Role>> GetRolesAsync();
 }

@@ -8,84 +8,83 @@ using ChangeBlog.Domain;
 using ChangeBlog.Domain.Miscellaneous;
 using CSharpFunctionalExtensions;
 
-namespace ChangeBlog.Application.Tests.TestDoubles
+namespace ChangeBlog.Application.Tests.TestDoubles;
+
+public class FakeProductDao : IProductDao
 {
-    public class FakeProductDao : IProductDao
+    public List<Product> Products { get; } = new();
+    public Conflict Conflict { get; set; }
+
+    public Task<Maybe<Product>> FindProductAsync(Guid accountId, Name name)
     {
-        public List<Product> Products { get; } = new();
-        public Conflict Conflict { get; set; }
+        var product = Products.TryFirst(x => x.AccountId == accountId
+                                             && x.Name == name);
 
-        public Task<Maybe<Product>> FindProductAsync(Guid accountId, Name name)
+        return Task.FromResult(product);
+    }
+
+    public Task<Maybe<Product>> FindProductAsync(Guid productId)
+    {
+        return Task.FromResult(Products.TryFirst(x => x.Id == productId));
+    }
+
+    public async Task<Product> GetProductAsync(Guid productId)
+    {
+        await Task.Yield();
+        return Products.Single(x => x.Id == productId);
+    }
+
+    public async Task<IList<Product>> GetAccountProductsAsync(AccountProductsQuerySettings querySettings)
+    {
+        await Task.Yield();
+
+        var lastEmail = Products.FirstOrDefault(x => x.Id == querySettings.LastProductId);
+
+        return Products
+            .Where(x => x.AccountId == querySettings.AccountId)
+            .OrderBy(x => x.Name.Value)
+            .Where(x => lastEmail is null || string.Compare(x.Name, lastEmail.Name) > 0)
+            .Take(querySettings.Limit)
+            .ToList();
+    }
+
+    public Task<Result<Product, Conflict>> AddProductAsync(Product product)
+    {
+        if (Conflict is not null)
         {
-            var product = Products.TryFirst(x => x.AccountId == accountId
-                                                 && x.Name == name);
-
-            return Task.FromResult(product);
+            return Task.FromResult(Result.Failure<Product, Conflict>(Conflict));
         }
 
-        public Task<Maybe<Product>> FindProductAsync(Guid productId)
-        {
-            return Task.FromResult(Products.TryFirst(x => x.Id == productId));
-        }
+        Products.Add(product);
+        return Task.FromResult(Result.Success<Product, Conflict>(product));
+    }
 
-        public async Task<Product> GetProductAsync(Guid productId)
-        {
-            await Task.Yield();
-            return Products.Single(x => x.Id == productId);
-        }
+    public Task CloseProductAsync(Product product)
+    {
+        Products.RemoveAll(x => x.Id == product.Id);
+        Products.Add(product);
+        return Task.CompletedTask;
+    }
 
-        public async Task<IList<Product>> GetAccountProductsAsync(AccountProductsQuerySettings querySettings)
-        {
-            await Task.Yield();
+    public Task<IList<Name>> GetSupportedLanguageCodesAsync() =>
+        Task.FromResult((IList<Name>) new List<Name> {Name.Parse("en"), Name.Parse("de")});
 
-            var lastEmail = Products.FirstOrDefault(x => x.Id == querySettings.LastProductId);
+    /// <summary>
+    ///     Not properly implemented, but should be enough for use-case tests
+    ///     The actual implementation of IProductDao is tested separately.
+    /// </summary>
+    /// <param name="querySettings"></param>
+    /// <returns></returns>
+    public async Task<IList<Product>> GetUserProductsAsync(UserProductsQuerySettings querySettings)
+    {
+        await Task.Yield();
 
-            return Products
-                .Where(x => x.AccountId == querySettings.AccountId)
-                .OrderBy(x => x.Name.Value)
-                .Where(x => lastEmail is null || string.Compare(x.Name, lastEmail.Name) > 0)
-                .Take(querySettings.Limit)
-                .ToList();
-        }
+        var lastEmail = Products.FirstOrDefault(x => x.Id == querySettings.LastProductId);
 
-        public Task<Result<Product, Conflict>> AddProductAsync(Product product)
-        {
-            if (Conflict is not null)
-            {
-                return Task.FromResult(Result.Failure<Product, Conflict>(Conflict));
-            }
-
-            Products.Add(product);
-            return Task.FromResult(Result.Success<Product, Conflict>(product));
-        }
-
-        public Task CloseProductAsync(Product product)
-        {
-            Products.RemoveAll(x => x.Id == product.Id);
-            Products.Add(product);
-            return Task.CompletedTask;
-        }
-
-        public Task<IList<Name>> GetSupportedLanguageCodesAsync() =>
-            Task.FromResult((IList<Name>) new List<Name> {Name.Parse("en"), Name.Parse("de")});
-
-        /// <summary>
-        ///     Not properly implemented, but should be enough for use-case tests
-        ///     The actual implementation of IProductDao is tested separately.
-        /// </summary>
-        /// <param name="querySettings"></param>
-        /// <returns></returns>
-        public async Task<IList<Product>> GetUserProductsAsync(UserProductsQuerySettings querySettings)
-        {
-            await Task.Yield();
-
-            var lastEmail = Products.FirstOrDefault(x => x.Id == querySettings.LastProductId);
-
-            return Products
-                .OrderBy(x => x.Name.Value)
-                .Where(x => lastEmail is null || string.Compare(x.Name, lastEmail.Name) > 0)
-                .Take(querySettings.Limit)
-                .ToList();
-        }
+        return Products
+            .OrderBy(x => x.Name.Value)
+            .Where(x => lastEmail is null || string.Compare(x.Name, lastEmail.Name) > 0)
+            .Take(querySettings.Limit)
+            .ToList();
     }
 }

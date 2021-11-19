@@ -1,24 +1,23 @@
-namespace ChangeBlog.Domain.Authorization
+namespace ChangeBlog.Domain.Authorization;
+
+public enum Permission
 {
-    public enum Permission
-    {
-        ViewAccount,
-        ViewAccountUsers,
+    ViewAccount,
+    ViewAccountUsers,
 
-        ViewAccountProducts,
-        CloseProduct,
-        AddOrUpdateProduct,
+    ViewAccountProducts,
+    CloseProduct,
+    AddOrUpdateProduct,
 
-        AddOrUpdateVersion,
-        AddVersion,
-        ViewVersions,
-        ReleaseVersion,
-        DeleteVersion,
+    AddOrUpdateVersion,
+    AddVersion,
+    ViewVersions,
+    ReleaseVersion,
+    DeleteVersion,
 
-        ViewPendingChangeLogLines,
-        ViewChangeLogLines,
-        AddOrUpdateChangeLogLine,
-        DeleteChangeLogLine,
-        MoveChangeLogLines
-    }
+    ViewPendingChangeLogLines,
+    ViewChangeLogLines,
+    AddOrUpdateChangeLogLine,
+    DeleteChangeLogLine,
+    MoveChangeLogLines
 }

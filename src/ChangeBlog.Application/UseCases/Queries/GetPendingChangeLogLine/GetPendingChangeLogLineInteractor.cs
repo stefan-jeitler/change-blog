@@ -7,68 +7,67 @@ using ChangeBlog.Application.DataAccess.Users;
 using ChangeBlog.Application.Extensions;
 using ChangeBlog.Application.UseCases.Queries.SharedModels;
 
-namespace ChangeBlog.Application.UseCases.Queries.GetPendingChangeLogLine
+namespace ChangeBlog.Application.UseCases.Queries.GetPendingChangeLogLine;
+
+public class GetPendingChangeLogLineInteractor : IGetPendingChangeLogLine
 {
-    public class GetPendingChangeLogLineInteractor : IGetPendingChangeLogLine
+    private readonly IChangeLogQueriesDao _changeLogQueries;
+    private readonly IProductDao _productDao;
+    private readonly IUserDao _userDao;
+
+    public GetPendingChangeLogLineInteractor(IChangeLogQueriesDao changeLogQueries, IUserDao userDao,
+        IProductDao productDao)
     {
-        private readonly IChangeLogQueriesDao _changeLogQueries;
-        private readonly IProductDao _productDao;
-        private readonly IUserDao _userDao;
+        _changeLogQueries = changeLogQueries ?? throw new ArgumentNullException(nameof(changeLogQueries));
+        _userDao = userDao ?? throw new ArgumentNullException(nameof(userDao));
+        _productDao = productDao ?? throw new ArgumentNullException(nameof(productDao));
+    }
 
-        public GetPendingChangeLogLineInteractor(IChangeLogQueriesDao changeLogQueries, IUserDao userDao,
-            IProductDao productDao)
+    public async Task ExecuteAsync(IGetPendingChangeLogLineOutputPort output,
+        Guid userId, Guid changeLogLineId)
+    {
+        if (userId == Guid.Empty)
+            throw new ArgumentException("UserId cannot be empty.");
+
+        if (changeLogLineId == Guid.Empty)
+            throw new ArgumentException("ChangeLogLineId cannot be empty.");
+
+        await GetChangeLogLineAsync(output, userId, changeLogLineId);
+    }
+
+    private async Task GetChangeLogLineAsync(
+        IGetPendingChangeLogLineOutputPort output,
+        Guid userId,
+        Guid changeLogLineId)
+    {
+        var line = await _changeLogQueries.FindLineAsync(changeLogLineId);
+
+        if (line.HasNoValue)
         {
-            _changeLogQueries = changeLogQueries ?? throw new ArgumentNullException(nameof(changeLogQueries));
-            _userDao = userDao ?? throw new ArgumentNullException(nameof(userDao));
-            _productDao = productDao ?? throw new ArgumentNullException(nameof(productDao));
+            output.LineDoesNotExist(changeLogLineId);
+            return;
         }
 
-        public async Task ExecuteAsync(IGetPendingChangeLogLineOutputPort output,
-            Guid userId, Guid changeLogLineId)
+        if (!line.GetValueOrThrow().IsPending)
         {
-            if (userId == Guid.Empty)
-                throw new ArgumentException("UserId cannot be empty.");
-
-            if (changeLogLineId == Guid.Empty)
-                throw new ArgumentException("ChangeLogLineId cannot be empty.");
-
-            await GetChangeLogLineAsync(output, userId, changeLogLineId);
+            output.LineIsNotPending(changeLogLineId);
+            return;
         }
 
-        private async Task GetChangeLogLineAsync(
-            IGetPendingChangeLogLineOutputPort output,
-            Guid userId,
-            Guid changeLogLineId)
-        {
-            var line = await _changeLogQueries.FindLineAsync(changeLogLineId);
+        var currentUser = await _userDao.GetUserAsync(userId);
+        var product = await _productDao.GetProductAsync(line.GetValueOrThrow().ProductId);
 
-            if (line.HasNoValue)
-            {
-                output.LineDoesNotExist(changeLogLineId);
-                return;
-            }
+        var l = line.GetValueOrThrow();
+        var lineResponseModel = new ChangeLogLineResponseModel(
+            l.Id,
+            l.Text,
+            l.Labels.Select(ll => ll.Value).ToList(),
+            l.Issues.Select(i => i.Value).ToList(),
+            l.CreatedAt.ToLocal(currentUser.TimeZone));
 
-            if (!line.GetValueOrThrow().IsPending)
-            {
-                output.LineIsNotPending(changeLogLineId);
-                return;
-            }
-
-            var currentUser = await _userDao.GetUserAsync(userId);
-            var product = await _productDao.GetProductAsync(line.GetValueOrThrow().ProductId);
-
-            var l = line.GetValueOrThrow();
-            var lineResponseModel = new ChangeLogLineResponseModel(
-                l.Id,
-                l.Text,
-                l.Labels.Select(ll => ll.Value).ToList(),
-                l.Issues.Select(i => i.Value).ToList(),
-                l.CreatedAt.ToLocal(currentUser.TimeZone));
-
-            output.LineFound(new PendingChangeLogLineResponseModel(product.Id,
-                product.Name,
-                product.AccountId,
-                lineResponseModel));
-        }
+        output.LineFound(new PendingChangeLogLineResponseModel(product.Id,
+            product.Name,
+            product.AccountId,
+            lineResponseModel));
     }
 }

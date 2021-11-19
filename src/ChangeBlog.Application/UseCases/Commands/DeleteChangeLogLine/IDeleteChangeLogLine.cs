@@ -1,9 +1,8 @@
 using System.Threading.Tasks;
 
-namespace ChangeBlog.Application.UseCases.Commands.DeleteChangeLogLine
+namespace ChangeBlog.Application.UseCases.Commands.DeleteChangeLogLine;
+
+public interface IDeleteChangeLogLine
 {
-    public interface IDeleteChangeLogLine
-    {
-        Task ExecuteAsync(IDeleteChangeLogLineOutputPort output, DeleteChangeLogLineRequestModel requestModel);
-    }
+    Task ExecuteAsync(IDeleteChangeLogLineOutputPort output, DeleteChangeLogLineRequestModel requestModel);
 }

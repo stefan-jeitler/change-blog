@@ -6,27 +6,26 @@ using System.Text.Json;
 using ChangeBlog.Domain.ChangeLog;
 using Dapper;
 
-namespace ChangeBlog.DataAccess.Postgres.TypeHandler
+namespace ChangeBlog.DataAccess.Postgres.TypeHandler;
+
+public class IssuesTypeHandler : SqlMapper.TypeHandler<IEnumerable<Issue>>
 {
-    public class IssuesTypeHandler : SqlMapper.TypeHandler<IEnumerable<Issue>>
+    public override void SetValue(IDbDataParameter parameter, IEnumerable<Issue> value)
     {
-        public override void SetValue(IDbDataParameter parameter, IEnumerable<Issue> value)
-        {
-            parameter.Value = JsonSerializer.Serialize(value.Select(x => x.Value));
-        }
+        parameter.Value = JsonSerializer.Serialize(value.Select(x => x.Value));
+    }
 
-        public override IEnumerable<Issue> Parse(object value)
-        {
-            var json = value.ToString();
+    public override IEnumerable<Issue> Parse(object value)
+    {
+        var json = value.ToString();
 
-            if (json is null)
-                return Enumerable.Empty<Issue>();
+        if (json is null)
+            return Enumerable.Empty<Issue>();
 
-            var issues = JsonSerializer
-                .Deserialize<List<string>>(json)?
-                .Select(Issue.Parse);
+        var issues = JsonSerializer
+            .Deserialize<List<string>>(json)?
+            .Select(Issue.Parse);
 
-            return issues ?? Enumerable.Empty<Issue>();
-        }
+        return issues ?? Enumerable.Empty<Issue>();
     }
 }

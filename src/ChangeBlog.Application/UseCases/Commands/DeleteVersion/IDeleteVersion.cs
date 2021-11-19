@@ -1,10 +1,9 @@
 using System;
 using System.Threading.Tasks;
 
-namespace ChangeBlog.Application.UseCases.Commands.DeleteVersion
+namespace ChangeBlog.Application.UseCases.Commands.DeleteVersion;
+
+public interface IDeleteVersion
 {
-    public interface IDeleteVersion
-    {
-        Task ExecuteAsync(IDeleteVersionOutputPort output, Guid versionId);
-    }
+    Task ExecuteAsync(IDeleteVersionOutputPort output, Guid versionId);
 }

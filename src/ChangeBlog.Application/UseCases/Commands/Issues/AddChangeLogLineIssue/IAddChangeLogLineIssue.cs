@@ -1,10 +1,9 @@
 using System.Threading.Tasks;
 using ChangeBlog.Application.UseCases.Commands.Issues.SharedModels;
 
-namespace ChangeBlog.Application.UseCases.Commands.Issues.AddChangeLogLineIssue
+namespace ChangeBlog.Application.UseCases.Commands.Issues.AddChangeLogLineIssue;
+
+public interface IAddChangeLogLineIssue
 {
-    public interface IAddChangeLogLineIssue
-    {
-        Task ExecuteAsync(IAddChangeLogLineIssueOutputPort output, ChangeLogLineIssueRequestModel requestModel);
-    }
+    Task ExecuteAsync(IAddChangeLogLineIssueOutputPort output, ChangeLogLineIssueRequestModel requestModel);
 }

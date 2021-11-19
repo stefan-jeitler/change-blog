@@ -5,26 +5,25 @@ using Microsoft.AspNetCore.Mvc.Testing;
 using Newtonsoft.Json;
 using Xunit;
 
-namespace ChangeBlog.Management.Api.Tests
+namespace ChangeBlog.Management.Api.Tests;
+
+public class HomeControllerTests : IClassFixture<WebApplicationFactory<Startup>>
 {
-    public class HomeControllerTests : IClassFixture<WebApplicationFactory<Startup>>
+    private readonly WebApplicationFactory<Startup> _factory;
+
+    public HomeControllerTests(WebApplicationFactory<Startup> factory)
     {
-        private readonly WebApplicationFactory<Startup> _factory;
+        _factory = factory;
+    }
 
-        public HomeControllerTests(WebApplicationFactory<Startup> factory)
-        {
-            _factory = factory;
-        }
+    [Fact]
+    public async Task IndexEndpoint_DeserializeApiInfo_SuccessfullyDeserialized()
+    {
+        var client = _factory.CreateClient();
 
-        [Fact]
-        public async Task IndexEndpoint_DeserializeApiInfo_SuccessfullyDeserialized()
-        {
-            var client = _factory.CreateClient();
+        var response = await client.GetAsync("/api/info");
 
-            var response = await client.GetAsync("/api/info");
-
-            var apiInfo = JsonConvert.DeserializeObject<ApiInfo>(await response.Content.ReadAsStringAsync());
-            apiInfo.Environment.Should().Be("Development");
-        }
+        var apiInfo = JsonConvert.DeserializeObject<ApiInfo>(await response.Content.ReadAsStringAsync());
+        apiInfo.Environment.Should().Be("Development");
     }
 }

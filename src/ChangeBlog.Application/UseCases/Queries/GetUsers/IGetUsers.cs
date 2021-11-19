@@ -2,11 +2,10 @@ using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 
-namespace ChangeBlog.Application.UseCases.Queries.GetUsers
+namespace ChangeBlog.Application.UseCases.Queries.GetUsers;
+
+public interface IGetUsers
 {
-    public interface IGetUsers
-    {
-        Task<IList<UserResponseModel>> ExecuteAsync(UsersQueryRequestModel queryRequestModel);
-        Task<UserResponseModel> ExecuteAsync(Guid userId);
-    }
+    Task<IList<UserResponseModel>> ExecuteAsync(UsersQueryRequestModel queryRequestModel);
+    Task<UserResponseModel> ExecuteAsync(Guid userId);
 }

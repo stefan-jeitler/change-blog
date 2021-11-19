@@ -1,15 +1,14 @@
 using System;
 
-namespace ChangeBlog.Api.Swagger
-{
-    [AttributeUsage(AttributeTargets.Class, Inherited = false)]
-    public class SwaggerControllerOrderAttribute : Attribute
-    {
-        public SwaggerControllerOrderAttribute(ushort position)
-        {
-            Position = position;
-        }
+namespace ChangeBlog.Api.Swagger;
 
-        public ushort Position { get; }
+[AttributeUsage(AttributeTargets.Class, Inherited = false)]
+public class SwaggerControllerOrderAttribute : Attribute
+{
+    public SwaggerControllerOrderAttribute(ushort position)
+    {
+        Position = position;
     }
+
+    public ushort Position { get; }
 }

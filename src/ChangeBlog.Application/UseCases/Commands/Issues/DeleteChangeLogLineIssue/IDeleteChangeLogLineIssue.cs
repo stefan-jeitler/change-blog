@@ -1,10 +1,9 @@
 using System.Threading.Tasks;
 using ChangeBlog.Application.UseCases.Commands.Issues.SharedModels;
 
-namespace ChangeBlog.Application.UseCases.Commands.Issues.DeleteChangeLogLineIssue
+namespace ChangeBlog.Application.UseCases.Commands.Issues.DeleteChangeLogLineIssue;
+
+public interface IDeleteChangeLogLineIssue
 {
-    public interface IDeleteChangeLogLineIssue
-    {
-        Task ExecuteAsync(IDeleteChangeLogLineIssueOutputPort output, ChangeLogLineIssueRequestModel requestModel);
-    }
+    Task ExecuteAsync(IDeleteChangeLogLineIssueOutputPort output, ChangeLogLineIssueRequestModel requestModel);
 }

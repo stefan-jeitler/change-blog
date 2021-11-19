@@ -1,8 +1,7 @@
-namespace ChangeBlog.Application.UseCases.Commands.DeleteChangeLogLine
+namespace ChangeBlog.Application.UseCases.Commands.DeleteChangeLogLine;
+
+public enum ChangeLogLineType
 {
-    public enum ChangeLogLineType
-    {
-        Pending,
-        NotPending
-    }
+    Pending,
+    NotPending
 }

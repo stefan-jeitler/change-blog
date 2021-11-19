@@ -1,17 +1,16 @@
 using System;
 
-namespace ChangeBlog.Application.DataAccess.Conflicts
+namespace ChangeBlog.Application.DataAccess.Conflicts;
+
+public class ProductClosedConflict : Conflict
 {
-    public class ProductClosedConflict : Conflict
+    public ProductClosedConflict(Guid productId)
     {
-        public ProductClosedConflict(Guid productId)
-        {
-            if (productId == Guid.Empty)
-                throw new ArgumentException("ProductId cannot be empty.");
+        if (productId == Guid.Empty)
+            throw new ArgumentException("ProductId cannot be empty.");
 
-            ProductId = productId;
-        }
-
-        public Guid ProductId { get; }
+        ProductId = productId;
     }
+
+    public Guid ProductId { get; }
 }

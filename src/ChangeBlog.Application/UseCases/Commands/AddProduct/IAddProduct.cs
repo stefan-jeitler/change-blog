@@ -1,9 +1,8 @@
 using System.Threading.Tasks;
 
-namespace ChangeBlog.Application.UseCases.Commands.AddProduct
+namespace ChangeBlog.Application.UseCases.Commands.AddProduct;
+
+public interface IAddProduct
 {
-    public interface IAddProduct
-    {
-        public Task ExecuteAsync(IAddProductOutputPort output, ProductRequestModel productRequestModel);
-    }
+    public Task ExecuteAsync(IAddProductOutputPort output, ProductRequestModel productRequestModel);
 }

@@ -18,51 +18,50 @@ using Dapper;
 using Microsoft.Extensions.DependencyInjection;
 using Npgsql;
 
-namespace ChangeBlog.DataAccess.Postgres
+namespace ChangeBlog.DataAccess.Postgres;
+
+public static class ServiceCollectionExtensions
 {
-    public static class ServiceCollectionExtensions
+    public static IServiceCollection AddPostgresDataAccess(this IServiceCollection services,
+        string connectionString)
     {
-        public static IServiceCollection AddPostgresDataAccess(this IServiceCollection services,
-            string connectionString)
-        {
-            DapperTypeHandlers.Initialize();
+        DapperTypeHandlers.Initialize();
 
-            return services
-                .AddDbSession(connectionString)
-                .AddScoped<UserAccessDao>()
-                .AddScoped<IUserAccessDao>(sp => sp.GetRequiredService<UserAccessDao>())
-                .AddScoped<SchemaVersion>()
-                .AddDataAccessObjects();
-        }
+        return services
+            .AddDbSession(connectionString)
+            .AddScoped<UserAccessDao>()
+            .AddScoped<IUserAccessDao>(sp => sp.GetRequiredService<UserAccessDao>())
+            .AddScoped<SchemaVersion>()
+            .AddDataAccessObjects();
+    }
 
-        private static IServiceCollection AddDbSession(this IServiceCollection services, string connectionString)
-        {
-            services.AddSingleton<Func<IDbConnection>>(_ => () => new NpgsqlConnection(connectionString));
+    private static IServiceCollection AddDbSession(this IServiceCollection services, string connectionString)
+    {
+        services.AddSingleton<Func<IDbConnection>>(_ => () => new NpgsqlConnection(connectionString));
 
-            services.AddScoped(_ => new LazyDbConnection(() => new NpgsqlConnection(connectionString)));
-            services.AddScoped<DbSession>();
+        services.AddScoped(_ => new LazyDbConnection(() => new NpgsqlConnection(connectionString)));
+        services.AddScoped<DbSession>();
 
-            services.AddScoped<IDbAccessor>(sp => sp.GetRequiredService<DbSession>());
-            services.AddScoped<IUnitOfWork>(sp => sp.GetRequiredService<DbSession>());
+        services.AddScoped<IDbAccessor>(sp => sp.GetRequiredService<DbSession>());
+        services.AddScoped<IUnitOfWork>(sp => sp.GetRequiredService<DbSession>());
 
-            return services;
-        }
+        return services;
+    }
 
-        private static IServiceCollection AddDataAccessObjects(this IServiceCollection services)
-        {
-            services
-                .AddScoped<IAccountDao, AccountDao>()
-                .AddScoped<IProductDao, ProductDao>()
-                .AddScoped<IVersioningSchemeDao, VersioningSchemeDao>()
-                .AddScoped<IUserDao, UserDao>()
-                .AddScoped<IRolesDao, RolesDao>()
-                .AddScoped<IVersionDao, VersionDao>()
-                .AddScoped<IChangeLogQueriesDao, ChangeLogQueriesDao>();
+    private static IServiceCollection AddDataAccessObjects(this IServiceCollection services)
+    {
+        services
+            .AddScoped<IAccountDao, AccountDao>()
+            .AddScoped<IProductDao, ProductDao>()
+            .AddScoped<IVersioningSchemeDao, VersioningSchemeDao>()
+            .AddScoped<IUserDao, UserDao>()
+            .AddScoped<IRolesDao, RolesDao>()
+            .AddScoped<IVersionDao, VersionDao>()
+            .AddScoped<IChangeLogQueriesDao, ChangeLogQueriesDao>();
 
-            services.AddScoped<IChangeLogCommandsDao, ChangeLogCommandsDao>()
-                .Decorate<IChangeLogCommandsDao, ChangeLogLineReadonlyCheckProxy>();
+        services.AddScoped<IChangeLogCommandsDao, ChangeLogCommandsDao>()
+            .Decorate<IChangeLogCommandsDao, ChangeLogLineReadonlyCheckProxy>();
 
-            return services;
-        }
+        return services;
     }
 }

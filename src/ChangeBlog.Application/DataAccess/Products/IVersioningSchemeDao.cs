@@ -4,12 +4,11 @@ using System.Threading.Tasks;
 using ChangeBlog.Domain.Version;
 using CSharpFunctionalExtensions;
 
-namespace ChangeBlog.Application.DataAccess.Products
+namespace ChangeBlog.Application.DataAccess.Products;
+
+public interface IVersioningSchemeDao
 {
-    public interface IVersioningSchemeDao
-    {
-        Task<Maybe<VersioningScheme>> FindSchemeAsync(Guid versioningSchemeId);
-        Task<VersioningScheme> GetSchemeAsync(Guid versioningSchemeId);
-        Task<IList<VersioningScheme>> GetSchemesAsync(IList<Guid> versioningSchemeIds);
-    }
+    Task<Maybe<VersioningScheme>> FindSchemeAsync(Guid versioningSchemeId);
+    Task<VersioningScheme> GetSchemeAsync(Guid versioningSchemeId);
+    Task<IList<VersioningScheme>> GetSchemesAsync(IList<Guid> versioningSchemeIds);
 }

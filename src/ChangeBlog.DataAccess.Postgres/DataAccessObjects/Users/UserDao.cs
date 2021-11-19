@@ -8,22 +8,22 @@ using CSharpFunctionalExtensions;
 using Dapper;
 using Microsoft.Extensions.Logging;
 
-namespace ChangeBlog.DataAccess.Postgres.DataAccessObjects.Users
+namespace ChangeBlog.DataAccess.Postgres.DataAccessObjects.Users;
+
+public class UserDao : IUserDao
 {
-    public class UserDao : IUserDao
+    private readonly IDbAccessor _dbAccessor;
+    private readonly ILogger<UserDao> _logger;
+
+    public UserDao(IDbAccessor dbAccessor, ILogger<UserDao> logger)
     {
-        private readonly IDbAccessor _dbAccessor;
-        private readonly ILogger<UserDao> _logger;
+        _dbAccessor = dbAccessor;
+        _logger = logger;
+    }
 
-        public UserDao(IDbAccessor dbAccessor, ILogger<UserDao> logger)
-        {
-            _dbAccessor = dbAccessor;
-            _logger = logger;
-        }
-
-        public async Task<User> GetUserAsync(Guid userId)
-        {
-            const string getUserSql = @"
+    public async Task<User> GetUserAsync(Guid userId)
+    {
+        const string getUserSql = @"
                 SELECT id,
                        email,
                        first_name AS firstName,
@@ -34,16 +34,16 @@ namespace ChangeBlog.DataAccess.Postgres.DataAccessObjects.Users
                 FROM ""user""
                 WHERE id = @userId";
 
-            return await _dbAccessor.DbConnection
-                .QuerySingleAsync<User>(getUserSql, new
-                {
-                    userId
-                });
-        }
+        return await _dbAccessor.DbConnection
+            .QuerySingleAsync<User>(getUserSql, new
+            {
+                userId
+            });
+    }
 
-        public async Task<IList<User>> GetUsersAsync(IList<Guid> userIds)
-        {
-            const string getUsersSql = @"
+    public async Task<IList<User>> GetUsersAsync(IList<Guid> userIds)
+    {
+        const string getUsersSql = @"
                 SELECT id,
                        email,
                        first_name AS firstName,
@@ -54,22 +54,22 @@ namespace ChangeBlog.DataAccess.Postgres.DataAccessObjects.Users
                 FROM ""user""
                 WHERE id = ANY (@userIds)";
 
-            var users = await _dbAccessor.DbConnection
-                .QueryAsync<User>(getUsersSql, new
-                {
-                    userIds
-                });
+        var users = await _dbAccessor.DbConnection
+            .QueryAsync<User>(getUsersSql, new
+            {
+                userIds
+            });
 
-            return users.AsList();
-        }
+        return users.AsList();
+    }
 
-        public async Task<IList<User>> GetUsersAsync(Guid accountId, ushort limit, Guid? lastUserId)
-        {
-            var pagingFilter = lastUserId.HasValue
-                ? "AND u.email > (SELECT us.email FROM \"user\" us where us.id = @lastUserId)"
-                : string.Empty;
+    public async Task<IList<User>> GetUsersAsync(Guid accountId, ushort limit, Guid? lastUserId)
+    {
+        var pagingFilter = lastUserId.HasValue
+            ? "AND u.email > (SELECT us.email FROM \"user\" us where us.id = @lastUserId)"
+            : string.Empty;
 
-            var getAccountUsersSql = @$"
+        var getAccountUsersSql = @$"
                 SELECT DISTINCT u.id,
                                 u.email,
                                 u.first_name AS firstName,
@@ -84,23 +84,23 @@ namespace ChangeBlog.DataAccess.Postgres.DataAccessObjects.Users
                 ORDER BY u.email
                     FETCH FIRST (@limit) ROWS ONLY";
 
-            var users = await _dbAccessor.DbConnection
-                .QueryAsync<User>(getAccountUsersSql, new
-                {
-                    accountId,
-                    lastUserId,
-                    limit = (int) limit
-                });
+        var users = await _dbAccessor.DbConnection
+            .QueryAsync<User>(getAccountUsersSql, new
+            {
+                accountId,
+                lastUserId,
+                limit = (int) limit
+            });
 
-            return users.AsList();
-        }
+        return users.AsList();
+    }
 
-        public async Task<Maybe<User>> FindByExternalUserIdAsync(string externalUserId)
-        {
-            if (string.IsNullOrEmpty(externalUserId))
-                return Maybe<User>.None;
+    public async Task<Maybe<User>> FindByExternalUserIdAsync(string externalUserId)
+    {
+        if (string.IsNullOrEmpty(externalUserId))
+            return Maybe<User>.None;
 
-            const string getUserSql = @"
+        const string getUserSql = @"
                 SELECT u.id,
                        u.email,
                        u.first_name AS firstName,
@@ -112,23 +112,23 @@ namespace ChangeBlog.DataAccess.Postgres.DataAccessObjects.Users
                 JOIN external_identity ei on u.id = ei.user_id
                 WHERE ei.external_user_id = @externalUserId";
 
-            var user = await _dbAccessor.DbConnection
-                .QuerySingleOrDefaultAsync<User>(getUserSql, new
-                {
-                    externalUserId
-                });
+        var user = await _dbAccessor.DbConnection
+            .QuerySingleOrDefaultAsync<User>(getUserSql, new
+            {
+                externalUserId
+            });
 
-            return user == default
-                ? Maybe<User>.None
-                : Maybe<User>.From(user);
-        }
+        return user == default
+            ? Maybe<User>.None
+            : Maybe<User>.From(user);
+    }
 
-        public async Task<Maybe<User>> FindByEmailAsync(string email)
-        {
-            if (string.IsNullOrEmpty(email))
-                return Maybe<User>.None;
+    public async Task<Maybe<User>> FindByEmailAsync(string email)
+    {
+        if (string.IsNullOrEmpty(email))
+            return Maybe<User>.None;
 
-            const string getUserSql = @"
+        const string getUserSql = @"
                 SELECT u.id,
                        u.email,
                        u.first_name AS firstName,
@@ -139,71 +139,70 @@ namespace ChangeBlog.DataAccess.Postgres.DataAccessObjects.Users
                 FROM ""user"" u
                 WHERE LOWER(u.email) = LOWER(@email)";
 
-            var user = await _dbAccessor.DbConnection
-                .QuerySingleOrDefaultAsync<User>(getUserSql, new
-                {
-                    email
-                });
+        var user = await _dbAccessor.DbConnection
+            .QuerySingleOrDefaultAsync<User>(getUserSql, new
+            {
+                email
+            });
 
-            return user == default
-                ? Maybe<User>.None
-                : Maybe<User>.From(user);
-        }
+        return user == default
+            ? Maybe<User>.None
+            : Maybe<User>.From(user);
+    }
 
-        public async Task<Result> AddExternalIdentity(ExternalIdentity externalIdentity)
-        {
-            const string insertExternalIdentitySql = @"
+    public async Task<Result> AddExternalIdentity(ExternalIdentity externalIdentity)
+    {
+        const string insertExternalIdentitySql = @"
                 INSERT INTO external_identity (id, user_id, external_user_id, identity_provider, created_at) 
                 VALUES (@id, @userId, @externalUserId, @identityProvider, @createdAt)";
 
-            try
-            {
-                await _dbAccessor.DbConnection
-                    .ExecuteAsync(insertExternalIdentitySql, new
-                    {
-                        id = externalIdentity.Id,
-                        userId = externalIdentity.UserId,
-                        externalUserId = externalIdentity.ExternalUserId,
-                        identityProvider = externalIdentity.IdentityProvider,
-                        createdAt = externalIdentity.CreatedAt
-                    });
-
-                return Result.Success();
-            }
-            catch (Exception exception)
-            {
-                _logger.LogError(exception, exception.Message);
-                return Result.Failure(exception.Message);
-            }
-        }
-
-        public async Task<Result> AddAsync(User user)
+        try
         {
-            const string insertUserSql = @"
+            await _dbAccessor.DbConnection
+                .ExecuteAsync(insertExternalIdentitySql, new
+                {
+                    id = externalIdentity.Id,
+                    userId = externalIdentity.UserId,
+                    externalUserId = externalIdentity.ExternalUserId,
+                    identityProvider = externalIdentity.IdentityProvider,
+                    createdAt = externalIdentity.CreatedAt
+                });
+
+            return Result.Success();
+        }
+        catch (Exception exception)
+        {
+            _logger.LogError(exception, exception.Message);
+            return Result.Failure(exception.Message);
+        }
+    }
+
+    public async Task<Result> AddAsync(User user)
+    {
+        const string insertUserSql = @"
                 INSERT INTO ""user"" (id, email, first_name, last_name, timezone, created_at)
                 VALUES (@userId, @email, @firstName, @lastName, @timeZone, @createdAt)
                 ";
 
-            try
-            {
-                await _dbAccessor.DbConnection
-                    .ExecuteAsync(insertUserSql, new
-                    {
-                        userId = user.Id,
-                        email = user.Email.Value,
-                        firstName = user.FirstName.Value,
-                        lastName = user.LastName.Value,
-                        timeZone = user.TimeZone.Value,
-                        createdAt = user.CreatedAt
-                    });
+        try
+        {
+            await _dbAccessor.DbConnection
+                .ExecuteAsync(insertUserSql, new
+                {
+                    userId = user.Id,
+                    email = user.Email.Value,
+                    firstName = user.FirstName.Value,
+                    lastName = user.LastName.Value,
+                    timeZone = user.TimeZone.Value,
+                    createdAt = user.CreatedAt
+                });
 
-                return Result.Success();
-            }
-            catch (Exception exception)
-            {
-                _logger.LogError(exception, exception.Message);
-                return Result.Failure(exception.Message);
-            }
+            return Result.Success();
+        }
+        catch (Exception exception)
+        {
+            _logger.LogError(exception, exception.Message);
+            return Result.Failure(exception.Message);
         }
     }
 }

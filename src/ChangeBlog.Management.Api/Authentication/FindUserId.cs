@@ -2,23 +2,22 @@
 using System.Threading.Tasks;
 using ChangeBlog.DataAccess.Postgres.DataAccessObjects.Users;
 
-namespace ChangeBlog.Management.Api.Authentication
+namespace ChangeBlog.Management.Api.Authentication;
+
+public class FindUserId
 {
-    public class FindUserId
+    private readonly UserAccessDao _userAccessDao;
+
+    public FindUserId(UserAccessDao userAccessDao)
     {
-        private readonly UserAccessDao _userAccessDao;
+        _userAccessDao = userAccessDao;
+    }
 
-        public FindUserId(UserAccessDao userAccessDao)
-        {
-            _userAccessDao = userAccessDao;
-        }
+    public async Task<Guid?> FindByExternalUserIdAsync(string externalUserId)
+    {
+        if (string.IsNullOrEmpty(externalUserId))
+            return null;
 
-        public async Task<Guid?> FindByExternalUserIdAsync(string externalUserId)
-        {
-            if (string.IsNullOrEmpty(externalUserId))
-                return null;
-
-            return await _userAccessDao.FindActiveUserByExternalUserId(externalUserId);
-        }
+        return await _userAccessDao.FindActiveUserByExternalUserId(externalUserId);
     }
 }

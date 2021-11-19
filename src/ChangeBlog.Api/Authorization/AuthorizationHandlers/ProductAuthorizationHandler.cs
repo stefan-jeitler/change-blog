@@ -7,33 +7,32 @@ using Microsoft.AspNetCore.Mvc.Filters;
 
 // ReSharper disable ConvertIfStatementToReturnStatement
 
-namespace ChangeBlog.Api.Authorization.AuthorizationHandlers
+namespace ChangeBlog.Api.Authorization.AuthorizationHandlers;
+
+public class ProductAuthorizationHandler : AuthorizationHandler
 {
-    public class ProductAuthorizationHandler : AuthorizationHandler
+    private readonly AuthorizationHandler _authorizationHandler;
+    private readonly IGetAuthorizationState _getAuthorizationState;
+
+    public ProductAuthorizationHandler(AuthorizationHandler authorizationHandlerComponent,
+        IGetAuthorizationState getAuthorizationState)
     {
-        private readonly AuthorizationHandler _authorizationHandler;
-        private readonly IGetAuthorizationState _getAuthorizationState;
+        _authorizationHandler = authorizationHandlerComponent;
+        _getAuthorizationState = getAuthorizationState;
+    }
 
-        public ProductAuthorizationHandler(AuthorizationHandler authorizationHandlerComponent,
-            IGetAuthorizationState getAuthorizationState)
-        {
-            _authorizationHandler = authorizationHandlerComponent;
-            _getAuthorizationState = getAuthorizationState;
-        }
+    public override Task<AuthorizationState> GetAuthorizationState(ActionExecutingContext context, Guid userId,
+        Permission permission)
+    {
+        var productIdInRoute = TryFindIdInRoute(context.HttpContext, KnownIdentifiers.ProductId);
+        if (productIdInRoute.HasValue)
+            return _getAuthorizationState.GetAuthStateByProductIdAsync(userId, productIdInRoute.Value, permission);
 
-        public override Task<AuthorizationState> GetAuthorizationState(ActionExecutingContext context, Guid userId,
-            Permission permission)
-        {
-            var productIdInRoute = TryFindIdInRoute(context.HttpContext, KnownIdentifiers.ProductId);
-            if (productIdInRoute.HasValue)
-                return _getAuthorizationState.GetAuthStateByProductIdAsync(userId, productIdInRoute.Value, permission);
+        var productIdInBody = TryFindInBody<IContainsProductId>(context);
+        if (productIdInBody is not null)
+            return _getAuthorizationState.GetAuthStateByProductIdAsync(userId, productIdInBody.ProductId,
+                permission);
 
-            var productIdInBody = TryFindInBody<IContainsProductId>(context);
-            if (productIdInBody is not null)
-                return _getAuthorizationState.GetAuthStateByProductIdAsync(userId, productIdInBody.ProductId,
-                    permission);
-
-            return _authorizationHandler.GetAuthorizationState(context, userId, permission);
-        }
+        return _authorizationHandler.GetAuthorizationState(context, userId, permission);
     }
 }

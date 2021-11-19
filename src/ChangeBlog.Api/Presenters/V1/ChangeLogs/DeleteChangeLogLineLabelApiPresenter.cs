@@ -6,34 +6,33 @@ using ChangeBlog.Application.DataAccess;
 using ChangeBlog.Application.UseCases.Commands.Labels.DeleteChangeLogLineLabel;
 using Microsoft.AspNetCore.Mvc;
 
-namespace ChangeBlog.Api.Presenters.V1.ChangeLogs
+namespace ChangeBlog.Api.Presenters.V1.ChangeLogs;
+
+public class DeleteChangeLogLineLabelApiPresenter : BaseApiPresenter, IDeleteChangeLogLineLabelOutputPort
 {
-    public class DeleteChangeLogLineLabelApiPresenter : BaseApiPresenter, IDeleteChangeLogLineLabelOutputPort
+    public void Deleted(Guid changeLogLineId)
     {
-        public void Deleted(Guid changeLogLineId)
+        var resourceIds = new Dictionary<string, string>
         {
-            var resourceIds = new Dictionary<string, string>
-            {
-                [KnownIdentifiers.ChangeLogLineId] = changeLogLineId.ToString()
-            };
+            [KnownIdentifiers.ChangeLogLineId] = changeLogLineId.ToString()
+        };
 
-            Response = new OkObjectResult(DefaultResponse.Create("Label successfully deleted.", resourceIds));
-        }
+        Response = new OkObjectResult(DefaultResponse.Create("Label successfully deleted.", resourceIds));
+    }
 
-        public void InvalidLabel(string label)
-        {
-            Response = new BadRequestObjectResult(
-                DefaultResponse.Create($"Invalid label '{label}'."));
-        }
+    public void InvalidLabel(string label)
+    {
+        Response = new BadRequestObjectResult(
+            DefaultResponse.Create($"Invalid label '{label}'."));
+    }
 
-        public void Conflict(Conflict conflict)
-        {
-            Response = conflict.ToResponse();
-        }
+    public void Conflict(Conflict conflict)
+    {
+        Response = conflict.ToResponse();
+    }
 
-        public void ChangeLogLineDoesNotExist()
-        {
-            Response = new NotFoundObjectResult(DefaultResponse.Create("ChangeLogLine not found."));
-        }
+    public void ChangeLogLineDoesNotExist()
+    {
+        Response = new NotFoundObjectResult(DefaultResponse.Create("ChangeLogLine not found."));
     }
 }

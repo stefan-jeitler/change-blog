@@ -10,28 +10,27 @@ using ChangeBlog.Application.UseCases.Queries.GetLatestVersion;
 using ChangeBlog.Application.UseCases.Queries.SharedModels;
 using Microsoft.AspNetCore.Mvc;
 
-namespace ChangeBlog.Api.Presenters.V1.Version
+namespace ChangeBlog.Api.Presenters.V1.Version;
+
+public class GetLatestVersionApiPresenter : BaseApiPresenter, IGetLatestVersionOutputPort
 {
-    public class GetLatestVersionApiPresenter : BaseApiPresenter, IGetLatestVersionOutputPort
+    public void VersionFound(VersionResponseModel versionResponseModel)
     {
-        public void VersionFound(VersionResponseModel versionResponseModel)
-        {
-            Response = new OkObjectResult(VersionDto.FromResponseModel(versionResponseModel));
-        }
+        Response = new OkObjectResult(VersionDto.FromResponseModel(versionResponseModel));
+    }
 
-        public void NoVersionExists(Guid productId)
+    public void NoVersionExists(Guid productId)
+    {
+        var resourceIds = new Dictionary<string, string>
         {
-            var resourceIds = new Dictionary<string, string>
-            {
-                [KnownIdentifiers.ProductId] = productId.ToString()
-            };
+            [KnownIdentifiers.ProductId] = productId.ToString()
+        };
 
-            Response = new NotFoundObjectResult(DefaultResponse.Create("Product does not contain any version.", resourceIds));
-        }
+        Response = new NotFoundObjectResult(DefaultResponse.Create("Product does not contain any version.", resourceIds));
+    }
 
-        public void ProductDoesNotExist()
-        {
-            Response = new NotFoundObjectResult(DefaultResponse.Create("Product not found."));
-        }
+    public void ProductDoesNotExist()
+    {
+        Response = new NotFoundObjectResult(DefaultResponse.Create("Product not found."));
     }
 }

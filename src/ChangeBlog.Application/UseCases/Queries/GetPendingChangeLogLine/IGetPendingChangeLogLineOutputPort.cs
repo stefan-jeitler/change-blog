@@ -1,11 +1,10 @@
 using System;
 
-namespace ChangeBlog.Application.UseCases.Queries.GetPendingChangeLogLine
+namespace ChangeBlog.Application.UseCases.Queries.GetPendingChangeLogLine;
+
+public interface IGetPendingChangeLogLineOutputPort
 {
-    public interface IGetPendingChangeLogLineOutputPort
-    {
-        void LineDoesNotExist(Guid changeLogLineId);
-        void LineIsNotPending(Guid changeLogLineId);
-        void LineFound(PendingChangeLogLineResponseModel responseModel);
-    }
+    void LineDoesNotExist(Guid changeLogLineId);
+    void LineIsNotPending(Guid changeLogLineId);
+    void LineFound(PendingChangeLogLineResponseModel responseModel);
 }

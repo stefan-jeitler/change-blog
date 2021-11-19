@@ -1,6 +1,5 @@
-namespace ChangeBlog.Application.DataAccess
+namespace ChangeBlog.Application.DataAccess;
+
+public abstract class Conflict
 {
-    public abstract class Conflict
-    {
-    }
 }

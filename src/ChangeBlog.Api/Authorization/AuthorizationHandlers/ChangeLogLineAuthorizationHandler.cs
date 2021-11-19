@@ -4,28 +4,27 @@ using ChangeBlog.Application.UseCases.Queries.GetAuthorizationState;
 using ChangeBlog.Domain.Authorization;
 using Microsoft.AspNetCore.Mvc.Filters;
 
-namespace ChangeBlog.Api.Authorization.AuthorizationHandlers
+namespace ChangeBlog.Api.Authorization.AuthorizationHandlers;
+
+public class ChangeLogLineAuthorizationHandler : AuthorizationHandler
 {
-    public class ChangeLogLineAuthorizationHandler : AuthorizationHandler
+    private readonly AuthorizationHandler _authorizationHandler;
+    private readonly IGetAuthorizationState _getAuthorizationState;
+
+    public ChangeLogLineAuthorizationHandler(AuthorizationHandler authorizationHandlerComponent,
+        IGetAuthorizationState getAuthorizationState)
     {
-        private readonly AuthorizationHandler _authorizationHandler;
-        private readonly IGetAuthorizationState _getAuthorizationState;
+        _authorizationHandler = authorizationHandlerComponent;
+        _getAuthorizationState = getAuthorizationState;
+    }
 
-        public ChangeLogLineAuthorizationHandler(AuthorizationHandler authorizationHandlerComponent,
-            IGetAuthorizationState getAuthorizationState)
-        {
-            _authorizationHandler = authorizationHandlerComponent;
-            _getAuthorizationState = getAuthorizationState;
-        }
+    public override Task<AuthorizationState> GetAuthorizationState(ActionExecutingContext context, Guid userId,
+        Permission permission)
+    {
+        var changeLogLineId = TryFindIdInRoute(context.HttpContext, KnownIdentifiers.ChangeLogLineId);
 
-        public override Task<AuthorizationState> GetAuthorizationState(ActionExecutingContext context, Guid userId,
-            Permission permission)
-        {
-            var changeLogLineId = TryFindIdInRoute(context.HttpContext, KnownIdentifiers.ChangeLogLineId);
-
-            return changeLogLineId.HasValue
-                ? _getAuthorizationState.GetAuthStateByChangeLogLineIdAsync(userId, changeLogLineId.Value, permission)
-                : _authorizationHandler.GetAuthorizationState(context, userId, permission);
-        }
+        return changeLogLineId.HasValue
+            ? _getAuthorizationState.GetAuthStateByChangeLogLineIdAsync(userId, changeLogLineId.Value, permission)
+            : _authorizationHandler.GetAuthorizationState(context, userId, permission);
     }
 }

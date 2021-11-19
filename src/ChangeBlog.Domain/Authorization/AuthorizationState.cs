@@ -1,9 +1,8 @@
-namespace ChangeBlog.Domain.Authorization
+namespace ChangeBlog.Domain.Authorization;
+
+public enum AuthorizationState
 {
-    public enum AuthorizationState
-    {
-        Inaccessible,
-        Unauthorized,
-        Authorized
-    }
+    Inaccessible,
+    Unauthorized,
+    Authorized
 }

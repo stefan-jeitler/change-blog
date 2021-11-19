@@ -1,10 +1,9 @@
 using System;
 using System.Threading.Tasks;
 
-namespace ChangeBlog.Application.UseCases.Queries.GetAccounts
+namespace ChangeBlog.Application.UseCases.Queries.GetAccounts;
+
+public interface IGetAccount
 {
-    public interface IGetAccount
-    {
-        Task<AccountResponseModel> ExecuteAsync(Guid userId, Guid accountId);
-    }
+    Task<AccountResponseModel> ExecuteAsync(Guid userId, Guid accountId);
 }

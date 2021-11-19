@@ -1,23 +1,22 @@
 using System;
 using NodaTime;
 
-namespace ChangeBlog.Application.Extensions
+namespace ChangeBlog.Application.Extensions;
+
+public static class DateTimeExtensions
 {
-    public static class DateTimeExtensions
+    public static DateTimeOffset ToLocal(this DateTime dateTime, string olsonId)
     {
-        public static DateTimeOffset ToLocal(this DateTime dateTime, string olsonId)
-        {
-            if (olsonId is null)
-                throw new ArgumentNullException(nameof(olsonId));
+        if (olsonId is null)
+            throw new ArgumentNullException(nameof(olsonId));
 
-            var timeZone = DateTimeZoneProviders.Tzdb.GetZoneOrNull(olsonId);
+        var timeZone = DateTimeZoneProviders.Tzdb.GetZoneOrNull(olsonId);
 
-            if (timeZone is null)
-                throw new Exception($"TimeZone not found: {olsonId}");
+        if (timeZone is null)
+            throw new Exception($"TimeZone not found: {olsonId}");
 
-            var instant = Instant.FromDateTimeUtc(DateTime.SpecifyKind(dateTime, DateTimeKind.Utc));
+        var instant = Instant.FromDateTimeUtc(DateTime.SpecifyKind(dateTime, DateTimeKind.Utc));
 
-            return instant.InZone(timeZone).ToDateTimeOffset();
-        }
+        return instant.InZone(timeZone).ToDateTimeOffset();
     }
 }

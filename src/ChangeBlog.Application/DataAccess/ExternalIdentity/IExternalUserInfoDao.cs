@@ -1,9 +1,8 @@
 ﻿using System.Threading.Tasks;
 
-namespace ChangeBlog.Application.DataAccess.ExternalIdentity
+namespace ChangeBlog.Application.DataAccess.ExternalIdentity;
+
+public interface IExternalUserInfoDao
 {
-    public interface IExternalUserInfoDao
-    {
-        Task<UserInfo> GetAsync();
-    }
+    Task<UserInfo> GetAsync();
 }

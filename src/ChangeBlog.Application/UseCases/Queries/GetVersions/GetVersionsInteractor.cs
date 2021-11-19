@@ -13,118 +13,117 @@ using ChangeBlog.Domain.ChangeLog;
 using ChangeBlog.Domain.Version;
 using CSharpFunctionalExtensions;
 
-namespace ChangeBlog.Application.UseCases.Queries.GetVersions
+namespace ChangeBlog.Application.UseCases.Queries.GetVersions;
+
+public class GetVersionsInteractor : IGetVersion, IGetVersions
 {
-    public class GetVersionsInteractor : IGetVersion, IGetVersions
+    private readonly IChangeLogQueriesDao _changeLogQueriesDao;
+    private readonly IProductDao _productDao;
+    private readonly IUserDao _userDao;
+    private readonly IVersionDao _versionDao;
+
+    public GetVersionsInteractor(IProductDao productDao, IVersionDao versionDao,
+        IChangeLogQueriesDao changeLogQueriesDao, IUserDao userDao)
     {
-        private readonly IChangeLogQueriesDao _changeLogQueriesDao;
-        private readonly IProductDao _productDao;
-        private readonly IUserDao _userDao;
-        private readonly IVersionDao _versionDao;
+        _productDao = productDao ?? throw new ArgumentNullException(nameof(productDao));
+        _versionDao = versionDao ?? throw new ArgumentNullException(nameof(versionDao));
+        _changeLogQueriesDao = changeLogQueriesDao ?? throw new ArgumentNullException(nameof(changeLogQueriesDao));
+        _userDao = userDao ?? throw new ArgumentNullException(nameof(userDao));
+    }
 
-        public GetVersionsInteractor(IProductDao productDao, IVersionDao versionDao,
-            IChangeLogQueriesDao changeLogQueriesDao, IUserDao userDao)
+    public async Task<Maybe<VersionResponseModel>> ExecuteAsync(Guid userId, Guid versionId)
+    {
+        var clVersion = await _versionDao.FindVersionAsync(versionId);
+        if (clVersion.HasNoValue)
+            return Maybe<VersionResponseModel>.None;
+
+        var currentUser = await _userDao.GetUserAsync(userId);
+        var product = await _productDao.GetProductAsync(clVersion.GetValueOrThrow().ProductId);
+
+        var changeLogs =
+            await _changeLogQueriesDao.GetChangeLogsAsync(clVersion.GetValueOrThrow().ProductId, clVersion.GetValueOrThrow().Id);
+
+        var responseModel = CreateResponseModel(clVersion.GetValueOrThrow(), product, currentUser.TimeZone, changeLogs);
+        return Maybe<VersionResponseModel>.From(responseModel);
+    }
+
+    public async Task<Maybe<VersionResponseModel>> ExecuteAsync(Guid userId, Guid productId, string version)
+    {
+        if (!ClVersionValue.TryParse(version, out var clVersionValue))
         {
-            _productDao = productDao ?? throw new ArgumentNullException(nameof(productDao));
-            _versionDao = versionDao ?? throw new ArgumentNullException(nameof(versionDao));
-            _changeLogQueriesDao = changeLogQueriesDao ?? throw new ArgumentNullException(nameof(changeLogQueriesDao));
-            _userDao = userDao ?? throw new ArgumentNullException(nameof(userDao));
+            return Maybe<VersionResponseModel>.None;
         }
 
-        public async Task<Maybe<VersionResponseModel>> ExecuteAsync(Guid userId, Guid versionId)
-        {
-            var clVersion = await _versionDao.FindVersionAsync(versionId);
-            if (clVersion.HasNoValue)
-                return Maybe<VersionResponseModel>.None;
+        var clVersion = await _versionDao.FindVersionAsync(productId, clVersionValue);
+        if (clVersion.HasNoValue)
+            return Maybe<VersionResponseModel>.None;
 
-            var currentUser = await _userDao.GetUserAsync(userId);
-            var product = await _productDao.GetProductAsync(clVersion.GetValueOrThrow().ProductId);
+        var currentUser = await _userDao.GetUserAsync(userId);
+        var product = await _productDao.GetProductAsync(clVersion.GetValueOrThrow().ProductId);
 
-            var changeLogs =
-                await _changeLogQueriesDao.GetChangeLogsAsync(clVersion.GetValueOrThrow().ProductId, clVersion.GetValueOrThrow().Id);
+        var changeLogs =
+            await _changeLogQueriesDao.GetChangeLogsAsync(clVersion.GetValueOrThrow().ProductId, clVersion.GetValueOrThrow().Id);
 
-            var responseModel = CreateResponseModel(clVersion.GetValueOrThrow(), product, currentUser.TimeZone, changeLogs);
-            return Maybe<VersionResponseModel>.From(responseModel);
-        }
+        var responseModel = CreateResponseModel(clVersion.GetValueOrThrow(), product, currentUser.TimeZone, changeLogs);
+        return Maybe<VersionResponseModel>.From(responseModel);
+    }
 
-        public async Task<Maybe<VersionResponseModel>> ExecuteAsync(Guid userId, Guid productId, string version)
-        {
-            if (!ClVersionValue.TryParse(version, out var clVersionValue))
-            {
-                return Maybe<VersionResponseModel>.None;
-            }
+    public async Task<IList<VersionResponseModel>> ExecuteAsync(VersionsQueryRequestModel requestModel)
+    {
+        var querySettings = new VersionQuerySettings(requestModel.ProductId,
+            requestModel.LastVersionId,
+            requestModel.SearchTerm,
+            requestModel.Limit,
+            requestModel.IncludeDeleted);
 
-            var clVersion = await _versionDao.FindVersionAsync(productId, clVersionValue);
-            if (clVersion.HasNoValue)
-                return Maybe<VersionResponseModel>.None;
+        var currentUser = await _userDao.GetUserAsync(requestModel.UserId);
+        var product = await _productDao.GetProductAsync(requestModel.ProductId);
 
-            var currentUser = await _userDao.GetUserAsync(userId);
-            var product = await _productDao.GetProductAsync(clVersion.GetValueOrThrow().ProductId);
+        var versions = await _versionDao.GetVersionsAsync(querySettings);
+        var changeLogsByVersionId = await GetChangeLogsAsync(versions);
 
-            var changeLogs =
-                await _changeLogQueriesDao.GetChangeLogsAsync(clVersion.GetValueOrThrow().ProductId, clVersion.GetValueOrThrow().Id);
+        return versions
+            .Select(x => CreateResponseModel(x,
+                product,
+                currentUser.TimeZone,
+                changeLogsByVersionId.GetValueOrDefault(x.Id, new ChangeLogs(Array.Empty<ChangeLogLine>()))))
+            .ToList();
+    }
 
-            var responseModel = CreateResponseModel(clVersion.GetValueOrThrow(), product, currentUser.TimeZone, changeLogs);
-            return Maybe<VersionResponseModel>.From(responseModel);
-        }
+    private async Task<IReadOnlyDictionary<Guid, ChangeLogs>> GetChangeLogsAsync(IEnumerable<ClVersion> clVersions)
+    {
+        var versionIds = clVersions
+            .Select(x => x.Id)
+            .Distinct()
+            .ToList();
 
-        public async Task<IList<VersionResponseModel>> ExecuteAsync(VersionsQueryRequestModel requestModel)
-        {
-            var querySettings = new VersionQuerySettings(requestModel.ProductId,
-                requestModel.LastVersionId,
-                requestModel.SearchTerm,
-                requestModel.Limit,
-                requestModel.IncludeDeleted);
+        var changeLogs = await _changeLogQueriesDao.GetChangeLogsAsync(versionIds);
 
-            var currentUser = await _userDao.GetUserAsync(requestModel.UserId);
-            var product = await _productDao.GetProductAsync(requestModel.ProductId);
+        return changeLogs
+            .ToDictionary(x => x.VersionId!.Value, x => x);
+    }
 
-            var versions = await _versionDao.GetVersionsAsync(querySettings);
-            var changeLogsByVersionId = await GetChangeLogsAsync(versions);
-
-            return versions
-                .Select(x => CreateResponseModel(x,
-                    product,
-                    currentUser.TimeZone,
-                    changeLogsByVersionId.GetValueOrDefault(x.Id, new ChangeLogs(Array.Empty<ChangeLogLine>()))))
-                .ToList();
-        }
-
-        private async Task<IReadOnlyDictionary<Guid, ChangeLogs>> GetChangeLogsAsync(IEnumerable<ClVersion> clVersions)
-        {
-            var versionIds = clVersions
-                .Select(x => x.Id)
-                .Distinct()
-                .ToList();
-
-            var changeLogs = await _changeLogQueriesDao.GetChangeLogsAsync(versionIds);
-
-            return changeLogs
-                .ToDictionary(x => x.VersionId!.Value, x => x);
-        }
-
-        private static VersionResponseModel CreateResponseModel(ClVersion clVersion, Product product,
-            string timeZone, ChangeLogs changeLogs)
-        {
-            return new(clVersion.Id,
-                clVersion.Value.Value,
-                clVersion.Name.Value,
-                clVersion.ProductId,
-                product.Name,
-                product.AccountId,
-                changeLogs.Lines
-                    .OrderBy(x => x.Position)
-                    .Select(x =>
-                        new ChangeLogLineResponseModel(x.Id,
-                            x.Text,
-                            x.Labels.Select(l => l.Value).ToList(),
-                            x.Issues.Select(i => i.Value).ToList(),
-                            x.CreatedAt.ToLocal(timeZone)))
-                    .ToList(),
-                clVersion.CreatedAt.ToLocal(timeZone),
-                clVersion.ReleasedAt?.ToLocal(timeZone),
-                clVersion.DeletedAt?.ToLocal(timeZone)
-            );
-        }
+    private static VersionResponseModel CreateResponseModel(ClVersion clVersion, Product product,
+        string timeZone, ChangeLogs changeLogs)
+    {
+        return new(clVersion.Id,
+            clVersion.Value.Value,
+            clVersion.Name.Value,
+            clVersion.ProductId,
+            product.Name,
+            product.AccountId,
+            changeLogs.Lines
+                .OrderBy(x => x.Position)
+                .Select(x =>
+                    new ChangeLogLineResponseModel(x.Id,
+                        x.Text,
+                        x.Labels.Select(l => l.Value).ToList(),
+                        x.Issues.Select(i => i.Value).ToList(),
+                        x.CreatedAt.ToLocal(timeZone)))
+                .ToList(),
+            clVersion.CreatedAt.ToLocal(timeZone),
+            clVersion.ReleasedAt?.ToLocal(timeZone),
+            clVersion.DeletedAt?.ToLocal(timeZone)
+        );
     }
 }

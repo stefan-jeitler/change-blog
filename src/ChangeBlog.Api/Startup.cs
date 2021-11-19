@@ -14,65 +14,64 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 
-namespace ChangeBlog.Api
+namespace ChangeBlog.Api;
+
+public class Startup
 {
-    public class Startup
+    private readonly IConfiguration _configuration;
+
+    public Startup(IConfiguration configuration)
     {
-        private readonly IConfiguration _configuration;
+        _configuration = configuration;
+    }
 
-        public Startup(IConfiguration configuration)
-        {
-            _configuration = configuration;
-        }
+    private static void ConfigureControllers(IServiceCollection services)
+    {
+        services
+            .AddControllers(o => { o.Filters.Add(typeof(AuthorizationFilter)); })
+            .ConfigureApiBehaviorOptions(o => o.InvalidModelStateResponseFactory = CustomErrorMessage);
+    }
 
-        private static void ConfigureControllers(IServiceCollection services)
-        {
-            services
-                .AddControllers(o => { o.Filters.Add(typeof(AuthorizationFilter)); })
-                .ConfigureApiBehaviorOptions(o => o.InvalidModelStateResponseFactory = CustomErrorMessage);
-        }
+    public void ConfigureServices(IServiceCollection services)
+    {
+        ConfigureControllers(services);
 
-        public void ConfigureServices(IServiceCollection services)
-        {
-            ConfigureControllers(services);
+        services.AddSwagger();
+        services.AddApplicationInsightsTelemetry();
+        services.AddApiKeyAuthentication();
+        services.AddPermissionHandler();
 
-            services.AddSwagger();
-            services.AddApplicationInsightsTelemetry();
-            services.AddApiKeyAuthentication();
-            services.AddPermissionHandler();
+        var connectionString = _configuration.GetConnectionString("ChangeBlogDb");
+        services.AddPostgresDataAccess(connectionString);
+        services.AddSingleton<IExternalUserInfoDao, ExternalUserInfoNotSupported>();
 
-            var connectionString = _configuration.GetConnectionString("ChangeBlogDb");
-            services.AddPostgresDataAccess(connectionString);
-            services.AddSingleton<IExternalUserInfoDao, ExternalUserInfoNotSupported>();
+        services.AddMemoryCache();
+        services.AddApplicationUseCases();
+    }
 
-            services.AddMemoryCache();
-            services.AddApplicationUseCases();
-        }
+    public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
+    {
+        if (env.IsDevelopment())
+            app.UseDeveloperExceptionPage();
 
-        public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
-        {
-            if (env.IsDevelopment())
-                app.UseDeveloperExceptionPage();
+        app.AddSwagger();
+        app.UseRouting();
+        app.UseAuthentication();
+        app.UseAuthorization();
+        app.UseEndpoints(endpoints =>
+            endpoints
+                .MapControllers()
+                .RequireAuthorization());
+    }
 
-            app.AddSwagger();
-            app.UseRouting();
-            app.UseAuthentication();
-            app.UseAuthorization();
-            app.UseEndpoints(endpoints =>
-                endpoints
-                    .MapControllers()
-                    .RequireAuthorization());
-        }
+    private static ActionResult CustomErrorMessage(ActionContext context)
+    {
+        var firstError = context.ModelState
+            .Where(x => x.Value is not null)
+            .FirstOrDefault(x => x.Value.Errors.Count > 0)
+            .Value?.Errors.FirstOrDefault()?
+            .ErrorMessage ?? "Unknown";
 
-        private static ActionResult CustomErrorMessage(ActionContext context)
-        {
-            var firstError = context.ModelState
-                .Where(x => x.Value is not null)
-                .FirstOrDefault(x => x.Value.Errors.Count > 0)
-                .Value?.Errors.FirstOrDefault()?
-                .ErrorMessage ?? "Unknown";
-
-            return new BadRequestObjectResult(DefaultResponse.Create(firstError));
-        }
+        return new BadRequestObjectResult(DefaultResponse.Create(firstError));
     }
 }

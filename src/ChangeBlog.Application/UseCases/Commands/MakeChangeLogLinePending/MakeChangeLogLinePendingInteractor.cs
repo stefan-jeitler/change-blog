@@ -10,130 +10,129 @@ using CSharpFunctionalExtensions;
 
 // ReSharper disable InvertIf
 
-namespace ChangeBlog.Application.UseCases.Commands.MakeChangeLogLinePending
+namespace ChangeBlog.Application.UseCases.Commands.MakeChangeLogLinePending;
+
+public class MakeChangeLogLinePendingInteractor : IMakeChangeLogLinePending
 {
-    public class MakeChangeLogLinePendingInteractor : IMakeChangeLogLinePending
+    private readonly IChangeLogCommandsDao _changeLogCommands;
+    private readonly IChangeLogQueriesDao _changeLogQueries;
+    private readonly IUnitOfWork _unitOfWork;
+    private readonly IVersionDao _versionDao;
+
+    public MakeChangeLogLinePendingInteractor(IVersionDao versionDao, IChangeLogQueriesDao changeLogQueries,
+        IChangeLogCommandsDao changeLogCommands, IUnitOfWork unitOfWork)
     {
-        private readonly IChangeLogCommandsDao _changeLogCommands;
-        private readonly IChangeLogQueriesDao _changeLogQueries;
-        private readonly IUnitOfWork _unitOfWork;
-        private readonly IVersionDao _versionDao;
+        _versionDao = versionDao ?? throw new ArgumentNullException(nameof(versionDao));
+        _changeLogQueries = changeLogQueries ?? throw new ArgumentNullException(nameof(changeLogQueries));
+        _unitOfWork = unitOfWork ?? throw new ArgumentNullException(nameof(unitOfWork));
+        _changeLogCommands = changeLogCommands ?? throw new ArgumentNullException(nameof(changeLogCommands));
+    }
 
-        public MakeChangeLogLinePendingInteractor(IVersionDao versionDao, IChangeLogQueriesDao changeLogQueries,
-            IChangeLogCommandsDao changeLogCommands, IUnitOfWork unitOfWork)
+    public async Task ExecuteAsync(IMakeChangeLogLinePendingOutputPort output, Guid changeLogLineId)
+    {
+        if (changeLogLineId == Guid.Empty)
+            throw new ArgumentException("ChangeLogLineId cannot be empty.");
+
+        _unitOfWork.Start();
+
+        var line = await GetLineAsync(output, changeLogLineId);
+        if (line.HasNoValue)
+            return;
+
+        var clVersion = await GetVersionAsync(output, line.GetValueOrThrow());
+        if (clVersion.HasNoValue)
+            return;
+
+        var pendingChangeLogMetadata = await GetChangeLogsAsync(output, line.GetValueOrThrow());
+        if (pendingChangeLogMetadata.HasNoValue)
+            return;
+
+        var pendingLine = MakeLinePending(line.GetValueOrThrow(), pendingChangeLogMetadata.GetValueOrThrow());
+        await MoveLineAsyncAsync(output, pendingLine);
+    }
+
+    private async Task<Maybe<ChangeLogLine>> GetLineAsync(IMakeChangeLogLinePendingOutputPort output,
+        Guid changeLogLineId)
+    {
+        var line = await _changeLogQueries.FindLineAsync(changeLogLineId);
+        if (line.HasNoValue)
         {
-            _versionDao = versionDao ?? throw new ArgumentNullException(nameof(versionDao));
-            _changeLogQueries = changeLogQueries ?? throw new ArgumentNullException(nameof(changeLogQueries));
-            _unitOfWork = unitOfWork ?? throw new ArgumentNullException(nameof(unitOfWork));
-            _changeLogCommands = changeLogCommands ?? throw new ArgumentNullException(nameof(changeLogCommands));
+            output.ChangeLogLineDoesNotExist();
+            return Maybe<ChangeLogLine>.None;
         }
 
-        public async Task ExecuteAsync(IMakeChangeLogLinePendingOutputPort output, Guid changeLogLineId)
+        if (line.GetValueOrThrow().IsPending)
         {
-            if (changeLogLineId == Guid.Empty)
-                throw new ArgumentException("ChangeLogLineId cannot be empty.");
-
-            _unitOfWork.Start();
-
-            var line = await GetLineAsync(output, changeLogLineId);
-            if (line.HasNoValue)
-                return;
-
-            var clVersion = await GetVersionAsync(output, line.GetValueOrThrow());
-            if (clVersion.HasNoValue)
-                return;
-
-            var pendingChangeLogMetadata = await GetChangeLogsAsync(output, line.GetValueOrThrow());
-            if (pendingChangeLogMetadata.HasNoValue)
-                return;
-
-            var pendingLine = MakeLinePending(line.GetValueOrThrow(), pendingChangeLogMetadata.GetValueOrThrow());
-            await MoveLineAsyncAsync(output, pendingLine);
+            output.ChangeLogLineIsAlreadyPending(line.GetValueOrThrow().Id);
+            return Maybe<ChangeLogLine>.None;
         }
 
-        private async Task<Maybe<ChangeLogLine>> GetLineAsync(IMakeChangeLogLinePendingOutputPort output,
-            Guid changeLogLineId)
+        return line;
+    }
+
+    private async Task<Maybe<ClVersion>> GetVersionAsync(IMakeChangeLogLinePendingOutputPort output,
+        ChangeLogLine line)
+    {
+        var versionId = line.VersionId!.Value;
+        var clVersion = await _versionDao.GetVersionAsync(versionId);
+
+        if (clVersion.IsReleased)
         {
-            var line = await _changeLogQueries.FindLineAsync(changeLogLineId);
-            if (line.HasNoValue)
-            {
-                output.ChangeLogLineDoesNotExist();
-                return Maybe<ChangeLogLine>.None;
-            }
-
-            if (line.GetValueOrThrow().IsPending)
-            {
-                output.ChangeLogLineIsAlreadyPending(line.GetValueOrThrow().Id);
-                return Maybe<ChangeLogLine>.None;
-            }
-
-            return line;
+            output.VersionAlreadyReleased(versionId);
+            return Maybe<ClVersion>.None;
         }
 
-        private async Task<Maybe<ClVersion>> GetVersionAsync(IMakeChangeLogLinePendingOutputPort output,
-            ChangeLogLine line)
+        if (clVersion.IsDeleted)
         {
-            var versionId = line.VersionId!.Value;
-            var clVersion = await _versionDao.GetVersionAsync(versionId);
-
-            if (clVersion.IsReleased)
-            {
-                output.VersionAlreadyReleased(versionId);
-                return Maybe<ClVersion>.None;
-            }
-
-            if (clVersion.IsDeleted)
-            {
-                output.VersionDeleted(versionId);
-                return Maybe<ClVersion>.None;
-            }
-
-            return Maybe<ClVersion>.From(clVersion);
+            output.VersionDeleted(versionId);
+            return Maybe<ClVersion>.None;
         }
 
-        private async Task<Maybe<ChangeLogs>> GetChangeLogsAsync(
-            IMakeChangeLogLinePendingOutputPort output,
-            ChangeLogLine line)
+        return Maybe<ClVersion>.From(clVersion);
+    }
+
+    private async Task<Maybe<ChangeLogs>> GetChangeLogsAsync(
+        IMakeChangeLogLinePendingOutputPort output,
+        ChangeLogLine line)
+    {
+        var pendingChangeLogs = await _changeLogQueries.GetChangeLogsAsync(line.ProductId);
+        if (!pendingChangeLogs.IsPositionAvailable)
         {
-            var pendingChangeLogs = await _changeLogQueries.GetChangeLogsAsync(line.ProductId);
-            if (!pendingChangeLogs.IsPositionAvailable)
-            {
-                output.TooManyPendingLines(ChangeLogs.MaxLines);
-                return Maybe<ChangeLogs>.None;
-            }
-
-            var existingLineWithSameText = pendingChangeLogs.Lines.FirstOrDefault(x => x.Text.Equals(line.Text));
-            if (existingLineWithSameText is not null)
-            {
-                output.LineWithSameTextAlreadyExists(existingLineWithSameText.Id, line.Text);
-                return Maybe<ChangeLogs>.None;
-            }
-
-            return Maybe<ChangeLogs>.From(pendingChangeLogs);
+            output.TooManyPendingLines(ChangeLogs.MaxLines);
+            return Maybe<ChangeLogs>.None;
         }
 
-        private static ChangeLogLine MakeLinePending(ChangeLogLine line, ChangeLogs pendingChangeLogs) =>
-            new(line.Id,
-                null,
-                line.ProductId,
-                line.Text,
-                pendingChangeLogs.NextFreePosition,
-                line.CreatedAt,
-                line.Labels,
-                line.Issues,
-                line.CreatedByUser,
-                line.DeletedAt);
-
-        private async Task MoveLineAsyncAsync(IMakeChangeLogLinePendingOutputPort output, ChangeLogLine line)
+        var existingLineWithSameText = pendingChangeLogs.Lines.FirstOrDefault(x => x.Text.Equals(line.Text));
+        if (existingLineWithSameText is not null)
         {
-            await _changeLogCommands.MoveLineAsync(line)
-                .Match(Finish, output.Conflict);
+            output.LineWithSameTextAlreadyExists(existingLineWithSameText.Id, line.Text);
+            return Maybe<ChangeLogs>.None;
+        }
 
-            void Finish(ChangeLogLine m)
-            {
-                _unitOfWork.Commit();
-                output.WasMadePending(m.Id);
-            }
+        return Maybe<ChangeLogs>.From(pendingChangeLogs);
+    }
+
+    private static ChangeLogLine MakeLinePending(ChangeLogLine line, ChangeLogs pendingChangeLogs) =>
+        new(line.Id,
+            null,
+            line.ProductId,
+            line.Text,
+            pendingChangeLogs.NextFreePosition,
+            line.CreatedAt,
+            line.Labels,
+            line.Issues,
+            line.CreatedByUser,
+            line.DeletedAt);
+
+    private async Task MoveLineAsyncAsync(IMakeChangeLogLinePendingOutputPort output, ChangeLogLine line)
+    {
+        await _changeLogCommands.MoveLineAsync(line)
+            .Match(Finish, output.Conflict);
+
+        void Finish(ChangeLogLine m)
+        {
+            _unitOfWork.Commit();
+            output.WasMadePending(m.Id);
         }
     }
 }

@@ -6,33 +6,32 @@ using ChangeBlog.Application.DataAccess.Products;
 using ChangeBlog.Domain.Version;
 using CSharpFunctionalExtensions;
 
-namespace ChangeBlog.Application.Tests.TestDoubles
+namespace ChangeBlog.Application.Tests.TestDoubles;
+
+public class FakeVersioningSchemeDao : IVersioningSchemeDao
 {
-    public class FakeVersioningSchemeDao : IVersioningSchemeDao
+    public List<VersioningScheme> VersioningSchemes { get; } = new();
+
+    public async Task<Maybe<VersioningScheme>> FindSchemeAsync(Guid versioningSchemeId)
     {
-        public List<VersioningScheme> VersioningSchemes { get; } = new();
+        await Task.Yield();
 
-        public async Task<Maybe<VersioningScheme>> FindSchemeAsync(Guid versioningSchemeId)
-        {
-            await Task.Yield();
+        return VersioningSchemes.TryFirst(x => x.Id == versioningSchemeId);
+    }
 
-            return VersioningSchemes.TryFirst(x => x.Id == versioningSchemeId);
-        }
+    public async Task<VersioningScheme> GetSchemeAsync(Guid versioningSchemeId)
+    {
+        await Task.Yield();
 
-        public async Task<VersioningScheme> GetSchemeAsync(Guid versioningSchemeId)
-        {
-            await Task.Yield();
+        return VersioningSchemes.Single(x => x.Id == versioningSchemeId);
+    }
 
-            return VersioningSchemes.Single(x => x.Id == versioningSchemeId);
-        }
+    public async Task<IList<VersioningScheme>> GetSchemesAsync(IList<Guid> versioningSchemeIds)
+    {
+        await Task.Yield();
 
-        public async Task<IList<VersioningScheme>> GetSchemesAsync(IList<Guid> versioningSchemeIds)
-        {
-            await Task.Yield();
-
-            return VersioningSchemes
-                .Where(x => versioningSchemeIds.Any(y => x.Id == y))
-                .ToList();
-        }
+        return VersioningSchemes
+            .Where(x => versioningSchemeIds.Any(y => x.Id == y))
+            .ToList();
     }
 }

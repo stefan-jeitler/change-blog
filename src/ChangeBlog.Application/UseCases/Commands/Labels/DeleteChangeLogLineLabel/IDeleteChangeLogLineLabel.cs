@@ -1,10 +1,9 @@
 using System.Threading.Tasks;
 using ChangeBlog.Application.UseCases.Commands.Labels.SharedModels;
 
-namespace ChangeBlog.Application.UseCases.Commands.Labels.DeleteChangeLogLineLabel
+namespace ChangeBlog.Application.UseCases.Commands.Labels.DeleteChangeLogLineLabel;
+
+public interface IDeleteChangeLogLineLabel
 {
-    public interface IDeleteChangeLogLineLabel
-    {
-        Task ExecuteAsync(IDeleteChangeLogLineLabelOutputPort output, ChangeLogLineLabelRequestModel requestModel);
-    }
+    Task ExecuteAsync(IDeleteChangeLogLineLabelOutputPort output, ChangeLogLineLabelRequestModel requestModel);
 }

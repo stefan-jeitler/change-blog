@@ -1,8 +1,7 @@
 using ChangeBlog.Application.DataAccess;
 
-namespace ChangeBlog.Application.Tests.TestDoubles
+namespace ChangeBlog.Application.Tests.TestDoubles;
+
+public class ConflictStub : Conflict
 {
-    public class ConflictStub : Conflict
-    {
-    }
 }

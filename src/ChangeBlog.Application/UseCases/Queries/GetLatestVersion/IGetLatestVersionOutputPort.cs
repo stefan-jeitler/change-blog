@@ -5,13 +5,12 @@ using System.Text;
 using System.Threading.Tasks;
 using ChangeBlog.Application.UseCases.Queries.SharedModels;
 
-namespace ChangeBlog.Application.UseCases.Queries.GetLatestVersion
-{
-    public interface IGetLatestVersionOutputPort
-    {
-        void VersionFound(VersionResponseModel versionResponseModel);
+namespace ChangeBlog.Application.UseCases.Queries.GetLatestVersion;
 
-        void NoVersionExists(Guid productId);
-        void ProductDoesNotExist();
-    }
+public interface IGetLatestVersionOutputPort
+{
+    void VersionFound(VersionResponseModel versionResponseModel);
+
+    void NoVersionExists(Guid productId);
+    void ProductDoesNotExist();
 }

@@ -1,10 +1,9 @@
 using System.Collections.Generic;
 using System.Threading.Tasks;
 
-namespace ChangeBlog.Application.UseCases.Queries.GetRoles
+namespace ChangeBlog.Application.UseCases.Queries.GetRoles;
+
+public interface IGetRoles
 {
-    public interface IGetRoles
-    {
-        Task<IList<RoleResponseModel>> ExecuteAsync(string role);
-    }
+    Task<IList<RoleResponseModel>> ExecuteAsync(string role);
 }

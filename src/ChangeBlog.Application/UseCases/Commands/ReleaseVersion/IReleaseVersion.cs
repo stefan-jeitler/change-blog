@@ -1,10 +1,9 @@
 using System;
 using System.Threading.Tasks;
 
-namespace ChangeBlog.Application.UseCases.Commands.ReleaseVersion
+namespace ChangeBlog.Application.UseCases.Commands.ReleaseVersion;
+
+public interface IReleaseVersion
 {
-    public interface IReleaseVersion
-    {
-        Task ExecuteAsync(IReleaseVersionOutputPort output, Guid versionId);
-    }
+    Task ExecuteAsync(IReleaseVersionOutputPort output, Guid versionId);
 }

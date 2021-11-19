@@ -2,26 +2,25 @@ using ChangeBlog.Application.DataAccess;
 using Microsoft.Extensions.DependencyInjection;
 using Xunit;
 
-namespace ChangeBlog.DataAccess.Postgres.Tests
+namespace ChangeBlog.DataAccess.Postgres.Tests;
+
+public class ServiceCollectionTests
 {
-    public class ServiceCollectionTests
+    [Fact]
+    public void AddDbSession_ResolveUowAndDbAccessor_SameObject()
     {
-        [Fact]
-        public void AddDbSession_ResolveUowAndDbAccessor_SameObject()
-        {
-            // arrange
-            var serviceCollection = new ServiceCollection();
-            serviceCollection.AddPostgresDataAccess(Configuration.ConnectionString);
+        // arrange
+        var serviceCollection = new ServiceCollection();
+        serviceCollection.AddPostgresDataAccess(Configuration.ConnectionString);
 
-            using var serviceProvider = serviceCollection.BuildServiceProvider();
-            using var scope = serviceProvider.CreateScope();
+        using var serviceProvider = serviceCollection.BuildServiceProvider();
+        using var scope = serviceProvider.CreateScope();
 
-            // act
-            var dbAccessor = scope.ServiceProvider.GetRequiredService<IDbAccessor>();
-            var unitOfWork = scope.ServiceProvider.GetRequiredService<IUnitOfWork>();
+        // act
+        var dbAccessor = scope.ServiceProvider.GetRequiredService<IDbAccessor>();
+        var unitOfWork = scope.ServiceProvider.GetRequiredService<IUnitOfWork>();
 
-            // assert
-            Assert.True(ReferenceEquals(dbAccessor, unitOfWork));
-        }
+        // assert
+        Assert.True(ReferenceEquals(dbAccessor, unitOfWork));
     }
 }

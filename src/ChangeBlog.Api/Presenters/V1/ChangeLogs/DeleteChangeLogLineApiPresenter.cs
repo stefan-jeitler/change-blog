@@ -6,56 +6,55 @@ using ChangeBlog.Application.DataAccess;
 using ChangeBlog.Application.UseCases.Commands.DeleteChangeLogLine;
 using Microsoft.AspNetCore.Mvc;
 
-namespace ChangeBlog.Api.Presenters.V1.ChangeLogs
+namespace ChangeBlog.Api.Presenters.V1.ChangeLogs;
+
+public class DeleteChangeLogLineApiPresenter : BaseApiPresenter, IDeleteChangeLogLineOutputPort
 {
-    public class DeleteChangeLogLineApiPresenter : BaseApiPresenter, IDeleteChangeLogLineOutputPort
+    public void LineDoesNotExist(Guid changeLogLineId)
     {
-        public void LineDoesNotExist(Guid changeLogLineId)
+        var resourceIds = new Dictionary<string, string>
         {
-            var resourceIds = new Dictionary<string, string>
-            {
-                [KnownIdentifiers.ChangeLogLineId] = changeLogLineId.ToString()
-            };
+            [KnownIdentifiers.ChangeLogLineId] = changeLogLineId.ToString()
+        };
 
-            Response = new NotFoundObjectResult(DefaultResponse.Create("The requested ChangeLogLine does not exist.",
-                resourceIds));
-        }
+        Response = new NotFoundObjectResult(DefaultResponse.Create("The requested ChangeLogLine does not exist.",
+            resourceIds));
+    }
 
-        public void LineDeleted(Guid changeLogLineId)
+    public void LineDeleted(Guid changeLogLineId)
+    {
+        var resourceIds = new Dictionary<string, string>
         {
-            var resourceIds = new Dictionary<string, string>
-            {
-                [KnownIdentifiers.ChangeLogLineId] = changeLogLineId.ToString()
-            };
+            [KnownIdentifiers.ChangeLogLineId] = changeLogLineId.ToString()
+        };
 
-            Response = new OkObjectResult(DefaultResponse.Create("Line successfully deleted.", resourceIds));
-        }
+        Response = new OkObjectResult(DefaultResponse.Create("Line successfully deleted.", resourceIds));
+    }
 
-        public void Conflict(Conflict conflict)
+    public void Conflict(Conflict conflict)
+    {
+        Response = conflict.ToResponse();
+    }
+
+    public void RequestedLineIsNotPending(Guid changeLogLineId)
+    {
+        var resourceIds = new Dictionary<string, string>
         {
-            Response = conflict.ToResponse();
-        }
+            [KnownIdentifiers.ChangeLogLineId] = changeLogLineId.ToString()
+        };
 
-        public void RequestedLineIsNotPending(Guid changeLogLineId)
+        Response = new ConflictObjectResult(DefaultResponse.Create("The requested change log line is not pending.",
+            resourceIds));
+    }
+
+    public void RequestedLineIsPending(Guid changeLogLineId)
+    {
+        var resourceIds = new Dictionary<string, string>
         {
-            var resourceIds = new Dictionary<string, string>
-            {
-                [KnownIdentifiers.ChangeLogLineId] = changeLogLineId.ToString()
-            };
+            [KnownIdentifiers.ChangeLogLineId] = changeLogLineId.ToString()
+        };
 
-            Response = new ConflictObjectResult(DefaultResponse.Create("The requested change log line is not pending.",
-                resourceIds));
-        }
-
-        public void RequestedLineIsPending(Guid changeLogLineId)
-        {
-            var resourceIds = new Dictionary<string, string>
-            {
-                [KnownIdentifiers.ChangeLogLineId] = changeLogLineId.ToString()
-            };
-
-            Response = new ConflictObjectResult(DefaultResponse.Create("The requested change log line is pending.",
-                resourceIds));
-        }
+        Response = new ConflictObjectResult(DefaultResponse.Create("The requested change log line is pending.",
+            resourceIds));
     }
 }

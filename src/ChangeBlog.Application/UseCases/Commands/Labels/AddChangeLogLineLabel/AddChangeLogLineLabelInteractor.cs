@@ -8,61 +8,60 @@ using CSharpFunctionalExtensions;
 
 // ReSharper disable InvertIf
 
-namespace ChangeBlog.Application.UseCases.Commands.Labels.AddChangeLogLineLabel
+namespace ChangeBlog.Application.UseCases.Commands.Labels.AddChangeLogLineLabel;
+
+public class AddChangeLogLineLabelInteractor : IAddChangeLogLineLabel
 {
-    public class AddChangeLogLineLabelInteractor : IAddChangeLogLineLabel
+    private readonly IChangeLogCommandsDao _changeLogCommands;
+    private readonly IChangeLogQueriesDao _changeLogQueries;
+    private readonly IUnitOfWork _unitOfWork;
+
+    public AddChangeLogLineLabelInteractor(IUnitOfWork unitOfWork, IChangeLogQueriesDao changeLogQueries,
+        IChangeLogCommandsDao changeLogCommands)
     {
-        private readonly IChangeLogCommandsDao _changeLogCommands;
-        private readonly IChangeLogQueriesDao _changeLogQueries;
-        private readonly IUnitOfWork _unitOfWork;
+        _unitOfWork = unitOfWork ?? throw new ArgumentNullException(nameof(unitOfWork));
+        _changeLogQueries = changeLogQueries ?? throw new ArgumentNullException(nameof(changeLogQueries));
+        _changeLogCommands = changeLogCommands ?? throw new ArgumentNullException(nameof(changeLogCommands));
+    }
 
-        public AddChangeLogLineLabelInteractor(IUnitOfWork unitOfWork, IChangeLogQueriesDao changeLogQueries,
-            IChangeLogCommandsDao changeLogCommands)
+    public async Task ExecuteAsync(IAddChangeLogLineLabelOutputPort output,
+        ChangeLogLineLabelRequestModel requestModel)
+    {
+        if (!Label.TryParse(requestModel.Label, out var label))
         {
-            _unitOfWork = unitOfWork ?? throw new ArgumentNullException(nameof(unitOfWork));
-            _changeLogQueries = changeLogQueries ?? throw new ArgumentNullException(nameof(changeLogQueries));
-            _changeLogCommands = changeLogCommands ?? throw new ArgumentNullException(nameof(changeLogCommands));
+            output.InvalidLabel(requestModel.Label);
+            return;
         }
 
-        public async Task ExecuteAsync(IAddChangeLogLineLabelOutputPort output,
-            ChangeLogLineLabelRequestModel requestModel)
+        _unitOfWork.Start();
+
+        var line = await _changeLogQueries.FindLineAsync(requestModel.ChangeLogLineId);
+        if (line.HasNoValue)
         {
-            if (!Label.TryParse(requestModel.Label, out var label))
-            {
-                output.InvalidLabel(requestModel.Label);
-                return;
-            }
-
-            _unitOfWork.Start();
-
-            var line = await _changeLogQueries.FindLineAsync(requestModel.ChangeLogLineId);
-            if (line.HasNoValue)
-            {
-                output.ChangeLogLineDoesNotExist();
-                return;
-            }
-
-            if (line.GetValueOrThrow().AvailableLabelPlaces <= 0)
-            {
-                output.MaxLabelsReached(ChangeLogLine.MaxLabels);
-                return;
-            }
-
-            await AddLabelAsync(output, line.GetValueOrThrow(), label);
+            output.ChangeLogLineDoesNotExist();
+            return;
         }
 
-        private async Task AddLabelAsync(IAddChangeLogLineLabelOutputPort output, ChangeLogLine line, Label label)
+        if (line.GetValueOrThrow().AvailableLabelPlaces <= 0)
         {
-            line.AddLabel(label);
+            output.MaxLabelsReached(ChangeLogLine.MaxLabels);
+            return;
+        }
 
-            await _changeLogCommands.UpdateLineAsync(line)
-                .Match(Finish, output.Conflict);
+        await AddLabelAsync(output, line.GetValueOrThrow(), label);
+    }
 
-            void Finish(ChangeLogLine l)
-            {
-                _unitOfWork.Commit();
-                output.Added(l.Id);
-            }
+    private async Task AddLabelAsync(IAddChangeLogLineLabelOutputPort output, ChangeLogLine line, Label label)
+    {
+        line.AddLabel(label);
+
+        await _changeLogCommands.UpdateLineAsync(line)
+            .Match(Finish, output.Conflict);
+
+        void Finish(ChangeLogLine l)
+        {
+            _unitOfWork.Commit();
+            output.Added(l.Id);
         }
     }
 }

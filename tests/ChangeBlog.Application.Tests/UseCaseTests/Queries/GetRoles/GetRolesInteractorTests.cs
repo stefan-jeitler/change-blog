@@ -7,64 +7,63 @@ using FluentAssertions;
 using Moq;
 using Xunit;
 
-namespace ChangeBlog.Application.Tests.UseCaseTests.Queries.GetRoles
+namespace ChangeBlog.Application.Tests.UseCaseTests.Queries.GetRoles;
+
+public class GetRolesInteractorTests
 {
-    public class GetRolesInteractorTests
+    private readonly Mock<IRolesDao> _rolesDaoMock;
+
+    public GetRolesInteractorTests()
     {
-        private readonly Mock<IRolesDao> _rolesDaoMock;
+        _rolesDaoMock = new Mock<IRolesDao>();
+    }
 
-        public GetRolesInteractorTests()
-        {
-            _rolesDaoMock = new Mock<IRolesDao>();
-        }
+    private GetRolesInteractor CreateInteractor() => new(_rolesDaoMock.Object);
 
-        private GetRolesInteractor CreateInteractor() => new(_rolesDaoMock.Object);
+    [Fact]
+    public async Task GetRoles_HappyPath_Successfully()
+    {
+        // arrange
+        _rolesDaoMock.Setup(m => m.GetRolesAsync()).ReturnsAsync(TestRoles.Roles);
+        var interactor = CreateInteractor();
 
-        [Fact]
-        public async Task GetRoles_HappyPath_Successfully()
-        {
-            // arrange
-            _rolesDaoMock.Setup(m => m.GetRolesAsync()).ReturnsAsync(TestRoles.Roles);
-            var interactor = CreateInteractor();
+        // act
+        var roles = await interactor.ExecuteAsync(null);
 
-            // act
-            var roles = await interactor.ExecuteAsync(null);
+        // assert
+        roles.Should().HaveCount(TestRoles.Roles.Count);
+    }
 
-            // assert
-            roles.Should().HaveCount(TestRoles.Roles.Count);
-        }
+    [Fact]
+    public async Task GetRoles_FilterDeveloperRole_Successfully()
+    {
+        // arrange
+        _rolesDaoMock.Setup(m => m.GetRolesAsync()).ReturnsAsync(TestRoles.Roles);
+        var interactor = CreateInteractor();
 
-        [Fact]
-        public async Task GetRoles_FilterDeveloperRole_Successfully()
-        {
-            // arrange
-            _rolesDaoMock.Setup(m => m.GetRolesAsync()).ReturnsAsync(TestRoles.Roles);
-            var interactor = CreateInteractor();
+        // act
+        var roles = await interactor.ExecuteAsync("developer");
 
-            // act
-            var roles = await interactor.ExecuteAsync("developer");
+        // assert
+        roles.Should().HaveCount(1);
+    }
 
-            // assert
-            roles.Should().HaveCount(1);
-        }
+    [Fact]
+    public async Task GetRoles_FilterDeveloperRole_ResultProperlyPopulated()
+    {
+        // arrange
+        _rolesDaoMock.Setup(m => m.GetRolesAsync()).ReturnsAsync(TestRoles.Roles);
+        var interactor = CreateInteractor();
 
-        [Fact]
-        public async Task GetRoles_FilterDeveloperRole_ResultProperlyPopulated()
-        {
-            // arrange
-            _rolesDaoMock.Setup(m => m.GetRolesAsync()).ReturnsAsync(TestRoles.Roles);
-            var interactor = CreateInteractor();
+        // act
+        var roles = await interactor.ExecuteAsync("developer");
 
-            // act
-            var roles = await interactor.ExecuteAsync("developer");
-
-            // assert
-            var developerRole = roles.Single();
-            developerRole.Name.Should().Be("Developer");
-            developerRole.Permissions.Should().HaveCount(3);
-            developerRole.Permissions.Should().Contain("ViewAccount");
-            developerRole.Permissions.Should().Contain("AddOrUpdateProduct");
-            developerRole.Permissions.Should().Contain("ViewChangeLogLines");
-        }
+        // assert
+        var developerRole = roles.Single();
+        developerRole.Name.Should().Be("Developer");
+        developerRole.Permissions.Should().HaveCount(3);
+        developerRole.Permissions.Should().Contain("ViewAccount");
+        developerRole.Permissions.Should().Contain("AddOrUpdateProduct");
+        developerRole.Permissions.Should().Contain("ViewChangeLogLines");
     }
 }

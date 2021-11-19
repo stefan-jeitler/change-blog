@@ -1,10 +1,9 @@
 using System.Threading.Tasks;
 
-namespace ChangeBlog.Application.UseCases.Commands.AddPendingChangeLogLine
+namespace ChangeBlog.Application.UseCases.Commands.AddPendingChangeLogLine;
+
+public interface IAddPendingChangeLogLine
 {
-    public interface IAddPendingChangeLogLine
-    {
-        Task ExecuteAsync(IAddPendingChangeLogLineOutputPort outputPort,
-            PendingChangeLogLineRequestModel lineRequestModel);
-    }
+    Task ExecuteAsync(IAddPendingChangeLogLineOutputPort outputPort,
+        PendingChangeLogLineRequestModel lineRequestModel);
 }

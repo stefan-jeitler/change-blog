@@ -8,90 +8,89 @@ using ChangeBlog.Application.UseCases.Commands.AddPendingChangeLogLine;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
-namespace ChangeBlog.Api.Presenters.V1.ChangeLogs
+namespace ChangeBlog.Api.Presenters.V1.ChangeLogs;
+
+public class AddPendingChangeLogLineApiPresenter : BaseApiPresenter, IAddPendingChangeLogLineOutputPort
 {
-    public class AddPendingChangeLogLineApiPresenter : BaseApiPresenter, IAddPendingChangeLogLineOutputPort
+    private readonly HttpContext _httpContext;
+
+    public AddPendingChangeLogLineApiPresenter(HttpContext httpContext)
     {
-        private readonly HttpContext _httpContext;
+        _httpContext = httpContext;
+    }
 
-        public AddPendingChangeLogLineApiPresenter(HttpContext httpContext)
+    public void ProductDoesNotExist(Guid productId)
+    {
+        var resourceIds = new Dictionary<string, string>
         {
-            _httpContext = httpContext;
-        }
+            [KnownIdentifiers.ProductId] = productId.ToString()
+        };
 
-        public void ProductDoesNotExist(Guid productId)
+        Response = new NotFoundObjectResult(DefaultResponse.Create("Product does not exist.", resourceIds));
+    }
+
+    public void Created(Guid changeLogLineId)
+    {
+        var resourceIds = new Dictionary<string, string>
         {
-            var resourceIds = new Dictionary<string, string>
-            {
-                [KnownIdentifiers.ProductId] = productId.ToString()
-            };
+            [KnownIdentifiers.ChangeLogLineId] = changeLogLineId.ToString()
+        };
 
-            Response = new NotFoundObjectResult(DefaultResponse.Create("Product does not exist.", resourceIds));
-        }
+        var location = _httpContext.CreateLinkTo($"api/v1/pending-changelogs/{changeLogLineId}");
+        Response = new CreatedResult(location,
+            DefaultResponse.Create("Pending ChangeLogLine successfully added.", resourceIds));
+    }
 
-        public void Created(Guid changeLogLineId)
+    public void Conflict(Conflict conflict)
+    {
+        Response = conflict.ToResponse();
+    }
+
+    public void TooManyLines(int maxChangeLogLines)
+    {
+        Response = new UnprocessableEntityObjectResult(
+            DefaultResponse.Create($"Too many lines. Max lines: {maxChangeLogLines}"));
+    }
+
+    public void LinesWithSameTextsAreNotAllowed(Guid changeLogLineId, string duplicate)
+    {
+        var resourceIds = new Dictionary<string, string>
         {
-            var resourceIds = new Dictionary<string, string>
-            {
-                [KnownIdentifiers.ChangeLogLineId] = changeLogLineId.ToString()
-            };
+            [KnownIdentifiers.ChangeLogLineId] = changeLogLineId.ToString()
+        };
 
-            var location = _httpContext.CreateLinkTo($"api/v1/pending-changelogs/{changeLogLineId}");
-            Response = new CreatedResult(location,
-                DefaultResponse.Create("Pending ChangeLogLine successfully added.", resourceIds));
-        }
+        Response = new UnprocessableEntityObjectResult(
+            DefaultResponse.Create($"Lines with same text are not allowed. Duplicate: '{duplicate}'", resourceIds));
+    }
 
-        public void Conflict(Conflict conflict)
-        {
-            Response = conflict.ToResponse();
-        }
+    public void InvalidChangeLogLineText(string text)
+    {
+        Response = new BadRequestObjectResult(DefaultResponse.Create($"Invalid change log text '{text}'."));
+    }
 
-        public void TooManyLines(int maxChangeLogLines)
-        {
-            Response = new UnprocessableEntityObjectResult(
-                DefaultResponse.Create($"Too many lines. Max lines: {maxChangeLogLines}"));
-        }
+    public void InvalidIssue(string changeLogText, string issue)
+    {
+        Response = new BadRequestObjectResult(
+            DefaultResponse.Create($"Invalid issue '{issue}' for change log '{changeLogText}'."));
+    }
 
-        public void LinesWithSameTextsAreNotAllowed(Guid changeLogLineId, string duplicate)
-        {
-            var resourceIds = new Dictionary<string, string>
-            {
-                [KnownIdentifiers.ChangeLogLineId] = changeLogLineId.ToString()
-            };
+    public void TooManyIssues(string changeLogText, int maxIssues)
+    {
+        Response = new UnprocessableEntityObjectResult(
+            DefaultResponse.Create(
+                $"The change log '{changeLogText}' has too many issues. Max issues: '{maxIssues}'."));
+    }
 
-            Response = new UnprocessableEntityObjectResult(
-                DefaultResponse.Create($"Lines with same text are not allowed. Duplicate: '{duplicate}'", resourceIds));
-        }
+    public void InvalidLabel(string changeLogText, string label)
+    {
+        Response = new BadRequestObjectResult(
+            DefaultResponse.Create($"Invalid label '{label}' for change log '{changeLogText}'."));
+    }
 
-        public void InvalidChangeLogLineText(string text)
-        {
-            Response = new BadRequestObjectResult(DefaultResponse.Create($"Invalid change log text '{text}'."));
-        }
-
-        public void InvalidIssue(string changeLogText, string issue)
-        {
-            Response = new BadRequestObjectResult(
-                DefaultResponse.Create($"Invalid issue '{issue}' for change log '{changeLogText}'."));
-        }
-
-        public void TooManyIssues(string changeLogText, int maxIssues)
-        {
-            Response = new UnprocessableEntityObjectResult(
-                DefaultResponse.Create(
-                    $"The change log '{changeLogText}' has too many issues. Max issues: '{maxIssues}'."));
-        }
-
-        public void InvalidLabel(string changeLogText, string label)
-        {
-            Response = new BadRequestObjectResult(
-                DefaultResponse.Create($"Invalid label '{label}' for change log '{changeLogText}'."));
-        }
-
-        public void TooManyLabels(string changeLogText, int maxLabels)
-        {
-            Response = new UnprocessableEntityObjectResult(
-                DefaultResponse.Create(
-                    $"The change log '{changeLogText}' has too many labels. Max labels: '{maxLabels}'."));
-        }
+    public void TooManyLabels(string changeLogText, int maxLabels)
+    {
+        Response = new UnprocessableEntityObjectResult(
+            DefaultResponse.Create(
+                $"The change log '{changeLogText}' has too many labels. Max labels: '{maxLabels}'."));
     }
 }

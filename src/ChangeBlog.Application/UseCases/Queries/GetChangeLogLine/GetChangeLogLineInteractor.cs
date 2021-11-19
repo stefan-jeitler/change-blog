@@ -6,56 +6,55 @@ using ChangeBlog.Application.DataAccess.Users;
 using ChangeBlog.Application.Extensions;
 using ChangeBlog.Application.UseCases.Queries.SharedModels;
 
-namespace ChangeBlog.Application.UseCases.Queries.GetChangeLogLine
+namespace ChangeBlog.Application.UseCases.Queries.GetChangeLogLine;
+
+public class GetChangeLogLineInteractor : IGetChangeLogLine
 {
-    public class GetChangeLogLineInteractor : IGetChangeLogLine
+    private readonly IChangeLogQueriesDao _changeLogQueries;
+    private readonly IUserDao _userDao;
+
+    public GetChangeLogLineInteractor(IChangeLogQueriesDao changeLogQueries, IUserDao userDao)
     {
-        private readonly IChangeLogQueriesDao _changeLogQueries;
-        private readonly IUserDao _userDao;
+        _changeLogQueries = changeLogQueries ?? throw new ArgumentNullException(nameof(changeLogQueries));
+        _userDao = userDao ?? throw new ArgumentNullException(nameof(userDao));
+    }
 
-        public GetChangeLogLineInteractor(IChangeLogQueriesDao changeLogQueries, IUserDao userDao)
+    public Task ExecuteAsync(IGetChangeLogLineOutputPort output, Guid userId, Guid changeLogLineId)
+    {
+        if (userId == Guid.Empty)
+            throw new ArgumentException("UserId cannot be empty.");
+
+        if (changeLogLineId == Guid.Empty)
+            throw new ArgumentException("ChangeLogLineId cannot be empty.");
+
+        return FindChangeLogLineAsync(output, userId, changeLogLineId);
+    }
+
+    private async Task FindChangeLogLineAsync(IGetChangeLogLineOutputPort output, Guid userId, Guid changeLogLineId)
+    {
+        var currentUser = await _userDao.GetUserAsync(userId);
+
+        var line = await _changeLogQueries.FindLineAsync(changeLogLineId);
+
+        if (line.HasNoValue)
         {
-            _changeLogQueries = changeLogQueries ?? throw new ArgumentNullException(nameof(changeLogQueries));
-            _userDao = userDao ?? throw new ArgumentNullException(nameof(userDao));
+            output.LineDoesNotExists(changeLogLineId);
+            return;
         }
 
-        public Task ExecuteAsync(IGetChangeLogLineOutputPort output, Guid userId, Guid changeLogLineId)
+        if (line.GetValueOrThrow().IsPending)
         {
-            if (userId == Guid.Empty)
-                throw new ArgumentException("UserId cannot be empty.");
-
-            if (changeLogLineId == Guid.Empty)
-                throw new ArgumentException("ChangeLogLineId cannot be empty.");
-
-            return FindChangeLogLineAsync(output, userId, changeLogLineId);
+            output.LineIsPending(changeLogLineId);
+            return;
         }
 
-        private async Task FindChangeLogLineAsync(IGetChangeLogLineOutputPort output, Guid userId, Guid changeLogLineId)
-        {
-            var currentUser = await _userDao.GetUserAsync(userId);
+        var l = line.GetValueOrThrow();
+        var responseModel = new ChangeLogLineResponseModel(l.Id,
+            l.Text,
+            l.Labels.Select(ll => ll.Value).ToList(),
+            l.Issues.Select(i => i.Value).ToList(),
+            l.CreatedAt.ToLocal(currentUser.TimeZone));
 
-            var line = await _changeLogQueries.FindLineAsync(changeLogLineId);
-
-            if (line.HasNoValue)
-            {
-                output.LineDoesNotExists(changeLogLineId);
-                return;
-            }
-
-            if (line.GetValueOrThrow().IsPending)
-            {
-                output.LineIsPending(changeLogLineId);
-                return;
-            }
-
-            var l = line.GetValueOrThrow();
-            var responseModel = new ChangeLogLineResponseModel(l.Id,
-                l.Text,
-                l.Labels.Select(ll => ll.Value).ToList(),
-                l.Issues.Select(i => i.Value).ToList(),
-                l.CreatedAt.ToLocal(currentUser.TimeZone));
-
-            output.LineFound(responseModel);
-        }
+        output.LineFound(responseModel);
     }
 }

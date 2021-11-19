@@ -1,22 +1,21 @@
 using System;
 
-namespace ChangeBlog.Domain
+namespace ChangeBlog.Domain;
+
+public class VersioningSchemeIdFinder
 {
-    public class VersioningSchemeIdFinder
+    private readonly Account _account;
+
+    public VersioningSchemeIdFinder(Account account)
     {
-        private readonly Account _account;
+        _account = account;
+    }
 
-        public VersioningSchemeIdFinder(Account account)
-        {
-            _account = account;
-        }
+    public Guid FindSchemeIdForProduct(Guid? customVersioningSchemeId)
+    {
+        if (customVersioningSchemeId.HasValue)
+            return customVersioningSchemeId.Value;
 
-        public Guid FindSchemeIdForProduct(Guid? customVersioningSchemeId)
-        {
-            if (customVersioningSchemeId.HasValue)
-                return customVersioningSchemeId.Value;
-
-            return _account.DefaultVersioningSchemeId ?? Defaults.VersioningSchemeId;
-        }
+        return _account.DefaultVersioningSchemeId ?? Defaults.VersioningSchemeId;
     }
 }

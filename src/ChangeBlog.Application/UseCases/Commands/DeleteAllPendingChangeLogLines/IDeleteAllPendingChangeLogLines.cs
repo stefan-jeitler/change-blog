@@ -1,10 +1,9 @@
 using System;
 using System.Threading.Tasks;
 
-namespace ChangeBlog.Application.UseCases.Commands.DeleteAllPendingChangeLogLines
+namespace ChangeBlog.Application.UseCases.Commands.DeleteAllPendingChangeLogLines;
+
+public interface IDeleteAllPendingChangeLogLines
 {
-    public interface IDeleteAllPendingChangeLogLines
-    {
-        Task ExecuteAsync(Guid productId);
-    }
+    Task ExecuteAsync(Guid productId);
 }

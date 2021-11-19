@@ -7,69 +7,68 @@ using ChangeBlog.Application.UseCases.Commands.AddExternalIdentity;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.Extensions.Logging;
 
-namespace ChangeBlog.Management.Api.Authentication
+namespace ChangeBlog.Management.Api.Authentication;
+
+public class AppAuthenticationHandler
 {
-    public class AppAuthenticationHandler
+    private readonly IAddExternalIdentity _addExternalIdentity;
+    private readonly FindUserId _findUserId;
+    private readonly ILogger<AppAuthenticationHandler> _logger;
+
+    public AppAuthenticationHandler(FindUserId findUserId, IAddExternalIdentity addExternalIdentity,
+        ILogger<AppAuthenticationHandler> logger)
     {
-        private readonly IAddExternalIdentity _addExternalIdentity;
-        private readonly FindUserId _findUserId;
-        private readonly ILogger<AppAuthenticationHandler> _logger;
+        _findUserId = findUserId;
+        _addExternalIdentity = addExternalIdentity;
+        _logger = logger;
+    }
 
-        public AppAuthenticationHandler(FindUserId findUserId, IAddExternalIdentity addExternalIdentity,
-            ILogger<AppAuthenticationHandler> logger)
+    public async Task HandleAsync(TokenValidatedContext context)
+    {
+        if (context.Principal is null)
         {
-            _findUserId = findUserId;
-            _addExternalIdentity = addExternalIdentity;
-            _logger = logger;
+            context.Fail(string.Empty);
+            return;
         }
 
-        public async Task HandleAsync(TokenValidatedContext context)
+        var externalUserId = context.Principal!.FindFirst(x => x.Type == ClaimTypes.NameIdentifier);
+        if (externalUserId is null)
         {
-            if (context.Principal is null)
-            {
-                context.Fail(string.Empty);
-                return;
-            }
-
-            var externalUserId = context.Principal!.FindFirst(x => x.Type == ClaimTypes.NameIdentifier);
-            if (externalUserId is null)
-            {
-                context.Fail(string.Empty);
-                return;
-            }
-
-            await AddAppUserIdentity(context, externalUserId.Value);
+            context.Fail(string.Empty);
+            return;
         }
 
-        private async Task AddAppUserIdentity(TokenValidatedContext context, string externalUserId)
+        await AddAppUserIdentity(context, externalUserId.Value);
+    }
+
+    private async Task AddAppUserIdentity(TokenValidatedContext context, string externalUserId)
+    {
+        var userId = await _findUserId.FindByExternalUserIdAsync(externalUserId);
+        if (userId.HasValue)
         {
-            var userId = await _findUserId.FindByExternalUserIdAsync(externalUserId);
-            if (userId.HasValue)
-            {
-                AddAppIdentity(context, userId.Value);
-                return;
-            }
-
-            var result = await _addExternalIdentity.ExecuteAsync(externalUserId);
-            if (result.IsFailure)
-            {
-                _logger.LogCritical(result.Error);
-                context.Fail(string.Empty);
-                return;
-            }
-
-            AddAppIdentity(context, result.Value);
+            AddAppIdentity(context, userId.Value);
+            return;
         }
 
-        private static void AddAppIdentity(TokenValidatedContext context, Guid userId)
+        var result = await _addExternalIdentity.ExecuteAsync(externalUserId);
+        if (result.IsFailure)
         {
-            var appClaims = new List<Claim>(1)
-            {
-                new(Constants.AppClaims.UserId, userId.ToString())
-            };
-            var appIdentity = new ClaimsIdentity(appClaims);
-
-            context.Principal!.AddIdentity(appIdentity);
+            _logger.LogCritical(result.Error);
+            context.Fail(string.Empty);
+            return;
         }
+
+        AddAppIdentity(context, result.Value);
+    }
+
+    private static void AddAppIdentity(TokenValidatedContext context, Guid userId)
+    {
+        var appClaims = new List<Claim>(1)
+        {
+            new(Constants.AppClaims.UserId, userId.ToString())
+        };
+        var appIdentity = new ClaimsIdentity(appClaims);
+
+        context.Principal!.AddIdentity(appIdentity);
     }
 }

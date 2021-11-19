@@ -1,16 +1,15 @@
 using System.Collections.Generic;
 
-namespace ChangeBlog.Application.UseCases.Queries.GetRoles
-{
-    public class RoleResponseModel
-    {
-        public RoleResponseModel(string name, IList<string> permissions)
-        {
-            Name = name;
-            Permissions = permissions;
-        }
+namespace ChangeBlog.Application.UseCases.Queries.GetRoles;
 
-        public string Name { get; }
-        public IList<string> Permissions { get; }
+public class RoleResponseModel
+{
+    public RoleResponseModel(string name, IList<string> permissions)
+    {
+        Name = name;
+        Permissions = permissions;
     }
+
+    public string Name { get; }
+    public IList<string> Permissions { get; }
 }

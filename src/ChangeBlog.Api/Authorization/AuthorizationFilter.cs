@@ -14,82 +14,81 @@ using Microsoft.Extensions.Logging;
 // ReSharper disable InconsistentNaming
 // ReSharper disable ConvertIfStatementToSwitchStatement
 
-namespace ChangeBlog.Api.Authorization
+namespace ChangeBlog.Api.Authorization;
+
+public class AuthorizationFilter : IAsyncActionFilter
 {
-    public class AuthorizationFilter : IAsyncActionFilter
+    private static readonly ActionResult UnauthorizedResult =
+        new ObjectResult(DefaultResponse.Create("You don't have permission to access this resource."))
+        {
+            StatusCode = StatusCodes.Status403Forbidden
+        };
+
+    private static readonly ActionResult NotFoundResult =
+        new NotFoundObjectResult(DefaultResponse.Create("Requested resource not found."));
+
+    private static readonly ActionResult InternalServerError =
+        new StatusCodeResult(StatusCodes.Status500InternalServerError);
+
+    private readonly AuthorizationHandler _authorizationHandler;
+    private readonly ILogger<AuthorizationFilter> _logger;
+
+    public AuthorizationFilter(ILogger<AuthorizationFilter> logger, AuthorizationHandler authorizationHandler)
     {
-        private static readonly ActionResult UnauthorizedResult =
-            new ObjectResult(DefaultResponse.Create("You don't have permission to access this resource."))
-            {
-                StatusCode = StatusCodes.Status403Forbidden
-            };
+        _logger = logger ?? throw new ArgumentNullException(nameof(logger));
+        _authorizationHandler =
+            authorizationHandler ?? throw new ArgumentNullException(nameof(authorizationHandler));
+    }
 
-        private static readonly ActionResult NotFoundResult =
-            new NotFoundObjectResult(DefaultResponse.Create("Requested resource not found."));
+    public async Task OnActionExecutionAsync(ActionExecutingContext context, ActionExecutionDelegate next)
+    {
+        var skipAuthorization = context.ActionDescriptor.EndpointMetadata.OfType<AllowAnonymousAttribute>().Any() ||
+                                context.ActionDescriptor.EndpointMetadata.OfType<SkipAuthorizationAttribute>()
+                                    .Any();
 
-        private static readonly ActionResult InternalServerError =
-            new StatusCodeResult(StatusCodes.Status500InternalServerError);
+        var permission = context.ActionDescriptor.EndpointMetadata.OfType<NeedsPermissionAttribute>().TryFirst();
 
-        private readonly AuthorizationHandler _authorizationHandler;
-        private readonly ILogger<AuthorizationFilter> _logger;
-
-        public AuthorizationFilter(ILogger<AuthorizationFilter> logger, AuthorizationHandler authorizationHandler)
+        if (permission.HasNoValue && skipAuthorization)
         {
-            _logger = logger ?? throw new ArgumentNullException(nameof(logger));
-            _authorizationHandler =
-                authorizationHandler ?? throw new ArgumentNullException(nameof(authorizationHandler));
+            await next();
+            return;
         }
 
-        public async Task OnActionExecutionAsync(ActionExecutingContext context, ActionExecutionDelegate next)
+        if (permission.HasNoValue && !skipAuthorization)
         {
-            var skipAuthorization = context.ActionDescriptor.EndpointMetadata.OfType<AllowAnonymousAttribute>().Any() ||
-                                    context.ActionDescriptor.EndpointMetadata.OfType<SkipAuthorizationAttribute>()
-                                        .Any();
+            var actionName = context.ActionDescriptor.DisplayName;
+            _logger.LogError(
+                $"The requested action '{actionName}' hasn't one of the attributes: {nameof(NeedsPermissionAttribute)}, {nameof(AllowAnonymousAttribute)} or {nameof(SkipAuthorizationAttribute)}.");
 
-            var permission = context.ActionDescriptor.EndpointMetadata.OfType<NeedsPermissionAttribute>().TryFirst();
+            context.Result = InternalServerError;
+            return;
+        }
 
-            if (permission.HasNoValue && skipAuthorization)
-            {
+        await HandleAuthorizationAsync(context, next, permission);
+    }
+
+    private async Task HandleAuthorizationAsync(ActionExecutingContext context, ActionExecutionDelegate next,
+        Maybe<NeedsPermissionAttribute> permission)
+    {
+        var userId = context.HttpContext.GetUserId();
+        var authState =
+            await _authorizationHandler.GetAuthorizationState(context, userId, permission.GetValueOrThrow().Permission);
+
+        switch (authState)
+        {
+            case AuthorizationState.Authorized:
                 await next();
-                return;
-            }
-
-            if (permission.HasNoValue && !skipAuthorization)
-            {
-                var actionName = context.ActionDescriptor.DisplayName;
-                _logger.LogError(
-                    $"The requested action '{actionName}' hasn't one of the attributes: {nameof(NeedsPermissionAttribute)}, {nameof(AllowAnonymousAttribute)} or {nameof(SkipAuthorizationAttribute)}.");
-
+                break;
+            case AuthorizationState.Unauthorized:
+                context.Result = UnauthorizedResult;
+                break;
+            case AuthorizationState.Inaccessible:
+                context.Result = NotFoundResult;
+                break;
+            default:
+                _logger.LogCritical("AuthorizationState is not supported.", authState);
                 context.Result = InternalServerError;
-                return;
-            }
-
-            await HandleAuthorizationAsync(context, next, permission);
-        }
-
-        private async Task HandleAuthorizationAsync(ActionExecutingContext context, ActionExecutionDelegate next,
-            Maybe<NeedsPermissionAttribute> permission)
-        {
-            var userId = context.HttpContext.GetUserId();
-            var authState =
-                await _authorizationHandler.GetAuthorizationState(context, userId, permission.GetValueOrThrow().Permission);
-
-            switch (authState)
-            {
-                case AuthorizationState.Authorized:
-                    await next();
-                    break;
-                case AuthorizationState.Unauthorized:
-                    context.Result = UnauthorizedResult;
-                    break;
-                case AuthorizationState.Inaccessible:
-                    context.Result = NotFoundResult;
-                    break;
-                default:
-                    _logger.LogCritical("AuthorizationState is not supported.", authState);
-                    context.Result = InternalServerError;
-                    break;
-            }
+                break;
         }
     }
 }

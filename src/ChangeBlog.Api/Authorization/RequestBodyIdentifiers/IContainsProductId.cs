@@ -1,9 +1,8 @@
 using System;
 
-namespace ChangeBlog.Api.Authorization.RequestBodyIdentifiers
+namespace ChangeBlog.Api.Authorization.RequestBodyIdentifiers;
+
+public interface IContainsProductId
 {
-    public interface IContainsProductId
-    {
-        Guid ProductId { get; }
-    }
+    Guid ProductId { get; }
 }

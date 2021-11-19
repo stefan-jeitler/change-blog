@@ -1,8 +1,8 @@
-namespace ChangeBlog.DataAccess.Postgres.DataAccessObjects.Products
+namespace ChangeBlog.DataAccess.Postgres.DataAccessObjects.Products;
+
+public static class ProductDaoSqlStatements
 {
-    public static class ProductDaoSqlStatements
-    {
-        public const string FindProductByAccountAndNameSql = @"
+    public const string FindProductByAccountAndNameSql = @"
             SELECT p.id,
                    p.account_id       AS accountId,
                    p.name,
@@ -25,7 +25,7 @@ namespace ChangeBlog.DataAccess.Postgres.DataAccessObjects.Products
               AND a.deleted_at is null
               AND LOWER(p.name) = @name";
 
-        public const string FindProductByProductIdSql = @"
+    public const string FindProductByProductIdSql = @"
             SELECT p.id,
                    p.account_id       AS accountId,
                    p.name,
@@ -45,39 +45,39 @@ namespace ChangeBlog.DataAccess.Postgres.DataAccessObjects.Products
                      JOIN versioning_scheme vs on p.versioning_scheme_id = vs.id
             WHERE p.id = @productId";
 
-        public static string GetProductsForAccountSql(bool usePaging, bool includeClosedProducts)
-        {
-            var pagingFilter = usePaging
-                ? "AND (p.name, p.id) > ((select ps.name from product ps where ps.id = @lastProductId), @lastProductId)"
-                : string.Empty;
+    public static string GetProductsForAccountSql(bool usePaging, bool includeClosedProducts)
+    {
+        var pagingFilter = usePaging
+            ? "AND (p.name, p.id) > ((select ps.name from product ps where ps.id = @lastProductId), @lastProductId)"
+            : string.Empty;
 
-            var includeClosedProductsFilter = includeClosedProducts
-                ? string.Empty
-                : "AND p.closed_at IS NULL";
+        var includeClosedProductsFilter = includeClosedProducts
+            ? string.Empty
+            : "AND p.closed_at IS NULL";
 
-            const string accountFilter = "AND p.account_id = @accountId";
+        const string accountFilter = "AND p.account_id = @accountId";
 
-            return GetProductsQuerySql(accountFilter, pagingFilter, includeClosedProductsFilter);
-        }
+        return GetProductsQuerySql(accountFilter, pagingFilter, includeClosedProductsFilter);
+    }
 
-        public static string GetProductsForUserSql(bool usePaging, bool includeClosedProducts)
-        {
-            var pagingFilter = usePaging
-                ? "AND (p.name, p.id) > ((select ps.name from product ps where ps.id = @lastProductId), @lastProductId)"
-                : string.Empty;
+    public static string GetProductsForUserSql(bool usePaging, bool includeClosedProducts)
+    {
+        var pagingFilter = usePaging
+            ? "AND (p.name, p.id) > ((select ps.name from product ps where ps.id = @lastProductId), @lastProductId)"
+            : string.Empty;
 
-            var includeClosedProductsFilter = includeClosedProducts
-                ? string.Empty
-                : "AND p.closed_at IS NULL";
+        var includeClosedProductsFilter = includeClosedProducts
+            ? string.Empty
+            : "AND p.closed_at IS NULL";
 
-            const string accountFilter = "";
+        const string accountFilter = "";
 
-            return GetProductsQuerySql(accountFilter, pagingFilter, includeClosedProductsFilter);
-        }
+        return GetProductsQuerySql(accountFilter, pagingFilter, includeClosedProductsFilter);
+    }
 
-        private static string GetProductsQuerySql(string accountFilter, string pagingFilter,
-            string includeClosedProductsFilter) =>
-            @$"SELECT p.id,
+    private static string GetProductsQuerySql(string accountFilter, string pagingFilter,
+        string includeClosedProductsFilter) =>
+        @$"SELECT p.id,
                    p.account_id       AS accountId,
                    p.name,
                    vs.id              AS vsId,
@@ -105,5 +105,4 @@ namespace ChangeBlog.DataAccess.Postgres.DataAccessObjects.Products
             {includeClosedProductsFilter}
             ORDER BY p.name, p.id
             FETCH FIRST (@limit) ROWS ONLY";
-    }
 }

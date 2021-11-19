@@ -1,10 +1,9 @@
 using System;
 using System.Threading.Tasks;
 
-namespace ChangeBlog.Application.UseCases.Commands.CloseProduct
+namespace ChangeBlog.Application.UseCases.Commands.CloseProduct;
+
+public interface ICloseProduct
 {
-    public interface ICloseProduct
-    {
-        Task ExecuteAsync(ICloseProductOutputPort output, Guid productId);
-    }
+    Task ExecuteAsync(ICloseProductOutputPort output, Guid productId);
 }

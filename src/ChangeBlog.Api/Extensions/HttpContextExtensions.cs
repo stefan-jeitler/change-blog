@@ -2,33 +2,32 @@ using System;
 using System.Security.Claims;
 using Microsoft.AspNetCore.Http;
 
-namespace ChangeBlog.Api.Extensions
+namespace ChangeBlog.Api.Extensions;
+
+public static class HttpContextExtensions
 {
-    public static class HttpContextExtensions
+    public static Guid GetUserId(this HttpContext httpContext)
     {
-        public static Guid GetUserId(this HttpContext httpContext)
+        var userIdValue = httpContext
+            .User.FindFirstValue(ClaimTypes.NameIdentifier);
+
+        return Guid.TryParse(userIdValue, out var userId)
+            ? userId
+            : Guid.Empty;
+    }
+
+    public static Uri CreateLinkTo(this HttpContext ctx, string relativePath)
+    {
+        var request = ctx.Request;
+
+        var uriBuilder = new UriBuilder
         {
-            var userIdValue = httpContext
-                .User.FindFirstValue(ClaimTypes.NameIdentifier);
+            Scheme = "https",
+            Host = request.Host.Host,
+            Path = relativePath,
+            Port = request.Host.Port ?? -1
+        };
 
-            return Guid.TryParse(userIdValue, out var userId)
-                ? userId
-                : Guid.Empty;
-        }
-
-        public static Uri CreateLinkTo(this HttpContext ctx, string relativePath)
-        {
-            var request = ctx.Request;
-
-            var uriBuilder = new UriBuilder
-            {
-                Scheme = "https",
-                Host = request.Host.Host,
-                Path = relativePath,
-                Port = request.Host.Port ?? -1
-            };
-
-            return uriBuilder.Uri;
-        }
+        return uriBuilder.Uri;
     }
 }

@@ -5,51 +5,50 @@ using CSharpFunctionalExtensions;
 
 // ReSharper disable SwitchStatementHandlesSomeKnownEnumValuesWithDefault
 
-namespace ChangeBlog.Application.UseCases.Commands.DeleteChangeLogLine
+namespace ChangeBlog.Application.UseCases.Commands.DeleteChangeLogLine;
+
+public class DeleteChangeLogLineInteractor : IDeleteChangeLogLine
 {
-    public class DeleteChangeLogLineInteractor : IDeleteChangeLogLine
+    private readonly IChangeLogCommandsDao _changeLogCommands;
+    private readonly IChangeLogQueriesDao _changeLogQueries;
+
+    public DeleteChangeLogLineInteractor(IChangeLogCommandsDao changeLogCommands,
+        IChangeLogQueriesDao changeLogQueries)
     {
-        private readonly IChangeLogCommandsDao _changeLogCommands;
-        private readonly IChangeLogQueriesDao _changeLogQueries;
+        _changeLogCommands = changeLogCommands ?? throw new ArgumentNullException(nameof(changeLogCommands));
+        _changeLogQueries = changeLogQueries ?? throw new ArgumentNullException(nameof(changeLogQueries));
+    }
 
-        public DeleteChangeLogLineInteractor(IChangeLogCommandsDao changeLogCommands,
-            IChangeLogQueriesDao changeLogQueries)
+    public async Task ExecuteAsync(IDeleteChangeLogLineOutputPort output,
+        DeleteChangeLogLineRequestModel requestModel)
+    {
+        var existingLine = await _changeLogQueries.FindLineAsync(requestModel.ChangeLogLineId);
+
+        if (existingLine.HasNoValue)
         {
-            _changeLogCommands = changeLogCommands ?? throw new ArgumentNullException(nameof(changeLogCommands));
-            _changeLogQueries = changeLogQueries ?? throw new ArgumentNullException(nameof(changeLogQueries));
+            output.LineDoesNotExist(requestModel.ChangeLogLineId);
+            return;
         }
 
-        public async Task ExecuteAsync(IDeleteChangeLogLineOutputPort output,
-            DeleteChangeLogLineRequestModel requestModel)
+        var changeLogLine = existingLine.GetValueOrThrow();
+
+        switch (requestModel.ChangeLogLineType)
         {
-            var existingLine = await _changeLogQueries.FindLineAsync(requestModel.ChangeLogLineId);
-
-            if (existingLine.HasNoValue)
-            {
-                output.LineDoesNotExist(requestModel.ChangeLogLineId);
+            case ChangeLogLineType.Pending when !changeLogLine.IsPending:
+                output.RequestedLineIsNotPending(changeLogLine.Id);
                 return;
-            }
-
-            var changeLogLine = existingLine.GetValueOrThrow();
-
-            switch (requestModel.ChangeLogLineType)
-            {
-                case ChangeLogLineType.Pending when !changeLogLine.IsPending:
-                    output.RequestedLineIsNotPending(changeLogLine.Id);
-                    return;
-                case ChangeLogLineType.NotPending when changeLogLine.IsPending:
-                    output.RequestedLineIsPending(changeLogLine.Id);
-                    return;
-            }
-
-            if (changeLogLine.DeletedAt.HasValue)
-            {
-                output.LineDeleted(changeLogLine.Id);
+            case ChangeLogLineType.NotPending when changeLogLine.IsPending:
+                output.RequestedLineIsPending(changeLogLine.Id);
                 return;
-            }
-
-            await _changeLogCommands.DeleteLineAsync(changeLogLine)
-                .Match(l => output.LineDeleted(l.Id), output.Conflict);
         }
+
+        if (changeLogLine.DeletedAt.HasValue)
+        {
+            output.LineDeleted(changeLogLine.Id);
+            return;
+        }
+
+        await _changeLogCommands.DeleteLineAsync(changeLogLine)
+            .Match(l => output.LineDeleted(l.Id), output.Conflict);
     }
 }

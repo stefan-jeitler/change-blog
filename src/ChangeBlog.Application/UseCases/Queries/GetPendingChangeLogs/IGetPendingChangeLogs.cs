@@ -1,10 +1,9 @@
 using System;
 using System.Threading.Tasks;
 
-namespace ChangeBlog.Application.UseCases.Queries.GetPendingChangeLogs
+namespace ChangeBlog.Application.UseCases.Queries.GetPendingChangeLogs;
+
+public interface IGetPendingChangeLogs
 {
-    public interface IGetPendingChangeLogs
-    {
-        Task<PendingChangeLogsResponseModel> ExecuteAsync(Guid userId, Guid productId);
-    }
+    Task<PendingChangeLogsResponseModel> ExecuteAsync(Guid userId, Guid productId);
 }

@@ -6,11 +6,11 @@ using ChangeBlog.Domain.Version;
 using CSharpFunctionalExtensions;
 using Dapper;
 
-namespace ChangeBlog.DataAccess.Postgres.DataAccessObjects.Products
+namespace ChangeBlog.DataAccess.Postgres.DataAccessObjects.Products;
+
+public class VersioningSchemeDao : IVersioningSchemeDao
 {
-    public class VersioningSchemeDao : IVersioningSchemeDao
-    {
-        private const string SelectVersioningScheme = @"
+    private const string SelectVersioningScheme = @"
                 SELECT id,
                        name,
                        regex_pattern   AS regexPattern,
@@ -22,56 +22,55 @@ namespace ChangeBlog.DataAccess.Postgres.DataAccessObjects.Products
                 FROM versioning_scheme
                 ";
 
-        private readonly IDbAccessor _dbAccessor;
+    private readonly IDbAccessor _dbAccessor;
 
-        public VersioningSchemeDao(IDbAccessor dbAccessor)
-        {
-            _dbAccessor = dbAccessor;
-        }
+    public VersioningSchemeDao(IDbAccessor dbAccessor)
+    {
+        _dbAccessor = dbAccessor;
+    }
 
-        public async Task<Maybe<VersioningScheme>> FindSchemeAsync(Guid versioningSchemeId)
-        {
-            var findVersioningSchemeSql = @$"
+    public async Task<Maybe<VersioningScheme>> FindSchemeAsync(Guid versioningSchemeId)
+    {
+        var findVersioningSchemeSql = @$"
                 {SelectVersioningScheme}
                 WHERE id = @versioningSchemeId";
 
-            var versioningScheme = await _dbAccessor.DbConnection
-                .QueryFirstOrDefaultAsync<VersioningScheme>(findVersioningSchemeSql, new
-                {
-                    versioningSchemeId
-                });
+        var versioningScheme = await _dbAccessor.DbConnection
+            .QueryFirstOrDefaultAsync<VersioningScheme>(findVersioningSchemeSql, new
+            {
+                versioningSchemeId
+            });
 
-            return versioningScheme == default
-                ? Maybe<VersioningScheme>.None
-                : Maybe<VersioningScheme>.From(versioningScheme);
-        }
+        return versioningScheme == default
+            ? Maybe<VersioningScheme>.None
+            : Maybe<VersioningScheme>.From(versioningScheme);
+    }
 
-        public async Task<VersioningScheme> GetSchemeAsync(Guid versioningSchemeId)
-        {
-            var getSchemeSql = @$"
+    public async Task<VersioningScheme> GetSchemeAsync(Guid versioningSchemeId)
+    {
+        var getSchemeSql = @$"
                 {SelectVersioningScheme}
                 WHERE id = @schemeId";
 
-            return await _dbAccessor.DbConnection
-                .QuerySingleOrDefaultAsync<VersioningScheme>(getSchemeSql, new
-                {
-                    schemeId = versioningSchemeId
-                });
-        }
+        return await _dbAccessor.DbConnection
+            .QuerySingleOrDefaultAsync<VersioningScheme>(getSchemeSql, new
+            {
+                schemeId = versioningSchemeId
+            });
+    }
 
-        public async Task<IList<VersioningScheme>> GetSchemesAsync(IList<Guid> versioningSchemeIds)
-        {
-            var getSchemeSql = $@"
+    public async Task<IList<VersioningScheme>> GetSchemesAsync(IList<Guid> versioningSchemeIds)
+    {
+        var getSchemeSql = $@"
                 {SelectVersioningScheme}
                 WHERE id = ANY(@schemeIds)";
 
-            var schemes = await _dbAccessor.DbConnection
-                .QueryAsync<VersioningScheme>(getSchemeSql, new
-                {
-                    schemeIds = versioningSchemeIds
-                });
+        var schemes = await _dbAccessor.DbConnection
+            .QueryAsync<VersioningScheme>(getSchemeSql, new
+            {
+                schemeIds = versioningSchemeIds
+            });
 
-            return schemes.AsList();
-        }
+        return schemes.AsList();
     }
 }

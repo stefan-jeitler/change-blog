@@ -1,9 +1,8 @@
 using System.Data;
 
-namespace ChangeBlog.DataAccess.Postgres
+namespace ChangeBlog.DataAccess.Postgres;
+
+public interface IDbAccessor
 {
-    public interface IDbAccessor
-    {
-        IDbConnection DbConnection { get; }
-    }
+    IDbConnection DbConnection { get; }
 }

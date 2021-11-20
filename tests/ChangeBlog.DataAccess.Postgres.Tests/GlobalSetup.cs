@@ -7,6 +7,6 @@ public static class GlobalSetup
     [ModuleInitializer]
     public static void Initialize()
     {
-        DapperTypeHandlers.Initialize();
+        DapperTypeHandlers.Add();
     }
 }

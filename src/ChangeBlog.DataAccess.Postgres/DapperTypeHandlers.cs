@@ -5,7 +5,7 @@ namespace ChangeBlog.DataAccess.Postgres;
 
 public static class DapperTypeHandlers
 {
-    public static void Initialize()
+    public static void Add()
     {
         SqlMapper.AddTypeHandler(new NameTypeHandler());
         SqlMapper.AddTypeHandler(new OptionalNameTypeHandler());

@@ -22,7 +22,7 @@ public static class ServiceCollectionExtensions
     public static IServiceCollection AddPostgresDataAccess(this IServiceCollection services,
         string connectionString)
     {
-        DapperTypeHandlers.Initialize();
+        DapperTypeHandlers.Add();
 
         return services
             .AddDbSession(connectionString)

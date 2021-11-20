@@ -19,8 +19,9 @@ public class VersionDto
     public DateTimeOffset? ReleasedAt { get; set; }
     public DateTimeOffset? DeletedAt { get; set; }
 
-    public static VersionDto FromResponseModel(VersionResponseModel model) =>
-        new()
+    public static VersionDto FromResponseModel(VersionResponseModel model)
+    {
+        return new()
         {
             Id = model.VersionId,
             Version = model.Version,
@@ -33,4 +34,5 @@ public class VersionDto
             ReleasedAt = model.ReleasedAt,
             DeletedAt = model.DeletedAt
         };
+    }
 }

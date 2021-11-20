@@ -16,7 +16,10 @@ public class VersionIdAssignmentRequestModelTests
         _testLineId = Guid.Parse("1763b2e7-9835-4992-8f73-8c2026530b2c");
     }
 
-    private VersionIdAssignmentRequestModel CreateRequestModel() => new(_testVersionId, _testLineId);
+    private VersionIdAssignmentRequestModel CreateRequestModel()
+    {
+        return new(_testVersionId, _testLineId);
+    }
 
     [Fact]
     public void Create_HappyPath_Successful()

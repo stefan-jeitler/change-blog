@@ -23,8 +23,10 @@ public class UpdateChangeLogLineInteractorTests
         _unitOfWorkMock = new Mock<IUnitOfWork>();
     }
 
-    private UpdateChangeLogLineInteractor CreateInteractor() =>
-        new(_fakeChangeLogDao, _fakeChangeLogDao, _unitOfWorkMock.Object);
+    private UpdateChangeLogLineInteractor CreateInteractor()
+    {
+        return new(_fakeChangeLogDao, _fakeChangeLogDao, _unitOfWorkMock.Object);
+    }
 
     [Fact]
     public async Task UpdateLine_HappyPath_Successful()
@@ -93,7 +95,7 @@ public class UpdateChangeLogLineInteractorTests
         var requestModel =
             new UpdateChangeLogLineRequestModel(lineId,
                 ChangeLogLineType.Pending,
-                text, 
+                text,
                 Array.Empty<string>(),
                 Array.Empty<string>());
         var updateLineInteractor = CreateInteractor();
@@ -151,7 +153,7 @@ public class UpdateChangeLogLineInteractorTests
         var requestModel =
             new UpdateChangeLogLineRequestModel(lineId,
                 ChangeLogLineType.Pending,
-                text, 
+                text,
                 Array.Empty<string>(),
                 Array.Empty<string>());
         var updateLineInteractor = CreateInteractor();

@@ -17,7 +17,10 @@ public class GetRolesInteractorTests
         _rolesDaoMock = new Mock<IRolesDao>();
     }
 
-    private GetRolesInteractor CreateInteractor() => new(_rolesDaoMock.Object);
+    private GetRolesInteractor CreateInteractor()
+    {
+        return new(_rolesDaoMock.Object);
+    }
 
     [Fact]
     public async Task GetRoles_HappyPath_Successfully()

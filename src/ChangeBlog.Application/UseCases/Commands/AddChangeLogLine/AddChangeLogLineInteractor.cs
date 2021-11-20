@@ -90,7 +90,8 @@ public class AddChangeLogLineInteractor : IAddChangeLogLine
             return Maybe<ChangeLogLine>.None;
         }
 
-        var existingLineWithSameText = changeLogs.Lines.FirstOrDefault(x => x.Text.Equals(parsedLine.GetValueOrThrow().Text));
+        var existingLineWithSameText =
+            changeLogs.Lines.FirstOrDefault(x => x.Text.Equals(parsedLine.GetValueOrThrow().Text));
         if (existingLineWithSameText is not null)
         {
             output.LineWithSameTextAlreadyExists(existingLineWithSameText.Id, parsedLine.GetValueOrThrow().Text);

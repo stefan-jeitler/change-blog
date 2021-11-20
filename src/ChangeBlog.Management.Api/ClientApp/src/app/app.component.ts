@@ -1,5 +1,5 @@
-import { Component, HostBinding } from '@angular/core';
-import { environment } from 'src/environments/environment';
+import {Component, HostBinding} from '@angular/core';
+import {environment} from 'src/environments/environment';
 
 @Component({
   selector: 'app-root',

@@ -89,7 +89,7 @@ public class UserDao : IUserDao
             {
                 accountId,
                 lastUserId,
-                limit = (int) limit
+                limit = (int)limit
             });
 
         return users.AsList();

@@ -13,9 +13,9 @@ namespace ChangeBlog.Application.Tests.UseCaseTests.Commands.DeleteVersion;
 
 public class DeleteVersionInteractorTests
 {
-    private readonly Mock<IDeleteVersionOutputPort> _outputPortMock;
     private readonly FakeProductDao _fakeProductDao;
     private readonly FakeVersionDao _fakeVersionDao;
+    private readonly Mock<IDeleteVersionOutputPort> _outputPortMock;
 
     public DeleteVersionInteractorTests()
     {
@@ -24,7 +24,10 @@ public class DeleteVersionInteractorTests
         _outputPortMock = new Mock<IDeleteVersionOutputPort>(MockBehavior.Strict);
     }
 
-    private DeleteVersionInteractor CreateInteractor() => new(_fakeVersionDao, _fakeProductDao);
+    private DeleteVersionInteractor CreateInteractor()
+    {
+        return new(_fakeVersionDao, _fakeProductDao);
+    }
 
     [Fact]
     public async Task DeleteVersion_VersionDoesNotExist_VersionDoesNotExistOutput()

@@ -20,7 +20,10 @@ public class DeleteChangeLogLineInteractorTests
         _outputPortMock = new Mock<IDeleteChangeLogLineOutputPort>(MockBehavior.Strict);
     }
 
-    private DeleteChangeLogLineInteractor CreateInteractor() => new(_fakeChangeLogDao, _fakeChangeLogDao);
+    private DeleteChangeLogLineInteractor CreateInteractor()
+    {
+        return new(_fakeChangeLogDao, _fakeChangeLogDao);
+    }
 
     [Fact]
     public async Task DeleteLine_LinesDoesNotExist_LineDoesNotExistOutput()

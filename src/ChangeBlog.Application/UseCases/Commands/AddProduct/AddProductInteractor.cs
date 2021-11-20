@@ -50,7 +50,8 @@ public class AddProductInteractor : IAddProduct
             return;
         }
 
-        var versioningSchemeId = await GetVersioningSchemeIdAsync(output, productRequestModel, account.GetValueOrThrow());
+        var versioningSchemeId =
+            await GetVersioningSchemeIdAsync(output, productRequestModel, account.GetValueOrThrow());
         if (versioningSchemeId.HasNoValue)
             return;
 

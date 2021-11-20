@@ -87,8 +87,10 @@ public class ChangeLogLineReadonlyCheckProxy : IChangeLogCommandsDao
             .Bind(_ => _changeLogCommands.DeleteLineAsync(changeLogLine));
     }
 
-    public Task DeletePendingChangeLogs(Guid productId) =>
-        _changeLogCommands.DeletePendingChangeLogs(productId);
+    public Task DeletePendingChangeLogs(Guid productId)
+    {
+        return _changeLogCommands.DeletePendingChangeLogs(productId);
+    }
 
 
     private async Task<Result<ChangeLogLine, Conflict>> IsReadOnlyAsync(ChangeLogLine line)

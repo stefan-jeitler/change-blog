@@ -1,9 +1,9 @@
+using System;
+using System.Collections.Generic;
 using ChangeBlog.Api.Shared.DTOs;
 using ChangeBlog.Application.DataAccess;
 using ChangeBlog.Application.DataAccess.Conflicts;
 using Microsoft.AspNetCore.Mvc;
-using System;
-using System.Collections.Generic;
 
 namespace ChangeBlog.Api.Presenters;
 
@@ -13,7 +13,8 @@ public static class ConflictExtensions
     {
         return conflict switch
         {
-            AddOrUpdateChangeLogLineConcurrencyConflict concurrencyConflict => CreateConcurrencyIssueResponse(concurrencyConflict),
+            AddOrUpdateChangeLogLineConcurrencyConflict concurrencyConflict => CreateConcurrencyIssueResponse(
+                concurrencyConflict),
             ChangeLogLineDeletedConflict lineDeleteConflict => CreateLineDeletedResponse(lineDeleteConflict),
             ProductClosedConflict closedConflict => CreateProductClosedResponse(closedConflict),
             VersionDeletedConflict versionDeletedConflict => CreateVersionDeletedResponse(versionDeletedConflict),
@@ -91,10 +92,7 @@ public static class ConflictExtensions
             [KnownIdentifiers.ChangeLogLineId] = changeLogLineId.ToString()
         };
 
-        if (versionId.HasValue)
-        {
-            resourceIds.Add(KnownIdentifiers.VersionId, versionId.Value.ToString());
-        }
+        if (versionId.HasValue) resourceIds.Add(KnownIdentifiers.VersionId, versionId.Value.ToString());
 
         var responseMessage =
             DefaultResponse.Create("Error while inserting or updating ChangeLogLines. Please try again later.",

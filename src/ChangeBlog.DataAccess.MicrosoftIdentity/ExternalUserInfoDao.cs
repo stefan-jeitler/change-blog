@@ -14,7 +14,7 @@ public class ExternalUserInfoDao : IExternalUserInfoDao
     private readonly string _baseUrl;
 
     private readonly HttpClient _httpClient;
-    private readonly string[] _scopes = {"openid", "profile", "email", "offline_access"};
+    private readonly string[] _scopes = { "openid", "profile", "email", "offline_access" };
     private readonly ITokenAcquisition _tokenAcquisition;
 
     public ExternalUserInfoDao(ITokenAcquisition tokenAcquisition, HttpClient httpClient, string baseUrl)
@@ -28,7 +28,7 @@ public class ExternalUserInfoDao : IExternalUserInfoDao
     {
         var token = await _tokenAcquisition.GetAccessTokenForUserAsync(_scopes);
         var message = CreateMessage(token);
-            
+
         var response = await _httpClient.SendAsync(message);
         response.EnsureSuccessStatusCode();
 

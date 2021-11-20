@@ -30,7 +30,7 @@ public class AddExternalIdentityInteractor : IAddExternalIdentity
             return Result.Failure<Guid>("ExternalUserId is null or empty.");
 
         var userByExternalId = await _userDao.FindByExternalUserIdAsync(externalUserId);
-            
+
         switch (userByExternalId.HasValue)
         {
             case true when userByExternalId.GetValueOrThrow().DeletedAt.HasValue:
@@ -60,10 +60,7 @@ public class AddExternalIdentityInteractor : IAddExternalIdentity
         if (user.DeletedAt.HasValue)
             return Result.Failure<Guid>("The user already exists, but it has been set to deleted.");
 
-        if (!userFoundByEmail)
-        {
-            await _userDao.AddAsync(user);
-        }
+        if (!userFoundByEmail) await _userDao.AddAsync(user);
 
         var externalIdentity = new ExternalIdentity(Guid.NewGuid(), user.Id, externalUserId,
             externalUserInfo.IdentityProvider, DateTime.UtcNow);

@@ -24,6 +24,19 @@ public class GetAccountsInteractor : IGetAccounts, IGetAccount
         _versioningSchemeDao = versioningSchemeDao ?? throw new ArgumentNullException(nameof(versioningSchemeDao));
     }
 
+    public async Task<AccountResponseModel> ExecuteAsync(Guid userId, Guid accountId)
+    {
+        var user = await _userDao.GetUserAsync(userId);
+        var account = await _accountDao.GetAccountAsync(accountId);
+
+        var schemeId = account.DefaultVersioningSchemeId;
+        var scheme = schemeId.HasValue
+            ? await _versioningSchemeDao.GetSchemeAsync(schemeId.Value)
+            : await _versioningSchemeDao.GetSchemeAsync(Defaults.VersioningSchemeId);
+
+        return CreateResponseModel(account, scheme, user);
+    }
+
     public async Task<IList<AccountResponseModel>> ExecuteAsync(Guid userId)
     {
         var user = await _userDao.GetUserAsync(userId);
@@ -47,23 +60,12 @@ public class GetAccountsInteractor : IGetAccounts, IGetAccount
             .ToList();
     }
 
-    public async Task<AccountResponseModel> ExecuteAsync(Guid userId, Guid accountId)
+    private static AccountResponseModel CreateResponseModel(Account account, VersioningScheme scheme, User user)
     {
-        var user = await _userDao.GetUserAsync(userId);
-        var account = await _accountDao.GetAccountAsync(accountId);
-
-        var schemeId = account.DefaultVersioningSchemeId;
-        var scheme = schemeId.HasValue
-            ? await _versioningSchemeDao.GetSchemeAsync(schemeId.Value)
-            : await _versioningSchemeDao.GetSchemeAsync(Defaults.VersioningSchemeId);
-
-        return CreateResponseModel(account, scheme, user);
-    }
-
-    private static AccountResponseModel CreateResponseModel(Account account, VersioningScheme scheme, User user) =>
-        new(account.Id,
+        return new(account.Id,
             account.Name,
             scheme.Name,
             scheme.Id,
             account.CreatedAt.ToLocal(user.TimeZone));
+    }
 }

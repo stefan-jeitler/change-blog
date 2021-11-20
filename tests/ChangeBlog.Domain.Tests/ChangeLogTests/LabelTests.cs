@@ -26,7 +26,7 @@ public class LabelTests
     [Fact]
     public void Parse_WithEmptyString_ArgumentException()
     {
-        Func<Label> act = () => Label.Parse(string.Empty);
+        var act = () => Label.Parse(string.Empty);
 
         act.Should().ThrowExactly<ArgumentException>();
     }
@@ -34,7 +34,7 @@ public class LabelTests
     [Fact]
     public void Parse_WithNull_ArgumentNullException()
     {
-        Func<Label> act = () => Label.Parse(null);
+        var act = () => Label.Parse(null);
 
         act.Should().ThrowExactly<ArgumentNullException>();
     }
@@ -42,7 +42,7 @@ public class LabelTests
     [Fact]
     public void Parse_WithOneCharacter_ArgumentException()
     {
-        Func<Label> act = () => Label.Parse("a");
+        var act = () => Label.Parse("a");
 
         act.Should().ThrowExactly<ArgumentException>();
     }
@@ -52,7 +52,7 @@ public class LabelTests
     {
         var tooLongLabelName = new string('a', 51);
 
-        Func<Label> act = () => Label.Parse(tooLongLabelName);
+        var act = () => Label.Parse(tooLongLabelName);
 
         act.Should().ThrowExactly<ArgumentException>();
     }
@@ -60,7 +60,7 @@ public class LabelTests
     [Fact]
     public void Parse_WithWhitespace_ArgumentException()
     {
-        Func<Label> act = () => Label.Parse(" ");
+        var act = () => Label.Parse(" ");
 
         act.Should().ThrowExactly<ArgumentException>();
     }
@@ -68,7 +68,7 @@ public class LabelTests
     [Fact]
     public void Parse_WithUnderscore_ArgumentException()
     {
-        Func<Label> act = () => Label.Parse("Label_Test");
+        var act = () => Label.Parse("Label_Test");
 
         act.Should().ThrowExactly<ArgumentException>();
     }
@@ -76,7 +76,7 @@ public class LabelTests
     [Fact]
     public void Parse_WithDash_ArgumentException()
     {
-        Func<Label> act = () => Label.Parse("Label-Test");
+        var act = () => Label.Parse("Label-Test");
 
         act.Should().ThrowExactly<ArgumentException>();
     }
@@ -106,7 +106,7 @@ public class LabelTests
     {
         const string name = "Bug Feature";
 
-        Func<Label> act = () => Label.Parse(name);
+        var act = () => Label.Parse(name);
 
         act.Should().ThrowExactly<ArgumentException>();
     }

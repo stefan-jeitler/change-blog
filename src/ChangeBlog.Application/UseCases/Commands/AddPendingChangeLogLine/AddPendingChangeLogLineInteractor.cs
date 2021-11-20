@@ -62,7 +62,8 @@ public class AddPendingChangeLogLineInteractor : IAddPendingChangeLogLine
             return Maybe<ChangeLogLine>.None;
         }
 
-        var existingLineWithSameText = changeLogs.Lines.FirstOrDefault(x => x.Text.Equals(parsedLine.GetValueOrThrow().Text));
+        var existingLineWithSameText =
+            changeLogs.Lines.FirstOrDefault(x => x.Text.Equals(parsedLine.GetValueOrThrow().Text));
         if (existingLineWithSameText is not null)
         {
             output.LinesWithSameTextsAreNotAllowed(existingLineWithSameText.Id, parsedLine.GetValueOrThrow().Text);

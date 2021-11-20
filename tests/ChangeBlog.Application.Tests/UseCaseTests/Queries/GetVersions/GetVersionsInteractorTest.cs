@@ -11,10 +11,10 @@ namespace ChangeBlog.Application.Tests.UseCaseTests.Queries.GetVersions;
 
 public class GetVersionsInteractorTest
 {
-    private readonly FakeProductDao _fakeProductDao;
-    private readonly FakeVersionDao _fakeVersionDao;
     private readonly FakeChangeLogDao _changeLogDao;
+    private readonly FakeProductDao _fakeProductDao;
     private readonly FakeUserDao _fakeUserDao;
+    private readonly FakeVersionDao _fakeVersionDao;
 
     public GetVersionsInteractorTest()
     {
@@ -24,7 +24,10 @@ public class GetVersionsInteractorTest
         _fakeUserDao = new FakeUserDao();
     }
 
-    private GetVersionsInteractor CreateInteractor() => new(_fakeProductDao, _fakeVersionDao, _changeLogDao, _fakeUserDao);
+    private GetVersionsInteractor CreateInteractor()
+    {
+        return new(_fakeProductDao, _fakeVersionDao, _changeLogDao, _fakeUserDao);
+    }
 
     [Fact]
     public async Task GetVersionByVersionId_VersionDoesNotExist_ReturnsNone()
@@ -57,7 +60,7 @@ public class GetVersionsInteractorTest
         requestedVersion.GetValueOrThrow().VersionId.Should().Be(version.Id);
         requestedVersion.GetValueOrThrow().Version.Should().Be(version.Value);
     }
-        
+
     [Fact]
     public async Task GetVersionByProductIdAndVersion_InvalidVersion_ReturnsNone()
     {
@@ -107,7 +110,8 @@ public class GetVersionsInteractorTest
         // arrange
         _fakeUserDao.Users.Add(TestAccount.User);
         var versionId = Guid.Parse("d1959237-0253-42c8-a817-77fd7fa4f126");
-        var version = new ClVersion(versionId, TestAccount.Product.Id, ClVersionValue.Parse("1.2.3"), OptionalName.Empty,
+        var version = new ClVersion(versionId, TestAccount.Product.Id, ClVersionValue.Parse("1.2.3"),
+            OptionalName.Empty,
             DateTime.Parse("2021-09-10T18:00:00"), TestAccount.UserId, DateTime.Parse("2021-09-10T14:00:00"), null);
         _fakeVersionDao.Versions.Add(version);
         _fakeProductDao.Products.Add(TestAccount.Product);

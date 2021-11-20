@@ -25,6 +25,6 @@ public abstract class AuthorizationHandler
     {
         var id = context.ActionArguments.Values.SingleOrDefault(x => x is T);
 
-        return (T) id;
+        return (T)id;
     }
 }

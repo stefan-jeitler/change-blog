@@ -31,8 +31,9 @@ public class ProductDto
     public DateTimeOffset CreatedAt { get; }
     public bool IsClosed { get; }
 
-    public static ProductDto FromResponseModel(ProductResponseModel m) =>
-        new(
+    public static ProductDto FromResponseModel(ProductResponseModel m)
+    {
+        return new(
             m.Id,
             m.AccountId,
             m.AccountName,
@@ -43,4 +44,5 @@ public class ProductDto
             m.CreatedByUser,
             m.CreatedAt,
             m.ClosedAt.HasValue);
+    }
 }

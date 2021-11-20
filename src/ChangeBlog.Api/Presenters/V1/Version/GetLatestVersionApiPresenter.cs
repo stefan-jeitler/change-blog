@@ -22,7 +22,8 @@ public class GetLatestVersionApiPresenter : BaseApiPresenter, IGetLatestVersionO
             [KnownIdentifiers.ProductId] = productId.ToString()
         };
 
-        Response = new NotFoundObjectResult(DefaultResponse.Create("Product does not contain any version.", resourceIds));
+        Response = new NotFoundObjectResult(
+            DefaultResponse.Create("Product does not contain any version.", resourceIds));
     }
 
     public void ProductDoesNotExist()

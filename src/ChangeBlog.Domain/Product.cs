@@ -70,6 +70,9 @@ public class Product
 
     public bool IsClosed => ClosedAt.HasValue;
 
-    public Product Close() => new(Id, AccountId, Name, VersioningScheme, LanguageCode, CreatedByUser, CreatedAt,
-        DateTime.UtcNow);
+    public Product Close()
+    {
+        return new(Id, AccountId, Name, VersioningScheme, LanguageCode, CreatedByUser, CreatedAt,
+            DateTime.UtcNow);
+    }
 }

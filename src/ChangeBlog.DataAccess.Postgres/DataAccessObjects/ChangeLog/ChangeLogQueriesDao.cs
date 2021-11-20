@@ -84,7 +84,7 @@ public class ChangeLogQueriesDao : IChangeLogQueriesDao
                 and chl.deleted_at is null";
 
         var lines = await _dbAccessor.DbConnection
-            .QueryAsync<ChangeLogLine>(getChangeLogLinesSql, new {versionIds});
+            .QueryAsync<ChangeLogLine>(getChangeLogLinesSql, new { versionIds });
 
         return lines
             .GroupBy(l => l.VersionId)

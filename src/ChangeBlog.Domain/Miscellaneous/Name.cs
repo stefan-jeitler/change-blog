@@ -53,5 +53,8 @@ public record Name
         return null;
     }
 
-    public static implicit operator string(Name name) => name.Value;
+    public static implicit operator string(Name name)
+    {
+        return name.Value;
+    }
 }

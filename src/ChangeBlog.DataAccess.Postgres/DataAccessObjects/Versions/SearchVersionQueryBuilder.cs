@@ -71,7 +71,7 @@ public class SearchVersionQueryBuilder
                 order by v.created_at desc, v.id
                 fetch first (@limit) rows only";
 
-        _parameters.Add("limit", (int) limit);
+        _parameters.Add("limit", (int)limit);
 
         return (query, _parameters);
     }

@@ -17,7 +17,10 @@ public class GetIssuesInteractorTests
         _fakeChangeLogDao = new FakeChangeLogDao();
     }
 
-    private GetIssuesInteractor CreateInteractor() => new(_fakeChangeLogDao);
+    private GetIssuesInteractor CreateInteractor()
+    {
+        return new(_fakeChangeLogDao);
+    }
 
     [Fact]
     public async Task GetIssues_HappyPath_Successful()

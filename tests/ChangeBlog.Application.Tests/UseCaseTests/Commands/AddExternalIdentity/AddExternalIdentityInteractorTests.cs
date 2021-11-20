@@ -16,7 +16,6 @@ namespace ChangeBlog.Application.Tests.UseCaseTests.Commands.AddExternalIdentity
 
 public class AddExternalIdentityInteractorTests
 {
-
     private readonly FakeExternalUserInfoDao _fakeExternalUserInfoDao;
     private readonly FakeUserDao _fakeUserDao;
     private readonly Mock<IUnitOfWork> _unitOfWorkMock;
@@ -29,8 +28,10 @@ public class AddExternalIdentityInteractorTests
     }
 
 
-    private AddExternalIdentityInteractor CreateInteractor() =>
-        new(_fakeExternalUserInfoDao, _fakeUserDao, _unitOfWorkMock.Object);
+    private AddExternalIdentityInteractor CreateInteractor()
+    {
+        return new(_fakeExternalUserInfoDao, _fakeUserDao, _unitOfWorkMock.Object);
+    }
 
     [Fact]
     public async Task AddExternalIdentity_ExternalUserIdIsNull_Failure()
@@ -47,7 +48,7 @@ public class AddExternalIdentityInteractorTests
     {
         // arrange
         const string externalUserId = "123456";
-        var testUser = new User(TestAccount.UserId, 
+        var testUser = new User(TestAccount.UserId,
             TestAccount.User.Email,
             TestAccount.User.FirstName,
             TestAccount.User.LastName,
@@ -77,7 +78,7 @@ public class AddExternalIdentityInteractorTests
     {
         // arrange
         const string externalUserId = "123456";
-        _fakeUserDao.ExternalIdentities.Add(new ExternalIdentity(Guid.NewGuid(), TestAccount.UserId, 
+        _fakeUserDao.ExternalIdentities.Add(new ExternalIdentity(Guid.NewGuid(), TestAccount.UserId,
             externalUserId, "TestProvider", DateTime.Parse("2021-09-06")));
         _fakeUserDao.Users.Add(TestAccount.User);
         var interactor = CreateInteractor();
@@ -95,7 +96,7 @@ public class AddExternalIdentityInteractorTests
     {
         // arrange
         const string externalUserId = "123456";
-        var testUser = new User(TestAccount.UserId, 
+        var testUser = new User(TestAccount.UserId,
             TestAccount.User.Email,
             TestAccount.User.FirstName,
             TestAccount.User.LastName,
@@ -126,7 +127,7 @@ public class AddExternalIdentityInteractorTests
     {
         // arrange
         const string externalUserId = "123456";
-        var testUser = new User(TestAccount.UserId, 
+        var testUser = new User(TestAccount.UserId,
             TestAccount.User.Email,
             TestAccount.User.FirstName,
             TestAccount.User.LastName,
@@ -158,7 +159,7 @@ public class AddExternalIdentityInteractorTests
     {
         // arrange
         const string externalUserId = "123456";
-        var testUser = new User(TestAccount.UserId, 
+        var testUser = new User(TestAccount.UserId,
             TestAccount.User.Email,
             TestAccount.User.FirstName,
             TestAccount.User.LastName,
@@ -189,12 +190,13 @@ public class AddExternalIdentityInteractorTests
         _unitOfWorkMock.Verify(m => m.Start(), Times.Once);
         _unitOfWorkMock.Verify(m => m.Commit(), Times.Once);
     }
+
     [Fact]
     public async Task AddExternalIdentity_ErrorWhileInsertingUser_ReturnsFailure()
     {
         // arrange
         const string externalUserId = "123456";
-        var testUser = new User(TestAccount.UserId, 
+        var testUser = new User(TestAccount.UserId,
             TestAccount.User.Email,
             TestAccount.User.FirstName,
             TestAccount.User.LastName,

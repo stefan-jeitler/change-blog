@@ -29,9 +29,11 @@ public class VersioningSchemeTest
         _testDeletionDate = null;
     }
 
-    private VersioningScheme CreateScheme() =>
-        new(_testId, _testName, _testRegexPatter,
+    private VersioningScheme CreateScheme()
+    {
+        return new(_testId, _testName, _testRegexPatter,
             _testDescription, _testAccountId, _testUserId, _testDeletionDate, _testCreationDate);
+    }
 
     [Fact]
     public void Create_WithValidArguments_Successful()
@@ -54,7 +56,7 @@ public class VersioningSchemeTest
     {
         _testId = Guid.Empty;
 
-        Func<VersioningScheme> act = CreateScheme;
+        var act = CreateScheme;
 
         act.Should().ThrowExactly<ArgumentException>();
     }
@@ -64,7 +66,7 @@ public class VersioningSchemeTest
     {
         _testName = null;
 
-        Func<VersioningScheme> act = CreateScheme;
+        var act = CreateScheme;
 
         act.Should().ThrowExactly<ArgumentNullException>();
     }
@@ -74,7 +76,7 @@ public class VersioningSchemeTest
     {
         _testRegexPatter = null;
 
-        Func<VersioningScheme> act = CreateScheme;
+        var act = CreateScheme;
 
         act.Should().ThrowExactly<ArgumentNullException>();
     }
@@ -94,7 +96,7 @@ public class VersioningSchemeTest
     {
         _testAccountId = Guid.Empty;
 
-        Func<VersioningScheme> act = CreateScheme;
+        var act = CreateScheme;
 
         act.Should().ThrowExactly<ArgumentException>();
     }
@@ -104,7 +106,7 @@ public class VersioningSchemeTest
     {
         _testUserId = Guid.Empty;
 
-        Func<VersioningScheme> act = CreateScheme;
+        var act = CreateScheme;
 
         act.Should().ThrowExactly<ArgumentException>();
     }
@@ -114,7 +116,7 @@ public class VersioningSchemeTest
     {
         _testDescription = null;
 
-        Func<VersioningScheme> act = CreateScheme;
+        var act = CreateScheme;
 
         act.Should().ThrowExactly<ArgumentNullException>();
     }
@@ -126,7 +128,7 @@ public class VersioningSchemeTest
     {
         _testCreationDate = DateTime.Parse(invalidDate);
 
-        Func<VersioningScheme> act = CreateScheme;
+        var act = CreateScheme;
 
         act.Should().ThrowExactly<ArgumentException>();
     }
@@ -138,7 +140,7 @@ public class VersioningSchemeTest
     {
         _testDeletionDate = DateTime.Parse(invalidDate);
 
-        Func<VersioningScheme> act = CreateScheme;
+        var act = CreateScheme;
 
         act.Should().ThrowExactly<ArgumentException>();
     }

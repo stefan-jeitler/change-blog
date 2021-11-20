@@ -10,10 +10,9 @@ namespace ChangeBlog.Application.Tests.UseCaseTests.Queries.GetPendingChangeLogs
 
 public class GetPendingChangeLogsInteractorTest
 {
-
     private readonly FakeChangeLogDao _fakeChangeLogDao;
-    private readonly FakeUserDao _fakeUserDao;
     private readonly FakeProductDao _fakeProductDao;
+    private readonly FakeUserDao _fakeUserDao;
 
     public GetPendingChangeLogsInteractorTest()
     {
@@ -22,8 +21,10 @@ public class GetPendingChangeLogsInteractorTest
         _fakeProductDao = new FakeProductDao();
     }
 
-    private GetPendingChangeLogsInteractor CreateInteractor() =>
-        new(_fakeChangeLogDao, _fakeUserDao, _fakeProductDao);
+    private GetPendingChangeLogsInteractor CreateInteractor()
+    {
+        return new(_fakeChangeLogDao, _fakeUserDao, _fakeProductDao);
+    }
 
     [Fact]
     public async Task GetPendingChangeLogs_HappyPath_Successful()

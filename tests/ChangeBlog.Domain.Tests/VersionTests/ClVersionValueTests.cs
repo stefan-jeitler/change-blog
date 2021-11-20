@@ -22,7 +22,7 @@ public class ClVersionValueTests
     [Fact]
     public void Parse_WithNullArgument_ArgumentNullException()
     {
-        Func<ClVersionValue> act = () => ClVersionValue.Parse(null);
+        var act = () => ClVersionValue.Parse(null);
 
         act.Should().ThrowExactly<ArgumentNullException>();
     }
@@ -30,7 +30,7 @@ public class ClVersionValueTests
     [Fact]
     public void Parse_WithEmptyString_ArgumentException()
     {
-        Func<ClVersionValue> act = () => ClVersionValue.Parse(string.Empty);
+        var act = () => ClVersionValue.Parse(string.Empty);
 
         act.Should().ThrowExactly<ArgumentException>();
     }
@@ -40,7 +40,7 @@ public class ClVersionValueTests
     {
         const string tooLongVersion = "6.1.1.1234+a6eda1a40b5261efa6496ad10f685199e93a37793a37793a37";
 
-        Func<ClVersionValue> act = () => ClVersionValue.Parse(tooLongVersion);
+        var act = () => ClVersionValue.Parse(tooLongVersion);
 
         act.Should().ThrowExactly<ArgumentException>();
     }
@@ -48,7 +48,7 @@ public class ClVersionValueTests
     [Fact]
     public void Parse_WithWhitespaceOnly_ArgumentException()
     {
-        Func<ClVersionValue> act = () => ClVersionValue.Parse(" ");
+        var act = () => ClVersionValue.Parse(" ");
 
         act.Should().ThrowExactly<ArgumentException>();
     }
@@ -56,7 +56,7 @@ public class ClVersionValueTests
     [Fact]
     public void Parse_WithWhitespacesInTheMiddle_ArgumentException()
     {
-        Func<ClVersionValue> act = () => ClVersionValue.Parse("1.2 .3");
+        var act = () => ClVersionValue.Parse("1.2 .3");
 
         act.Should().ThrowExactly<ArgumentException>();
     }

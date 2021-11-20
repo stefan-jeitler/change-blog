@@ -56,7 +56,7 @@ public class ChangeLogCommandsDao : IChangeLogCommandsDao
     {
         try
         {
-            await AddOrUpdateLinesInternalAsync(new[] {changeLogLine});
+            await AddOrUpdateLinesInternalAsync(new[] { changeLogLine });
             return Result.Success<ChangeLogLine, Conflict>(changeLogLine);
         }
         //duplicate key value violates unique constraint
@@ -169,7 +169,7 @@ public class ChangeLogCommandsDao : IChangeLogCommandsDao
             .ExecuteAsync(MoveLineSql, new
             {
                 versionId = changeLogLine.VersionId,
-                position = (int) changeLogLine.Position,
+                position = (int)changeLogLine.Position,
                 changeLogLineId = changeLogLine.Id
             });
 
@@ -191,7 +191,7 @@ public class ChangeLogCommandsDao : IChangeLogCommandsDao
             .ExecuteAsync(MoveLineSql, lines.Select(l => new
             {
                 versionId = l.VersionId,
-                position = (int) l.Position,
+                position = (int)l.Position,
                 changeLogLineId = l.Id
             }));
 
@@ -201,9 +201,7 @@ public class ChangeLogCommandsDao : IChangeLogCommandsDao
             .Distinct();
 
         foreach (var versionId in versionIdsBeforeMove.Concat(versionIdsOfNewDestination))
-        {
             await UpdateSearchVectorsAsync(versionId);
-        }
 
         return Result.Success<int, Conflict>(count);
     }
@@ -220,7 +218,7 @@ public class ChangeLogCommandsDao : IChangeLogCommandsDao
                 text = l.Text,
                 labels = l.Labels.AsEnumerable(),
                 issues = l.Issues.AsEnumerable(),
-                position = (int) l.Position,
+                position = (int)l.Position,
                 createdByUser = l.CreatedByUser,
                 deletedAt = l.DeletedAt,
                 createdAt = l.CreatedAt
@@ -230,9 +228,7 @@ public class ChangeLogCommandsDao : IChangeLogCommandsDao
                      .Where(x => x.VersionId.HasValue)
                      .Select(x => x.VersionId.Value)
                      .Distinct())
-        {
             await UpdateSearchVectorsAsync(versionId);
-        }
 
         return Result.Success<int, Conflict>(count);
     }
@@ -248,10 +244,7 @@ public class ChangeLogCommandsDao : IChangeLogCommandsDao
                 issues = changeLogLine.Issues.AsEnumerable()
             });
 
-        if (changeLogLine.VersionId.HasValue)
-        {
-            await UpdateSearchVectorsAsync(changeLogLine.VersionId.Value);
-        }
+        if (changeLogLine.VersionId.HasValue) await UpdateSearchVectorsAsync(changeLogLine.VersionId.Value);
 
         return Result.Success<ChangeLogLine, Conflict>(changeLogLine);
     }
@@ -264,21 +257,20 @@ public class ChangeLogCommandsDao : IChangeLogCommandsDao
                 changeLogLineId = changeLogLine.Id
             });
 
-        if (changeLogLine.VersionId.HasValue)
-        {
-            await UpdateSearchVectorsAsync(changeLogLine.VersionId.Value);
-        }
+        if (changeLogLine.VersionId.HasValue) await UpdateSearchVectorsAsync(changeLogLine.VersionId.Value);
 
         return Result.Success<ChangeLogLine, Conflict>(changeLogLine);
     }
 
-    private Task UpdateSearchVectorsAsync(Guid versionId) =>
-        _dbAccessor.DbConnection
+    private Task UpdateSearchVectorsAsync(Guid versionId)
+    {
+        return _dbAccessor.DbConnection
             .ExecuteAsync("CALL update_version_searchvectors_proc(@versionId)",
                 new
                 {
                     versionId
                 });
+    }
 
     private async Task<IList<Guid>> GetVersionIdsAsync(IEnumerable<Guid> changeLogLineIds)
     {

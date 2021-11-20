@@ -79,6 +79,7 @@ public class AssignPendingLineToVersionApiPresenter : BaseApiPresenter,
             [KnownIdentifiers.ProductId] = targetVersionProductId.ToString()
         };
 
-        Response = new ConflictObjectResult(DefaultResponse.Create("The target version belongs to a different product.", resourceIds));
+        Response = new ConflictObjectResult(DefaultResponse.Create("The target version belongs to a different product.",
+            resourceIds));
     }
 }

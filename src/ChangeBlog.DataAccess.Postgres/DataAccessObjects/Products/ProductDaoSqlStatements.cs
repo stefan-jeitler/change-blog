@@ -76,8 +76,9 @@ public static class ProductDaoSqlStatements
     }
 
     private static string GetProductsQuerySql(string accountFilter, string pagingFilter,
-        string includeClosedProductsFilter) =>
-        @$"SELECT p.id,
+        string includeClosedProductsFilter)
+    {
+        return @$"SELECT p.id,
                    p.account_id       AS accountId,
                    p.name,
                    vs.id              AS vsId,
@@ -105,4 +106,5 @@ public static class ProductDaoSqlStatements
             {includeClosedProductsFilter}
             ORDER BY p.name, p.id
             FETCH FIRST (@limit) ROWS ONLY";
+    }
 }

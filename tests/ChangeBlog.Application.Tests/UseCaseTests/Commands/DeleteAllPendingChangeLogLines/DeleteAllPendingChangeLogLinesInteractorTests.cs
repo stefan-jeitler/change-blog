@@ -24,7 +24,7 @@ public class DeleteAllPendingChangeLogLinesInteractorTests
         // arrange
         var pendingLines = Enumerable
             .Range(0, 5)
-            .Select(x => new ChangeLogLine(null, TestAccount.Product.Id, ChangeLogText.Parse($"00000{x}"), (uint) x,
+            .Select(x => new ChangeLogLine(null, TestAccount.Product.Id, ChangeLogText.Parse($"00000{x}"), (uint)x,
                 TestAccount.UserId));
 
         _fakeChangeLogDao.ChangeLogs.AddRange(pendingLines);

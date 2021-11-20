@@ -23,7 +23,7 @@ public class ProductUserRoleTests
     [Fact]
     public void Create_WithEmptyUserId_ArgumentException()
     {
-        Func<ProductUserRole> act = () => new ProductUserRole(Guid.Empty, TestProductId, TestRoleId);
+        var act = () => new ProductUserRole(Guid.Empty, TestProductId, TestRoleId);
 
         act.Should().ThrowExactly<ArgumentException>();
     }
@@ -31,7 +31,7 @@ public class ProductUserRoleTests
     [Fact]
     public void Create_WithEmptyProductId_ArgumentException()
     {
-        Func<ProductUserRole> act = () => new ProductUserRole(TestUserId, Guid.Empty, TestRoleId);
+        var act = () => new ProductUserRole(TestUserId, Guid.Empty, TestRoleId);
 
         act.Should().ThrowExactly<ArgumentException>();
     }
@@ -39,7 +39,7 @@ public class ProductUserRoleTests
     [Fact]
     public void Create_WithEmptyRoleId_ArgumentException()
     {
-        Func<ProductUserRole> act = () => new ProductUserRole(TestUserId, TestProductId, Guid.Empty);
+        var act = () => new ProductUserRole(TestUserId, TestProductId, Guid.Empty);
 
         act.Should().ThrowExactly<ArgumentException>();
     }

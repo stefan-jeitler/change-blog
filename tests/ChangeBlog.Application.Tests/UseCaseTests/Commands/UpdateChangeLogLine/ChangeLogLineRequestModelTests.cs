@@ -9,11 +9,11 @@ namespace ChangeBlog.Application.Tests.UseCaseTests.Commands.UpdateChangeLogLine
 
 public class ChangeLogLineRequestModelTests
 {
+    private readonly ChangeLogLineType _changeLogLineType;
     private readonly IList<string> _testIssues;
     private readonly IList<string> _testLabels;
-    private Guid _testLineId;
     private readonly string _testText;
-    private readonly ChangeLogLineType _changeLogLineType;
+    private Guid _testLineId;
 
     public ChangeLogLineRequestModelTests()
     {
@@ -24,7 +24,10 @@ public class ChangeLogLineRequestModelTests
         _changeLogLineType = ChangeLogLineType.NotPending;
     }
 
-    private UpdateChangeLogLineRequestModel CreateRequestModel() => new(_testLineId, _changeLogLineType, _testText, _testLabels, _testIssues);
+    private UpdateChangeLogLineRequestModel CreateRequestModel()
+    {
+        return new(_testLineId, _changeLogLineType, _testText, _testLabels, _testIssues);
+    }
 
     [Fact]
     public void Create_HappyPath_Successful()

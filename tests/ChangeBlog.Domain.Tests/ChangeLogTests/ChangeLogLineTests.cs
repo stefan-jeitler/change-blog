@@ -24,8 +24,8 @@ public class ChangeLogLineTests
     public ChangeLogLineTests()
     {
         _testPosition = 5;
-        _testIssues = new List<Issue>(1) {Issue.Parse("#1234")};
-        _testLabels = new List<Label>(1) {Label.Parse("Feature")};
+        _testIssues = new List<Issue>(1) { Issue.Parse("#1234") };
+        _testLabels = new List<Label>(1) { Label.Parse("Feature") };
         _testId = Guid.Parse("51d89265-52c2-4a38-a0fe-b99bdc5523d0");
         _testVersionId = Guid.Parse("66845d0a-45bc-4834-96d0-b48c2c403628");
         _testProductId = Guid.Parse("ef5656e5-15f0-418d-b3a4-b69f1c3abac5");
@@ -35,8 +35,9 @@ public class ChangeLogLineTests
         _testDeletionDate = null;
     }
 
-    private ChangeLogLine CreateChangeLogLine() =>
-        new(_testId,
+    private ChangeLogLine CreateChangeLogLine()
+    {
+        return new(_testId,
             _testVersionId,
             _testProductId,
             _testText,
@@ -46,6 +47,7 @@ public class ChangeLogLineTests
             _testIssues,
             _testUserId,
             _testDeletionDate);
+    }
 
     [Fact]
     public void Create_WithValidArguments_Successful()
@@ -97,7 +99,7 @@ public class ChangeLogLineTests
     {
         _testId = Guid.Empty;
 
-        Func<ChangeLogLine> act = CreateChangeLogLine;
+        var act = CreateChangeLogLine;
 
         act.Should().ThrowExactly<ArgumentException>();
     }
@@ -107,7 +109,7 @@ public class ChangeLogLineTests
     {
         _testVersionId = Guid.Empty;
 
-        Func<ChangeLogLine> act = CreateChangeLogLine;
+        var act = CreateChangeLogLine;
 
         act.Should().ThrowExactly<ArgumentException>();
     }
@@ -127,7 +129,7 @@ public class ChangeLogLineTests
     {
         _testProductId = Guid.Empty;
 
-        Func<ChangeLogLine> act = CreateChangeLogLine;
+        var act = CreateChangeLogLine;
 
         act.Should().ThrowExactly<ArgumentException>();
     }
@@ -137,7 +139,7 @@ public class ChangeLogLineTests
     {
         _testText = null;
 
-        Func<ChangeLogLine> act = CreateChangeLogLine;
+        var act = CreateChangeLogLine;
 
         act.Should().ThrowExactly<ArgumentNullException>();
     }
@@ -149,7 +151,7 @@ public class ChangeLogLineTests
     {
         _testCreationDate = DateTime.Parse(invalidDate);
 
-        Func<ChangeLogLine> act = CreateChangeLogLine;
+        var act = CreateChangeLogLine;
 
         act.Should().ThrowExactly<ArgumentException>();
     }
@@ -162,7 +164,7 @@ public class ChangeLogLineTests
     {
         _testDeletionDate = DateTime.Parse(invalidDate);
 
-        Func<ChangeLogLine> act = CreateChangeLogLine;
+        var act = CreateChangeLogLine;
 
         act.Should().ThrowExactly<ArgumentException>();
     }
@@ -204,7 +206,7 @@ public class ChangeLogLineTests
         var line = CreateChangeLogLine();
 
         // act
-        Func<ChangeLogLine> act = () => line.AssignToVersion(Guid.Empty, 0);
+        var act = () => line.AssignToVersion(Guid.Empty, 0);
 
         // assert
         act.Should().ThrowExactly<ArgumentException>();
@@ -219,7 +221,7 @@ public class ChangeLogLineTests
         var line = CreateChangeLogLine();
 
         // act
-        Func<ChangeLogLine> act = () => line.AssignToVersion(versionId, 0);
+        var act = () => line.AssignToVersion(versionId, 0);
 
         // assert
         act.Should().ThrowExactly<ArgumentException>();

@@ -16,7 +16,10 @@ public class GetUsersInteractorTests
         _fakeUserDao = new FakeUserDao();
     }
 
-    private GetUsersInteractor CreateInteractor() => new(_fakeUserDao);
+    private GetUsersInteractor CreateInteractor()
+    {
+        return new(_fakeUserDao);
+    }
 
     [Fact]
     public async Task GetUsers_HappyPath_Successful()

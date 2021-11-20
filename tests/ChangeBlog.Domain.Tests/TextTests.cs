@@ -18,7 +18,7 @@ public class TextTests
     [Fact]
     public void Parse_NullText_ArgumentNullException()
     {
-        Func<Text> act = () => Text.Parse(null);
+        var act = () => Text.Parse(null);
 
         act.Should().ThrowExactly<ArgumentNullException>();
     }
@@ -26,7 +26,7 @@ public class TextTests
     [Fact]
     public void Parse_EmptyText_ArgumentException()
     {
-        Func<Text> act = () => Text.Parse(string.Empty);
+        var act = () => Text.Parse(string.Empty);
 
         act.Should().ThrowExactly<ArgumentException>();
     }
@@ -36,7 +36,7 @@ public class TextTests
     {
         var tooLong = new string('a', 501);
 
-        Func<Text> act = () => Text.Parse(tooLong);
+        var act = () => Text.Parse(tooLong);
 
         act.Should().ThrowExactly<ArgumentException>();
     }

@@ -21,8 +21,11 @@ public class VersionRequestModelTests
         _testVersion = "1.2.3";
     }
 
-    private VersionRequestModel CreateRequestModel() => new(_testUserId, _testProductId, _testVersion, _testName,
-        new List<ChangeLogLineRequestModel>());
+    private VersionRequestModel CreateRequestModel()
+    {
+        return new(_testUserId, _testProductId, _testVersion, _testName,
+            new List<ChangeLogLineRequestModel>());
+    }
 
     [Fact]
     public void Create_HappyPath_Successful()

@@ -13,5 +13,8 @@ public class FindUserId
         _userAccessDao = userAccessDao;
     }
 
-    public Task<Guid?> FindByApiKeyAsync(string apiKey) => _userAccessDao.FindActiveUserIdByApiKeyAsync(apiKey);
+    public Task<Guid?> FindByApiKeyAsync(string apiKey)
+    {
+        return _userAccessDao.FindActiveUserIdByApiKeyAsync(apiKey);
+    }
 }

@@ -5,8 +5,10 @@ namespace ChangeBlog.Application.Tests.TestDoubles;
 
 public class FakeExternalUserInfoDao : IExternalUserInfoDao
 {
-
     public UserInfo UserInfo { get; set; }
 
-    public Task<UserInfo> GetAsync() => Task.FromResult(UserInfo);
+    public Task<UserInfo> GetAsync()
+    {
+        return Task.FromResult(UserInfo);
+    }
 }

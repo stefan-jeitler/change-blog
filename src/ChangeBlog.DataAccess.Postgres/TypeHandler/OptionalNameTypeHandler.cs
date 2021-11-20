@@ -11,5 +11,8 @@ public class OptionalNameTypeHandler : SqlMapper.TypeHandler<OptionalName>
         parameter.Value = value.Value;
     }
 
-    public override OptionalName Parse(object value) => OptionalName.Parse(value.ToString());
+    public override OptionalName Parse(object value)
+    {
+        return OptionalName.Parse(value.ToString());
+    }
 }

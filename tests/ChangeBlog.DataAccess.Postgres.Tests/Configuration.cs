@@ -9,10 +9,12 @@ public class Configuration
 
     public static string ConnectionString => Instance.Value.GetConnectionString("ChangeBlogDb");
 
-    private static IConfiguration BuildConfiguration() =>
-        new ConfigurationBuilder()
+    private static IConfiguration BuildConfiguration()
+    {
+        return new ConfigurationBuilder()
             .AddJsonFile("appsettings.json", false)
             .AddUserSecrets<Configuration>(true)
             .AddEnvironmentVariables()
             .Build();
+    }
 }

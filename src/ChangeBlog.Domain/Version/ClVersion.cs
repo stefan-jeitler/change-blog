@@ -74,14 +74,19 @@ public class ClVersion : IEquatable<ClVersion>
                Equals(Value, other.Value);
     }
 
-    public ClVersion Release() =>
-        IsReleased
+    public ClVersion Release()
+    {
+        return IsReleased
             ? this
             : new ClVersion(Id, ProductId, Value, Name, DateTime.UtcNow, CreatedByUser, CreatedAt, DeletedAt);
+    }
 
-    public ClVersion Delete() => IsDeleted
-        ? this
-        : new ClVersion(Id, ProductId, Value, Name, ReleasedAt, CreatedByUser, CreatedAt, DateTime.UtcNow);
+    public ClVersion Delete()
+    {
+        return IsDeleted
+            ? this
+            : new ClVersion(Id, ProductId, Value, Name, ReleasedAt, CreatedByUser, CreatedAt, DateTime.UtcNow);
+    }
 
     private static void VerifyDeletedAtDate(DateTime? releasedAt, DateTime? deletedAt)
     {
@@ -103,8 +108,11 @@ public class ClVersion : IEquatable<ClVersion>
             return true;
 
         return obj.GetType() == GetType() &&
-               Equals((ClVersion) obj);
+               Equals((ClVersion)obj);
     }
 
-    public override int GetHashCode() => HashCode.Combine(Id, ProductId, Value);
+    public override int GetHashCode()
+    {
+        return HashCode.Combine(Id, ProductId, Value);
+    }
 }

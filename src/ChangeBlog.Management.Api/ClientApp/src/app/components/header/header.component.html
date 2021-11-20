@@ -1,19 +1,19 @@
 <nav class="navbar navbar-light navbar-dark bg-dark ps-5 pe-5">
   <div class="container-fluid">
     <a class="navbar-brand " href="./">ChangeBlog</a>
-    <button type="button" class="btn btn-light ms-auto" *ngIf="!isLoggedIn" (click)="login()">Login</button>
-    <div class="dropdown user-profile" *ngIf="isLoggedIn">
-      <i class="bi bi-person-circle white user-profile-icon" data-bs-toggle="dropdown" aria-expanded="false"></i>
-      <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="user-icon">
-        <li><a class="dropdown-item user-profile-name" aria-disabled="true">{{ userName }}</a></li>
+    <button (click)="login()" *ngIf="!isLoggedIn" class="btn btn-light ms-auto" type="button">Login</button>
+    <div *ngIf="isLoggedIn" class="dropdown user-profile">
+      <i aria-expanded="false" class="bi bi-person-circle white user-profile-icon" data-bs-toggle="dropdown"></i>
+      <ul aria-labelledby="user-icon" class="dropdown-menu dropdown-menu-end">
+        <li><a aria-disabled="true" class="dropdown-item user-profile-name">{{ userName }}</a></li>
         <li>
           <hr class="dropdown-divider">
         </li>
-        <li><a class="dropdown-item" [routerLink]="['profile']">Profile</a></li>
+        <li><a [routerLink]="['profile']" class="dropdown-item">Profile</a></li>
         <li>
           <hr class="dropdown-divider">
         </li>
-        <li><a class="dropdown-item" (click)="logout()">Logout</a></li>
+        <li><a (click)="logout()" class="dropdown-item">Logout</a></li>
       </ul>
     </div>
   </div>

@@ -16,9 +16,9 @@ namespace ChangeBlog.Application.Tests.UseCaseTests.Commands.MakeChangeLogLinePe
 public class MakeChangeLogLinePendingInteractorTests
 {
     private readonly FakeChangeLogDao _fakeChangeLogDao;
+    private readonly FakeVersionDao _fakeVersionDao;
     private readonly Mock<IMakeChangeLogLinePendingOutputPort> _outputPortMock;
     private readonly Mock<IUnitOfWork> _unitOfWorkMock;
-    private readonly FakeVersionDao _fakeVersionDao;
 
     public MakeChangeLogLinePendingInteractorTests()
     {
@@ -28,9 +28,11 @@ public class MakeChangeLogLinePendingInteractorTests
         _outputPortMock = new Mock<IMakeChangeLogLinePendingOutputPort>(MockBehavior.Strict);
     }
 
-    private MakeChangeLogLinePendingInteractor CreateInteractor() =>
-        new(_fakeVersionDao, _fakeChangeLogDao,
+    private MakeChangeLogLinePendingInteractor CreateInteractor()
+    {
+        return new(_fakeVersionDao, _fakeChangeLogDao,
             _fakeChangeLogDao, _unitOfWorkMock.Object);
+    }
 
     [Fact]
     public async Task MakeLinePending_HappyPath_SuccessfullyAndUowStartedAndCommitted()

@@ -22,10 +22,13 @@ public class RoleTests
         _testName = Name.Parse("Tester");
         _testDescription = Text.Parse("Tester role.");
         _testCreationDate = DateTime.Parse("2021-05-14");
-        _testPermissions = new List<Permission>(2) {Permission.AddVersion, Permission.CloseProduct};
+        _testPermissions = new List<Permission>(2) { Permission.AddVersion, Permission.CloseProduct };
     }
 
-    private Role CreateRole() => new(_testId, _testName, _testDescription, _testCreationDate, _testPermissions);
+    private Role CreateRole()
+    {
+        return new(_testId, _testName, _testDescription, _testCreationDate, _testPermissions);
+    }
 
     [Fact]
     public void Create_HappyPath_Successful()
@@ -46,7 +49,7 @@ public class RoleTests
     {
         _testId = Guid.Empty;
 
-        Func<Role> act = CreateRole;
+        var act = CreateRole;
 
         act.Should().ThrowExactly<ArgumentException>();
     }
@@ -56,7 +59,7 @@ public class RoleTests
     {
         _testName = null;
 
-        Func<Role> act = CreateRole;
+        var act = CreateRole;
 
         act.Should().ThrowExactly<ArgumentNullException>();
     }
@@ -66,7 +69,7 @@ public class RoleTests
     {
         _testDescription = null;
 
-        Func<Role> act = CreateRole;
+        var act = CreateRole;
 
         act.Should().ThrowExactly<ArgumentNullException>();
     }
@@ -76,7 +79,7 @@ public class RoleTests
     {
         _testPermissions = null;
 
-        Func<Role> act = CreateRole;
+        var act = CreateRole;
 
         act.Should().ThrowExactly<ArgumentNullException>();
     }
@@ -88,7 +91,7 @@ public class RoleTests
     {
         _testCreationDate = DateTime.Parse(invalidDate);
 
-        Func<Role> act = CreateRole;
+        var act = CreateRole;
 
         act.Should().ThrowExactly<ArgumentException>();
     }

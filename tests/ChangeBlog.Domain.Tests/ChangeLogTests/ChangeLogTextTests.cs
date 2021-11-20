@@ -20,7 +20,7 @@ public class ChangeLogTextTests
     [Fact]
     public void Parse_WithNullArgument_ArgumentNullException()
     {
-        Func<ChangeLogText> act = () => ChangeLogText.Parse(null);
+        var act = () => ChangeLogText.Parse(null);
 
         act.Should().ThrowExactly<ArgumentNullException>();
     }
@@ -28,7 +28,7 @@ public class ChangeLogTextTests
     [Fact]
     public void Parse_WithEmptyString_ArgumentException()
     {
-        Func<ChangeLogText> act = () => ChangeLogText.Parse(string.Empty);
+        var act = () => ChangeLogText.Parse(string.Empty);
 
         act.Should().ThrowExactly<ArgumentException>();
     }
@@ -36,7 +36,7 @@ public class ChangeLogTextTests
     [Fact]
     public void Parse_WithWhitespaceOnly_ArgumentException()
     {
-        Func<ChangeLogText> act = () => ChangeLogText.Parse(" ");
+        var act = () => ChangeLogText.Parse(" ");
 
         act.Should().ThrowExactly<ArgumentException>();
     }
@@ -59,7 +59,7 @@ public class ChangeLogTextTests
     {
         var tooLongText = new string('a', 201);
 
-        Func<ChangeLogText> act = () => ChangeLogText.Parse(tooLongText);
+        var act = () => ChangeLogText.Parse(tooLongText);
 
         act.Should().ThrowExactly<ArgumentException>("Too long");
     }
@@ -69,7 +69,7 @@ public class ChangeLogTextTests
     {
         const string tooShortText = "Test";
 
-        Func<ChangeLogText> act = () => ChangeLogText.Parse(tooShortText);
+        var act = () => ChangeLogText.Parse(tooShortText);
 
         act.Should().ThrowExactly<ArgumentException>("Too short");
     }

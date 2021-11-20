@@ -22,7 +22,7 @@ public class ChangeLogLine
     public ChangeLogLine(Guid id, Guid? versionId, Guid productId, ChangeLogText text, int position,
         DateTime createdAt, IEnumerable<Label> labels, IEnumerable<Issue> issues, Guid createdByUser,
         DateTime? deletedAt = null)
-        : this(id, versionId, productId, text, (uint) position, createdAt, labels, issues, createdByUser, deletedAt)
+        : this(id, versionId, productId, text, (uint)position, createdAt, labels, issues, createdByUser, deletedAt)
     {
     }
 
@@ -89,7 +89,7 @@ public class ChangeLogLine
 
     public void AddLabel(Label label)
     {
-        AddLabels(new List<Label>(1) {label});
+        AddLabels(new List<Label>(1) { label });
     }
 
     public void AddLabels(IReadOnlyCollection<Label> labels)
@@ -102,7 +102,7 @@ public class ChangeLogLine
 
     public void RemoveLabel(Label label)
     {
-        RemoveLabels(new List<Label>(1) {label});
+        RemoveLabels(new List<Label>(1) { label });
     }
 
     public void RemoveLabels(IEnumerable<Label> labels)
@@ -112,7 +112,7 @@ public class ChangeLogLine
 
     public void AddIssue(Issue issue)
     {
-        AddIssues(new List<Issue>(1) {issue});
+        AddIssues(new List<Issue>(1) { issue });
     }
 
     public void AddIssues(IReadOnlyCollection<Issue> issues)
@@ -125,7 +125,7 @@ public class ChangeLogLine
 
     public void RemoveIssue(Issue issue)
     {
-        RemoveIssues(new List<Issue>(1) {issue});
+        RemoveIssues(new List<Issue>(1) { issue });
     }
 
     public void RemoveIssues(IEnumerable<Issue> issues)

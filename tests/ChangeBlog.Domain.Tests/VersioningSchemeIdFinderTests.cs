@@ -28,7 +28,7 @@ public class VersioningSchemeIdFinderTests
         // arrange
         var testAccount = new Account(TestAccount.Id, TestAccount.Name, TestAccount.CustomVersioningScheme.Id,
             TestAccount.CreationDate, null);
-        var customSchemeId = (Guid?) null;
+        var customSchemeId = (Guid?)null;
 
         var service = new VersioningSchemeIdFinder(testAccount);
 

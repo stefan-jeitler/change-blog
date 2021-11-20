@@ -12,9 +12,9 @@ namespace ChangeBlog.Application.Tests.UseCaseTests.Queries.GetPendingChangeLogL
 public class GetPendingChangeLogLineInteractorTests
 {
     private readonly FakeChangeLogDao _fakeChangeLogDao;
-    private readonly Mock<IGetPendingChangeLogLineOutputPort> _outputPortMock;
     private readonly FakeProductDao _fakeProductDao;
     private readonly FakeUserDao _fakeUserDao;
+    private readonly Mock<IGetPendingChangeLogLineOutputPort> _outputPortMock;
 
     public GetPendingChangeLogLineInteractorTests()
     {
@@ -24,8 +24,10 @@ public class GetPendingChangeLogLineInteractorTests
         _outputPortMock = new Mock<IGetPendingChangeLogLineOutputPort>(MockBehavior.Strict);
     }
 
-    private GetPendingChangeLogLineInteractor CreateInteractor() =>
-        new(_fakeChangeLogDao, _fakeUserDao, _fakeProductDao);
+    private GetPendingChangeLogLineInteractor CreateInteractor()
+    {
+        return new(_fakeChangeLogDao, _fakeUserDao, _fakeProductDao);
+    }
 
     [Fact]
     public async Task GetPendingChangeLogLine_HappyPath_Successful()

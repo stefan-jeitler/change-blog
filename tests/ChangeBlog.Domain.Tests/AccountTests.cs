@@ -22,12 +22,14 @@ public class AccountTests
         _testDeletionDate = DateTime.Parse("2021-04-03");
     }
 
-    private Account CreateAccount() =>
-        new(_testAccountId,
+    private Account CreateAccount()
+    {
+        return new(_testAccountId,
             _testName,
             _defaultVersioningSchemeId,
             _testCreationDate,
             _testDeletionDate);
+    }
 
     [Fact]
     public void Create_WithValidArguments_Successful()
@@ -47,7 +49,7 @@ public class AccountTests
     {
         _testAccountId = Guid.Empty;
 
-        Func<Account> act = CreateAccount;
+        var act = CreateAccount;
 
         act.Should().ThrowExactly<ArgumentException>();
     }
@@ -57,7 +59,7 @@ public class AccountTests
     {
         _testName = null;
 
-        Func<Account> act = CreateAccount;
+        var act = CreateAccount;
 
         act.Should().ThrowExactly<ArgumentNullException>();
     }
@@ -80,7 +82,7 @@ public class AccountTests
     {
         _testCreationDate = DateTime.Parse(invalidDate);
 
-        Func<Account> act = CreateAccount;
+        var act = CreateAccount;
 
         act.Should().ThrowExactly<ArgumentException>();
     }
@@ -92,7 +94,7 @@ public class AccountTests
     {
         _testDeletionDate = DateTime.Parse(invalidDate);
 
-        Func<Account> act = CreateAccount;
+        var act = CreateAccount;
 
         act.Should().ThrowExactly<ArgumentException>();
     }

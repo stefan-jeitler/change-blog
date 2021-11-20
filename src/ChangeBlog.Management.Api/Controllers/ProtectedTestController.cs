@@ -17,6 +17,8 @@ public class ProtectedTestController : ControllerBase
     }
 
     [HttpGet]
-    public string GetProtectedString() => "Protected-String";
-
+    public string GetProtectedString()
+    {
+        return "Protected-String";
+    }
 }

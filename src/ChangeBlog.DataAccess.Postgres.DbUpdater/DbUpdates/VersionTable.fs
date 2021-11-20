@@ -130,23 +130,19 @@ let private makeUpdateSearchVectorsProcedureLanguageAwareSql =
 let private dropUpdateAllVersionSearchVectorsProcedureSql =
     "drop procedure if exists update_all_version_searchvectors_proc()"
 
-let private fixUniqueIndexOnProductIdAndValueSql = 
-    [
-        """
+let private fixUniqueIndexOnProductIdAndValueSql =
+    [ """
             CREATE UNIQUE INDEX IF NOT EXISTS version_productid_value_unique
             ON "version" (product_id, lower(value)) WHERE deleted_at is null
         """
-        "drop index if exists version_productid_value_deletedatnull_unique"
-    ]
+      "drop index if exists version_productid_value_deletedatnull_unique" ]
 
-let private addProductIdToSearchVectorIndexSql = 
-    [
-        "drop index if exists version_searchvector_idx"
-        """
+let private addProductIdToSearchVectorIndexSql =
+    [ "drop index if exists version_searchvector_idx"
+      """
             CREATE INDEX IF NOT EXISTS version_productid_searchvectors_idx
             ON version USING GIN (product_id, search_vectors)
-        """
-    ]
+        """ ]
 
 let create (dbConnection: IDbConnection) =
     dbConnection.Execute(createVersionSql) |> ignore

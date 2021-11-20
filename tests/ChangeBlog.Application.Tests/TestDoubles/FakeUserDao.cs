@@ -11,7 +11,6 @@ namespace ChangeBlog.Application.Tests.TestDoubles;
 
 public class FakeUserDao : IUserDao
 {
-
     public List<User> Users { get; } = new();
     public List<ExternalIdentity> ExternalIdentities { get; } = new();
     public bool ProduceFailureWhileImporting { get; set; }
@@ -60,7 +59,7 @@ public class FakeUserDao : IUserDao
     {
         await Task.Yield();
 
-        if(ProduceFailureWhileImporting)
+        if (ProduceFailureWhileImporting)
             return Result.Failure("Something went wrong.");
 
         ExternalIdentities.Add(externalIdentity);

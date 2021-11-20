@@ -11,8 +11,9 @@ public class AccountDto
     public Guid DefaultVersioningSchemeId { get; set; }
     public DateTimeOffset CreatedAt { get; set; }
 
-    public static AccountDto FromResponseModel(AccountResponseModel m) =>
-        new()
+    public static AccountDto FromResponseModel(AccountResponseModel m)
+    {
+        return new()
         {
             Id = m.Id,
             Name = m.Name,
@@ -20,4 +21,5 @@ public class AccountDto
             DefaultVersioningSchemeId = m.DefaultVersioningSchemeId,
             CreatedAt = m.CreatedAt
         };
+    }
 }

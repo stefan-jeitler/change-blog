@@ -11,5 +11,8 @@ public class ClVersionValueTypeHandler : SqlMapper.TypeHandler<ClVersionValue>
         parameter.Value = value.Value;
     }
 
-    public override ClVersionValue Parse(object value) => ClVersionValue.Parse(value.ToString());
+    public override ClVersionValue Parse(object value)
+    {
+        return ClVersionValue.Parse(value.ToString());
+    }
 }

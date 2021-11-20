@@ -90,7 +90,7 @@ public class AccountDao : IAccountDao
                 and a.deleted_at is null";
 
         var accounts = await _dbAccessor.DbConnection
-            .QueryAsync<Domain.Account>(getAccountsSql, new {accountIds});
+            .QueryAsync<Domain.Account>(getAccountsSql, new { accountIds });
 
         return accounts.AsList();
     }

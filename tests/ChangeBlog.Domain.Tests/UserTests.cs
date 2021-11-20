@@ -26,9 +26,11 @@ public class UserTests
         _testCreationDate = DateTime.Parse("2021-04-03");
     }
 
-    private User CreateUser() =>
-        new(_testUserId, _testEmail, _testFirstName, _testLastName, _testTimeZone,
+    private User CreateUser()
+    {
+        return new(_testUserId, _testEmail, _testFirstName, _testLastName, _testTimeZone,
             _testDeletionDate, _testCreationDate);
+    }
 
     [Fact]
     public void Create_WithValidArguments_Successful()
@@ -49,7 +51,7 @@ public class UserTests
     {
         _testUserId = Guid.Empty;
 
-        Func<User> act = CreateUser;
+        var act = CreateUser;
 
         act.Should().ThrowExactly<ArgumentException>();
     }
@@ -59,7 +61,7 @@ public class UserTests
     {
         _testEmail = null;
 
-        Func<User> act = CreateUser;
+        var act = CreateUser;
 
         act.Should().ThrowExactly<ArgumentNullException>();
     }
@@ -69,7 +71,7 @@ public class UserTests
     {
         _testFirstName = null;
 
-        Func<User> act = CreateUser;
+        var act = CreateUser;
 
         act.Should().ThrowExactly<ArgumentNullException>();
     }
@@ -79,7 +81,7 @@ public class UserTests
     {
         _testLastName = null;
 
-        Func<User> act = CreateUser;
+        var act = CreateUser;
 
         act.Should().ThrowExactly<ArgumentNullException>();
     }
@@ -89,7 +91,7 @@ public class UserTests
     {
         _testTimeZone = null;
 
-        Func<User> act = CreateUser;
+        var act = CreateUser;
 
         act.Should().ThrowExactly<ArgumentNullException>();
     }
@@ -101,7 +103,7 @@ public class UserTests
     {
         _testDeletionDate = DateTime.Parse(invalidDate);
 
-        Func<User> act = CreateUser;
+        var act = CreateUser;
 
         act.Should().ThrowExactly<ArgumentException>();
     }
@@ -113,7 +115,7 @@ public class UserTests
     {
         _testCreationDate = DateTime.Parse(invalidDate);
 
-        Func<User> act = CreateUser;
+        var act = CreateUser;
 
         act.Should().ThrowExactly<ArgumentException>();
     }

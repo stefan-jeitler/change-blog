@@ -1,28 +1,29 @@
 # UserAccess Test users
 
-In this document you'll find account and user information that can be used for testing the **authentication** and **authorization** mecahnism.
+In this document you'll find account and user information that can be used for testing the **authentication** and **
+authorization** mecahnism.
 
 At the end there is a sql script that inserts the test data.  
 But be aware to not execute the script against the staging or production evironment.  
-It is **only** for the **testing** environemnt.  
+It is **only** for the **testing** environemnt.
 
 ## Prefix
 
 All test entities starts with the prefix **`t_ua`**.  
 `t` stands for test and `ua` for user access.  
 This is used for grouping the testing purpose.  
-User access tests covers Authentication and Authorization.  
+User access tests covers Authentication and Authorization.
 
 ## Accounts
 
-Two test accounts will be created, named like the following.  
+Two test accounts will be created, named like the following.
 
 * `t_ua_account_01`
 * `t_ua_account_02`
 
 ## Users
 
-Usernames will start with the account name followed by `_user_<number>`.  
+Usernames will start with the account name followed by `_user_<number>`.
 
 | User                    | Email                                      | ApiKey     |
 | ----------------------- | ------------------------------------------ | ---------- |
@@ -71,7 +72,7 @@ Usernames will start with the account name followed by `_user_<number>`.
 
 ## Products
 
-Products starts with the account name followed by `_proj_<number>`.  
+Products starts with the account name followed by `_proj_<number>`.
 
 * `t_ua_account_01_proj_01`
 * `t_ua_account_01_proj_02`

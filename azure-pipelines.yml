@@ -1,151 +1,150 @@
-
 trigger:
   branches:
-   include:
-   - '*'
+    include:
+      - '*'
   tags:
     include:
-    - '*'
-    
+      - '*'
+
 schedules:
-- cron: "0 0 * * *"
-  displayName: Daily midnight build
-  branches:
-    include:
-    - main
-  always: true
+  - cron: "0 0 * * *"
+    displayName: Daily midnight build
+    branches:
+      include:
+        - main
+    always: true
 
 name: $(SourceBranchName)
 
 variables:
   BuildConfiguration: Release
-  ${{ if startsWith(variables['Build.SourceBranch'], 'refs/tags/') }}: 
+  ${{ if startsWith(variables['Build.SourceBranch'], 'refs/tags/') }}:
     Version: $(Build.SourceBranchName)
-  ${{ if not(startsWith(variables['Build.SourceBranch'], 'refs/tags/')) }}: 
+  ${{ if not(startsWith(variables['Build.SourceBranch'], 'refs/tags/')) }}:
     Version: 0.0.0
 
 pool:
   vmImage: 'windows-2022'
 
 stages:
-- stage: continuous_integration
-  displayName: Continuous Integration
+  - stage: continuous_integration
+    displayName: Continuous Integration
+    
+    jobs:
+      - job: build_n_test
+        displayName: Build & Test
+        steps:
+          - pwsh: ./build.ps1 -Version $(Version) -Configuration $(BuildConfiguration)
+            displayName: Build
 
-  jobs:
-    - job: build_n_test
-      displayName: Build & Test
-      steps:        
-      - pwsh: ./build.ps1 -Version $(Version) -Configuration $(BuildConfiguration) 
-        displayName: Build
+          - task: DotNetCoreCLI@2
+            displayName: Test
+            inputs:
+              command: test
+              projects: 'tests/*Tests/*.csproj'
+              arguments: >-
+                --configuration $(buildConfiguration)
+                -p:CollectCoverage=true 
+                -p:CoverletOutput=$(Agent.TempDirectory)/TestResults/
+                -p:CoverletOutputFormat="json%2cCobertura" 
+                -p:MergeWith=$(Agent.TempDirectory)/TestResults/coverage.json
+                --logger trx --no-build
+              publishTestResults: true
+            env:
+              ConnectionStrings__ChangeBlogDb: $(ConnectionStringChangeBlogDb)
 
-      - task: DotNetCoreCLI@2
-        displayName: Test
-        inputs:
-          command: test
-          projects: 'tests/*Tests/*.csproj'
-          arguments: >-
-            --configuration $(buildConfiguration)
-            -p:CollectCoverage=true 
-            -p:CoverletOutput=$(Agent.TempDirectory)/TestResults/
-            -p:CoverletOutputFormat="json%2cCobertura" 
-            -p:MergeWith=$(Agent.TempDirectory)/TestResults/coverage.json
-            --logger trx --no-build
-          publishTestResults: true
-        env: 
-          ConnectionStrings__ChangeBlogDb: $(ConnectionStringChangeBlogDb)
+          - task: PublishCodeCoverageResults@1
+            displayName: 'Publish code coverage'
+            inputs:
+              codeCoverageTool: 'Cobertura'
+              summaryFileLocation: '$(Agent.TempDirectory)/TestResults/coverage.cobertura.xml'
 
-      - task: PublishCodeCoverageResults@1
-        displayName: 'Publish code coverage'
-        inputs:
-          codeCoverageTool: 'Cobertura'
-          summaryFileLocation: '$(Agent.TempDirectory)/TestResults/coverage.cobertura.xml'
-  
-- stage: continuous_delivery
-  displayName: Continuous Delivery
-  dependsOn: continuous_integration
-  condition: and(succeeded(), startsWith(variables['Build.SourceBranch'], 'refs/tags/'))
+  - stage: continuous_delivery
+    displayName: Continuous Delivery
+    dependsOn: continuous_integration
+    condition: and(succeeded(), startsWith(variables['Build.SourceBranch'], 'refs/tags/'))
+    
+    pool:
+      vmImage: 'ubuntu-latest'
+    
+    variables:
+      ImageNameApi: change-blog-api
+      ImageNameManagementApi: change-blog-management-api
+    
+    jobs:
 
-  pool:
-    vmImage: 'ubuntu-latest'
+      - job: prepare_release
+        displayName: Prepare Release
+        steps:
+          - task: DotNetCoreCLI@2
+            displayName: Build DbUpdater
+            inputs:
+              command: 'build'
+              projects: './src/ChangeBlog.DataAccess.Postgres.DbUpdater/ChangeBlog.DataAccess.Postgres.DbUpdater.fsproj'
+              arguments: >-
+                --configuration Release 
+                -p:Version=$(Version) 
+                --output $(Build.SourcesDirectory)/dbUpdater
+          - task: PublishPipelineArtifact@1
+            displayName: Publish DbUpdater Artifact
+            inputs:
+              targetPath: '$(Build.SourcesDirectory)/dbUpdater'
+              artifact: 'DbUpdater'
+              publishLocation: 'pipeline'
+          - task: PowerShell@2
+            displayName: Create Latest Changes
+            inputs:
+              targetType: inline
+              script: |
+                . ./latest-changes.ps1
+                Create-LatestChanges `
+                    -Version $(Version) `
+                    -OutputDir ./latestChanges
+                Move-Item ./latest-changes.ps1 ./latestChanges
+              pwsh: true
+          - task: PublishPipelineArtifact@1
+            displayName: Publish Latest Changes Artifact
+            inputs:
+              targetPath: '$(Build.SourcesDirectory)/latestChanges'
+              artifact: 'LatestChanges'
+              publishLocation: 'pipeline'
 
-  variables:
-    ImageNameApi: change-blog-api
-    ImageNameManagementApi: change-blog-management-api
+      - job: publish_api_image
+        displayName: Publish Api
+        dependsOn: prepare_release
+        steps:
+          - task: PowerShell@2
+            displayName: Build & Push Image
+            inputs:
+              targetType: filePath
+              filePath: ./publish-image.ps1
+              arguments: >-
+                -Dockerfile $(System.DefaultWorkingDirectory)/src/ChangeBlog.Api/Dockerfile 
+                -ImageName $(ImageNameApi) 
+                -Version $(Version) 
+                -Tag $(Version) 
+                -PushToRegistry
+                -RegistryUrl $(AZ_ContainerRegistry_Url) 
+                -RegistryUsername $(AZ_SP_Deploy_ClientId) 
+                -RegistryPwd '$(AZ_SP_Deploy_Secret)'
+              pwsh: true
 
-  jobs:
-
-    - job: prepare_release
-      displayName: Prepare Release
-      steps:
-      - task: DotNetCoreCLI@2
-        displayName: Build DbUpdater
-        inputs:
-          command: 'build'
-          projects: './src/ChangeBlog.DataAccess.Postgres.DbUpdater/ChangeBlog.DataAccess.Postgres.DbUpdater.fsproj'
-          arguments: >-
-            --configuration Release 
-            -p:Version=$(Version) 
-            --output $(Build.SourcesDirectory)/dbUpdater
-      - task: PublishPipelineArtifact@1
-        displayName: Publish DbUpdater Artifact
-        inputs:
-          targetPath: '$(Build.SourcesDirectory)/dbUpdater'
-          artifact: 'DbUpdater'
-          publishLocation: 'pipeline'
-      - task: PowerShell@2
-        displayName: Create Latest Changes
-        inputs:
-          targetType: inline
-          script: |
-            . ./latest-changes.ps1
-            Create-LatestChanges `
-                -Version $(Version) `
-                -OutputDir ./latestChanges
-            Move-Item ./latest-changes.ps1 ./latestChanges
-          pwsh: true
-      - task: PublishPipelineArtifact@1
-        displayName: Publish Latest Changes Artifact
-        inputs:
-          targetPath: '$(Build.SourcesDirectory)/latestChanges'
-          artifact: 'LatestChanges'
-          publishLocation: 'pipeline'
-
-    - job: publish_api_image
-      displayName: Publish Api
-      dependsOn: prepare_release
-      steps:
-      - task: PowerShell@2
-        displayName: Build & Push Image
-        inputs:
-          targetType: filePath
-          filePath: ./publish-image.ps1
-          arguments: >-
-            -Dockerfile $(System.DefaultWorkingDirectory)/src/ChangeBlog.Api/Dockerfile 
-            -ImageName $(ImageNameApi) 
-            -Version $(Version) 
-            -Tag $(Version) 
-            -PushToRegistry
-            -RegistryUrl $(AZ_ContainerRegistry_Url) 
-            -RegistryUsername $(AZ_SP_Deploy_ClientId) 
-            -RegistryPwd '$(AZ_SP_Deploy_Secret)'
-          pwsh: true
-
-    - job: publish_mngmt_api_image
-      displayName: Publish Management Api
-      dependsOn: prepare_release
-      steps:
-      - task: PowerShell@2
-        displayName: Build & Push Image
-        inputs:
-          targetType: filePath
-          filePath: ./publish-image.ps1
-          arguments: >-
-            -Dockerfile $(System.DefaultWorkingDirectory)/src/ChangeBlog.Management.Api/Dockerfile 
-            -ImageName $(ImageNameManagementApi) 
-            -Version $(Version) 
-            -Tag $(Version) 
-            -PushToRegistry
-            -RegistryUrl $(AZ_ContainerRegistry_Url) 
-            -RegistryUsername $(AZ_SP_Deploy_ClientId) 
-            -RegistryPwd '$(AZ_SP_Deploy_Secret)'
-          pwsh: true
+      - job: publish_mngmt_api_image
+        displayName: Publish Management Api
+        dependsOn: prepare_release
+        steps:
+          - task: PowerShell@2
+            displayName: Build & Push Image
+            inputs:
+              targetType: filePath
+              filePath: ./publish-image.ps1
+              arguments: >-
+                -Dockerfile $(System.DefaultWorkingDirectory)/src/ChangeBlog.Management.Api/Dockerfile 
+                -ImageName $(ImageNameManagementApi) 
+                -Version $(Version) 
+                -Tag $(Version) 
+                -PushToRegistry
+                -RegistryUrl $(AZ_ContainerRegistry_Url) 
+                -RegistryUsername $(AZ_SP_Deploy_ClientId) 
+                -RegistryPwd '$(AZ_SP_Deploy_Secret)'
+              pwsh: true

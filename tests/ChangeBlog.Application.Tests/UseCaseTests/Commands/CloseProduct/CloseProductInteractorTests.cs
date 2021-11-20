@@ -10,8 +10,8 @@ namespace ChangeBlog.Application.Tests.UseCaseTests.Commands.CloseProduct;
 
 public class CloseProductInteractorTests
 {
-    private readonly Mock<ICloseProductOutputPort> _outputPortMock;
     private readonly FakeProductDao _fakeProductDao;
+    private readonly Mock<ICloseProductOutputPort> _outputPortMock;
 
     public CloseProductInteractorTests()
     {
@@ -19,7 +19,10 @@ public class CloseProductInteractorTests
         _outputPortMock = new Mock<ICloseProductOutputPort>(MockBehavior.Strict);
     }
 
-    private CloseProductInteractor CreateInteractor() => new(_fakeProductDao);
+    private CloseProductInteractor CreateInteractor()
+    {
+        return new(_fakeProductDao);
+    }
 
     [Fact]
     public async Task CloseProduct_ProductDoesNotExist_ProductDoesNotExistOutput()

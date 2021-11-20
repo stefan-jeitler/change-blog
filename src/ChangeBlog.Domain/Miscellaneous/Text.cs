@@ -49,5 +49,8 @@ public record Text
         return null;
     }
 
-    public static implicit operator string(Text text) => text.Value;
+    public static implicit operator string(Text text)
+    {
+        return text.Value;
+    }
 }

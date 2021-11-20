@@ -26,8 +26,10 @@ public class AddChangeLogLineLabelInteractorTests
         _fakeChangeLogDao = new FakeChangeLogDao();
     }
 
-    private AddChangeLogLineLabelInteractor CreateInteractor() =>
-        new(_unitOfWorkMock.Object, _fakeChangeLogDao, _fakeChangeLogDao);
+    private AddChangeLogLineLabelInteractor CreateInteractor()
+    {
+        return new(_unitOfWorkMock.Object, _fakeChangeLogDao, _fakeChangeLogDao);
+    }
 
     [Fact]
     public async Task AddLabel_HappyPath_LabelAddedAndUowCommitted()
@@ -101,7 +103,7 @@ public class AddChangeLogLineLabelInteractorTests
         var addLabelInteractor = CreateInteractor();
 
         var existingLabels =
-            new List<string> {"Feature", "Bug", "Security", "Deprecated", "Added"}.Select(Label.Parse);
+            new List<string> { "Feature", "Bug", "Security", "Deprecated", "Added" }.Select(Label.Parse);
         _fakeChangeLogDao.ChangeLogs.Add(new ChangeLogLine(lineId, null, TestAccount.Product.Id,
             ChangeLogText.Parse("Some text"), 0U, DateTime.Parse("2021-04-17"), existingLabels,
             Array.Empty<Issue>(), TestAccount.UserId));

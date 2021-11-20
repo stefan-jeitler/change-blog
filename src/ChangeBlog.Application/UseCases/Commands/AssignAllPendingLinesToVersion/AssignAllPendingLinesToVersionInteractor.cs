@@ -41,7 +41,8 @@ public class AssignAllPendingLinesToVersionInteractor : IAssignAllPendingLinesTo
 
         if (requestModel.ProductId != clVersion.GetValueOrThrow().ProductId)
         {
-            output.TargetVersionBelongsToDifferentProduct(requestModel.ProductId, clVersion.GetValueOrThrow().ProductId);
+            output.TargetVersionBelongsToDifferentProduct(requestModel.ProductId,
+                clVersion.GetValueOrThrow().ProductId);
             return;
         }
 
@@ -111,8 +112,8 @@ public class AssignAllPendingLinesToVersionInteractor : IAssignAllPendingLinesTo
         }
 
         var assignedLines = pendingChangeLogs.Lines
-            .Select((x, i) => new {Line = x, Position = versionChangeLogs.NextFreePosition + i})
-            .Select(x => x.Line.AssignToVersion(clVersion.Id, (uint) x.Position));
+            .Select((x, i) => new { Line = x, Position = versionChangeLogs.NextFreePosition + i })
+            .Select(x => x.Line.AssignToVersion(clVersion.Id, (uint)x.Position));
 
         return Maybe<IEnumerable<ChangeLogLine>>.From(assignedLines);
     }

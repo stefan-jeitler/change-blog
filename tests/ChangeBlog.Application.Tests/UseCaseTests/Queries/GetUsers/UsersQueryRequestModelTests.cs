@@ -20,8 +20,10 @@ public class UsersQueryRequestModelTests
         _testCount = 100;
     }
 
-    private UsersQueryRequestModel CreateRequestModel() =>
-        new(_testUserId, _testAccountId, _testLastUserId, _testCount);
+    private UsersQueryRequestModel CreateRequestModel()
+    {
+        return new(_testUserId, _testAccountId, _testLastUserId, _testCount);
+    }
 
     [Fact]
     public void Create_HappyPath_Successful()

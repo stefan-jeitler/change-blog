@@ -28,14 +28,10 @@ public class SchemaVersion
         var dbSchemaVersion = SemVersion.Parse(dbSchemaVersionValue);
 
         if (AppSchemaVersion.Major != dbSchemaVersion.Major)
-        {
             throw new Exception($"Schema version mismatch: App {AppSchemaVersion}; Database {dbSchemaVersion}");
-        }
 
         if (AppSchemaVersion != dbSchemaVersion)
-        {
             _logger.LogWarning("Schema version mismatch: App {AppSchemaVersion}; Database {DbSchemaVersion}",
                 AppSchemaVersion, dbSchemaVersion);
-        }
     }
 }

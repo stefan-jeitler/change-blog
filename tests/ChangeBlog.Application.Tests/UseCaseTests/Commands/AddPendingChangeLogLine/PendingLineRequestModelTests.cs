@@ -24,8 +24,10 @@ public class PendingLineRequestModelTests
         _testIssues = new List<string>(0);
     }
 
-    private PendingChangeLogLineRequestModel CreateRequestModel() =>
-        new(_testUserId, _testProductId, _testText, _testLabels, _testIssues);
+    private PendingChangeLogLineRequestModel CreateRequestModel()
+    {
+        return new(_testUserId, _testProductId, _testText, _testLabels, _testIssues);
+    }
 
     [Fact]
     public void Create_HappyPath_Successful()

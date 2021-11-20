@@ -6,6 +6,8 @@ namespace ChangeBlog.DataAccess.MicrosoftIdentity;
 
 public class ExternalUserInfoNotSupported : IExternalUserInfoDao
 {
-    public Task<UserInfo> GetAsync() =>
+    public Task<UserInfo> GetAsync()
+    {
         throw new NotSupportedException("External UserInfo is not yet supported in this api.");
+    }
 }

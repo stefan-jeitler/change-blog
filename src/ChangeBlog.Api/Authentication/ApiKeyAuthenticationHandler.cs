@@ -53,7 +53,7 @@ public class ApiKeyAuthenticationHandler : AuthenticationHandler<ApiKeyAuthentic
             new(ClaimTypes.NameIdentifier, userId.ToString())
         }, ApiKeyAuthenticationOptions.AuthenticationType);
 
-        var identities = new List<ClaimsIdentity> {identity};
+        var identities = new List<ClaimsIdentity> { identity };
         var principal = new ClaimsPrincipal(identities);
         var ticket = new AuthenticationTicket(principal, ApiKeyAuthenticationOptions.Scheme);
 

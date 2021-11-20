@@ -25,7 +25,7 @@ public class ChangeLogsTests
         return Enumerable
             .Range(0, count)
             .Select(x =>
-                new ChangeLogLine(_testVersionId, _testProductId, ChangeLogText.Parse($"{x:D5}"), (uint) x,
+                new ChangeLogLine(_testVersionId, _testProductId, ChangeLogText.Parse($"{x:D5}"), (uint)x,
                     _testUserId))
             .ToList();
     }
@@ -99,7 +99,7 @@ public class ChangeLogsTests
         testLines.Add(lineFromDifferentVersion);
 
         // act
-        Func<ChangeLogs> act = () => new ChangeLogs(testLines);
+        var act = () => new ChangeLogs(testLines);
 
         // assert
         act.Should().ThrowExactly<InvalidOperationException>();
@@ -116,7 +116,7 @@ public class ChangeLogsTests
         testLines.Add(pendingLine);
 
         // act
-        Func<ChangeLogs> act = () => new ChangeLogs(testLines);
+        var act = () => new ChangeLogs(testLines);
 
         // assert
         act.Should().ThrowExactly<InvalidOperationException>();
@@ -213,7 +213,7 @@ public class ChangeLogsTests
         var lines = line1.Concat(line2).ToList();
 
         // act
-        Func<ChangeLogs> act = () => new ChangeLogs(lines);
+        var act = () => new ChangeLogs(lines);
 
         // assert
         act.Should().ThrowExactly<ArgumentException>();
@@ -245,7 +245,7 @@ public class ChangeLogsTests
     {
         var line = new ChangeLogLine(_testVersionId, _testProductId, ChangeLogText.Parse("new Feature"), 0,
             _testUserId);
-        var changeLogs = new ChangeLogs(new List<ChangeLogLine>(1) {line});
+        var changeLogs = new ChangeLogs(new List<ChangeLogLine>(1) { line });
 
         var containsText = changeLogs.ContainsText(ChangeLogText.Parse("New Feature"));
 
@@ -257,7 +257,7 @@ public class ChangeLogsTests
     {
         var line = new ChangeLogLine(_testVersionId, _testProductId, ChangeLogText.Parse("new Feature"), 0,
             _testUserId);
-        var changeLogs = new ChangeLogs(new List<ChangeLogLine>(1) {line});
+        var changeLogs = new ChangeLogs(new List<ChangeLogLine>(1) { line });
 
         var containsText = changeLogs.ContainsText(ChangeLogText.Parse("Bugfix"));
 

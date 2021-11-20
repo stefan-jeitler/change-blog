@@ -45,7 +45,7 @@ public class ChangeLogLineLabelsTests
     [Fact]
     public void Create_WithNullLabels_ArgumentNullException()
     {
-        Func<ChangeLogLine> act = () => new ChangeLogLine(TestId,
+        var act = () => new ChangeLogLine(TestId,
             TestVersionId,
             TestProductId,
             TestText,
@@ -68,7 +68,7 @@ public class ChangeLogLineLabelsTests
             Label.Parse("Fixed"), Label.Parse("Security")
         };
 
-        Func<ChangeLogLine> act = () => new ChangeLogLine(TestId, TestVersionId,
+        var act = () => new ChangeLogLine(TestId, TestVersionId,
             TestProductId, TestText, TestPosition,
             TestCreationDate, labels, Array.Empty<Issue>(),
             TestUserId);
@@ -118,7 +118,7 @@ public class ChangeLogLineLabelsTests
         var newLabel = Label.Parse("Security");
 
         // act
-        Action act = () => line.AddLabel(newLabel);
+        var act = () => line.AddLabel(newLabel);
 
         // assert
         act.Should().ThrowExactly<ArgumentException>();
@@ -131,7 +131,7 @@ public class ChangeLogLineLabelsTests
         var featureLabel = Label.Parse("Feature");
         var bugLabel = Label.Parse("Bug");
         var deprecatedLabel = Label.Parse("Deprecated");
-        var existingLabels = new List<Label> {featureLabel, bugLabel};
+        var existingLabels = new List<Label> { featureLabel, bugLabel };
 
         var line = new ChangeLogLine(TestId, null,
             TestProductId, TestText, TestPosition,
@@ -153,7 +153,7 @@ public class ChangeLogLineLabelsTests
     {
         // arrange
         var featureLabel = Label.Parse("Feature");
-        var existingLabels = new List<Label> {featureLabel, featureLabel};
+        var existingLabels = new List<Label> { featureLabel, featureLabel };
 
         // act
         var line = new ChangeLogLine(TestId, TestVersionId,
@@ -185,7 +185,7 @@ public class ChangeLogLineLabelsTests
     {
         // arrange
         var featureLabel = Label.Parse("Feature");
-        var existingLabels = new List<Label> {featureLabel};
+        var existingLabels = new List<Label> { featureLabel };
 
         var line = new ChangeLogLine(TestId, TestVersionId,
             TestProductId, TestText, TestPosition,
@@ -227,7 +227,7 @@ public class ChangeLogLineLabelsTests
     {
         // arrange
         var featureLabel = Label.Parse("Feature");
-        var existingLabels = new List<Label> {featureLabel};
+        var existingLabels = new List<Label> { featureLabel };
 
         var line = new ChangeLogLine(TestId, null,
             TestProductId, TestText, TestPosition,
@@ -246,7 +246,7 @@ public class ChangeLogLineLabelsTests
     {
         // arrange
         var featureLabel = Label.Parse("Feature");
-        var existingLabels = new List<Label> {featureLabel};
+        var existingLabels = new List<Label> { featureLabel };
 
         var line = new ChangeLogLine(TestId, null,
             TestProductId, TestText, TestPosition,

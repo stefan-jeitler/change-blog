@@ -20,10 +20,10 @@ namespace ChangeBlog.Application.Tests.UseCaseTests.Commands.AddChangeLogLine;
 public class AddChangeLogLineInteractorTests
 {
     private readonly FakeChangeLogDao _fakeChangeLogDao;
-    private readonly Mock<IAddChangeLogLineOutputPort> _outputPortMock;
     private readonly FakeProductDao _fakeProductDao;
-    private readonly Mock<IUnitOfWork> _unitOfWorkMock;
     private readonly FakeVersionDao _fakeVersionDao;
+    private readonly Mock<IAddChangeLogLineOutputPort> _outputPortMock;
+    private readonly Mock<IUnitOfWork> _unitOfWorkMock;
 
     public AddChangeLogLineInteractorTests()
     {
@@ -34,17 +34,19 @@ public class AddChangeLogLineInteractorTests
         _unitOfWorkMock = new Mock<IUnitOfWork>();
     }
 
-    private AddChangeLogLineInteractor CreateInteractor() =>
-        new(_fakeChangeLogDao, _fakeChangeLogDao,
+    private AddChangeLogLineInteractor CreateInteractor()
+    {
+        return new(_fakeChangeLogDao, _fakeChangeLogDao,
             _unitOfWorkMock.Object, _fakeVersionDao);
+    }
 
     [Fact]
     public async Task AddChangeLogLine_InvalidVersion_InvalidVersionFormatOutput()
     {
         // arrange
         const string changeLogLine = "Bug fixed.";
-        var labels = new List<string> {"Bugfix", "ProxyIssue"};
-        var issues = new List<string> {"#1234", "#12345"};
+        var labels = new List<string> { "Bugfix", "ProxyIssue" };
+        var issues = new List<string> { "#1234", "#12345" };
         var changeLogLineRequestModel =
             new VersionChangeLogLineRequestModel(TestAccount.UserId, TestAccount.Product.Id, "1. .3",
                 changeLogLine, labels,
@@ -70,8 +72,8 @@ public class AddChangeLogLineInteractorTests
     {
         // arrange
         const string changeLogLine = "Some Bug fixed";
-        var labels = new List<string> {"Bugfix", "ProxyIssue"};
-        var issues = new List<string> {"#1234", "#12345"};
+        var labels = new List<string> { "Bugfix", "ProxyIssue" };
+        var issues = new List<string> { "#1234", "#12345" };
         var changeLogLineRequestModel =
             new VersionChangeLogLineRequestModel(TestAccount.UserId, TestAccount.Product.Id, "1.2",
                 changeLogLine, labels,
@@ -104,8 +106,8 @@ public class AddChangeLogLineInteractorTests
     {
         // arrange
         const string changeLogLine = "Some Bug fixed";
-        var labels = new List<string> {"Bugfix", "ProxyIssue"};
-        var issues = new List<string> {"#1234", "#12345"};
+        var labels = new List<string> { "Bugfix", "ProxyIssue" };
+        var issues = new List<string> { "#1234", "#12345" };
         var changeLogLineRequestModel =
             new VersionChangeLogLineRequestModel(TestAccount.UserId, TestAccount.Product.Id, "1.2",
                 changeLogLine, labels,
@@ -142,8 +144,8 @@ public class AddChangeLogLineInteractorTests
     {
         // arrange
         const string changeLogLine = "Some Bug fixed";
-        var labels = new List<string> {"Bugfix", "ProxyIssue"};
-        var issues = new List<string> {"#1234", "#12345"};
+        var labels = new List<string> { "Bugfix", "ProxyIssue" };
+        var issues = new List<string> { "#1234", "#12345" };
         var changeLogLineRequestModel =
             new VersionChangeLogLineRequestModel(TestAccount.UserId, TestAccount.Product.Id, "1.2",
                 changeLogLine, labels,
@@ -169,8 +171,8 @@ public class AddChangeLogLineInteractorTests
     {
         // arrange
         const string changeLogLine = "Some Bug fixed";
-        var labels = new List<string> {"Bugfix", "ProxyIssue"};
-        var issues = new List<string> {"#1234", "#12345"};
+        var labels = new List<string> { "Bugfix", "ProxyIssue" };
+        var issues = new List<string> { "#1234", "#12345" };
         var notExistingVersionId = Guid.Parse("e2eeaad4-dc62-4bb5-8581-f3bf1702255a");
         var changeLogLineRequestModel =
             new VersionIdChangeLogLineRequestModel(TestAccount.UserId, notExistingVersionId,
@@ -197,8 +199,8 @@ public class AddChangeLogLineInteractorTests
     {
         // arrange
         const string changeLogLine = "Some Bug fixed";
-        var labels = new List<string> {"Bugfix", "ProxyIssue"};
-        var issues = new List<string> {"#1234", "#12345"};
+        var labels = new List<string> { "Bugfix", "ProxyIssue" };
+        var issues = new List<string> { "#1234", "#12345" };
         var versionId = Guid.Parse("1d7831d5-32fb-437f-a9d5-bf5a7dd34b10");
         var changeLogLineRequestModel =
             new VersionIdChangeLogLineRequestModel(TestAccount.UserId, versionId, changeLogLine, labels,
@@ -239,8 +241,8 @@ public class AddChangeLogLineInteractorTests
     {
         // arrange
         const string changeLogLine = "Some Bug fixed";
-        var labels = new List<string> {"Bugfix", "ProxyIssue"};
-        var issues = new List<string> {"#1234", "#12345"};
+        var labels = new List<string> { "Bugfix", "ProxyIssue" };
+        var issues = new List<string> { "#1234", "#12345" };
         var changeLogLineRequestModel =
             new VersionChangeLogLineRequestModel(TestAccount.UserId, TestAccount.Product.Id, "1.2",
                 changeLogLine, labels,
@@ -281,8 +283,8 @@ public class AddChangeLogLineInteractorTests
     {
         // arrange
         const string changeLogLine = "Some Bug fixed";
-        var labels = new List<string> {"Bugfix", "ProxyIssue"};
-        var issues = new List<string> {"#1234", "#12345"};
+        var labels = new List<string> { "Bugfix", "ProxyIssue" };
+        var issues = new List<string> { "#1234", "#12345" };
         var changeLogLineRequestModel =
             new VersionChangeLogLineRequestModel(TestAccount.UserId, TestAccount.Product.Id, "1.2",
                 changeLogLine, labels,
@@ -300,7 +302,7 @@ public class AddChangeLogLineInteractorTests
 
         _fakeChangeLogDao.ChangeLogs.AddRange(Enumerable.Range(0, 100)
             .Select(x =>
-                new ChangeLogLine(versionId, TestAccount.Product.Id, ChangeLogText.Parse($"{x:D5}"), (uint) x,
+                new ChangeLogLine(versionId, TestAccount.Product.Id, ChangeLogText.Parse($"{x:D5}"), (uint)x,
                     TestAccount.UserId)));
 
         var addLineInteractor = CreateInteractor();
@@ -319,8 +321,8 @@ public class AddChangeLogLineInteractorTests
     {
         // arrange
         const string changeLogLine = "Some Bug fixed";
-        var labels = new List<string> {"Bugfix"};
-        var issues = new List<string> {"#1234", "#12345"};
+        var labels = new List<string> { "Bugfix" };
+        var issues = new List<string> { "#1234", "#12345" };
         var changeLogLineRequestModel =
             new VersionChangeLogLineRequestModel(TestAccount.UserId, TestAccount.Product.Id, "1.2",
                 changeLogLine, labels,

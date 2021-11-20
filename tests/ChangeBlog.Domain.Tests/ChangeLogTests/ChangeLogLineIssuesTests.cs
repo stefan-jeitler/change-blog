@@ -30,7 +30,7 @@ public class ChangeLogLineIssuesTests
             TestPosition,
             TestCreationDate,
             Array.Empty<Label>(),
-            new List<Issue> {TestIssue},
+            new List<Issue> { TestIssue },
             TestUserId);
 
         line.Issues.Count.Should().Be(1);
@@ -57,7 +57,7 @@ public class ChangeLogLineIssuesTests
     [Fact]
     public void Create_WithNullIssues_ArgumentNullException()
     {
-        Func<ChangeLogLine> act = () => new ChangeLogLine(TestId,
+        var act = () => new ChangeLogLine(TestId,
             TestVersionId,
             TestProductId,
             TestText,
@@ -81,7 +81,7 @@ public class ChangeLogLineIssuesTests
             Issue.Parse("#12310"), Issue.Parse("#12311")
         };
 
-        Func<ChangeLogLine> act = () => new ChangeLogLine(TestId,
+        var act = () => new ChangeLogLine(TestId,
             TestVersionId,
             TestProductId,
             TestText,
@@ -156,7 +156,7 @@ public class ChangeLogLineIssuesTests
             TestUserId);
 
         // act
-        Action act = () => line.AddIssue(Issue.Parse("#123411"));
+        var act = () => line.AddIssue(Issue.Parse("#123411"));
 
         // assert
         act.Should().ThrowExactly<ArgumentException>();
@@ -185,7 +185,7 @@ public class ChangeLogLineIssuesTests
             null, TestProductId, TestText,
             TestPosition, TestCreationDate,
             Enumerable.Empty<Label>(),
-            new List<Issue>(1) {issue},
+            new List<Issue>(1) { issue },
             TestUserId);
 
         line.RemoveIssue(issue);
@@ -202,7 +202,7 @@ public class ChangeLogLineIssuesTests
             null, TestProductId, TestText,
             TestPosition, TestCreationDate,
             Enumerable.Empty<Label>(),
-            new List<Issue>(1) {issue1, issue2},
+            new List<Issue>(1) { issue1, issue2 },
             TestUserId);
 
         line.RemoveIssue(issue2);

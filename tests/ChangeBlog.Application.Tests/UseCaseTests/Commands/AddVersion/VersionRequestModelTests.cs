@@ -22,11 +22,14 @@ public class VersionRequestModelTests
         _testVersion = "1.2.3";
         _testName = string.Empty;
         var testLine = new ChangeLogLineRequestModel("some text", new List<string>(0), new List<string>(0));
-        _testLines = new List<ChangeLogLineRequestModel>(1) {testLine};
+        _testLines = new List<ChangeLogLineRequestModel>(1) { testLine };
     }
 
-    private VersionRequestModel CreateRequestModel() => new(_testUserId, _testProductId, _testVersion,
-        _testName, _testLines, _testReleaseImmediately);
+    private VersionRequestModel CreateRequestModel()
+    {
+        return new(_testUserId, _testProductId, _testVersion,
+            _testName, _testLines, _testReleaseImmediately);
+    }
 
     [Fact]
     public void Create_HappyPath_Successful()

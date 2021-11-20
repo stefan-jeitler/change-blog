@@ -18,7 +18,7 @@ public class EmailTests
     [Fact]
     public void Parse_WithNullArgument_ArgumentNullException()
     {
-        Func<Email> act = () => Email.Parse(null);
+        var act = () => Email.Parse(null);
 
         act.Should().ThrowExactly<ArgumentNullException>();
     }
@@ -26,7 +26,7 @@ public class EmailTests
     [Fact]
     public void Parse_WithEmptyString_ArgumentException()
     {
-        Func<Email> act = () => Email.Parse(string.Empty);
+        var act = () => Email.Parse(string.Empty);
 
         act.Should().ThrowExactly<ArgumentException>();
     }
@@ -35,7 +35,7 @@ public class EmailTests
     [Fact]
     public void Parse_WithWhitespace_ArgumentException()
     {
-        Func<Email> act = () => Email.Parse(" ");
+        var act = () => Email.Parse(" ");
 
         act.Should().ThrowExactly<ArgumentException>();
     }
@@ -45,7 +45,7 @@ public class EmailTests
     {
         var tooLongEmail = new string('a', 250) + "@abcd";
 
-        Func<Email> act = () => Email.Parse(tooLongEmail);
+        var act = () => Email.Parse(tooLongEmail);
 
         tooLongEmail.Length.Should().Be(255);
         act.Should().ThrowExactly<ArgumentException>();
@@ -65,7 +65,7 @@ public class EmailTests
     [Fact]
     public void Parse_WithoutAtSign_ArgumentException()
     {
-        Func<Email> act = () => Email.Parse("stefanAtChangeBlog");
+        var act = () => Email.Parse("stefanAtChangeBlog");
 
         act.Should().ThrowExactly<ArgumentException>();
     }

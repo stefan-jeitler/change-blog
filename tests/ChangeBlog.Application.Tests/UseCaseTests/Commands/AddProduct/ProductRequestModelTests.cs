@@ -22,8 +22,10 @@ public class ProductRequestModelTests
         _testLangCode = "en";
     }
 
-    private ProductRequestModel CreateRequestModel() =>
-        new(_testAccountId, _testName, _testSchemeId, _testLangCode, _testUserId);
+    private ProductRequestModel CreateRequestModel()
+    {
+        return new(_testAccountId, _testName, _testSchemeId, _testLangCode, _testUserId);
+    }
 
     [Fact]
     public void Create_HappyPath_Successful()

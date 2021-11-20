@@ -18,7 +18,7 @@ public class IssueTests
     [Fact]
     public void Parse_WithNull_ArgumentNullException()
     {
-        Func<Issue> act = () => Issue.Parse(null);
+        var act = () => Issue.Parse(null);
 
         act.Should().ThrowExactly<ArgumentNullException>();
     }
@@ -26,7 +26,7 @@ public class IssueTests
     [Fact]
     public void Parse_WithEmptyString_ArgumentException()
     {
-        Func<Issue> act = () => Issue.Parse(string.Empty);
+        var act = () => Issue.Parse(string.Empty);
 
         act.Should().ThrowExactly<ArgumentException>();
     }
@@ -34,7 +34,7 @@ public class IssueTests
     [Fact]
     public void Parse_WithWhitespace_ArgumentException()
     {
-        Func<Issue> act = () => Issue.Parse(" ");
+        var act = () => Issue.Parse(" ");
 
         act.Should().ThrowExactly<ArgumentException>();
     }
@@ -42,7 +42,7 @@ public class IssueTests
     [Fact]
     public void Parse_WithWhitespaceInTheMiddle_ArgumentException()
     {
-        Func<Issue> act = () => Issue.Parse("# 1234");
+        var act = () => Issue.Parse("# 1234");
 
         act.Should().ThrowExactly<ArgumentException>();
     }
@@ -63,7 +63,7 @@ public class IssueTests
     {
         var tooLongIssueNumber = new string('a', 51);
 
-        Func<Issue> act = () => Issue.Parse(tooLongIssueNumber);
+        var act = () => Issue.Parse(tooLongIssueNumber);
 
         act.Should().ThrowExactly<ArgumentException>();
     }

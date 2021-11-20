@@ -63,7 +63,13 @@ public record ChangeLogText
         }
     }
 
-    public override int GetHashCode() => StringComparer.OrdinalIgnoreCase.GetHashCode(Value);
+    public override int GetHashCode()
+    {
+        return StringComparer.OrdinalIgnoreCase.GetHashCode(Value);
+    }
 
-    public static implicit operator string(ChangeLogText text) => text.Value;
+    public static implicit operator string(ChangeLogText text)
+    {
+        return text.Value;
+    }
 }

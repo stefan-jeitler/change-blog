@@ -58,8 +58,9 @@ public class AuthorizationFilter : IAsyncActionFilter
         {
             var actionName = context.ActionDescriptor.DisplayName;
             _logger.LogError(
-                "The requested action '{ActionName}' hasn't one of the attributes: {PermissionAttribute}, {AllowAnonymous} or {SkipAuthorization}", 
-                actionName, nameof(NeedsPermissionAttribute), nameof(AllowAnonymousAttribute), nameof(SkipAuthorizationAttribute));
+                "The requested action '{ActionName}' hasn't one of the attributes: {PermissionAttribute}, {AllowAnonymous} or {SkipAuthorization}",
+                actionName, nameof(NeedsPermissionAttribute), nameof(AllowAnonymousAttribute),
+                nameof(SkipAuthorizationAttribute));
 
             context.Result = InternalServerError;
             return;

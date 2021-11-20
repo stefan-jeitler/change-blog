@@ -41,7 +41,8 @@ public class GetVersionsInteractor : IGetVersion, IGetVersions
         var product = await _productDao.GetProductAsync(clVersion.GetValueOrThrow().ProductId);
 
         var changeLogs =
-            await _changeLogQueriesDao.GetChangeLogsAsync(clVersion.GetValueOrThrow().ProductId, clVersion.GetValueOrThrow().Id);
+            await _changeLogQueriesDao.GetChangeLogsAsync(clVersion.GetValueOrThrow().ProductId,
+                clVersion.GetValueOrThrow().Id);
 
         var responseModel = CreateResponseModel(clVersion.GetValueOrThrow(), product, currentUser.TimeZone, changeLogs);
         return Maybe<VersionResponseModel>.From(responseModel);
@@ -49,10 +50,7 @@ public class GetVersionsInteractor : IGetVersion, IGetVersions
 
     public async Task<Maybe<VersionResponseModel>> ExecuteAsync(Guid userId, Guid productId, string version)
     {
-        if (!ClVersionValue.TryParse(version, out var clVersionValue))
-        {
-            return Maybe<VersionResponseModel>.None;
-        }
+        if (!ClVersionValue.TryParse(version, out var clVersionValue)) return Maybe<VersionResponseModel>.None;
 
         var clVersion = await _versionDao.FindVersionAsync(productId, clVersionValue);
         if (clVersion.HasNoValue)
@@ -62,7 +60,8 @@ public class GetVersionsInteractor : IGetVersion, IGetVersions
         var product = await _productDao.GetProductAsync(clVersion.GetValueOrThrow().ProductId);
 
         var changeLogs =
-            await _changeLogQueriesDao.GetChangeLogsAsync(clVersion.GetValueOrThrow().ProductId, clVersion.GetValueOrThrow().Id);
+            await _changeLogQueriesDao.GetChangeLogsAsync(clVersion.GetValueOrThrow().ProductId,
+                clVersion.GetValueOrThrow().Id);
 
         var responseModel = CreateResponseModel(clVersion.GetValueOrThrow(), product, currentUser.TimeZone, changeLogs);
         return Maybe<VersionResponseModel>.From(responseModel);

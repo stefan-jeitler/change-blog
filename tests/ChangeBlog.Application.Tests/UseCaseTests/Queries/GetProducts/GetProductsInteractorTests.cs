@@ -22,7 +22,10 @@ public class GetProductsInteractorTests
         _fakeAccountDao.Accounts.Add(TestAccount.Account);
     }
 
-    private GetProductsInteractor CreateInteractor() => new(_fakeProductDao, _fakeUserDao, _fakeAccountDao);
+    private GetProductsInteractor CreateInteractor()
+    {
+        return new(_fakeProductDao, _fakeUserDao, _fakeAccountDao);
+    }
 
     [Fact]
     public async Task GetAccountProducts_HappyPath_Successful()

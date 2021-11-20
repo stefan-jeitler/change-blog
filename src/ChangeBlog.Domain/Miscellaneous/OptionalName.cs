@@ -39,5 +39,8 @@ public record OptionalName
         return true;
     }
 
-    public static implicit operator string(OptionalName name) => name.Value;
+    public static implicit operator string(OptionalName name)
+    {
+        return name.Value;
+    }
 }

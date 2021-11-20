@@ -26,8 +26,10 @@ public class RemoveChangeLogLineIssueInteractorTests
         _unitOfWorkMock = new Mock<IUnitOfWork>();
     }
 
-    private DeleteChangeLogLineIssueInteractor CreateInteractor() =>
-        new(_fakeChangeLogDao, _fakeChangeLogDao, _unitOfWorkMock.Object);
+    private DeleteChangeLogLineIssueInteractor CreateInteractor()
+    {
+        return new(_fakeChangeLogDao, _fakeChangeLogDao, _unitOfWorkMock.Object);
+    }
 
     [Fact]
     public async Task RemoveIssue_HappyPath_IssueAddedAndUowCommitted()
@@ -39,7 +41,7 @@ public class RemoveChangeLogLineIssueInteractorTests
         var removeIssueInteractor = CreateInteractor();
 
         var line = new ChangeLogLine(lineId, null, TestAccount.Product.Id, ChangeLogText.Parse("some valid text"),
-            0U, DateTime.Parse("2021-04-19"), Array.Empty<Label>(), new List<Issue>(1) {issue}, TestAccount.UserId);
+            0U, DateTime.Parse("2021-04-19"), Array.Empty<Label>(), new List<Issue>(1) { issue }, TestAccount.UserId);
         _fakeChangeLogDao.ChangeLogs.Add(line);
 
         _outputPortMock.Setup(m => m.Removed(It.IsAny<Guid>()));
@@ -64,7 +66,7 @@ public class RemoveChangeLogLineIssueInteractorTests
         var removeIssueInteractor = CreateInteractor();
 
         var line = new ChangeLogLine(lineId, null, TestAccount.Product.Id, ChangeLogText.Parse("some valid text"),
-            0U, DateTime.Parse("2021-04-19"), Array.Empty<Label>(), new List<Issue>(1) {issue}, TestAccount.UserId);
+            0U, DateTime.Parse("2021-04-19"), Array.Empty<Label>(), new List<Issue>(1) { issue }, TestAccount.UserId);
         _fakeChangeLogDao.ChangeLogs.Add(line);
         _fakeChangeLogDao.Conflict = new ConflictStub();
 

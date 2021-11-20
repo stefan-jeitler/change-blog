@@ -17,7 +17,10 @@ public class GetLabelsInteractorTests
         _fakeChangeLogDao = new FakeChangeLogDao();
     }
 
-    private GetLabelsInteractor CreateInteractor() => new(_fakeChangeLogDao);
+    private GetLabelsInteractor CreateInteractor()
+    {
+        return new(_fakeChangeLogDao);
+    }
 
     [Fact]
     public async Task GetLabels_HappyPath_Successful()

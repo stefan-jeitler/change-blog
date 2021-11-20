@@ -25,8 +25,10 @@ public class AddChangeLogLineIssueInteractorTests
         _fakeChangeLogDao = new FakeChangeLogDao();
     }
 
-    private AddChangeLogLineIssueInteractor CreateInteractor() =>
-        new(_unitOfWorkMock.Object, _fakeChangeLogDao, _fakeChangeLogDao);
+    private AddChangeLogLineIssueInteractor CreateInteractor()
+    {
+        return new(_unitOfWorkMock.Object, _fakeChangeLogDao, _fakeChangeLogDao);
+    }
 
     [Fact]
     public async Task AddIssue_HappyPath_IssueAddedAndUowCommitted()

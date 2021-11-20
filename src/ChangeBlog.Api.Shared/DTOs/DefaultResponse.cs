@@ -21,8 +21,13 @@ public class DefaultResponse
     [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
     public IReadOnlyDictionary<string, string> ResourceIds { get; }
 
-    public static DefaultResponse Create(string message) => new(message);
+    public static DefaultResponse Create(string message)
+    {
+        return new(message);
+    }
 
-    public static DefaultResponse Create(string message, IReadOnlyDictionary<string, string> resourceIds) =>
-        new(message, resourceIds);
+    public static DefaultResponse Create(string message, IReadOnlyDictionary<string, string> resourceIds)
+    {
+        return new(message, resourceIds);
+    }
 }

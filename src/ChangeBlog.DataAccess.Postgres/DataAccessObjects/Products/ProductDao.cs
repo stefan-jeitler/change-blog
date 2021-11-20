@@ -72,7 +72,7 @@ public class ProductDao : IProductDao
                 accountId = querySettings.AccountId,
                 userId = querySettings.UserId,
                 lastProductId = querySettings.LastProductId,
-                limit = (int) querySettings.Limit
+                limit = (int)querySettings.Limit
             });
 
         return products.AsList();
@@ -88,7 +88,7 @@ public class ProductDao : IProductDao
             {
                 userId = querySettings.UserId,
                 lastProductId = querySettings.LastProductId,
-                limit = (int) querySettings.Limit
+                limit = (int)querySettings.Limit
             });
 
         return products.AsList();

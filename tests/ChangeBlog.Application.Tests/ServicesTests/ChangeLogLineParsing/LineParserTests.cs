@@ -22,7 +22,7 @@ public class LineParserTests
     public void ParseChangeLogLine_ValidIssues_ReturnsIssuesAndNoOutput()
     {
         // arrange
-        var issues = new List<string> {"#1234"};
+        var issues = new List<string> { "#1234" };
         const string text = "some feature added";
         var lineParsingRequestModel = new LineParserRequestModel(text, Array.Empty<string>(), issues);
 
@@ -39,7 +39,7 @@ public class LineParserTests
     public void ParseChangeLogLine_InvalidIssue_InvalidIssuesOutput()
     {
         // arrange
-        var issues = new List<string> {"#1234", "# 345"};
+        var issues = new List<string> { "#1234", "# 345" };
         const string text = "some feature added";
         var lineParsingRequestModel = new LineParserRequestModel(text, Array.Empty<string>(), issues);
         _outputPortMock.Setup(m => m.InvalidIssue(It.IsAny<string>(), It.IsAny<string>()));
@@ -57,7 +57,7 @@ public class LineParserTests
     public void ParseChangeLogLine_TooManyIssues_TooManyIssuesOutput()
     {
         // arrange
-        var issues = new List<string> {"#1", "#2", "#3", "#4", "#5", "#6", "#7", "#8", "#9", "#10", "#11"};
+        var issues = new List<string> { "#1", "#2", "#3", "#4", "#5", "#6", "#7", "#8", "#9", "#10", "#11" };
         const string text = "some feature added";
         var lineParsingRequestModel = new LineParserRequestModel(text, Array.Empty<string>(), issues);
         _outputPortMock.Setup(m => m.TooManyIssues(It.IsAny<string>(), It.IsAny<int>()));
@@ -75,7 +75,7 @@ public class LineParserTests
     public void ParseChangeLogLine_ValidLabels_ReturnsExtractedLabelsAndNoOutput()
     {
         // arrange
-        var labels = new List<string> {"Bugfix", "ProxyIssue"};
+        var labels = new List<string> { "Bugfix", "ProxyIssue" };
         const string text = "some feature added";
         var lineParsingRequestModel = new LineParserRequestModel(text, labels, Array.Empty<string>());
 
@@ -93,7 +93,7 @@ public class LineParserTests
     public void ParseChangeLogLine_InvalidChangeLogLabel_InvalidLabelsOutput()
     {
         // arrange
-        var labels = new List<string> {"Bugfix", "ProxyIssue", "invalid label"};
+        var labels = new List<string> { "Bugfix", "ProxyIssue", "invalid label" };
         const string text = "some feature added";
         var lineParsingRequestModel = new LineParserRequestModel(text, labels, Array.Empty<string>());
         _outputPortMock.Setup(m => m.InvalidLabel(It.IsAny<string>(), It.IsAny<string>()));
@@ -114,7 +114,7 @@ public class LineParserTests
     {
         // arrange
         var labels = new List<string>
-            {"Bugfix", "ProxyIssue", "Security", "ProxyStrikesBack", "Deprecated", "Feature"};
+            { "Bugfix", "ProxyIssue", "Security", "ProxyStrikesBack", "Deprecated", "Feature" };
         const string text = "some feature added";
         var lineParsingRequestModel = new LineParserRequestModel(text, labels, Array.Empty<string>());
         _outputPortMock.Setup(m => m.TooManyLabels(It.IsAny<string>(), It.IsAny<int>()));

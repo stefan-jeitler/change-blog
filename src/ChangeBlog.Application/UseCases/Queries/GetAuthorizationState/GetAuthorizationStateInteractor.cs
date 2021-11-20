@@ -14,7 +14,8 @@ public class GetAuthorizationStateInteractor : IGetAuthorizationState
         _userAccessDao = userAccessDao ?? throw new ArgumentNullException(nameof(userAccessDao));
     }
 
-    public async Task<AuthorizationState> GetAuthStateByAccountIdAsync(Guid userId, Guid accountId, Permission permission)
+    public async Task<AuthorizationState> GetAuthStateByAccountIdAsync(Guid userId, Guid accountId,
+        Permission permission)
     {
         var accountPermissions = await _userAccessDao.GetAccountRolesAsync(accountId, userId);
 
@@ -23,7 +24,8 @@ public class GetAuthorizationStateInteractor : IGetAuthorizationState
         return authService.GetAuthorizationState(permission);
     }
 
-    public async Task<AuthorizationState> GetAuthStateByProductIdAsync(Guid userId, Guid productId, Permission permission)
+    public async Task<AuthorizationState> GetAuthStateByProductIdAsync(Guid userId, Guid productId,
+        Permission permission)
     {
         var (account, product) = await _userAccessDao.GetRolesByProductIdAsync(userId, productId);
 
@@ -32,7 +34,8 @@ public class GetAuthorizationStateInteractor : IGetAuthorizationState
         return authService.GetAuthorizationState(permission);
     }
 
-    public async Task<AuthorizationState> GetAuthStateByVersionIdAsync(Guid userId, Guid versionId, Permission permission)
+    public async Task<AuthorizationState> GetAuthStateByVersionIdAsync(Guid userId, Guid versionId,
+        Permission permission)
     {
         var (account, product) = await _userAccessDao.GetRolesByVersionIdAsync(userId, versionId);
 
@@ -41,7 +44,8 @@ public class GetAuthorizationStateInteractor : IGetAuthorizationState
         return authService.GetAuthorizationState(permission);
     }
 
-    public async Task<AuthorizationState> GetAuthStateByChangeLogLineIdAsync(Guid userId, Guid changeLogLineId, Permission permission)
+    public async Task<AuthorizationState> GetAuthStateByChangeLogLineIdAsync(Guid userId, Guid changeLogLineId,
+        Permission permission)
     {
         var (account, product) = await _userAccessDao.GetRolesByChangeLogLineIdAsync(userId, changeLogLineId);
 

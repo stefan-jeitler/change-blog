@@ -18,9 +18,9 @@ namespace ChangeBlog.Application.Tests.ProxyTests;
 public class ReadOnlyCheckProxyTests
 {
     private readonly FakeChangeLogDao _fakeChangeLogDao;
-    private readonly IMemoryCache _memoryCache;
     private readonly FakeProductDao _fakeProductDao;
     private readonly FakeVersionDao _fakeVersionDao;
+    private readonly IMemoryCache _memoryCache;
 
     public ReadOnlyCheckProxyTests()
     {
@@ -30,8 +30,10 @@ public class ReadOnlyCheckProxyTests
         _memoryCache = new MemoryCache(new MemoryCacheOptions());
     }
 
-    private ChangeLogLineReadonlyCheckProxy CreateProxy() =>
-        new(_fakeChangeLogDao, _fakeVersionDao, _memoryCache, _fakeProductDao);
+    private ChangeLogLineReadonlyCheckProxy CreateProxy()
+    {
+        return new(_fakeChangeLogDao, _fakeVersionDao, _memoryCache, _fakeProductDao);
+    }
 
     [Fact]
     public async Task AddLine_RelatedVersionAlreadyReleased_Conflict()
@@ -235,7 +237,7 @@ public class ReadOnlyCheckProxyTests
         var lineId = Guid.Parse("0683e1e1-0e0d-405c-b77e-a6d0d5141b67");
         var line = new ChangeLogLine(lineId, null, TestAccount.Product.Id, ChangeLogText.Parse("some text"),
             0U, TestAccount.UserId, DateTime.Parse("2021-04-17"));
-            
+
         _fakeChangeLogDao.ChangeLogs.Add(line);
         _fakeProductDao.Products.Add(TestAccount.Product);
 
@@ -293,7 +295,7 @@ public class ReadOnlyCheckProxyTests
         var proxy = CreateProxy();
 
         // act
-        var result = await proxy.AddOrUpdateLinesAsync(new List<ChangeLogLine>(2) {firstLine, secondLine});
+        var result = await proxy.AddOrUpdateLinesAsync(new List<ChangeLogLine>(2) { firstLine, secondLine });
 
         // assert
         result.IsSuccess.Should().BeTrue();
@@ -327,7 +329,7 @@ public class ReadOnlyCheckProxyTests
         var proxy = CreateProxy();
 
         // act
-        var result = await proxy.AddOrUpdateLinesAsync(new List<ChangeLogLine>(2) {firstLine, secondLine});
+        var result = await proxy.AddOrUpdateLinesAsync(new List<ChangeLogLine>(2) { firstLine, secondLine });
 
         // assert
         result.IsSuccess.Should().BeFalse();
@@ -396,7 +398,7 @@ public class ReadOnlyCheckProxyTests
 
         // act
         var result = await proxy.MoveLinesAsync(new List<ChangeLogLine>(2)
-            {firstLineAssigned, secondLineAssigned});
+            { firstLineAssigned, secondLineAssigned });
 
         // assert
         result.IsSuccess.Should().BeTrue();
@@ -432,7 +434,7 @@ public class ReadOnlyCheckProxyTests
 
         // act
         var result = await proxy.MoveLinesAsync(new List<ChangeLogLine>(2)
-            {firstLineAssigned, secondLineAssigned});
+            { firstLineAssigned, secondLineAssigned });
 
         // assert
         result.IsSuccess.Should().BeFalse();

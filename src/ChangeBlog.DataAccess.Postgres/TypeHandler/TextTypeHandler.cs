@@ -11,5 +11,8 @@ public class TextTypeHandler : SqlMapper.TypeHandler<Text>
         parameter.Value = value.Value;
     }
 
-    public override Text Parse(object value) => Text.Parse(value.ToString());
+    public override Text Parse(object value)
+    {
+        return Text.Parse(value.ToString());
+    }
 }

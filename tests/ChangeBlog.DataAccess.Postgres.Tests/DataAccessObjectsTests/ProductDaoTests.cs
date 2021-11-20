@@ -2,7 +2,6 @@ using System;
 using System.Threading.Tasks;
 using ChangeBlog.Application.DataAccess.Products;
 using ChangeBlog.DataAccess.Postgres.DataAccessObjects.Products;
-using ChangeBlog.Domain;
 using ChangeBlog.Domain.Miscellaneous;
 using Dapper;
 using FluentAssertions;
@@ -35,7 +34,10 @@ public class ProductDaoTests : IAsyncLifetime
         return Task.CompletedTask;
     }
 
-    private ProductDao CreateDao() => new(new DbSession(_lazyDbConnection), NullLogger<ProductDao>.Instance);
+    private ProductDao CreateDao()
+    {
+        return new(new DbSession(_lazyDbConnection), NullLogger<ProductDao>.Instance);
+    }
 
     [Fact]
     public async Task FindProduct_ByAccountIdAndName_ReturnsProduct()
@@ -81,7 +83,7 @@ public class ProductDaoTests : IAsyncLifetime
         var productDao = CreateDao();
         var notExistingProductId = Guid.Parse("21f05095-c016-4f60-b98a-03c037b6cc8c");
 
-        Func<Task<Product>> act = () => productDao.GetProductAsync(notExistingProductId);
+        var act = () => productDao.GetProductAsync(notExistingProductId);
 
         await act.Should().ThrowExactlyAsync<Exception>();
     }
@@ -145,7 +147,7 @@ public class ProductDaoTests : IAsyncLifetime
         // assert
         result.IsSuccess.Should().BeTrue();
         var exists = await _lazyDbConnection.Value.ExecuteScalarAsync<bool>(
-            "select exists(select null from product where id = @productId)", new {productId = TestData.Product.Id});
+            "select exists(select null from product where id = @productId)", new { productId = TestData.Product.Id });
         exists.Should().BeTrue();
     }
 
@@ -166,7 +168,7 @@ public class ProductDaoTests : IAsyncLifetime
         // assert
         var exists = await _lazyDbConnection.Value.ExecuteScalarAsync<bool>(
             "select exists(select null from product where id = @productId and closed_at is not null)",
-            new {productId = TestData.Product.Id});
+            new { productId = TestData.Product.Id });
         exists.Should().BeTrue();
     }
 

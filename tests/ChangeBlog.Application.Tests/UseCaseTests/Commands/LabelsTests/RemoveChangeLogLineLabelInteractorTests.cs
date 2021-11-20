@@ -26,8 +26,10 @@ public class RemoveChangeLogLineLabelInteractorTests
         _fakeChangeLogDao = new FakeChangeLogDao();
     }
 
-    private DeleteChangeLogLineLabelInteractor CreateInteractor() =>
-        new(_unitOfWorkMock.Object, _fakeChangeLogDao, _fakeChangeLogDao);
+    private DeleteChangeLogLineLabelInteractor CreateInteractor()
+    {
+        return new(_unitOfWorkMock.Object, _fakeChangeLogDao, _fakeChangeLogDao);
+    }
 
     [Fact]
     public async Task RemoveLabel_HappyPath_LabelRemovedAndUowCommitted()
@@ -39,7 +41,7 @@ public class RemoveChangeLogLineLabelInteractorTests
         var removeLabelInteractor = CreateInteractor();
 
         var line = new ChangeLogLine(lineId, null, TestAccount.Product.Id, ChangeLogText.Parse("some valid text"),
-            0U, DateTime.Parse("2021-04-19"), new List<Label> {label}, Array.Empty<Issue>(), TestAccount.UserId);
+            0U, DateTime.Parse("2021-04-19"), new List<Label> { label }, Array.Empty<Issue>(), TestAccount.UserId);
         _fakeChangeLogDao.ChangeLogs.Add(line);
         _outputPortMock.Setup(m => m.Deleted(It.IsAny<Guid>()));
 

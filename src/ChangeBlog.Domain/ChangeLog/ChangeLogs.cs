@@ -22,12 +22,12 @@ public class ChangeLogs
     public int Count => Lines.Count;
 
     public int LastPosition => Lines
-        .Select(x => (int) x.Position)
+        .Select(x => (int)x.Position)
         .DefaultIfEmpty(-1)
         .Max();
 
-    public uint RemainingPositionsToAdd => MaxLines - (uint) Count;
-    public uint NextFreePosition => (uint) (LastPosition + 1);
+    public uint RemainingPositionsToAdd => MaxLines - (uint)Count;
+    public uint NextFreePosition => (uint)(LastPosition + 1);
     public bool IsPositionAvailable => RemainingPositionsToAdd > 0;
 
     private static void VerifyNoDuplicatesExist(IEnumerable<ChangeLogLine> lines)

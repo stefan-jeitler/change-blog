@@ -18,10 +18,10 @@ namespace ChangeBlog.Application.Tests.UseCaseTests.Commands.AddOrUpdateVersion;
 public class AddOrUpdateVersionInteractorTests
 {
     private readonly FakeChangeLogDao _fakeChangeLogDao;
-    private readonly Mock<IAddOrUpdateVersionOutputPort> _outputPortMock;
     private readonly FakeProductDao _fakeProductDao;
-    private readonly Mock<IUnitOfWork> _unitOfWorkMock;
     private readonly FakeVersionDao _fakeVersionDao;
+    private readonly Mock<IAddOrUpdateVersionOutputPort> _outputPortMock;
+    private readonly Mock<IUnitOfWork> _unitOfWorkMock;
 
     public AddOrUpdateVersionInteractorTests()
     {
@@ -32,9 +32,11 @@ public class AddOrUpdateVersionInteractorTests
         _outputPortMock = new Mock<IAddOrUpdateVersionOutputPort>(MockBehavior.Strict);
     }
 
-    private AddOrUpdateVersionInteractor CreateInteractor() =>
-        new(_fakeProductDao, _fakeVersionDao,
+    private AddOrUpdateVersionInteractor CreateInteractor()
+    {
+        return new(_fakeProductDao, _fakeVersionDao,
             _unitOfWorkMock.Object, _fakeChangeLogDao, _fakeChangeLogDao);
+    }
 
     [Fact]
     public async Task UpdateVersion_HappyPath_SuccessfullyUpdated()

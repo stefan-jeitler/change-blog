@@ -13,10 +13,10 @@ namespace ChangeBlog.Application.Tests.UseCaseTests.Commands.AddProduct;
 public class AddProductInteractorTests
 {
     private readonly FakeAccountDao _fakeAccountDao;
-    private readonly Mock<IAddProductOutputPort> _outputPortMock;
     private readonly FakeProductDao _fakeProductDao;
-    private readonly Mock<IUnitOfWork> _unitOfWorkMock;
     private readonly FakeVersioningSchemeDao _fakeVersioningSchemeDao;
+    private readonly Mock<IAddProductOutputPort> _outputPortMock;
+    private readonly Mock<IUnitOfWork> _unitOfWorkMock;
 
     public AddProductInteractorTests()
     {
@@ -27,11 +27,13 @@ public class AddProductInteractorTests
         _outputPortMock = new Mock<IAddProductOutputPort>(MockBehavior.Strict);
     }
 
-    private AddProductInteractor CreateInteractor() =>
-        new(_fakeAccountDao,
+    private AddProductInteractor CreateInteractor()
+    {
+        return new(_fakeAccountDao,
             _fakeVersioningSchemeDao,
             _fakeProductDao,
             _unitOfWorkMock.Object);
+    }
 
     [Fact]
     public async Task CreateProduct_Successful()

@@ -19,9 +19,9 @@ namespace ChangeBlog.Application.Tests.UseCaseTests.Commands.AssignAllPendingLin
 public class AssignAllPendingLinesToVersionInteractorTests
 {
     private readonly FakeChangeLogDao _fakeChangeLogDao;
+    private readonly FakeVersionDao _fakeVersionDao;
     private readonly Mock<IAssignAllPendingLinesToVersionOutputPort> _outputPortMock;
     private readonly Mock<IUnitOfWork> _unitOfWork;
-    private readonly FakeVersionDao _fakeVersionDao;
 
     public AssignAllPendingLinesToVersionInteractorTests()
     {
@@ -31,9 +31,11 @@ public class AssignAllPendingLinesToVersionInteractorTests
         _fakeChangeLogDao = new FakeChangeLogDao();
     }
 
-    private AssignAllPendingLinesToVersionInteractor CreateInteractor() =>
-        new(_fakeVersionDao, _unitOfWork.Object,
+    private AssignAllPendingLinesToVersionInteractor CreateInteractor()
+    {
+        return new(_fakeVersionDao, _unitOfWork.Object,
             _fakeChangeLogDao, _fakeChangeLogDao);
+    }
 
     [Fact]
     public async Task AssignAllPendingLines_HappyPath_AssignedAndUowCommitted()
@@ -43,7 +45,7 @@ public class AssignAllPendingLinesToVersionInteractorTests
         var assignAllPendingLinesInteractor = CreateInteractor();
 
         var pendingLines = Enumerable.Range(0, 3)
-            .Select(x => new ChangeLogLine(null, TestAccount.Product.Id, ChangeLogText.Parse($"{x:D5}"), (uint) x,
+            .Select(x => new ChangeLogLine(null, TestAccount.Product.Id, ChangeLogText.Parse($"{x:D5}"), (uint)x,
                 TestAccount.UserId));
         _fakeChangeLogDao.ChangeLogs.AddRange(pendingLines);
 
@@ -74,11 +76,12 @@ public class AssignAllPendingLinesToVersionInteractorTests
         var assignAllPendingLinesInteractor = CreateInteractor();
 
         var pendingLines = Enumerable.Range(0, 3)
-            .Select(x => new ChangeLogLine(null, TestAccount.Product.Id, ChangeLogText.Parse($"{x:D5}"), (uint) x,
+            .Select(x => new ChangeLogLine(null, TestAccount.Product.Id, ChangeLogText.Parse($"{x:D5}"), (uint)x,
                 TestAccount.UserId));
         _fakeChangeLogDao.ChangeLogs.AddRange(pendingLines);
 
-        var clVersion = new ClVersion(targetVersionId, targetVersionsProductId, ClVersionValue.Parse("1.2.3"), OptionalName.Empty,
+        var clVersion = new ClVersion(targetVersionId, targetVersionsProductId, ClVersionValue.Parse("1.2.3"),
+            OptionalName.Empty,
             null, TestAccount.UserId, DateTime.UtcNow, null);
         _fakeVersionDao.Versions.Add(clVersion);
 
@@ -88,7 +91,8 @@ public class AssignAllPendingLinesToVersionInteractorTests
         await assignAllPendingLinesInteractor.ExecuteAsync(_outputPortMock.Object, requestModel);
 
         // assert
-        _outputPortMock.Verify(m => m.TargetVersionBelongsToDifferentProduct(It.Is<Guid>(x => x == TestAccount.Product.Id),
+        _outputPortMock.Verify(m => m.TargetVersionBelongsToDifferentProduct(
+            It.Is<Guid>(x => x == TestAccount.Product.Id),
             It.Is<Guid>(x => x == targetVersionsProductId)), Times.Once);
     }
 
@@ -171,7 +175,7 @@ public class AssignAllPendingLinesToVersionInteractorTests
         var assignAllPendingLinesInteractor = CreateInteractor();
 
         var pendingLines = Enumerable.Range(0, 60)
-            .Select(x => new ChangeLogLine(null, TestAccount.Product.Id, ChangeLogText.Parse($"{x:D5}"), (uint) x,
+            .Select(x => new ChangeLogLine(null, TestAccount.Product.Id, ChangeLogText.Parse($"{x:D5}"), (uint)x,
                 TestAccount.UserId));
         _fakeChangeLogDao.ChangeLogs.AddRange(pendingLines);
 
@@ -181,7 +185,7 @@ public class AssignAllPendingLinesToVersionInteractorTests
 
         var assignedLines = Enumerable.Range(0, 60)
             .Select(x =>
-                new ChangeLogLine(clVersion.Id, TestAccount.Product.Id, ChangeLogText.Parse($"{x:D5}"), (uint) x,
+                new ChangeLogLine(clVersion.Id, TestAccount.Product.Id, ChangeLogText.Parse($"{x:D5}"), (uint)x,
                     TestAccount.UserId));
         _fakeChangeLogDao.ChangeLogs.AddRange(assignedLines);
 
@@ -203,7 +207,7 @@ public class AssignAllPendingLinesToVersionInteractorTests
         var assignAllPendingLinesInteractor = CreateInteractor();
 
         var pendingLines = Enumerable.Range(0, 10)
-            .Select(x => new ChangeLogLine(null, TestAccount.Product.Id, ChangeLogText.Parse($"{x:D5}"), (uint) x,
+            .Select(x => new ChangeLogLine(null, TestAccount.Product.Id, ChangeLogText.Parse($"{x:D5}"), (uint)x,
                 TestAccount.UserId));
         _fakeChangeLogDao.ChangeLogs.AddRange(pendingLines);
 
@@ -233,7 +237,7 @@ public class AssignAllPendingLinesToVersionInteractorTests
         var assignAllPendingLinesInteractor = CreateInteractor();
 
         var pendingLines = Enumerable.Range(0, 60)
-            .Select(x => new ChangeLogLine(null, TestAccount.Product.Id, ChangeLogText.Parse($"{x:D5}"), (uint) x,
+            .Select(x => new ChangeLogLine(null, TestAccount.Product.Id, ChangeLogText.Parse($"{x:D5}"), (uint)x,
                 TestAccount.UserId));
         _fakeChangeLogDao.ChangeLogs.AddRange(pendingLines);
 

@@ -16,7 +16,10 @@ public class VersionAssignmentRequestModelTests
         _testVersion = "1.2.3";
     }
 
-    private VersionAssignmentRequestModel CreateRequestModel() => new(_testProductId, _testVersion);
+    private VersionAssignmentRequestModel CreateRequestModel()
+    {
+        return new(_testProductId, _testVersion);
+    }
 
     [Fact]
     public void Create_HappyPath_Successful()

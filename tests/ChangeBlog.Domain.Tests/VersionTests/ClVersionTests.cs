@@ -29,9 +29,11 @@ public class ClVersionTests
         _testDeletedDate = null;
     }
 
-    private ClVersion CreateVersion() =>
-        new(_testId, _testProductId, _testVersionValue, _testName,
+    private ClVersion CreateVersion()
+    {
+        return new(_testId, _testProductId, _testVersionValue, _testName,
             _testReleaseDate, _testUserId, _testCreationDate, _testDeletedDate);
+    }
 
     [Fact]
     public void Create_WithValidArguments_Successful()
@@ -51,7 +53,7 @@ public class ClVersionTests
     {
         _testId = Guid.Empty;
 
-        Func<ClVersion> act = CreateVersion;
+        var act = CreateVersion;
 
         act.Should().ThrowExactly<ArgumentException>();
     }
@@ -61,7 +63,7 @@ public class ClVersionTests
     {
         _testProductId = Guid.Empty;
 
-        Func<ClVersion> act = CreateVersion;
+        var act = CreateVersion;
 
         act.Should().ThrowExactly<ArgumentException>();
     }
@@ -71,7 +73,7 @@ public class ClVersionTests
     {
         _testVersionValue = null;
 
-        Func<ClVersion> act = CreateVersion;
+        var act = CreateVersion;
 
         act.Should().ThrowExactly<ArgumentNullException>();
     }
@@ -122,7 +124,7 @@ public class ClVersionTests
         _testDeletedDate = DateTime.Parse("2021-04-16T18:30:00Z");
         _testReleaseDate = DateTime.Parse("2021-04-16T18:30:01Z");
 
-        Func<ClVersion> act = CreateVersion;
+        var act = CreateVersion;
 
         act.Should().ThrowExactly<InvalidOperationException>("Closed versions cannot be released.");
     }
@@ -134,7 +136,7 @@ public class ClVersionTests
     {
         _testReleaseDate = DateTime.Parse(invalidDate);
 
-        Func<ClVersion> act = CreateVersion;
+        var act = CreateVersion;
 
         act.Should().ThrowExactly<ArgumentException>();
     }
@@ -146,7 +148,7 @@ public class ClVersionTests
     {
         _testCreationDate = DateTime.Parse(invalidDate);
 
-        Func<ClVersion> act = CreateVersion;
+        var act = CreateVersion;
 
         act.Should().ThrowExactly<ArgumentException>();
     }
@@ -158,7 +160,7 @@ public class ClVersionTests
     {
         _testDeletedDate = DateTime.Parse(invalidDate);
 
-        Func<ClVersion> act = CreateVersion;
+        var act = CreateVersion;
 
         act.Should().ThrowExactly<ArgumentException>();
     }
@@ -215,7 +217,7 @@ public class ClVersionTests
         _testReleaseDate = null;
         var version = CreateVersion();
 
-        Func<ClVersion> act = () => version.Release();
+        var act = () => version.Release();
 
         act.Should().ThrowExactly<InvalidOperationException>();
     }
@@ -226,7 +228,7 @@ public class ClVersionTests
         var version1 = CreateVersion();
         var version2 = CreateVersion();
 
-        var isEqual = version1.Equals((object) version2);
+        var isEqual = version1.Equals((object)version2);
 
         isEqual.Should().BeTrue();
     }
@@ -242,7 +244,7 @@ public class ClVersionTests
         var version2 = CreateVersion();
 
         // act
-        var isEqual = version1.Equals((object) version2);
+        var isEqual = version1.Equals((object)version2);
 
         // assert
         isEqual.Should().BeFalse();

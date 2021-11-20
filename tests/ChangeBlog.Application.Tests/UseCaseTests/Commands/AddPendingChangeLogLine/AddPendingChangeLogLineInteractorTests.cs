@@ -15,8 +15,8 @@ namespace ChangeBlog.Application.Tests.UseCaseTests.Commands.AddPendingChangeLog
 public class AddPendingChangeLogLineInteractorTests
 {
     private readonly FakeChangeLogDao _fakeChangeLogDao;
-    private readonly Mock<IAddPendingChangeLogLineOutputPort> _outputPortMock;
     private readonly FakeProductDao _fakeProductDao;
+    private readonly Mock<IAddPendingChangeLogLineOutputPort> _outputPortMock;
     private readonly Mock<IUnitOfWork> _unitOfWorkMock;
 
     public AddPendingChangeLogLineInteractorTests()
@@ -27,16 +27,19 @@ public class AddPendingChangeLogLineInteractorTests
         _unitOfWorkMock = new Mock<IUnitOfWork>();
     }
 
-    private AddPendingChangeLogLineInteractor CreateInteractor() => new(_fakeProductDao, _fakeChangeLogDao,
-        _fakeChangeLogDao, _unitOfWorkMock.Object);
+    private AddPendingChangeLogLineInteractor CreateInteractor()
+    {
+        return new(_fakeProductDao, _fakeChangeLogDao,
+            _fakeChangeLogDao, _unitOfWorkMock.Object);
+    }
 
     [Fact]
     public async Task AddPendingLine_NotExistingProduct_ProductDoesNotExistOutput()
     {
         // arrange
         const string changeLogLine = "Some Bug fixed";
-        var labels = new List<string> {"Bugfix", "ProxyIssue"};
-        var issues = new List<string> {"#1234", "#12345"};
+        var labels = new List<string> { "Bugfix", "ProxyIssue" };
+        var issues = new List<string> { "#1234", "#12345" };
         var lineRequestModel =
             new PendingChangeLogLineRequestModel(TestAccount.UserId, TestAccount.Product.Id, changeLogLine, labels,
                 issues);
@@ -58,8 +61,8 @@ public class AddPendingChangeLogLineInteractorTests
     {
         // arrange
         const string changeLogLine = "Some Bug fixed";
-        var labels = new List<string> {"Bugfix", "ProxyIssue"};
-        var issues = new List<string> {"#1234", "#12345"};
+        var labels = new List<string> { "Bugfix", "ProxyIssue" };
+        var issues = new List<string> { "#1234", "#12345" };
         var lineRequestModel =
             new PendingChangeLogLineRequestModel(TestAccount.UserId, TestAccount.Product.Id, changeLogLine, labels,
                 issues);
@@ -93,8 +96,8 @@ public class AddPendingChangeLogLineInteractorTests
     {
         // arrange
         const string changeLogLine = "some changes";
-        var labels = new List<string> {"Bugfix", "ProxyIssue"};
-        var issues = new List<string> {"#1234", "#12345"};
+        var labels = new List<string> { "Bugfix", "ProxyIssue" };
+        var issues = new List<string> { "#1234", "#12345" };
         var lineRequestModel =
             new PendingChangeLogLineRequestModel(TestAccount.UserId, TestAccount.Product.Id, changeLogLine, labels,
                 issues);
@@ -131,8 +134,8 @@ public class AddPendingChangeLogLineInteractorTests
     {
         // arrange
         const string changeLogLine = "Some Bug fixed";
-        var labels = new List<string> {"Bugfix", "ProxyIssue"};
-        var issues = new List<string> {"#1234", "#12345"};
+        var labels = new List<string> { "Bugfix", "ProxyIssue" };
+        var issues = new List<string> { "#1234", "#12345" };
         var lineRequestModel =
             new PendingChangeLogLineRequestModel(TestAccount.UserId, TestAccount.Product.Id, changeLogLine, labels,
                 issues);
@@ -143,7 +146,7 @@ public class AddPendingChangeLogLineInteractorTests
 
         _fakeChangeLogDao.ChangeLogs.AddRange(Enumerable.Range(0, 100)
             .Select(x =>
-                new ChangeLogLine(null, TestAccount.Product.Id, ChangeLogText.Parse($"{x:D5}"), (uint) x,
+                new ChangeLogLine(null, TestAccount.Product.Id, ChangeLogText.Parse($"{x:D5}"), (uint)x,
                     TestAccount.UserId)));
 
         var addPendingLineInteractor = CreateInteractor();
@@ -163,8 +166,8 @@ public class AddPendingChangeLogLineInteractorTests
     {
         // arrange
         const string changeLogLine = "Some Bug fixed";
-        var labels = new List<string> {"Bugfix", "ProxyIssue"};
-        var issues = new List<string> {"#1234", "#12345"};
+        var labels = new List<string> { "Bugfix", "ProxyIssue" };
+        var issues = new List<string> { "#1234", "#12345" };
         var lineRequestModel =
             new PendingChangeLogLineRequestModel(TestAccount.UserId, TestAccount.Product.Id, changeLogLine, labels,
                 issues);

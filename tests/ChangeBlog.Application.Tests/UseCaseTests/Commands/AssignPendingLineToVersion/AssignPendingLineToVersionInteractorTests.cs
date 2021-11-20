@@ -18,10 +18,10 @@ namespace ChangeBlog.Application.Tests.UseCaseTests.Commands.AssignPendingLineTo
 public class AssignPendingLineToVersionInteractorTests
 {
     private readonly FakeChangeLogDao _fakeChangeLogDao;
-    private readonly Mock<IAssignPendingLineToVersionOutputPort> _outputPortMock;
     private readonly FakeProductDao _fakeProductDao;
-    private readonly Mock<IUnitOfWork> _unitOfWorkMock;
     private readonly FakeVersionDao _fakeVersionDao;
+    private readonly Mock<IAssignPendingLineToVersionOutputPort> _outputPortMock;
+    private readonly Mock<IUnitOfWork> _unitOfWorkMock;
 
     public AssignPendingLineToVersionInteractorTests()
     {
@@ -32,8 +32,11 @@ public class AssignPendingLineToVersionInteractorTests
         _unitOfWorkMock = new Mock<IUnitOfWork>();
     }
 
-    private AssignPendingLineToVersionInteractor CreateInteractor() => new(_fakeVersionDao, _fakeChangeLogDao,
-        _fakeChangeLogDao, _unitOfWorkMock.Object);
+    private AssignPendingLineToVersionInteractor CreateInteractor()
+    {
+        return new(_fakeVersionDao, _fakeChangeLogDao,
+            _fakeChangeLogDao, _unitOfWorkMock.Object);
+    }
 
     [Fact]
     public async Task AssignPendingLineByVersionId_HappyPath_AssignedAndUowCommitted()
@@ -85,7 +88,8 @@ public class AssignPendingLineToVersionInteractorTests
             TestAccount.Product.LanguageCode,
             TestAccount.CreationDate));
 
-        var clVersion = new ClVersion(targetVersionsProductId, targetVersionsProductId, ClVersionValue.Parse("1.2"), OptionalName.Empty,
+        var clVersion = new ClVersion(targetVersionsProductId, targetVersionsProductId, ClVersionValue.Parse("1.2"),
+            OptionalName.Empty,
             null, TestAccount.UserId, DateTime.UtcNow, null);
         _fakeVersionDao.Versions.Add(clVersion);
 
@@ -105,7 +109,6 @@ public class AssignPendingLineToVersionInteractorTests
         // assert
         _outputPortMock.Verify(m => m.TargetVersionBelongsToDifferentProduct(It.Is<Guid>(x => x == line.ProductId),
             It.Is<Guid>(x => x == targetVersionsProductId)), Times.Once);
-
     }
 
 
@@ -245,7 +248,7 @@ public class AssignPendingLineToVersionInteractorTests
         var lineId = Guid.Parse("2b4b147a-9ebd-4350-a45b-aaae5d8d63de");
 
         _fakeChangeLogDao.ChangeLogs.AddRange(Enumerable.Range(0, 100).Select(x =>
-            new ChangeLogLine(clVersion.Id, TestAccount.Product.Id, ChangeLogText.Parse($"{x:D5}"), (uint) x,
+            new ChangeLogLine(clVersion.Id, TestAccount.Product.Id, ChangeLogText.Parse($"{x:D5}"), (uint)x,
                 TestAccount.UserId)));
 
         var assignmentRequestModel =
@@ -283,7 +286,7 @@ public class AssignPendingLineToVersionInteractorTests
         _fakeChangeLogDao.ChangeLogs.Add(pendingLine);
 
         _fakeChangeLogDao.ChangeLogs.AddRange(Enumerable.Range(0, 1).Select(x =>
-            new ChangeLogLine(clVersion.Id, TestAccount.Product.Id, ChangeLogText.Parse($"{x:D5}"), (uint) x,
+            new ChangeLogLine(clVersion.Id, TestAccount.Product.Id, ChangeLogText.Parse($"{x:D5}"), (uint)x,
                 TestAccount.UserId)));
 
         var assignmentRequestModel =

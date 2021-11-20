@@ -25,8 +25,11 @@ public class VersionChangeLogLineRequestModelTests
         _testIssues = new List<string>(0);
     }
 
-    private VersionChangeLogLineRequestModel CreateRequestModel() => new(_testUserId, _testProductId,
-        _testVersion, _testText, _testLabels, _testIssues);
+    private VersionChangeLogLineRequestModel CreateRequestModel()
+    {
+        return new(_testUserId, _testProductId,
+            _testVersion, _testText, _testLabels, _testIssues);
+    }
 
     [Fact]
     public void Create_HappyPath_Successful()

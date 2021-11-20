@@ -1,5 +1,5 @@
-import { Component, OnInit } from '@angular/core';
-import { AuthConfig, OAuthService } from 'angular-oauth2-oidc';
+import {Component, OnInit} from '@angular/core';
+import {AuthConfig, OAuthService} from 'angular-oauth2-oidc';
 
 @Component({
   selector: 'app-header',
@@ -11,11 +11,6 @@ export class HeaderComponent implements OnInit {
   constructor(private authService: OAuthService, private authConfig: AuthConfig) {
     this.authService.events.subscribe(e => console.table(e))
 
-   }
-
-  ngOnInit() {
-    this.authService.configure(this.authConfig);
-    this.authService.loadDiscoveryDocumentAndTryLogin();
   }
 
   get isLoggedIn(): boolean {
@@ -26,6 +21,11 @@ export class HeaderComponent implements OnInit {
     const claims = this.authService.getIdentityClaims() as any;
 
     return claims?.preferred_username ?? "";
+  }
+
+  ngOnInit() {
+    this.authService.configure(this.authConfig);
+    this.authService.loadDiscoveryDocumentAndTryLogin();
   }
 
   login() {

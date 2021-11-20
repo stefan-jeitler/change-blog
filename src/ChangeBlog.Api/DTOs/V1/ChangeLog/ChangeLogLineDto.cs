@@ -12,8 +12,9 @@ public class ChangeLogLineDto
     public List<string> Issues { get; set; }
     public DateTimeOffset CreatedAt { get; set; }
 
-    public static ChangeLogLineDto FromResponseModel(ChangeLogLineResponseModel model) =>
-        new()
+    public static ChangeLogLineDto FromResponseModel(ChangeLogLineResponseModel model)
+    {
+        return new()
         {
             Id = model.Id,
             Text = model.Text,
@@ -21,4 +22,5 @@ public class ChangeLogLineDto
             Issues = model.Issues,
             CreatedAt = model.CreatedAt
         };
+    }
 }

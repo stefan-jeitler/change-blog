@@ -1,7 +1,6 @@
 using System;
 using System.Threading.Tasks;
 using ChangeBlog.DataAccess.Postgres.DataAccessObjects.Account;
-using ChangeBlog.Domain;
 using FluentAssertions;
 using Npgsql;
 using Xunit;
@@ -24,7 +23,10 @@ public class AccountDaoTests : IDisposable
         _lazyDbConnection?.Dispose();
     }
 
-    private AccountDao CreateDao() => new(new DbSession(_lazyDbConnection));
+    private AccountDao CreateDao()
+    {
+        return new(new DbSession(_lazyDbConnection));
+    }
 
     [Fact]
     public async Task FindAccount_ExistingAccount_ResultHasValue()
@@ -65,7 +67,7 @@ public class AccountDaoTests : IDisposable
         var accountDao = CreateDao();
         var notExistingAccountId = Guid.Parse("d6f4d5cd-e0b0-43e8-b05b-46b55eb0d529");
 
-        Func<Task<Account>> act = () => accountDao.GetAccountAsync(notExistingAccountId);
+        var act = () => accountDao.GetAccountAsync(notExistingAccountId);
 
         await act.Should().ThrowExactlyAsync<Exception>();
     }

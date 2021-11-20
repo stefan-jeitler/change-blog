@@ -29,9 +29,11 @@ public class ProductTests
         _testClosedDate = null;
     }
 
-    private Product CreateProduct() =>
-        new(_testId, _testAccountId, _testName, _testVersioningScheme, _testLangCode, _testUserId,
+    private Product CreateProduct()
+    {
+        return new(_testId, _testAccountId, _testName, _testVersioningScheme, _testLangCode, _testUserId,
             _testCreationDate, _testClosedDate);
+    }
 
     [Fact]
     public void Create_WithValidArguments_Successful()
@@ -76,7 +78,7 @@ public class ProductTests
     {
         _testId = Guid.Empty;
 
-        Func<Product> act = CreateProduct;
+        var act = CreateProduct;
 
         act.Should().ThrowExactly<ArgumentException>();
     }
@@ -86,7 +88,7 @@ public class ProductTests
     {
         _testAccountId = Guid.Empty;
 
-        Func<Product> act = CreateProduct;
+        var act = CreateProduct;
 
         act.Should().ThrowExactly<ArgumentException>();
     }
@@ -96,7 +98,7 @@ public class ProductTests
     {
         _testName = null;
 
-        Func<Product> act = CreateProduct;
+        var act = CreateProduct;
 
         act.Should().ThrowExactly<ArgumentNullException>();
     }
@@ -106,7 +108,7 @@ public class ProductTests
     {
         _testVersioningScheme = null;
 
-        Func<Product> act = CreateProduct;
+        var act = CreateProduct;
 
         act.Should().ThrowExactly<ArgumentNullException>();
     }
@@ -116,7 +118,7 @@ public class ProductTests
     {
         _testLangCode = null;
 
-        Func<Product> act = CreateProduct;
+        var act = CreateProduct;
 
         act.Should().ThrowExactly<ArgumentNullException>();
     }
@@ -126,7 +128,7 @@ public class ProductTests
     {
         _testUserId = Guid.Empty;
 
-        Func<Product> act = CreateProduct;
+        var act = CreateProduct;
 
         act.Should().ThrowExactly<ArgumentException>();
     }
@@ -138,7 +140,7 @@ public class ProductTests
     {
         _testCreationDate = DateTime.Parse(invalidDate);
 
-        Func<Product> act = CreateProduct;
+        var act = CreateProduct;
 
         act.Should().ThrowExactly<ArgumentException>();
     }
@@ -150,7 +152,7 @@ public class ProductTests
     {
         _testClosedDate = DateTime.Parse(invalidDate);
 
-        Func<Product> act = CreateProduct;
+        var act = CreateProduct;
 
         act.Should().ThrowExactly<ArgumentException>();
     }

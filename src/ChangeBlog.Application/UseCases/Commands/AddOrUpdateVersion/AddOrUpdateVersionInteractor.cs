@@ -57,7 +57,7 @@ public class AddOrUpdateVersionInteractor : IAddVersion, IAddOrUpdateVersion
         }
         else
         {
-            await ExecuteAsync((IAddVersionOutputPort) output, requestModel);
+            await ExecuteAsync((IAddVersionOutputPort)output, requestModel);
             _unitOfWork.Commit();
         }
     }
@@ -73,7 +73,8 @@ public class AddOrUpdateVersionInteractor : IAddVersion, IAddOrUpdateVersion
         if (newVersion.HasNoValue)
             return;
 
-        var existingVersion = await _versionDao.FindVersionAsync(product.GetValueOrThrow().Id, newVersion.GetValueOrThrow().Value);
+        var existingVersion =
+            await _versionDao.FindVersionAsync(product.GetValueOrThrow().Id, newVersion.GetValueOrThrow().Value);
         if (existingVersion.HasValue)
         {
             output.VersionAlreadyExists(existingVersion.GetValueOrThrow().Id);
@@ -85,7 +86,8 @@ public class AddOrUpdateVersionInteractor : IAddVersion, IAddOrUpdateVersion
             return;
 
         _unitOfWork.Start();
-        await SaveVersionAsync(output, newVersion.GetValueOrThrow(), lines.GetValueOrThrow(), versionRequestModel.ReleaseImmediately);
+        await SaveVersionAsync(output, newVersion.GetValueOrThrow(), lines.GetValueOrThrow(),
+            versionRequestModel.ReleaseImmediately);
     }
 
     private async Task<Maybe<Product>> GetProductAsync(IAddVersionOutputPort output, Guid productId)
@@ -172,7 +174,7 @@ public class AddOrUpdateVersionInteractor : IAddVersion, IAddOrUpdateVersion
         var lines = new List<ChangeLogLine>();
         foreach (var (lineRequestModel, i) in lineCandidates.Select((x, i) => (x, i)))
         {
-            var line = CreateLine(output, lineRequestModel, newVersion, (uint) i);
+            var line = CreateLine(output, lineRequestModel, newVersion, (uint)i);
 
             if (line.HasNoValue) return Maybe<IEnumerable<ChangeLogLine>>.None;
 
@@ -269,14 +271,15 @@ public class AddOrUpdateVersionInteractor : IAddVersion, IAddOrUpdateVersion
 
         var releasedAt = requestModel.ReleaseImmediately
             ? DateTime.UtcNow
-            : (DateTime?) null;
+            : (DateTime?)null;
 
         var v = clVersion;
         var updatedVersion = new ClVersion(v.Id, v.ProductId, newVersionValue, clVersionName, releasedAt,
             v.CreatedByUser, v.CreatedAt, v.DeletedAt);
 
         var existingChangeLogs = await _changeLogQueriesDao.GetChangeLogsAsync(clVersion.ProductId, clVersion.Id);
-        var linesToDelete = existingChangeLogs.Lines.Where(x => !parsedChangeLogs.GetValueOrThrow().ContainsText(x.Text));
+        var linesToDelete =
+            existingChangeLogs.Lines.Where(x => !parsedChangeLogs.GetValueOrThrow().ContainsText(x.Text));
         await DeleteExistingLines(linesToDelete);
 
         await _changeLogCommands.AddOrUpdateLinesAsync(parsedChangeLogs.GetValueOrThrow().Lines)
@@ -292,9 +295,6 @@ public class AddOrUpdateVersionInteractor : IAddVersion, IAddOrUpdateVersion
 
     private async Task DeleteExistingLines(IEnumerable<ChangeLogLine> changeLogLines)
     {
-        foreach (var line in changeLogLines)
-        {
-            await _changeLogCommands.DeleteLineAsync(line);
-        }
+        foreach (var line in changeLogLines) await _changeLogCommands.DeleteLineAsync(line);
     }
 }

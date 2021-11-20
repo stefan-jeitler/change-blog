@@ -26,7 +26,7 @@ public class AccountControllerTests : IClassFixture<WebApplicationFactory<Startu
     {
         // arrange
         var client = _factory.CreateClient();
-        client.DefaultRequestHeaders.Add("X-API-KEY", new[] {"acc01usr02"});
+        client.DefaultRequestHeaders.Add("X-API-KEY", new[] { "acc01usr02" });
 
         // act
         var response = await client.GetAsync("/api/v1/accounts/");
@@ -43,7 +43,7 @@ public class AccountControllerTests : IClassFixture<WebApplicationFactory<Startu
     {
         // arrange
         var client = _factory.CreateClient();
-        client.DefaultRequestHeaders.Add("X-API-KEY", new[] {"acc01usr02"});
+        client.DefaultRequestHeaders.Add("X-API-KEY", new[] { "acc01usr02" });
 
         // act
         var response = await client.GetAsync("/api/v1/accounts/ec3a44cc-0ba4-4c97-ad7f-911e9f6a73bc");
@@ -59,7 +59,7 @@ public class AccountControllerTests : IClassFixture<WebApplicationFactory<Startu
     {
         // arrange
         var client = _factory.CreateClient();
-        client.DefaultRequestHeaders.Add("X-API-KEY", new[] {"acc01usr02"});
+        client.DefaultRequestHeaders.Add("X-API-KEY", new[] { "acc01usr02" });
 
         // act
         var response =
@@ -77,7 +77,7 @@ public class AccountControllerTests : IClassFixture<WebApplicationFactory<Startu
     {
         // arrange
         var client = _factory.CreateClient();
-        client.DefaultRequestHeaders.Add("X-API-KEY", new[] {"acc01usr02"});
+        client.DefaultRequestHeaders.Add("X-API-KEY", new[] { "acc01usr02" });
 
         // act
         var response = await client.GetAsync("/api/v1/accounts/ec3a44cc-0ba4-4c97-ad7f-911e9f6a73bc/users");
@@ -93,7 +93,7 @@ public class AccountControllerTests : IClassFixture<WebApplicationFactory<Startu
     {
         // arrange
         var client = _factory.CreateClient();
-        client.DefaultRequestHeaders.Add("X-API-KEY", new[] {"acc01usr02"});
+        client.DefaultRequestHeaders.Add("X-API-KEY", new[] { "acc01usr02" });
 
         // act
         var response = await client.GetAsync("/api/v1/accounts/roles");

@@ -11,5 +11,8 @@ public class EmailTypeHandler : SqlMapper.TypeHandler<Email>
         parameter.Value = value.Value;
     }
 
-    public override Email Parse(object value) => Email.Parse(value.ToString());
+    public override Email Parse(object value)
+    {
+        return Email.Parse(value.ToString());
+    }
 }

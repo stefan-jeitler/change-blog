@@ -18,7 +18,7 @@ public class NameTests
     [Fact]
     public void Parse_WithNullArgument_ArgumentNullException()
     {
-        Func<Name> act = () => Name.Parse(null);
+        var act = () => Name.Parse(null);
 
         act.Should().ThrowExactly<ArgumentNullException>();
     }
@@ -26,7 +26,7 @@ public class NameTests
     [Fact]
     public void Parse_WithEmptyString_ArgumentException()
     {
-        Func<Name> act = () => Name.Parse(string.Empty);
+        var act = () => Name.Parse(string.Empty);
 
         act.Should().ThrowExactly<ArgumentException>();
     }
@@ -34,7 +34,7 @@ public class NameTests
     [Fact]
     public void Parse_WithOneCharacter_TooShortArgumentException()
     {
-        Func<Name> act = () => Name.Parse("a");
+        var act = () => Name.Parse("a");
 
         act.Should().ThrowExactly<ArgumentException>();
     }
@@ -44,7 +44,7 @@ public class NameTests
     {
         var name = new string('a', 51);
 
-        Func<Name> act = () => Name.Parse(name);
+        var act = () => Name.Parse(name);
 
         act.Should().ThrowExactly<ArgumentException>();
     }

@@ -23,8 +23,10 @@ public class VersionIdChangeLogLineRequestModelTests
         _testIssues = new List<string>(0);
     }
 
-    private VersionIdChangeLogLineRequestModel CreateRequestModel() =>
-        new(_testUserId, _testVersionId, _testText, _testLabels, _testIssues);
+    private VersionIdChangeLogLineRequestModel CreateRequestModel()
+    {
+        return new(_testUserId, _testVersionId, _testText, _testLabels, _testIssues);
+    }
 
     [Fact]
     public void Create_HappyPath_Successful()

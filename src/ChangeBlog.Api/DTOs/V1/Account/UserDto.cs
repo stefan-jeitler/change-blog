@@ -23,8 +23,9 @@ public class UserDto
     public string TimeZone { get; }
     public DateTimeOffset CreatedAt { get; }
 
-    public static UserDto FromResponseModel(UserResponseModel m) =>
-        new(
+    public static UserDto FromResponseModel(UserResponseModel m)
+    {
+        return new(
             m.Id,
             m.Email,
             m.FirstName,
@@ -32,4 +33,5 @@ public class UserDto
             m.TimeZone,
             m.CreatedAt
         );
+    }
 }

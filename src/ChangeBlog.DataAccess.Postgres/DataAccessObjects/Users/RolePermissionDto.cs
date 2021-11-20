@@ -13,18 +13,15 @@ public class RolePermissionDto
         Name = name ?? throw new ArgumentNullException(nameof(name));
         Description = description ?? throw new ArgumentNullException(nameof(description));
 
-        if (Enum.TryParse<Permission>(permission, true, out var p))
-        {
-            Permission = p;
-        }
-            
+        if (Enum.TryParse<Permission>(permission, true, out var p)) Permission = p;
+
         CreatedAt = createdAt;
     }
 
     public string Type { get; }
-    public Guid Id { get;  }
+    public Guid Id { get; }
     public string Name { get; }
-    public string Description { get;  }
-    public Permission? Permission { get;  }
-    public DateTime CreatedAt { get;  }
+    public string Description { get; }
+    public Permission? Permission { get; }
+    public DateTime CreatedAt { get; }
 }

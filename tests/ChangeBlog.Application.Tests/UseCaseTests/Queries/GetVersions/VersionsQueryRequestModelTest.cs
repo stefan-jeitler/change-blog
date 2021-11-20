@@ -24,8 +24,11 @@ public class VersionsQueryRequestModelTest
         _testIncludeDeleted = false;
     }
 
-    private VersionsQueryRequestModel CreateRequestModel() => new(_testProductId, _testLastVersionId, _testUserId,
-        _testSearchTerm, _testLimit, _testIncludeDeleted);
+    private VersionsQueryRequestModel CreateRequestModel()
+    {
+        return new(_testProductId, _testLastVersionId, _testUserId,
+            _testSearchTerm, _testLimit, _testIncludeDeleted);
+    }
 
     [Fact]
     public void Create_ValidModel_ArgumentsProperlyAssigned()
@@ -79,7 +82,7 @@ public class VersionsQueryRequestModelTest
 
         requestModel.SearchTerm.Should().BeNull();
     }
-        
+
     [Fact]
     public void Create_WithZeroLimit_ArgumentException()
     {
@@ -89,7 +92,7 @@ public class VersionsQueryRequestModelTest
 
         act.Should().ThrowExactly<ArgumentException>();
     }
-        
+
     [Fact]
     public void Create_IncludeDeleted_IncludeDeletedIsTrue()
     {

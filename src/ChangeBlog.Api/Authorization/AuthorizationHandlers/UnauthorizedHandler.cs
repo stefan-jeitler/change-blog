@@ -9,5 +9,7 @@ public class UnauthorizedHandler : AuthorizationHandler
 {
     public override Task<AuthorizationState> GetAuthorizationState(ActionExecutingContext context, Guid userId,
         Permission permission)
-        => Task.FromResult(AuthorizationState.Unauthorized);
+    {
+        return Task.FromResult(AuthorizationState.Unauthorized);
+    }
 }

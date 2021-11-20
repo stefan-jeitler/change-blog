@@ -16,7 +16,8 @@ public class UserAccessDaoTest
 {
     private static UserAccessDao CreateDao()
     {
-        return new(() => new NpgsqlConnection(Configuration.ConnectionString), NullLogger<UserAccessDao>.Instance);
+        return new UserAccessDao(() => new NpgsqlConnection(Configuration.ConnectionString),
+            NullLogger<UserAccessDao>.Instance);
     }
 
     [Fact]
@@ -77,7 +78,7 @@ public class UserAccessDaoTest
         var t_ua_account_01_user_02 = Guid.Parse("7aa9004b-ed6f-4862-8307-579030c860be");
         var t_ua_account_01_proj_02 = Guid.Parse("0614f8d6-8895-4c74-bcbe-8a3c26076e1b");
 
-        var (_, productRoles) = 
+        var (_, productRoles) =
             await userAccessDao.GetRolesByProductIdAsync(t_ua_account_01_user_02, t_ua_account_01_proj_02);
 
         productRoles.Should().BeEmpty();
@@ -90,7 +91,8 @@ public class UserAccessDaoTest
         var t_ua_account_01_proj_01 = Guid.Parse("139a2e54-e9be-4168-98b4-2839d9b3db04");
         var t_ua_account_01_user_01 = Guid.Parse("f575503e-4eee-4d6d-b2c1-f11d8fc3da76");
 
-        var (_, productRoles) = await userAccessDao.GetRolesByProductIdAsync(t_ua_account_01_user_01, t_ua_account_01_proj_01);
+        var (_, productRoles) =
+            await userAccessDao.GetRolesByProductIdAsync(t_ua_account_01_user_01, t_ua_account_01_proj_01);
 
         productRoles.Should().ContainSingle(x => x.Name.Value == Role.ProductManager);
     }

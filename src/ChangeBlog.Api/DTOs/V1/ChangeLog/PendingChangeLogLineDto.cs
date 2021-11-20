@@ -10,12 +10,14 @@ public class PendingChangeLogLineDto
     public Guid AccountId { get; set; }
     public ChangeLogLineDto ChangeLogLine { get; set; }
 
-    public static PendingChangeLogLineDto FromResponseModel(PendingChangeLogLineResponseModel m) =>
-        new()
+    public static PendingChangeLogLineDto FromResponseModel(PendingChangeLogLineResponseModel m)
+    {
+        return new()
         {
             ProductId = m.ProductId,
             ProductName = m.ProductName,
             AccountId = m.AccountId,
             ChangeLogLine = ChangeLogLineDto.FromResponseModel(m.ChangeLogLine)
         };
+    }
 }

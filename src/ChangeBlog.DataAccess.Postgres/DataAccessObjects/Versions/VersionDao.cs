@@ -77,7 +77,7 @@ public class VersionDao : IVersionDao
                 {SelectVersion}
                 where v.product_id = @productId
                 order by v.created_at desc
-                fetch first 1 row only";    
+                fetch first 1 row only";
 
         var version = await _dbAccessor.DbConnection
             .QuerySingleOrDefaultAsync<ClVersion>(findVersionSql, new
@@ -167,7 +167,7 @@ public class VersionDao : IVersionDao
 
     public async Task<Result<ClVersion, Conflict>> ReleaseVersionAsync(ClVersion version)
     {
-        if (!version.IsReleased) 
+        if (!version.IsReleased)
             throw new Exception("Only release versions can be marked as released.");
 
         await _dbAccessor.DbConnection
@@ -206,11 +206,13 @@ public class VersionDao : IVersionDao
         }
     }
 
-    private Task UpdateSearchVectorsAsync(Guid versionId) =>
-        _dbAccessor.DbConnection
+    private Task UpdateSearchVectorsAsync(Guid versionId)
+    {
+        return _dbAccessor.DbConnection
             .ExecuteAsync("CALL update_version_searchvectors_proc(@versionId)",
                 new
                 {
                     versionId
                 });
+    }
 }

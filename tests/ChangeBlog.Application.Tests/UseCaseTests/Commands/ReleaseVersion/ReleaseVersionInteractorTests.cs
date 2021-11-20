@@ -13,9 +13,9 @@ namespace ChangeBlog.Application.Tests.UseCaseTests.Commands.ReleaseVersion;
 
 public class ReleaseVersionInteractorTests
 {
-    private readonly Mock<IReleaseVersionOutputPort> _outputPortMock;
     private readonly FakeProductDao _fakeProductDao;
     private readonly FakeVersionDao _fakeVersionDao;
+    private readonly Mock<IReleaseVersionOutputPort> _outputPortMock;
 
     public ReleaseVersionInteractorTests()
     {
@@ -24,7 +24,10 @@ public class ReleaseVersionInteractorTests
         _outputPortMock = new Mock<IReleaseVersionOutputPort>(MockBehavior.Strict);
     }
 
-    private ReleaseVersionInteractor CreateInteractor() => new(_fakeVersionDao, _fakeProductDao);
+    private ReleaseVersionInteractor CreateInteractor()
+    {
+        return new(_fakeVersionDao, _fakeProductDao);
+    }
 
     [Fact]
     public async Task ReleaseVersion_NotExistingVersion_VersionDoesNotExistOutput()

@@ -30,11 +30,9 @@ let private addChangeTrackerAccountSql =
     VALUES ('a00788cb-03f8-4a8c-84b6-756622550e8c', 'ChangeTracker', null, null, '2021-05-23 20:40:38.879023')
     on conflict (id) do nothing"""
 
-let private fixUniqueIndexOnAccountNameSql = 
-    [
-        "CREATE UNIQUE INDEX IF NOT EXISTS account_name_unique ON account (LOWER(name)) where deleted_at is null"
-        "drop index if exists account_name_deletedat_unique"
-    ]
+let private fixUniqueIndexOnAccountNameSql =
+    [ "CREATE UNIQUE INDEX IF NOT EXISTS account_name_unique ON account (LOWER(name)) where deleted_at is null"
+      "drop index if exists account_name_deletedat_unique" ]
 
 let create (dbConnection: IDbConnection) =
     dbConnection.Execute(createAccountSql) |> ignore

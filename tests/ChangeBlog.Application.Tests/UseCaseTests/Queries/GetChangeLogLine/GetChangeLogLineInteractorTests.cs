@@ -13,8 +13,8 @@ namespace ChangeBlog.Application.Tests.UseCaseTests.Queries.GetChangeLogLine;
 public class GetChangeLogLineInteractorTests
 {
     private readonly FakeChangeLogDao _changeLogQueriesStub;
-    private readonly Mock<IGetChangeLogLineOutputPort> _outputPortMock;
     private readonly FakeUserDao _fakeUserDao;
+    private readonly Mock<IGetChangeLogLineOutputPort> _outputPortMock;
 
     public GetChangeLogLineInteractorTests()
     {
@@ -23,7 +23,10 @@ public class GetChangeLogLineInteractorTests
         _outputPortMock = new Mock<IGetChangeLogLineOutputPort>(MockBehavior.Strict);
     }
 
-    private GetChangeLogLineInteractor CreateInteractor() => new(_changeLogQueriesStub, _fakeUserDao);
+    private GetChangeLogLineInteractor CreateInteractor()
+    {
+        return new(_changeLogQueriesStub, _fakeUserDao);
+    }
 
     [Fact]
     public async Task GetChangeLogLine_HappyPath_Successful()
@@ -67,7 +70,8 @@ public class GetChangeLogLineInteractorTests
         // assert
         var expectedCreatedAt = DateTimeOffset.Parse("2021-07-26T02:00:00+02:00");
         _outputPortMock.Verify(
-            m => m.LineFound(It.Is<ChangeLogLineResponseModel>(r => r.CreatedAt.LocalDateTime == expectedCreatedAt)), Times.Once);
+            m => m.LineFound(It.Is<ChangeLogLineResponseModel>(r => r.CreatedAt.LocalDateTime == expectedCreatedAt)),
+            Times.Once);
     }
 
     [Fact]

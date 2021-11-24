@@ -30,7 +30,7 @@ public class AddExternalIdentityInteractorTests
 
     private AddExternalIdentityInteractor CreateInteractor()
     {
-        return new(_fakeExternalUserInfoDao, _fakeUserDao, _unitOfWorkMock.Object);
+        return new AddExternalIdentityInteractor(_fakeExternalUserInfoDao, _fakeUserDao, _unitOfWorkMock.Object);
     }
 
     [Fact]

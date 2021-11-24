@@ -29,7 +29,7 @@ public class AddProductInteractorTests
 
     private AddProductInteractor CreateInteractor()
     {
-        return new(_fakeAccountDao,
+        return new AddProductInteractor(_fakeAccountDao,
             _fakeVersioningSchemeDao,
             _fakeProductDao,
             _unitOfWorkMock.Object);

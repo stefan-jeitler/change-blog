@@ -28,6 +28,6 @@ public class DefaultResponse
 
     public static DefaultResponse Create(string message, IReadOnlyDictionary<string, string> resourceIds)
     {
-        return new(message, resourceIds);
+        return new DefaultResponse(message, resourceIds);
     }
 }

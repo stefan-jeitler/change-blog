@@ -30,7 +30,8 @@ public class AuthorizationService
 
     public AuthorizationState GetAuthorizationState(Permission permission)
     {
-        if (_accountRoles.All(x => x.Name.Value != Role.DefaultUser)) return AuthorizationState.Inaccessible;
+        if (_accountRoles.All(x => x.Name.Value != Role.DefaultUser))
+            return AuthorizationState.Inaccessible;
 
         if (_productRoles.Count > 0)
             return _productRoles.Any(r => r.Permissions.Contains(permission))

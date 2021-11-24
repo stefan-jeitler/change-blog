@@ -34,7 +34,7 @@ public class AssignPendingLineToVersionInteractorTests
 
     private AssignPendingLineToVersionInteractor CreateInteractor()
     {
-        return new(_fakeVersionDao, _fakeChangeLogDao,
+        return new AssignPendingLineToVersionInteractor(_fakeVersionDao, _fakeChangeLogDao,
             _fakeChangeLogDao, _unitOfWorkMock.Object);
     }
 

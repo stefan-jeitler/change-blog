@@ -48,10 +48,10 @@ public record ClVersionValue
         var c = candidate.Trim();
 
         if (c == string.Empty)
-            return new ArgumentException("Version value cannot be empty.", nameof(candidate));
+            return new ArgumentException("Version cannot be empty.", nameof(candidate));
 
-        if (c.Contains(" "))
-            return new ArgumentException("Whitespaces in a versionValue are not allowed.");
+        if (c.Contains(' '))
+            return new ArgumentException("Whitespaces are not allowed in Versions.");
 
         if (c.Length > MaxLength)
             return new ArgumentException($"Version too long. max length {MaxLength}.");

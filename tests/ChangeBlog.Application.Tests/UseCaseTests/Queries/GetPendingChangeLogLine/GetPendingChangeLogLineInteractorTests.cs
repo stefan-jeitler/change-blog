@@ -26,7 +26,7 @@ public class GetPendingChangeLogLineInteractorTests
 
     private GetPendingChangeLogLineInteractor CreateInteractor()
     {
-        return new(_fakeChangeLogDao, _fakeUserDao, _fakeProductDao);
+        return new GetPendingChangeLogLineInteractor(_fakeChangeLogDao, _fakeUserDao, _fakeProductDao);
     }
 
     [Fact]

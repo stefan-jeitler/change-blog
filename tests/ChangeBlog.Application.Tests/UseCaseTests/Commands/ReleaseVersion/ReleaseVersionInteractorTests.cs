@@ -26,7 +26,7 @@ public class ReleaseVersionInteractorTests
 
     private ReleaseVersionInteractor CreateInteractor()
     {
-        return new(_fakeVersionDao, _fakeProductDao);
+        return new ReleaseVersionInteractor(_fakeVersionDao, _fakeProductDao);
     }
 
     [Fact]

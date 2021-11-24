@@ -23,7 +23,7 @@ public class GetPendingChangeLogsInteractorTest
 
     private GetPendingChangeLogsInteractor CreateInteractor()
     {
-        return new(_fakeChangeLogDao, _fakeUserDao, _fakeProductDao);
+        return new GetPendingChangeLogsInteractor(_fakeChangeLogDao, _fakeUserDao, _fakeProductDao);
     }
 
     [Fact]

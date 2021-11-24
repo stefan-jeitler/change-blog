@@ -36,7 +36,7 @@ public class AddChangeLogLineInteractorTests
 
     private AddChangeLogLineInteractor CreateInteractor()
     {
-        return new(_fakeChangeLogDao, _fakeChangeLogDao,
+        return new AddChangeLogLineInteractor(_fakeChangeLogDao, _fakeChangeLogDao,
             _unitOfWorkMock.Object, _fakeVersionDao);
     }
 

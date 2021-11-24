@@ -15,15 +15,15 @@
     }
 
     $buildArgs = @(
-    $Project
-    "-Restore"
-    "-MaxCpuCount"
-    "-Target:Build"
-    "-Property:Configuration=$Configuration"
-    "-Property:Version=$Version"
-    "-ConsoleLoggerParameters:Summary"
-    "-Verbosity:Minimal"
-    "-NoLogo"
+        $Project
+        "-Restore"
+        "-MaxCpuCount"
+        "-Target:Build"
+        "-Property:Configuration=$Configuration"
+        "-Property:Version=$Version"
+        "-ConsoleLoggerParameters:Summary"
+        "-Verbosity:Minimal"
+        "-NoLogo"
     )
 
     Write-Host "`nMSBuild arguments:"

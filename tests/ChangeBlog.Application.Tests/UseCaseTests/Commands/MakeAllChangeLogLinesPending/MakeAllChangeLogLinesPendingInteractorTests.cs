@@ -32,7 +32,7 @@ public class MakeAllChangeLogLinesPendingInteractorTests
 
     private MakeAllChangeLogLinesPendingInteractor CreateInteractor()
     {
-        return new(_fakeVersionDao, _fakeChangeLogDao,
+        return new MakeAllChangeLogLinesPendingInteractor(_fakeVersionDao, _fakeChangeLogDao,
             _fakeChangeLogDao, _unitOfWorkMock.Object);
     }
 

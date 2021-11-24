@@ -21,7 +21,7 @@ public class LineParsingRequestModelTests
 
     private LineParserRequestModel CreateRequestModel()
     {
-        return new(_testText, _testLabels, _testIssues);
+        return new LineParserRequestModel(_testText, _testLabels, _testIssues);
     }
 
     [Fact]

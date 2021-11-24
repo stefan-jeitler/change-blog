@@ -21,7 +21,7 @@ public class CloseProductInteractorTests
 
     private CloseProductInteractor CreateInteractor()
     {
-        return new(_fakeProductDao);
+        return new CloseProductInteractor(_fakeProductDao);
     }
 
     [Fact]

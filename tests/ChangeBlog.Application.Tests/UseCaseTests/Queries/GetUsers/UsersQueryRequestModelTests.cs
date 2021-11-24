@@ -22,7 +22,7 @@ public class UsersQueryRequestModelTests
 
     private UsersQueryRequestModel CreateRequestModel()
     {
-        return new(_testUserId, _testAccountId, _testLastUserId, _testCount);
+        return new UsersQueryRequestModel(_testUserId, _testAccountId, _testLastUserId, _testCount);
     }
 
     [Fact]

@@ -26,7 +26,7 @@ public class GetVersionsInteractorTest
 
     private GetVersionsInteractor CreateInteractor()
     {
-        return new(_fakeProductDao, _fakeVersionDao, _changeLogDao, _fakeUserDao);
+        return new GetVersionsInteractor(_fakeProductDao, _fakeVersionDao, _changeLogDao, _fakeUserDao);
     }
 
     [Fact]

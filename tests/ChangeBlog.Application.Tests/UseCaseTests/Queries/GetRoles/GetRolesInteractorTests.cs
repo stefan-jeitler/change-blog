@@ -19,7 +19,7 @@ public class GetRolesInteractorTests
 
     private GetRolesInteractor CreateInteractor()
     {
-        return new(_rolesDaoMock.Object);
+        return new GetRolesInteractor(_rolesDaoMock.Object);
     }
 
     [Fact]

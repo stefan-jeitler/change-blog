@@ -27,7 +27,7 @@ public class VersionRequestModelTests
 
     private VersionRequestModel CreateRequestModel()
     {
-        return new(_testUserId, _testProductId, _testVersion,
+        return new VersionRequestModel(_testUserId, _testProductId, _testVersion,
             _testName, _testLines, _testReleaseImmediately);
     }
 

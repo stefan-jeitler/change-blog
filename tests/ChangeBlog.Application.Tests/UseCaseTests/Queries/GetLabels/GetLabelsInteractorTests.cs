@@ -19,7 +19,7 @@ public class GetLabelsInteractorTests
 
     private GetLabelsInteractor CreateInteractor()
     {
-        return new(_fakeChangeLogDao);
+        return new GetLabelsInteractor(_fakeChangeLogDao);
     }
 
     [Fact]

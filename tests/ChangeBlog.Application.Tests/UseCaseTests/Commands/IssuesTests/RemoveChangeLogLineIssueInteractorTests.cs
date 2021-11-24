@@ -28,7 +28,7 @@ public class RemoveChangeLogLineIssueInteractorTests
 
     private DeleteChangeLogLineIssueInteractor CreateInteractor()
     {
-        return new(_fakeChangeLogDao, _fakeChangeLogDao, _unitOfWorkMock.Object);
+        return new DeleteChangeLogLineIssueInteractor(_fakeChangeLogDao, _fakeChangeLogDao, _unitOfWorkMock.Object);
     }
 
     [Fact]

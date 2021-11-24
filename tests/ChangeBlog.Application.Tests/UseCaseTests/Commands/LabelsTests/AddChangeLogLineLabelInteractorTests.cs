@@ -28,7 +28,7 @@ public class AddChangeLogLineLabelInteractorTests
 
     private AddChangeLogLineLabelInteractor CreateInteractor()
     {
-        return new(_unitOfWorkMock.Object, _fakeChangeLogDao, _fakeChangeLogDao);
+        return new AddChangeLogLineLabelInteractor(_unitOfWorkMock.Object, _fakeChangeLogDao, _fakeChangeLogDao);
     }
 
     [Fact]

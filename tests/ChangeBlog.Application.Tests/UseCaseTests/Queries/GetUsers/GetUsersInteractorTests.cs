@@ -18,7 +18,7 @@ public class GetUsersInteractorTests
 
     private GetUsersInteractor CreateInteractor()
     {
-        return new(_fakeUserDao);
+        return new GetUsersInteractor(_fakeUserDao);
     }
 
     [Fact]

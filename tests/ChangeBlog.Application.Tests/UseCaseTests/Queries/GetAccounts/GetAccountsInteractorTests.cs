@@ -23,7 +23,7 @@ public class GetAccountsInteractorTests
 
     private GetAccountsInteractor CreateInteractor()
     {
-        return new(_fakeAccountDao, _fakeUserDao, _fakeVersioningSchemeDao);
+        return new GetAccountsInteractor(_fakeAccountDao, _fakeUserDao, _fakeVersioningSchemeDao);
     }
 
     [Fact]

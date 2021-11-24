@@ -34,7 +34,7 @@ public class AddOrUpdateVersionInteractorTests
 
     private AddOrUpdateVersionInteractor CreateInteractor()
     {
-        return new(_fakeProductDao, _fakeVersionDao,
+        return new AddOrUpdateVersionInteractor(_fakeProductDao, _fakeVersionDao,
             _unitOfWorkMock.Object, _fakeChangeLogDao, _fakeChangeLogDao);
     }
 

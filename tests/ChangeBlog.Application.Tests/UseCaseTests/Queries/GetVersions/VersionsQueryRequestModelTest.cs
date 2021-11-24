@@ -26,7 +26,7 @@ public class VersionsQueryRequestModelTest
 
     private VersionsQueryRequestModel CreateRequestModel()
     {
-        return new(_testProductId, _testLastVersionId, _testUserId,
+        return new VersionsQueryRequestModel(_testProductId, _testLastVersionId, _testUserId,
             _testSearchTerm, _testLimit, _testIncludeDeleted);
     }
 

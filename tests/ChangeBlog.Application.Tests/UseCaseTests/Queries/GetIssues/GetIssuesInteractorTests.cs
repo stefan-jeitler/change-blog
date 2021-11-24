@@ -19,7 +19,7 @@ public class GetIssuesInteractorTests
 
     private GetIssuesInteractor CreateInteractor()
     {
-        return new(_fakeChangeLogDao);
+        return new GetIssuesInteractor(_fakeChangeLogDao);
     }
 
     [Fact]

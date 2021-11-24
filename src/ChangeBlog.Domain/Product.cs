@@ -72,7 +72,7 @@ public class Product
 
     public Product Close()
     {
-        return new(Id, AccountId, Name, VersioningScheme, LanguageCode, CreatedByUser, CreatedAt,
+        return new Product(Id, AccountId, Name, VersioningScheme, LanguageCode, CreatedByUser, CreatedAt,
             DateTime.UtcNow);
     }
 }

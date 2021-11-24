@@ -33,7 +33,7 @@ public class AssignAllPendingLinesToVersionInteractorTests
 
     private AssignAllPendingLinesToVersionInteractor CreateInteractor()
     {
-        return new(_fakeVersionDao, _unitOfWork.Object,
+        return new AssignAllPendingLinesToVersionInteractor(_fakeVersionDao, _unitOfWork.Object,
             _fakeChangeLogDao, _fakeChangeLogDao);
     }
 

@@ -24,7 +24,7 @@ public class ProductRequestModelTests
 
     private ProductRequestModel CreateRequestModel()
     {
-        return new(_testAccountId, _testName, _testSchemeId, _testLangCode, _testUserId);
+        return new ProductRequestModel(_testAccountId, _testName, _testSchemeId, _testLangCode, _testUserId);
     }
 
     [Fact]

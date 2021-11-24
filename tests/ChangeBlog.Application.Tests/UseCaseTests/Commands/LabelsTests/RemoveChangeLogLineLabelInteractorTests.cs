@@ -28,7 +28,7 @@ public class RemoveChangeLogLineLabelInteractorTests
 
     private DeleteChangeLogLineLabelInteractor CreateInteractor()
     {
-        return new(_unitOfWorkMock.Object, _fakeChangeLogDao, _fakeChangeLogDao);
+        return new DeleteChangeLogLineLabelInteractor(_unitOfWorkMock.Object, _fakeChangeLogDao, _fakeChangeLogDao);
     }
 
     [Fact]

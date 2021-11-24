@@ -25,7 +25,7 @@ public class GetChangeLogLineInteractorTests
 
     private GetChangeLogLineInteractor CreateInteractor()
     {
-        return new(_changeLogQueriesStub, _fakeUserDao);
+        return new GetChangeLogLineInteractor(_changeLogQueriesStub, _fakeUserDao);
     }
 
     [Fact]

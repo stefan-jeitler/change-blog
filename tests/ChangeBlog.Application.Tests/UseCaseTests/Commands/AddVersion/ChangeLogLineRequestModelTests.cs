@@ -21,7 +21,7 @@ public class ChangeLogLineRequestModelTests
 
     private ChangeLogLineRequestModel CreateRequestModel()
     {
-        return new(_testText, _testLabels, _testIssues);
+        return new ChangeLogLineRequestModel(_testText, _testLabels, _testIssues);
     }
 
     [Fact]

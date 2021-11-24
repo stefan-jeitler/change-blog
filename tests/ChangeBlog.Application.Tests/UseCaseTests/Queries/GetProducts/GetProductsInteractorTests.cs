@@ -24,7 +24,7 @@ public class GetProductsInteractorTests
 
     private GetProductsInteractor CreateInteractor()
     {
-        return new(_fakeProductDao, _fakeUserDao, _fakeAccountDao);
+        return new GetProductsInteractor(_fakeProductDao, _fakeUserDao, _fakeAccountDao);
     }
 
     [Fact]

@@ -26,7 +26,7 @@ public class DeleteVersionInteractorTests
 
     private DeleteVersionInteractor CreateInteractor()
     {
-        return new(_fakeVersionDao, _fakeProductDao);
+        return new DeleteVersionInteractor(_fakeVersionDao, _fakeProductDao);
     }
 
     [Fact]

@@ -26,7 +26,7 @@ public class PendingLineRequestModelTests
 
     private PendingChangeLogLineRequestModel CreateRequestModel()
     {
-        return new(_testUserId, _testProductId, _testText, _testLabels, _testIssues);
+        return new PendingChangeLogLineRequestModel(_testUserId, _testProductId, _testText, _testLabels, _testIssues);
     }
 
     [Fact]

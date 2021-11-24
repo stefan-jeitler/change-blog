@@ -25,7 +25,7 @@ public class VersionIdChangeLogLineRequestModelTests
 
     private VersionIdChangeLogLineRequestModel CreateRequestModel()
     {
-        return new(_testUserId, _testVersionId, _testText, _testLabels, _testIssues);
+        return new VersionIdChangeLogLineRequestModel(_testUserId, _testVersionId, _testText, _testLabels, _testIssues);
     }
 
     [Fact]

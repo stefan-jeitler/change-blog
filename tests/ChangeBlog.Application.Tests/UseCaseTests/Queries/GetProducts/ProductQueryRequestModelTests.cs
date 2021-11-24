@@ -24,7 +24,7 @@ public class ProductsQueryRequestModelTests
 
     private AccountProductQueryRequestModel CreateRequestModel()
     {
-        return new(_testUserId, _testAccountId, _testLastProductId, _testCount, true);
+        return new AccountProductQueryRequestModel(_testUserId, _testAccountId, _testLastProductId, _testCount, true);
     }
 
     [Fact]

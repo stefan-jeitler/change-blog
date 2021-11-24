@@ -18,7 +18,7 @@ public class VersionIdAssignmentRequestModelTests
 
     private VersionIdAssignmentRequestModel CreateRequestModel()
     {
-        return new(_testProductId, _testVersionId);
+        return new VersionIdAssignmentRequestModel(_testProductId, _testVersionId);
     }
 
     [Fact]

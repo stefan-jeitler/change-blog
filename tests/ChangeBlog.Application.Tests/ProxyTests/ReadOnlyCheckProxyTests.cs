@@ -32,7 +32,7 @@ public class ReadOnlyCheckProxyTests
 
     private ChangeLogLineReadonlyCheckProxy CreateProxy()
     {
-        return new(_fakeChangeLogDao, _fakeVersionDao, _memoryCache, _fakeProductDao);
+        return new ChangeLogLineReadonlyCheckProxy(_fakeChangeLogDao, _fakeVersionDao, _memoryCache, _fakeProductDao);
     }
 
     [Fact]

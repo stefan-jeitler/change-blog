@@ -22,7 +22,7 @@ public class DeleteChangeLogLineInteractorTests
 
     private DeleteChangeLogLineInteractor CreateInteractor()
     {
-        return new(_fakeChangeLogDao, _fakeChangeLogDao);
+        return new DeleteChangeLogLineInteractor(_fakeChangeLogDao, _fakeChangeLogDao);
     }
 
     [Fact]

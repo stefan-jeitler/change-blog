@@ -11,17 +11,15 @@ namespace ChangeBlog.DataAccess.MicrosoftIdentity;
 public class ExternalUserInfoDao : IExternalUserInfoDao
 {
     private const string IdentityProvider = "MicrosoftIdentityPlatform";
-    private readonly string _baseUrl;
 
     private readonly HttpClient _httpClient;
     private readonly string[] _scopes = { "openid", "profile", "email", "offline_access" };
     private readonly ITokenAcquisition _tokenAcquisition;
 
-    public ExternalUserInfoDao(ITokenAcquisition tokenAcquisition, HttpClient httpClient, string baseUrl)
+    public ExternalUserInfoDao(ITokenAcquisition tokenAcquisition, HttpClient httpClient)
     {
         _tokenAcquisition = tokenAcquisition;
         _httpClient = httpClient;
-        _baseUrl = baseUrl;
     }
 
     public async Task<UserInfo> GetAsync()
@@ -50,11 +48,9 @@ public class ExternalUserInfoDao : IExternalUserInfoDao
             IdentityProvider);
     }
 
-    private HttpRequestMessage CreateMessage(string token)
+    private static HttpRequestMessage CreateMessage(string token)
     {
-        var userInfoEndpoint = new Uri($"{_baseUrl.TrimEnd('/')}/userinfo");
-
-        return new HttpRequestMessage(HttpMethod.Get, userInfoEndpoint)
+        return new HttpRequestMessage(HttpMethod.Get, string.Empty)
         {
             Headers =
             {

@@ -5,11 +5,11 @@
     </PropertyGroup>
 
     <ItemGroup>
-        <ProjectReference Include="..\ChangeBlog.Application\ChangeBlog.Application.csproj"/>
+        <ProjectReference Include="..\ChangeBlog.Application\ChangeBlog.Application.csproj" />
     </ItemGroup>
 
     <ItemGroup>
-        <PackageReference Include="Microsoft.Identity.Web" Version="1.21.0"/>
+        <PackageReference Include="Microsoft.Identity.Web" Version="1.21.1" />
     </ItemGroup>
 
 </Project>

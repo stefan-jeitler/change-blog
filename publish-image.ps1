@@ -24,7 +24,7 @@
 
     $LocalImageName = "$( $ImageName ):$Tag"
 
-    docker build -t $LocalImageName -f $Dockerfile --build-arg Version = $version $SourceDir
+    docker build -t $LocalImageName -f $Dockerfile --build-arg Version=$version $SourceDir
 
     if ($LastExitCode -ne 0)
     {

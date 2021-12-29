@@ -28,7 +28,7 @@ public class UserTests
 
     private User CreateUser()
     {
-        return new(_testUserId, _testEmail, _testFirstName, _testLastName, _testTimeZone,
+        return new User(_testUserId, _testEmail, _testFirstName, _testLastName, _testTimeZone,
             _testDeletionDate, _testCreationDate);
     }
 

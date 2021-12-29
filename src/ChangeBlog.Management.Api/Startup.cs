@@ -18,16 +18,16 @@ namespace ChangeBlog.Management.Api;
 
 public class Startup
 {
+    private readonly IConfiguration _configuration;
+
     public Startup(IConfiguration configuration)
     {
-        Configuration = configuration;
+        _configuration = configuration;
     }
-
-    public IConfiguration Configuration { get; }
 
     public void ConfigureServices(IServiceCollection services)
     {
-        var settings = Configuration
+        var settings = _configuration
             .GetSection("Authentication:MicrosoftIdentity")
             .Get<MicrosoftIdentityAuthenticationSettings>();
 
@@ -46,22 +46,25 @@ public class Startup
             .AddSwagger()
             .AddApplicationUseCases();
 
-        var connectionString = Configuration.GetConnectionString("ChangeBlogDb");
+        var connectionString = _configuration.GetConnectionString("ChangeBlogDb");
         services.AddPostgresDataAccess(connectionString);
 
-        var userInfoEndpointBaseUrl = Configuration.GetValue<string>("UserInfoEndpointBaseUrl");
+        var userInfoEndpointBaseUrl = _configuration.GetValue<string>("UserInfoEndpointBaseUrl");
         services.AddMicrosoftIdentityDataAccess(userInfoEndpointBaseUrl);
     }
 
 
     public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
     {
-        if (env.IsDevelopment()) app.UseDeveloperExceptionPage();
+        if (env.IsDevelopment()) 
+            app.UseDeveloperExceptionPage();
 
         app.AddSwagger();
 
         app.UseStaticFiles();
-        if (!env.IsDevelopment()) app.UseSpaStaticFiles();
+        
+        if (!env.IsDevelopment())
+            app.UseSpaStaticFiles();
 
         app.UseRouting();
 
@@ -79,15 +82,17 @@ public class Startup
         {
             spa.Options.SourcePath = "ClientApp";
 
-            if (env.IsDevelopment()) spa.UseAngularCliServer("start");
+            if (env.IsDevelopment())
+                spa.UseAngularCliServer("start");
         });
     }
 
     private static ActionResult CustomErrorMessage(ActionContext context)
     {
         var firstError = context.ModelState
-            .FirstOrDefault(modelError => modelError.Value.Errors.Count > 0)
-            .Value.Errors.FirstOrDefault()?
+            .Where(x => x.Value is not null)
+            .FirstOrDefault(x => x.Value.Errors.Count > 0)
+            .Value?.Errors.FirstOrDefault()?
             .ErrorMessage ?? "Unknown";
 
         return new BadRequestObjectResult(DefaultResponse.Create(firstError));

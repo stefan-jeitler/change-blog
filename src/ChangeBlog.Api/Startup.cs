@@ -25,13 +25,6 @@ public class Startup
         _configuration = configuration;
     }
 
-    private static void ConfigureControllers(IServiceCollection services)
-    {
-        services
-            .AddControllers(o => { o.Filters.Add(typeof(AuthorizationFilter)); })
-            .ConfigureApiBehaviorOptions(o => o.InvalidModelStateResponseFactory = CustomErrorMessage);
-    }
-
     public void ConfigureServices(IServiceCollection services)
     {
         ConfigureControllers(services);
@@ -62,6 +55,13 @@ public class Startup
             endpoints
                 .MapControllers()
                 .RequireAuthorization());
+    }
+
+    private static void ConfigureControllers(IServiceCollection services)
+    {
+        services
+            .AddControllers(o => { o.Filters.Add(typeof(AuthorizationFilter)); })
+            .ConfigureApiBehaviorOptions(o => o.InvalidModelStateResponseFactory = CustomErrorMessage);
     }
 
     private static ActionResult CustomErrorMessage(ActionContext context)

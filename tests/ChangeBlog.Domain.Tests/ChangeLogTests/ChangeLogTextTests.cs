@@ -110,9 +110,9 @@ public class ChangeLogTextTests
     {
         var text = ChangeLogText.Parse("New Feature added");
 
-        string labelStringified = text;
+        string textStringified = text;
 
-        labelStringified.Should().Be(text.Value);
+        textStringified.Should().Be(text.Value);
     }
 
     [Fact]

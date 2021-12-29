@@ -31,7 +31,7 @@ public class ClVersionTests
 
     private ClVersion CreateVersion()
     {
-        return new(_testId, _testProductId, _testVersionValue, _testName,
+        return new ClVersion(_testId, _testProductId, _testVersionValue, _testName,
             _testReleaseDate, _testUserId, _testCreationDate, _testDeletedDate);
     }
 

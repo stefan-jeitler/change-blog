@@ -63,8 +63,7 @@ public class AccountTests
 
         act.Should().ThrowExactly<ArgumentNullException>();
     }
-
-
+    
     [Fact]
     public void Create_WithNullVersioningSchemeId_NullIsAllowed()
     {

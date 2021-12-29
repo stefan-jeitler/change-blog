@@ -92,7 +92,8 @@ public static class ConflictExtensions
             [KnownIdentifiers.ChangeLogLineId] = changeLogLineId.ToString()
         };
 
-        if (versionId.HasValue) resourceIds.Add(KnownIdentifiers.VersionId, versionId.Value.ToString());
+        if (versionId.HasValue) 
+            resourceIds.Add(KnownIdentifiers.VersionId, versionId.Value.ToString());
 
         var responseMessage =
             DefaultResponse.Create("Error while inserting or updating ChangeLogLines. Please try again later.",

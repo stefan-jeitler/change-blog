@@ -59,7 +59,7 @@ public class AddProductApiPresenter : BaseApiPresenter, IAddProductOutputPort
     {
         var resourceIds = new Dictionary<string, string>
         {
-            [nameof(versioningSchemeId)] = versioningSchemeId.ToString()
+            [KnownIdentifiers.VersioningSchemeId] = versioningSchemeId.ToString()
         };
 
         Response = new NotFoundObjectResult(DefaultResponse.Create("VersioningScheme not found.",

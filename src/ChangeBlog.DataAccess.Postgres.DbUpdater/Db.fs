@@ -32,7 +32,6 @@ let constraintExists (dbConnection: IDbConnection) (constraintName: string) =
 
     dbConnection.ExecuteScalar<bool>(constraintExistsSql, parameters)
 
-
 let getLatestSchemaVersion (dbConnection: IDbConnection) =
     let tableExists =
         tableExists dbConnection "schema_version"

@@ -23,7 +23,11 @@ public class Product
     {
     }
 
-    public Product(Guid id, Guid accountId, Name name, VersioningScheme versioningScheme, Name languageCode,
+    public Product(Guid id,
+        Guid accountId,
+        Name name,
+        VersioningScheme versioningScheme, 
+        Name languageCode,
         Guid createdByUser,
         DateTime createdAt,
         DateTime? closedAt)

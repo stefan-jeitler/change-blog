@@ -21,7 +21,7 @@ public class ChangeLogLineIssuesTests
     private static readonly DateTime TestCreationDate = DateTime.Parse("2021-04.02T18:28");
 
     [Fact]
-    public void Create_WithIssues_IssuesExists()
+    public void Create_WithIssues_IssuesExist()
     {
         var line = new ChangeLogLine(TestId,
             TestVersionId,

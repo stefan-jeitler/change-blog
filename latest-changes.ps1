@@ -36,7 +36,6 @@ function Publish-LatestChanges
     Write-Host "latest changes:"
     Write-Host $latestChanges
 
-
     $endpoint = "$($BaseUrl.TrimEnd("/") )/api/v1/products/$ProductId/versions"
 
     $parameters = @{

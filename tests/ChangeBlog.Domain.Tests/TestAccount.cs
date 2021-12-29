@@ -4,7 +4,7 @@ using ChangeBlog.Domain.Version;
 
 namespace ChangeBlog.Domain.Tests;
 
-public class TestAccount
+public static class TestAccount
 {
     public static readonly Guid Id = Guid.Parse("c1b588ee-069d-453e-8f74-fc43b7ae0649");
     public static readonly Name Name = Name.Parse("Test Account");

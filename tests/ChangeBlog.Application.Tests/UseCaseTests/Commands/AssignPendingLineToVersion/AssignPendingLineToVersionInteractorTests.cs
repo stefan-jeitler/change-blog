@@ -1,7 +1,7 @@
 using System;
 using System.Linq;
 using System.Threading.Tasks;
-using ChangeBlog.Application.DataAccess;
+using ChangeBlog.Application.Boundaries.DataAccess;
 using ChangeBlog.Application.Tests.TestDoubles;
 using ChangeBlog.Application.UseCases.Commands.AssignPendingLineToVersion;
 using ChangeBlog.Application.UseCases.Commands.AssignPendingLineToVersion.Models;

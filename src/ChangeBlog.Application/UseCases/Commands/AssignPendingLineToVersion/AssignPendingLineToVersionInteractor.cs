@@ -1,8 +1,8 @@
 using System;
 using System.Threading.Tasks;
-using ChangeBlog.Application.DataAccess;
-using ChangeBlog.Application.DataAccess.ChangeLog;
-using ChangeBlog.Application.DataAccess.Versions;
+using ChangeBlog.Application.Boundaries.DataAccess;
+using ChangeBlog.Application.Boundaries.DataAccess.ChangeLog;
+using ChangeBlog.Application.Boundaries.DataAccess.Versions;
 using ChangeBlog.Application.UseCases.Commands.AssignPendingLineToVersion.Models;
 using ChangeBlog.Domain.ChangeLog;
 using ChangeBlog.Domain.Version;

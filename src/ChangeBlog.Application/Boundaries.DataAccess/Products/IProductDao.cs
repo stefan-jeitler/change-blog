@@ -5,7 +5,7 @@ using ChangeBlog.Domain;
 using ChangeBlog.Domain.Miscellaneous;
 using CSharpFunctionalExtensions;
 
-namespace ChangeBlog.Application.DataAccess.Products;
+namespace ChangeBlog.Application.Boundaries.DataAccess.Products;
 
 public interface IProductDao
 {

@@ -3,7 +3,7 @@ using System.Net.Http;
 using System.Net.Http.Headers;
 using System.Net.Http.Json;
 using System.Threading.Tasks;
-using ChangeBlog.Application.DataAccess.ExternalIdentity;
+using ChangeBlog.Application.Boundaries.DataAccess.ExternalIdentity;
 using Microsoft.Identity.Web;
 
 namespace ChangeBlog.DataAccess.MicrosoftIdentity;

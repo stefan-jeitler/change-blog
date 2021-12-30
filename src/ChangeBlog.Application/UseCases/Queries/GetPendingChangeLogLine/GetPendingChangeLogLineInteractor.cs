@@ -1,9 +1,9 @@
 using System;
 using System.Linq;
 using System.Threading.Tasks;
-using ChangeBlog.Application.DataAccess.ChangeLog;
-using ChangeBlog.Application.DataAccess.Products;
-using ChangeBlog.Application.DataAccess.Users;
+using ChangeBlog.Application.Boundaries.DataAccess.ChangeLog;
+using ChangeBlog.Application.Boundaries.DataAccess.Products;
+using ChangeBlog.Application.Boundaries.DataAccess.Users;
 using ChangeBlog.Application.Extensions;
 using ChangeBlog.Application.UseCases.Queries.SharedModels;
 

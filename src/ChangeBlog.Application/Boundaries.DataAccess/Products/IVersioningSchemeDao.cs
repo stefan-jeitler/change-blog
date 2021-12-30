@@ -4,7 +4,7 @@ using System.Threading.Tasks;
 using ChangeBlog.Domain.Version;
 using CSharpFunctionalExtensions;
 
-namespace ChangeBlog.Application.DataAccess.Products;
+namespace ChangeBlog.Application.Boundaries.DataAccess.Products;
 
 public interface IVersioningSchemeDao
 {

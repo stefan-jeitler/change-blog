@@ -1,5 +1,5 @@
 ﻿using System.Threading.Tasks;
-using ChangeBlog.Application.DataAccess.ExternalIdentity;
+using ChangeBlog.Application.Boundaries.DataAccess.ExternalIdentity;
 
 namespace ChangeBlog.Application.Tests.TestDoubles;
 

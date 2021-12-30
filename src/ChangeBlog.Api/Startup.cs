@@ -4,7 +4,7 @@ using ChangeBlog.Api.Authorization;
 using ChangeBlog.Api.Shared;
 using ChangeBlog.Api.Shared.DTOs;
 using ChangeBlog.Api.Swagger;
-using ChangeBlog.Application.DataAccess.ExternalIdentity;
+using ChangeBlog.Application.Boundaries.DataAccess.ExternalIdentity;
 using ChangeBlog.DataAccess.MicrosoftIdentity;
 using ChangeBlog.DataAccess.Postgres;
 using Microsoft.AspNetCore.Builder;

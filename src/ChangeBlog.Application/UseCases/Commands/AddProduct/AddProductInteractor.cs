@@ -1,9 +1,9 @@
 using System;
 using System.Linq;
 using System.Threading.Tasks;
-using ChangeBlog.Application.DataAccess;
-using ChangeBlog.Application.DataAccess.Accounts;
-using ChangeBlog.Application.DataAccess.Products;
+using ChangeBlog.Application.Boundaries.DataAccess;
+using ChangeBlog.Application.Boundaries.DataAccess.Accounts;
+using ChangeBlog.Application.Boundaries.DataAccess.Products;
 using ChangeBlog.Domain;
 using ChangeBlog.Domain.Miscellaneous;
 using ChangeBlog.Domain.Version;

@@ -1,6 +1,6 @@
 using System;
 using System.Threading.Tasks;
-using ChangeBlog.Application.DataAccess.Users;
+using ChangeBlog.Application.Boundaries.DataAccess.Users;
 using ChangeBlog.Domain.Authorization;
 
 namespace ChangeBlog.Application.UseCases.Queries.GetAuthorizationState;

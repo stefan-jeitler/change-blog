@@ -1,8 +1,8 @@
 using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
-using ChangeBlog.Application.DataAccess;
-using ChangeBlog.Application.DataAccess.Versions;
+using ChangeBlog.Application.Boundaries.DataAccess;
+using ChangeBlog.Application.Boundaries.DataAccess.Versions;
 using ChangeBlog.Domain.Version;
 using CSharpFunctionalExtensions;
 using Dapper;

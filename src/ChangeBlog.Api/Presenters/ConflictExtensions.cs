@@ -1,8 +1,8 @@
 using System;
 using System.Collections.Generic;
 using ChangeBlog.Api.Shared.DTOs;
-using ChangeBlog.Application.DataAccess;
-using ChangeBlog.Application.DataAccess.Conflicts;
+using ChangeBlog.Application.Boundaries.DataAccess;
+using ChangeBlog.Application.Boundaries.DataAccess.Conflicts;
 using Microsoft.AspNetCore.Mvc;
 
 namespace ChangeBlog.Api.Presenters;

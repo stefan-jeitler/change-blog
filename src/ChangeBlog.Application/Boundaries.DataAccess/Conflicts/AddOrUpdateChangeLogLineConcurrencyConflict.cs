@@ -1,6 +1,6 @@
 using System;
 
-namespace ChangeBlog.Application.DataAccess.Conflicts;
+namespace ChangeBlog.Application.Boundaries.DataAccess.Conflicts;
 
 public class AddOrUpdateChangeLogLineConcurrencyConflict : Conflict
 {

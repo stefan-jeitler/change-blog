@@ -1,5 +1,5 @@
 using System;
-using ChangeBlog.Application.DataAccess;
+using ChangeBlog.Application.Boundaries.DataAccess;
 
 namespace ChangeBlog.Application.UseCases.Commands.Issues.DeleteChangeLogLineIssue;
 

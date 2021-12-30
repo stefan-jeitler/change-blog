@@ -1,8 +1,8 @@
 using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
-using ChangeBlog.Application.DataAccess;
-using ChangeBlog.Application.DataAccess.Products;
+using ChangeBlog.Application.Boundaries.DataAccess;
+using ChangeBlog.Application.Boundaries.DataAccess.Products;
 using ChangeBlog.Domain;
 using ChangeBlog.Domain.Miscellaneous;
 using CSharpFunctionalExtensions;

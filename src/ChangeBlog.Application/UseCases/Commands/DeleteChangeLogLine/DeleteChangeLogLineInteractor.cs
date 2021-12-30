@@ -1,6 +1,6 @@
 using System;
 using System.Threading.Tasks;
-using ChangeBlog.Application.DataAccess.ChangeLog;
+using ChangeBlog.Application.Boundaries.DataAccess.ChangeLog;
 using CSharpFunctionalExtensions;
 
 // ReSharper disable SwitchStatementHandlesSomeKnownEnumValuesWithDefault

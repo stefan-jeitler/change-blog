@@ -4,7 +4,7 @@ using System.Threading.Tasks;
 using ChangeBlog.Domain.ChangeLog;
 using CSharpFunctionalExtensions;
 
-namespace ChangeBlog.Application.DataAccess.ChangeLog;
+namespace ChangeBlog.Application.Boundaries.DataAccess.ChangeLog;
 
 public interface IChangeLogCommandsDao
 {

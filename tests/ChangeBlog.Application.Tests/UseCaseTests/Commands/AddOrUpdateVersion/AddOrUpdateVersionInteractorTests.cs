@@ -1,7 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
-using ChangeBlog.Application.DataAccess;
+using ChangeBlog.Application.Boundaries.DataAccess;
 using ChangeBlog.Application.Tests.TestDoubles;
 using ChangeBlog.Application.UseCases.Commands.AddOrUpdateVersion;
 using ChangeBlog.Application.UseCases.Commands.AddOrUpdateVersion.Models;

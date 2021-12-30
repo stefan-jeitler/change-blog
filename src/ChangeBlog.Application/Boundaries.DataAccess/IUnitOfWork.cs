@@ -1,4 +1,4 @@
-namespace ChangeBlog.Application.DataAccess;
+namespace ChangeBlog.Application.Boundaries.DataAccess;
 
 public interface IUnitOfWork
 {

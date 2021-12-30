@@ -1,8 +1,8 @@
 ﻿using System;
 using System.Threading.Tasks;
-using ChangeBlog.Application.DataAccess;
-using ChangeBlog.Application.DataAccess.ExternalIdentity;
-using ChangeBlog.Application.DataAccess.Users;
+using ChangeBlog.Application.Boundaries.DataAccess;
+using ChangeBlog.Application.Boundaries.DataAccess.ExternalIdentity;
+using ChangeBlog.Application.Boundaries.DataAccess.Users;
 using ChangeBlog.Application.Models;
 using ChangeBlog.Domain;
 using ChangeBlog.Domain.Miscellaneous;

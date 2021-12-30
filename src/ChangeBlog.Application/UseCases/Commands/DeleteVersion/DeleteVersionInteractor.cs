@@ -1,7 +1,7 @@
 using System;
 using System.Threading.Tasks;
-using ChangeBlog.Application.DataAccess.Products;
-using ChangeBlog.Application.DataAccess.Versions;
+using ChangeBlog.Application.Boundaries.DataAccess.Products;
+using ChangeBlog.Application.Boundaries.DataAccess.Versions;
 using ChangeBlog.Domain.Version;
 using CSharpFunctionalExtensions;
 

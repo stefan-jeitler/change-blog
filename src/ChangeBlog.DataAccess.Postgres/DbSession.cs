@@ -1,5 +1,5 @@
 using System.Data;
-using ChangeBlog.Application.DataAccess;
+using ChangeBlog.Application.Boundaries.DataAccess;
 
 namespace ChangeBlog.DataAccess.Postgres;
 

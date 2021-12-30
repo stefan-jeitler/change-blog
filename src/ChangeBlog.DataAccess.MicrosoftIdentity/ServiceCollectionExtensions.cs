@@ -1,6 +1,6 @@
 ﻿using System;
 using System.Net.Http;
-using ChangeBlog.Application.DataAccess.ExternalIdentity;
+using ChangeBlog.Application.Boundaries.DataAccess.ExternalIdentity;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Identity.Web;
 

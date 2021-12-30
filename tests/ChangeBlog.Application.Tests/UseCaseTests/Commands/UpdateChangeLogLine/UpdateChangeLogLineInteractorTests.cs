@@ -1,6 +1,6 @@
 using System;
 using System.Threading.Tasks;
-using ChangeBlog.Application.DataAccess;
+using ChangeBlog.Application.Boundaries.DataAccess;
 using ChangeBlog.Application.Tests.TestDoubles;
 using ChangeBlog.Application.UseCases.Commands.DeleteChangeLogLine;
 using ChangeBlog.Application.UseCases.Commands.UpdateChangeLogLine;

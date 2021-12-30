@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Threading.Tasks;
 using ChangeBlog.Domain;
 
-namespace ChangeBlog.Application.DataAccess.Users;
+namespace ChangeBlog.Application.Boundaries.DataAccess.Users;
 
 public interface IUserAccessDao
 {

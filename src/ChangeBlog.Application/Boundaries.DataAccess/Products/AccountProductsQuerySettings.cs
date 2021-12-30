@@ -1,12 +1,13 @@
 using System;
 
-namespace ChangeBlog.Application.DataAccess.Products;
+namespace ChangeBlog.Application.Boundaries.DataAccess.Products;
 
-public class UserProductsQuerySettings
+public class AccountProductsQuerySettings
 {
-    public UserProductsQuerySettings(Guid userId, Guid? lastProductId = null, ushort limit = 100,
+    public AccountProductsQuerySettings(Guid accountId, Guid userId, Guid? lastProductId = null, ushort limit = 100,
         bool includeClosedProducts = false)
     {
+        AccountId = accountId;
         UserId = userId;
         LastProductId = lastProductId;
         Limit = limit;
@@ -14,6 +15,7 @@ public class UserProductsQuerySettings
     }
 
     public Guid UserId { get; }
+    public Guid AccountId { get; }
     public Guid? LastProductId { get; }
     public ushort Limit { get; }
     public bool IncludeClosedProducts { get; }

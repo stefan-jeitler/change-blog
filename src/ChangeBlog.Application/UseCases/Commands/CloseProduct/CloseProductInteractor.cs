@@ -1,6 +1,6 @@
 using System;
 using System.Threading.Tasks;
-using ChangeBlog.Application.DataAccess.Products;
+using ChangeBlog.Application.Boundaries.DataAccess.Products;
 
 namespace ChangeBlog.Application.UseCases.Commands.CloseProduct;
 

@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Data;
 using System.Linq;
 using System.Threading.Tasks;
-using ChangeBlog.Application.DataAccess.Users;
+using ChangeBlog.Application.Boundaries.DataAccess.Users;
 using ChangeBlog.Domain;
 using ChangeBlog.Domain.Miscellaneous;
 using Dapper;

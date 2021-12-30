@@ -2,7 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using ChangeBlog.Application.DataAccess.Accounts;
+using ChangeBlog.Application.Boundaries.DataAccess.Accounts;
 using ChangeBlog.Domain;
 using CSharpFunctionalExtensions;
 

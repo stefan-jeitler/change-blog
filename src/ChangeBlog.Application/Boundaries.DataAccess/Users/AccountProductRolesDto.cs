@@ -2,7 +2,7 @@ using System;
 using System.Collections.Generic;
 using ChangeBlog.Domain;
 
-namespace ChangeBlog.Application.DataAccess.Users;
+namespace ChangeBlog.Application.Boundaries.DataAccess.Users;
 
 public class AccountProductRolesDto
 {

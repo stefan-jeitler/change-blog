@@ -1,6 +1,6 @@
 ﻿using System.Threading.Tasks;
 
-namespace ChangeBlog.Application.DataAccess.ExternalIdentity;
+namespace ChangeBlog.Application.Boundaries.DataAccess.ExternalIdentity;
 
 public interface IExternalUserInfoDao
 {

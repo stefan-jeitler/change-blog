@@ -1,11 +1,11 @@
 using System;
 using System.Data;
-using ChangeBlog.Application.DataAccess;
-using ChangeBlog.Application.DataAccess.Accounts;
-using ChangeBlog.Application.DataAccess.ChangeLog;
-using ChangeBlog.Application.DataAccess.Products;
-using ChangeBlog.Application.DataAccess.Users;
-using ChangeBlog.Application.DataAccess.Versions;
+using ChangeBlog.Application.Boundaries.DataAccess;
+using ChangeBlog.Application.Boundaries.DataAccess.Accounts;
+using ChangeBlog.Application.Boundaries.DataAccess.ChangeLog;
+using ChangeBlog.Application.Boundaries.DataAccess.Products;
+using ChangeBlog.Application.Boundaries.DataAccess.Users;
+using ChangeBlog.Application.Boundaries.DataAccess.Versions;
 using ChangeBlog.Application.Proxies;
 using ChangeBlog.DataAccess.Postgres.DataAccessObjects.Account;
 using ChangeBlog.DataAccess.Postgres.DataAccessObjects.ChangeLog;

@@ -1,7 +1,7 @@
 using System;
 using System.Collections.Generic;
+using ChangeBlog.Application.Boundaries.DataAccess;
 using ChangeBlog.Application.ChangeLogLineParser;
-using ChangeBlog.Application.DataAccess;
 
 namespace ChangeBlog.Application.UseCases.Commands.AddOrUpdateVersion.OutputPorts;
 

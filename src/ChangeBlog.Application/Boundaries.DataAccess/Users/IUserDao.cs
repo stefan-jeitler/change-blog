@@ -4,7 +4,7 @@ using System.Threading.Tasks;
 using ChangeBlog.Domain;
 using CSharpFunctionalExtensions;
 
-namespace ChangeBlog.Application.DataAccess.Users;
+namespace ChangeBlog.Application.Boundaries.DataAccess.Users;
 
 public interface IUserDao
 {

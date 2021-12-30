@@ -1,6 +1,6 @@
 using System;
 using System.Collections.Generic;
-using ChangeBlog.Application.DataAccess;
+using ChangeBlog.Application.Boundaries.DataAccess;
 
 namespace ChangeBlog.Application.UseCases.Commands.AddProduct;
 

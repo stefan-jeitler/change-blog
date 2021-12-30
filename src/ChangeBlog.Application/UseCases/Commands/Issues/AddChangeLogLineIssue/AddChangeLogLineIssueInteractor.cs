@@ -1,7 +1,7 @@
 using System;
 using System.Threading.Tasks;
-using ChangeBlog.Application.DataAccess;
-using ChangeBlog.Application.DataAccess.ChangeLog;
+using ChangeBlog.Application.Boundaries.DataAccess;
+using ChangeBlog.Application.Boundaries.DataAccess.ChangeLog;
 using ChangeBlog.Application.UseCases.Commands.Issues.SharedModels;
 using ChangeBlog.Domain.ChangeLog;
 using CSharpFunctionalExtensions;

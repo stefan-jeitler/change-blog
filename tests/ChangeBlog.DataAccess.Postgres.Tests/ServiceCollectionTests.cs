@@ -1,4 +1,4 @@
-using ChangeBlog.Application.DataAccess;
+using ChangeBlog.Application.Boundaries.DataAccess;
 using Microsoft.Extensions.DependencyInjection;
 using Xunit;
 

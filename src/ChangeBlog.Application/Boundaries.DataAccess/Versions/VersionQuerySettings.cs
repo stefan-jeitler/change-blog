@@ -1,6 +1,6 @@
 using System;
 
-namespace ChangeBlog.Application.DataAccess.Versions;
+namespace ChangeBlog.Application.Boundaries.DataAccess.Versions;
 
 public class VersionQuerySettings
 {

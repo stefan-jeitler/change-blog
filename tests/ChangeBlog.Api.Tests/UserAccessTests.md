@@ -1,11 +1,11 @@
 # UserAccess Test users
 
-In this document you'll find account and user information that can be used for testing the **authentication** and **
-authorization** mecahnism.
+In this document you'll find account and user information that can be used for testing the **authentication** and  
+**authorization** mechanism.
 
 At the end there is a sql script that inserts the test data.  
-But be aware to not execute the script against the staging or production evironment.  
-It is **only** for the **testing** environemnt.
+But be aware to not execute the script against the staging or production environment.  
+It is **only** for the **testing** environment.
 
 ## Prefix
 
@@ -25,8 +25,8 @@ Two test accounts will be created, named like the following.
 
 Usernames will start with the account name followed by `_user_<number>`.
 
-| User                    | Email                                      | ApiKey     |
-| ----------------------- | ------------------------------------------ | ---------- |
+| User                    | Email                                   | ApiKey     |
+|-------------------------|-----------------------------------------|------------|
 | t_ua_account_01_user_01 | t_ua_account_01_user_01@change-blog.com | acc01usr01 |
 | t_ua_account_01_user_02 | t_ua_account_01_user_02@change-blog.com | acc01usr02 |
 | t_ua_account_02_user_01 | t_ua_account_02_user_01@change-blog.com | acc02usr01 |

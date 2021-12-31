@@ -9,7 +9,9 @@ public class ChangeLogLineResponseModel
         DateTimeOffset createdAt)
     {
         if (id == Guid.Empty)
+        {
             throw new ArgumentException("Id cannot be empty.");
+        }
 
         Id = id;
 
@@ -18,7 +20,9 @@ public class ChangeLogLineResponseModel
         Issues = issues ?? throw new ArgumentNullException(nameof(issues));
 
         if (createdAt == DateTimeOffset.MinValue || createdAt == DateTimeOffset.MaxValue)
+        {
             throw new ArgumentException("Invalid creation date.");
+        }
 
         CreatedAt = createdAt;
     }

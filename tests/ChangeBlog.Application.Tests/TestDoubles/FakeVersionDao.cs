@@ -69,7 +69,10 @@ public class FakeVersionDao : IVersionDao
     {
         await Task.Yield();
 
-        if (Conflict is not null) return Result.Failure<ClVersion, Conflict>(Conflict);
+        if (Conflict is not null)
+        {
+            return Result.Failure<ClVersion, Conflict>(Conflict);
+        }
 
         Versions.RemoveAll(x => x.Id == version.Id);
         return Result.Success<ClVersion, Conflict>(version);
@@ -79,7 +82,10 @@ public class FakeVersionDao : IVersionDao
     {
         await Task.Yield();
 
-        if (Conflict is not null) return Result.Failure<ClVersion, Conflict>(Conflict);
+        if (Conflict is not null)
+        {
+            return Result.Failure<ClVersion, Conflict>(Conflict);
+        }
 
         Versions.RemoveAll(x => x.Id == version.Id);
         Versions.Add(version);
@@ -90,7 +96,10 @@ public class FakeVersionDao : IVersionDao
     {
         await Task.Yield();
 
-        if (Conflict is not null) return Result.Failure<ClVersion, Conflict>(Conflict);
+        if (Conflict is not null)
+        {
+            return Result.Failure<ClVersion, Conflict>(Conflict);
+        }
 
         Versions.RemoveAll(x => x.Id == version.Id);
         Versions.Add(version);

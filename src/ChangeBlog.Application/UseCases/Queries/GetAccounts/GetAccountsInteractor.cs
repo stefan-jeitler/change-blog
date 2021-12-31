@@ -62,7 +62,7 @@ public class GetAccountsInteractor : IGetAccounts, IGetAccount
 
     private static AccountResponseModel CreateResponseModel(Account account, VersioningScheme scheme, User user)
     {
-        return new(account.Id,
+        return new AccountResponseModel(account.Id,
             account.Name,
             scheme.Name,
             scheme.Id,

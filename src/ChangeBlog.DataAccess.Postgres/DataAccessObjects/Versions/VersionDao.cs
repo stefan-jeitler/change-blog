@@ -95,8 +95,10 @@ public class VersionDao : IVersionDao
         var version = await FindVersionAsync(versionId);
 
         if (version.HasNoValue)
+        {
             throw new Exception(
                 "The requested version does not exist. If you are not sure whether the version exists use 'FindVersion' otherwise file an issue.");
+        }
 
         return version.GetValueOrThrow();
     }
@@ -108,7 +110,9 @@ public class VersionDao : IVersionDao
             .AddTextSearch(querySettings.SearchTerm);
 
         if (!querySettings.IncludeDeleted)
+        {
             queryBuilder.ExcludeDeletedVersions();
+        }
 
         var (query, parameters) = queryBuilder.Build(querySettings.Limit);
 
@@ -153,7 +157,9 @@ public class VersionDao : IVersionDao
     public async Task<Result<ClVersion, Conflict>> DeleteVersionAsync(ClVersion version)
     {
         if (!version.IsDeleted)
+        {
             throw new Exception("Only deleted versions can be marked as deleted.");
+        }
 
         await _dbAccessor.DbConnection
             .ExecuteAsync("update version set deleted_at = @deletedAt where id = @versionId", new
@@ -168,7 +174,9 @@ public class VersionDao : IVersionDao
     public async Task<Result<ClVersion, Conflict>> ReleaseVersionAsync(ClVersion version)
     {
         if (!version.IsReleased)
+        {
             throw new Exception("Only release versions can be marked as released.");
+        }
 
         await _dbAccessor.DbConnection
             .ExecuteAsync("update version set released_at = @releasedAt where id = @versionId", new

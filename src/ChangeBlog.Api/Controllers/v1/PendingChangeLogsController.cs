@@ -121,7 +121,9 @@ public class PendingChangeLogsController : ControllerBase
         [FromBody] MoveChangeLogLineDto moveChangeLogLineDto)
     {
         if (moveChangeLogLineDto.TargetVersionId == Guid.Empty)
+        {
             return BadRequest(DefaultResponse.Create("TargetVersionId cannot be empty."));
+        }
 
         var requestModel =
             new VersionIdAssignmentRequestModel(moveChangeLogLineDto.TargetVersionId, changeLogLineId);
@@ -144,7 +146,9 @@ public class PendingChangeLogsController : ControllerBase
         [FromBody] MoveChangeLogLineDto moveChangeLogLineDto)
     {
         if (moveChangeLogLineDto.TargetVersionId == Guid.Empty)
+        {
             return BadRequest(DefaultResponse.Create("TargetVersionId cannot be empty."));
+        }
 
         var requestModel =
             new Application.UseCases.Commands.AssignAllPendingLinesToVersion.Models.VersionIdAssignmentRequestModel(

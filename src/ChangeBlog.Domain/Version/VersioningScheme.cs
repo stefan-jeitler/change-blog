@@ -10,7 +10,9 @@ public class VersioningScheme
         DateTime? deletedAt, DateTime createdAt)
     {
         if (id == Guid.Empty)
+        {
             throw new ArgumentException("Id cannot be empty.");
+        }
 
         Id = id;
 
@@ -18,25 +20,33 @@ public class VersioningScheme
         RegexPattern = regexPattern ?? throw new ArgumentNullException(nameof(regexPattern));
 
         if (accountId.HasValue && accountId == Guid.Empty)
+        {
             throw new ArgumentException("AccountId cannot be empty.");
+        }
 
         AccountId = accountId;
 
         if (createdByUser == Guid.Empty)
+        {
             throw new ArgumentException("UserId cannot be empty.");
+        }
 
         CreatedByUser = createdByUser;
 
         Description = description ?? throw new ArgumentNullException(nameof(description));
 
         if (createdAt == DateTime.MinValue || createdAt == DateTime.MaxValue)
+        {
             throw new ArgumentException("Invalid creation date.");
+        }
 
         CreatedAt = createdAt;
 
         if (deletedAt.HasValue &&
             (deletedAt.Value == DateTime.MinValue || deletedAt.Value == DateTime.MaxValue))
+        {
             throw new ArgumentException("Invalid deletion date.");
+        }
 
         DeletedAt = deletedAt;
     }

@@ -320,7 +320,9 @@ public class AddVersionInteractorTests
 
         // assert
         foreach (var (lineRequestModel, i) in changeLogLines.Select((x, i) => (x, i)))
+        {
             _fakeChangeLogDao.ChangeLogs[i].Position.Should().Be(uint.Parse(lineRequestModel.Text));
+        }
     }
 
     [Fact]

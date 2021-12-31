@@ -60,7 +60,9 @@ public class FakeUserDao : IUserDao
         await Task.Yield();
 
         if (ProduceFailureWhileImporting)
+        {
             return Result.Failure("Something went wrong.");
+        }
 
         ExternalIdentities.Add(externalIdentity);
 

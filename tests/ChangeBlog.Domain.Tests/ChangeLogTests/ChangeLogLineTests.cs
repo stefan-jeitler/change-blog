@@ -37,7 +37,7 @@ public class ChangeLogLineTests
 
     private ChangeLogLine CreateChangeLogLine()
     {
-        return new(_testId,
+        return new ChangeLogLine(_testId,
             _testVersionId,
             _testProductId,
             _testText,

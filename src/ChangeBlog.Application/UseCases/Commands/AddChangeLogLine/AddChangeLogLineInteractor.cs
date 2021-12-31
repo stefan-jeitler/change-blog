@@ -71,7 +71,9 @@ public class AddChangeLogLineInteractor : IAddChangeLogLine
     {
         var line = await CreateChangeLogLineAsync(output, requestModel, clVersion);
         if (line.HasNoValue)
+        {
             return;
+        }
 
         await SaveChangeLogLineAsync(output, line.GetValueOrThrow());
     }
@@ -81,7 +83,9 @@ public class AddChangeLogLineInteractor : IAddChangeLogLine
     {
         var parsedLine = ParseLine(output, requestModel);
         if (parsedLine.HasNoValue)
+        {
             return Maybe<ChangeLogLine>.None;
+        }
 
         var changeLogs = await _changeLogQueries.GetChangeLogsAsync(clVersion.ProductId, clVersion.Id);
         if (!changeLogs.IsPositionAvailable)

@@ -25,7 +25,7 @@ public class UserDto
 
     public static UserDto FromResponseModel(UserResponseModel m)
     {
-        return new(
+        return new UserDto(
             m.Id,
             m.Email,
             m.FirstName,

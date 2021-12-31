@@ -29,10 +29,14 @@ public class GetLatestVersionInteractor : IGetLatestVersion
     public async Task ExecuteAsync(IGetLatestVersionOutputPort output, Guid userId, Guid productId)
     {
         if (userId == Guid.Empty)
+        {
             throw new ArgumentException("userId cannot be empty.");
+        }
 
         if (productId == Guid.Empty)
+        {
             throw new ArgumentException("productId cannot be empty.");
+        }
 
         var currentUser = await _userDao.GetUserAsync(userId);
         var product = await _productDao.FindProductAsync(productId);

@@ -33,7 +33,7 @@ public class ProductDto
 
     public static ProductDto FromResponseModel(ProductResponseModel m)
     {
-        return new(
+        return new ProductDto(
             m.Id,
             m.AccountId,
             m.AccountName,

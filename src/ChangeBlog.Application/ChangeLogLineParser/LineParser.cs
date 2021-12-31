@@ -21,11 +21,15 @@ public static class LineParser
 
         var labels = ExtractLabels(output, lineParserRequestModel.Labels, text);
         if (labels.HasNoValue)
+        {
             return Maybe<LineParserResponseModel>.None;
+        }
 
         var issues = ExtractIssues(output, lineParserRequestModel.Issues, text);
         if (issues.HasNoValue)
+        {
             return Maybe<LineParserResponseModel>.None;
+        }
 
         return Maybe<LineParserResponseModel>.From(new LineParserResponseModel(text,
             labels.GetValueOrThrow().ToImmutableHashSet(),
@@ -57,10 +61,16 @@ public static class LineParser
         var parsedIssues = new List<Issue>();
 
         foreach (var i in issues)
+        {
             if (Issue.TryParse(i, out var issue))
+            {
                 parsedIssues.Add(issue);
+            }
             else
+            {
                 return Result.Failure<List<Issue>, string>(i);
+            }
+        }
 
         return Result.Success<List<Issue>, string>(parsedIssues);
     }
@@ -89,10 +99,16 @@ public static class LineParser
     {
         var parsedLabels = new List<Label>();
         foreach (var l in labels)
+        {
             if (Label.TryParse(l, out var label))
+            {
                 parsedLabels.Add(label);
+            }
             else
+            {
                 return Result.Failure<List<Label>, string>(l);
+            }
+        }
 
         return Result.Success<List<Label>, string>(parsedLabels);
     }

@@ -50,7 +50,10 @@ public class FakeProductDao : IProductDao
 
     public Task<Result<Product, Conflict>> AddProductAsync(Product product)
     {
-        if (Conflict is not null) return Task.FromResult(Result.Failure<Product, Conflict>(Conflict));
+        if (Conflict is not null)
+        {
+            return Task.FromResult(Result.Failure<Product, Conflict>(Conflict));
+        }
 
         Products.Add(product);
         return Task.FromResult(Result.Success<Product, Conflict>(product));

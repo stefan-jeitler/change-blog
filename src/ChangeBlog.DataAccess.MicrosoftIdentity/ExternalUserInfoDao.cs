@@ -38,7 +38,9 @@ public class ExternalUserInfoDao : IExternalUserInfoDao
     private static UserInfo CreateUserInfo(UserInfoDto userDto)
     {
         if (userDto is null)
+        {
             throw new ArgumentNullException(nameof(userDto));
+        }
 
         return new UserInfo(userDto.Subject,
             userDto.Name,

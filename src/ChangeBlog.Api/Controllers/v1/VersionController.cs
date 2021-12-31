@@ -50,7 +50,9 @@ public class VersionController : ControllerBase
         var version = await getVersion.ExecuteAsync(userId, versionId);
 
         if (version.HasNoValue)
+        {
             return new NotFoundObjectResult(DefaultResponse.Create("Version not found"));
+        }
 
         return Ok(VersionDto.FromResponseModel(version.GetValueOrThrow()));
     }
@@ -107,7 +109,9 @@ public class VersionController : ControllerBase
         var clVersion = await getVersion.ExecuteAsync(userId, productId, version);
 
         if (clVersion.HasNoValue)
+        {
             return new NotFoundObjectResult(DefaultResponse.Create("Version not found"));
+        }
 
         return Ok(VersionDto.FromResponseModel(clVersion.GetValueOrThrow()));
     }
@@ -123,7 +127,9 @@ public class VersionController : ControllerBase
         [FromBody] AddVersionDto versionDto)
     {
         if (versionDto is null)
+        {
             return new BadRequestObjectResult(DefaultResponse.Create("Missing version dto."));
+        }
 
         var lines = versionDto.ChangeLogLines
             .Select(x =>

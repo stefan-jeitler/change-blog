@@ -31,7 +31,7 @@ public class VersioningSchemeTest
 
     private VersioningScheme CreateScheme()
     {
-        return new(_testId, _testName, _testRegexPatter,
+        return new VersioningScheme(_testId, _testName, _testRegexPatter,
             _testDescription, _testAccountId, _testUserId, _testDeletionDate, _testCreationDate);
     }
 

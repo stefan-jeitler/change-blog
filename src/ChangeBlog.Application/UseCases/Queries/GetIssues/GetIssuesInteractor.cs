@@ -17,12 +17,17 @@ public class GetIssuesInteractor : IGetIssues
 
     public async Task<IList<string>> ExecuteAsync(Guid changeLogLineId)
     {
-        if (changeLogLineId == Guid.Empty) throw new ArgumentException("ChangeLogLineId cannot be empty.");
+        if (changeLogLineId == Guid.Empty)
+        {
+            throw new ArgumentException("ChangeLogLineId cannot be empty.");
+        }
 
         var line = await _changeLogQueries.FindLineAsync(changeLogLineId);
 
         if (line.HasNoValue)
+        {
             return Array.Empty<string>();
+        }
 
         return line.GetValueOrThrow().Issues
             .Select(x => x.Value)

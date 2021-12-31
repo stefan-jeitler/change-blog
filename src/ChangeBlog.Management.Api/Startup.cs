@@ -56,15 +56,19 @@ public class Startup
 
     public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
     {
-        if (env.IsDevelopment()) 
+        if (env.IsDevelopment())
+        {
             app.UseDeveloperExceptionPage();
+        }
 
         app.AddSwagger();
 
         app.UseStaticFiles();
-        
+
         if (!env.IsDevelopment())
+        {
             app.UseSpaStaticFiles();
+        }
 
         app.UseRouting();
 
@@ -83,7 +87,9 @@ public class Startup
             spa.Options.SourcePath = "ClientApp";
 
             if (env.IsDevelopment())
+            {
                 spa.UseAngularCliServer("start");
+            }
         });
     }
 

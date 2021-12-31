@@ -16,7 +16,9 @@ public abstract class AuthorizationHandler
     {
         if (httpContext.Request.RouteValues.TryGetValue(key, out var routeValue) &&
             Guid.TryParse(routeValue?.ToString(), out var idInRoute))
+        {
             return idInRoute;
+        }
 
         return null;
     }

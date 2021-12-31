@@ -10,12 +10,16 @@ public class UsersQueryRequestModel
         ushort limit = MaxLimit)
     {
         if (accountId == Guid.Empty)
+        {
             throw new ArgumentException("AccountId cannot be empty.");
+        }
 
         AccountId = accountId;
 
         if (userId == Guid.Empty)
+        {
             throw new ArgumentException("UserId cannot be empty.");
+        }
 
         UserId = userId;
 

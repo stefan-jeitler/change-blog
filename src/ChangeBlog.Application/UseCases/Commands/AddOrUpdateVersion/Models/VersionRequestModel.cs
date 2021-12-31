@@ -10,12 +10,16 @@ public class VersionRequestModel
         bool releaseImmediately = false)
     {
         if (userId == Guid.Empty)
+        {
             throw new ArgumentException("UserId cannot be empty.");
+        }
 
         UserId = userId;
 
         if (productId == Guid.Empty)
+        {
             throw new ArgumentException("ProductId cannot be empty.");
+        }
 
         ProductId = productId;
         Version = version ?? throw new ArgumentNullException(nameof(version));

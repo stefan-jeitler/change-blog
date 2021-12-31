@@ -35,7 +35,9 @@ public class AddProductInteractor : IAddProduct
 
         var account = await GetAccountAsync(output, productRequestModel.AccountId);
         if (account.HasNoValue)
+        {
             return;
+        }
 
         if (!Name.TryParse(productRequestModel.Name, out var name))
         {
@@ -53,11 +55,15 @@ public class AddProductInteractor : IAddProduct
         var versioningSchemeId =
             await GetVersioningSchemeIdAsync(output, productRequestModel, account.GetValueOrThrow());
         if (versioningSchemeId.HasNoValue)
+        {
             return;
+        }
 
         var langCode = await GetLangCodeAsync(output, productRequestModel.LanguageCode);
         if (langCode.HasNoValue)
+        {
             return;
+        }
 
         var product = new Product(account.GetValueOrThrow().Id,
             name, versioningSchemeId.GetValueOrThrow(),
@@ -126,7 +132,9 @@ public class AddProductInteractor : IAddProduct
 
         var isCommonScheme = !scheme.GetValueOrThrow().AccountId.HasValue;
         if (isCommonScheme)
+        {
             return scheme;
+        }
 
         var schemeBelongsToAccount = scheme.GetValueOrThrow().AccountId == account.Id;
         if (!schemeBelongsToAccount)

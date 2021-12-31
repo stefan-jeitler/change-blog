@@ -40,7 +40,9 @@ public class RolesDao : IRolesDao
             .Any(x => !x.Permission.HasValue);
 
         if (notSupportedPermissionsExists)
+        {
             _logger.LogWarning("There are permissions that are not supported by the app");
+        }
 
         return permissions
             .Where(x => x.Permission is not null)

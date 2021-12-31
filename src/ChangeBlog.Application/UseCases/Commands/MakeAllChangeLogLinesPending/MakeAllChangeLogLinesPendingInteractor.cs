@@ -32,10 +32,14 @@ public class MakeAllChangeLogLinesPendingInteractor : IMakeAllChangeLogLinesPend
     public async Task ExecuteAsync(IMakeAllChangeLogLinesPendingOutputPort output, Guid productId, string version)
     {
         if (productId == Guid.Empty)
+        {
             throw new ArgumentException("productId cannot be empty.");
+        }
 
         if (version is null)
+        {
             throw new ArgumentNullException(nameof(version));
+        }
 
         if (!ClVersionValue.TryParse(version, out var clVersionValue))
         {
@@ -56,7 +60,9 @@ public class MakeAllChangeLogLinesPendingInteractor : IMakeAllChangeLogLinesPend
     public async Task ExecuteAsync(IMakeAllChangeLogLinesPendingOutputPort output, Guid versionId)
     {
         if (versionId == Guid.Empty)
+        {
             throw new ArgumentException("versionId cannot be empty.");
+        }
 
         var clVersion = await _versionDao.FindVersionAsync(versionId);
         if (clVersion.HasNoValue)
@@ -71,7 +77,9 @@ public class MakeAllChangeLogLinesPendingInteractor : IMakeAllChangeLogLinesPend
     private async Task MakeAllLinesPendingAsync(IMakeAllChangeLogLinesPendingOutputPort output, ClVersion clVersion)
     {
         if (IsVersionReadOnly(output, clVersion))
+        {
             return;
+        }
 
         _unitOfWork.Start();
 

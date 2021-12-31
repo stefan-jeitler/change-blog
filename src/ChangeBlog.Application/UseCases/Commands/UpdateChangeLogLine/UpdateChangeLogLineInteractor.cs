@@ -43,7 +43,9 @@ public class UpdateChangeLogLineInteractor : IUpdateChangeLogLine
 
         var parsedNewLine = ParseLine(output, requestModel);
         if (parsedNewLine.HasNoValue)
+        {
             return;
+        }
 
         var changeLogLine = existingLine.GetValueOrThrow();
         switch (requestModel.ChangeLogLineType)

@@ -9,7 +9,9 @@ public class User
         DateTime createdAt)
     {
         if (id == Guid.Empty)
+        {
             throw new ArgumentException("Id cannot be empty");
+        }
 
         Id = id;
         Email = email ?? throw new ArgumentNullException(nameof(email));
@@ -19,12 +21,16 @@ public class User
 
         if (deletedAt.HasValue &&
             (deletedAt == DateTime.MinValue || deletedAt == DateTime.MaxValue))
+        {
             throw new ArgumentException("Invalid creation date.");
+        }
 
         DeletedAt = deletedAt;
 
         if (createdAt == DateTime.MinValue || createdAt == DateTime.MaxValue)
+        {
             throw new ArgumentException("Invalid creation date.");
+        }
 
         CreatedAt = createdAt;
     }

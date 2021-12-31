@@ -18,12 +18,16 @@ public class AuthorizationService
         IEnumerable<Role> productRoles)
     {
         if (accountRoles is null)
+        {
             throw new ArgumentNullException(nameof(accountRoles));
+        }
 
         _accountRoles = accountRoles.ToList();
 
         if (productRoles is null)
+        {
             throw new ArgumentNullException(nameof(productRoles));
+        }
 
         _productRoles = productRoles.ToList();
     }
@@ -31,12 +35,16 @@ public class AuthorizationService
     public AuthorizationState GetAuthorizationState(Permission permission)
     {
         if (_accountRoles.All(x => x.Name.Value != Role.DefaultUser))
+        {
             return AuthorizationState.Inaccessible;
+        }
 
         if (_productRoles.Count > 0)
+        {
             return _productRoles.Any(r => r.Permissions.Contains(permission))
                 ? AuthorizationState.Authorized
                 : AuthorizationState.Unauthorized;
+        }
 
         return _accountRoles.Any(r => r.Permissions.Contains(permission))
             ? AuthorizationState.Authorized

@@ -12,8 +12,8 @@ public static class ServiceCollectionExtensions
         string userInfoEndpointBaseUrl)
     {
         var userInfoEndpoint = new Uri($"{userInfoEndpointBaseUrl.TrimEnd('/')}/userinfo");
-        var httpClient = new HttpClient {BaseAddress = userInfoEndpoint};
-        
+        var httpClient = new HttpClient { BaseAddress = userInfoEndpoint };
+
         services.AddScoped<IExternalUserInfoDao>(sp => new ExternalUserInfoDao(
             sp.GetRequiredService<ITokenAcquisition>(),
             httpClient));

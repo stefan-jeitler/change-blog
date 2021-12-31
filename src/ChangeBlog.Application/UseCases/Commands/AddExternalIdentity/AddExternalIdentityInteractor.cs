@@ -27,7 +27,9 @@ public class AddExternalIdentityInteractor : IAddExternalIdentity
     public async Task<Result<Guid>> ExecuteAsync(string externalUserId)
     {
         if (string.IsNullOrEmpty(externalUserId))
+        {
             return Result.Failure<Guid>("ExternalUserId is null or empty.");
+        }
 
         var userByExternalId = await _userDao.FindByExternalUserIdAsync(externalUserId);
 
@@ -58,9 +60,14 @@ public class AddExternalIdentityInteractor : IAddExternalIdentity
                 Name.Parse(externalUserInfo.LastName), Name.Parse("Etc/UTC"), null, DateTime.UtcNow);
 
         if (user.DeletedAt.HasValue)
+        {
             return Result.Failure<Guid>("The user already exists, but it has been set to deleted.");
+        }
 
-        if (!userFoundByEmail) await _userDao.AddAsync(user);
+        if (!userFoundByEmail)
+        {
+            await _userDao.AddAsync(user);
+        }
 
         var externalIdentity = new ExternalIdentity(Guid.NewGuid(), user.Id, externalUserId,
             externalUserInfo.IdentityProvider, DateTime.UtcNow);
@@ -68,7 +75,9 @@ public class AddExternalIdentityInteractor : IAddExternalIdentity
         var (isSuccess, _, error) = await _userDao.AddExternalIdentity(externalIdentity);
 
         if (!isSuccess)
+        {
             return Result.Failure<Guid>($"Error while importing the user into the database. {error}");
+        }
 
         _unitOfWork.Commit();
         return Result.Success(user.Id);

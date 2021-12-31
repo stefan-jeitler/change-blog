@@ -14,7 +14,9 @@ public class VersioningSchemeIdFinder
     public Guid FindSchemeIdForProduct(Guid? customVersioningSchemeId)
     {
         if (customVersioningSchemeId.HasValue)
+        {
             return customVersioningSchemeId.Value;
+        }
 
         return _account.DefaultVersioningSchemeId ?? Defaults.VersioningSchemeId;
     }

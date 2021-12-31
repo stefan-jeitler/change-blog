@@ -11,18 +11,26 @@ public class ApiInfo
     public ApiInfo(string name, string version, string environment)
     {
         if (name is null)
+        {
             throw new ArgumentNullException(nameof(name));
+        }
 
         if (name == string.Empty)
+        {
             throw new ArgumentException("name cannot be empty.");
+        }
 
         Name = name;
 
         if (version is null)
+        {
             throw new ArgumentNullException(nameof(version));
+        }
 
         if (version == string.Empty)
+        {
             throw new ArgumentException("version cannot be empty");
+        }
 
         Version = version;
 

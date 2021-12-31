@@ -27,7 +27,7 @@ public class RoleTests
 
     private Role CreateRole()
     {
-        return new(_testId, _testName, _testDescription, _testCreationDate, _testPermissions);
+        return new Role(_testId, _testName, _testDescription, _testCreationDate, _testPermissions);
     }
 
     [Fact]

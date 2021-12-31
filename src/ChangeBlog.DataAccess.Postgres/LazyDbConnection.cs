@@ -13,7 +13,9 @@ public sealed class LazyDbConnection : Lazy<IDbConnection>, IDisposable
     public void Dispose()
     {
         if (!IsValueCreated)
+        {
             return;
+        }
 
         Value?.Dispose();
     }

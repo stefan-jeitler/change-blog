@@ -25,7 +25,7 @@ public class AccountDaoTests : IDisposable
 
     private AccountDao CreateDao()
     {
-        return new(new DbSession(_lazyDbConnection));
+        return new AccountDao(new DbSession(_lazyDbConnection));
     }
 
     [Fact]

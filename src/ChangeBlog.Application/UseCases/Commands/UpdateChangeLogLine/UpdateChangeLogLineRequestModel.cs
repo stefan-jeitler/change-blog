@@ -10,7 +10,9 @@ public class UpdateChangeLogLineRequestModel
         IList<string> labels, IList<string> issues)
     {
         if (changeLogLineId == Guid.Empty)
+        {
             throw new ArgumentException("ChangeLogLineId cannot be empty.");
+        }
 
         ChangeLogLineId = changeLogLineId;
         ChangeLogLineType = changeLogLineType;

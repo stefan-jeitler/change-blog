@@ -98,7 +98,9 @@ public class UserDao : IUserDao
     public async Task<Maybe<User>> FindByExternalUserIdAsync(string externalUserId)
     {
         if (string.IsNullOrEmpty(externalUserId))
+        {
             return Maybe<User>.None;
+        }
 
         const string getUserSql = @"
                 SELECT u.id,
@@ -126,7 +128,9 @@ public class UserDao : IUserDao
     public async Task<Maybe<User>> FindByEmailAsync(string email)
     {
         if (string.IsNullOrEmpty(email))
+        {
             return Maybe<User>.None;
+        }
 
         const string getUserSql = @"
                 SELECT u.id,

@@ -21,7 +21,7 @@ public class VersionDto
 
     public static VersionDto FromResponseModel(VersionResponseModel model)
     {
-        return new()
+        return new VersionDto
         {
             Id = model.VersionId,
             Version = model.Version,

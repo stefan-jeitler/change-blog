@@ -24,7 +24,9 @@ public class DeleteVersionInteractor : IDeleteVersion
     {
         var clVersion = await GetVersionAsync(output, versionId);
         if (clVersion.HasNoValue)
+        {
             return;
+        }
 
         var product = await _productDao.GetProductAsync(clVersion.GetValueOrThrow().ProductId);
         if (product.IsClosed)

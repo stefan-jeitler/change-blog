@@ -11,7 +11,9 @@ public class VersionResponseModel
         DateTimeOffset? deletedAt)
     {
         if (versionId == Guid.Empty)
+        {
             throw new ArgumentException("VersionId cannot be empty.");
+        }
 
         VersionId = versionId;
 
@@ -19,18 +21,24 @@ public class VersionResponseModel
         Name = name ?? throw new ArgumentNullException(nameof(name));
 
         if (productId == Guid.Empty)
+        {
             throw new ArgumentException("ProductId cannot be empty.");
+        }
 
         ProductId = productId;
         ProductName = productName ?? throw new ArgumentNullException(nameof(productName));
 
         if (accountId == Guid.Empty)
+        {
             throw new ArgumentException("AccountId cannot be empty.");
+        }
 
         AccountId = accountId;
 
         if (createdAt == DateTimeOffset.MinValue || createdAt == DateTimeOffset.MaxValue)
+        {
             throw new ArgumentException("Invalid creation date.");
+        }
 
         ChangeLogs = changeLogs ?? throw new ArgumentNullException(nameof(changeLogs));
         CreatedAt = createdAt;

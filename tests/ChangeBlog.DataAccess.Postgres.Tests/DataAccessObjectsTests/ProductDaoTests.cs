@@ -36,7 +36,7 @@ public class ProductDaoTests : IAsyncLifetime
 
     private ProductDao CreateDao()
     {
-        return new(new DbSession(_lazyDbConnection), NullLogger<ProductDao>.Instance);
+        return new ProductDao(new DbSession(_lazyDbConnection), NullLogger<ProductDao>.Instance);
     }
 
     [Fact]

@@ -26,12 +26,16 @@ public class ProductAuthorizationHandler : AuthorizationHandler
     {
         var productIdInRoute = TryFindIdInRoute(context.HttpContext, KnownIdentifiers.ProductId);
         if (productIdInRoute.HasValue)
+        {
             return _getAuthorizationState.GetAuthStateByProductIdAsync(userId, productIdInRoute.Value, permission);
+        }
 
         var productIdInBody = TryFindInBody<IContainsProductId>(context);
         if (productIdInBody is not null)
+        {
             return _getAuthorizationState.GetAuthStateByProductIdAsync(userId, productIdInBody.ProductId,
                 permission);
+        }
 
         return _authorizationHandler.GetAuthorizationState(context, userId, permission);
     }

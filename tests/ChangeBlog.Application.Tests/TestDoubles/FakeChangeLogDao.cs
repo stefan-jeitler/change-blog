@@ -19,7 +19,9 @@ public class FakeChangeLogDao : IChangeLogQueriesDao, IChangeLogCommandsDao
         await Task.Yield();
 
         if (Conflict is not null)
+        {
             return Result.Failure<ChangeLogLine, Conflict>(Conflict);
+        }
 
         ChangeLogs.Add(changeLogLine);
         return changeLogLine;
@@ -33,7 +35,9 @@ public class FakeChangeLogDao : IChangeLogQueriesDao, IChangeLogCommandsDao
         ChangeLogs.RemoveAll(x => lines.Any(y => x.Id == y.Id));
 
         if (Conflict is not null)
+        {
             return Result.Failure<int, Conflict>(Conflict);
+        }
 
         ChangeLogs.AddRange(lines);
         return Result.Success<int, Conflict>(lines.Count);
@@ -46,7 +50,9 @@ public class FakeChangeLogDao : IChangeLogQueriesDao, IChangeLogCommandsDao
         {
             var movedLine = await MoveLineAsync(line);
             if (movedLine.IsFailure)
+            {
                 return Result.Failure<int, Conflict>(movedLine.Error);
+            }
         }
 
         return Result.Success<int, Conflict>(lines.Count);
@@ -57,7 +63,9 @@ public class FakeChangeLogDao : IChangeLogQueriesDao, IChangeLogCommandsDao
         await Task.Yield();
 
         if (Conflict is not null)
+        {
             return Result.Failure<ChangeLogLine, Conflict>(Conflict);
+        }
 
         ChangeLogs.RemoveAll(x => x.Id == changeLogLine.Id);
         ChangeLogs.Add(changeLogLine);
@@ -70,7 +78,9 @@ public class FakeChangeLogDao : IChangeLogQueriesDao, IChangeLogCommandsDao
         await Task.Yield();
 
         if (Conflict is not null)
+        {
             return Result.Failure<ChangeLogLine, Conflict>(Conflict);
+        }
 
         ChangeLogs.RemoveAll(x => x.Id == changeLogLine.Id);
         ChangeLogs.Add(changeLogLine);
@@ -83,7 +93,9 @@ public class FakeChangeLogDao : IChangeLogQueriesDao, IChangeLogCommandsDao
         await Task.Yield();
 
         if (Conflict is not null)
+        {
             return Result.Failure<ChangeLogLine, Conflict>(Conflict);
+        }
 
         ChangeLogs.RemoveAll(x => x.Id == changeLogLine.Id);
         return Result.Success<ChangeLogLine, Conflict>(changeLogLine);

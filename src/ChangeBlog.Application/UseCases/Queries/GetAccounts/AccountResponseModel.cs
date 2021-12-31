@@ -8,7 +8,9 @@ public class AccountResponseModel
         Guid defaultVersioningSchemeId, DateTimeOffset createdAt)
     {
         if (id == Guid.Empty)
+        {
             throw new ArgumentException("Id cannot be empty.");
+        }
 
         Id = id;
         Name = name ?? throw new ArgumentNullException(nameof(name));
@@ -16,7 +18,9 @@ public class AccountResponseModel
                                   throw new ArgumentNullException(nameof(defaultVersioningScheme));
 
         if (defaultVersioningSchemeId == Guid.Empty)
+        {
             throw new ArgumentException("VersioningSchemeId cannot be empty.");
+        }
 
         DefaultVersioningSchemeId = defaultVersioningSchemeId;
         CreatedAt = createdAt;

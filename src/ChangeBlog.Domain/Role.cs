@@ -19,7 +19,9 @@ public class Role
     public Role(Guid id, Name name, Text description, DateTime createdAt, IEnumerable<Permission> permissions)
     {
         if (id == Guid.Empty)
+        {
             throw new ArgumentException("Id cannot be empty.");
+        }
 
         Id = id;
         Name = name ?? throw new ArgumentNullException(nameof(name));
@@ -27,7 +29,9 @@ public class Role
         Permissions = permissions?.ToImmutableHashSet() ?? throw new ArgumentNullException(nameof(permissions));
 
         if (createdAt == DateTime.MinValue || createdAt == DateTime.MaxValue)
+        {
             throw new ArgumentException("Invalid createdAt.");
+        }
 
         CreatedAt = createdAt;
     }

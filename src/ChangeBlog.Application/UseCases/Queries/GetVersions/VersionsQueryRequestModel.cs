@@ -11,23 +11,31 @@ public class VersionsQueryRequestModel
         ushort limit, bool includeDeleted = false)
     {
         if (productId == Guid.Empty)
+        {
             throw new ArgumentException("ProductId cannot be empty.");
+        }
 
         ProductId = productId;
         LastVersionId = lastVersionId;
 
         if (userId == Guid.Empty)
+        {
             throw new ArgumentException("UserId cannot be empty.");
+        }
 
         UserId = userId;
 
         if (searchTerm is not null && searchTerm.Length > MaxSearchTermLength)
+        {
             throw new ArgumentException($"SearchTerm is too long. Max length: {MaxSearchTermLength}");
+        }
 
         SearchTerm = searchTerm;
 
         if (limit == 0)
+        {
             throw new ArgumentException("Limit must not be 0");
+        }
 
         Limit = Math.Min(limit, MaxLimit);
         IncludeDeleted = includeDeleted;

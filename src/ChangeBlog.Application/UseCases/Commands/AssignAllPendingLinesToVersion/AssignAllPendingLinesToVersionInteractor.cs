@@ -77,7 +77,9 @@ public class AssignAllPendingLinesToVersionInteractor : IAssignAllPendingLinesTo
 
         var assignedLines = await AssignLinesAsync(output, clVersion);
         if (assignedLines.HasNoValue)
+        {
             return;
+        }
 
         await SaveAssignmentsAsync(output, assignedLines.GetValueOrThrow(), clVersion);
     }

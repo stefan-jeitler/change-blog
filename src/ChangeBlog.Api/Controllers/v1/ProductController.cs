@@ -36,7 +36,9 @@ public class ProductController : ControllerBase
         var product = await getProduct.ExecuteAsync(userId, productId);
 
         if (product.HasNoValue)
+        {
             return NotFound(DefaultResponse.Create("Product not found"));
+        }
 
         return Ok(ProductDto.FromResponseModel(product.GetValueOrThrow()));
     }
@@ -51,7 +53,9 @@ public class ProductController : ControllerBase
         [FromBody] AddOrUpdateProductDto addOrUpdateProductDto)
     {
         if (addOrUpdateProductDto.VersioningSchemeId == Guid.Empty)
+        {
             return BadRequest(DefaultResponse.Create("VersioningSchemeId cannot be empty."));
+        }
 
         var userId = HttpContext.GetUserId();
 

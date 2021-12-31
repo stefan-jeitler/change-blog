@@ -26,7 +26,8 @@ public class ChangeLogLineRequestModelTests
 
     private UpdateChangeLogLineRequestModel CreateRequestModel()
     {
-        return new UpdateChangeLogLineRequestModel(_testLineId, _changeLogLineType, _testText, _testLabels, _testIssues);
+        return new UpdateChangeLogLineRequestModel(_testLineId, _changeLogLineType, _testText, _testLabels,
+            _testIssues);
     }
 
     [Fact]

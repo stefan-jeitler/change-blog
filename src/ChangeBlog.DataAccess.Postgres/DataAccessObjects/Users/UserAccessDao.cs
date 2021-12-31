@@ -79,7 +79,9 @@ public class UserAccessDao : IUserAccessDao
     public async Task<Guid?> FindActiveUserIdByApiKeyAsync(string apiKey)
     {
         if (string.IsNullOrEmpty(apiKey))
+        {
             return null;
+        }
 
         using var dbConnection = _acquireDbConnection();
         return await dbConnection
@@ -90,7 +92,9 @@ public class UserAccessDao : IUserAccessDao
     public async Task<Guid?> FindActiveUserByExternalUserId(string externalUserId)
     {
         if (string.IsNullOrEmpty(externalUserId))
+        {
             return null;
+        }
 
         using var dbConnection = _acquireDbConnection();
         return await dbConnection
@@ -118,7 +122,9 @@ public class UserAccessDao : IUserAccessDao
             .Any(x => !x.Permission.HasValue);
 
         if (notSupportedPermissionsExists)
+        {
             _logger.LogWarning("There are permissions that are not supported by the app");
+        }
 
         return rolePermissions
             .Where(x => x.Permission is not null)

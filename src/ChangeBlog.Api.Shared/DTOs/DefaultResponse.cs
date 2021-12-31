@@ -9,7 +9,9 @@ public class DefaultResponse
     public DefaultResponse(string message, IReadOnlyDictionary<string, string> resourceIds = null)
     {
         if (string.IsNullOrEmpty(message))
+        {
             throw new ArgumentException("Message cannot be null or empty.");
+        }
 
         Message = message;
 
@@ -23,7 +25,7 @@ public class DefaultResponse
 
     public static DefaultResponse Create(string message)
     {
-        return new(message);
+        return new DefaultResponse(message);
     }
 
     public static DefaultResponse Create(string message, IReadOnlyDictionary<string, string> resourceIds)

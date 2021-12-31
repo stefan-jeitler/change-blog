@@ -18,17 +18,25 @@ public sealed class DbSession : IDbAccessor, IUnitOfWork
 
     public void Start()
     {
-        if (_startedUows == 0) BeginTransaction();
+        if (_startedUows == 0)
+        {
+            BeginTransaction();
+        }
 
         _startedUows++;
     }
 
     public void Commit()
     {
-        if (_startedUows == 1) CommitTransaction();
+        if (_startedUows == 1)
+        {
+            CommitTransaction();
+        }
 
         if (_startedUows > 0)
+        {
             _startedUows--;
+        }
     }
 
     private void CommitTransaction()
@@ -41,7 +49,9 @@ public sealed class DbSession : IDbAccessor, IUnitOfWork
     private void BeginTransaction()
     {
         if (_dbConnection.Value.State != ConnectionState.Open)
+        {
             _dbConnection.Value.Open();
+        }
 
         _transaction = _dbConnection.Value.BeginTransaction(IsolationLevel.RepeatableRead);
     }

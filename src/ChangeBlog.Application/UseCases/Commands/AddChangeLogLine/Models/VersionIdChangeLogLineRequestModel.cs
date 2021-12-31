@@ -11,12 +11,16 @@ public class VersionIdChangeLogLineRequestModel : IChangeLogLineRequestModel
         List<string> issues)
     {
         if (userId == Guid.Empty)
+        {
             throw new ArgumentException("UserId cannot be empty.");
+        }
 
         UserId = userId;
 
         if (versionId == Guid.Empty)
+        {
             throw new ArgumentException("VersionId cannot be empty.");
+        }
 
         VersionId = versionId;
         Text = text ?? throw new ArgumentNullException(nameof(text));

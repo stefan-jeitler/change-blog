@@ -40,7 +40,10 @@ public static class SwaggerExtensions
 
             c.OrderActionsBy(api =>
             {
-                if (api.ActionDescriptor is not ControllerActionDescriptor descriptor) return string.Empty;
+                if (api.ActionDescriptor is not ControllerActionDescriptor descriptor)
+                {
+                    return string.Empty;
+                }
 
                 var orderAttribute = descriptor
                     .EndpointMetadata

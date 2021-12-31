@@ -5,13 +5,13 @@
     </PropertyGroup>
 
     <ItemGroup>
-        <ProjectReference Include="..\ChangeBlog.Domain\ChangeBlog.Domain.csproj" />
+        <ProjectReference Include="..\ChangeBlog.Domain\ChangeBlog.Domain.csproj"/>
     </ItemGroup>
 
     <ItemGroup>
-        <PackageReference Include="CSharpFunctionalExtensions" Version="2.27.0" />
-        <PackageReference Include="Microsoft.Extensions.Caching.Abstractions" Version="6.0.0" />
-        <PackageReference Include="NodaTime" Version="3.0.9" />
+        <PackageReference Include="CSharpFunctionalExtensions" Version="2.27.0"/>
+        <PackageReference Include="Microsoft.Extensions.Caching.Abstractions" Version="6.0.0"/>
+        <PackageReference Include="NodaTime" Version="3.0.9"/>
     </ItemGroup>
 
 </Project>

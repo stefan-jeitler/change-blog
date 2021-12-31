@@ -67,11 +67,15 @@ public class AddOrUpdateVersionInteractor : IAddVersion, IAddOrUpdateVersion
     {
         var product = await GetProductAsync(output, versionRequestModel.ProductId);
         if (product.HasNoValue)
+        {
             return;
+        }
 
         var newVersion = CreateNewVersion(output, product.GetValueOrThrow(), versionRequestModel);
         if (newVersion.HasNoValue)
+        {
             return;
+        }
 
         var existingVersion =
             await _versionDao.FindVersionAsync(product.GetValueOrThrow().Id, newVersion.GetValueOrThrow().Value);
@@ -83,7 +87,9 @@ public class AddOrUpdateVersionInteractor : IAddVersion, IAddOrUpdateVersion
 
         var lines = newVersion.Bind(v => CreateLines(output, versionRequestModel.Lines, v));
         if (lines.HasNoValue)
+        {
             return;
+        }
 
         _unitOfWork.Start();
         await SaveVersionAsync(output, newVersion.GetValueOrThrow(), lines.GetValueOrThrow(),
@@ -176,7 +182,10 @@ public class AddOrUpdateVersionInteractor : IAddVersion, IAddOrUpdateVersion
         {
             var line = CreateLine(output, lineRequestModel, newVersion, (uint)i);
 
-            if (line.HasNoValue) return Maybe<IEnumerable<ChangeLogLine>>.None;
+            if (line.HasNoValue)
+            {
+                return Maybe<IEnumerable<ChangeLogLine>>.None;
+            }
 
             lines.Add(line.GetValueOrThrow());
         }
@@ -191,7 +200,10 @@ public class AddOrUpdateVersionInteractor : IAddVersion, IAddOrUpdateVersion
             new LineParserRequestModel(requestModel.Text, requestModel.Labels, requestModel.Issues);
 
         var parsedLine = LineParser.Parse(output, lineParsingRequestModel);
-        if (parsedLine.HasNoValue) return Maybe<ChangeLogLine>.None;
+        if (parsedLine.HasNoValue)
+        {
+            return Maybe<ChangeLogLine>.None;
+        }
 
         var changeLogLine = new ChangeLogLine(Guid.NewGuid(),
             clVersion.Id,
@@ -261,7 +273,9 @@ public class AddOrUpdateVersionInteractor : IAddVersion, IAddOrUpdateVersion
         var parsedChangeLogs = CreateLines(output, requestModel.Lines, clVersion)
             .Map(x => new ChangeLogs(x.ToList()));
         if (parsedChangeLogs.HasNoValue)
+        {
             return;
+        }
 
         if (!OptionalName.TryParse(requestModel.Name, out var clVersionName))
         {
@@ -295,6 +309,9 @@ public class AddOrUpdateVersionInteractor : IAddVersion, IAddOrUpdateVersion
 
     private async Task DeleteExistingLines(IEnumerable<ChangeLogLine> changeLogLines)
     {
-        foreach (var line in changeLogLines) await _changeLogCommands.DeleteLineAsync(line);
+        foreach (var line in changeLogLines)
+        {
+            await _changeLogCommands.DeleteLineAsync(line);
+        }
     }
 }

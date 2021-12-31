@@ -10,12 +10,16 @@ public class AccountProductQueryRequestModel
         bool includeClosedProducts)
     {
         if (userId == Guid.Empty)
+        {
             throw new ArgumentException("UserId cannot be empty.");
+        }
 
         UserId = userId;
 
         if (accountId == Guid.Empty)
+        {
             throw new ArgumentException("AccountId cannot be empty.");
+        }
 
         AccountId = accountId;
         LastProductId = lastProductId;

@@ -26,19 +26,23 @@ public class Product
     public Product(Guid id,
         Guid accountId,
         Name name,
-        VersioningScheme versioningScheme, 
+        VersioningScheme versioningScheme,
         Name languageCode,
         Guid createdByUser,
         DateTime createdAt,
         DateTime? closedAt)
     {
         if (id == Guid.Empty)
+        {
             throw new ArgumentException("Id cannot be empty.");
+        }
 
         Id = id;
 
         if (accountId == Guid.Empty)
+        {
             throw new ArgumentException("AccountId cannot be empty.");
+        }
 
         AccountId = accountId;
         Name = name ?? throw new ArgumentNullException(nameof(name));
@@ -47,18 +51,24 @@ public class Product
         LanguageCode = languageCode ?? throw new ArgumentNullException(nameof(languageCode));
 
         if (createdByUser == Guid.Empty)
+        {
             throw new ArgumentException("UserId cannot be empty.");
+        }
 
         CreatedByUser = createdByUser;
 
         if (createdAt == DateTime.MinValue || createdAt == DateTime.MaxValue)
+        {
             throw new ArgumentException("Invalid creation date.");
+        }
 
         CreatedAt = createdAt;
 
         if (closedAt.HasValue &&
             (closedAt == DateTime.MinValue || closedAt == DateTime.MaxValue))
+        {
             throw new ArgumentException("Invalid creation date.");
+        }
 
         ClosedAt = closedAt;
     }

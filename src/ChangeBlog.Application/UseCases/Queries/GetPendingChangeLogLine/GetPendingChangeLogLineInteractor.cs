@@ -27,10 +27,14 @@ public class GetPendingChangeLogLineInteractor : IGetPendingChangeLogLine
         Guid userId, Guid changeLogLineId)
     {
         if (userId == Guid.Empty)
+        {
             throw new ArgumentException("UserId cannot be empty.");
+        }
 
         if (changeLogLineId == Guid.Empty)
+        {
             throw new ArgumentException("ChangeLogLineId cannot be empty.");
+        }
 
         await GetChangeLogLineAsync(output, userId, changeLogLineId);
     }

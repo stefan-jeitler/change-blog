@@ -17,7 +17,9 @@ public class DeleteAllPendingChangeLogLinesInteractor : IDeleteAllPendingChangeL
     public Task ExecuteAsync(Guid productId)
     {
         if (productId == Guid.Empty)
+        {
             throw new ArgumentException("ProductId cannot be empty.");
+        }
 
         return _changeLogCommands.DeletePendingChangeLogs(productId);
     }

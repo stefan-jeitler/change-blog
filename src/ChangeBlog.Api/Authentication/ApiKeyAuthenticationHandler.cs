@@ -32,16 +32,22 @@ public class ApiKeyAuthenticationHandler : AuthenticationHandler<ApiKeyAuthentic
     protected override async Task<AuthenticateResult> HandleAuthenticateAsync()
     {
         if (!Request.Headers.TryGetValue(ApiKeyHeaderName, out var apiKeyHeaderValues))
+        {
             return AuthenticateResult.NoResult();
+        }
 
         var apiKeyInHeader = apiKeyHeaderValues.FirstOrDefault();
 
         if (apiKeyInHeader is null)
+        {
             return AuthenticateResult.NoResult();
+        }
 
         var userId = await _findUserId.FindByApiKeyAsync(apiKeyInHeader);
         if (!userId.HasValue || userId.Value == Guid.Empty)
+        {
             return AuthenticateResult.NoResult();
+        }
 
         return IssueTicket(userId.Value);
     }

@@ -31,21 +31,29 @@ public class MakeChangeLogLinePendingInteractor : IMakeChangeLogLinePending
     public async Task ExecuteAsync(IMakeChangeLogLinePendingOutputPort output, Guid changeLogLineId)
     {
         if (changeLogLineId == Guid.Empty)
+        {
             throw new ArgumentException("ChangeLogLineId cannot be empty.");
+        }
 
         _unitOfWork.Start();
 
         var line = await GetLineAsync(output, changeLogLineId);
         if (line.HasNoValue)
+        {
             return;
+        }
 
         var clVersion = await GetVersionAsync(output, line.GetValueOrThrow());
         if (clVersion.HasNoValue)
+        {
             return;
+        }
 
         var pendingChangeLogMetadata = await GetChangeLogsAsync(output, line.GetValueOrThrow());
         if (pendingChangeLogMetadata.HasNoValue)
+        {
             return;
+        }
 
         var pendingLine = MakeLinePending(line.GetValueOrThrow(), pendingChangeLogMetadata.GetValueOrThrow());
         await MoveLineAsyncAsync(output, pendingLine);
@@ -114,7 +122,7 @@ public class MakeChangeLogLinePendingInteractor : IMakeChangeLogLinePending
 
     private static ChangeLogLine MakeLinePending(ChangeLogLine line, ChangeLogs pendingChangeLogs)
     {
-        return new(line.Id,
+        return new ChangeLogLine(line.Id,
             null,
             line.ProductId,
             line.Text,

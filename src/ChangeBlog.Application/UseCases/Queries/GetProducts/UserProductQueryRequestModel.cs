@@ -10,7 +10,9 @@ public class UserProductQueryRequestModel
         ushort limit, bool includeClosedProducts)
     {
         if (userId == Guid.Empty)
+        {
             throw new ArgumentException("UserId cannot be empty.");
+        }
 
         UserId = userId;
 

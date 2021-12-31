@@ -24,7 +24,9 @@ public class ReleaseVersionInteractor : IReleaseVersion
     {
         var clVersion = await GetVersionAsync(output, versionId);
         if (clVersion.HasNoValue)
+        {
             return;
+        }
 
         var product = await _product.GetProductAsync(clVersion.GetValueOrThrow().ProductId);
         if (product.IsClosed)

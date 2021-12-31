@@ -10,13 +10,17 @@ public class PendingChangeLogsResponseModel
         List<ChangeLogLineResponseModel> changeLogs)
     {
         if (productId == Guid.Empty)
+        {
             throw new ArgumentException("ProductId cannot be empty.");
+        }
 
         ProductId = productId;
         ProductName = productName ?? throw new ArgumentNullException(nameof(productName));
 
         if (accountId == Guid.Empty)
+        {
             throw new ArgumentException("AccountId cannot be empty.");
+        }
 
         AccountId = accountId;
 

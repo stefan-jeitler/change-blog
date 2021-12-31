@@ -18,7 +18,9 @@ public record Issue
         var exception = ParseInternal(candidate, out var issue);
 
         if (exception is null)
+        {
             return issue;
+        }
 
         throw exception;
     }
@@ -35,18 +37,26 @@ public record Issue
         issue = null;
 
         if (candidate is null)
+        {
             return new ArgumentNullException(nameof(candidate));
+        }
 
         var c = candidate.Trim();
 
         if (c == string.Empty)
+        {
             return new ArgumentException("Issue number cannot be empty.");
+        }
 
         if (c.Contains(' '))
+        {
             return new ArgumentException("Whitespaces not allowed.");
+        }
 
         if (c.Length > MaxLength)
+        {
             return new ArgumentException($"Issue number cannot have more than {MaxLength} characters.");
+        }
 
         issue = new Issue(c);
         return null;

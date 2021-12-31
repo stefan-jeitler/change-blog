@@ -17,7 +17,9 @@ public record ChangeLogText
     public virtual bool Equals(ChangeLogText other)
     {
         if (other is null)
+        {
             return false;
+        }
 
         return ReferenceEquals(this, other) ||
                string.Equals(Value, other.Value, StringComparison.OrdinalIgnoreCase);
@@ -28,7 +30,9 @@ public record ChangeLogText
         var exception = ParseInternal(candidate, out var text);
 
         if (exception is null)
+        {
             return text;
+        }
 
         throw exception;
     }
@@ -45,12 +49,16 @@ public record ChangeLogText
         text = null;
 
         if (candidate is null)
+        {
             return new ArgumentNullException(nameof(candidate));
+        }
 
         var c = candidate.Trim();
 
         if (c == string.Empty)
+        {
             return new ArgumentException("Text must not be empty.");
+        }
 
         switch (c.Length)
         {

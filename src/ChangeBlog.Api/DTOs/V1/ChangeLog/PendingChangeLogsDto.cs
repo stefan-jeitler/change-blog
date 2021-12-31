@@ -14,7 +14,7 @@ public class PendingChangeLogsDto
 
     public static PendingChangeLogsDto FromResponseModel(PendingChangeLogsResponseModel m)
     {
-        return new()
+        return new PendingChangeLogsDto
         {
             ProductId = m.ProductId,
             ProductName = m.ProductName,

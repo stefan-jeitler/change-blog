@@ -28,12 +28,16 @@ public class AccountAuthorizationHandler : AuthorizationHandler
     {
         var accountIdInRoute = TryFindIdInRoute(context.HttpContext, KnownIdentifiers.AccountId);
         if (accountIdInRoute.HasValue)
+        {
             return _getAuthorizationState.GetAuthStateByAccountIdAsync(userId, accountIdInRoute.Value, permission);
+        }
 
         var accountIdInBody = TryFindInBody<IContainsAccountId>(context);
         if (accountIdInBody is not null)
+        {
             return _getAuthorizationState.GetAuthStateByAccountIdAsync(userId, accountIdInBody.AccountId,
                 permission);
+        }
 
         return _authorizationHandler.GetAuthorizationState(context, userId, permission);
     }

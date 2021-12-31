@@ -9,12 +9,16 @@ public class PendingChangeLogLineRequestModel
         List<string> issues)
     {
         if (userId == Guid.Empty)
+        {
             throw new ArgumentException("UserId cannot be empty.");
+        }
 
         UserId = userId;
 
         if (productId == Guid.Empty)
+        {
             throw new ArgumentException("ProductId cannot be empty.");
+        }
 
         ProductId = productId;
         Text = text ?? throw new ArgumentNullException(nameof(text));

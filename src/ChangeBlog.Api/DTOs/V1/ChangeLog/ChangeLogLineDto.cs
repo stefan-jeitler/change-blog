@@ -14,7 +14,7 @@ public class ChangeLogLineDto
 
     public static ChangeLogLineDto FromResponseModel(ChangeLogLineResponseModel model)
     {
-        return new()
+        return new ChangeLogLineDto
         {
             Id = model.Id,
             Text = model.Text,

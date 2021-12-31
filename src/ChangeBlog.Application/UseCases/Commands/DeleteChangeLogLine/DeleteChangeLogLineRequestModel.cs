@@ -7,7 +7,9 @@ public class DeleteChangeLogLineRequestModel
     public DeleteChangeLogLineRequestModel(Guid changeLogLineId, ChangeLogLineType changeLogLineType)
     {
         if (changeLogLineId == Guid.Empty)
+        {
             throw new ArgumentException("ChangeLogLineId cannot be empty.");
+        }
 
         ChangeLogLineId = changeLogLineId;
         ChangeLogLineType = changeLogLineType;

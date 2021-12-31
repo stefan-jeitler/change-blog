@@ -19,7 +19,9 @@ public class IssuesTypeHandler : SqlMapper.TypeHandler<IEnumerable<Issue>>
         var json = value.ToString();
 
         if (json is null)
+        {
             return Enumerable.Empty<Issue>();
+        }
 
         var issues = JsonSerializer
             .Deserialize<List<string>>(json)?

@@ -26,10 +26,14 @@ public class GetPendingChangeLogsInteractor : IGetPendingChangeLogs
     public async Task<PendingChangeLogsResponseModel> ExecuteAsync(Guid userId, Guid productId)
     {
         if (userId == Guid.Empty)
+        {
             throw new ArgumentException("UserId cannot be empty.");
+        }
 
         if (productId == Guid.Empty)
+        {
             throw new ArgumentException("ProductId cannot be empty.");
+        }
 
         return await GetChangeLogsAsync(userId, productId);
     }

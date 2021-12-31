@@ -19,7 +19,9 @@ public class LabelsTypeHandler : SqlMapper.TypeHandler<IEnumerable<Label>>
         var json = value.ToString();
 
         if (json is null)
+        {
             return Enumerable.Empty<Label>();
+        }
 
         var labels = JsonSerializer
             .Deserialize<List<string>>(json)?

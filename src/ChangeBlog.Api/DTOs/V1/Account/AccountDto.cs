@@ -13,7 +13,7 @@ public class AccountDto
 
     public static AccountDto FromResponseModel(AccountResponseModel m)
     {
-        return new()
+        return new AccountDto
         {
             Id = m.Id,
             Name = m.Name,

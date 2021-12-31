@@ -41,7 +41,9 @@ public class AddPendingChangeLogLineInteractor : IAddPendingChangeLogLine
 
         var line = await CreateChangeLogLineAsync(output, lineRequestModel, product.GetValueOrThrow());
         if (line.HasNoValue)
+        {
             return;
+        }
 
         await SaveChangeLogLineAsync(output, line.GetValueOrThrow());
     }
@@ -52,7 +54,9 @@ public class AddPendingChangeLogLineInteractor : IAddPendingChangeLogLine
     {
         var parsedLine = ParseLine(output, requestModel);
         if (parsedLine.HasNoValue)
+        {
             return Maybe<ChangeLogLine>.None;
+        }
 
         var changeLogs = await _changeLogQueries.GetChangeLogsAsync(product.Id);
 

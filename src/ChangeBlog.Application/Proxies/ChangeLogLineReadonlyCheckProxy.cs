@@ -50,7 +50,9 @@ public class ChangeLogLineReadonlyCheckProxy : IChangeLogCommandsDao
         {
             var result = await IsReadOnlyAsync(line);
             if (result.IsFailure)
+            {
                 return Result.Failure<int, Conflict>(result.Error);
+            }
         }
 
         return await _changeLogCommands.AddOrUpdateLinesAsync(lines);
@@ -63,7 +65,9 @@ public class ChangeLogLineReadonlyCheckProxy : IChangeLogCommandsDao
         {
             var result = await IsReadOnlyAsync(line);
             if (result.IsFailure)
+            {
                 return Result.Failure<int, Conflict>(result.Error);
+            }
         }
 
         return await _changeLogCommands.MoveLinesAsync(lines);
@@ -96,27 +100,35 @@ public class ChangeLogLineReadonlyCheckProxy : IChangeLogCommandsDao
     private async Task<Result<ChangeLogLine, Conflict>> IsReadOnlyAsync(ChangeLogLine line)
     {
         if (line.DeletedAt.HasValue)
+        {
             return Result.Failure<ChangeLogLine, Conflict>(
                 new ChangeLogLineDeletedConflict(line.Id));
+        }
 
         if (!line.IsPending)
         {
             var version = await GetVersionAsync(line.VersionId!.Value);
 
             if (version.IsDeleted)
+            {
                 return Result.Failure<ChangeLogLine, Conflict>(
                     new VersionDeletedConflict(version.Id));
+            }
 
             if (version.IsReleased)
+            {
                 return Result.Failure<ChangeLogLine, Conflict>(
                     new VersionReleasedConflict(version.Id));
+            }
         }
 
         var product = await GetProductAsync(line.ProductId);
 
         if (product.IsClosed)
+        {
             return Result.Failure<ChangeLogLine, Conflict>(
                 new ProductClosedConflict(product.Id));
+        }
 
         return Result.Success<ChangeLogLine, Conflict>(line);
     }

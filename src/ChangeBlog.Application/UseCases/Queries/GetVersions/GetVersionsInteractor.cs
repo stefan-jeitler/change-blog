@@ -35,7 +35,9 @@ public class GetVersionsInteractor : IGetVersion, IGetVersions
     {
         var clVersion = await _versionDao.FindVersionAsync(versionId);
         if (clVersion.HasNoValue)
+        {
             return Maybe<VersionResponseModel>.None;
+        }
 
         var currentUser = await _userDao.GetUserAsync(userId);
         var product = await _productDao.GetProductAsync(clVersion.GetValueOrThrow().ProductId);
@@ -50,11 +52,16 @@ public class GetVersionsInteractor : IGetVersion, IGetVersions
 
     public async Task<Maybe<VersionResponseModel>> ExecuteAsync(Guid userId, Guid productId, string version)
     {
-        if (!ClVersionValue.TryParse(version, out var clVersionValue)) return Maybe<VersionResponseModel>.None;
+        if (!ClVersionValue.TryParse(version, out var clVersionValue))
+        {
+            return Maybe<VersionResponseModel>.None;
+        }
 
         var clVersion = await _versionDao.FindVersionAsync(productId, clVersionValue);
         if (clVersion.HasNoValue)
+        {
             return Maybe<VersionResponseModel>.None;
+        }
 
         var currentUser = await _userDao.GetUserAsync(userId);
         var product = await _productDao.GetProductAsync(clVersion.GetValueOrThrow().ProductId);

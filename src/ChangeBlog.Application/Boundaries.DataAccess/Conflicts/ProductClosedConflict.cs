@@ -7,7 +7,9 @@ public class ProductClosedConflict : Conflict
     public ProductClosedConflict(Guid productId)
     {
         if (productId == Guid.Empty)
+        {
             throw new ArgumentException("ProductId cannot be empty.");
+        }
 
         ProductId = productId;
     }

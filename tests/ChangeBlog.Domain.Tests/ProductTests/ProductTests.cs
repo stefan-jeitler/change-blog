@@ -31,7 +31,7 @@ public class ProductTests
 
     private Product CreateProduct()
     {
-        return new(_testId, _testAccountId, _testName, _testVersioningScheme, _testLangCode, _testUserId,
+        return new Product(_testId, _testAccountId, _testName, _testVersioningScheme, _testLangCode, _testUserId,
             _testCreationDate, _testClosedDate);
     }
 

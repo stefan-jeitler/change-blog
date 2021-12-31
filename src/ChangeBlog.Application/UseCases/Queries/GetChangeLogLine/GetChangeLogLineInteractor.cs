@@ -22,10 +22,14 @@ public class GetChangeLogLineInteractor : IGetChangeLogLine
     public Task ExecuteAsync(IGetChangeLogLineOutputPort output, Guid userId, Guid changeLogLineId)
     {
         if (userId == Guid.Empty)
+        {
             throw new ArgumentException("UserId cannot be empty.");
+        }
 
         if (changeLogLineId == Guid.Empty)
+        {
             throw new ArgumentException("ChangeLogLineId cannot be empty.");
+        }
 
         return FindChangeLogLineAsync(output, userId, changeLogLineId);
     }

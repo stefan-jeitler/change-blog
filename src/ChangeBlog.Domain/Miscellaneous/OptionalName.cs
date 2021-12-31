@@ -16,7 +16,9 @@ public record OptionalName
     public static OptionalName Parse(string candidate)
     {
         if (string.IsNullOrWhiteSpace(candidate))
+        {
             return new OptionalName(string.Empty);
+        }
 
         var name = Name.Parse(candidate);
         return new OptionalName(name.Value);
@@ -33,7 +35,9 @@ public record OptionalName
         }
 
         if (!Name.TryParse(candidate, out var n))
+        {
             return false;
+        }
 
         name = new OptionalName(n.Value);
         return true;

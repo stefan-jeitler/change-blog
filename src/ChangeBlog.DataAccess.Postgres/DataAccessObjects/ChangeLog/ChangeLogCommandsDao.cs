@@ -174,10 +174,14 @@ public class ChangeLogCommandsDao : IChangeLogCommandsDao
             });
 
         if (currentVersionId.HasValue)
+        {
             await UpdateSearchVectorsAsync(currentVersionId.Value);
+        }
 
         if (newVersionId.HasValue)
+        {
             await UpdateSearchVectorsAsync(newVersionId.Value);
+        }
 
         return Result.Success<ChangeLogLine, Conflict>(changeLogLine);
     }
@@ -201,7 +205,9 @@ public class ChangeLogCommandsDao : IChangeLogCommandsDao
             .Distinct();
 
         foreach (var versionId in versionIdsBeforeMove.Concat(versionIdsOfNewDestination))
+        {
             await UpdateSearchVectorsAsync(versionId);
+        }
 
         return Result.Success<int, Conflict>(count);
     }
@@ -228,7 +234,9 @@ public class ChangeLogCommandsDao : IChangeLogCommandsDao
                      .Where(x => x.VersionId.HasValue)
                      .Select(x => x.VersionId.Value)
                      .Distinct())
+        {
             await UpdateSearchVectorsAsync(versionId);
+        }
 
         return Result.Success<int, Conflict>(count);
     }
@@ -244,7 +252,10 @@ public class ChangeLogCommandsDao : IChangeLogCommandsDao
                 issues = changeLogLine.Issues.AsEnumerable()
             });
 
-        if (changeLogLine.VersionId.HasValue) await UpdateSearchVectorsAsync(changeLogLine.VersionId.Value);
+        if (changeLogLine.VersionId.HasValue)
+        {
+            await UpdateSearchVectorsAsync(changeLogLine.VersionId.Value);
+        }
 
         return Result.Success<ChangeLogLine, Conflict>(changeLogLine);
     }
@@ -257,7 +268,10 @@ public class ChangeLogCommandsDao : IChangeLogCommandsDao
                 changeLogLineId = changeLogLine.Id
             });
 
-        if (changeLogLine.VersionId.HasValue) await UpdateSearchVectorsAsync(changeLogLine.VersionId.Value);
+        if (changeLogLine.VersionId.HasValue)
+        {
+            await UpdateSearchVectorsAsync(changeLogLine.VersionId.Value);
+        }
 
         return Result.Success<ChangeLogLine, Conflict>(changeLogLine);
     }

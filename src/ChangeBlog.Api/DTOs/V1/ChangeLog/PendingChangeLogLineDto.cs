@@ -12,7 +12,7 @@ public class PendingChangeLogLineDto
 
     public static PendingChangeLogLineDto FromResponseModel(PendingChangeLogLineResponseModel m)
     {
-        return new()
+        return new PendingChangeLogLineDto
         {
             ProductId = m.ProductId,
             ProductName = m.ProductName,

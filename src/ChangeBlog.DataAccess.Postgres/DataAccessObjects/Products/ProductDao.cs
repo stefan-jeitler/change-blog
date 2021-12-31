@@ -55,8 +55,10 @@ public class ProductDao : IProductDao
         var product = await FindProductAsync(productId);
 
         if (product.HasNoValue)
+        {
             throw new Exception(
                 "The requested product does not exist. If you are not sure whether the product exists use 'FindProduct' otherwise file an issue.");
+        }
 
         return product.GetValueOrThrow();
     }
@@ -127,7 +129,9 @@ public class ProductDao : IProductDao
     public async Task CloseProductAsync(Product product)
     {
         if (!product.ClosedAt.HasValue)
+        {
             throw new Exception("The given product has no closed date.");
+        }
 
         const string closeProductSql = "UPDATE product SET closed_at = @closedAt WHERE id = @productId";
 

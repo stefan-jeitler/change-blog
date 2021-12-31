@@ -31,17 +31,23 @@ public class ChangeLogLine
         DateTime? deletedAt = null)
     {
         if (id == Guid.Empty)
+        {
             throw new ArgumentException("Id must not be empty.", nameof(id));
+        }
 
         Id = id;
 
         if (versionId.HasValue && versionId.Value == Guid.Empty)
+        {
             throw new ArgumentException("VersionId cannot be empty.");
+        }
 
         VersionId = versionId;
 
         if (productId == Guid.Empty)
+        {
             throw new ArgumentException("ProductId must not be empty.", nameof(productId));
+        }
 
         ProductId = productId;
         Text = text ?? throw new ArgumentNullException(nameof(text));
@@ -50,17 +56,23 @@ public class ChangeLogLine
         Issues = Populate(issues ?? throw new ArgumentNullException(nameof(issues)), MaxIssues);
 
         if (createdByUser == Guid.Empty)
+        {
             throw new ArgumentException("CreatedByUser cannot be empty.");
+        }
 
         CreatedByUser = createdByUser;
 
         if (createdAt == DateTime.MinValue || createdAt == DateTime.MaxValue)
+        {
             throw new ArgumentException("Invalid creation date.", nameof(createdAt));
+        }
 
         CreatedAt = createdAt;
 
         if (deletedAt.HasValue && (deletedAt.Value == DateTime.MinValue || deletedAt.Value == DateTime.MaxValue))
+        {
             throw new ArgumentException("Invalid deletion date.");
+        }
 
         DeletedAt = deletedAt;
     }
@@ -95,7 +107,9 @@ public class ChangeLogLine
     public void AddLabels(IReadOnlyCollection<Label> labels)
     {
         if (Labels.Count + labels.Count >= MaxLabels)
+        {
             throw new ArgumentException($"Too many labels. Max. {MaxLabels} labels.");
+        }
 
         Labels = Labels.Union(labels);
     }
@@ -118,7 +132,9 @@ public class ChangeLogLine
     public void AddIssues(IReadOnlyCollection<Issue> issues)
     {
         if (Issues.Count + issues.Count > MaxIssues)
+        {
             throw new ArgumentException("");
+        }
 
         Issues = Issues.Union(issues);
     }
@@ -136,10 +152,14 @@ public class ChangeLogLine
     public ChangeLogLine AssignToVersion(Guid versionId, uint position)
     {
         if (!IsPending)
+        {
             throw new ArgumentException("Not pending lines can't be assigned.");
+        }
 
         if (versionId == Guid.Empty)
+        {
             throw new ArgumentException("VersionId cannot be empty.");
+        }
 
         return new ChangeLogLine(Id, versionId, ProductId, Text, position, CreatedAt, Labels, Issues, CreatedByUser,
             DeletedAt);

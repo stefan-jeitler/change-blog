@@ -14,27 +14,27 @@ import {ProfileComponent} from "./components/profile/profile.component";
 let host = `${window.location.origin}`;
 
 @NgModule({
-  declarations: [
-    AppComponent,
-    HeaderComponent,
-    HomeComponent,
-    ProfileComponent
-  ],
-  imports: [
-    BrowserModule,
-    HttpClientModule,
-    AppRoutingModule,
-    OAuthModule.forRoot({
-      resourceServer: {
-        sendAccessToken: true,
-        allowedUrls: [host]
-      }
-    })
-  ],
-  providers: [
-    {provide: AuthConfig, useValue: environment.authConfig}
-  ],
-  bootstrap: [AppComponent]
+    declarations: [
+        AppComponent,
+        HeaderComponent,
+        HomeComponent,
+        ProfileComponent
+    ],
+    imports: [
+        BrowserModule,
+        HttpClientModule,
+        AppRoutingModule,
+        OAuthModule.forRoot({
+            resourceServer: {
+                sendAccessToken: true,
+                allowedUrls: [host]
+            }
+        })
+    ],
+    providers: [
+        {provide: AuthConfig, useValue: environment.authConfig}
+    ],
+    bootstrap: [AppComponent]
 })
 export class AppModule {
 }

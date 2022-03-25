@@ -1,6 +1,6 @@
 using System;
 
-namespace ChangeBlog.Api.Swagger;
+namespace ChangeBlog.Api.Shared.Swagger;
 
 [AttributeUsage(AttributeTargets.Class, Inherited = false)]
 public class SwaggerControllerOrderAttribute : Attribute

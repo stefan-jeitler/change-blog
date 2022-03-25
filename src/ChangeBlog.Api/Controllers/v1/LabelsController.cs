@@ -5,7 +5,7 @@ using System.Threading.Tasks;
 using ChangeBlog.Api.Authorization;
 using ChangeBlog.Api.Presenters.V1.ChangeLogs;
 using ChangeBlog.Api.Shared.DTOs;
-using ChangeBlog.Api.Swagger;
+using ChangeBlog.Api.Shared.Swagger;
 using ChangeBlog.Application.UseCases.Commands.Labels.AddChangeLogLineLabel;
 using ChangeBlog.Application.UseCases.Commands.Labels.DeleteChangeLogLineLabel;
 using ChangeBlog.Application.UseCases.Commands.Labels.SharedModels;

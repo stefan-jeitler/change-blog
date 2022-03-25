@@ -2,6 +2,7 @@
 using System.Net.Mime;
 using System.Reflection;
 using ChangeBlog.Api.Shared.DTOs;
+using ChangeBlog.Api.Shared.Swagger;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -12,6 +13,7 @@ namespace ChangeBlog.Management.Api.Controllers;
 [ApiController]
 [Route("api")]
 [Produces(MediaTypeNames.Application.Json)]
+[SwaggerControllerOrder(0)]
 public class HomeController : ControllerBase
 {
     private static readonly Lazy<string> AssemblyVersion =

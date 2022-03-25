@@ -9,7 +9,7 @@ using ChangeBlog.Api.DTOs.V1.Version;
 using ChangeBlog.Api.Extensions;
 using ChangeBlog.Api.Presenters.V1.Version;
 using ChangeBlog.Api.Shared.DTOs;
-using ChangeBlog.Api.Swagger;
+using ChangeBlog.Api.Shared.Swagger;
 using ChangeBlog.Application.UseCases.Commands.AddOrUpdateVersion;
 using ChangeBlog.Application.UseCases.Commands.AddOrUpdateVersion.Models;
 using ChangeBlog.Application.UseCases.Commands.DeleteVersion;
@@ -49,10 +49,7 @@ public class VersionController : ControllerBase
         var userId = HttpContext.GetUserId();
         var version = await getVersion.ExecuteAsync(userId, versionId);
 
-        if (version.HasNoValue)
-        {
-            return new NotFoundObjectResult(DefaultResponse.Create("Version not found"));
-        }
+        if (version.HasNoValue) return new NotFoundObjectResult(DefaultResponse.Create("Version not found"));
 
         return Ok(VersionDto.FromResponseModel(version.GetValueOrThrow()));
     }
@@ -108,10 +105,7 @@ public class VersionController : ControllerBase
         var userId = HttpContext.GetUserId();
         var clVersion = await getVersion.ExecuteAsync(userId, productId, version);
 
-        if (clVersion.HasNoValue)
-        {
-            return new NotFoundObjectResult(DefaultResponse.Create("Version not found"));
-        }
+        if (clVersion.HasNoValue) return new NotFoundObjectResult(DefaultResponse.Create("Version not found"));
 
         return Ok(VersionDto.FromResponseModel(clVersion.GetValueOrThrow()));
     }
@@ -126,10 +120,7 @@ public class VersionController : ControllerBase
         Guid productId,
         [FromBody] AddVersionDto versionDto)
     {
-        if (versionDto is null)
-        {
-            return new BadRequestObjectResult(DefaultResponse.Create("Missing version dto."));
-        }
+        if (versionDto is null) return new BadRequestObjectResult(DefaultResponse.Create("Missing version dto."));
 
         var lines = versionDto.ChangeLogLines
             .Select(x =>

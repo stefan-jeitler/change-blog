@@ -1,5 +1,8 @@
 ﻿using System;
+using System.Linq;
+using ChangeBlog.Api.Shared.Swagger;
 using Microsoft.AspNetCore.Builder;
+using Microsoft.AspNetCore.Mvc.Controllers;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.OpenApi.Models;
 
@@ -11,7 +14,7 @@ public static class SwaggerExtensions
     {
         services.AddSwaggerGen(c =>
         {
-            c.SwaggerDoc("v1", new OpenApiInfo { Title = "ChangeBlog.Management.Api", Version = "v1" });
+            c.SwaggerDoc("v1", new OpenApiInfo {Title = "ChangeBlog.Management.Api", Version = "v1"});
             c.AddSecurityDefinition("Bearer", new OpenApiSecurityScheme
             {
                 Name = "Bearer",
@@ -34,6 +37,19 @@ public static class SwaggerExtensions
                     },
                     Array.Empty<string>()
                 }
+            });
+
+            c.OrderActionsBy(api =>
+            {
+                if (api.ActionDescriptor is not ControllerActionDescriptor descriptor) return string.Empty;
+
+                var orderAttribute = descriptor
+                    .EndpointMetadata.OfType<SwaggerControllerOrderAttribute>()
+                    .FirstOrDefault();
+
+                return orderAttribute is null
+                    ? descriptor.ControllerName
+                    : orderAttribute.Position.ToString();
             });
         });
 

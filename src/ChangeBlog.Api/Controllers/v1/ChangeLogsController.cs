@@ -7,7 +7,7 @@ using ChangeBlog.Api.DTOs.V1.ChangeLog;
 using ChangeBlog.Api.Extensions;
 using ChangeBlog.Api.Presenters.V1.ChangeLogs;
 using ChangeBlog.Api.Shared.DTOs;
-using ChangeBlog.Api.Swagger;
+using ChangeBlog.Api.Shared.Swagger;
 using ChangeBlog.Application.UseCases.Commands.AddChangeLogLine;
 using ChangeBlog.Application.UseCases.Commands.AddChangeLogLine.Models;
 using ChangeBlog.Application.UseCases.Commands.DeleteChangeLogLine;

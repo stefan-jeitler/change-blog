@@ -6,7 +6,7 @@ using ChangeBlog.Api.DTOs.V1.Product;
 using ChangeBlog.Api.Extensions;
 using ChangeBlog.Api.Presenters.V1.Product;
 using ChangeBlog.Api.Shared.DTOs;
-using ChangeBlog.Api.Swagger;
+using ChangeBlog.Api.Shared.Swagger;
 using ChangeBlog.Application.UseCases.Commands.AddProduct;
 using ChangeBlog.Application.UseCases.Commands.CloseProduct;
 using ChangeBlog.Application.UseCases.Queries.GetProducts;
@@ -35,10 +35,7 @@ public class ProductController : ControllerBase
         var userId = HttpContext.GetUserId();
         var product = await getProduct.ExecuteAsync(userId, productId);
 
-        if (product.HasNoValue)
-        {
-            return NotFound(DefaultResponse.Create("Product not found"));
-        }
+        if (product.HasNoValue) return NotFound(DefaultResponse.Create("Product not found"));
 
         return Ok(ProductDto.FromResponseModel(product.GetValueOrThrow()));
     }
@@ -53,9 +50,7 @@ public class ProductController : ControllerBase
         [FromBody] AddOrUpdateProductDto addOrUpdateProductDto)
     {
         if (addOrUpdateProductDto.VersioningSchemeId == Guid.Empty)
-        {
             return BadRequest(DefaultResponse.Create("VersioningSchemeId cannot be empty."));
-        }
 
         var userId = HttpContext.GetUserId();
 

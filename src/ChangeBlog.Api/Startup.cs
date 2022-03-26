@@ -19,6 +19,7 @@ namespace ChangeBlog.Api;
 
 public class Startup
 {
+    private const string AllowManagementAppOrigin = nameof(AllowManagementAppOrigin);
     private readonly IConfiguration _configuration;
 
     public Startup(IConfiguration configuration)
@@ -46,6 +47,19 @@ public class Startup
 
         services.AddMemoryCache();
         services.AddApplicationUseCases();
+
+        var corsUrls = _configuration
+            .GetSection("AppSettings:CorsUrls")
+            .Get<string[]>();
+        services.AddCors(options =>
+        {
+            options.AddPolicy(AllowManagementAppOrigin, builder =>
+            {
+                builder.WithOrigins(corsUrls)
+                    .AllowAnyHeader()
+                    .AllowAnyMethod();
+            });
+        });
     }
 
     public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
@@ -56,6 +70,7 @@ public class Startup
         app.UseRouting();
         app.UseAuthentication();
         app.UseAuthorization();
+        app.UseCors(AllowManagementAppOrigin);
         app.UseEndpoints(endpoints =>
             endpoints
                 .MapControllers()

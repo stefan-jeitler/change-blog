@@ -30,7 +30,7 @@ export class ProfileComponent implements OnInit {
 
   ngOnInit(): void {
     const accessToken = this.authService.getAccessToken();
-    this.http.get<User>("/api/v1/user/info", {
+    this.http.get<User>("https://app-change-blog-staging.azurewebsites.net/api/v1/user/info", {
       headers: {'Authorization': `Bearer ${accessToken}`}
     })
       .subscribe(u => this._currentUser = u);

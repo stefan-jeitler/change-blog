@@ -6,6 +6,7 @@ using System.Security.Claims;
 using System.Text.Encodings.Web;
 using System.Text.Json;
 using System.Threading.Tasks;
+using ChangeBlog.Api.Shared;
 using ChangeBlog.Api.Shared.DTOs;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Http;
@@ -32,22 +33,16 @@ public class ApiKeyAuthenticationHandler : AuthenticationHandler<ApiKeyAuthentic
     protected override async Task<AuthenticateResult> HandleAuthenticateAsync()
     {
         if (!Request.Headers.TryGetValue(ApiKeyHeaderName, out var apiKeyHeaderValues))
-        {
             return AuthenticateResult.NoResult();
-        }
 
         var apiKeyInHeader = apiKeyHeaderValues.FirstOrDefault();
 
         if (apiKeyInHeader is null)
-        {
             return AuthenticateResult.NoResult();
-        }
 
         var userId = await _findUserId.FindByApiKeyAsync(apiKeyInHeader);
         if (!userId.HasValue || userId.Value == Guid.Empty)
-        {
             return AuthenticateResult.NoResult();
-        }
 
         return IssueTicket(userId.Value);
     }
@@ -56,10 +51,10 @@ public class ApiKeyAuthenticationHandler : AuthenticationHandler<ApiKeyAuthentic
     {
         var identity = new ClaimsIdentity(new List<Claim>
         {
-            new(ClaimTypes.NameIdentifier, userId.ToString())
+            new(Constants.AppClaims.UserId, userId.ToString())
         }, ApiKeyAuthenticationOptions.AuthenticationType);
 
-        var identities = new List<ClaimsIdentity> { identity };
+        var identities = new List<ClaimsIdentity> {identity};
         var principal = new ClaimsPrincipal(identities);
         var ticket = new AuthenticationTicket(principal, ApiKeyAuthenticationOptions.Scheme);
 

@@ -1,5 +1,6 @@
 using System.Linq;
 using ChangeBlog.Api.Shared;
+using ChangeBlog.Api.Shared.Authentication;
 using ChangeBlog.Api.Shared.DTOs;
 using ChangeBlog.DataAccess.MicrosoftIdentity;
 using ChangeBlog.DataAccess.Postgres;
@@ -53,22 +54,17 @@ public class Startup
         services.AddMicrosoftIdentityDataAccess(userInfoEndpointBaseUrl);
     }
 
-
     public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
     {
         if (env.IsDevelopment())
-        {
             app.UseDeveloperExceptionPage();
-        }
 
         app.AddSwagger();
 
         app.UseStaticFiles();
 
         if (!env.IsDevelopment())
-        {
             app.UseSpaStaticFiles();
-        }
 
         app.UseRouting();
 
@@ -87,9 +83,7 @@ public class Startup
             spa.Options.SourcePath = "ClientApp";
 
             if (env.IsDevelopment())
-            {
                 spa.UseAngularCliServer("start");
-            }
         });
     }
 

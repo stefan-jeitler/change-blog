@@ -1,6 +1,7 @@
 ﻿using System.Net.Mime;
 using System.Text.Json;
 using System.Threading.Tasks;
+using ChangeBlog.Api.Shared.Authentication;
 using ChangeBlog.Api.Shared.DTOs;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authentication.JwtBearer;

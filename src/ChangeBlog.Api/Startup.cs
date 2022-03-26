@@ -2,6 +2,7 @@ using System.Linq;
 using ChangeBlog.Api.Authentication;
 using ChangeBlog.Api.Authorization;
 using ChangeBlog.Api.Shared;
+using ChangeBlog.Api.Shared.Authentication;
 using ChangeBlog.Api.Shared.DTOs;
 using ChangeBlog.Api.Swagger;
 using ChangeBlog.Application.Boundaries.DataAccess.ExternalIdentity;
@@ -31,7 +32,12 @@ public class Startup
 
         services.AddSwagger();
         services.AddApplicationInsightsTelemetry();
-        services.AddApiKeyAuthentication();
+
+        var settings = _configuration
+            .GetSection("Authentication:MicrosoftIdentity")
+            .Get<MicrosoftIdentityAuthenticationSettings>();
+
+        services.AddAppAuthentication(settings);
         services.AddPermissionHandler();
 
         var connectionString = _configuration.GetConnectionString("ChangeBlogDb");

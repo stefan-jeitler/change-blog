@@ -1,4 +1,4 @@
-﻿namespace ChangeBlog.Management.Api.Authentication;
+﻿namespace ChangeBlog.Api.Shared.Authentication;
 
 public class MicrosoftIdentityAuthenticationSettings
 {

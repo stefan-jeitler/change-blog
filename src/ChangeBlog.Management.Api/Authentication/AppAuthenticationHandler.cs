@@ -67,7 +67,7 @@ public class AppAuthenticationHandler
         {
             new(Constants.AppClaims.UserId, userId.ToString())
         };
-        var appIdentity = new ClaimsIdentity(appClaims);
+        var appIdentity = new ClaimsIdentity(appClaims, "ChangeBlogApp");
 
         context.Principal!.AddIdentity(appIdentity);
     }

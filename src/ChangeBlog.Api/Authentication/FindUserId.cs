@@ -17,4 +17,9 @@ public class FindUserId
     {
         return _userAccessDao.FindActiveUserIdByApiKeyAsync(apiKey);
     }
+
+    public Task<Guid?> FindByExternalUserIdAsync(string externalUserId)
+    {
+        return _userAccessDao.FindActiveUserByExternalUserId(externalUserId);
+    }
 }

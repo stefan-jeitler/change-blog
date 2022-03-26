@@ -39,6 +39,30 @@ public static class SwaggerExtensions
                 }
             });
 
+            c.AddSecurityDefinition("Bearer", new OpenApiSecurityScheme
+            {
+                Name = "Bearer",
+                In = ParameterLocation.Header,
+                Description = "Please insert JsonWebToken",
+                Type = SecuritySchemeType.Http,
+                Scheme = "Bearer"
+            });
+
+            c.AddSecurityRequirement(new OpenApiSecurityRequirement
+            {
+                {
+                    new OpenApiSecurityScheme
+                    {
+                        Reference = new OpenApiReference
+                        {
+                            Type = ReferenceType.SecurityScheme,
+                            Id = "Bearer"
+                        }
+                    },
+                    Array.Empty<string>()
+                }
+            });
+
             c.OrderActionsBy(api =>
             {
                 if (api.ActionDescriptor is not ControllerActionDescriptor descriptor) return string.Empty;

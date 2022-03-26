@@ -10,13 +10,15 @@ import {AuthConfig, OAuthModule} from "angular-oauth2-oidc";
 import {environment} from "src/environments/environment";
 import {HomeComponent} from "./components/home/home.component";
 import {ProfileComponent} from "./components/profile/profile.component";
+import { ApikeyComponent } from './components/apikey/apikey.component';
 
 @NgModule({
   declarations: [
     AppComponent,
     HeaderComponent,
     HomeComponent,
-    ProfileComponent
+    ProfileComponent,
+    ApikeyComponent
   ],
   imports: [
     BrowserModule,
@@ -25,7 +27,7 @@ import {ProfileComponent} from "./components/profile/profile.component";
     OAuthModule.forRoot({
       resourceServer: {
         sendAccessToken: true,
-        allowedUrls: [`${window.location.origin}/api/v1/user/info`]
+        allowedUrls: [`${window.location.origin}`]
       }
     })
   ],

@@ -13,6 +13,9 @@
       <li *ngIf="isLoggedIn" class="nav-item">
         <a class="nav-link" [routerLink]="['profile']">Profile</a>
       </li>
+      <li *ngIf="isLoggedIn" class="nav-item">
+        <a class="nav-link" [routerLink]="['apikey']">Api-Key</a>
+      </li>
     </ul>
     <div>
       <button *ngIf="!isLoggedIn" (click)="login()" class="btn btn-light ms-auto" type="button">Login</button>

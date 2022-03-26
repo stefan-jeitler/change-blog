@@ -24,7 +24,7 @@ variables:
     Version: 0.0.0
 
 pool:
-  vmImage: 'windows-2022'
+  vmImage: 'ubuntu-latest'
 
 stages:
   - stage: continuous_integration
@@ -63,9 +63,6 @@ stages:
     displayName: Continuous Delivery
     dependsOn: continuous_integration
     condition: and(succeeded(), startsWith(variables['Build.SourceBranch'], 'refs/tags/'))
-    
-    pool:
-      vmImage: 'ubuntu-latest'
     
     variables:
       ImageNameApi: change-blog-api

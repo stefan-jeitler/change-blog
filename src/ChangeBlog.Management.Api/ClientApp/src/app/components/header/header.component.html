@@ -18,9 +18,9 @@
       </li>
     </ul>
     <div>
-      <button *ngIf="!isLoggedIn" (click)="login()" class="btn btn-light ms-auto" type="button">Login</button>
+      <button *ngIf="!isLoggedIn" (click)="login()" class="btn btn-light ms-auto float-end" type="button">Login</button>
       <div *ngIf="isLoggedIn" class="dropdown user-profile">
-        <i class="bi bi-person-circle white user-profile-icon" data-bs-toggle="dropdown"></i>
+        <i class="bi bi-person-circle white user-profile-icon float-end" data-bs-toggle="dropdown"></i>
         <ul aria-labelledby="user-icon" class="dropdown-menu dropdown-menu-end">
           <li><a aria-disabled="true" class="dropdown-item user-profile-name">{{ userName }}</a></li>
           <li>

@@ -18,14 +18,14 @@ public class SchemaVersion
         _logger = logger;
     }
 
-    private static SemVersion AppSchemaVersion => SemVersion.Parse("12.1.5");
+    private static SemVersion AppSchemaVersion => SemVersion.Parse("12.1.5", SemVersionStyles.Strict);
 
     public async Task ApproveAsync()
     {
         using var dbConnection = _acquireDbConnection();
         const string schemaVersionSql = "SELECT version from schema_Version";
         var dbSchemaVersionValue = await dbConnection.ExecuteScalarAsync<string>(schemaVersionSql);
-        var dbSchemaVersion = SemVersion.Parse(dbSchemaVersionValue);
+        var dbSchemaVersion = SemVersion.Parse(dbSchemaVersionValue, SemVersionStyles.Strict);
 
         if (AppSchemaVersion.Major != dbSchemaVersion.Major)
         {

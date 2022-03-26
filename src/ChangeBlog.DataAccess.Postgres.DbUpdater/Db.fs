@@ -37,14 +37,14 @@ let getLatestSchemaVersion (dbConnection: IDbConnection) =
         tableExists dbConnection "schema_version"
 
     match tableExists with
-    | false -> SemVersion.Parse("0.0.0")
+    | false -> SemVersion.Parse("0.0.0", SemVersionStyles.Strict)
     | true ->
         let versionSql = "SELECT version FROM schema_version"
 
         let latestVersion =
             dbConnection.ExecuteScalar<string>(versionSql)
 
-        SemVersion.Parse(latestVersion)
+        SemVersion.Parse(latestVersion, SemVersionStyles.Strict)
 
 let updateSchemaVersion (dbConnection: IDbConnection) (version: SemVersion) =
     let updateSchemaVersionSql =

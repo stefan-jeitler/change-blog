@@ -48,12 +48,10 @@ public static class ServiceCollectionExtensions
                 o.ClientSecret = settings.ClientSecret;
             })
             .EnableTokenAcquisitionToCallDownstreamApi(_ => { })
-            .AddInMemoryTokenCaches()
-            ;
+            .AddInMemoryTokenCaches();
 
         return services;
     }
-
 
     private static async Task OnTokenValidated(TokenValidatedContext context)
     {

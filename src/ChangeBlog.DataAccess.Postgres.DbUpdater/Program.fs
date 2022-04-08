@@ -52,7 +52,7 @@ let createDetectBreakingChangesCommand (dbConnection: IDbConnection) =
             -1
 
     let description =
-        "examines whether the db updates contain any breaking changes. If it does the return code is set to 1 otherwise to 0."
+        "examine whether the db updates contain any breaking changes. If they do the return code is set to 1 otherwise to 0."
 
     let detectBreakingChangesCommand =
         Command("detect-breakingchanges", description)

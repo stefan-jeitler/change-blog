@@ -40,7 +40,6 @@ public class AddOrUpdateVersionApiPresenter : BaseApiPresenter, IAddOrUpdateVers
         Response = new CreatedResult(location, DefaultResponse.Create("Version added.", resourceIds));
     }
 
-
     public void InvalidVersionFormat(string version)
     {
         Response = new UnprocessableEntityObjectResult(DefaultResponse.Create($"Invalid format '{version}'."));

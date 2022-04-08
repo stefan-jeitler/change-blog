@@ -11,6 +11,10 @@
         <PackageReference Include="Scrutor" Version="4.1.0" />
         <PackageReference Include="Swashbuckle.AspNetCore" Version="6.3.0" />
         <PackageReference Include="Microsoft.Identity.Web" Version="1.23.1" />
+        <PackageReference Include="NSwag.MSBuild" Version="13.15.10">
+            <PrivateAssets>all</PrivateAssets>
+            <IncludeAssets>runtime; build; native; contentfiles; analyzers</IncludeAssets>
+        </PackageReference>
     </ItemGroup>
 
     <ItemGroup>
@@ -18,6 +22,12 @@
         <ProjectReference Include="..\ChangeBlog.Application\ChangeBlog.Application.csproj" />
         <ProjectReference Include="..\ChangeBlog.DataAccess.MicrosoftIdentity\ChangeBlog.DataAccess.MicrosoftIdentity.csproj" />
         <ProjectReference Include="..\ChangeBlog.DataAccess.Postgres\ChangeBlog.DataAccess.Postgres.csproj" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <None Update="ClientGenerationConfig.nswag">
+        <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+      </None>
     </ItemGroup>
 
     <Target Name="GenerateTypeScriptClient" Condition="$(Configuration)=='Debug'">
@@ -28,18 +38,21 @@
         <CallTarget Targets="Restore" />
         <CallTarget Targets="Build" />
 
-        <Message Text="Install SwashBuckle.AspNetCore.Cli" Importance="high"/>
-        <Exec Command="dotnet new tool-manifest --force" WorkingDirectory="$(OutDir)"/>
-        <Exec Command="dotnet tool update SwashBuckle.AspNetCore.Cli" WorkingDirectory="$(OutDir)"/>
+        <Message Text="Install SwashBuckle.AspNetCore.Cli" Importance="high" />
+        <Exec Command="dotnet new tool-manifest --force" WorkingDirectory="$(OutDir)" />
+        <Exec Command="dotnet tool update SwashBuckle.AspNetCore.Cli" WorkingDirectory="$(OutDir)" />
 
         <Message Text="Creating directory for clients" Importance="high" />
         <MakeDir Directories="$(OutDir)/clients/" />
 
-        <Message Text="Generating clients" Importance="high" />
+        <Message Text="Generating client" Importance="high" />
         <Exec Command="dotnet swagger tofile --output ./clients/ChangeBlog-Api-Swagger.yaml --yaml $(AssemblyName).dll v1" WorkingDirectory="$(OutDir)" />
         <Exec Command="dotnet swagger tofile --output ./clients/ChangeBlog-Api-Swagger.json $(AssemblyName).dll v1" WorkingDirectory="$(OutDir)" />
-        
-        
+
+        <Exec Command="$(NSwagExe) run ClientGenerationConfig.nswag /variables:input=.\clients\ChangeBlog-Api-Swagger.json,output=.\clients\ChangeBlogApiClient.ts" WorkingDirectory="$(OutDir)" />
+
+        <Message Text="Copy client to frontend app. Dir: $(TypeScriptClientOutput)" Importance="high" />
+        <Copy SourceFiles="$(OutDir)/clients/ChangeBlogApiClient.ts" DestinationFolder="$(TypeScriptClientOutput)" />
     </Target>
 
 </Project>

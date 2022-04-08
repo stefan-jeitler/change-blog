@@ -20,4 +20,26 @@
         <ProjectReference Include="..\ChangeBlog.DataAccess.Postgres\ChangeBlog.DataAccess.Postgres.csproj" />
     </ItemGroup>
 
+    <Target Name="GenerateTypeScriptClient" Condition="$(Configuration)=='Debug'">
+        <PropertyGroup>
+            <TypeScriptClientOutput>$(ProjectDir)../ChangeBlog.Management.Api/ClientApp/src/clients/</TypeScriptClientOutput>
+        </PropertyGroup>
+        
+        <CallTarget Targets="Restore" />
+        <CallTarget Targets="Build" />
+
+        <Message Text="Install SwashBuckle.AspNetCore.Cli" Importance="high"/>
+        <Exec Command="dotnet new tool-manifest --force" WorkingDirectory="$(OutDir)"/>
+        <Exec Command="dotnet tool update SwashBuckle.AspNetCore.Cli" WorkingDirectory="$(OutDir)"/>
+
+        <Message Text="Creating directory for clients" Importance="high" />
+        <MakeDir Directories="$(OutDir)/clients/" />
+
+        <Message Text="Generating clients" Importance="high" />
+        <Exec Command="dotnet swagger tofile --output ./clients/ChangeBlog-Api-Swagger.yaml --yaml $(AssemblyName).dll v1" WorkingDirectory="$(OutDir)" />
+        <Exec Command="dotnet swagger tofile --output ./clients/ChangeBlog-Api-Swagger.json $(AssemblyName).dll v1" WorkingDirectory="$(OutDir)" />
+        
+        
+    </Target>
+
 </Project>

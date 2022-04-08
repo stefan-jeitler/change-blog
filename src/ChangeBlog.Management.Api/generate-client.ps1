@@ -1,0 +1,1 @@
+﻿dotnet msbuild -Target:GenerateTypeScriptClient .\ChangeBlog.Management.Api.csproj

@@ -34,15 +34,15 @@
         <PropertyGroup>
             <TypeScriptClientOutput>$(ProjectDir)../ChangeBlog.Management.Api/ClientApp/src/clients/</TypeScriptClientOutput>
         </PropertyGroup>
-        
-        <CallTarget Targets="Restore" />
-        <CallTarget Targets="Build" />
+
+        <CallTarget Targets="Clean;Restore;Build" />
 
         <Message Text="Install SwashBuckle.AspNetCore.Cli" Importance="high" />
         <Exec Command="dotnet new tool-manifest --force" WorkingDirectory="$(OutDir)" />
         <Exec Command="dotnet tool update SwashBuckle.AspNetCore.Cli" WorkingDirectory="$(OutDir)" />
 
         <Message Text="Creating directory for clients" Importance="high" />
+        <RemoveDir Directories="$(OutDir)/clients/" />
         <MakeDir Directories="$(OutDir)/clients/" />
 
         <Message Text="Generating client" Importance="high" />

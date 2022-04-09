@@ -10,17 +10,17 @@
 
 import { mergeMap as _observableMergeMap, catchError as _observableCatch } from 'rxjs/operators';
 import { Observable, throwError as _observableThrow, of as _observableOf } from 'rxjs';
-import { Injectable, Inject, Optional, OpaqueToken } from '@angular/core';
+import { Injectable, Inject, Optional, InjectionToken } from '@angular/core';
 import { HttpClient, HttpHeaders, HttpResponse, HttpResponseBase } from '@angular/common/http';
 
 export module Client.ChangeBlog.Api {
-export const API_BASE_URL = new OpaqueToken('API_BASE_URL');
+export const API_BASE_URL = new InjectionToken<string>('API_BASE_URL');
 
 @Injectable()
 export class ChangeBlogApiClient {
     private http: HttpClient;
     private baseUrl: string;
-    protected jsonParseReviver: (key: string, value: any) => any = undefined;
+    protected jsonParseReviver: ((key: string, value: any) => any) | undefined = undefined;
 
     constructor(@Inject(HttpClient) http: HttpClient, @Optional() @Inject(API_BASE_URL) baseUrl?: string) {
         this.http = http;
@@ -84,7 +84,7 @@ export class ChangeBlogApiClient {
      * @param limit (optional) 
      * @return Success
      */
-    changes(searchTerm: string, lastVersionId: string, limit: number): Observable<VersionDto[]> {
+    changes(searchTerm: string | undefined, lastVersionId: string | undefined, limit: number | undefined): Observable<VersionDto[]> {
         let url_ = this.baseUrl + "/api/changes?";
         if (searchTerm === null)
             throw new Error("The parameter 'searchTerm' cannot be null.");
@@ -136,7 +136,7 @@ export class ChangeBlogApiClient {
             if (Array.isArray(resultData200)) {
                 result200 = [] as any;
                 for (let item of resultData200)
-                    result200.push(VersionDto.fromJS(item));
+                    result200!.push(VersionDto.fromJS(item));
             }
             else {
                 result200 = <any>null;
@@ -208,7 +208,7 @@ export class ChangeBlogApiClient {
             if (Array.isArray(resultData200)) {
                 result200 = [] as any;
                 for (let item of resultData200)
-                    result200.push(AccountDto.fromJS(item));
+                    result200!.push(AccountDto.fromJS(item));
             }
             else {
                 result200 = <any>null;
@@ -303,7 +303,7 @@ export class ChangeBlogApiClient {
      * @param limit (optional) 
      * @return Success
      */
-    users(accountId: string, lastUserId: string, limit: number): Observable<UserDto[]> {
+    users(accountId: string, lastUserId: string | undefined, limit: number | undefined): Observable<UserDto[]> {
         let url_ = this.baseUrl + "/api/v1/accounts/{accountId}/users?";
         if (accountId === undefined || accountId === null)
             throw new Error("The parameter 'accountId' must be defined.");
@@ -368,7 +368,7 @@ export class ChangeBlogApiClient {
             if (Array.isArray(resultData200)) {
                 result200 = [] as any;
                 for (let item of resultData200)
-                    result200.push(UserDto.fromJS(item));
+                    result200!.push(UserDto.fromJS(item));
             }
             else {
                 result200 = <any>null;
@@ -396,7 +396,7 @@ export class ChangeBlogApiClient {
      * @param includeClosed (optional) 
      * @return Success
      */
-    productsAll(accountId: string, lastProductId: string, limit: number, includeClosed: boolean): Observable<ProductDto[]> {
+    productsAll(accountId: string, lastProductId: string | undefined, limit: number | undefined, includeClosed: boolean | undefined): Observable<ProductDto[]> {
         let url_ = this.baseUrl + "/api/v1/accounts/{accountId}/products?";
         if (accountId === undefined || accountId === null)
             throw new Error("The parameter 'accountId' must be defined.");
@@ -465,7 +465,7 @@ export class ChangeBlogApiClient {
             if (Array.isArray(resultData200)) {
                 result200 = [] as any;
                 for (let item of resultData200)
-                    result200.push(ProductDto.fromJS(item));
+                    result200!.push(ProductDto.fromJS(item));
             }
             else {
                 result200 = <any>null;
@@ -492,7 +492,7 @@ export class ChangeBlogApiClient {
      * @param includePermissions (optional) 
      * @return Success
      */
-    roles(filter: string, includePermissions: boolean): Observable<RoleDto[]> {
+    roles(filter: string | undefined, includePermissions: boolean | undefined): Observable<RoleDto[]> {
         let url_ = this.baseUrl + "/api/v1/accounts/roles?";
         if (filter === null)
             throw new Error("The parameter 'filter' cannot be null.");
@@ -554,7 +554,7 @@ export class ChangeBlogApiClient {
             if (Array.isArray(resultData200)) {
                 result200 = [] as any;
                 for (let item of resultData200)
-                    result200.push(RoleDto.fromJS(item));
+                    result200!.push(RoleDto.fromJS(item));
             }
             else {
                 result200 = <any>null;
@@ -582,7 +582,7 @@ export class ChangeBlogApiClient {
      * @param includeClosed (optional) 
      * @return Success
      */
-    productsAll2(lastProductId: string, limit: number, includeClosed: boolean): Observable<ProductDto[]> {
+    productsAll2(lastProductId: string | undefined, limit: number | undefined, includeClosed: boolean | undefined): Observable<ProductDto[]> {
         let url_ = this.baseUrl + "/api/v1/user/products?";
         if (lastProductId === null)
             throw new Error("The parameter 'lastProductId' cannot be null.");
@@ -648,7 +648,7 @@ export class ChangeBlogApiClient {
             if (Array.isArray(resultData200)) {
                 result200 = [] as any;
                 for (let item of resultData200)
-                    result200.push(ProductDto.fromJS(item));
+                    result200!.push(ProductDto.fromJS(item));
             }
             else {
                 result200 = <any>null;
@@ -821,7 +821,7 @@ export class ChangeBlogApiClient {
      * @param body (optional) 
      * @return Created
      */
-    productsPOST(body: AddOrUpdateProductDto): Observable<DefaultResponse> {
+    productsPOST(body: AddOrUpdateProductDto | undefined): Observable<DefaultResponse> {
         let url_ = this.baseUrl + "/api/v1/products";
         url_ = url_.replace(/[?&]$/, "");
 
@@ -1175,7 +1175,7 @@ export class ChangeBlogApiClient {
      * @param limit (optional) 
      * @return Success
      */
-    versionsAll(productId: string, searchTerm: string, lastVersionId: string, includeDeleted: boolean, limit: number): Observable<VersionDto[]> {
+    versionsAll(productId: string, searchTerm: string | undefined, lastVersionId: string | undefined, includeDeleted: boolean | undefined, limit: number | undefined): Observable<VersionDto[]> {
         let url_ = this.baseUrl + "/api/v1/products/{productId}/versions?";
         if (productId === undefined || productId === null)
             throw new Error("The parameter 'productId' must be defined.");
@@ -1255,7 +1255,7 @@ export class ChangeBlogApiClient {
             if (Array.isArray(resultData200)) {
                 result200 = [] as any;
                 for (let item of resultData200)
-                    result200.push(VersionDto.fromJS(item));
+                    result200!.push(VersionDto.fromJS(item));
             }
             else {
                 result200 = <any>null;
@@ -1274,7 +1274,7 @@ export class ChangeBlogApiClient {
      * @param body (optional) 
      * @return Created
      */
-    versionsPOST(productId: string, body: AddVersionDto): Observable<DefaultResponse> {
+    versionsPOST(productId: string, body: AddVersionDto | undefined): Observable<DefaultResponse> {
         let url_ = this.baseUrl + "/api/v1/products/{productId}/versions";
         if (productId === undefined || productId === null)
             throw new Error("The parameter 'productId' must be defined.");
@@ -1523,7 +1523,7 @@ export class ChangeBlogApiClient {
             if (Array.isArray(resultData200)) {
                 result200 = [] as any;
                 for (let item of resultData200)
-                    result200.push(VersionDto.fromJS(item));
+                    result200!.push(VersionDto.fromJS(item));
             }
             else {
                 result200 = <any>null;
@@ -1549,7 +1549,7 @@ export class ChangeBlogApiClient {
      * @param body (optional) 
      * @return Success
      */
-    versionsPUT(productId: string, version: string, body: AddOrUpdateVersionDto): Observable<DefaultResponse> {
+    versionsPUT(productId: string, version: string, body: AddOrUpdateVersionDto | undefined): Observable<DefaultResponse> {
         let url_ = this.baseUrl + "/api/v1/products/{productId}/versions/{version}";
         if (productId === undefined || productId === null)
             throw new Error("The parameter 'productId' must be defined.");
@@ -1812,7 +1812,7 @@ export class ChangeBlogApiClient {
             if (Array.isArray(resultData200)) {
                 result200 = [] as any;
                 for (let item of resultData200)
-                    result200.push(ChangeLogLineDto.fromJS(item));
+                    result200!.push(ChangeLogLineDto.fromJS(item));
             }
             else {
                 result200 = <any>null;
@@ -1831,7 +1831,7 @@ export class ChangeBlogApiClient {
      * @param body (optional) 
      * @return Created
      */
-    pendingChangelogsPOST(productId: string, body: AddOrUpdateChangeLogLineDto): Observable<DefaultResponse> {
+    pendingChangelogsPOST(productId: string, body: AddOrUpdateChangeLogLineDto | undefined): Observable<DefaultResponse> {
         let url_ = this.baseUrl + "/api/v1/products/{productId}/pending-changelogs";
         if (productId === undefined || productId === null)
             throw new Error("The parameter 'productId' must be defined.");
@@ -2089,7 +2089,7 @@ export class ChangeBlogApiClient {
      * @param body (optional) 
      * @return Success
      */
-    pendingChangelogsPATCH(changeLogLineId: string, body: PatchChangeLogLineDto): Observable<DefaultResponse> {
+    pendingChangelogsPATCH(changeLogLineId: string, body: PatchChangeLogLineDto | undefined): Observable<DefaultResponse> {
         let url_ = this.baseUrl + "/api/v1/pending-changelogs/{changeLogLineId}";
         if (changeLogLineId === undefined || changeLogLineId === null)
             throw new Error("The parameter 'changeLogLineId' must be defined.");
@@ -2279,7 +2279,7 @@ export class ChangeBlogApiClient {
      * @param body (optional) 
      * @return Success
      */
-    move(changeLogLineId: string, body: MoveChangeLogLineDto): Observable<DefaultResponse> {
+    move(changeLogLineId: string, body: MoveChangeLogLineDto | undefined): Observable<DefaultResponse> {
         let url_ = this.baseUrl + "/api/v1/pending-changelogs/{changeLogLineId}/move";
         if (changeLogLineId === undefined || changeLogLineId === null)
             throw new Error("The parameter 'changeLogLineId' must be defined.");
@@ -2380,7 +2380,7 @@ export class ChangeBlogApiClient {
      * @param body (optional) 
      * @return Success
      */
-    move2(productId: string, body: MoveChangeLogLineDto): Observable<DefaultResponse> {
+    move2(productId: string, body: MoveChangeLogLineDto | undefined): Observable<DefaultResponse> {
         let url_ = this.baseUrl + "/api/v1/products/{productId}/pending-changelogs/move";
         if (productId === undefined || productId === null)
             throw new Error("The parameter 'productId' must be defined.");
@@ -2652,7 +2652,7 @@ export class ChangeBlogApiClient {
      * @param body (optional) 
      * @return Success
      */
-    changelogsPATCH(changeLogLineId: string, body: PatchChangeLogLineDto): Observable<DefaultResponse> {
+    changelogsPATCH(changeLogLineId: string, body: PatchChangeLogLineDto | undefined): Observable<DefaultResponse> {
         let url_ = this.baseUrl + "/api/v1/changelogs/{changeLogLineId}";
         if (changeLogLineId === undefined || changeLogLineId === null)
             throw new Error("The parameter 'changeLogLineId' must be defined.");
@@ -2746,7 +2746,7 @@ export class ChangeBlogApiClient {
      * @param body (optional) 
      * @return Created
      */
-    changelogsPOST(versionId: string, body: AddOrUpdateChangeLogLineDto): Observable<DefaultResponse> {
+    changelogsPOST(versionId: string, body: AddOrUpdateChangeLogLineDto | undefined): Observable<DefaultResponse> {
         let url_ = this.baseUrl + "/api/v1/versions/{versionId}/changelogs";
         if (versionId === undefined || versionId === null)
             throw new Error("The parameter 'versionId' must be defined.");
@@ -3102,7 +3102,7 @@ export class ChangeBlogApiClient {
             if (Array.isArray(resultData200)) {
                 result200 = [] as any;
                 for (let item of resultData200)
-                    result200.push(item);
+                    result200!.push(item);
             }
             else {
                 result200 = <any>null;
@@ -3375,7 +3375,7 @@ export class ChangeBlogApiClient {
             if (Array.isArray(resultData200)) {
                 result200 = [] as any;
                 for (let item of resultData200)
-                    result200.push(item);
+                    result200!.push(item);
             }
             else {
                 result200 = <any>null;
@@ -3584,8 +3584,8 @@ export class ChangeBlogApiClient {
 
 export class AccountDto implements IAccountDto {
     id?: string;
-    name?: string;
-    defaultVersioningScheme?: string;
+    name?: string | undefined;
+    defaultVersioningScheme?: string | undefined;
     defaultVersioningSchemeId?: string;
     createdAt?: Date;
 
@@ -3628,16 +3628,16 @@ export class AccountDto implements IAccountDto {
 
 export interface IAccountDto {
     id?: string;
-    name?: string;
-    defaultVersioningScheme?: string;
+    name?: string | undefined;
+    defaultVersioningScheme?: string | undefined;
     defaultVersioningSchemeId?: string;
     createdAt?: Date;
 }
 
 export class AddOrUpdateChangeLogLineDto implements IAddOrUpdateChangeLogLineDto {
-    text: string;
-    labels?: string[];
-    issues?: string[];
+    text!: string;
+    labels?: string[] | undefined;
+    issues?: string[] | undefined;
 
     constructor(data?: IAddOrUpdateChangeLogLineDto) {
         if (data) {
@@ -3654,12 +3654,12 @@ export class AddOrUpdateChangeLogLineDto implements IAddOrUpdateChangeLogLineDto
             if (Array.isArray(_data["labels"])) {
                 this.labels = [] as any;
                 for (let item of _data["labels"])
-                    this.labels.push(item);
+                    this.labels!.push(item);
             }
             if (Array.isArray(_data["issues"])) {
                 this.issues = [] as any;
                 for (let item of _data["issues"])
-                    this.issues.push(item);
+                    this.issues!.push(item);
             }
         }
     }
@@ -3690,15 +3690,15 @@ export class AddOrUpdateChangeLogLineDto implements IAddOrUpdateChangeLogLineDto
 
 export interface IAddOrUpdateChangeLogLineDto {
     text: string;
-    labels?: string[];
-    issues?: string[];
+    labels?: string[] | undefined;
+    issues?: string[] | undefined;
 }
 
 export class AddOrUpdateProductDto implements IAddOrUpdateProductDto {
-    name: string;
-    versioningSchemeId?: string;
-    languageCode: string;
-    accountId: string;
+    name!: string;
+    versioningSchemeId?: string | undefined;
+    languageCode!: string;
+    accountId!: string;
 
     constructor(data?: IAddOrUpdateProductDto) {
         if (data) {
@@ -3737,14 +3737,14 @@ export class AddOrUpdateProductDto implements IAddOrUpdateProductDto {
 
 export interface IAddOrUpdateProductDto {
     name: string;
-    versioningSchemeId?: string;
+    versioningSchemeId?: string | undefined;
     languageCode: string;
     accountId: string;
 }
 
 export class AddOrUpdateVersionDto implements IAddOrUpdateVersionDto {
-    name?: string;
-    changeLogLines: AddOrUpdateChangeLogLineDto[];
+    name?: string | undefined;
+    changeLogLines!: AddOrUpdateChangeLogLineDto[];
     releaseImmediately?: boolean;
 
     constructor(data?: IAddOrUpdateVersionDto) {
@@ -3765,7 +3765,7 @@ export class AddOrUpdateVersionDto implements IAddOrUpdateVersionDto {
             if (Array.isArray(_data["changeLogLines"])) {
                 this.changeLogLines = [] as any;
                 for (let item of _data["changeLogLines"])
-                    this.changeLogLines.push(AddOrUpdateChangeLogLineDto.fromJS(item));
+                    this.changeLogLines!.push(AddOrUpdateChangeLogLineDto.fromJS(item));
             }
             this.releaseImmediately = _data["releaseImmediately"];
         }
@@ -3792,15 +3792,15 @@ export class AddOrUpdateVersionDto implements IAddOrUpdateVersionDto {
 }
 
 export interface IAddOrUpdateVersionDto {
-    name?: string;
+    name?: string | undefined;
     changeLogLines: AddOrUpdateChangeLogLineDto[];
     releaseImmediately?: boolean;
 }
 
 export class AddVersionDto implements IAddVersionDto {
-    version: string;
-    name?: string;
-    changeLogLines: AddOrUpdateChangeLogLineDto[];
+    version!: string;
+    name?: string | undefined;
+    changeLogLines!: AddOrUpdateChangeLogLineDto[];
     releaseImmediately?: boolean;
 
     constructor(data?: IAddVersionDto) {
@@ -3822,7 +3822,7 @@ export class AddVersionDto implements IAddVersionDto {
             if (Array.isArray(_data["changeLogLines"])) {
                 this.changeLogLines = [] as any;
                 for (let item of _data["changeLogLines"])
-                    this.changeLogLines.push(AddOrUpdateChangeLogLineDto.fromJS(item));
+                    this.changeLogLines!.push(AddOrUpdateChangeLogLineDto.fromJS(item));
             }
             this.releaseImmediately = _data["releaseImmediately"];
         }
@@ -3851,15 +3851,15 @@ export class AddVersionDto implements IAddVersionDto {
 
 export interface IAddVersionDto {
     version: string;
-    name?: string;
+    name?: string | undefined;
     changeLogLines: AddOrUpdateChangeLogLineDto[];
     releaseImmediately?: boolean;
 }
 
 export class ApiInfo implements IApiInfo {
-    name?: string;
-    version?: string;
-    environment?: string;
+    name?: string | undefined;
+    version?: string | undefined;
+    environment?: string | undefined;
 
     constructor(data?: IApiInfo) {
         if (data) {
@@ -3895,16 +3895,16 @@ export class ApiInfo implements IApiInfo {
 }
 
 export interface IApiInfo {
-    name?: string;
-    version?: string;
-    environment?: string;
+    name?: string | undefined;
+    version?: string | undefined;
+    environment?: string | undefined;
 }
 
 export class ChangeLogLineDto implements IChangeLogLineDto {
     id?: string;
-    text?: string;
-    labels?: string[];
-    issues?: string[];
+    text?: string | undefined;
+    labels?: string[] | undefined;
+    issues?: string[] | undefined;
     createdAt?: Date;
 
     constructor(data?: IChangeLogLineDto) {
@@ -3923,12 +3923,12 @@ export class ChangeLogLineDto implements IChangeLogLineDto {
             if (Array.isArray(_data["labels"])) {
                 this.labels = [] as any;
                 for (let item of _data["labels"])
-                    this.labels.push(item);
+                    this.labels!.push(item);
             }
             if (Array.isArray(_data["issues"])) {
                 this.issues = [] as any;
                 for (let item of _data["issues"])
-                    this.issues.push(item);
+                    this.issues!.push(item);
             }
             this.createdAt = _data["createdAt"] ? new Date(_data["createdAt"].toString()) : <any>undefined;
         }
@@ -3962,15 +3962,15 @@ export class ChangeLogLineDto implements IChangeLogLineDto {
 
 export interface IChangeLogLineDto {
     id?: string;
-    text?: string;
-    labels?: string[];
-    issues?: string[];
+    text?: string | undefined;
+    labels?: string[] | undefined;
+    issues?: string[] | undefined;
     createdAt?: Date;
 }
 
 export class DefaultResponse implements IDefaultResponse {
-    message?: string;
-    resourceIds?: { [key: string]: string; };
+    message?: string | undefined;
+    resourceIds?: { [key: string]: string; } | undefined;
 
     constructor(data?: IDefaultResponse) {
         if (data) {
@@ -3988,7 +3988,7 @@ export class DefaultResponse implements IDefaultResponse {
                 this.resourceIds = {} as any;
                 for (let key in _data["resourceIds"]) {
                     if (_data["resourceIds"].hasOwnProperty(key))
-                        (<any>this.resourceIds)[key] = _data["resourceIds"][key];
+                        (<any>this.resourceIds)![key] = _data["resourceIds"][key];
                 }
             }
         }
@@ -4016,12 +4016,12 @@ export class DefaultResponse implements IDefaultResponse {
 }
 
 export interface IDefaultResponse {
-    message?: string;
-    resourceIds?: { [key: string]: string; };
+    message?: string | undefined;
+    resourceIds?: { [key: string]: string; } | undefined;
 }
 
 export class MoveChangeLogLineDto implements IMoveChangeLogLineDto {
-    targetVersionId: string;
+    targetVersionId!: string;
 
     constructor(data?: IMoveChangeLogLineDto) {
         if (data) {
@@ -4057,9 +4057,9 @@ export interface IMoveChangeLogLineDto {
 }
 
 export class PatchChangeLogLineDto implements IPatchChangeLogLineDto {
-    text?: string;
-    labels?: string[];
-    issues?: string[];
+    text?: string | undefined;
+    labels?: string[] | undefined;
+    issues?: string[] | undefined;
 
     constructor(data?: IPatchChangeLogLineDto) {
         if (data) {
@@ -4076,12 +4076,12 @@ export class PatchChangeLogLineDto implements IPatchChangeLogLineDto {
             if (Array.isArray(_data["labels"])) {
                 this.labels = [] as any;
                 for (let item of _data["labels"])
-                    this.labels.push(item);
+                    this.labels!.push(item);
             }
             if (Array.isArray(_data["issues"])) {
                 this.issues = [] as any;
                 for (let item of _data["issues"])
-                    this.issues.push(item);
+                    this.issues!.push(item);
             }
         }
     }
@@ -4111,14 +4111,14 @@ export class PatchChangeLogLineDto implements IPatchChangeLogLineDto {
 }
 
 export interface IPatchChangeLogLineDto {
-    text?: string;
-    labels?: string[];
-    issues?: string[];
+    text?: string | undefined;
+    labels?: string[] | undefined;
+    issues?: string[] | undefined;
 }
 
 export class PendingChangeLogLineDto implements IPendingChangeLogLineDto {
     productId?: string;
-    productName?: string;
+    productName?: string | undefined;
     accountId?: string;
     changeLogLine?: ChangeLogLineDto;
 
@@ -4159,7 +4159,7 @@ export class PendingChangeLogLineDto implements IPendingChangeLogLineDto {
 
 export interface IPendingChangeLogLineDto {
     productId?: string;
-    productName?: string;
+    productName?: string | undefined;
     accountId?: string;
     changeLogLine?: ChangeLogLineDto;
 }
@@ -4167,12 +4167,12 @@ export interface IPendingChangeLogLineDto {
 export class ProductDto implements IProductDto {
     id?: string;
     accountId?: string;
-    accountName?: string;
-    name?: string;
+    accountName?: string | undefined;
+    name?: string | undefined;
     versioningSchemeId?: string;
-    versioningScheme?: string;
-    languageCode?: string;
-    createdByUser?: string;
+    versioningScheme?: string | undefined;
+    languageCode?: string | undefined;
+    createdByUser?: string | undefined;
     createdAt?: Date;
     isClosed?: boolean;
 
@@ -4226,19 +4226,19 @@ export class ProductDto implements IProductDto {
 export interface IProductDto {
     id?: string;
     accountId?: string;
-    accountName?: string;
-    name?: string;
+    accountName?: string | undefined;
+    name?: string | undefined;
     versioningSchemeId?: string;
-    versioningScheme?: string;
-    languageCode?: string;
-    createdByUser?: string;
+    versioningScheme?: string | undefined;
+    languageCode?: string | undefined;
+    createdByUser?: string | undefined;
     createdAt?: Date;
     isClosed?: boolean;
 }
 
 export class RoleDto implements IRoleDto {
-    name?: string;
-    permissions?: string[];
+    name?: string | undefined;
+    permissions?: string[] | undefined;
 
     constructor(data?: IRoleDto) {
         if (data) {
@@ -4255,7 +4255,7 @@ export class RoleDto implements IRoleDto {
             if (Array.isArray(_data["permissions"])) {
                 this.permissions = [] as any;
                 for (let item of _data["permissions"])
-                    this.permissions.push(item);
+                    this.permissions!.push(item);
             }
         }
     }
@@ -4280,16 +4280,16 @@ export class RoleDto implements IRoleDto {
 }
 
 export interface IRoleDto {
-    name?: string;
-    permissions?: string[];
+    name?: string | undefined;
+    permissions?: string[] | undefined;
 }
 
 export class UserDto implements IUserDto {
     id?: string;
-    email?: string;
-    firstName?: string;
-    lastName?: string;
-    timeZone?: string;
+    email?: string | undefined;
+    firstName?: string | undefined;
+    lastName?: string | undefined;
+    timeZone?: string | undefined;
     createdAt?: Date;
 
     constructor(data?: IUserDto) {
@@ -4333,24 +4333,24 @@ export class UserDto implements IUserDto {
 
 export interface IUserDto {
     id?: string;
-    email?: string;
-    firstName?: string;
-    lastName?: string;
-    timeZone?: string;
+    email?: string | undefined;
+    firstName?: string | undefined;
+    lastName?: string | undefined;
+    timeZone?: string | undefined;
     createdAt?: Date;
 }
 
 export class VersionDto implements IVersionDto {
     id?: string;
-    version?: string;
-    name?: string;
+    version?: string | undefined;
+    name?: string | undefined;
     productId?: string;
-    productName?: string;
+    productName?: string | undefined;
     accountId?: string;
-    changeLogLines?: ChangeLogLineDto[];
+    changeLogLines?: ChangeLogLineDto[] | undefined;
     createdAt?: Date;
-    releasedAt?: Date;
-    deletedAt?: Date;
+    releasedAt?: Date | undefined;
+    deletedAt?: Date | undefined;
 
     constructor(data?: IVersionDto) {
         if (data) {
@@ -4372,7 +4372,7 @@ export class VersionDto implements IVersionDto {
             if (Array.isArray(_data["changeLogLines"])) {
                 this.changeLogLines = [] as any;
                 for (let item of _data["changeLogLines"])
-                    this.changeLogLines.push(ChangeLogLineDto.fromJS(item));
+                    this.changeLogLines!.push(ChangeLogLineDto.fromJS(item));
             }
             this.createdAt = _data["createdAt"] ? new Date(_data["createdAt"].toString()) : <any>undefined;
             this.releasedAt = _data["releasedAt"] ? new Date(_data["releasedAt"].toString()) : <any>undefined;
@@ -4409,19 +4409,19 @@ export class VersionDto implements IVersionDto {
 
 export interface IVersionDto {
     id?: string;
-    version?: string;
-    name?: string;
+    version?: string | undefined;
+    name?: string | undefined;
     productId?: string;
-    productName?: string;
+    productName?: string | undefined;
     accountId?: string;
-    changeLogLines?: ChangeLogLineDto[];
+    changeLogLines?: ChangeLogLineDto[] | undefined;
     createdAt?: Date;
-    releasedAt?: Date;
-    deletedAt?: Date;
+    releasedAt?: Date | undefined;
+    deletedAt?: Date | undefined;
 }
 
 export class SwaggerException extends Error {
-    message: string;
+    override message: string;
     status: number;
     response: string;
     headers: { [key: string]: any; };

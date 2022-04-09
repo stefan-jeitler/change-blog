@@ -20,7 +20,7 @@ export const API_BASE_URL = new OpaqueToken('API_BASE_URL');
 export class ChangeBlogManagementApiClient {
     private http: HttpClient;
     private baseUrl: string;
-    protected jsonParseReviver: (key: string, value: any) => any = undefined;
+    protected jsonParseReviver: ((key: string, value: any) => any) | undefined = undefined;
 
     constructor(@Inject(HttpClient) http: HttpClient, @Optional() @Inject(API_BASE_URL) baseUrl?: string) {
         this.http = http;
@@ -80,9 +80,9 @@ export class ChangeBlogManagementApiClient {
 }
 
 export class ApiInfo implements IApiInfo {
-    name?: string;
-    version?: string;
-    environment?: string;
+    name?: string | undefined;
+    version?: string | undefined;
+    environment?: string | undefined;
 
     constructor(data?: IApiInfo) {
         if (data) {
@@ -118,13 +118,13 @@ export class ApiInfo implements IApiInfo {
 }
 
 export interface IApiInfo {
-    name?: string;
-    version?: string;
-    environment?: string;
+    name?: string | undefined;
+    version?: string | undefined;
+    environment?: string | undefined;
 }
 
 export class SwaggerException extends Error {
-    message: string;
+    override message: string;
     status: number;
     response: string;
     headers: { [key: string]: any; };

@@ -25,12 +25,12 @@
     </ItemGroup>
 
     <ItemGroup>
-      <None Update="ClientGenerationConfig.nswag">
+      <None Update="client-config.nswag">
         <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
       </None>
     </ItemGroup>
 
-    <Target Name="GenerateTypeScriptClient" Condition="$(Configuration)=='Debug'">
+    <Target Name="GenerateTypeScriptClient">
         <PropertyGroup>
             <TypeScriptClientOutput>$(ProjectDir)../ChangeBlog.Management.Api/ClientApp/src/clients/</TypeScriptClientOutput>
             <ApiVersion>v1</ApiVersion>
@@ -50,7 +50,7 @@
         <Exec Command="dotnet swagger tofile --output ./clients/ChangeBlog-Api-Swagger.yaml --yaml $(AssemblyName).dll $(ApiVersion)" WorkingDirectory="$(OutDir)" />
         <Exec Command="dotnet swagger tofile --output ./clients/ChangeBlog-Api-Swagger.json $(AssemblyName).dll $(ApiVersion)" WorkingDirectory="$(OutDir)" />
 
-        <Exec Command="$(NSwagExe) run ClientGenerationConfig.nswag /variables:input=.\clients\ChangeBlog-Api-Swagger.json,output=.\clients\ChangeBlogApiClient.ts" WorkingDirectory="$(OutDir)" />
+        <Exec Command="$(NSwagExe) run client-config.nswag /variables:input=.\clients\ChangeBlog-Api-Swagger.json,output=.\clients\ChangeBlogApiClient.ts" WorkingDirectory="$(OutDir)" />
 
         <Message Text="Copy client to frontend app. Dir: $(TypeScriptClientOutput)" Importance="high" />
         <Copy SourceFiles="$(OutDir)/clients/ChangeBlogApiClient.ts" DestinationFolder="$(TypeScriptClientOutput)" />

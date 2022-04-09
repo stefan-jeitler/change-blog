@@ -1,6 +1,7 @@
 using System.Linq;
 using ChangeBlog.Api.Shared;
 using ChangeBlog.Api.Shared.Authentication;
+using ChangeBlog.Api.Shared.Authorization;
 using ChangeBlog.Api.Shared.DTOs;
 using ChangeBlog.DataAccess.MicrosoftIdentity;
 using ChangeBlog.DataAccess.Postgres;
@@ -36,9 +37,11 @@ public class Startup
             .AddAuthenticationServices()
             .AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
             .AddAppAuthentication(settings);
+        
+        services.AddPermissionHandler();
 
         services
-            .AddControllers()
+            .AddControllers(o => { o.Filters.Add(typeof(AuthorizationFilter)); })
             .ConfigureApiBehaviorOptions(o => o.InvalidModelStateResponseFactory = CustomErrorMessage);
 
         services.AddSpaStaticFiles(configuration => { configuration.RootPath = "ClientApp/dist"; });

@@ -1,4 +1,5 @@
 ﻿using System.Net.Mime;
+using ChangeBlog.Api.Shared.Authorization;
 using ChangeBlog.Api.Shared.DTOs;
 using ChangeBlog.Api.Shared.Swagger;
 using Microsoft.AspNetCore.Http;
@@ -14,9 +15,11 @@ namespace ChangeBlog.Management.Api.Controllers.v1;
 [SwaggerControllerOrder(1)]
 public class UserController : ControllerBase
 {
-    [HttpPost]
-    public ActionResult EnsureUserIsImported()
+    [HttpPost(Name = "EnsureUserIsImported")]
+    [ProducesResponseType(typeof(DefaultResponse), StatusCodes.Status200OK)]
+    [SkipAuthorization]
+    public ActionResult<DefaultResponse> EnsureUserIsImported()
     {
-        return Ok(DefaultResponse.Create(""));
+        return Ok(DefaultResponse.Create("It has now been ensured that the user is available in the app."));
     }
 }

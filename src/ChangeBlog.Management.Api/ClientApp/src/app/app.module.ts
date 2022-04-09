@@ -1,4 +1,4 @@
-import {NgModule} from "@angular/core";
+import { NgModule} from "@angular/core";
 import {BrowserModule} from "@angular/platform-browser";
 import {HttpClientModule} from "@angular/common/http";
 
@@ -12,8 +12,8 @@ import {HomeComponent} from "./components/home/home.component";
 import {ProfileComponent} from "./components/profile/profile.component";
 import { ApikeyComponent } from './components/apikey/apikey.component';
 
-import { ChangeBlogApi } from '../clients/ChangeBlogApiClient'
-import { ChangeBlogManagementApi } from '../clients/ChangeBlogManagementApiClient'
+import { ChangeBlogApi } from 'src/clients/ChangeBlogApiClient'
+import { ChangeBlogManagementApi } from 'src/clients/ChangeBlogManagementApiClient'
 
 @NgModule({
   declarations: [
@@ -30,7 +30,7 @@ import { ChangeBlogManagementApi } from '../clients/ChangeBlogManagementApiClien
     OAuthModule.forRoot({
       resourceServer: {
         sendAccessToken: true,
-        allowedUrls: ['https://app-change-blog-staging.azurewebsites.net']
+        allowedUrls: ['https://app-change-blog-staging.azurewebsites.net', '/']
       }
     })
   ],

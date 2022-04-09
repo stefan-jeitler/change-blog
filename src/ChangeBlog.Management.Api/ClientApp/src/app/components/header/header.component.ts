@@ -1,7 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { AuthConfig, OAuthService } from 'angular-oauth2-oidc';
-import { filter, map, mergeMap } from 'rxjs/operators';
-import { ChangeBlogManagementApi } from 'src/clients/ChangeBlogManagementApiClient';
+import { OAuthService } from 'angular-oauth2-oidc';
 
 @Component({
   selector: 'app-header',
@@ -10,9 +8,7 @@ import { ChangeBlogManagementApi } from 'src/clients/ChangeBlogManagementApiClie
 })
 export class HeaderComponent implements OnInit {
   constructor(
-    private authService: OAuthService,
-    private authConfig: AuthConfig,
-    private changeBlogManagementApiClient: ChangeBlogManagementApi.Client
+    private authService: OAuthService
   ) {}
 
   get isLoggedIn(): boolean {
@@ -26,23 +22,6 @@ export class HeaderComponent implements OnInit {
   }
 
   ngOnInit() {
-    this.authService.events
-      .pipe(
-        filter(
-          (e) =>
-            e.type === 'token_received' &&
-            this.authService.hasValidAccessToken()
-        ),
-        mergeMap((x) =>
-          this.changeBlogManagementApiClient.ensureUserIsImported()
-        )
-      )
-      .subscribe(
-        (x) => console.debug(x),
-        (e) => console.error(e)
-      );
-
-    this.authService.configure(this.authConfig);
     this.authService.loadDiscoveryDocumentAndTryLogin();
   }
 

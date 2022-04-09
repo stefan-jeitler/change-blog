@@ -1,13 +1,16 @@
-import {Component, HostBinding} from '@angular/core';
-import {environment} from 'src/environments/environment';
+import { Component, HostBinding, Inject } from '@angular/core';
+import { AppConfig, APP_CONFIG } from 'app.config';
 
 @Component({
-    selector: 'app-root',
-    templateUrl: './app.component.html',
-    styleUrls: ['./app.component.scss']
+  selector: 'app-root',
+  templateUrl: './app.component.html',
+  styleUrls: ['./app.component.scss'],
 })
 export class AppComponent {
-    @HostBinding('attr.app-version') appVersionAttr = environment.appVersion;
-    title = 'change-blog';
-    currentApplicationVersion = environment.appVersion;
+  constructor(@Inject(APP_CONFIG) private appConfig: AppConfig) {}
+
+  title = 'change-blog';
+  get appVersion(): string {
+    return this.appConfig.appVersion!;
+  }
 }

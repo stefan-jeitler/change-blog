@@ -1,4 +1,4 @@
-namespace ChangeBlog.Api.Authorization;
+namespace ChangeBlog.Api.Shared.Authorization;
 
 public static class KnownIdentifiers
 {

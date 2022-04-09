@@ -1,7 +1,7 @@
 using System;
 using ChangeBlog.Domain.Authorization;
 
-namespace ChangeBlog.Api.Authorization;
+namespace ChangeBlog.Api.Shared.Authorization;
 
 [AttributeUsage(AttributeTargets.Method | AttributeTargets.Class, Inherited = false)]
 public class NeedsPermissionAttribute : Attribute

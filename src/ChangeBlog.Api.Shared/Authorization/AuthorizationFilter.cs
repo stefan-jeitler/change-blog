@@ -1,7 +1,6 @@
 using System;
 using System.Linq;
 using System.Threading.Tasks;
-using ChangeBlog.Api.Extensions;
 using ChangeBlog.Api.Shared.DTOs;
 using ChangeBlog.Domain.Authorization;
 using CSharpFunctionalExtensions;
@@ -14,7 +13,7 @@ using Microsoft.Extensions.Logging;
 // ReSharper disable InconsistentNaming
 // ReSharper disable ConvertIfStatementToSwitchStatement
 
-namespace ChangeBlog.Api.Authorization;
+namespace ChangeBlog.Api.Shared.Authorization;
 
 public class AuthorizationFilter : IAsyncActionFilter
 {

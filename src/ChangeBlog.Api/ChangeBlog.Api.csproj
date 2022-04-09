@@ -30,6 +30,10 @@
       </None>
     </ItemGroup>
 
+    <ItemGroup>
+      <Folder Include="Extensions" />
+    </ItemGroup>
+
     <Target Name="GenerateTypeScriptClient">
         <PropertyGroup>
             <TypeScriptClientOutput>$(ProjectDir)../ChangeBlog.Management.Api/ClientApp/src/clients/</TypeScriptClientOutput>

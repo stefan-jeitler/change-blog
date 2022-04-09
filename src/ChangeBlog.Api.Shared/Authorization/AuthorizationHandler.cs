@@ -5,7 +5,7 @@ using ChangeBlog.Domain.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc.Filters;
 
-namespace ChangeBlog.Api.Authorization;
+namespace ChangeBlog.Api.Shared.Authorization;
 
 public abstract class AuthorizationHandler
 {

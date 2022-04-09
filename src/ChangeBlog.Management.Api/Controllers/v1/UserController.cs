@@ -14,4 +14,9 @@ namespace ChangeBlog.Management.Api.Controllers.v1;
 [SwaggerControllerOrder(1)]
 public class UserController : ControllerBase
 {
+    [HttpPost]
+    public ActionResult EnsureUserIsImported()
+    {
+        return Ok(DefaultResponse.Create(""));
+    }
 }

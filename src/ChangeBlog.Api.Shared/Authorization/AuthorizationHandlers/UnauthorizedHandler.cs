@@ -3,7 +3,7 @@ using System.Threading.Tasks;
 using ChangeBlog.Domain.Authorization;
 using Microsoft.AspNetCore.Mvc.Filters;
 
-namespace ChangeBlog.Api.Authorization.AuthorizationHandlers;
+namespace ChangeBlog.Api.Shared.Authorization.AuthorizationHandlers;
 
 public class UnauthorizedHandler : AuthorizationHandler
 {

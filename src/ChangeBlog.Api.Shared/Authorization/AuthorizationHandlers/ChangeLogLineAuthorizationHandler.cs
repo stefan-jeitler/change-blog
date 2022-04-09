@@ -4,14 +4,14 @@ using ChangeBlog.Application.UseCases.Queries.GetAuthorizationState;
 using ChangeBlog.Domain.Authorization;
 using Microsoft.AspNetCore.Mvc.Filters;
 
-namespace ChangeBlog.Api.Authorization.AuthorizationHandlers;
+namespace ChangeBlog.Api.Shared.Authorization.AuthorizationHandlers;
 
-public class VersionAuthorizationHandler : AuthorizationHandler
+public class ChangeLogLineAuthorizationHandler : AuthorizationHandler
 {
     private readonly AuthorizationHandler _authorizationHandler;
     private readonly IGetAuthorizationState _getAuthorizationState;
 
-    public VersionAuthorizationHandler(AuthorizationHandler authorizationHandlerComponent,
+    public ChangeLogLineAuthorizationHandler(AuthorizationHandler authorizationHandlerComponent,
         IGetAuthorizationState getAuthorizationState)
     {
         _authorizationHandler = authorizationHandlerComponent;
@@ -21,10 +21,10 @@ public class VersionAuthorizationHandler : AuthorizationHandler
     public override Task<AuthorizationState> GetAuthorizationState(ActionExecutingContext context, Guid userId,
         Permission permission)
     {
-        var versionId = TryFindIdInRoute(context.HttpContext, KnownIdentifiers.VersionId);
+        var changeLogLineId = TryFindIdInRoute(context.HttpContext, KnownIdentifiers.ChangeLogLineId);
 
-        return versionId.HasValue
-            ? _getAuthorizationState.GetAuthStateByVersionIdAsync(userId, versionId.Value, permission)
+        return changeLogLineId.HasValue
+            ? _getAuthorizationState.GetAuthStateByChangeLogLineIdAsync(userId, changeLogLineId.Value, permission)
             : _authorizationHandler.GetAuthorizationState(context, userId, permission);
     }
 }

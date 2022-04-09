@@ -1,6 +1,6 @@
 using System;
 using System.ComponentModel.DataAnnotations;
-using ChangeBlog.Api.Authorization.RequestBodyIdentifiers;
+using ChangeBlog.Api.Shared.Authorization.RequestBodyIdentifiers;
 
 namespace ChangeBlog.Api.DTOs.V1.Product;
 

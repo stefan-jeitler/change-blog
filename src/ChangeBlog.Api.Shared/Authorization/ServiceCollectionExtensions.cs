@@ -1,7 +1,7 @@
-using ChangeBlog.Api.Authorization.AuthorizationHandlers;
+using ChangeBlog.Api.Shared.Authorization.AuthorizationHandlers;
 using Microsoft.Extensions.DependencyInjection;
 
-namespace ChangeBlog.Api.Authorization;
+namespace ChangeBlog.Api.Shared.Authorization;
 
 public static class ServiceCollectionExtensions
 {

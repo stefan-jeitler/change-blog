@@ -1,8 +1,8 @@
 using System.Linq;
 using ChangeBlog.Api.Authentication;
-using ChangeBlog.Api.Authorization;
 using ChangeBlog.Api.Shared;
 using ChangeBlog.Api.Shared.Authentication;
+using ChangeBlog.Api.Shared.Authorization;
 using ChangeBlog.Api.Shared.DTOs;
 using ChangeBlog.Api.Swagger;
 using ChangeBlog.Application.Boundaries.DataAccess.ExternalIdentity;

@@ -1,13 +1,13 @@
 using System;
 using System.Threading.Tasks;
-using ChangeBlog.Api.Authorization.RequestBodyIdentifiers;
+using ChangeBlog.Api.Shared.Authorization.RequestBodyIdentifiers;
 using ChangeBlog.Application.UseCases.Queries.GetAuthorizationState;
 using ChangeBlog.Domain.Authorization;
 using Microsoft.AspNetCore.Mvc.Filters;
 
 // ReSharper disable ConvertIfStatementToReturnStatement
 
-namespace ChangeBlog.Api.Authorization.AuthorizationHandlers;
+namespace ChangeBlog.Api.Shared.Authorization.AuthorizationHandlers;
 
 public class ProductAuthorizationHandler : AuthorizationHandler
 {

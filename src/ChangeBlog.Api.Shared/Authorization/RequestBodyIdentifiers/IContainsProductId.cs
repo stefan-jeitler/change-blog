@@ -1,6 +1,6 @@
 using System;
 
-namespace ChangeBlog.Api.Authorization.RequestBodyIdentifiers;
+namespace ChangeBlog.Api.Shared.Authorization.RequestBodyIdentifiers;
 
 public interface IContainsProductId
 {

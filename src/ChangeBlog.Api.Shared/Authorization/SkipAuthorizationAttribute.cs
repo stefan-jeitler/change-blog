@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace ChangeBlog.Api.Authorization;
+namespace ChangeBlog.Api.Shared.Authorization;
 
 /// <summary>
 ///     Use it with care in situations where no resource id is provided in the request.

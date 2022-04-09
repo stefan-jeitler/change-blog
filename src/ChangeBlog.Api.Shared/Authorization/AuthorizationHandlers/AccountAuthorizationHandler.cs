@@ -1,6 +1,6 @@
 using System;
 using System.Threading.Tasks;
-using ChangeBlog.Api.Authorization.RequestBodyIdentifiers;
+using ChangeBlog.Api.Shared.Authorization.RequestBodyIdentifiers;
 using ChangeBlog.Application.UseCases.Queries.GetAuthorizationState;
 using ChangeBlog.Domain.Authorization;
 using Microsoft.AspNetCore.Mvc.Filters;
@@ -9,7 +9,7 @@ using Microsoft.AspNetCore.Mvc.Filters;
 
 // ReSharper disable ClassNeverInstantiated.Global
 
-namespace ChangeBlog.Api.Authorization.AuthorizationHandlers;
+namespace ChangeBlog.Api.Shared.Authorization.AuthorizationHandlers;
 
 public class AccountAuthorizationHandler : AuthorizationHandler
 {

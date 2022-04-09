@@ -1,9 +1,8 @@
 using System;
 using System.Security.Claims;
-using ChangeBlog.Api.Shared;
 using Microsoft.AspNetCore.Http;
 
-namespace ChangeBlog.Api.Extensions;
+namespace ChangeBlog.Api.Shared;
 
 public static class HttpContextExtensions
 {

@@ -1,6 +1,6 @@
 using System;
 using System.Collections.Generic;
-using ChangeBlog.Api.Extensions;
+using ChangeBlog.Api.Shared;
 using ChangeBlog.Api.Shared.DTOs;
 using ChangeBlog.Application.Boundaries.DataAccess;
 using ChangeBlog.Application.UseCases.Commands.AddChangeLogLine;

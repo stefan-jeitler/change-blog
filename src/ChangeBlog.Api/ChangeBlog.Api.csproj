@@ -33,6 +33,7 @@
     <Target Name="GenerateTypeScriptClient" Condition="$(Configuration)=='Debug'">
         <PropertyGroup>
             <TypeScriptClientOutput>$(ProjectDir)../ChangeBlog.Management.Api/ClientApp/src/clients/</TypeScriptClientOutput>
+            <ApiVersion>v1</ApiVersion>
         </PropertyGroup>
 
         <CallTarget Targets="Clean;Restore;Build" />
@@ -46,8 +47,8 @@
         <MakeDir Directories="$(OutDir)/clients/" />
 
         <Message Text="Generating client" Importance="high" />
-        <Exec Command="dotnet swagger tofile --output ./clients/ChangeBlog-Api-Swagger.yaml --yaml $(AssemblyName).dll v1" WorkingDirectory="$(OutDir)" />
-        <Exec Command="dotnet swagger tofile --output ./clients/ChangeBlog-Api-Swagger.json $(AssemblyName).dll v1" WorkingDirectory="$(OutDir)" />
+        <Exec Command="dotnet swagger tofile --output ./clients/ChangeBlog-Api-Swagger.yaml --yaml $(AssemblyName).dll $(ApiVersion)" WorkingDirectory="$(OutDir)" />
+        <Exec Command="dotnet swagger tofile --output ./clients/ChangeBlog-Api-Swagger.json $(AssemblyName).dll $(ApiVersion)" WorkingDirectory="$(OutDir)" />
 
         <Exec Command="$(NSwagExe) run ClientGenerationConfig.nswag /variables:input=.\clients\ChangeBlog-Api-Swagger.json,output=.\clients\ChangeBlogApiClient.ts" WorkingDirectory="$(OutDir)" />
 

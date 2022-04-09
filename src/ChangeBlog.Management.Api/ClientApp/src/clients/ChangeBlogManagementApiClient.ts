@@ -13,7 +13,7 @@ import { Observable, throwError as _observableThrow, of as _observableOf } from 
 import { Injectable, Inject, Optional, OpaqueToken } from '@angular/core';
 import { HttpClient, HttpHeaders, HttpResponse, HttpResponseBase } from '@angular/common/http';
 
-export module Client.ChangeBlog.Api {
+export module Client.ChangeBlog.Management.Api {
 export const API_BASE_URL = new OpaqueToken('API_BASE_URL');
 
 @Injectable()

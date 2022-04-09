@@ -10,19 +10,19 @@
 
 import { mergeMap as _observableMergeMap, catchError as _observableCatch } from 'rxjs/operators';
 import { Observable, throwError as _observableThrow, of as _observableOf } from 'rxjs';
-import { Injectable, Inject, Optional, OpaqueToken } from '@angular/core';
+import { Injectable, Inject, Optional, InjectionToken } from '@angular/core';
 import { HttpClient, HttpHeaders, HttpResponse, HttpResponseBase } from '@angular/common/http';
 
-export module Client.ChangeBlog.Management.Api {
-export const API_BASE_URL = new OpaqueToken('API_BASE_URL');
+export module ChangeBlogManagementApi {
+export const MNGMT_API_BASE_URL = new InjectionToken<string>('MNGMT_API_BASE_URL');
 
 @Injectable()
-export class ChangeBlogManagementApiClient {
+export class Client {
     private http: HttpClient;
     private baseUrl: string;
     protected jsonParseReviver: ((key: string, value: any) => any) | undefined = undefined;
 
-    constructor(@Inject(HttpClient) http: HttpClient, @Optional() @Inject(API_BASE_URL) baseUrl?: string) {
+    constructor(@Inject(HttpClient) http: HttpClient, @Optional() @Inject(MNGMT_API_BASE_URL) baseUrl?: string) {
         this.http = http;
         this.baseUrl = baseUrl !== undefined && baseUrl !== null ? baseUrl : "";
     }

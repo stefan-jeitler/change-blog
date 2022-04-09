@@ -12,6 +12,9 @@ import {HomeComponent} from "./components/home/home.component";
 import {ProfileComponent} from "./components/profile/profile.component";
 import { ApikeyComponent } from './components/apikey/apikey.component';
 
+import { ChangeBlogApi } from '../clients/ChangeBlogApiClient'
+import { ChangeBlogManagementApi } from '../clients/ChangeBlogManagementApiClient'
+
 @NgModule({
   declarations: [
     AppComponent,
@@ -27,12 +30,18 @@ import { ApikeyComponent } from './components/apikey/apikey.component';
     OAuthModule.forRoot({
       resourceServer: {
         sendAccessToken: true,
-        allowedUrls: [`${window.location.origin}`]
+        allowedUrls: ['https://app-change-blog-staging.azurewebsites.net']
       }
     })
   ],
   providers: [
-    {provide: AuthConfig, useValue: environment.authConfig}
+    {provide: AuthConfig, useValue: environment.authConfig},
+    {
+      provide: ChangeBlogApi.API_BASE_URL,
+      useFactory: () => 'https://app-change-blog-staging.azurewebsites.net'
+    },
+    ChangeBlogApi.Client,
+    ChangeBlogManagementApi.Client
   ],
   bootstrap: [AppComponent]
 })

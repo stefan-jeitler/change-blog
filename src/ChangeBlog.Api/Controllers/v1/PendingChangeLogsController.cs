@@ -32,7 +32,7 @@ namespace ChangeBlog.Api.Controllers.V1;
 [SwaggerControllerOrder(5)]
 public class PendingChangeLogsController : ControllerBase
 {
-    [HttpGet("products/{productId:Guid}/pending-changelogs")]
+    [HttpGet("products/{productId:Guid}/pending-changelogs", Name = "GetPendingChangeLogs")]
     [ProducesResponseType(StatusCodes.Status200OK)]
     [NeedsPermission(Permission.ViewPendingChangeLogLines)]
     public async Task<ActionResult<List<ChangeLogLineDto>>> GetPendingChangeLogsAsync(
@@ -45,7 +45,7 @@ public class PendingChangeLogsController : ControllerBase
         return Ok(PendingChangeLogsDto.FromResponseModel(pendingChangeLogs));
     }
 
-    [HttpGet("pending-changelogs/{changeLogLineId:Guid}")]
+    [HttpGet("pending-changelogs/{changeLogLineId:Guid}", Name = "GetPendingChangeLogLine")]
     [ProducesResponseType(StatusCodes.Status200OK)]
     [ProducesResponseType(typeof(DefaultResponse), StatusCodes.Status404NotFound)]
     [NeedsPermission(Permission.ViewPendingChangeLogLines)]
@@ -61,7 +61,7 @@ public class PendingChangeLogsController : ControllerBase
         return presenter.Response;
     }
 
-    [HttpPost("products/{productId:Guid}/pending-changelogs")]
+    [HttpPost("products/{productId:Guid}/pending-changelogs", Name = "AddPendingChangeLogLine")]
     [ProducesResponseType(typeof(DefaultResponse), StatusCodes.Status201Created)]
     [ProducesResponseType(typeof(DefaultResponse), StatusCodes.Status404NotFound)]
     [ProducesResponseType(typeof(DefaultResponse), StatusCodes.Status409Conflict)]
@@ -86,7 +86,7 @@ public class PendingChangeLogsController : ControllerBase
     }
 
 
-    [HttpPatch("pending-changelogs/{changeLogLineId:Guid}")]
+    [HttpPatch("pending-changelogs/{changeLogLineId:Guid}", Name = "UpdatePendingChangeLogLine")]
     [ProducesResponseType(typeof(DefaultResponse), StatusCodes.Status200OK)]
     [ProducesResponseType(typeof(DefaultResponse), StatusCodes.Status404NotFound)]
     [ProducesResponseType(typeof(DefaultResponse), StatusCodes.Status409Conflict)]
@@ -109,7 +109,7 @@ public class PendingChangeLogsController : ControllerBase
         return presenter.Response;
     }
 
-    [HttpPost("pending-changelogs/{changeLogLineId:Guid}/move")]
+    [HttpPost("pending-changelogs/{changeLogLineId:Guid}/move", Name = "MovePendingChangeLogLine")]
     [ProducesResponseType(typeof(DefaultResponse), StatusCodes.Status200OK)]
     [ProducesResponseType(typeof(DefaultResponse), StatusCodes.Status404NotFound)]
     [ProducesResponseType(typeof(DefaultResponse), StatusCodes.Status409Conflict)]
@@ -132,7 +132,7 @@ public class PendingChangeLogsController : ControllerBase
         return presenter.Response;
     }
 
-    [HttpPost("products/{productId:Guid}/pending-changelogs/move")]
+    [HttpPost("products/{productId:Guid}/pending-changelogs/move", Name = "MoveAllPendingChangeLogs")]
     [ProducesResponseType(typeof(DefaultResponse), StatusCodes.Status200OK)]
     [ProducesResponseType(typeof(DefaultResponse), StatusCodes.Status404NotFound)]
     [ProducesResponseType(typeof(DefaultResponse), StatusCodes.Status409Conflict)]
@@ -156,7 +156,7 @@ public class PendingChangeLogsController : ControllerBase
         return presenter.Response;
     }
 
-    [HttpDelete("pending-changelogs/{changeLogLineId:Guid}")]
+    [HttpDelete("pending-changelogs/{changeLogLineId:Guid}", Name = "DeletePendingChangeLogLine")]
     [ProducesResponseType(typeof(DefaultResponse), StatusCodes.Status200OK)]
     [ProducesResponseType(typeof(DefaultResponse), StatusCodes.Status404NotFound)]
     [ProducesResponseType(typeof(DefaultResponse), StatusCodes.Status409Conflict)]
@@ -173,7 +173,7 @@ public class PendingChangeLogsController : ControllerBase
         return presenter.Response;
     }
 
-    [HttpDelete("products/{productId:Guid}/pending-changelogs")]
+    [HttpDelete("products/{productId:Guid}/pending-changelogs", Name = "DeleteAllPendingChangeLogs")]
     [ProducesResponseType(typeof(DefaultResponse), StatusCodes.Status200OK)]
     [NeedsPermission(Permission.DeleteChangeLogLine)]
     public async Task<ActionResult> DeleteAllPendingChangeLogLineAsync(

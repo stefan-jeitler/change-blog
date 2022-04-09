@@ -30,7 +30,7 @@ namespace ChangeBlog.Api.Controllers.V1;
 [SwaggerControllerOrder(6)]
 public class ChangeLogsController : ControllerBase
 {
-    [HttpGet("changelogs/{changeLogLineId:Guid}")]
+    [HttpGet("changelogs/{changeLogLineId:Guid}", Name = "GetChangeLogLine")]
     [ProducesResponseType(StatusCodes.Status200OK)]
     [ProducesResponseType(typeof(DefaultResponse), StatusCodes.Status404NotFound)]
     [NeedsPermission(Permission.ViewChangeLogLines)]
@@ -46,7 +46,7 @@ public class ChangeLogsController : ControllerBase
         return presenter.Response;
     }
 
-    [HttpDelete("changelogs/{changeLogLineId:Guid}")]
+    [HttpDelete("changelogs/{changeLogLineId:Guid}", Name = "DeleteChangeLogLine")]
     [ProducesResponseType(typeof(DefaultResponse), StatusCodes.Status200OK)]
     [ProducesResponseType(typeof(DefaultResponse), StatusCodes.Status404NotFound)]
     [ProducesResponseType(typeof(DefaultResponse), StatusCodes.Status409Conflict)]
@@ -63,7 +63,7 @@ public class ChangeLogsController : ControllerBase
         return presenter.Response;
     }
 
-    [HttpPost("versions/{versionId:Guid}/changelogs")]
+    [HttpPost("versions/{versionId:Guid}/changelogs", Name = "AddChangeLogLine")]
     [ProducesResponseType(typeof(DefaultResponse), StatusCodes.Status201Created)]
     [ProducesResponseType(typeof(DefaultResponse), StatusCodes.Status404NotFound)]
     [ProducesResponseType(typeof(DefaultResponse), StatusCodes.Status409Conflict)]
@@ -87,7 +87,7 @@ public class ChangeLogsController : ControllerBase
         return presenter.Response;
     }
 
-    [HttpPatch("changelogs/{changeLogLineId:Guid}")]
+    [HttpPatch("changelogs/{changeLogLineId:Guid}", Name = "UpdateChangeLogLine")]
     [ProducesResponseType(typeof(DefaultResponse), StatusCodes.Status200OK)]
     [ProducesResponseType(typeof(DefaultResponse), StatusCodes.Status409Conflict)]
     [ProducesResponseType(typeof(DefaultResponse), StatusCodes.Status422UnprocessableEntity)]
@@ -109,7 +109,7 @@ public class ChangeLogsController : ControllerBase
         return presenter.Response;
     }
 
-    [HttpPost("changelogs/{changeLogLineId:Guid}/make-pending")]
+    [HttpPost("changelogs/{changeLogLineId:Guid}/make-pending", Name = "MakeChangeLogLinePending")]
     [ProducesResponseType(typeof(DefaultResponse), StatusCodes.Status200OK)]
     [ProducesResponseType(typeof(DefaultResponse), StatusCodes.Status404NotFound)]
     [ProducesResponseType(typeof(DefaultResponse), StatusCodes.Status409Conflict)]
@@ -125,7 +125,7 @@ public class ChangeLogsController : ControllerBase
         return presenter.Response;
     }
 
-    [HttpPost("versions/{versionId:Guid}/changelogs/make-pending")]
+    [HttpPost("versions/{versionId:Guid}/changelogs/make-pending", Name = "MakeAllChangeLogLinesPending")]
     [ProducesResponseType(typeof(DefaultResponse), StatusCodes.Status200OK)]
     [ProducesResponseType(typeof(DefaultResponse), StatusCodes.Status404NotFound)]
     [ProducesResponseType(typeof(DefaultResponse), StatusCodes.Status409Conflict)]

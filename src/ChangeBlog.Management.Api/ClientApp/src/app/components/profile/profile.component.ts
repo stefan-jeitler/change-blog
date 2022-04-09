@@ -1,13 +1,6 @@
-import {HttpClient} from '@angular/common/http';
+import {ChangeBlogApi} from '../../../clients/ChangeBlogApiClient'
 import {Component, OnInit} from '@angular/core';
 import {OAuthService} from "angular-oauth2-oidc";
-
-interface User {
-  email: string;
-  firstName: string;
-  lastName: string;
-  timeZone: string;
-}
 
 @Component({
   selector: 'app-profile',
@@ -16,23 +9,27 @@ interface User {
 })
 export class ProfileComponent implements OnInit {
 
-  private readonly emptyUser: User = {email: "", firstName: "", lastName: "", timeZone: ""};
+  private readonly emptyUser: ChangeBlogApi.IUserDto = {
+    id: "",
+    email: "",
+    firstName: "",
+    lastName: "",
+    createdAt: undefined,
+    timeZone: ""
+  };
 
-  constructor(private http: HttpClient, private authService: OAuthService) {
+  constructor(private changeBlogApiClient: ChangeBlogApi.Client, private authService: OAuthService) {
     this._currentUser = this.emptyUser;
   }
 
-  private _currentUser: User;
+  private _currentUser: ChangeBlogApi.IUserDto;
 
-  get currentUser(): User {
+  get currentUser(): ChangeBlogApi.IUserDto {
     return this._currentUser ?? this.emptyUser;
   }
 
   ngOnInit(): void {
-    const accessToken = this.authService.getAccessToken();
-    this.http.get<User>("https://app-change-blog-staging.azurewebsites.net/api/v1/user/info", {
-      headers: {'Authorization': `Bearer ${accessToken}`}
-    })
+    this.changeBlogApiClient.getUserInfo()
       .subscribe(u => this._currentUser = u);
   }
 

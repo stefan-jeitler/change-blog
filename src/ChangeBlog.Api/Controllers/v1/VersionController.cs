@@ -38,7 +38,7 @@ public class VersionController : ControllerBase
         _getVersions = getVersions;
     }
 
-    [HttpGet("versions/{versionId:Guid}")]
+    [HttpGet("versions/{versionId:Guid}", Name = "GetVersion")]
     [ProducesResponseType(StatusCodes.Status200OK)]
     [ProducesResponseType(typeof(DefaultResponse), StatusCodes.Status404NotFound)]
     [NeedsPermission(Permission.ViewVersions)]
@@ -54,7 +54,7 @@ public class VersionController : ControllerBase
         return Ok(VersionDto.FromResponseModel(version.GetValueOrThrow()));
     }
 
-    [HttpGet("products/{productId:Guid}/versions")]
+    [HttpGet("products/{productId:Guid}/versions", Name = "GerVersions")]
     [ProducesResponseType(StatusCodes.Status200OK)]
     [NeedsPermission(Permission.ViewVersions)]
     public async Task<ActionResult<List<VersionDto>>> GetProductVersionsAsync(Guid productId,
@@ -78,7 +78,7 @@ public class VersionController : ControllerBase
         return Ok(versions.Select(VersionDto.FromResponseModel));
     }
 
-    [HttpGet("products/{productId:Guid}/versions/latest")]
+    [HttpGet("products/{productId:Guid}/versions/latest", Name = "GetLatestVersion")]
     [ProducesResponseType(StatusCodes.Status200OK)]
     [ProducesResponseType(typeof(DefaultResponse), StatusCodes.Status404NotFound)]
     [NeedsPermission(Permission.ViewVersions)]
@@ -93,7 +93,7 @@ public class VersionController : ControllerBase
         return presenter.Response;
     }
 
-    [HttpGet("products/{productId:Guid}/versions/{version}")]
+    [HttpGet("products/{productId:Guid}/versions/{version}", Name = "GetProductVersion")]
     [ProducesResponseType(StatusCodes.Status200OK)]
     [ProducesResponseType(typeof(DefaultResponse), StatusCodes.Status404NotFound)]
     [NeedsPermission(Permission.ViewVersions)]
@@ -105,12 +105,13 @@ public class VersionController : ControllerBase
         var userId = HttpContext.GetUserId();
         var clVersion = await getVersion.ExecuteAsync(userId, productId, version);
 
-        if (clVersion.HasNoValue) return new NotFoundObjectResult(DefaultResponse.Create("Version not found"));
+        if (clVersion.HasNoValue) 
+            return new NotFoundObjectResult(DefaultResponse.Create("Version not found"));
 
         return Ok(VersionDto.FromResponseModel(clVersion.GetValueOrThrow()));
     }
 
-    [HttpPost("products/{productId:Guid}/versions")]
+    [HttpPost("products/{productId:Guid}/versions", Name = "AddVersion")]
     [ProducesResponseType(typeof(DefaultResponse), StatusCodes.Status201Created)]
     [ProducesResponseType(typeof(DefaultResponse), StatusCodes.Status404NotFound)]
     [ProducesResponseType(typeof(DefaultResponse), StatusCodes.Status409Conflict)]
@@ -139,7 +140,7 @@ public class VersionController : ControllerBase
         return presenter.Response;
     }
 
-    [HttpPost("versions/{versionId:Guid}/release")]
+    [HttpPost("versions/{versionId:Guid}/release", Name = "ReleaseVersion")]
     [ProducesResponseType(typeof(DefaultResponse), StatusCodes.Status200OK)]
     [ProducesResponseType(typeof(DefaultResponse), StatusCodes.Status404NotFound)]
     [ProducesResponseType(typeof(DefaultResponse), StatusCodes.Status409Conflict)]
@@ -153,7 +154,7 @@ public class VersionController : ControllerBase
         return presenter.Response;
     }
 
-    [HttpPut("products/{productId:Guid}/versions/{version}")]
+    [HttpPut("products/{productId:Guid}/versions/{version}", Name = "UpdateVersion")]
     [ProducesResponseType(typeof(DefaultResponse), StatusCodes.Status200OK)]
     [ProducesResponseType(typeof(DefaultResponse), StatusCodes.Status201Created)]
     [ProducesResponseType(typeof(DefaultResponse), StatusCodes.Status404NotFound)]
@@ -188,7 +189,7 @@ public class VersionController : ControllerBase
         return presenter.Response;
     }
 
-    [HttpDelete("versions/{versionId:Guid}")]
+    [HttpDelete("versions/{versionId:Guid}", Name = "DeleteVersion")]
     [ProducesResponseType(typeof(DefaultResponse), StatusCodes.Status200OK)]
     [ProducesResponseType(typeof(DefaultResponse), StatusCodes.Status404NotFound)]
     [ProducesResponseType(typeof(DefaultResponse), StatusCodes.Status409Conflict)]

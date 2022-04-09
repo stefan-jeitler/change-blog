@@ -48,7 +48,7 @@ public class HomeController : ControllerBase
         _getVersions = getVersions;
     }
 
-    [HttpGet("info")]
+    [HttpGet("info", Name = "GetApiInfo")]
     [ProducesResponseType(StatusCodes.Status200OK)]
     [AllowAnonymous]
     public ActionResult<ApiInfo> Info()
@@ -60,7 +60,7 @@ public class HomeController : ControllerBase
         return Ok(apiInfo);
     }
 
-    [HttpGet("changes")]
+    [HttpGet("changes", Name = "GetApiChangeLogs")]
     [ProducesResponseType(StatusCodes.Status200OK)]
     [AllowAnonymous]
     public async Task<ActionResult<List<VersionDto>>> GetChangesAsync(

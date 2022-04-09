@@ -25,7 +25,7 @@ namespace ChangeBlog.Api.Controllers.V1;
 [SwaggerControllerOrder(8)]
 public class IssuesController : ControllerBase
 {
-    [HttpGet]
+    [HttpGet(Name = "GetIssues")]
     [ProducesResponseType(StatusCodes.Status200OK)]
     [NeedsPermission(Permission.ViewChangeLogLines)]
     public async Task<ActionResult<List<string>>> GetChangeLogLineIssuesAsync([FromServices] IGetIssues getIssues,
@@ -36,7 +36,7 @@ public class IssuesController : ControllerBase
         return Ok(issues);
     }
 
-    [HttpPatch("{issue}")]
+    [HttpPut("{issue}", Name = "AddIssue")]
     [ProducesResponseType(typeof(DefaultResponse), StatusCodes.Status200OK)]
     [ProducesResponseType(typeof(DefaultResponse), StatusCodes.Status404NotFound)]
     [ProducesResponseType(typeof(DefaultResponse), StatusCodes.Status409Conflict)]
@@ -54,7 +54,7 @@ public class IssuesController : ControllerBase
         return presenter.Response;
     }
 
-    [HttpDelete("{issue}")]
+    [HttpDelete("{issue}", Name = "DeleteIssue")]
     [ProducesResponseType(typeof(DefaultResponse), StatusCodes.Status200OK)]
     [ProducesResponseType(typeof(DefaultResponse), StatusCodes.Status404NotFound)]
     [ProducesResponseType(typeof(DefaultResponse), StatusCodes.Status409Conflict)]

@@ -25,7 +25,7 @@ namespace ChangeBlog.Api.Controllers.V1;
 [SwaggerControllerOrder(3)]
 public class ProductController : ControllerBase
 {
-    [HttpGet("{productId:Guid}")]
+    [HttpGet("{productId:Guid}", Name = "GetProduct")]
     [ProducesResponseType(StatusCodes.Status200OK)]
     [ProducesResponseType(typeof(DefaultResponse), StatusCodes.Status404NotFound)]
     [NeedsPermission(Permission.ViewAccountProducts)]
@@ -40,7 +40,7 @@ public class ProductController : ControllerBase
         return Ok(ProductDto.FromResponseModel(product.GetValueOrThrow()));
     }
 
-    [HttpPost]
+    [HttpPost(Name = "AddProduct")]
     [ProducesResponseType(typeof(DefaultResponse), StatusCodes.Status201Created)]
     [ProducesResponseType(typeof(DefaultResponse), StatusCodes.Status404NotFound)]
     [ProducesResponseType(typeof(DefaultResponse), StatusCodes.Status409Conflict)]
@@ -66,7 +66,7 @@ public class ProductController : ControllerBase
         return presenter.Response;
     }
 
-    [HttpPost("{productId:Guid}/close")]
+    [HttpPost("{productId:Guid}/close", Name = "CloseProduct")]
     [ProducesResponseType(typeof(DefaultResponse), StatusCodes.Status200OK)]
     [ProducesResponseType(typeof(DefaultResponse), StatusCodes.Status404NotFound)]
     [NeedsPermission(Permission.CloseProduct)]

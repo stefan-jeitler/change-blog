@@ -7,8 +7,8 @@
   },
   "codeGenerators": {
     "openApiToTypeScriptClient": {
-      "className": "ChangeBlogManagementApiClient",
-      "moduleName": "Client.ChangeBlog.Management.Api",
+      "className": "Client",
+      "moduleName": "ChangeBlogManagementApi",
       "namespace": "",
       "typeScriptVersion": 4.6,
       "rxJsVersion": 6.3,
@@ -39,7 +39,7 @@
       "convertConstructorInterfaceData": false,
       "importRequiredTypes": true,
       "useGetBaseUrlMethod": false,
-      "baseUrlTokenName": "API_BASE_URL",
+      "baseUrlTokenName": "MNGMT_API_BASE_URL",
       "queryNullValue": "",
       "output": "$(output)"
     }

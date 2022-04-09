@@ -25,7 +25,7 @@ namespace ChangeBlog.Api.Controllers.V1;
 [SwaggerControllerOrder(7)]
 public class LabelsController : ControllerBase
 {
-    [HttpGet]
+    [HttpGet(Name = "GetLabels")]
     [ProducesResponseType(StatusCodes.Status200OK)]
     [NeedsPermission(Permission.ViewChangeLogLines)]
     public async Task<ActionResult<List<string>>> GetChangeLogLineLabelsAsync([FromServices] IGetLabels getLabels,
@@ -36,7 +36,7 @@ public class LabelsController : ControllerBase
         return Ok(labels);
     }
 
-    [HttpPatch("{label}")]
+    [HttpPut("{label}", Name = "AddLabel")]
     [ProducesResponseType(typeof(DefaultResponse), StatusCodes.Status200OK)]
     [ProducesResponseType(typeof(DefaultResponse), StatusCodes.Status404NotFound)]
     [ProducesResponseType(typeof(DefaultResponse), StatusCodes.Status409Conflict)]
@@ -54,7 +54,7 @@ public class LabelsController : ControllerBase
         return presenter.Response;
     }
 
-    [HttpDelete("{label}")]
+    [HttpDelete("{label}", Name = "DeleteLabel")]
     [ProducesResponseType(typeof(DefaultResponse), StatusCodes.Status200OK)]
     [ProducesResponseType(typeof(DefaultResponse), StatusCodes.Status404NotFound)]
     [ProducesResponseType(typeof(DefaultResponse), StatusCodes.Status409Conflict)]

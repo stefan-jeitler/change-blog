@@ -34,7 +34,7 @@ public class UserController : ControllerBase
         _getUser = getUser;
     }
 
-    [HttpGet("products")]
+    [HttpGet("products", Name = "GetUserProducts")]
     [ProducesResponseType(StatusCodes.Status200OK)]
     [ProducesResponseType(typeof(DefaultResponse), StatusCodes.Status400BadRequest)]
     [SkipAuthorization]
@@ -54,7 +54,7 @@ public class UserController : ControllerBase
         return Ok(products.Select(ProductDto.FromResponseModel));
     }
 
-    [HttpGet("info")]
+    [HttpGet("info", Name = "GetUserInfo")]
     [ProducesResponseType(StatusCodes.Status200OK)]
     [SkipAuthorization]
     public async Task<ActionResult<UserDto>> GetUserInfoAsync()

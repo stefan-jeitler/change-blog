@@ -41,7 +41,7 @@ public class AccountController : ControllerBase
         return Ok(accounts.Select(AccountDto.FromResponseModel));
     }
 
-    [HttpGet("{accountId:Guid}")]
+    [HttpGet("{accountId:Guid}", Name = "GetAccount")]
     [ProducesResponseType(StatusCodes.Status200OK)]
     [ProducesResponseType(typeof(DefaultResponse), StatusCodes.Status400BadRequest)]
     [NeedsPermission(Permission.ViewAccount)]
@@ -54,7 +54,7 @@ public class AccountController : ControllerBase
         return Ok(AccountDto.FromResponseModel(account));
     }
 
-    [HttpGet("{accountId:Guid}/users")]
+    [HttpGet("{accountId:Guid}/users", Name = "GetAccountUsers")]
     [ProducesResponseType(StatusCodes.Status200OK)]
     [ProducesResponseType(typeof(DefaultResponse), StatusCodes.Status400BadRequest)]
     [NeedsPermission(Permission.ViewAccountUsers)]
@@ -76,7 +76,7 @@ public class AccountController : ControllerBase
         return Ok(users.Select(UserDto.FromResponseModel));
     }
 
-    [HttpGet("{accountId:Guid}/products")]
+    [HttpGet("{accountId:Guid}/products", Name = "GetAccountProducts")]
     [ProducesResponseType(StatusCodes.Status200OK)]
     [ProducesResponseType(typeof(DefaultResponse), StatusCodes.Status400BadRequest)]
     [NeedsPermission(Permission.ViewAccountProducts)]
@@ -101,7 +101,7 @@ public class AccountController : ControllerBase
         return Ok(products.Select(ProductDto.FromResponseModel));
     }
 
-    [HttpGet("roles")]
+    [HttpGet("roles", Name = "GetRoles")]
     [ProducesResponseType(StatusCodes.Status200OK)]
     [ProducesResponseType(typeof(DefaultResponse), StatusCodes.Status400BadRequest)]
     [SkipAuthorization]

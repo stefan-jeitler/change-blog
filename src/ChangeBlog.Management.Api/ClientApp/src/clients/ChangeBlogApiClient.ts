@@ -13,11 +13,11 @@ import { Observable, throwError as _observableThrow, of as _observableOf } from 
 import { Injectable, Inject, Optional, InjectionToken } from '@angular/core';
 import { HttpClient, HttpHeaders, HttpResponse, HttpResponseBase } from '@angular/common/http';
 
-export module Client.ChangeBlog.Api {
+export module ChangeBlogApi {
 export const API_BASE_URL = new InjectionToken<string>('API_BASE_URL');
 
 @Injectable()
-export class ChangeBlogApiClient {
+export class Client {
     private http: HttpClient;
     private baseUrl: string;
     protected jsonParseReviver: ((key: string, value: any) => any) | undefined = undefined;
@@ -30,7 +30,7 @@ export class ChangeBlogApiClient {
     /**
      * @return Success
      */
-    info(): Observable<ApiInfo> {
+    getApiInfo(): Observable<ApiInfo> {
         let url_ = this.baseUrl + "/api/info";
         url_ = url_.replace(/[?&]$/, "");
 
@@ -43,11 +43,11 @@ export class ChangeBlogApiClient {
         };
 
         return this.http.request("get", url_, options_).pipe(_observableMergeMap((response_ : any) => {
-            return this.processInfo(response_);
+            return this.processGetApiInfo(response_);
         })).pipe(_observableCatch((response_: any) => {
             if (response_ instanceof HttpResponseBase) {
                 try {
-                    return this.processInfo(response_ as any);
+                    return this.processGetApiInfo(response_ as any);
                 } catch (e) {
                     return _observableThrow(e) as any as Observable<ApiInfo>;
                 }
@@ -56,7 +56,7 @@ export class ChangeBlogApiClient {
         }));
     }
 
-    protected processInfo(response: HttpResponseBase): Observable<ApiInfo> {
+    protected processGetApiInfo(response: HttpResponseBase): Observable<ApiInfo> {
         const status = response.status;
         const responseBlob =
             response instanceof HttpResponse ? response.body :
@@ -84,7 +84,7 @@ export class ChangeBlogApiClient {
      * @param limit (optional) 
      * @return Success
      */
-    changes(searchTerm: string | undefined, lastVersionId: string | undefined, limit: number | undefined): Observable<VersionDto[]> {
+    getApiChangeLogs(searchTerm?: string | undefined, lastVersionId?: string | undefined, limit?: number | undefined): Observable<VersionDto[]> {
         let url_ = this.baseUrl + "/api/changes?";
         if (searchTerm === null)
             throw new Error("The parameter 'searchTerm' cannot be null.");
@@ -109,11 +109,11 @@ export class ChangeBlogApiClient {
         };
 
         return this.http.request("get", url_, options_).pipe(_observableMergeMap((response_ : any) => {
-            return this.processChanges(response_);
+            return this.processGetApiChangeLogs(response_);
         })).pipe(_observableCatch((response_: any) => {
             if (response_ instanceof HttpResponseBase) {
                 try {
-                    return this.processChanges(response_ as any);
+                    return this.processGetApiChangeLogs(response_ as any);
                 } catch (e) {
                     return _observableThrow(e) as any as Observable<VersionDto[]>;
                 }
@@ -122,7 +122,7 @@ export class ChangeBlogApiClient {
         }));
     }
 
-    protected processChanges(response: HttpResponseBase): Observable<VersionDto[]> {
+    protected processGetApiChangeLogs(response: HttpResponseBase): Observable<VersionDto[]> {
         const status = response.status;
         const responseBlob =
             response instanceof HttpResponse ? response.body :
@@ -154,7 +154,7 @@ export class ChangeBlogApiClient {
     /**
      * @return Success
      */
-    accountsAll(): Observable<AccountDto[]> {
+    accounts(): Observable<AccountDto[]> {
         let url_ = this.baseUrl + "/api/v1/accounts";
         url_ = url_.replace(/[?&]$/, "");
 
@@ -167,11 +167,11 @@ export class ChangeBlogApiClient {
         };
 
         return this.http.request("get", url_, options_).pipe(_observableMergeMap((response_ : any) => {
-            return this.processAccountsAll(response_);
+            return this.processAccounts(response_);
         })).pipe(_observableCatch((response_: any) => {
             if (response_ instanceof HttpResponseBase) {
                 try {
-                    return this.processAccountsAll(response_ as any);
+                    return this.processAccounts(response_ as any);
                 } catch (e) {
                     return _observableThrow(e) as any as Observable<AccountDto[]>;
                 }
@@ -180,7 +180,7 @@ export class ChangeBlogApiClient {
         }));
     }
 
-    protected processAccountsAll(response: HttpResponseBase): Observable<AccountDto[]> {
+    protected processAccounts(response: HttpResponseBase): Observable<AccountDto[]> {
         const status = response.status;
         const responseBlob =
             response instanceof HttpResponse ? response.body :
@@ -226,7 +226,7 @@ export class ChangeBlogApiClient {
     /**
      * @return Success
      */
-    accounts(accountId: string): Observable<AccountDto> {
+    getAccount(accountId: string): Observable<AccountDto> {
         let url_ = this.baseUrl + "/api/v1/accounts/{accountId}";
         if (accountId === undefined || accountId === null)
             throw new Error("The parameter 'accountId' must be defined.");
@@ -242,11 +242,11 @@ export class ChangeBlogApiClient {
         };
 
         return this.http.request("get", url_, options_).pipe(_observableMergeMap((response_ : any) => {
-            return this.processAccounts(response_);
+            return this.processGetAccount(response_);
         })).pipe(_observableCatch((response_: any) => {
             if (response_ instanceof HttpResponseBase) {
                 try {
-                    return this.processAccounts(response_ as any);
+                    return this.processGetAccount(response_ as any);
                 } catch (e) {
                     return _observableThrow(e) as any as Observable<AccountDto>;
                 }
@@ -255,7 +255,7 @@ export class ChangeBlogApiClient {
         }));
     }
 
-    protected processAccounts(response: HttpResponseBase): Observable<AccountDto> {
+    protected processGetAccount(response: HttpResponseBase): Observable<AccountDto> {
         const status = response.status;
         const responseBlob =
             response instanceof HttpResponse ? response.body :
@@ -303,7 +303,7 @@ export class ChangeBlogApiClient {
      * @param limit (optional) 
      * @return Success
      */
-    users(accountId: string, lastUserId: string | undefined, limit: number | undefined): Observable<UserDto[]> {
+    getAccountUsers(accountId: string, lastUserId?: string | undefined, limit?: number | undefined): Observable<UserDto[]> {
         let url_ = this.baseUrl + "/api/v1/accounts/{accountId}/users?";
         if (accountId === undefined || accountId === null)
             throw new Error("The parameter 'accountId' must be defined.");
@@ -327,11 +327,11 @@ export class ChangeBlogApiClient {
         };
 
         return this.http.request("get", url_, options_).pipe(_observableMergeMap((response_ : any) => {
-            return this.processUsers(response_);
+            return this.processGetAccountUsers(response_);
         })).pipe(_observableCatch((response_: any) => {
             if (response_ instanceof HttpResponseBase) {
                 try {
-                    return this.processUsers(response_ as any);
+                    return this.processGetAccountUsers(response_ as any);
                 } catch (e) {
                     return _observableThrow(e) as any as Observable<UserDto[]>;
                 }
@@ -340,7 +340,7 @@ export class ChangeBlogApiClient {
         }));
     }
 
-    protected processUsers(response: HttpResponseBase): Observable<UserDto[]> {
+    protected processGetAccountUsers(response: HttpResponseBase): Observable<UserDto[]> {
         const status = response.status;
         const responseBlob =
             response instanceof HttpResponse ? response.body :
@@ -396,7 +396,7 @@ export class ChangeBlogApiClient {
      * @param includeClosed (optional) 
      * @return Success
      */
-    productsAll(accountId: string, lastProductId: string | undefined, limit: number | undefined, includeClosed: boolean | undefined): Observable<ProductDto[]> {
+    getAccountProducts(accountId: string, lastProductId?: string | undefined, limit?: number | undefined, includeClosed?: boolean | undefined): Observable<ProductDto[]> {
         let url_ = this.baseUrl + "/api/v1/accounts/{accountId}/products?";
         if (accountId === undefined || accountId === null)
             throw new Error("The parameter 'accountId' must be defined.");
@@ -424,11 +424,11 @@ export class ChangeBlogApiClient {
         };
 
         return this.http.request("get", url_, options_).pipe(_observableMergeMap((response_ : any) => {
-            return this.processProductsAll(response_);
+            return this.processGetAccountProducts(response_);
         })).pipe(_observableCatch((response_: any) => {
             if (response_ instanceof HttpResponseBase) {
                 try {
-                    return this.processProductsAll(response_ as any);
+                    return this.processGetAccountProducts(response_ as any);
                 } catch (e) {
                     return _observableThrow(e) as any as Observable<ProductDto[]>;
                 }
@@ -437,7 +437,7 @@ export class ChangeBlogApiClient {
         }));
     }
 
-    protected processProductsAll(response: HttpResponseBase): Observable<ProductDto[]> {
+    protected processGetAccountProducts(response: HttpResponseBase): Observable<ProductDto[]> {
         const status = response.status;
         const responseBlob =
             response instanceof HttpResponse ? response.body :
@@ -492,7 +492,7 @@ export class ChangeBlogApiClient {
      * @param includePermissions (optional) 
      * @return Success
      */
-    roles(filter: string | undefined, includePermissions: boolean | undefined): Observable<RoleDto[]> {
+    getRoles(filter?: string | undefined, includePermissions?: boolean | undefined): Observable<RoleDto[]> {
         let url_ = this.baseUrl + "/api/v1/accounts/roles?";
         if (filter === null)
             throw new Error("The parameter 'filter' cannot be null.");
@@ -513,11 +513,11 @@ export class ChangeBlogApiClient {
         };
 
         return this.http.request("get", url_, options_).pipe(_observableMergeMap((response_ : any) => {
-            return this.processRoles(response_);
+            return this.processGetRoles(response_);
         })).pipe(_observableCatch((response_: any) => {
             if (response_ instanceof HttpResponseBase) {
                 try {
-                    return this.processRoles(response_ as any);
+                    return this.processGetRoles(response_ as any);
                 } catch (e) {
                     return _observableThrow(e) as any as Observable<RoleDto[]>;
                 }
@@ -526,7 +526,7 @@ export class ChangeBlogApiClient {
         }));
     }
 
-    protected processRoles(response: HttpResponseBase): Observable<RoleDto[]> {
+    protected processGetRoles(response: HttpResponseBase): Observable<RoleDto[]> {
         const status = response.status;
         const responseBlob =
             response instanceof HttpResponse ? response.body :
@@ -582,7 +582,7 @@ export class ChangeBlogApiClient {
      * @param includeClosed (optional) 
      * @return Success
      */
-    productsAll2(lastProductId: string | undefined, limit: number | undefined, includeClosed: boolean | undefined): Observable<ProductDto[]> {
+    getUserProducts(lastProductId?: string | undefined, limit?: number | undefined, includeClosed?: boolean | undefined): Observable<ProductDto[]> {
         let url_ = this.baseUrl + "/api/v1/user/products?";
         if (lastProductId === null)
             throw new Error("The parameter 'lastProductId' cannot be null.");
@@ -607,11 +607,11 @@ export class ChangeBlogApiClient {
         };
 
         return this.http.request("get", url_, options_).pipe(_observableMergeMap((response_ : any) => {
-            return this.processProductsAll2(response_);
+            return this.processGetUserProducts(response_);
         })).pipe(_observableCatch((response_: any) => {
             if (response_ instanceof HttpResponseBase) {
                 try {
-                    return this.processProductsAll2(response_ as any);
+                    return this.processGetUserProducts(response_ as any);
                 } catch (e) {
                     return _observableThrow(e) as any as Observable<ProductDto[]>;
                 }
@@ -620,7 +620,7 @@ export class ChangeBlogApiClient {
         }));
     }
 
-    protected processProductsAll2(response: HttpResponseBase): Observable<ProductDto[]> {
+    protected processGetUserProducts(response: HttpResponseBase): Observable<ProductDto[]> {
         const status = response.status;
         const responseBlob =
             response instanceof HttpResponse ? response.body :
@@ -673,7 +673,7 @@ export class ChangeBlogApiClient {
     /**
      * @return Success
      */
-    info2(): Observable<UserDto> {
+    getUserInfo(): Observable<UserDto> {
         let url_ = this.baseUrl + "/api/v1/user/info";
         url_ = url_.replace(/[?&]$/, "");
 
@@ -686,11 +686,11 @@ export class ChangeBlogApiClient {
         };
 
         return this.http.request("get", url_, options_).pipe(_observableMergeMap((response_ : any) => {
-            return this.processInfo2(response_);
+            return this.processGetUserInfo(response_);
         })).pipe(_observableCatch((response_: any) => {
             if (response_ instanceof HttpResponseBase) {
                 try {
-                    return this.processInfo2(response_ as any);
+                    return this.processGetUserInfo(response_ as any);
                 } catch (e) {
                     return _observableThrow(e) as any as Observable<UserDto>;
                 }
@@ -699,7 +699,7 @@ export class ChangeBlogApiClient {
         }));
     }
 
-    protected processInfo2(response: HttpResponseBase): Observable<UserDto> {
+    protected processGetUserInfo(response: HttpResponseBase): Observable<UserDto> {
         const status = response.status;
         const responseBlob =
             response instanceof HttpResponse ? response.body :
@@ -738,7 +738,7 @@ export class ChangeBlogApiClient {
     /**
      * @return Success
      */
-    productsGET(productId: string): Observable<ProductDto> {
+    getProduct(productId: string): Observable<ProductDto> {
         let url_ = this.baseUrl + "/api/v1/products/{productId}";
         if (productId === undefined || productId === null)
             throw new Error("The parameter 'productId' must be defined.");
@@ -754,11 +754,11 @@ export class ChangeBlogApiClient {
         };
 
         return this.http.request("get", url_, options_).pipe(_observableMergeMap((response_ : any) => {
-            return this.processProductsGET(response_);
+            return this.processGetProduct(response_);
         })).pipe(_observableCatch((response_: any) => {
             if (response_ instanceof HttpResponseBase) {
                 try {
-                    return this.processProductsGET(response_ as any);
+                    return this.processGetProduct(response_ as any);
                 } catch (e) {
                     return _observableThrow(e) as any as Observable<ProductDto>;
                 }
@@ -767,7 +767,7 @@ export class ChangeBlogApiClient {
         }));
     }
 
-    protected processProductsGET(response: HttpResponseBase): Observable<ProductDto> {
+    protected processGetProduct(response: HttpResponseBase): Observable<ProductDto> {
         const status = response.status;
         const responseBlob =
             response instanceof HttpResponse ? response.body :
@@ -821,7 +821,7 @@ export class ChangeBlogApiClient {
      * @param body (optional) 
      * @return Created
      */
-    productsPOST(body: AddOrUpdateProductDto | undefined): Observable<DefaultResponse> {
+    addProduct(body?: AddOrUpdateProductDto | undefined): Observable<DefaultResponse> {
         let url_ = this.baseUrl + "/api/v1/products";
         url_ = url_.replace(/[?&]$/, "");
 
@@ -838,11 +838,11 @@ export class ChangeBlogApiClient {
         };
 
         return this.http.request("post", url_, options_).pipe(_observableMergeMap((response_ : any) => {
-            return this.processProductsPOST(response_);
+            return this.processAddProduct(response_);
         })).pipe(_observableCatch((response_: any) => {
             if (response_ instanceof HttpResponseBase) {
                 try {
-                    return this.processProductsPOST(response_ as any);
+                    return this.processAddProduct(response_ as any);
                 } catch (e) {
                     return _observableThrow(e) as any as Observable<DefaultResponse>;
                 }
@@ -851,7 +851,7 @@ export class ChangeBlogApiClient {
         }));
     }
 
-    protected processProductsPOST(response: HttpResponseBase): Observable<DefaultResponse> {
+    protected processAddProduct(response: HttpResponseBase): Observable<DefaultResponse> {
         const status = response.status;
         const responseBlob =
             response instanceof HttpResponse ? response.body :
@@ -918,7 +918,7 @@ export class ChangeBlogApiClient {
     /**
      * @return Success
      */
-    close(productId: string): Observable<DefaultResponse> {
+    closeProduct(productId: string): Observable<DefaultResponse> {
         let url_ = this.baseUrl + "/api/v1/products/{productId}/close";
         if (productId === undefined || productId === null)
             throw new Error("The parameter 'productId' must be defined.");
@@ -934,11 +934,11 @@ export class ChangeBlogApiClient {
         };
 
         return this.http.request("post", url_, options_).pipe(_observableMergeMap((response_ : any) => {
-            return this.processClose(response_);
+            return this.processCloseProduct(response_);
         })).pipe(_observableCatch((response_: any) => {
             if (response_ instanceof HttpResponseBase) {
                 try {
-                    return this.processClose(response_ as any);
+                    return this.processCloseProduct(response_ as any);
                 } catch (e) {
                     return _observableThrow(e) as any as Observable<DefaultResponse>;
                 }
@@ -947,7 +947,7 @@ export class ChangeBlogApiClient {
         }));
     }
 
-    protected processClose(response: HttpResponseBase): Observable<DefaultResponse> {
+    protected processCloseProduct(response: HttpResponseBase): Observable<DefaultResponse> {
         const status = response.status;
         const responseBlob =
             response instanceof HttpResponse ? response.body :
@@ -1000,7 +1000,7 @@ export class ChangeBlogApiClient {
     /**
      * @return Success
      */
-    versionsGET(versionId: string): Observable<VersionDto> {
+    getVersion(versionId: string): Observable<VersionDto> {
         let url_ = this.baseUrl + "/api/v1/versions/{versionId}";
         if (versionId === undefined || versionId === null)
             throw new Error("The parameter 'versionId' must be defined.");
@@ -1016,11 +1016,11 @@ export class ChangeBlogApiClient {
         };
 
         return this.http.request("get", url_, options_).pipe(_observableMergeMap((response_ : any) => {
-            return this.processVersionsGET(response_);
+            return this.processGetVersion(response_);
         })).pipe(_observableCatch((response_: any) => {
             if (response_ instanceof HttpResponseBase) {
                 try {
-                    return this.processVersionsGET(response_ as any);
+                    return this.processGetVersion(response_ as any);
                 } catch (e) {
                     return _observableThrow(e) as any as Observable<VersionDto>;
                 }
@@ -1029,7 +1029,7 @@ export class ChangeBlogApiClient {
         }));
     }
 
-    protected processVersionsGET(response: HttpResponseBase): Observable<VersionDto> {
+    protected processGetVersion(response: HttpResponseBase): Observable<VersionDto> {
         const status = response.status;
         const responseBlob =
             response instanceof HttpResponse ? response.body :
@@ -1082,7 +1082,7 @@ export class ChangeBlogApiClient {
     /**
      * @return Success
      */
-    versionsDELETE(versionId: string): Observable<DefaultResponse> {
+    deleteVersion(versionId: string): Observable<DefaultResponse> {
         let url_ = this.baseUrl + "/api/v1/versions/{versionId}";
         if (versionId === undefined || versionId === null)
             throw new Error("The parameter 'versionId' must be defined.");
@@ -1098,11 +1098,11 @@ export class ChangeBlogApiClient {
         };
 
         return this.http.request("delete", url_, options_).pipe(_observableMergeMap((response_ : any) => {
-            return this.processVersionsDELETE(response_);
+            return this.processDeleteVersion(response_);
         })).pipe(_observableCatch((response_: any) => {
             if (response_ instanceof HttpResponseBase) {
                 try {
-                    return this.processVersionsDELETE(response_ as any);
+                    return this.processDeleteVersion(response_ as any);
                 } catch (e) {
                     return _observableThrow(e) as any as Observable<DefaultResponse>;
                 }
@@ -1111,7 +1111,7 @@ export class ChangeBlogApiClient {
         }));
     }
 
-    protected processVersionsDELETE(response: HttpResponseBase): Observable<DefaultResponse> {
+    protected processDeleteVersion(response: HttpResponseBase): Observable<DefaultResponse> {
         const status = response.status;
         const responseBlob =
             response instanceof HttpResponse ? response.body :
@@ -1175,7 +1175,7 @@ export class ChangeBlogApiClient {
      * @param limit (optional) 
      * @return Success
      */
-    versionsAll(productId: string, searchTerm: string | undefined, lastVersionId: string | undefined, includeDeleted: boolean | undefined, limit: number | undefined): Observable<VersionDto[]> {
+    gerVersions(productId: string, searchTerm?: string | undefined, lastVersionId?: string | undefined, includeDeleted?: boolean | undefined, limit?: number | undefined): Observable<VersionDto[]> {
         let url_ = this.baseUrl + "/api/v1/products/{productId}/versions?";
         if (productId === undefined || productId === null)
             throw new Error("The parameter 'productId' must be defined.");
@@ -1207,11 +1207,11 @@ export class ChangeBlogApiClient {
         };
 
         return this.http.request("get", url_, options_).pipe(_observableMergeMap((response_ : any) => {
-            return this.processVersionsAll(response_);
+            return this.processGerVersions(response_);
         })).pipe(_observableCatch((response_: any) => {
             if (response_ instanceof HttpResponseBase) {
                 try {
-                    return this.processVersionsAll(response_ as any);
+                    return this.processGerVersions(response_ as any);
                 } catch (e) {
                     return _observableThrow(e) as any as Observable<VersionDto[]>;
                 }
@@ -1220,7 +1220,7 @@ export class ChangeBlogApiClient {
         }));
     }
 
-    protected processVersionsAll(response: HttpResponseBase): Observable<VersionDto[]> {
+    protected processGerVersions(response: HttpResponseBase): Observable<VersionDto[]> {
         const status = response.status;
         const responseBlob =
             response instanceof HttpResponse ? response.body :
@@ -1274,7 +1274,7 @@ export class ChangeBlogApiClient {
      * @param body (optional) 
      * @return Created
      */
-    versionsPOST(productId: string, body: AddVersionDto | undefined): Observable<DefaultResponse> {
+    addVersion(productId: string, body?: AddVersionDto | undefined): Observable<DefaultResponse> {
         let url_ = this.baseUrl + "/api/v1/products/{productId}/versions";
         if (productId === undefined || productId === null)
             throw new Error("The parameter 'productId' must be defined.");
@@ -1294,11 +1294,11 @@ export class ChangeBlogApiClient {
         };
 
         return this.http.request("post", url_, options_).pipe(_observableMergeMap((response_ : any) => {
-            return this.processVersionsPOST(response_);
+            return this.processAddVersion(response_);
         })).pipe(_observableCatch((response_: any) => {
             if (response_ instanceof HttpResponseBase) {
                 try {
-                    return this.processVersionsPOST(response_ as any);
+                    return this.processAddVersion(response_ as any);
                 } catch (e) {
                     return _observableThrow(e) as any as Observable<DefaultResponse>;
                 }
@@ -1307,7 +1307,7 @@ export class ChangeBlogApiClient {
         }));
     }
 
-    protected processVersionsPOST(response: HttpResponseBase): Observable<DefaultResponse> {
+    protected processAddVersion(response: HttpResponseBase): Observable<DefaultResponse> {
         const status = response.status;
         const responseBlob =
             response instanceof HttpResponse ? response.body :
@@ -1374,7 +1374,7 @@ export class ChangeBlogApiClient {
     /**
      * @return Success
      */
-    latest(productId: string): Observable<VersionDto> {
+    getLatestVersion(productId: string): Observable<VersionDto> {
         let url_ = this.baseUrl + "/api/v1/products/{productId}/versions/latest";
         if (productId === undefined || productId === null)
             throw new Error("The parameter 'productId' must be defined.");
@@ -1390,11 +1390,11 @@ export class ChangeBlogApiClient {
         };
 
         return this.http.request("get", url_, options_).pipe(_observableMergeMap((response_ : any) => {
-            return this.processLatest(response_);
+            return this.processGetLatestVersion(response_);
         })).pipe(_observableCatch((response_: any) => {
             if (response_ instanceof HttpResponseBase) {
                 try {
-                    return this.processLatest(response_ as any);
+                    return this.processGetLatestVersion(response_ as any);
                 } catch (e) {
                     return _observableThrow(e) as any as Observable<VersionDto>;
                 }
@@ -1403,7 +1403,7 @@ export class ChangeBlogApiClient {
         }));
     }
 
-    protected processLatest(response: HttpResponseBase): Observable<VersionDto> {
+    protected processGetLatestVersion(response: HttpResponseBase): Observable<VersionDto> {
         const status = response.status;
         const responseBlob =
             response instanceof HttpResponse ? response.body :
@@ -1456,7 +1456,7 @@ export class ChangeBlogApiClient {
     /**
      * @return Success
      */
-    versionsAll2(productId: string, version: string): Observable<VersionDto[]> {
+    getProductVersion(productId: string, version: string): Observable<VersionDto[]> {
         let url_ = this.baseUrl + "/api/v1/products/{productId}/versions/{version}";
         if (productId === undefined || productId === null)
             throw new Error("The parameter 'productId' must be defined.");
@@ -1475,11 +1475,11 @@ export class ChangeBlogApiClient {
         };
 
         return this.http.request("get", url_, options_).pipe(_observableMergeMap((response_ : any) => {
-            return this.processVersionsAll2(response_);
+            return this.processGetProductVersion(response_);
         })).pipe(_observableCatch((response_: any) => {
             if (response_ instanceof HttpResponseBase) {
                 try {
-                    return this.processVersionsAll2(response_ as any);
+                    return this.processGetProductVersion(response_ as any);
                 } catch (e) {
                     return _observableThrow(e) as any as Observable<VersionDto[]>;
                 }
@@ -1488,7 +1488,7 @@ export class ChangeBlogApiClient {
         }));
     }
 
-    protected processVersionsAll2(response: HttpResponseBase): Observable<VersionDto[]> {
+    protected processGetProductVersion(response: HttpResponseBase): Observable<VersionDto[]> {
         const status = response.status;
         const responseBlob =
             response instanceof HttpResponse ? response.body :
@@ -1549,7 +1549,7 @@ export class ChangeBlogApiClient {
      * @param body (optional) 
      * @return Success
      */
-    versionsPUT(productId: string, version: string, body: AddOrUpdateVersionDto | undefined): Observable<DefaultResponse> {
+    updateVersion(productId: string, version: string, body?: AddOrUpdateVersionDto | undefined): Observable<DefaultResponse> {
         let url_ = this.baseUrl + "/api/v1/products/{productId}/versions/{version}";
         if (productId === undefined || productId === null)
             throw new Error("The parameter 'productId' must be defined.");
@@ -1572,11 +1572,11 @@ export class ChangeBlogApiClient {
         };
 
         return this.http.request("put", url_, options_).pipe(_observableMergeMap((response_ : any) => {
-            return this.processVersionsPUT(response_);
+            return this.processUpdateVersion(response_);
         })).pipe(_observableCatch((response_: any) => {
             if (response_ instanceof HttpResponseBase) {
                 try {
-                    return this.processVersionsPUT(response_ as any);
+                    return this.processUpdateVersion(response_ as any);
                 } catch (e) {
                     return _observableThrow(e) as any as Observable<DefaultResponse>;
                 }
@@ -1585,7 +1585,7 @@ export class ChangeBlogApiClient {
         }));
     }
 
-    protected processVersionsPUT(response: HttpResponseBase): Observable<DefaultResponse> {
+    protected processUpdateVersion(response: HttpResponseBase): Observable<DefaultResponse> {
         const status = response.status;
         const responseBlob =
             response instanceof HttpResponse ? response.body :
@@ -1659,7 +1659,7 @@ export class ChangeBlogApiClient {
     /**
      * @return Success
      */
-    release(versionId: string): Observable<DefaultResponse> {
+    releaseVersion(versionId: string): Observable<DefaultResponse> {
         let url_ = this.baseUrl + "/api/v1/versions/{versionId}/release";
         if (versionId === undefined || versionId === null)
             throw new Error("The parameter 'versionId' must be defined.");
@@ -1675,11 +1675,11 @@ export class ChangeBlogApiClient {
         };
 
         return this.http.request("post", url_, options_).pipe(_observableMergeMap((response_ : any) => {
-            return this.processRelease(response_);
+            return this.processReleaseVersion(response_);
         })).pipe(_observableCatch((response_: any) => {
             if (response_ instanceof HttpResponseBase) {
                 try {
-                    return this.processRelease(response_ as any);
+                    return this.processReleaseVersion(response_ as any);
                 } catch (e) {
                     return _observableThrow(e) as any as Observable<DefaultResponse>;
                 }
@@ -1688,7 +1688,7 @@ export class ChangeBlogApiClient {
         }));
     }
 
-    protected processRelease(response: HttpResponseBase): Observable<DefaultResponse> {
+    protected processReleaseVersion(response: HttpResponseBase): Observable<DefaultResponse> {
         const status = response.status;
         const responseBlob =
             response instanceof HttpResponse ? response.body :
@@ -1748,7 +1748,7 @@ export class ChangeBlogApiClient {
     /**
      * @return Success
      */
-    pendingChangelogsAll(productId: string): Observable<ChangeLogLineDto[]> {
+    getPendingChangeLogs(productId: string): Observable<ChangeLogLineDto[]> {
         let url_ = this.baseUrl + "/api/v1/products/{productId}/pending-changelogs";
         if (productId === undefined || productId === null)
             throw new Error("The parameter 'productId' must be defined.");
@@ -1764,11 +1764,11 @@ export class ChangeBlogApiClient {
         };
 
         return this.http.request("get", url_, options_).pipe(_observableMergeMap((response_ : any) => {
-            return this.processPendingChangelogsAll(response_);
+            return this.processGetPendingChangeLogs(response_);
         })).pipe(_observableCatch((response_: any) => {
             if (response_ instanceof HttpResponseBase) {
                 try {
-                    return this.processPendingChangelogsAll(response_ as any);
+                    return this.processGetPendingChangeLogs(response_ as any);
                 } catch (e) {
                     return _observableThrow(e) as any as Observable<ChangeLogLineDto[]>;
                 }
@@ -1777,7 +1777,7 @@ export class ChangeBlogApiClient {
         }));
     }
 
-    protected processPendingChangelogsAll(response: HttpResponseBase): Observable<ChangeLogLineDto[]> {
+    protected processGetPendingChangeLogs(response: HttpResponseBase): Observable<ChangeLogLineDto[]> {
         const status = response.status;
         const responseBlob =
             response instanceof HttpResponse ? response.body :
@@ -1831,7 +1831,7 @@ export class ChangeBlogApiClient {
      * @param body (optional) 
      * @return Created
      */
-    pendingChangelogsPOST(productId: string, body: AddOrUpdateChangeLogLineDto | undefined): Observable<DefaultResponse> {
+    addPendingChangeLogLine(productId: string, body?: AddOrUpdateChangeLogLineDto | undefined): Observable<DefaultResponse> {
         let url_ = this.baseUrl + "/api/v1/products/{productId}/pending-changelogs";
         if (productId === undefined || productId === null)
             throw new Error("The parameter 'productId' must be defined.");
@@ -1851,11 +1851,11 @@ export class ChangeBlogApiClient {
         };
 
         return this.http.request("post", url_, options_).pipe(_observableMergeMap((response_ : any) => {
-            return this.processPendingChangelogsPOST(response_);
+            return this.processAddPendingChangeLogLine(response_);
         })).pipe(_observableCatch((response_: any) => {
             if (response_ instanceof HttpResponseBase) {
                 try {
-                    return this.processPendingChangelogsPOST(response_ as any);
+                    return this.processAddPendingChangeLogLine(response_ as any);
                 } catch (e) {
                     return _observableThrow(e) as any as Observable<DefaultResponse>;
                 }
@@ -1864,7 +1864,7 @@ export class ChangeBlogApiClient {
         }));
     }
 
-    protected processPendingChangelogsPOST(response: HttpResponseBase): Observable<DefaultResponse> {
+    protected processAddPendingChangeLogLine(response: HttpResponseBase): Observable<DefaultResponse> {
         const status = response.status;
         const responseBlob =
             response instanceof HttpResponse ? response.body :
@@ -1931,7 +1931,7 @@ export class ChangeBlogApiClient {
     /**
      * @return Success
      */
-    pendingChangelogsDELETE(productId: string): Observable<DefaultResponse> {
+    deleteAllPendingChangeLogs(productId: string): Observable<DefaultResponse> {
         let url_ = this.baseUrl + "/api/v1/products/{productId}/pending-changelogs";
         if (productId === undefined || productId === null)
             throw new Error("The parameter 'productId' must be defined.");
@@ -1947,11 +1947,11 @@ export class ChangeBlogApiClient {
         };
 
         return this.http.request("delete", url_, options_).pipe(_observableMergeMap((response_ : any) => {
-            return this.processPendingChangelogsDELETE(response_);
+            return this.processDeleteAllPendingChangeLogs(response_);
         })).pipe(_observableCatch((response_: any) => {
             if (response_ instanceof HttpResponseBase) {
                 try {
-                    return this.processPendingChangelogsDELETE(response_ as any);
+                    return this.processDeleteAllPendingChangeLogs(response_ as any);
                 } catch (e) {
                     return _observableThrow(e) as any as Observable<DefaultResponse>;
                 }
@@ -1960,7 +1960,7 @@ export class ChangeBlogApiClient {
         }));
     }
 
-    protected processPendingChangelogsDELETE(response: HttpResponseBase): Observable<DefaultResponse> {
+    protected processDeleteAllPendingChangeLogs(response: HttpResponseBase): Observable<DefaultResponse> {
         const status = response.status;
         const responseBlob =
             response instanceof HttpResponse ? response.body :
@@ -2006,7 +2006,7 @@ export class ChangeBlogApiClient {
     /**
      * @return Success
      */
-    pendingChangelogsGET(changeLogLineId: string): Observable<PendingChangeLogLineDto> {
+    getPendingChangeLogLine(changeLogLineId: string): Observable<PendingChangeLogLineDto> {
         let url_ = this.baseUrl + "/api/v1/pending-changelogs/{changeLogLineId}";
         if (changeLogLineId === undefined || changeLogLineId === null)
             throw new Error("The parameter 'changeLogLineId' must be defined.");
@@ -2022,11 +2022,11 @@ export class ChangeBlogApiClient {
         };
 
         return this.http.request("get", url_, options_).pipe(_observableMergeMap((response_ : any) => {
-            return this.processPendingChangelogsGET(response_);
+            return this.processGetPendingChangeLogLine(response_);
         })).pipe(_observableCatch((response_: any) => {
             if (response_ instanceof HttpResponseBase) {
                 try {
-                    return this.processPendingChangelogsGET(response_ as any);
+                    return this.processGetPendingChangeLogLine(response_ as any);
                 } catch (e) {
                     return _observableThrow(e) as any as Observable<PendingChangeLogLineDto>;
                 }
@@ -2035,7 +2035,7 @@ export class ChangeBlogApiClient {
         }));
     }
 
-    protected processPendingChangelogsGET(response: HttpResponseBase): Observable<PendingChangeLogLineDto> {
+    protected processGetPendingChangeLogLine(response: HttpResponseBase): Observable<PendingChangeLogLineDto> {
         const status = response.status;
         const responseBlob =
             response instanceof HttpResponse ? response.body :
@@ -2089,7 +2089,7 @@ export class ChangeBlogApiClient {
      * @param body (optional) 
      * @return Success
      */
-    pendingChangelogsPATCH(changeLogLineId: string, body: PatchChangeLogLineDto | undefined): Observable<DefaultResponse> {
+    updatePendingChangeLogLine(changeLogLineId: string, body?: PatchChangeLogLineDto | undefined): Observable<DefaultResponse> {
         let url_ = this.baseUrl + "/api/v1/pending-changelogs/{changeLogLineId}";
         if (changeLogLineId === undefined || changeLogLineId === null)
             throw new Error("The parameter 'changeLogLineId' must be defined.");
@@ -2109,11 +2109,11 @@ export class ChangeBlogApiClient {
         };
 
         return this.http.request("patch", url_, options_).pipe(_observableMergeMap((response_ : any) => {
-            return this.processPendingChangelogsPATCH(response_);
+            return this.processUpdatePendingChangeLogLine(response_);
         })).pipe(_observableCatch((response_: any) => {
             if (response_ instanceof HttpResponseBase) {
                 try {
-                    return this.processPendingChangelogsPATCH(response_ as any);
+                    return this.processUpdatePendingChangeLogLine(response_ as any);
                 } catch (e) {
                     return _observableThrow(e) as any as Observable<DefaultResponse>;
                 }
@@ -2122,7 +2122,7 @@ export class ChangeBlogApiClient {
         }));
     }
 
-    protected processPendingChangelogsPATCH(response: HttpResponseBase): Observable<DefaultResponse> {
+    protected processUpdatePendingChangeLogLine(response: HttpResponseBase): Observable<DefaultResponse> {
         const status = response.status;
         const responseBlob =
             response instanceof HttpResponse ? response.body :
@@ -2189,7 +2189,7 @@ export class ChangeBlogApiClient {
     /**
      * @return Success
      */
-    pendingChangelogsDELETE2(changeLogLineId: string): Observable<DefaultResponse> {
+    deletePendingChangeLogLine(changeLogLineId: string): Observable<DefaultResponse> {
         let url_ = this.baseUrl + "/api/v1/pending-changelogs/{changeLogLineId}";
         if (changeLogLineId === undefined || changeLogLineId === null)
             throw new Error("The parameter 'changeLogLineId' must be defined.");
@@ -2205,11 +2205,11 @@ export class ChangeBlogApiClient {
         };
 
         return this.http.request("delete", url_, options_).pipe(_observableMergeMap((response_ : any) => {
-            return this.processPendingChangelogsDELETE2(response_);
+            return this.processDeletePendingChangeLogLine(response_);
         })).pipe(_observableCatch((response_: any) => {
             if (response_ instanceof HttpResponseBase) {
                 try {
-                    return this.processPendingChangelogsDELETE2(response_ as any);
+                    return this.processDeletePendingChangeLogLine(response_ as any);
                 } catch (e) {
                     return _observableThrow(e) as any as Observable<DefaultResponse>;
                 }
@@ -2218,7 +2218,7 @@ export class ChangeBlogApiClient {
         }));
     }
 
-    protected processPendingChangelogsDELETE2(response: HttpResponseBase): Observable<DefaultResponse> {
+    protected processDeletePendingChangeLogLine(response: HttpResponseBase): Observable<DefaultResponse> {
         const status = response.status;
         const responseBlob =
             response instanceof HttpResponse ? response.body :
@@ -2279,7 +2279,7 @@ export class ChangeBlogApiClient {
      * @param body (optional) 
      * @return Success
      */
-    move(changeLogLineId: string, body: MoveChangeLogLineDto | undefined): Observable<DefaultResponse> {
+    movePendingChangeLogLine(changeLogLineId: string, body?: MoveChangeLogLineDto | undefined): Observable<DefaultResponse> {
         let url_ = this.baseUrl + "/api/v1/pending-changelogs/{changeLogLineId}/move";
         if (changeLogLineId === undefined || changeLogLineId === null)
             throw new Error("The parameter 'changeLogLineId' must be defined.");
@@ -2299,11 +2299,11 @@ export class ChangeBlogApiClient {
         };
 
         return this.http.request("post", url_, options_).pipe(_observableMergeMap((response_ : any) => {
-            return this.processMove(response_);
+            return this.processMovePendingChangeLogLine(response_);
         })).pipe(_observableCatch((response_: any) => {
             if (response_ instanceof HttpResponseBase) {
                 try {
-                    return this.processMove(response_ as any);
+                    return this.processMovePendingChangeLogLine(response_ as any);
                 } catch (e) {
                     return _observableThrow(e) as any as Observable<DefaultResponse>;
                 }
@@ -2312,7 +2312,7 @@ export class ChangeBlogApiClient {
         }));
     }
 
-    protected processMove(response: HttpResponseBase): Observable<DefaultResponse> {
+    protected processMovePendingChangeLogLine(response: HttpResponseBase): Observable<DefaultResponse> {
         const status = response.status;
         const responseBlob =
             response instanceof HttpResponse ? response.body :
@@ -2380,7 +2380,7 @@ export class ChangeBlogApiClient {
      * @param body (optional) 
      * @return Success
      */
-    move2(productId: string, body: MoveChangeLogLineDto | undefined): Observable<DefaultResponse> {
+    moveAllPendingChangeLogs(productId: string, body?: MoveChangeLogLineDto | undefined): Observable<DefaultResponse> {
         let url_ = this.baseUrl + "/api/v1/products/{productId}/pending-changelogs/move";
         if (productId === undefined || productId === null)
             throw new Error("The parameter 'productId' must be defined.");
@@ -2400,11 +2400,11 @@ export class ChangeBlogApiClient {
         };
 
         return this.http.request("post", url_, options_).pipe(_observableMergeMap((response_ : any) => {
-            return this.processMove2(response_);
+            return this.processMoveAllPendingChangeLogs(response_);
         })).pipe(_observableCatch((response_: any) => {
             if (response_ instanceof HttpResponseBase) {
                 try {
-                    return this.processMove2(response_ as any);
+                    return this.processMoveAllPendingChangeLogs(response_ as any);
                 } catch (e) {
                     return _observableThrow(e) as any as Observable<DefaultResponse>;
                 }
@@ -2413,7 +2413,7 @@ export class ChangeBlogApiClient {
         }));
     }
 
-    protected processMove2(response: HttpResponseBase): Observable<DefaultResponse> {
+    protected processMoveAllPendingChangeLogs(response: HttpResponseBase): Observable<DefaultResponse> {
         const status = response.status;
         const responseBlob =
             response instanceof HttpResponse ? response.body :
@@ -2480,7 +2480,7 @@ export class ChangeBlogApiClient {
     /**
      * @return Success
      */
-    changelogsGET(changeLogLineId: string): Observable<ChangeLogLineDto> {
+    getChangeLogLine(changeLogLineId: string): Observable<ChangeLogLineDto> {
         let url_ = this.baseUrl + "/api/v1/changelogs/{changeLogLineId}";
         if (changeLogLineId === undefined || changeLogLineId === null)
             throw new Error("The parameter 'changeLogLineId' must be defined.");
@@ -2496,11 +2496,11 @@ export class ChangeBlogApiClient {
         };
 
         return this.http.request("get", url_, options_).pipe(_observableMergeMap((response_ : any) => {
-            return this.processChangelogsGET(response_);
+            return this.processGetChangeLogLine(response_);
         })).pipe(_observableCatch((response_: any) => {
             if (response_ instanceof HttpResponseBase) {
                 try {
-                    return this.processChangelogsGET(response_ as any);
+                    return this.processGetChangeLogLine(response_ as any);
                 } catch (e) {
                     return _observableThrow(e) as any as Observable<ChangeLogLineDto>;
                 }
@@ -2509,7 +2509,7 @@ export class ChangeBlogApiClient {
         }));
     }
 
-    protected processChangelogsGET(response: HttpResponseBase): Observable<ChangeLogLineDto> {
+    protected processGetChangeLogLine(response: HttpResponseBase): Observable<ChangeLogLineDto> {
         const status = response.status;
         const responseBlob =
             response instanceof HttpResponse ? response.body :
@@ -2562,7 +2562,7 @@ export class ChangeBlogApiClient {
     /**
      * @return Success
      */
-    changelogsDELETE(changeLogLineId: string): Observable<DefaultResponse> {
+    deleteChangeLogLine(changeLogLineId: string): Observable<DefaultResponse> {
         let url_ = this.baseUrl + "/api/v1/changelogs/{changeLogLineId}";
         if (changeLogLineId === undefined || changeLogLineId === null)
             throw new Error("The parameter 'changeLogLineId' must be defined.");
@@ -2578,11 +2578,11 @@ export class ChangeBlogApiClient {
         };
 
         return this.http.request("delete", url_, options_).pipe(_observableMergeMap((response_ : any) => {
-            return this.processChangelogsDELETE(response_);
+            return this.processDeleteChangeLogLine(response_);
         })).pipe(_observableCatch((response_: any) => {
             if (response_ instanceof HttpResponseBase) {
                 try {
-                    return this.processChangelogsDELETE(response_ as any);
+                    return this.processDeleteChangeLogLine(response_ as any);
                 } catch (e) {
                     return _observableThrow(e) as any as Observable<DefaultResponse>;
                 }
@@ -2591,7 +2591,7 @@ export class ChangeBlogApiClient {
         }));
     }
 
-    protected processChangelogsDELETE(response: HttpResponseBase): Observable<DefaultResponse> {
+    protected processDeleteChangeLogLine(response: HttpResponseBase): Observable<DefaultResponse> {
         const status = response.status;
         const responseBlob =
             response instanceof HttpResponse ? response.body :
@@ -2652,7 +2652,7 @@ export class ChangeBlogApiClient {
      * @param body (optional) 
      * @return Success
      */
-    changelogsPATCH(changeLogLineId: string, body: PatchChangeLogLineDto | undefined): Observable<DefaultResponse> {
+    updateChangeLogLine(changeLogLineId: string, body?: PatchChangeLogLineDto | undefined): Observable<DefaultResponse> {
         let url_ = this.baseUrl + "/api/v1/changelogs/{changeLogLineId}";
         if (changeLogLineId === undefined || changeLogLineId === null)
             throw new Error("The parameter 'changeLogLineId' must be defined.");
@@ -2672,11 +2672,11 @@ export class ChangeBlogApiClient {
         };
 
         return this.http.request("patch", url_, options_).pipe(_observableMergeMap((response_ : any) => {
-            return this.processChangelogsPATCH(response_);
+            return this.processUpdateChangeLogLine(response_);
         })).pipe(_observableCatch((response_: any) => {
             if (response_ instanceof HttpResponseBase) {
                 try {
-                    return this.processChangelogsPATCH(response_ as any);
+                    return this.processUpdateChangeLogLine(response_ as any);
                 } catch (e) {
                     return _observableThrow(e) as any as Observable<DefaultResponse>;
                 }
@@ -2685,7 +2685,7 @@ export class ChangeBlogApiClient {
         }));
     }
 
-    protected processChangelogsPATCH(response: HttpResponseBase): Observable<DefaultResponse> {
+    protected processUpdateChangeLogLine(response: HttpResponseBase): Observable<DefaultResponse> {
         const status = response.status;
         const responseBlob =
             response instanceof HttpResponse ? response.body :
@@ -2746,7 +2746,7 @@ export class ChangeBlogApiClient {
      * @param body (optional) 
      * @return Created
      */
-    changelogsPOST(versionId: string, body: AddOrUpdateChangeLogLineDto | undefined): Observable<DefaultResponse> {
+    addChangeLogLine(versionId: string, body?: AddOrUpdateChangeLogLineDto | undefined): Observable<DefaultResponse> {
         let url_ = this.baseUrl + "/api/v1/versions/{versionId}/changelogs";
         if (versionId === undefined || versionId === null)
             throw new Error("The parameter 'versionId' must be defined.");
@@ -2766,11 +2766,11 @@ export class ChangeBlogApiClient {
         };
 
         return this.http.request("post", url_, options_).pipe(_observableMergeMap((response_ : any) => {
-            return this.processChangelogsPOST(response_);
+            return this.processAddChangeLogLine(response_);
         })).pipe(_observableCatch((response_: any) => {
             if (response_ instanceof HttpResponseBase) {
                 try {
-                    return this.processChangelogsPOST(response_ as any);
+                    return this.processAddChangeLogLine(response_ as any);
                 } catch (e) {
                     return _observableThrow(e) as any as Observable<DefaultResponse>;
                 }
@@ -2779,7 +2779,7 @@ export class ChangeBlogApiClient {
         }));
     }
 
-    protected processChangelogsPOST(response: HttpResponseBase): Observable<DefaultResponse> {
+    protected processAddChangeLogLine(response: HttpResponseBase): Observable<DefaultResponse> {
         const status = response.status;
         const responseBlob =
             response instanceof HttpResponse ? response.body :
@@ -2846,7 +2846,7 @@ export class ChangeBlogApiClient {
     /**
      * @return Success
      */
-    makePending(changeLogLineId: string): Observable<DefaultResponse> {
+    makeChangeLogLinePending(changeLogLineId: string): Observable<DefaultResponse> {
         let url_ = this.baseUrl + "/api/v1/changelogs/{changeLogLineId}/make-pending";
         if (changeLogLineId === undefined || changeLogLineId === null)
             throw new Error("The parameter 'changeLogLineId' must be defined.");
@@ -2862,11 +2862,11 @@ export class ChangeBlogApiClient {
         };
 
         return this.http.request("post", url_, options_).pipe(_observableMergeMap((response_ : any) => {
-            return this.processMakePending(response_);
+            return this.processMakeChangeLogLinePending(response_);
         })).pipe(_observableCatch((response_: any) => {
             if (response_ instanceof HttpResponseBase) {
                 try {
-                    return this.processMakePending(response_ as any);
+                    return this.processMakeChangeLogLinePending(response_ as any);
                 } catch (e) {
                     return _observableThrow(e) as any as Observable<DefaultResponse>;
                 }
@@ -2875,7 +2875,7 @@ export class ChangeBlogApiClient {
         }));
     }
 
-    protected processMakePending(response: HttpResponseBase): Observable<DefaultResponse> {
+    protected processMakeChangeLogLinePending(response: HttpResponseBase): Observable<DefaultResponse> {
         const status = response.status;
         const responseBlob =
             response instanceof HttpResponse ? response.body :
@@ -2942,7 +2942,7 @@ export class ChangeBlogApiClient {
     /**
      * @return Success
      */
-    makePending2(versionId: string): Observable<DefaultResponse> {
+    makeAllChangeLogLinesPending(versionId: string): Observable<DefaultResponse> {
         let url_ = this.baseUrl + "/api/v1/versions/{versionId}/changelogs/make-pending";
         if (versionId === undefined || versionId === null)
             throw new Error("The parameter 'versionId' must be defined.");
@@ -2958,11 +2958,11 @@ export class ChangeBlogApiClient {
         };
 
         return this.http.request("post", url_, options_).pipe(_observableMergeMap((response_ : any) => {
-            return this.processMakePending2(response_);
+            return this.processMakeAllChangeLogLinesPending(response_);
         })).pipe(_observableCatch((response_: any) => {
             if (response_ instanceof HttpResponseBase) {
                 try {
-                    return this.processMakePending2(response_ as any);
+                    return this.processMakeAllChangeLogLinesPending(response_ as any);
                 } catch (e) {
                     return _observableThrow(e) as any as Observable<DefaultResponse>;
                 }
@@ -2971,7 +2971,7 @@ export class ChangeBlogApiClient {
         }));
     }
 
-    protected processMakePending2(response: HttpResponseBase): Observable<DefaultResponse> {
+    protected processMakeAllChangeLogLinesPending(response: HttpResponseBase): Observable<DefaultResponse> {
         const status = response.status;
         const responseBlob =
             response instanceof HttpResponse ? response.body :
@@ -3038,7 +3038,7 @@ export class ChangeBlogApiClient {
     /**
      * @return Success
      */
-    labelsAll(changeLogLineId: string): Observable<string[]> {
+    getLabels(changeLogLineId: string): Observable<string[]> {
         let url_ = this.baseUrl + "/api/v1/changelogs/{changeLogLineId}/labels";
         if (changeLogLineId === undefined || changeLogLineId === null)
             throw new Error("The parameter 'changeLogLineId' must be defined.");
@@ -3054,11 +3054,11 @@ export class ChangeBlogApiClient {
         };
 
         return this.http.request("get", url_, options_).pipe(_observableMergeMap((response_ : any) => {
-            return this.processLabelsAll(response_);
+            return this.processGetLabels(response_);
         })).pipe(_observableCatch((response_: any) => {
             if (response_ instanceof HttpResponseBase) {
                 try {
-                    return this.processLabelsAll(response_ as any);
+                    return this.processGetLabels(response_ as any);
                 } catch (e) {
                     return _observableThrow(e) as any as Observable<string[]>;
                 }
@@ -3067,7 +3067,7 @@ export class ChangeBlogApiClient {
         }));
     }
 
-    protected processLabelsAll(response: HttpResponseBase): Observable<string[]> {
+    protected processGetLabels(response: HttpResponseBase): Observable<string[]> {
         const status = response.status;
         const responseBlob =
             response instanceof HttpResponse ? response.body :
@@ -3120,7 +3120,7 @@ export class ChangeBlogApiClient {
     /**
      * @return Success
      */
-    labelsPATCH(changeLogLineId: string, label: string): Observable<DefaultResponse> {
+    addLabel(changeLogLineId: string, label: string): Observable<DefaultResponse> {
         let url_ = this.baseUrl + "/api/v1/changelogs/{changeLogLineId}/labels/{label}";
         if (changeLogLineId === undefined || changeLogLineId === null)
             throw new Error("The parameter 'changeLogLineId' must be defined.");
@@ -3138,12 +3138,12 @@ export class ChangeBlogApiClient {
             })
         };
 
-        return this.http.request("patch", url_, options_).pipe(_observableMergeMap((response_ : any) => {
-            return this.processLabelsPATCH(response_);
+        return this.http.request("put", url_, options_).pipe(_observableMergeMap((response_ : any) => {
+            return this.processAddLabel(response_);
         })).pipe(_observableCatch((response_: any) => {
             if (response_ instanceof HttpResponseBase) {
                 try {
-                    return this.processLabelsPATCH(response_ as any);
+                    return this.processAddLabel(response_ as any);
                 } catch (e) {
                     return _observableThrow(e) as any as Observable<DefaultResponse>;
                 }
@@ -3152,7 +3152,7 @@ export class ChangeBlogApiClient {
         }));
     }
 
-    protected processLabelsPATCH(response: HttpResponseBase): Observable<DefaultResponse> {
+    protected processAddLabel(response: HttpResponseBase): Observable<DefaultResponse> {
         const status = response.status;
         const responseBlob =
             response instanceof HttpResponse ? response.body :
@@ -3219,7 +3219,7 @@ export class ChangeBlogApiClient {
     /**
      * @return Success
      */
-    labelsDELETE(changeLogLineId: string, label: string): Observable<DefaultResponse> {
+    deleteLabel(changeLogLineId: string, label: string): Observable<DefaultResponse> {
         let url_ = this.baseUrl + "/api/v1/changelogs/{changeLogLineId}/labels/{label}";
         if (changeLogLineId === undefined || changeLogLineId === null)
             throw new Error("The parameter 'changeLogLineId' must be defined.");
@@ -3238,11 +3238,11 @@ export class ChangeBlogApiClient {
         };
 
         return this.http.request("delete", url_, options_).pipe(_observableMergeMap((response_ : any) => {
-            return this.processLabelsDELETE(response_);
+            return this.processDeleteLabel(response_);
         })).pipe(_observableCatch((response_: any) => {
             if (response_ instanceof HttpResponseBase) {
                 try {
-                    return this.processLabelsDELETE(response_ as any);
+                    return this.processDeleteLabel(response_ as any);
                 } catch (e) {
                     return _observableThrow(e) as any as Observable<DefaultResponse>;
                 }
@@ -3251,7 +3251,7 @@ export class ChangeBlogApiClient {
         }));
     }
 
-    protected processLabelsDELETE(response: HttpResponseBase): Observable<DefaultResponse> {
+    protected processDeleteLabel(response: HttpResponseBase): Observable<DefaultResponse> {
         const status = response.status;
         const responseBlob =
             response instanceof HttpResponse ? response.body :
@@ -3311,7 +3311,7 @@ export class ChangeBlogApiClient {
     /**
      * @return Success
      */
-    issuesAll(changeLogLineId: string): Observable<string[]> {
+    getIssues(changeLogLineId: string): Observable<string[]> {
         let url_ = this.baseUrl + "/api/v1/changelogs/{changeLogLineId}/issues";
         if (changeLogLineId === undefined || changeLogLineId === null)
             throw new Error("The parameter 'changeLogLineId' must be defined.");
@@ -3327,11 +3327,11 @@ export class ChangeBlogApiClient {
         };
 
         return this.http.request("get", url_, options_).pipe(_observableMergeMap((response_ : any) => {
-            return this.processIssuesAll(response_);
+            return this.processGetIssues(response_);
         })).pipe(_observableCatch((response_: any) => {
             if (response_ instanceof HttpResponseBase) {
                 try {
-                    return this.processIssuesAll(response_ as any);
+                    return this.processGetIssues(response_ as any);
                 } catch (e) {
                     return _observableThrow(e) as any as Observable<string[]>;
                 }
@@ -3340,7 +3340,7 @@ export class ChangeBlogApiClient {
         }));
     }
 
-    protected processIssuesAll(response: HttpResponseBase): Observable<string[]> {
+    protected processGetIssues(response: HttpResponseBase): Observable<string[]> {
         const status = response.status;
         const responseBlob =
             response instanceof HttpResponse ? response.body :
@@ -3393,7 +3393,7 @@ export class ChangeBlogApiClient {
     /**
      * @return Success
      */
-    issuesPATCH(changeLogLineId: string, issue: string): Observable<DefaultResponse> {
+    addIssue(changeLogLineId: string, issue: string): Observable<DefaultResponse> {
         let url_ = this.baseUrl + "/api/v1/changelogs/{changeLogLineId}/issues/{issue}";
         if (changeLogLineId === undefined || changeLogLineId === null)
             throw new Error("The parameter 'changeLogLineId' must be defined.");
@@ -3411,12 +3411,12 @@ export class ChangeBlogApiClient {
             })
         };
 
-        return this.http.request("patch", url_, options_).pipe(_observableMergeMap((response_ : any) => {
-            return this.processIssuesPATCH(response_);
+        return this.http.request("put", url_, options_).pipe(_observableMergeMap((response_ : any) => {
+            return this.processAddIssue(response_);
         })).pipe(_observableCatch((response_: any) => {
             if (response_ instanceof HttpResponseBase) {
                 try {
-                    return this.processIssuesPATCH(response_ as any);
+                    return this.processAddIssue(response_ as any);
                 } catch (e) {
                     return _observableThrow(e) as any as Observable<DefaultResponse>;
                 }
@@ -3425,7 +3425,7 @@ export class ChangeBlogApiClient {
         }));
     }
 
-    protected processIssuesPATCH(response: HttpResponseBase): Observable<DefaultResponse> {
+    protected processAddIssue(response: HttpResponseBase): Observable<DefaultResponse> {
         const status = response.status;
         const responseBlob =
             response instanceof HttpResponse ? response.body :
@@ -3492,7 +3492,7 @@ export class ChangeBlogApiClient {
     /**
      * @return Success
      */
-    issuesDELETE(changeLogLineId: string, issue: string): Observable<DefaultResponse> {
+    deleteIssue(changeLogLineId: string, issue: string): Observable<DefaultResponse> {
         let url_ = this.baseUrl + "/api/v1/changelogs/{changeLogLineId}/issues/{issue}";
         if (changeLogLineId === undefined || changeLogLineId === null)
             throw new Error("The parameter 'changeLogLineId' must be defined.");
@@ -3511,11 +3511,11 @@ export class ChangeBlogApiClient {
         };
 
         return this.http.request("delete", url_, options_).pipe(_observableMergeMap((response_ : any) => {
-            return this.processIssuesDELETE(response_);
+            return this.processDeleteIssue(response_);
         })).pipe(_observableCatch((response_: any) => {
             if (response_ instanceof HttpResponseBase) {
                 try {
-                    return this.processIssuesDELETE(response_ as any);
+                    return this.processDeleteIssue(response_ as any);
                 } catch (e) {
                     return _observableThrow(e) as any as Observable<DefaultResponse>;
                 }
@@ -3524,7 +3524,7 @@ export class ChangeBlogApiClient {
         }));
     }
 
-    protected processIssuesDELETE(response: HttpResponseBase): Observable<DefaultResponse> {
+    protected processDeleteIssue(response: HttpResponseBase): Observable<DefaultResponse> {
         const status = response.status;
         const responseBlob =
             response instanceof HttpResponse ? response.body :

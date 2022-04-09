@@ -30,7 +30,7 @@ export class Client {
     /**
      * @return Success
      */
-    info(): Observable<ApiInfo> {
+    getAppInfo(): Observable<ApiInfo> {
         let url_ = this.baseUrl + "/api/info";
         url_ = url_.replace(/[?&]$/, "");
 
@@ -43,11 +43,11 @@ export class Client {
         };
 
         return this.http.request("get", url_, options_).pipe(_observableMergeMap((response_ : any) => {
-            return this.processInfo(response_);
+            return this.processGetAppInfo(response_);
         })).pipe(_observableCatch((response_: any) => {
             if (response_ instanceof HttpResponseBase) {
                 try {
-                    return this.processInfo(response_ as any);
+                    return this.processGetAppInfo(response_ as any);
                 } catch (e) {
                     return _observableThrow(e) as any as Observable<ApiInfo>;
                 }
@@ -56,7 +56,7 @@ export class Client {
         }));
     }
 
-    protected processInfo(response: HttpResponseBase): Observable<ApiInfo> {
+    protected processGetAppInfo(response: HttpResponseBase): Observable<ApiInfo> {
         const status = response.status;
         const responseBlob =
             response instanceof HttpResponse ? response.body :
@@ -76,6 +76,53 @@ export class Client {
             }));
         }
         return _observableOf<ApiInfo>(null as any);
+    }
+
+    /**
+     * @return Success
+     */
+    getAppSettings(): Observable<void> {
+        let url_ = this.baseUrl + "/api/appsettings";
+        url_ = url_.replace(/[?&]$/, "");
+
+        let options_ : any = {
+            observe: "response",
+            responseType: "blob",
+            headers: new HttpHeaders({
+            })
+        };
+
+        return this.http.request("get", url_, options_).pipe(_observableMergeMap((response_ : any) => {
+            return this.processGetAppSettings(response_);
+        })).pipe(_observableCatch((response_: any) => {
+            if (response_ instanceof HttpResponseBase) {
+                try {
+                    return this.processGetAppSettings(response_ as any);
+                } catch (e) {
+                    return _observableThrow(e) as any as Observable<void>;
+                }
+            } else
+                return _observableThrow(response_) as any as Observable<void>;
+        }));
+    }
+
+    protected processGetAppSettings(response: HttpResponseBase): Observable<void> {
+        const status = response.status;
+        const responseBlob =
+            response instanceof HttpResponse ? response.body :
+            (response as any).error instanceof Blob ? (response as any).error : undefined;
+
+        let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
+        if (status === 200) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            return _observableOf<void>(null as any);
+            }));
+        } else if (status !== 200 && status !== 204) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            }));
+        }
+        return _observableOf<void>(null as any);
     }
 
     /**

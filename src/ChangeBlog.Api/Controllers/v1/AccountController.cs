@@ -29,7 +29,7 @@ namespace ChangeBlog.Api.Controllers.V1;
 [SwaggerControllerOrder(1)]
 public class AccountController : ControllerBase
 {
-    [HttpGet]
+    [HttpGet(Name = "GetAccounts")]
     [ProducesResponseType(StatusCodes.Status200OK)]
     [SkipAuthorization]
     public async Task<ActionResult<List<AccountDto>>> GetAccountsAsync(

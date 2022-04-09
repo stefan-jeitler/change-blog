@@ -154,7 +154,7 @@ export class Client {
     /**
      * @return Success
      */
-    accounts(): Observable<AccountDto[]> {
+    getAccounts(): Observable<AccountDto[]> {
         let url_ = this.baseUrl + "/api/v1/accounts";
         url_ = url_.replace(/[?&]$/, "");
 
@@ -167,11 +167,11 @@ export class Client {
         };
 
         return this.http.request("get", url_, options_).pipe(_observableMergeMap((response_ : any) => {
-            return this.processAccounts(response_);
+            return this.processGetAccounts(response_);
         })).pipe(_observableCatch((response_: any) => {
             if (response_ instanceof HttpResponseBase) {
                 try {
-                    return this.processAccounts(response_ as any);
+                    return this.processGetAccounts(response_ as any);
                 } catch (e) {
                     return _observableThrow(e) as any as Observable<AccountDto[]>;
                 }
@@ -180,7 +180,7 @@ export class Client {
         }));
     }
 
-    protected processAccounts(response: HttpResponseBase): Observable<AccountDto[]> {
+    protected processGetAccounts(response: HttpResponseBase): Observable<AccountDto[]> {
         const status = response.status;
         const responseBlob =
             response instanceof HttpResponse ? response.body :

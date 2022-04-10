@@ -18,7 +18,9 @@
       </li>
     </ul>
     <div>
-      <button *ngIf="!isLoggedIn" (click)="login()" class="btn btn-light ms-auto float-end" type="button">Login</button>
+      <span *ngIf="!isLoggedIn" (click)="login()" class="float-end" style="cursor: pointer;">
+          <img src="/assets/img/ms-symbollockup_signin_light.svg" alt="Login with Microsoft" />
+      </span>
       <div *ngIf="isLoggedIn" class="dropdown user-profile">
         <i class="bi bi-person-circle white user-profile-icon float-end" data-bs-toggle="dropdown"></i>
         <ul aria-labelledby="user-icon" class="dropdown-menu dropdown-menu-end">

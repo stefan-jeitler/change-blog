@@ -41,7 +41,7 @@ public class AddExternalIdentityInteractor : IAddExternalIdentity
                 return Result.Success(userByExternalId.GetValueOrThrow().Id);
         }
 
-        var externalUserInfo = await _externalUserInfoDao.GetAsync();
+        var externalUserInfo = await _externalUserInfoDao.GetUserInfoAsync();
 
         return await ImportUserAsync(externalUserId, externalUserInfo);
     }

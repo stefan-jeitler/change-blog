@@ -11,8 +11,7 @@ public static class ServiceCollectionExtensions
     public static IServiceCollection AddMicrosoftIdentityDataAccess(this IServiceCollection services,
         string userInfoEndpointBaseUrl)
     {
-        var userInfoEndpoint = new Uri($"{userInfoEndpointBaseUrl.TrimEnd('/')}/userinfo");
-        var httpClient = new HttpClient { BaseAddress = userInfoEndpoint };
+        var httpClient = new HttpClient { BaseAddress = new Uri(userInfoEndpointBaseUrl) };
 
         services.AddScoped<IExternalUserInfoDao>(sp => new ExternalUserInfoDao(
             sp.GetRequiredService<ITokenAcquisition>(),

@@ -61,7 +61,7 @@ public class HomeController : ControllerBase
     public ActionResult AppSettings()
     {
         var appSettings = _configuration
-            .GetSection("AppSettings")
+            .GetSection(nameof(Configuration.AppSettings))
             .Get<AppSettings>();
 
         return Ok(appSettings);

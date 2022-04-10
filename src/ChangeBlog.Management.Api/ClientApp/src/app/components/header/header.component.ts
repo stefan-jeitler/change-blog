@@ -22,11 +22,10 @@ export class HeaderComponent implements OnInit {
   }
 
   ngOnInit() {
-    this.authService.loadDiscoveryDocumentAndTryLogin();
   }
 
   login() {
-    this.authService.initLoginFlow();
+    this.authService.initCodeFlow();
   }
 
   logout() {

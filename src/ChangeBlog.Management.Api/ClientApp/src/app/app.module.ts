@@ -37,6 +37,8 @@ export function initializeAuthentication(
           (e) => console.error(e)
         );
 
+      authService.loadDiscoveryDocumentAndTryLogin();
+
       resolve();
     });
   };
@@ -57,7 +59,11 @@ export function initializeAuthentication(
     OAuthModule.forRoot({
       resourceServer: {
         sendAccessToken: true,
-        allowedUrls: ['https://app-change-blog-staging.azurewebsites.net', 'http://localhost:6430', '/'],
+        allowedUrls: [
+          'https://app-change-blog-staging.azurewebsites.net',
+          'http://localhost:6430',
+          '/',
+        ],
       },
     }),
   ],
@@ -71,7 +77,7 @@ export function initializeAuthentication(
     {
       provide: ChangeBlogApi.API_BASE_URL,
       useFactory: (appConfig: AppConfig) => appConfig.changeBlogApiBaseUrl,
-      deps: [APP_CONFIG]
+      deps: [APP_CONFIG],
     },
     ChangeBlogApi.Client,
     ChangeBlogManagementApi.Client,

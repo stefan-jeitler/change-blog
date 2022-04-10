@@ -15,7 +15,7 @@ namespace ChangeBlog.Management.Api.Controllers.v1;
 [SwaggerControllerOrder(1)]
 public class UserController : ControllerBase
 {
-    [HttpPost(Name = "EnsureUserIsImported")]
+    [HttpPost("import", Name = "EnsureUserIsImported")]
     [ProducesResponseType(typeof(DefaultResponse), StatusCodes.Status200OK)]
     [SkipAuthorization]
     public ActionResult<DefaultResponse> EnsureUserIsImported()

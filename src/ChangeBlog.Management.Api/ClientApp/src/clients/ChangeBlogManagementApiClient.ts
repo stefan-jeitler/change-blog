@@ -129,7 +129,7 @@ export class Client {
      * @return Success
      */
     ensureUserIsImported(): Observable<DefaultResponse> {
-        let url_ = this.baseUrl + "/api/v1/user";
+        let url_ = this.baseUrl + "/api/v1/user/import";
         url_ = url_.replace(/[?&]$/, "");
 
         let options_ : any = {

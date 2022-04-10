@@ -30,7 +30,7 @@ public class UserController : ControllerBase
     [ProducesResponseType(typeof(IFormFile), StatusCodes.Status200OK)]
     [ProducesResponseType(typeof(DefaultResponse), StatusCodes.Status404NotFound)]
     [SkipAuthorization]
-    public async Task<ActionResult<IFormFile>> GetUserPhotoAsync([FromServices] IExternalUserInfoDao externalUserInfo)
+    public async Task<ActionResult> GetUserPhotoAsync([FromServices] IExternalUserInfoDao externalUserInfo)
     {
         var (hasValue, userPhoto) = await externalUserInfo.GetUserPhotoAsync();
 

@@ -98,7 +98,6 @@ public class DbSessionTests
         var lazyDbConnection = new LazyDbConnection(() => dbConnectionMock.Object);
         var dbSession = new DbSession(lazyDbConnection);
 
-
         // act
         dbSession.Commit();
         dbSession.Commit();

@@ -1,18 +1,21 @@
-.user-profile-name:focus,
-.user-profile-name:hover {
-  cursor: default;
-  background-color: transparent;
+@import 'src/styles/_layout-variables';
+
+.header {
+  display: flex;
+  height: 100%;
 }
 
-li {
-  cursor: pointer;
+.menu-icon {
+  display: flex;
+  align-items: center;
+  font-size: 22px;
+  padding-left: 7px;
 }
 
-.white {
-  color: white;
+
+@media (min-width: $mobile-breakpoint) {
+  .menu-icon {
+    display: none;
+  }
 }
 
-.user-profile-icon {
-  cursor: pointer;
-  font-size: 2em;
-}

@@ -1,0 +1,37 @@
+@import 'src/styles/_layout-variables';
+
+.wrapper {
+  display: grid;
+  grid-template-columns: $side-nav-width auto;
+  grid-template-rows: $header-height auto;
+  grid-template-areas:
+    "header header"
+    "nav content";
+
+  min-height: 100vh;
+}
+
+.head {
+  grid-area: header;
+}
+
+.side-nav {
+  grid-area: nav;
+}
+
+.content {
+  grid-area: content;
+}
+
+@media (max-width: $mobile-breakpoint) {
+  .wrapper {
+    grid-template-columns: auto;
+    grid-template-areas:
+      "header"
+      "content";
+
+    .side-nav {
+      display: none;
+    }
+  }
+}

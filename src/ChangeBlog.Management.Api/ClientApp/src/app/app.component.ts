@@ -8,13 +8,17 @@ import { AppConfig, APP_CONFIG } from 'app.config';
 })
 export class AppComponent {
   constructor(@Inject(APP_CONFIG) private appConfig: AppConfig) {
-    this.showSideNav = false;
+    this.showMobileSideNav = false;
   }
 
-  showSideNav: boolean;
+  showMobileSideNav: boolean;
 
   title = 'change-blog';
   get appVersion(): string {
     return this.appConfig.appVersion!;
+  }
+
+  triggerMobileSideNav() {
+    this.showMobileSideNav = true;
   }
 }

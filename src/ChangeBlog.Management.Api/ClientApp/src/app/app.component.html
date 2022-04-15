@@ -1,5 +1,5 @@
 <div class="wrapper">
-  <app-header class="head" style="background-color: coral"></app-header>
+  <app-header (triggerMobileSideNav)="triggerMobileSideNav()" class="head" style="background-color: coral"></app-header>
 
   <nav class="side-nav" style="background-color: yellow">
     <app-side-navigation></app-side-navigation>
@@ -8,12 +8,11 @@
   <section class="content" style="background-color: green">
     <h1>ChangeBlog</h1>
     <h2>enhance your change logs</h2>
-    <p-button type="text" (click)="showSideNav = true" icon="pi pi-plus" label="Show"></p-button>
     <router-outlet></router-outlet>
     <p>dieser text hat eigentlich gar keinen wirklichen inhalt. aber er hat auch keine relevanz, und deswegen ist das egal. er dient lediglich als platzhalter. um mal zu zeigen, wie diese stelle der seite aussieht, wenn ein paar zeilen vorhanden sind. ob sich der text dabei gut fühlt, weiß ich nicht. ich schätze, eher nicht, denn wer fühlt sich schon gut als platzhalter. aber irgendwer muss diesen job ja machen und deshalb kann ich es nicht ändern .</p>
   </section>
 </div>
 
-<p-sidebar [style]="{width: 'var(--side-nav-width)', 'background-color': 'yellow'}" [(visible)]="showSideNav" [baseZIndex]="10000">
+<p-sidebar [style]="{width: 'var(--side-nav-width)', 'background-color': 'yellow'}" [(visible)]="showMobileSideNav" [baseZIndex]="10000">
   <app-side-navigation></app-side-navigation>
 </p-sidebar>

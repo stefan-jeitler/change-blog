@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import {Component, EventEmitter, OnInit, Output} from '@angular/core';
 import { OAuthService } from 'angular-oauth2-oidc';
 
 @Component({
@@ -10,6 +10,8 @@ export class HeaderComponent implements OnInit {
   constructor(
     private authService: OAuthService
   ) {}
+
+  @Output("triggerMobileSideNav") triggerMobileSideNav: EventEmitter<any> = new EventEmitter();
 
   get isLoggedIn(): boolean {
     return this.authService.hasValidIdToken();
@@ -30,5 +32,9 @@ export class HeaderComponent implements OnInit {
 
   logout() {
     this.authService.logOut();
+  }
+
+  showMobileSideNav() {
+    this.triggerMobileSideNav.emit();
   }
 }

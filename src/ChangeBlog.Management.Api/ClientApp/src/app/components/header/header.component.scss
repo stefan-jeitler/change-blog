@@ -1,21 +1,33 @@
 @import 'src/styles/_layout-variables';
+@import 'src/styles/_variables';
 
 .header {
   display: flex;
-  height: 100%;
+  align-items: center;
+  align-content: center;
+  gap: $default-gap;
+  margin: $default-margin;
 }
 
 .menu-icon {
   display: flex;
-  align-items: center;
   font-size: 22px;
-  padding-left: 7px;
 }
 
+.user-section {
+  margin-left: auto;
+}
+
+.clickable-image {
+  cursor: pointer;
+}
+
+.p-disabled {
+  opacity: 1;
+}
 
 @media (min-width: $mobile-breakpoint) {
   .menu-icon {
     display: none;
   }
 }
-

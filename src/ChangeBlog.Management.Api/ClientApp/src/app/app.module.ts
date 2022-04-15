@@ -19,6 +19,10 @@ import {SidebarModule} from "primeng/sidebar";
 import { SideNavigationComponent } from './components/side-navigation/side-navigation.component';
 import {ButtonModule} from "primeng/button";
 import {BrowserAnimationsModule} from "@angular/platform-browser/animations";
+import {PanelMenuModule} from "primeng/panelmenu";
+import {MenuModule} from "primeng/menu";
+import {MenubarModule} from "primeng/menubar";
+import {OverlayPanelModule} from "primeng/overlaypanel";
 
 export function initializeAuthentication(
   authService: OAuthService,
@@ -74,6 +78,10 @@ export function initializeAuthentication(
     }),
     SidebarModule,
     ButtonModule,
+    PanelMenuModule,
+    MenuModule,
+    MenubarModule,
+    OverlayPanelModule,
   ],
   providers: [
     {

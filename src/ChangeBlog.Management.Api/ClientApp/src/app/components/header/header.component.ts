@@ -1,5 +1,6 @@
 import {Component, EventEmitter, OnInit, Output} from '@angular/core';
-import { OAuthService } from 'angular-oauth2-oidc';
+import {OAuthService} from 'angular-oauth2-oidc';
+import {MenuItem} from "primeng/api";
 
 @Component({
   selector: 'app-header',
@@ -7,11 +8,14 @@ import { OAuthService } from 'angular-oauth2-oidc';
   styleUrls: ['./header.component.scss'],
 })
 export class HeaderComponent implements OnInit {
+  @Output("triggerMobileSideNav") triggerMobileSideNav: EventEmitter<any> = new EventEmitter();
+  items: MenuItem[];
+
   constructor(
     private authService: OAuthService
-  ) {}
-
-  @Output("triggerMobileSideNav") triggerMobileSideNav: EventEmitter<any> = new EventEmitter();
+  ) {
+    this.items = [];
+  }
 
   get isLoggedIn(): boolean {
     return this.authService.hasValidIdToken();
@@ -24,6 +28,20 @@ export class HeaderComponent implements OnInit {
   }
 
   ngOnInit() {
+    this.items = [
+      {
+        label: 'Profile',
+        routerLink: '/profile',
+        icon: 'pi pi-fw pi-user-plus'
+      },
+      {
+        label: 'Logout',
+        icon: 'pi pi-fw pi-sign-out',
+        command: () => {
+          this.logout();
+        }
+      }
+    ];
   }
 
   login() {

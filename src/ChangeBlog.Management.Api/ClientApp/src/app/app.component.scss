@@ -1,9 +1,14 @@
 @import 'src/styles/_layout-variables';
+@import 'src/styles/_variables';
+
+p-sidebar {
+  --side-nav-width: auto;
+}
 
 .wrapper {
   display: grid;
-  grid-template-columns: $side-nav-width auto;
-  grid-template-rows: $header-height auto;
+  grid-template-columns: auto 1fr;
+  grid-template-rows: auto 1fr;
   grid-template-areas:
     "header header"
     "nav content";
@@ -23,6 +28,10 @@
   grid-area: content;
 }
 
+.inner-content {
+  margin: $default-margin;
+}
+
 @media (max-width: $mobile-breakpoint) {
   .wrapper {
     grid-template-columns: auto;
@@ -34,8 +43,4 @@
       display: none;
     }
   }
-}
-
-.side-nav-overlay {
-  width: $side-nav-width;
 }

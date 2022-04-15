@@ -1,9 +1,6 @@
 @import 'src/styles/_layout-variables';
+@import 'src/styles/_variables';
 @import url('https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,400;0,500;1,300;1,400;1,500&display=swap');
-
-:root {
-  --side-nav-width: #{$side-nav-width};
-}
 
 body,html {
   margin: 0;
@@ -13,7 +10,13 @@ body,html {
   box-sizing: border-box;
 }
 
-body {
+body,
+body .p-component {
   font-family: 'Roboto', sans-serif;
-  font-size: 16px;
+  font-size: $default-font-size;
+}
+
+// let the components add paddings
+.p-sidebar-content {
+  padding: 0 !important;
 }

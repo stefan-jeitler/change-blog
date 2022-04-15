@@ -15,6 +15,10 @@ import { ChangeBlogApi } from 'src/clients/ChangeBlogApiClient';
 import { ChangeBlogManagementApi } from 'src/clients/ChangeBlogManagementApiClient';
 import { filter, mergeMap } from 'rxjs/operators';
 import { AppConfig, APP_CONFIG } from 'app.config';
+import {SidebarModule} from "primeng/sidebar";
+import { SideNavigationComponent } from './components/side-navigation/side-navigation.component';
+import {ButtonModule} from "primeng/button";
+import {BrowserAnimationsModule} from "@angular/platform-browser/animations";
 
 export function initializeAuthentication(
   authService: OAuthService,
@@ -51,9 +55,11 @@ export function initializeAuthentication(
     HomeComponent,
     ProfileComponent,
     ApikeyComponent,
+    SideNavigationComponent,
   ],
   imports: [
     BrowserModule,
+    BrowserAnimationsModule,
     HttpClientModule,
     AppRoutingModule,
     OAuthModule.forRoot({
@@ -66,6 +72,8 @@ export function initializeAuthentication(
         ],
       },
     }),
+    SidebarModule,
+    ButtonModule,
   ],
   providers: [
     {

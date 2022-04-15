@@ -2,18 +2,18 @@
   <app-header class="head" style="background-color: coral"></app-header>
 
   <nav class="side-nav" style="background-color: yellow">
-    <ul>
-      <li><a href="">Nav 1</a></li>
-      <li><a href="">Nav 2</a></li>
-      <li><a href="">Nav 3</a></li>
-    </ul>
+    <app-side-navigation></app-side-navigation>
   </nav>
 
   <section class="content" style="background-color: green">
     <h1>ChangeBlog</h1>
     <h2>enhance your change logs</h2>
+    <p-button type="text" (click)="showSideNav = true" icon="pi pi-plus" label="Show"></p-button>
     <router-outlet></router-outlet>
-    <p>Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet. Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet.</p>
+    <p>dieser text hat eigentlich gar keinen wirklichen inhalt. aber er hat auch keine relevanz, und deswegen ist das egal. er dient lediglich als platzhalter. um mal zu zeigen, wie diese stelle der seite aussieht, wenn ein paar zeilen vorhanden sind. ob sich der text dabei gut fühlt, weiß ich nicht. ich schätze, eher nicht, denn wer fühlt sich schon gut als platzhalter. aber irgendwer muss diesen job ja machen und deshalb kann ich es nicht ändern .</p>
   </section>
-
 </div>
+
+<p-sidebar [style]="{width: 'var(--side-nav-width)', 'background-color': 'yellow'}" [(visible)]="showSideNav" [baseZIndex]="10000">
+  <app-side-navigation></app-side-navigation>
+</p-sidebar>

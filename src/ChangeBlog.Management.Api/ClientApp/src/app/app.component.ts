@@ -1,4 +1,4 @@
-import { Component, HostBinding, Inject } from '@angular/core';
+import { Component, Inject } from '@angular/core';
 import { AppConfig, APP_CONFIG } from 'app.config';
 
 @Component({
@@ -7,7 +7,11 @@ import { AppConfig, APP_CONFIG } from 'app.config';
   styleUrls: ['./app.component.scss'],
 })
 export class AppComponent {
-  constructor(@Inject(APP_CONFIG) private appConfig: AppConfig) {}
+  constructor(@Inject(APP_CONFIG) private appConfig: AppConfig) {
+    this.showSideNav = false;
+  }
+
+  showSideNav: boolean;
 
   title = 'change-blog';
   get appVersion(): string {

@@ -1,6 +1,11 @@
 @import 'src/styles/_layout-variables';
 @import 'src/styles/_variables';
 
+h2 {
+  margin: 5px;
+  font-weight: 500;
+}
+
 .header {
   display: flex;
   align-items: center;

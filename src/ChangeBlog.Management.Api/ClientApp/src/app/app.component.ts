@@ -1,6 +1,7 @@
 import {Component} from '@angular/core';
 import {ActivationEnd, Router} from "@angular/router";
 import {filter} from "rxjs/operators";
+import {OAuthService} from "angular-oauth2-oidc";
 
 @Component({
   selector: 'app-root',
@@ -11,7 +12,7 @@ export class AppComponent {
   showMobileSideNav: boolean;
   title = 'change-blog';
 
-  constructor(private router: Router) {
+  constructor(private router: Router, private authService: OAuthService) {
     this.showMobileSideNav = false;
 
     this.router.events
@@ -23,5 +24,9 @@ export class AppComponent {
 
   triggerMobileSideNav() {
     this.showMobileSideNav = true;
+  }
+
+  get isLoggedIn(): boolean {
+    return this.authService.hasValidIdToken();
   }
 }

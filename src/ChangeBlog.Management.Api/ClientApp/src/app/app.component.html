@@ -1,4 +1,8 @@
-<div class="wrapper">
+<div *ngIf="!isLoggedIn">
+  <app-landing></app-landing>
+</div>
+
+<div *ngIf="isLoggedIn" class="wrapper">
   <app-header (triggerMobileSideNav)="triggerMobileSideNav()" class="head" style="background-color: coral"></app-header>
 
   <nav class="side-nav" style="background-color: yellow">
@@ -15,6 +19,6 @@
 </div>
 
 <p-sidebar [(visible)]="showMobileSideNav" [baseZIndex]="10000"
-           [style]="{width: 'var(--side-nav-width)', 'background-color': 'yellow'}">
+           [style]="{'width': 'var(--side-nav-width)', 'background-color': 'yellow'}">
   <app-side-navigation></app-side-navigation>
 </p-sidebar>

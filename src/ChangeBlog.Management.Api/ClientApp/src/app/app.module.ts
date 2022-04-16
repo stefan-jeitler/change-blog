@@ -24,6 +24,9 @@ import {MenuModule} from "primeng/menu";
 import {MenubarModule} from "primeng/menubar";
 import {OverlayPanelModule} from "primeng/overlaypanel";
 import {Router} from "@angular/router";
+import { LoginComponent } from './components/login/login.component';
+import { LandingComponent } from './components/landing/landing.component';
+import {DialogModule} from "primeng/dialog";
 
 export function initializeApp(
   router: Router,
@@ -35,7 +38,6 @@ export function initializeApp(
     return new Promise((resolve, reject) => {
       // Router
       router.onSameUrlNavigation = 'reload';
-
 
       // Auth
       authService.configure(appConfig.authConfig!);
@@ -53,7 +55,10 @@ export function initializeApp(
           (e) => console.error(e)
         );
 
-      authService.loadDiscoveryDocumentAndTryLogin();
+      // redirect user to landing page if not authenticated
+      authService.loadDiscoveryDocumentAndTryLogin()
+        .then(x => {
+        });
 
       resolve();
     });
@@ -68,6 +73,8 @@ export function initializeApp(
     ProfileComponent,
     ApikeyComponent,
     SideNavigationComponent,
+    LoginComponent,
+    LandingComponent,
   ],
   imports: [
     BrowserModule,
@@ -90,6 +97,7 @@ export function initializeApp(
     MenuModule,
     MenubarModule,
     OverlayPanelModule,
+    DialogModule,
   ],
   providers: [
     {

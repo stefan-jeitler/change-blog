@@ -2,14 +2,9 @@
   <a href="javascript:void(0)">
     <i (click)="showMobileSideNav()" class="pi pi-bars menu-icon"></i>
   </a>
-  <span class="app-title">header works!</span>
+  <h2 class="app-title">ChangeBlog</h2>
   <div class="user-section">
-    <div *ngIf="!isLoggedIn">
-      <a href="#" (click)="login()" *ngIf="!isLoggedIn">
-          <img alt="Login with Microsoft" class="clickable-image" src="/assets/img/ms-symbollockup_signin_light.svg"/>
-      </a>
-    </div>
-    <div *ngIf="isLoggedIn">
+    <div>
       <button (click)="userMenu.toggle($event)"
               class="p-button-rounded p-button-info user-icon"
               icon="pi pi-user"

@@ -17,10 +17,6 @@ export class HeaderComponent implements OnInit {
     this.items = [];
   }
 
-  get isLoggedIn(): boolean {
-    return this.authService.hasValidIdToken();
-  }
-
   get userName(): string {
     const claims = this.authService.getIdentityClaims() as any;
 
@@ -44,9 +40,6 @@ export class HeaderComponent implements OnInit {
     ];
   }
 
-  login() {
-    this.authService.initCodeFlow();
-  }
 
   logout() {
     this.authService.logOut();

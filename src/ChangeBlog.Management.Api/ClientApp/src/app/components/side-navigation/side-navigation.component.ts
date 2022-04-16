@@ -1,5 +1,6 @@
-import { Component, OnInit } from '@angular/core';
+import {Component, Inject, OnInit} from '@angular/core';
 import {MenuItem} from "primeng/api";
+import {APP_CONFIG, AppConfig} from "app.config";
 
 @Component({
   selector: 'app-side-navigation',
@@ -8,20 +9,29 @@ import {MenuItem} from "primeng/api";
 })
 export class SideNavigationComponent implements OnInit {
 
-  constructor() {
-    this.items = [
-      {label: 'Accounts', icon: 'pi pi-fw pi-plus'},
-      {label: 'Users', icon: 'pi pi-fw pi-download'},
-      {label: 'Products', icon: 'pi pi-fw pi-refresh'},
-      {label: 'Versions', icon: 'pi pi-fw pi-refresh'},
-      {label: 'Change Logs', icon: 'pi pi-fw pi-refresh'}
+  menuItems: MenuItem[];
+
+  constructor(@Inject(APP_CONFIG)
+              private appConfig: AppConfig,) {
+    this.menuItems = [
+      {
+        label: 'Profile',
+        icon: 'pi pi-fw pi-user',
+        routerLink: '/profile'
+      },
+      {
+        label: 'Api Key',
+        icon: 'pi pi-fw pi-key',
+        routerLink: "/apikey"
+      }
     ];
   }
-
-  items: MenuItem[];
 
   ngOnInit(): void {
 
   }
 
+  get appVersion(): string {
+    return this.appConfig.appVersion!;
+  }
 }

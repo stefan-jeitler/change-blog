@@ -1,5 +1,6 @@
-import { Component, Inject } from '@angular/core';
-import { AppConfig, APP_CONFIG } from 'app.config';
+import {Component} from '@angular/core';
+import {ActivationEnd, Router} from "@angular/router";
+import {filter} from "rxjs/operators";
 
 @Component({
   selector: 'app-root',
@@ -7,15 +8,17 @@ import { AppConfig, APP_CONFIG } from 'app.config';
   styleUrls: ['./app.component.scss'],
 })
 export class AppComponent {
-  constructor(@Inject(APP_CONFIG) private appConfig: AppConfig) {
-    this.showMobileSideNav = false;
-  }
-
   showMobileSideNav: boolean;
-
   title = 'change-blog';
-  get appVersion(): string {
-    return this.appConfig.appVersion!;
+
+  constructor(private router: Router) {
+    this.showMobileSideNav = false;
+
+    this.router.events
+      .pipe(filter(event => event instanceof ActivationEnd))
+      .subscribe((event) => {
+        this.showMobileSideNav = false;
+      });
   }
 
   triggerMobileSideNav() {

@@ -23,14 +23,21 @@ import {PanelMenuModule} from "primeng/panelmenu";
 import {MenuModule} from "primeng/menu";
 import {MenubarModule} from "primeng/menubar";
 import {OverlayPanelModule} from "primeng/overlaypanel";
+import {Router} from "@angular/router";
 
-export function initializeAuthentication(
+export function initializeApp(
+  router: Router,
   authService: OAuthService,
   appConfig: AppConfig,
   apiClient: ChangeBlogManagementApi.Client
 ): () => Promise<void> {
   return () => {
     return new Promise((resolve, reject) => {
+      // Router
+      router.onSameUrlNavigation = 'reload';
+
+
+      // Auth
       authService.configure(appConfig.authConfig!);
       authService.setupAutomaticSilentRefresh();
 
@@ -87,8 +94,8 @@ export function initializeAuthentication(
   providers: [
     {
       provide: APP_INITIALIZER,
-      useFactory: initializeAuthentication,
-      deps: [OAuthService, APP_CONFIG, ChangeBlogManagementApi.Client],
+      useFactory: initializeApp,
+      deps: [Router, OAuthService, APP_CONFIG, ChangeBlogManagementApi.Client],
       multi: true,
     },
     {

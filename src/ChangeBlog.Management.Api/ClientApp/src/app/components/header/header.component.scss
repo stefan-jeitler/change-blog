@@ -22,7 +22,7 @@
   width: 37px;
 }
 
-@media (min-width: $mobile-breakpoint) {
+@media (min-width: calc(#{$mobile-breakpoint} + 1px)) {
   .menu-icon {
     display: none;
   }

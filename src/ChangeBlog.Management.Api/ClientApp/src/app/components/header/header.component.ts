@@ -32,7 +32,7 @@ export class HeaderComponent implements OnInit {
       {
         label: 'Profile',
         routerLink: '/profile',
-        icon: 'pi pi-fw pi-user-plus'
+        icon: 'pi pi-fw pi-user'
       },
       {
         label: 'Logout',

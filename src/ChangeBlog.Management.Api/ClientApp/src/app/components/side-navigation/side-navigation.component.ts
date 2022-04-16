@@ -10,6 +10,7 @@ import {APP_CONFIG, AppConfig} from "app.config";
 export class SideNavigationComponent implements OnInit {
 
   menuItems: MenuItem[];
+  currentYear: number;
 
   constructor(@Inject(APP_CONFIG)
               private appConfig: AppConfig,) {
@@ -25,6 +26,8 @@ export class SideNavigationComponent implements OnInit {
         routerLink: "/apikey"
       }
     ];
+
+    this.currentYear = new Date().getUTCFullYear();
   }
 
   ngOnInit(): void {

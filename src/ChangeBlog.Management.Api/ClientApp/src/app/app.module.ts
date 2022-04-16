@@ -32,6 +32,7 @@ export function initializeAuthentication(
   return () => {
     return new Promise((resolve, reject) => {
       authService.configure(appConfig.authConfig!);
+      authService.setupAutomaticSilentRefresh();
 
       authService.events
         .pipe(

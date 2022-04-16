@@ -1,21 +1,23 @@
 <div class="header">
-  <i (click)="showMobileSideNav()" class="pi pi-bars menu-icon clickable-image"></i>
+  <a href="#">
+    <i (click)="showMobileSideNav()" class="pi pi-bars menu-icon"></i>
+  </a>
   <span class="app-title">header works!</span>
   <div class="user-section">
     <div *ngIf="!isLoggedIn">
-            <span (click)="login()" *ngIf="!isLoggedIn">
+      <a href="#" (click)="login()" *ngIf="!isLoggedIn">
           <img alt="Login with Microsoft" class="clickable-image" src="/assets/img/ms-symbollockup_signin_light.svg"/>
-      </span>
+      </a>
     </div>
     <div *ngIf="isLoggedIn">
       <button (click)="userMenu.toggle($event)"
+              class="p-button-rounded p-button-info user-icon"
+              icon="pi pi-user"
               pButton
               pRipple
-              type="button"
-              tooltipEvent="hover"
               pTooltip="{{userName}}"
-              icon="pi pi-user"
-              class="p-button-rounded p-button-info user-icon"></button>
+              tooltipEvent="hover"
+              type="button"></button>
       <p-menu #userMenu [model]="items" [popup]="true"></p-menu>
     </div>
 

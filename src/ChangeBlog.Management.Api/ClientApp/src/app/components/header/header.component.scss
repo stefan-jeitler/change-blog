@@ -10,7 +10,6 @@
 }
 
 .menu-icon {
-  display: flex;
   font-size: 22px;
 }
 
@@ -21,10 +20,6 @@
 .user-icon {
   height: 37px !important;
   width: 37px;
-}
-
-.clickable-image {
-  cursor: pointer;
 }
 
 @media (min-width: $mobile-breakpoint) {

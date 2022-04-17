@@ -1,9 +1,5 @@
 import { ChangeBlogApi } from '../../../clients/ChangeBlogApiClient';
 import { Component, OnInit } from '@angular/core';
-import { OAuthService } from 'angular-oauth2-oidc';
-
-import { ChangeBlogManagementApi } from '../../../clients/ChangeBlogManagementApiClient';
-import { HttpClient } from '@angular/common/http';
 
 @Component({
   selector: 'app-profile',

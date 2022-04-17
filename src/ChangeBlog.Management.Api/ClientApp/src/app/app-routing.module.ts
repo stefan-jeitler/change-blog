@@ -17,14 +17,17 @@ const routes: Routes = [
       {
         path: 'home',
         component: HomeComponent,
+        canActivate: [AuthGuard]
       },
       {
         path: 'profile',
         component: ProfileComponent,
+        canActivate: [AuthGuard]
       },
       {
         path: 'apikey',
         component: ApikeyComponent,
+        canActivate: [AuthGuard]
       },
       {
         path: '**',

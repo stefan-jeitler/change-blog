@@ -61,8 +61,7 @@ export function initializeApp(
           (e) => console.error(e)
         );
 
-      oAuthService.loadDiscoveryDocumentAndTryLogin();
-
+      oAuthService.loadDiscoveryDocument();
       resolve();
     });
   };

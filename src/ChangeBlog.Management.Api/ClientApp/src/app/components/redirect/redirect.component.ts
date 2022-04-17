@@ -19,10 +19,13 @@ export class RedirectComponent implements OnInit {
 
   ngOnInit(): void {
 
-    if(this.isLoggedIn())
-      this.router.navigateByUrl('/app/home');
-    else
-      this.router.navigateByUrl('/home');
+    this.authClient.tryLogin()
+      .then(x => {
+        if(this.isLoggedIn())
+          this.router.navigateByUrl('/app/home');
+        else
+          this.router.navigateByUrl('/home');
+      });
   }
 
 }

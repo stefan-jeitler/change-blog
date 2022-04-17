@@ -23,23 +23,21 @@ export class AuthGuard implements CanActivate {
       if (isLoggedIn())
         resolve(true);
       else {
-
-        this.authService.events
-          .pipe(filter(x => x.type === 'token_received'))
-          .subscribe(
-            x => {
-              if (isLoggedIn())
-                resolve(true);
-              else {
-                gotoLandingPage();
-                resolve(false);
-              }
-            },
-            e => {
+        this.authService.tryLogin()
+          .then(x => {
+            if (isLoggedIn())
+              resolve(true);
+            else {
               gotoLandingPage();
-              reject(e);
-            });
+              resolve(false);
+            }
+          })
+          .catch(e => {
+            gotoLandingPage();
+            reject(e);
+          })
       }
+
     });
 
     const timeout = new Promise<boolean>((resolve, reject) => {

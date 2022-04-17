@@ -1,1 +1,39 @@
-/* You can add global styles to this file, and also import other style files */
+@import 'src/styles/_variables';
+@import url('https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,100;0,300;0,400;0,500;1,100;1,300;1,400&display=swap');
+
+body,html {
+  margin: 0;
+  padding: 0;
+}
+* {
+  box-sizing: border-box;
+}
+
+body,
+body .p-component {
+  font-family: 'Roboto', sans-serif;
+  font-size: $default-font-size;
+}
+
+span, p {
+  color: var(--text-color);
+}
+
+.disable-link-styling {
+  color: inherit;
+  text-decoration: inherit;
+}
+
+
+// override primeng styling when necessary
+.p-sidebar-content {
+  padding: 0 !important;
+}
+
+.p-menu {
+  border-radius: 2px;
+}
+
+.side-menue .p-menu {
+  border: 0;
+}

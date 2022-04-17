@@ -1,0 +1,17 @@
+@import 'src/styles/_variables';
+
+.side-nav {
+  margin: 5px 0 5px 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.app-info {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 14px;
+  margin-top: 36px;
+  width: 100%;
+}

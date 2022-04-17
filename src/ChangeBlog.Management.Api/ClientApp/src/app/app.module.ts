@@ -55,10 +55,8 @@ export function initializeApp(
           (e) => console.error(e)
         );
 
-      // redirect user to landing page if not authenticated
       authService.loadDiscoveryDocumentAndTryLogin()
-        .then(x => {
-        });
+        .then(x => {});
 
       resolve();
     });

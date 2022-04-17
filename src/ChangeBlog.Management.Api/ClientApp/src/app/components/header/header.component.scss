@@ -4,7 +4,8 @@
 h2 {
   margin: 5px;
   font-weight: 500;
-  font-size: 24px;
+  font-size: 19px;
+  text-transform: uppercase;
 }
 
 .header {
@@ -26,6 +27,11 @@ h2 {
 .user-icon {
   height: 37px !important;
   width: 37px;
+}
+
+.disable-link-styling {
+  color: inherit;
+  text-decoration: inherit;
 }
 
 @media (min-width: calc(#{$mobile-breakpoint} + 1px)) {

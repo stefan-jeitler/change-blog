@@ -2,7 +2,9 @@
   <a href="javascript:void(0)">
     <i (click)="showMobileSideNav()" class="pi pi-bars menu-icon"></i>
   </a>
-  <h2 class="app-title">ChangeBlog</h2>
+  <a class="disable-link-styling" [routerLink]="['/']" href="#">
+    <span class="text-xl">ChangeBlog</span>
+  </a>
   <div class="user-section">
     <div>
       <button (click)="userMenu.toggle($event)"

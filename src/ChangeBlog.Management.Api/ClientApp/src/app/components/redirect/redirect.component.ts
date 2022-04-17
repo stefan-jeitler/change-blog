@@ -3,9 +3,7 @@ import {OAuthService} from "angular-oauth2-oidc";
 import {Router} from "@angular/router";
 
 @Component({
-  selector: 'app-redirect',
-  templateUrl: './redirect.component.html',
-  styleUrls: ['./redirect.component.scss']
+  templateUrl: './redirect.component.html'
 })
 export class RedirectComponent implements OnInit {
 

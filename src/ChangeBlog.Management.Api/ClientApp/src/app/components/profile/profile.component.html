@@ -1,1 +1,30 @@
-<span>profile works!</span>
+<h3>User Profile</h3>
+<div class="flex align-items-center flex-row flex-wrap">
+  <div class="flex ml-2">
+    <div class="p-inputgroup">
+      <span class="p-inputgroup-addon"><i class="pi pi-user"></i></span>
+      <input [(ngModel)]="firstAndLastName" pInputText readonly type="text">
+    </div>
+  </div>
+
+  <div class="flex ml-2">
+    <div class="p-inputgroup">
+      <span class="p-inputgroup-addon"><i class="pi pi-at"></i></span>
+      <input [(ngModel)]="currentUser.email" pInputText readonly type="text">
+    </div>
+  </div>
+
+  <div class="flex ml-2">
+    <div class="p-inputgroup">
+      <span class="p-inputgroup-addon">TZ</span>
+      <input [(ngModel)]="currentUser.timeZone" pInputText readonly type="text">
+    </div>
+  </div>
+
+  <div class="flex ml-2">
+    <div class="p-inputgroup">
+      <span class="p-inputgroup-addon"><i class="pi pi-user-edit"></i></span>
+      <input [ngModel]="currentUser.createdAt | date:'dd.MM.yyyy'" pInputText readonly type="text">
+    </div>
+  </div>
+</div>

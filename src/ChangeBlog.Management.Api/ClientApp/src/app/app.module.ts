@@ -33,6 +33,8 @@ import {InputTextModule} from "primeng/inputtext";
 import {RippleModule} from "primeng/ripple";
 import {LayoutComponent} from './components/layout/layout.component';
 import { RedirectComponent } from './components/redirect/redirect.component';
+import {CheckboxModule} from "primeng/checkbox";
+import {RadioButtonModule} from "primeng/radiobutton";
 
 export function initializeApp(
   router: Router,
@@ -106,6 +108,8 @@ export function initializeApp(
     MenubarModule,
     OverlayPanelModule,
     DialogModule,
+    CheckboxModule,
+    RadioButtonModule,
   ],
   providers: [
     {

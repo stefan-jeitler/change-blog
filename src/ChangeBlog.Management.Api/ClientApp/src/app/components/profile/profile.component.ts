@@ -26,6 +26,11 @@ export class ProfileComponent implements OnInit {
     return this._currentUser ?? this.emptyUser;
   }
 
+  get firstAndLastName(): string {
+    return `${this.currentUser.firstName} ${this.currentUser.lastName}`;
+  }
+  set firstAndLastName(value) {}
+
   ngOnInit(): void {
     this.changeBlogApiClient
       .getUserInfo()

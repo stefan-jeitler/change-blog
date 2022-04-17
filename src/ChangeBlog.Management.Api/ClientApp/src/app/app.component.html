@@ -3,20 +3,20 @@
 </div>
 
 <div *ngIf="isLoggedIn" class="wrapper">
-  <app-header (triggerMobileSideNav)="triggerMobileSideNav()" class="head" style="background-color: coral"></app-header>
+  <app-header (triggerMobileSideNav)="triggerMobileSideNav()" class="head surface-800"></app-header>
 
-  <nav class="side-nav" style="background-color: yellow">
+  <nav class="side-nav surface-card">
     <app-side-navigation></app-side-navigation>
   </nav>
 
-  <section class="content" style="background-color: green">
+  <section class="content surface-ground">
     <div class="inner-content">
       <router-outlet></router-outlet>
     </div>
   </section>
 </div>
 
-<p-sidebar [(visible)]="showMobileSideNav" [baseZIndex]="10000"
-           [style]="{'width': 'var(--side-nav-width)', 'background-color': 'yellow'}">
+<p-sidebar class="surface-200" [(visible)]="showMobileSideNav" [baseZIndex]="10000"
+           [style]="{'width': 'var(--side-nav-width)'}">
   <app-side-navigation></app-side-navigation>
 </p-sidebar>

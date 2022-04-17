@@ -27,6 +27,10 @@ import {Router} from "@angular/router";
 import { LoginComponent } from './components/login/login.component';
 import { LandingComponent } from './components/landing/landing.component';
 import {DialogModule} from "primeng/dialog";
+import {FormsModule} from "@angular/forms";
+import {TooltipModule} from "primeng/tooltip";
+import {InputTextModule} from "primeng/inputtext";
+import {RippleModule} from "primeng/ripple";
 
 export function initializeApp(
   router: Router,
@@ -89,6 +93,10 @@ export function initializeApp(
         ],
       },
     }),
+    FormsModule,
+    InputTextModule,
+    RippleModule,
+    TooltipModule,
     SidebarModule,
     ButtonModule,
     PanelMenuModule,

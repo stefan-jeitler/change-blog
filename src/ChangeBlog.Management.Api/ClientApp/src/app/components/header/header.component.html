@@ -1,21 +1,21 @@
 <div class="header">
   <a href="javascript:void(0)">
-    <i (click)="showMobileSideNav()" class="pi pi-bars menu-icon"></i>
+    <i (click)="showMobileSideNav()" class="pi pi-bars menu-icon text-0"></i>
   </a>
   <a class="disable-link-styling" [routerLink]="['/']" href="#">
-    <span class="text-xl">ChangeBlog</span>
+    <span class="text-xl text-0">ChangeBlog</span>
   </a>
   <div class="user-section">
     <div>
       <button (click)="userMenu.toggle($event)"
-              class="p-button-rounded p-button-info user-icon"
+              class="p-button-rounded p-button-info user-icon bg-primary-reverse"
               icon="pi pi-user"
               pButton
-              pRipple
-              pTooltip="{{userName}}"
-              tooltipEvent="hover"
               type="button"></button>
-      <p-menu #userMenu [model]="items" [popup]="true"></p-menu>
+      <p-menu [style]="{'width': 'auto'}"
+              [model]="menuItems"
+              [popup]="true"
+              #userMenu ></p-menu>
     </div>
 
   </div>

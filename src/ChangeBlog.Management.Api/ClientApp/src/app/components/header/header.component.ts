@@ -9,12 +9,12 @@ import {MenuItem} from "primeng/api";
 })
 export class HeaderComponent implements OnInit {
   @Output("triggerMobileSideNav") triggerMobileSideNav: EventEmitter<any> = new EventEmitter();
-  items: MenuItem[];
+  menuItems: MenuItem[];
 
   constructor(
     private authService: OAuthService
   ) {
-    this.items = [];
+    this.menuItems = [];
   }
 
   get userName(): string {
@@ -24,7 +24,16 @@ export class HeaderComponent implements OnInit {
   }
 
   ngOnInit() {
-    this.items = [
+    this.menuItems = [
+      {
+        label: this.userName,
+        style: {
+          'pointer-events': 'none'
+        },
+      },
+      {
+        separator: true
+      },
       {
         label: 'Profile',
         routerLink: '/profile',

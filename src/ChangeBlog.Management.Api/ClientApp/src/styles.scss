@@ -19,7 +19,11 @@ span, p {
   color: var(--text-color);
 }
 
-// let the components add paddings
+// override primeng styling when necessary
 .p-sidebar-content {
   padding: 0 !important;
+}
+
+.p-menu {
+  border-radius: 2px;
 }

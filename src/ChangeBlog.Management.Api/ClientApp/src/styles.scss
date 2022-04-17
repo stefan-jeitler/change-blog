@@ -19,6 +19,12 @@ span, p {
   color: var(--text-color);
 }
 
+.disable-link-styling {
+  color: inherit;
+  text-decoration: inherit;
+}
+
+
 // override primeng styling when necessary
 .p-sidebar-content {
   padding: 0 !important;
@@ -26,4 +32,8 @@ span, p {
 
 .p-menu {
   border-radius: 2px;
+}
+
+.side-menue .p-menu {
+  border: 0;
 }

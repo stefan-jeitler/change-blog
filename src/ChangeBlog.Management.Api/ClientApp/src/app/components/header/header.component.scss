@@ -30,11 +30,6 @@ h2 {
   width: 37px;
 }
 
-.disable-link-styling {
-  color: inherit;
-  text-decoration: inherit;
-}
-
 @media (min-width: calc(#{$mobile-breakpoint} + 1px)) {
   .menu-icon {
     display: none;

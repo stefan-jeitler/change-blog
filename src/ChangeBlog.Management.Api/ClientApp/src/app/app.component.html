@@ -6,7 +6,7 @@
   <app-header (triggerMobileSideNav)="triggerMobileSideNav()" class="head surface-800"></app-header>
 
   <nav class="side-nav surface-card">
-    <app-side-navigation></app-side-navigation>
+    <app-side-navigation [showTitle]="false"></app-side-navigation>
   </nav>
 
   <section class="content surface-ground">
@@ -16,7 +16,7 @@
   </section>
 </div>
 
-<p-sidebar class="surface-200" [(visible)]="showMobileSideNav" [baseZIndex]="10000"
+<p-sidebar class="surface-200" [showCloseIcon]="false" [(visible)]="showMobileSideNav" [baseZIndex]="10000"
            [style]="{'width': 'var(--side-nav-width)'}">
-  <app-side-navigation></app-side-navigation>
+  <app-side-navigation [showTitle]="true"></app-side-navigation>
 </p-sidebar>

@@ -1,4 +1,4 @@
-import {Component, Inject, OnInit} from '@angular/core';
+import {Component, Inject, Input, OnInit} from '@angular/core';
 import {MenuItem} from "primeng/api";
 import {APP_CONFIG, AppConfig} from "app.config";
 
@@ -13,7 +13,7 @@ export class SideNavigationComponent implements OnInit {
   currentYear: number;
 
   constructor(@Inject(APP_CONFIG)
-              private appConfig: AppConfig,) {
+              private appConfig: AppConfig) {
     this.menuItems = [
       {
         label: 'Profile',
@@ -28,11 +28,14 @@ export class SideNavigationComponent implements OnInit {
     ];
 
     this.currentYear = new Date().getUTCFullYear();
+    this.showTitle = false;
   }
 
   ngOnInit(): void {
 
   }
+
+  @Input() showTitle: boolean;
 
   get appVersion(): string {
     return this.appConfig.appVersion!;

@@ -1,7 +1,4 @@
 import {Component} from '@angular/core';
-import {ActivationEnd, Router} from "@angular/router";
-import {filter} from "rxjs/operators";
-import {OAuthService} from "angular-oauth2-oidc";
 
 @Component({
   selector: 'app-root',
@@ -9,24 +6,7 @@ import {OAuthService} from "angular-oauth2-oidc";
   styleUrls: ['./app.component.scss'],
 })
 export class AppComponent {
-  showMobileSideNav: boolean;
-  title = 'change-blog';
 
-  constructor(private router: Router, private authService: OAuthService) {
-    this.showMobileSideNav = false;
-
-    this.router.events
-      .pipe(filter(event => event instanceof ActivationEnd))
-      .subscribe((event) => {
-        this.showMobileSideNav = false;
-      });
-  }
-
-  triggerMobileSideNav() {
-    this.showMobileSideNav = true;
-  }
-
-  get isLoggedIn(): boolean {
-    return this.authService.hasValidIdToken();
+  constructor() {
   }
 }

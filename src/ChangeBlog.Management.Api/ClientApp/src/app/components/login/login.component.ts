@@ -9,19 +9,14 @@ import {OAuthService} from "angular-oauth2-oidc";
 export class LoginComponent implements OnInit {
   showLoginDialog: boolean;
 
-
   constructor(private authService: OAuthService) {
     this.showLoginDialog = true;
-  }
-
-  get isLoggedIn(): boolean {
-    return this.authService.hasValidIdToken();
   }
 
   ngOnInit(): void {
   }
 
   login() {
-    this.authService.initCodeFlow();
+    this.authService.initLoginFlow('/app/home');
   }
 }

@@ -1,6 +1,6 @@
 import {Component, EventEmitter, OnInit, Output} from '@angular/core';
-import {OAuthService} from 'angular-oauth2-oidc';
 import {MenuItem} from "primeng/api";
+import {OAuthService} from "angular-oauth2-oidc";
 
 @Component({
   selector: 'app-header',
@@ -36,7 +36,7 @@ export class HeaderComponent implements OnInit {
       },
       {
         label: 'Profile',
-        routerLink: '/profile',
+        routerLink: '/app/profile',
         icon: 'pi pi-fw pi-user'
       },
       {

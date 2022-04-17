@@ -18,12 +18,12 @@ export class SideNavigationComponent implements OnInit {
       {
         label: 'Profile',
         icon: 'pi pi-fw pi-user',
-        routerLink: '/profile'
+        routerLink: '/app/profile'
       },
       {
         label: 'Api Key',
         icon: 'pi pi-fw pi-key',
-        routerLink: "/apikey"
+        routerLink: "/app/apikey"
       }
     ];
 

@@ -5,12 +5,10 @@ import { APP_CONFIG } from 'app.config';
 import {AppModule} from './app/app.module';
 import {environment} from './environments/environment';
 
-
-
 fetch("/api/appsettings")
   .then((res) => res.json())
   .then((config) => {
-    config.authConfig.redirectUri = window.location.origin;
+    config.authConfig.redirectUri = `${window.location.origin}/app/home`;
     config.appVersion = require("package.json").version;
 
     if (environment.production) {

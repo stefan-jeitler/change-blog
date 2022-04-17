@@ -1,22 +1,22 @@
-import { APP_INITIALIZER, NgModule } from '@angular/core';
-import { BrowserModule } from '@angular/platform-browser';
-import { HttpClientModule } from '@angular/common/http';
+import {APP_INITIALIZER, NgModule} from '@angular/core';
+import {BrowserModule} from '@angular/platform-browser';
+import {HttpClientModule} from '@angular/common/http';
 
-import { AppRoutingModule } from './app-routing.module';
-import { AppComponent } from './app.component';
-import { HeaderComponent } from './components/header/header.component';
+import {AppRoutingModule} from './app-routing.module';
+import {AppComponent} from './app.component';
+import {HeaderComponent} from './components/header/header.component';
 
-import { OAuthModule, OAuthService } from 'angular-oauth2-oidc';
-import { HomeComponent } from './components/home/home.component';
-import { ProfileComponent } from './components/profile/profile.component';
-import { ApikeyComponent } from './components/apikey/apikey.component';
+import {OAuthModule, OAuthService} from 'angular-oauth2-oidc';
+import {HomeComponent} from './components/home/home.component';
+import {ProfileComponent} from './components/profile/profile.component';
+import {ApikeyComponent} from './components/apikey/apikey.component';
 
-import { ChangeBlogApi } from 'src/clients/ChangeBlogApiClient';
-import { ChangeBlogManagementApi } from 'src/clients/ChangeBlogManagementApiClient';
-import { filter, mergeMap } from 'rxjs/operators';
-import { AppConfig, APP_CONFIG } from 'app.config';
+import {ChangeBlogApi} from 'src/clients/ChangeBlogApiClient';
+import {ChangeBlogManagementApi} from 'src/clients/ChangeBlogManagementApiClient';
+import {filter, mergeMap} from 'rxjs/operators';
+import {APP_CONFIG, AppConfig} from 'app.config';
 import {SidebarModule} from "primeng/sidebar";
-import { SideNavigationComponent } from './components/side-navigation/side-navigation.component';
+import {SideNavigationComponent} from './components/side-navigation/side-navigation.component';
 import {ButtonModule} from "primeng/button";
 import {BrowserAnimationsModule} from "@angular/platform-browser/animations";
 import {PanelMenuModule} from "primeng/panelmenu";
@@ -24,17 +24,19 @@ import {MenuModule} from "primeng/menu";
 import {MenubarModule} from "primeng/menubar";
 import {OverlayPanelModule} from "primeng/overlaypanel";
 import {Router} from "@angular/router";
-import { LoginComponent } from './components/login/login.component';
-import { LandingComponent } from './components/landing/landing.component';
+import {LoginComponent} from './components/login/login.component';
+import {LandingComponent} from './components/landing/landing.component';
 import {DialogModule} from "primeng/dialog";
 import {FormsModule} from "@angular/forms";
 import {TooltipModule} from "primeng/tooltip";
 import {InputTextModule} from "primeng/inputtext";
 import {RippleModule} from "primeng/ripple";
+import {LayoutComponent} from './components/layout/layout.component';
+import { RedirectComponent } from './components/redirect/redirect.component';
 
 export function initializeApp(
   router: Router,
-  authService: OAuthService,
+  oAuthService: OAuthService,
   appConfig: AppConfig,
   apiClient: ChangeBlogManagementApi.Client
 ): () => Promise<void> {
@@ -44,13 +46,13 @@ export function initializeApp(
       router.onSameUrlNavigation = 'reload';
 
       // Auth
-      authService.configure(appConfig.authConfig!);
-      authService.setupAutomaticSilentRefresh();
+      oAuthService.configure(appConfig.authConfig!);
+      oAuthService.setupAutomaticSilentRefresh();
 
-      authService.events
+      oAuthService.events
         .pipe(
           filter(
-            (e) => e.type === 'token_received' && authService.hasValidIdToken()
+            (e) => e.type === 'token_received' && oAuthService.hasValidIdToken()
           ),
           mergeMap((x) => apiClient.ensureUserIsImported())
         )
@@ -59,8 +61,7 @@ export function initializeApp(
           (e) => console.error(e)
         );
 
-      authService.loadDiscoveryDocumentAndTryLogin()
-        .then(x => {});
+      oAuthService.loadDiscoveryDocumentAndTryLogin();
 
       resolve();
     });
@@ -77,6 +78,8 @@ export function initializeApp(
     SideNavigationComponent,
     LoginComponent,
     LandingComponent,
+    LayoutComponent,
+    RedirectComponent,
   ],
   imports: [
     BrowserModule,
@@ -116,10 +119,12 @@ export function initializeApp(
       provide: ChangeBlogApi.API_BASE_URL,
       useFactory: (appConfig: AppConfig) => appConfig.changeBlogApiBaseUrl,
       deps: [APP_CONFIG],
+      multi: true
     },
     ChangeBlogApi.Client,
     ChangeBlogManagementApi.Client,
   ],
   bootstrap: [AppComponent],
 })
-export class AppModule {}
+export class AppModule {
+}

@@ -84,33 +84,33 @@ export class HeaderComponent implements OnInit {
   }
 
   private populateLangItems() {
-    const createLangItem: (x: string) => MenuItem = x => {
+    const createLangItem: (x: {id: string, label: string}) => MenuItem = x => {
       return {
-        label: x.toUpperCase(),
-        command: () => this.changeLanguage(x)
+        label: x.id.toUpperCase(),
+        command: () => this.changeLanguage(x.id, x.label)
       };
     }
 
-    this.langItems = (<string[]>this.translationService.getAvailableLangs())
+    this.langItems = (<{id: string, label: string}[]>this.translationService.getAvailableLangs())
       .map(createLangItem);
   }
 
-  private changeLanguage(targetLang: string) {
-    if (targetLang.toUpperCase() === this.currentLang.toUpperCase())
+  private changeLanguage(targetLangId: string, targetLang: string) {
+    if (targetLangId.toUpperCase() === this.currentLang.toUpperCase())
       return;
 
-    this.translationService.setActiveLang(targetLang);
+    this.translationService.setActiveLang(targetLangId);
 
     this.translationService
-      .load(targetLang)
+      .load(targetLangId)
       .subscribe(
         x => {
           this.populateMenuItems();
-          localStorage.setItem('language', targetLang);
+          localStorage.setItem('language', targetLangId);
           this.messageService.add({
             severity: 'success',
             summary: translate('languageChangedShort'),
-            detail: translate('languageChanged', {langCode: targetLang.toUpperCase()})
+            detail: translate('languageChanged', {langCode: targetLang})
           });
         });
 

@@ -2,7 +2,6 @@ import {Injectable} from '@angular/core';
 import {ActivatedRouteSnapshot, CanActivate, Router, RouterStateSnapshot, UrlTree} from '@angular/router';
 import {Observable} from 'rxjs';
 import {OAuthService} from "angular-oauth2-oidc";
-import {filter} from "rxjs/operators";
 
 @Injectable({
   providedIn: 'root'
@@ -19,7 +18,7 @@ export class AuthGuard implements CanActivate {
     const isLoggedIn = () => this.authService.hasValidIdToken() && this.authService.hasValidAccessToken();
     const gotoLandingPage = () => this.router.navigateByUrl('/home');
 
-    const canActivate = new Promise<boolean>((resolve, reject) => {
+    return new Promise<boolean>((resolve, reject) => {
       if (isLoggedIn())
         resolve(true);
       else {
@@ -39,21 +38,6 @@ export class AuthGuard implements CanActivate {
       }
 
     });
-
-    const timeout = new Promise<boolean>((resolve, reject) => {
-      setTimeout(() => {
-        const loggedIn = isLoggedIn();
-
-        if(loggedIn)
-          resolve(true);
-        else {
-          resolve(false);
-          gotoLandingPage();
-        }
-      }, 500);
-    });
-
-    return Promise.race([canActivate, timeout]);
   }
 
 }

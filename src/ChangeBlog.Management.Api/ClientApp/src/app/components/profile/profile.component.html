@@ -1,4 +1,4 @@
-<h3>User Profile</h3>
+<h3>{{ 'userProfile' | transloco }}</h3>
 <div class="flex align-items-center flex-row flex-wrap">
   <div class="flex ml-2">
     <div class="p-inputgroup">
@@ -24,7 +24,7 @@
   <div class="flex ml-2">
     <div class="p-inputgroup">
       <span class="p-inputgroup-addon"><i class="pi pi-user-edit"></i></span>
-      <input [ngModel]="currentUser.createdAt | date:'dd.MM.yyyy'" pInputText readonly type="text">
+      <input [ngModel]="currentUser.createdAt | date" pInputText readonly type="text">
     </div>
   </div>
 </div>

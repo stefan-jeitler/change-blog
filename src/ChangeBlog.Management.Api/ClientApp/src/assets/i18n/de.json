@@ -1,0 +1,10 @@
+{
+  "profile": "Profil",
+  "userProfile": "Benutzerprofil",
+  "apikey": "Api Schlüssel",
+  "logout": "Abmelden",
+  "languageChangedShort": "Sprache umgestellt",
+  "languageChanged": "Die Sprache wurde auf {{ langCode }} umgestellt.",
+  "genericErrorMessageShort": "Fehler",
+  "genericErrorMessage": "Fehler beim Ausführen der Aktion."
+}

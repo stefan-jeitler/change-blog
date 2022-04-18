@@ -1,7 +1,8 @@
 import {Component, EventEmitter, OnInit, Output} from '@angular/core';
-import {MenuItem, MessageService, Message} from "primeng/api";
+import {MenuItem, MessageService} from "primeng/api";
 import {OAuthService} from "angular-oauth2-oidc";
 import {translate, TranslocoService} from "@ngneat/transloco";
+import {filter} from "rxjs/operators";
 
 @Component({
   selector: 'app-header',
@@ -20,6 +21,17 @@ export class HeaderComponent implements OnInit {
   ) {
     this.menuItems = [];
     this.langItems = [];
+
+    this.translationService.events$
+      .pipe(filter(e => e.type === 'translationLoadSuccess' && e.wasFailure))
+      .subscribe((x) => {
+          this.messageService.add({
+            severity: 'error',
+            summary: translate('genericErrorMessageShort'),
+            detail: translate('genericErrorMessage')
+          });
+        }
+      );
   }
 
   get userName(): string {
@@ -37,6 +49,13 @@ export class HeaderComponent implements OnInit {
     this.populateLangItems();
   }
 
+  logout() {
+    this.authService.logOut();
+  }
+
+  showMobileSideNav() {
+    this.triggerMobileSideNav.emit();
+  }
 
   private populateMenuItems() {
     this.menuItems = [
@@ -64,16 +83,8 @@ export class HeaderComponent implements OnInit {
     ];
   }
 
-  logout() {
-    this.authService.logOut();
-  }
-
-  showMobileSideNav() {
-    this.triggerMobileSideNav.emit();
-  }
-
   private populateLangItems() {
-    const createLangItem: (x:string) => MenuItem = x => {
+    const createLangItem: (x: string) => MenuItem = x => {
       return {
         label: x.toUpperCase(),
         command: () => this.changeLanguage(x)
@@ -85,16 +96,23 @@ export class HeaderComponent implements OnInit {
   }
 
   private changeLanguage(targetLang: string) {
-    if(targetLang === this.currentLang)
+    if (targetLang.toUpperCase() === this.currentLang.toUpperCase())
       return;
 
     this.translationService.setActiveLang(targetLang);
+
     this.translationService
       .load(targetLang)
-      .subscribe(x => {
-        this.populateMenuItems();
-        localStorage.setItem('language', targetLang);
-      });
+      .subscribe(
+        x => {
+          this.populateMenuItems();
+          localStorage.setItem('language', targetLang);
+          this.messageService.add({
+            severity: 'success',
+            summary: translate('languageChangedShort'),
+            detail: translate('languageChanged', {langCode: targetLang.toUpperCase()})
+          });
+        });
 
   }
 }

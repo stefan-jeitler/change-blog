@@ -1,6 +1,10 @@
 {
   "profile": "Profile",
+  "userProfile": "User Profile",
   "apikey": "Api Key",
   "logout": "Logout",
-  "languageChanged": "Teh Language was set to {{ langCode }}."
+  "languageChangedShort": "Language changed",
+  "languageChanged": "The Language was set to {{ langCode }}.",
+  "genericErrorMessageShort": "Error",
+  "genericErrorMessage": "An Error occured while performing this action."
 }

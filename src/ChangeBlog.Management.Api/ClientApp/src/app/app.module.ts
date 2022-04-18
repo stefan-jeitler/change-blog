@@ -40,6 +40,7 @@ import {getBrowserLang, TranslocoService} from "@ngneat/transloco";
 import {MessageModule} from "primeng/message";
 import {MessagesModule} from "primeng/messages";
 import {MessageService} from "primeng/api";
+import {ToastModule} from "primeng/toast";
 
 export function initializeApp(
   router: Router,
@@ -136,7 +137,8 @@ export function initializeApp(
     CheckboxModule,
     RadioButtonModule,
     MessageModule,
-    MessagesModule
+    MessagesModule,
+    ToastModule
   ],
   providers: [
     {

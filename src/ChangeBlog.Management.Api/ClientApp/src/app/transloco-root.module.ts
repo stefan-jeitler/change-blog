@@ -10,6 +10,12 @@ import {
 import { Injectable, NgModule } from '@angular/core';
 import { environment } from '../environments/environment';
 
+
+export interface LanguageInfo {
+  id: string;
+  label: string;
+}
+
 @Injectable({ providedIn: 'root' })
 export class TranslocoHttpLoader implements TranslocoLoader {
   constructor(private http: HttpClient) {

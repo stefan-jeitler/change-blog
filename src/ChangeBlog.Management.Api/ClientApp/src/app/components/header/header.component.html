@@ -9,14 +9,14 @@
     <div class="flex align-items-center">
       <div>
         <button (click)="langMenu.toggle($event)"
-                class="p-button-rounded p-button-sm bg-primary-reverse"
+                class="p-button-rounded p-button-secondary  p-button-sm bg-primary-reverse"
                 label="{{currentLang}}" pButton
                 type="button"></button>
         <p-menu #langMenu [model]="langItems" [popup]="true" [style]="{'width': 'auto'}"></p-menu>
       </div>
       <div class="ml-3">
         <button (click)="userMenu.toggle($event)"
-                class="p-button-rounded bg-primary-reverse"
+                class="p-button-rounded p-button-secondary bg-primary-reverse"
                 icon="pi pi-user"
                 pButton
                 type="button"></button>

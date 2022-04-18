@@ -3,6 +3,7 @@ import {MenuItem, MessageService} from "primeng/api";
 import {OAuthService} from "angular-oauth2-oidc";
 import {translate, TranslocoService} from "@ngneat/transloco";
 import {filter} from "rxjs/operators";
+import {LanguageInfo} from "../../transloco-root.module";
 
 @Component({
   selector: 'app-header',
@@ -84,33 +85,33 @@ export class HeaderComponent implements OnInit {
   }
 
   private populateLangItems() {
-    const createLangItem: (x: {id: string, label: string}) => MenuItem = x => {
+    const createLangItem: (x: LanguageInfo) => MenuItem = x => {
       return {
         label: x.id.toUpperCase(),
-        command: () => this.changeLanguage(x.id, x.label)
+        command: () => this.changeLanguage(x)
       };
     }
 
-    this.langItems = (<{id: string, label: string}[]>this.translationService.getAvailableLangs())
+    this.langItems = (<LanguageInfo[]>this.translationService.getAvailableLangs())
       .map(createLangItem);
   }
 
-  private changeLanguage(targetLangId: string, targetLang: string) {
-    if (targetLangId.toUpperCase() === this.currentLang.toUpperCase())
+  private changeLanguage(targetLang: LanguageInfo) {
+    if (targetLang.id.toUpperCase() === this.currentLang.toUpperCase())
       return;
 
-    this.translationService.setActiveLang(targetLangId);
+    this.translationService.setActiveLang(targetLang.id);
 
     this.translationService
-      .load(targetLangId)
+      .load(targetLang.id)
       .subscribe(
         x => {
           this.populateMenuItems();
-          localStorage.setItem('language', targetLangId);
+          localStorage.setItem('language', targetLang.id);
           this.messageService.add({
             severity: 'success',
             summary: translate('languageChangedShort'),
-            detail: translate('languageChanged', {langCode: targetLang})
+            detail: translate('languageChanged', {langCode: targetLang.label})
           });
         });
 

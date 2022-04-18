@@ -35,7 +35,7 @@ import {LayoutComponent} from './components/layout/layout.component';
 import {RedirectComponent} from './components/redirect/redirect.component';
 import {CheckboxModule} from "primeng/checkbox";
 import {RadioButtonModule} from "primeng/radiobutton";
-import {TranslocoRootModule} from './transloco-root.module';
+import {LanguageInfo, TranslocoRootModule} from './transloco-root.module';
 import {getBrowserLang, TranslocoService} from "@ngneat/transloco";
 import {MessageModule} from "primeng/message";
 import {MessagesModule} from "primeng/messages";
@@ -80,8 +80,8 @@ export function initializeApp(
       const browserLang = getValueOrDefault(getBrowserLang());
       const defaultLang = getValueOrDefault(translationService.getDefaultLang());
 
-      const chosenLocale = storedLang ?? browserLang ?? defaultLang ?? 'en-US';
-      const finalLang = (<string[]>translationService.getAvailableLangs()).find(x => x === chosenLocale) ?? defaultLang;
+      const chosenLang = storedLang ?? browserLang ?? defaultLang ?? 'en-US';
+      const finalLang = (<LanguageInfo[]>translationService.getAvailableLangs()).find(x => x.id === chosenLang)?.id ?? defaultLang;
 
       translationService.setActiveLang(finalLang!);
       const i18nSetup = translationService.load(finalLang!).toPromise();

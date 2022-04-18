@@ -6,7 +6,7 @@ import {AppRoutingModule} from './app-routing.module';
 import {AppComponent} from './app.component';
 import {HeaderComponent} from './components/header/header.component';
 
-import {OAuthModule, OAuthService} from 'angular-oauth2-oidc';
+import {OAuthModule, OAuthService, OAuthStorage} from 'angular-oauth2-oidc';
 import {HomeComponent} from './components/home/home.component';
 import {ProfileComponent} from './components/profile/profile.component';
 import {ApikeyComponent} from './components/apikey/apikey.component';
@@ -153,6 +153,7 @@ export function initializeApp(
       deps: [APP_CONFIG],
       multi: true
     },
+    { provide: OAuthStorage, useValue: localStorage },
     ChangeBlogApi.Client,
     ChangeBlogManagementApi.Client,
     MessageService

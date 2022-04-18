@@ -1,0 +1,6 @@
+{
+  "profile": "Profil",
+  "apikey": "Api Schlüssel",
+  "logout": "Abmelden",
+  "languageChanged": "Die Sprache wurde auf {{ langCode }} umgestellt."
+}

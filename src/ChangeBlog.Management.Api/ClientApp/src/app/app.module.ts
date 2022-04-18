@@ -32,18 +32,25 @@ import {TooltipModule} from "primeng/tooltip";
 import {InputTextModule} from "primeng/inputtext";
 import {RippleModule} from "primeng/ripple";
 import {LayoutComponent} from './components/layout/layout.component';
-import { RedirectComponent } from './components/redirect/redirect.component';
+import {RedirectComponent} from './components/redirect/redirect.component';
 import {CheckboxModule} from "primeng/checkbox";
 import {RadioButtonModule} from "primeng/radiobutton";
+import {TranslocoRootModule} from './transloco-root.module';
+import {getBrowserLang, TranslocoService} from "@ngneat/transloco";
+import {MessageModule} from "primeng/message";
+import {MessagesModule} from "primeng/messages";
+import {MessageService} from "primeng/api";
 
 export function initializeApp(
   router: Router,
   oAuthService: OAuthService,
   appConfig: AppConfig,
-  apiClient: ChangeBlogManagementApi.Client
+  apiClient: ChangeBlogManagementApi.Client,
+  translationService: TranslocoService
 ): () => Promise<void> {
   return () => {
-    return new Promise((resolve, reject) => {
+    // TODO: get out of here
+    return new Promise<void>((resolve, reject) => {
       // Router
       router.onSameUrlNavigation = 'reload';
 
@@ -63,9 +70,26 @@ export function initializeApp(
           (e) => console.error(e)
         );
 
-      oAuthService.loadDiscoveryDocument()
-        .then(x => resolve());
+      const authSetup = oAuthService.loadDiscoveryDocument();
+
+      // i18n
+      const getValueOrDefault = (v: string | undefined | null) => v ? v : undefined;
+
+      const storedLang = getValueOrDefault(localStorage.getItem('language'));
+      const browserLang = getValueOrDefault(getBrowserLang());
+      const defaultLang = getValueOrDefault(translationService.getDefaultLang());
+
+      const chosenLocale = storedLang ?? browserLang ?? defaultLang ?? 'en-US';
+      const finalLang = (<string[]>translationService.getAvailableLangs()).find(x => x === chosenLocale) ?? defaultLang;
+
+      translationService.setActiveLang(finalLang!);
+      const i18nSetup = translationService.load(finalLang!).toPromise();
+
+      // wait till setup is finished
+      Promise.all([authSetup, i18nSetup])
+        .then(() => resolve());
     });
+
   };
 }
 
@@ -97,6 +121,7 @@ export function initializeApp(
         ],
       },
     }),
+    TranslocoRootModule,
     FormsModule,
     InputTextModule,
     RippleModule,
@@ -110,12 +135,14 @@ export function initializeApp(
     DialogModule,
     CheckboxModule,
     RadioButtonModule,
+    MessageModule,
+    MessagesModule
   ],
   providers: [
     {
       provide: APP_INITIALIZER,
       useFactory: initializeApp,
-      deps: [Router, OAuthService, APP_CONFIG, ChangeBlogManagementApi.Client],
+      deps: [Router, OAuthService, APP_CONFIG, ChangeBlogManagementApi.Client, TranslocoService],
       multi: true,
     },
     {
@@ -126,6 +153,7 @@ export function initializeApp(
     },
     ChangeBlogApi.Client,
     ChangeBlogManagementApi.Client,
+    MessageService
   ],
   bootstrap: [AppComponent],
 })

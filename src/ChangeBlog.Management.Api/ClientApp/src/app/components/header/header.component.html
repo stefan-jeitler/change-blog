@@ -2,22 +2,30 @@
   <a href="javascript:void(0)">
     <i (click)="showMobileSideNav()" class="pi pi-bars menu-icon text-0"></i>
   </a>
-  <a class="disable-link-styling" [routerLink]="['/app/home']">
+  <a [routerLink]="['/app/home']" class="disable-link-styling">
     <span class="text-xl text-0">ChangeBlog</span>
   </a>
   <div class="user-section">
-    <div>
-      <button (click)="userMenu.toggle($event)"
-              class="p-button-rounded p-button-info user-icon bg-primary-reverse"
-              icon="pi pi-user"
-              pButton
-              type="button"></button>
-      <p-menu [style]="{'width': 'auto'}"
-              [model]="menuItems"
-              [popup]="true"
-              #userMenu ></p-menu>
+    <div class="flex align-items-center">
+      <div class="">
+        <button (click)="langMenu.toggle($event)"
+                class="p-button-rounded p-button-sm bg-primary-reverse"
+                label="{{currentLang}}" pButton
+                type="button"></button>
+        <p-menu #langMenu [model]="langItems" [popup]="true" [style]="{'width': 'auto'}"></p-menu>
+      </div>
+      <div class="ml-3">
+        <button (click)="userMenu.toggle($event)"
+                class="p-button-rounded bg-primary-reverse"
+                icon="pi pi-user"
+                pButton
+                type="button"></button>
+        <p-menu #userMenu
+                [model]="menuItems"
+                [popup]="true"
+                [style]="{'width': 'auto'}"></p-menu>
+      </div>
     </div>
-
   </div>
 </div>
 

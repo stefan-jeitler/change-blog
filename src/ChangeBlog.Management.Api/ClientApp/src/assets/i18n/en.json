@@ -1,0 +1,6 @@
+{
+  "profile": "Profile",
+  "apikey": "Api Key",
+  "logout": "Logout",
+  "languageChanged": "Teh Language was set to {{ langCode }}."
+}

@@ -63,8 +63,8 @@ export function initializeApp(
           (e) => console.error(e)
         );
 
-      oAuthService.loadDiscoveryDocument();
-      resolve();
+      oAuthService.loadDiscoveryDocument()
+        .then(x => resolve());
     });
   };
 }

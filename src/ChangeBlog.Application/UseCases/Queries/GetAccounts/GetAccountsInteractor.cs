@@ -32,7 +32,7 @@ public class GetAccountsInteractor : IGetAccounts, IGetAccount
         var schemeId = account.DefaultVersioningSchemeId;
         var scheme = schemeId.HasValue
             ? await _versioningSchemeDao.GetSchemeAsync(schemeId.Value)
-            : await _versioningSchemeDao.GetSchemeAsync(Defaults.VersioningSchemeId);
+            : await _versioningSchemeDao.GetSchemeAsync(Default.VersioningSchemeId);
 
         return CreateResponseModel(account, scheme, user);
     }
@@ -50,7 +50,7 @@ public class GetAccountsInteractor : IGetAccounts, IGetAccount
 
         var versioningScheme = await _versioningSchemeDao.GetSchemesAsync(schemeIds);
         var schemeById = versioningScheme.ToDictionary(x => x.Id, x => x);
-        var defaultScheme = await _versioningSchemeDao.GetSchemeAsync(Defaults.VersioningSchemeId);
+        var defaultScheme = await _versioningSchemeDao.GetSchemeAsync(Default.VersioningSchemeId);
 
         return accounts.Select(x =>
             {

@@ -13,6 +13,7 @@ public class UserTests
     private Name _testFirstName;
     private Name _testLastName;
     private Name _testTimeZone;
+    private Name _testCulture;
     private Guid _testUserId;
 
     public UserTests()
@@ -22,6 +23,7 @@ public class UserTests
         _testFirstName = Name.Parse("Stefan");
         _testLastName = Name.Parse("Jeitler");
         _testTimeZone = Name.Parse("Europe/Berlin");
+        _testCulture = Name.Parse("de-AT");
         _testDeletionDate = DateTime.Parse("2021-04-03");
         _testCreationDate = DateTime.Parse("2021-04-03");
     }
@@ -29,7 +31,7 @@ public class UserTests
     private User CreateUser()
     {
         return new User(_testUserId, _testEmail, _testFirstName, _testLastName, _testTimeZone,
-            _testDeletionDate, _testCreationDate);
+            _testCulture, _testDeletionDate, _testCreationDate);
     }
 
     [Fact]
@@ -88,6 +90,16 @@ public class UserTests
 
     [Fact]
     public void Create_WithNullTimeZone_ArgumentNullException()
+    {
+        _testTimeZone = null;
+
+        var act = CreateUser;
+
+        act.Should().ThrowExactly<ArgumentNullException>();
+    }
+    
+    [Fact]
+    public void Create_WithNullCulture_ArgumentNullException()
     {
         _testTimeZone = null;
 

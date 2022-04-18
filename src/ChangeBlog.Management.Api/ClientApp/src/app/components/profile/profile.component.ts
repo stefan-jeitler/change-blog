@@ -14,6 +14,7 @@ export class ProfileComponent implements OnInit {
     lastName: '',
     createdAt: undefined,
     timeZone: '',
+    culture: ''
   };
 
   constructor(private changeBlogApiClient: ChangeBlogApi.Client) {

@@ -17,7 +17,7 @@ public class VersioningSchemeIdFinderTests
         var schemeId = service.FindSchemeIdForProduct(null);
 
         // assert
-        schemeId.Should().Be(Defaults.VersioningSchemeId);
+        schemeId.Should().Be(Default.VersioningSchemeId);
     }
 
     [Fact]

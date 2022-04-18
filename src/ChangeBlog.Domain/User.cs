@@ -5,7 +5,7 @@ namespace ChangeBlog.Domain;
 
 public class User
 {
-    public User(Guid id, Email email, Name firstName, Name lastName, Name timeZone, DateTime? deletedAt,
+    public User(Guid id, Email email, Name firstName, Name lastName, Name timeZone, Name culture, DateTime? deletedAt,
         DateTime createdAt)
     {
         if (id == Guid.Empty)
@@ -18,6 +18,7 @@ public class User
         FirstName = firstName ?? throw new ArgumentNullException(nameof(firstName));
         LastName = lastName ?? throw new ArgumentNullException(nameof(lastName));
         TimeZone = timeZone ?? throw new ArgumentNullException(nameof(timeZone));
+        Culture = culture ?? throw new ArgumentNullException(nameof(culture));
 
         if (deletedAt.HasValue &&
             (deletedAt == DateTime.MinValue || deletedAt == DateTime.MaxValue))
@@ -44,6 +45,8 @@ public class User
     ///     OlsonId
     /// </summary>
     public Name TimeZone { get; }
+
+    public Name Culture { get; set; }
 
     public DateTime? DeletedAt { get; }
 

@@ -175,7 +175,7 @@ public class ProductDaoTests : IAsyncLifetime
     private async Task InsertTestUserAsync()
     {
         const string insertTestUserSql =
-            @"insert into ""user"" values (@id, @email, @firstName, @lastName, @timeZone, @deletedAt, @createdAt) on conflict (id) do nothing";
+            @"insert into ""user"" values (@id, @email, @firstName, @lastName, @timeZone, @deletedAt, @createdAt, @culture) on conflict (id) do nothing";
         await _lazyDbConnection.Value.ExecuteAsync(insertTestUserSql, new
         {
             id = TestData.User.Id,
@@ -183,6 +183,7 @@ public class ProductDaoTests : IAsyncLifetime
             firstName = TestData.User.FirstName,
             lastName = TestData.User.LastName,
             timeZone = TestData.User.TimeZone,
+            culture = TestData.User.Culture,
             deletedAt = TestData.User.DeletedAt,
             createdAt = TestData.User.CreatedAt
         });

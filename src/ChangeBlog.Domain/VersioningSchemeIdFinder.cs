@@ -18,6 +18,6 @@ public class VersioningSchemeIdFinder
             return customVersioningSchemeId.Value;
         }
 
-        return _account.DefaultVersioningSchemeId ?? Defaults.VersioningSchemeId;
+        return _account.DefaultVersioningSchemeId ?? Default.VersioningSchemeId;
     }
 }

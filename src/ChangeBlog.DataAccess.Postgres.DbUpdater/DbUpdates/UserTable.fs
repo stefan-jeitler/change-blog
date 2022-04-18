@@ -51,6 +51,12 @@ let private addUserForAppChangesSql =
                 now())
         on conflict (id) do nothing
     """
+    
+let private addCultureColumnSql = [
+        """ALTER TABLE "user" ADD COLUMN IF NOT EXISTS culture TEXT"""
+        """UPDATE "user" SET culture = 'en-US' WHERE culture is null"""
+        """ALTER TABLE "user" ALTER COLUMN culture SET NOT NULL"""
+    ]
 
 let create (dbConnection: IDbConnection) =
     dbConnection.Execute(createUserSql) |> ignore
@@ -71,4 +77,9 @@ let fixEmailUniqueConstraint (dbConnection: IDbConnection) =
 
 let addUserForAppChanges (dbConnection: IDbConnection) =
     dbConnection.Execute(addUserForAppChangesSql)
+    |> ignore
+
+let addCultureColumn (dbConnection: IDbConnection) =
+    addCultureColumnSql
+    |> List.map dbConnection.Execute
     |> ignore

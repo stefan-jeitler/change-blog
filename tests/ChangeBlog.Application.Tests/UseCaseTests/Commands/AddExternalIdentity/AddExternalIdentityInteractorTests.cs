@@ -53,6 +53,7 @@ public class AddExternalIdentityInteractorTests
             TestAccount.User.FirstName,
             TestAccount.User.LastName,
             Name.Parse("UTC"),
+            Name.Parse("de-AT"),
             DateTime.Parse("2021-09-05"),
             DateTime.Parse("2021-09-05"));
 
@@ -101,6 +102,7 @@ public class AddExternalIdentityInteractorTests
             TestAccount.User.FirstName,
             TestAccount.User.LastName,
             Name.Parse("UTC"),
+            Name.Parse("de-AT"),
             null,
             DateTime.Parse("2021-09-05"));
 
@@ -132,6 +134,7 @@ public class AddExternalIdentityInteractorTests
             TestAccount.User.FirstName,
             TestAccount.User.LastName,
             Name.Parse("UTC"),
+            Name.Parse("de-AT"),
             DateTime.Parse("2021-09-05"),
             DateTime.Parse("2021-09-05"));
 
@@ -164,6 +167,7 @@ public class AddExternalIdentityInteractorTests
             TestAccount.User.FirstName,
             TestAccount.User.LastName,
             Name.Parse("UTC"),
+            Name.Parse("de-AT"),
             DateTime.Parse("2021-09-05"),
             DateTime.Parse("2021-09-05"));
 
@@ -201,6 +205,7 @@ public class AddExternalIdentityInteractorTests
             TestAccount.User.FirstName,
             TestAccount.User.LastName,
             Name.Parse("UTC"),
+            Name.Parse("de-AT"),
             DateTime.Parse("2021-09-05"),
             DateTime.Parse("2021-09-05"));
 

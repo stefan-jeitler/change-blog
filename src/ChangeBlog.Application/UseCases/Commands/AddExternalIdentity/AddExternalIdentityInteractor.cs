@@ -57,7 +57,7 @@ public class AddExternalIdentityInteractor : IAddExternalIdentity
             ? userByEmail.GetValueOrThrow()
             : new User(Guid.NewGuid(), Email.Parse(externalUserInfo.Email),
                 Name.Parse(externalUserInfo.FirstName),
-                Name.Parse(externalUserInfo.LastName), Name.Parse("Etc/UTC"), null, DateTime.UtcNow);
+                Name.Parse(externalUserInfo.LastName), Default.Timezone, Default.Culture, null, DateTime.UtcNow);
 
         if (user.DeletedAt.HasValue)
         {

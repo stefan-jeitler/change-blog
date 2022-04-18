@@ -4290,6 +4290,7 @@ export class UserDto implements IUserDto {
     firstName?: string | undefined;
     lastName?: string | undefined;
     timeZone?: string | undefined;
+    culture?: string | undefined;
     createdAt?: Date;
 
     constructor(data?: IUserDto) {
@@ -4308,6 +4309,7 @@ export class UserDto implements IUserDto {
             this.firstName = _data["firstName"];
             this.lastName = _data["lastName"];
             this.timeZone = _data["timeZone"];
+            this.culture = _data["culture"];
             this.createdAt = _data["createdAt"] ? new Date(_data["createdAt"].toString()) : <any>undefined;
         }
     }
@@ -4326,6 +4328,7 @@ export class UserDto implements IUserDto {
         data["firstName"] = this.firstName;
         data["lastName"] = this.lastName;
         data["timeZone"] = this.timeZone;
+        data["culture"] = this.culture;
         data["createdAt"] = this.createdAt ? this.createdAt.toISOString() : <any>undefined;
         return data;
     }
@@ -4337,6 +4340,7 @@ export interface IUserDto {
     firstName?: string | undefined;
     lastName?: string | undefined;
     timeZone?: string | undefined;
+    culture?: string | undefined;
     createdAt?: Date;
 }
 

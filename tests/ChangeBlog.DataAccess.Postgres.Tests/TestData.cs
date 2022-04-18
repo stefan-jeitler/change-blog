@@ -10,7 +10,7 @@ public static class TestData
     public static readonly Account Account = new(
         Guid.Parse("80f00d91-97ff-4050-8eb0-6f4484b4df99"),
         Name.Parse("TestAccount DataAccess tests"),
-        Defaults.VersioningSchemeId,
+        Default.VersioningSchemeId,
         DateTime.Parse("2021-05-21"),
         null);
 
@@ -20,6 +20,7 @@ public static class TestData
         Name.Parse("test"),
         Name.Parse("dataAccess"),
         Name.Parse("Europe/Berlin"),
+        Name.Parse("de-AT"),
         null,
         DateTime.Parse("2021-05-21")
     );

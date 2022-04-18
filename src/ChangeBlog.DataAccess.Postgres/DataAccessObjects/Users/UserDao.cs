@@ -29,6 +29,7 @@ public class UserDao : IUserDao
                        first_name AS firstName,
                        last_name  AS lastName,
                        timezone,
+                       culture,
                        deleted_at AS deletedAt,
                        created_at AS createdAt
                 FROM ""user""
@@ -49,6 +50,7 @@ public class UserDao : IUserDao
                        first_name AS firstName,
                        last_name  AS lastName,
                        timezone,
+                       culture,
                        deleted_at AS deletedAt,
                        created_at AS createdAt
                 FROM ""user""
@@ -75,6 +77,7 @@ public class UserDao : IUserDao
                                 u.first_name AS firstName,
                                 u.last_name  AS lastName,
                                 u.timezone,
+                                u.culture,
                                 u.deleted_at AS deletedAt,
                                 u.created_at AS createdAt
                 FROM ""user"" u
@@ -108,6 +111,7 @@ public class UserDao : IUserDao
                        u.first_name AS firstName,
                        u.last_name  AS lastName,
                        u.timezone,
+                       u.culture,
                        u.deleted_at AS deletedAt,
                        u.created_at AS createdAt
                 FROM ""user"" u
@@ -138,6 +142,7 @@ public class UserDao : IUserDao
                        u.first_name AS firstName,
                        u.last_name  AS lastName,
                        u.timezone,
+                       u.culture,
                        u.deleted_at AS deletedAt,
                        u.created_at AS createdAt
                 FROM ""user"" u
@@ -184,8 +189,8 @@ public class UserDao : IUserDao
     public async Task<Result> AddAsync(User user)
     {
         const string insertUserSql = @"
-                INSERT INTO ""user"" (id, email, first_name, last_name, timezone, created_at)
-                VALUES (@userId, @email, @firstName, @lastName, @timeZone, @createdAt)
+                INSERT INTO ""user"" (id, email, first_name, last_name, timezone, culture, created_at)
+                VALUES (@userId, @email, @firstName, @lastName, @timeZone, @culture, @createdAt)
                 ";
 
         try
@@ -198,6 +203,7 @@ public class UserDao : IUserDao
                     firstName = user.FirstName.Value,
                     lastName = user.LastName.Value,
                     timeZone = user.TimeZone.Value,
+                    culture = user.Culture.Value,
                     createdAt = user.CreatedAt
                 });
 

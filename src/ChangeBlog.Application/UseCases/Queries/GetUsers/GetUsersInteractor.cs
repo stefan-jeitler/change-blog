@@ -29,6 +29,7 @@ public class GetUsersInteractor : IGetUsers
                 x.FirstName,
                 x.LastName,
                 x.TimeZone,
+                x.Culture,
                 x.CreatedAt.ToLocal(currentUser.TimeZone)))
             .ToList();
     }
@@ -42,6 +43,7 @@ public class GetUsersInteractor : IGetUsers
             user.FirstName,
             user.LastName,
             user.TimeZone,
+            user.Culture,
             user.CreatedAt.ToLocal(user.TimeZone));
     }
 }

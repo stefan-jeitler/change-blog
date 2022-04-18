@@ -6,13 +6,14 @@ namespace ChangeBlog.Api.DTOs.V1.Account;
 public class UserDto
 {
     public UserDto(Guid id, string email, string firstName, string lastName, string timeZone,
-        DateTimeOffset createdAt)
+        string culture, DateTimeOffset createdAt)
     {
         Id = id;
         Email = email;
         FirstName = firstName;
         LastName = lastName;
         TimeZone = timeZone;
+        Culture = culture;
         CreatedAt = createdAt;
     }
 
@@ -21,6 +22,7 @@ public class UserDto
     public string FirstName { get; }
     public string LastName { get; }
     public string TimeZone { get; }
+    public string Culture { get; }
     public DateTimeOffset CreatedAt { get; }
 
     public static UserDto FromResponseModel(UserResponseModel m)
@@ -31,6 +33,7 @@ public class UserDto
             m.FirstName,
             m.LastName,
             m.TimeZone,
+            m.Culture,
             m.CreatedAt
         );
     }

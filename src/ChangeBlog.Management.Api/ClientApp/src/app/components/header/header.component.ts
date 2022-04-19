@@ -111,7 +111,7 @@ export class HeaderComponent implements OnInit {
           this.messageService.add({
             severity: 'success',
             summary: translate('languageChangedShort'),
-            detail: translate('languageChanged', {langCode: targetLang.label})
+            detail: translate('languageChanged', {lang: targetLang.label})
           });
         });
 

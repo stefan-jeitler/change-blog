@@ -5,7 +5,7 @@ import {HomeComponent} from "./components/home/home.component";
 import {LayoutComponent} from "./components/layout/layout.component";
 import {ProfileComponent} from "./components/profile/profile.component";
 import {ApikeyComponent} from "./components/apikey/apikey.component";
-import {AuthGuard} from "./auth.guard";
+import {AuthGuard} from "./guards/auth.guard";
 import {RedirectComponent} from "./components/redirect/redirect.component";
 
 const routes: Routes = [

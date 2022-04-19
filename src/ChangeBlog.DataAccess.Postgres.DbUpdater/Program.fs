@@ -37,7 +37,7 @@ let createDbUpdatesCommand (dbConnection: IDbConnection) =
         Command("run-updates", "execute all new db updates.")
 
     runUpdatesCommand.AddOption verboseSwitch
-    runUpdatesCommand.Handler <- CommandHandler.Create<bool>(handler)
+    runUpdatesCommand.Handler <- CommandHandler.Create<bool>((fun (verbose) -> handler verbose))
 
     runUpdatesCommand
 
@@ -58,7 +58,7 @@ let createDetectBreakingChangesCommand (dbConnection: IDbConnection) =
         Command("detect-breakingchanges", description)
 
     detectBreakingChangesCommand.AddOption verboseSwitch
-    detectBreakingChangesCommand.Handler <- CommandHandler.Create<bool>(handler)
+    detectBreakingChangesCommand.Handler <- CommandHandler.Create<bool>((fun (verbose) -> handler verbose))
 
     detectBreakingChangesCommand
 

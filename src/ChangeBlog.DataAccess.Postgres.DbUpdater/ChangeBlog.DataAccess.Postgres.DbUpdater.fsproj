@@ -30,6 +30,7 @@
         <Compile Include="DbUpdates\UserTable.fs" />
         <Compile Include="DbUpdates/VersioningSchemeTable.fs" />
         <Compile Include="DbUpdates\VersionTable.fs" />
+        <Compile Include="DbUpdates\UserDataTable.fs" />
         <Compile Include="DbUpdates.fs" />
         <Compile Include="DbUpdatesRunner.fs" />
         <Compile Include="DbUpdatesAnalysis.fs" />

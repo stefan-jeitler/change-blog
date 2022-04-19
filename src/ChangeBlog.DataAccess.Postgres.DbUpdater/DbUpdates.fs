@@ -57,4 +57,5 @@ let dbUpdates: DbUpdate list =
       { Version = v "12.1.3"; Update = VersioningSchemeTable.fixUniqueIndexOnNameAndAccountId }
       { Version = v "12.1.4"; Update = VersionTable.fixUniqueIndexOnProductIdAndValue }
       { Version = v "12.1.5"; Update = VersionTable.addProductIdToSearchVectorIndex }
-      { Version = v "13.0.0"; Update = UserTable.addCultureColumn } ]
+      { Version = v "13.0.0"; Update = UserTable.addCultureColumn }
+      { Version = v "13.1.0"; Update = UserDataTable.create } ]

@@ -62,7 +62,7 @@ export function initializeApp(
       oAuthService.events
         .pipe(
           filter(
-            (e) => e.type === 'token_received' && oAuthService.hasValidIdToken()
+            (e) => e.type === 'token_received' && oAuthService.hasValidAccessToken()
           ),
           mergeMap((x) => apiClient.ensureUserIsImported())
         )

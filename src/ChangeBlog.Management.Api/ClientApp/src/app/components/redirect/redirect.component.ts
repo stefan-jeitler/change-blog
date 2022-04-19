@@ -7,17 +7,17 @@ import {Router} from "@angular/router";
 })
 export class RedirectComponent implements OnInit {
 
-  constructor(private authClient: OAuthService,
+  constructor(private authService: OAuthService,
               private router: Router) {
   }
 
   isLoggedIn() {
-    return this.authClient.hasValidIdToken() && this.authClient.hasValidAccessToken();
+    return this.authService.hasValidIdToken() && this.authService.hasValidAccessToken();
   }
 
   ngOnInit(): void {
 
-    this.authClient.tryLogin()
+    this.authService.tryLogin()
       .then(x => {
         if(this.isLoggedIn())
           this.router.navigateByUrl('/app/home');

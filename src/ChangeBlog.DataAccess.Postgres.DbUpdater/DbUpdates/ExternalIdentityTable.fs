@@ -19,5 +19,10 @@ let private createTableSql =
     )
 """
 
+let private dropColumnIdentityProviderSql = "ALTER TABLE external_identity DROP COLUMN IF EXISTS identity_provider"
+
 let create (dbConnection: IDbConnection) =
     dbConnection.Execute(createTableSql) |> ignore
+    
+let dropColumnIdentityProvider (dbConnection: IDbConnection) =
+    dbConnection.Execute(dropColumnIdentityProviderSql) |> ignore

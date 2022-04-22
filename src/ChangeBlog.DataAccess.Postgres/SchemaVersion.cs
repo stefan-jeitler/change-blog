@@ -18,7 +18,7 @@ public class SchemaVersion
         _logger = logger;
     }
 
-    private static SemVersion AppSchemaVersion => SemVersion.Parse("13.0.0", SemVersionStyles.Strict);
+    private static SemVersion AppSchemaVersion => SemVersion.Parse("14.0.0", SemVersionStyles.Strict);
 
     public async Task ApproveAsync()
     {

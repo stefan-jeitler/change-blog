@@ -24,12 +24,12 @@ public static class ServiceCollectionExtensions
                 }, o =>
             {
                 o.Instance = settings.Instance;
+                o.Domain = settings.Domain;
+                o.SignUpSignInPolicyId = settings.SignUpSignInPolicyId;
                 o.TenantId = settings.TenantId;
                 o.ClientId = settings.ClientId;
                 o.ClientSecret = settings.ClientSecret;
-            })
-            .EnableTokenAcquisitionToCallDownstreamApi(_ => { })
-            .AddInMemoryTokenCaches();
+            });
 
         return authBuilder;
     }
@@ -45,6 +45,8 @@ public static class ServiceCollectionExtensions
 
     private static async Task OnTokenValidated(TokenValidatedContext context)
     {
+        context.HttpContext.User = context.Principal!;
+        
         var authHandler = context.HttpContext.RequestServices.GetRequiredService<AppAuthenticationHandler>();
 
         await authHandler.HandleAsync(context);

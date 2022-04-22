@@ -4,9 +4,9 @@ using ChangeBlog.Api.Shared;
 using ChangeBlog.Api.Shared.Authentication;
 using ChangeBlog.Api.Shared.Authorization;
 using ChangeBlog.Api.Shared.DTOs;
+using ChangeBlog.Api.Shared.UserInfo;
 using ChangeBlog.Api.Swagger;
 using ChangeBlog.Application.Boundaries.DataAccess.ExternalIdentity;
-using ChangeBlog.DataAccess.MicrosoftIdentity;
 using ChangeBlog.DataAccess.Postgres;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
@@ -35,7 +35,7 @@ public class Startup
         services.AddApplicationInsightsTelemetry();
 
         var settings = _configuration
-            .GetSection("Authentication:MicrosoftIdentity")
+            .GetSection("Authentication:AzureAdB2C")
             .Get<MicrosoftIdentityAuthenticationSettings>();
 
         services.AddAppAuthentication(settings);
@@ -43,7 +43,8 @@ public class Startup
 
         var connectionString = _configuration.GetConnectionString("ChangeBlogDb");
         services.AddPostgresDataAccess(connectionString);
-        services.AddSingleton<IExternalUserInfoDao, ExternalUserInfoNotSupported>();
+        services.AddHttpContextAccessor();
+        services.AddScoped<IExternalUserInfoDao, TokenClaimsUserInfo>();
 
         services.AddMemoryCache();
         services.AddApplicationUseCases();

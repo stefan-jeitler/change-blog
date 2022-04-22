@@ -54,7 +54,7 @@ public static class JwtAuthUtils
         var appIdentity = new ClaimsIdentity(new List<Claim>
         {
             new(Constants.AppClaims.UserId, appUserId!.Value.ToString())
-        });
+        }, "ChangeBlogApp");
 
         context.Principal!.AddIdentity(appIdentity);
     }

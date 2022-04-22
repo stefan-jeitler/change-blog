@@ -16,6 +16,24 @@ public static class HttpContextExtensions
             : Guid.Empty;
     }
 
+    public static string GetEmail(this HttpContext httpContext)
+    {
+        return httpContext.User.FindFirstValue(ClaimTypes.Email) ??
+               throw new Exception("Missing email address in claims.");
+    }
+
+    public static string GetFirstName(this HttpContext httpContext)
+    {
+        return httpContext.User.FindFirstValue(ClaimTypes.GivenName) ??
+               throw new Exception("Missing email address in claims.");
+    }
+
+    public static string GetLastName(this HttpContext httpContext)
+    {
+        return httpContext.User.FindFirstValue(ClaimTypes.Surname) ??
+               throw new Exception("Missing email address in claims.");
+    }
+
     public static Uri CreateLinkTo(this HttpContext ctx, string relativePath)
     {
         var request = ctx.Request;

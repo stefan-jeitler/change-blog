@@ -20,7 +20,6 @@
     <ItemGroup>
         <ProjectReference Include="..\ChangeBlog.Api.Shared\ChangeBlog.Api.Shared.csproj" />
         <ProjectReference Include="..\ChangeBlog.Application\ChangeBlog.Application.csproj" />
-        <ProjectReference Include="..\ChangeBlog.DataAccess.MicrosoftIdentity\ChangeBlog.DataAccess.MicrosoftIdentity.csproj" />
         <ProjectReference Include="..\ChangeBlog.DataAccess.Postgres\ChangeBlog.DataAccess.Postgres.csproj" />
     </ItemGroup>
 

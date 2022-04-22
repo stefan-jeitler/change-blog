@@ -8,7 +8,7 @@ import {environment} from './environments/environment';
 fetch("/api/appsettings")
   .then((res) => res.json())
   .then((config) => {
-    config.authConfig.redirectUri = window.location.origin;
+    config.authConfig.redirectUri = window.location.origin + '/';
     config.appVersion = require("package.json").version;
 
     if (environment.production) {

@@ -162,8 +162,8 @@ public class UserDao : IUserDao
     public async Task<Result> AddExternalIdentity(ExternalIdentity externalIdentity)
     {
         const string insertExternalIdentitySql = @"
-                INSERT INTO external_identity (id, user_id, external_user_id, identity_provider, created_at) 
-                VALUES (@id, @userId, @externalUserId, @identityProvider, @createdAt)";
+                INSERT INTO external_identity (id, user_id, external_user_id, created_at) 
+                VALUES (@id, @userId, @externalUserId, @createdAt)";
 
         try
         {
@@ -173,7 +173,6 @@ public class UserDao : IUserDao
                     id = externalIdentity.Id,
                     userId = externalIdentity.UserId,
                     externalUserId = externalIdentity.ExternalUserId,
-                    identityProvider = externalIdentity.IdentityProvider,
                     createdAt = externalIdentity.CreatedAt
                 });
 

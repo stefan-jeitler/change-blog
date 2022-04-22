@@ -41,23 +41,23 @@ public class AddExternalIdentityInteractor : IAddExternalIdentity
                 return Result.Success(userByExternalId.GetValueOrThrow().Id);
         }
 
-        var externalUserInfo = await _externalUserInfoDao.GetUserInfoAsync();
+        var externalUserInfo = _externalUserInfoDao.GetUserInfo();
 
         return await ImportUserAsync(externalUserId, externalUserInfo);
     }
 
-    private async Task<Result<Guid>> ImportUserAsync(string externalUserId, UserInfo externalUserInfo)
+    private async Task<Result<Guid>> ImportUserAsync(string externalUserId, ExternalUserInfo externalExternalUserInfo)
     {
         _unitOfWork.Start();
 
-        var userByEmail = await _userDao.FindByEmailAsync(externalUserInfo.Email);
+        var userByEmail = await _userDao.FindByEmailAsync(externalExternalUserInfo.Email);
         var userFoundByEmail = userByEmail.HasValue;
 
         var user = userByEmail.HasValue
             ? userByEmail.GetValueOrThrow()
-            : new User(Guid.NewGuid(), Email.Parse(externalUserInfo.Email),
-                Name.Parse(externalUserInfo.FirstName),
-                Name.Parse(externalUserInfo.LastName), Default.Timezone, Default.Culture, null, DateTime.UtcNow);
+            : new User(Guid.NewGuid(), Email.Parse(externalExternalUserInfo.Email),
+                Name.Parse(externalExternalUserInfo.FirstName),
+                Name.Parse(externalExternalUserInfo.LastName), Default.Timezone, Default.Culture, null, DateTime.UtcNow);
 
         if (user.DeletedAt.HasValue)
         {
@@ -70,7 +70,7 @@ public class AddExternalIdentityInteractor : IAddExternalIdentity
         }
 
         var externalIdentity = new ExternalIdentity(Guid.NewGuid(), user.Id, externalUserId,
-            externalUserInfo.IdentityProvider, DateTime.UtcNow);
+            DateTime.UtcNow);
 
         var (isSuccess, _, error) = await _userDao.AddExternalIdentity(externalIdentity);
 

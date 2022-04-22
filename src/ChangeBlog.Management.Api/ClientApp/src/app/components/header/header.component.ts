@@ -38,7 +38,9 @@ export class HeaderComponent implements OnInit {
   get userName(): string {
     const claims = this.authService.getIdentityClaims() as any;
 
-    return claims?.preferred_username ?? '';
+    return claims.emails.length > 0
+      ? claims.emails[0]
+      : `${claims.given_name} ${claims.family_name}`;
   }
 
   get currentLang() {

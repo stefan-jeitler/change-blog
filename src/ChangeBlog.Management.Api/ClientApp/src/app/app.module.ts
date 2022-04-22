@@ -41,6 +41,7 @@ import {MessageModule} from "primeng/message";
 import {MessagesModule} from "primeng/messages";
 import {MessageService} from "primeng/api";
 import {ToastModule} from "primeng/toast";
+import {DEBUG} from "@angular/compiler-cli/src/ngtsc/logging/src/console_logger";
 
 export function initializeApp(
   router: Router,
@@ -56,7 +57,7 @@ export function initializeApp(
       router.onSameUrlNavigation = 'reload';
 
       // Auth
-      oAuthService.configure(appConfig.authConfig!);
+      oAuthService.configure(appConfig.authConfig);
       oAuthService.setupAutomaticSilentRefresh();
 
       oAuthService.events
@@ -71,7 +72,7 @@ export function initializeApp(
           (e) => console.error(e)
         );
 
-      const authSetup = oAuthService.loadDiscoveryDocument();
+      const authSetup = oAuthService.loadDiscoveryDocument(appConfig.discoveryDocument);
 
       // i18n
       const getValueOrDefault = (v: string | undefined | null) => v ? v : undefined;

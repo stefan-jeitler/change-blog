@@ -1,20 +1,13 @@
-﻿using System.Threading.Tasks;
-using ChangeBlog.Application.Boundaries.DataAccess.ExternalIdentity;
-using CSharpFunctionalExtensions;
+﻿using ChangeBlog.Application.Boundaries.DataAccess.ExternalIdentity;
 
 namespace ChangeBlog.Application.Tests.TestDoubles;
 
 public class FakeExternalUserInfoDao : IExternalUserInfoDao
 {
-    public UserInfo UserInfo { get; set; }
+    public ExternalUserInfo ExternalUserInfo { get; set; }
 
-    public Task<UserInfo> GetUserInfoAsync()
+    public ExternalUserInfo GetUserInfo()
     {
-        return Task.FromResult(UserInfo);
-    }
-
-    public Task<Maybe<UserPhoto>> GetUserPhotoAsync()
-    {
-        return Task.FromResult(Maybe<UserPhoto>.None);
+        return ExternalUserInfo;
     }
 }

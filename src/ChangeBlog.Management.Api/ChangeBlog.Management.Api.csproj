@@ -14,7 +14,6 @@
     </PropertyGroup>
 
     <ItemGroup>
-        <PackageReference Include="Microsoft.AspNetCore.Authentication.JwtBearer" Version="6.0.4" />
         <PackageReference Include="Microsoft.Identity.Web" Version="1.23.1" />
         <PackageReference Include="Swashbuckle.AspNetCore" Version="6.3.0" />
         <PackageReference Include="Microsoft.AspNetCore.SpaServices.Extensions" Version="6.0.4" />
@@ -36,7 +35,6 @@
     <ItemGroup>
         <ProjectReference Include="..\ChangeBlog.Api.Shared\ChangeBlog.Api.Shared.csproj" />
         <ProjectReference Include="..\ChangeBlog.Application\ChangeBlog.Application.csproj" />
-        <ProjectReference Include="..\ChangeBlog.DataAccess.MicrosoftIdentity\ChangeBlog.DataAccess.MicrosoftIdentity.csproj" />
         <ProjectReference Include="..\ChangeBlog.DataAccess.Postgres\ChangeBlog.DataAccess.Postgres.csproj" />
     </ItemGroup>
 

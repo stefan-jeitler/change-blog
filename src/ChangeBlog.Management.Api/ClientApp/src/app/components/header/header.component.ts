@@ -4,6 +4,7 @@ import {OAuthService} from "angular-oauth2-oidc";
 import {translate, TranslocoService} from "@ngneat/transloco";
 import {filter} from "rxjs/operators";
 import {LanguageInfo} from "../../transloco-root.module";
+import {IdentityUser} from "../../models/identityUser.interface";
 
 @Component({
   selector: 'app-header',
@@ -36,7 +37,7 @@ export class HeaderComponent implements OnInit {
   }
 
   get userName(): string {
-    const claims = this.authService.getIdentityClaims() as any;
+    const claims = this.authService.getIdentityClaims() as IdentityUser;
 
     return claims.emails.length > 0
       ? claims.emails[0]

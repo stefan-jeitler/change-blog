@@ -47,11 +47,9 @@
         <Message Importance="high" Text="Restoring dependencies using 'npm'. This may take several minutes..." />
         <Exec WorkingDirectory="$(SpaRoot)" Command="npm install" />
     </Target>
-
+    
     <Target Name="PublishRunWebpack" AfterTargets="ComputeFilesToPublish">
-        <!-- As part of publishing, ensure the JS resources are freshly built in production mode -->
         <Exec WorkingDirectory="$(SpaRoot)" Command="npm install" />
-        <!-- ReSharper disable once UnknownProperty -->
         <Exec WorkingDirectory="$(SpaRoot)" Command="npm version $(Version) --allow-same-version" />
         <Exec WorkingDirectory="$(SpaRoot)" Command="npm run build" />
         <Exec WorkingDirectory="$(SpaRoot)" Command="npm run build:ssr" Condition=" '$(BuildServerSideRenderer)' == 'true' " />

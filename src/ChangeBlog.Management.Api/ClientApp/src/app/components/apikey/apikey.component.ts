@@ -1,4 +1,5 @@
 import { Component, OnInit } from '@angular/core';
+import {TranslationKey} from "../../generated/TranslationKey";
 
 @Component({
   selector: 'app-apikey',
@@ -6,8 +7,11 @@ import { Component, OnInit } from '@angular/core';
   styleUrls: ['./apikey.component.scss']
 })
 export class ApikeyComponent implements OnInit {
+  apiKey: string;
 
-  constructor() { }
+  constructor() {
+    this.apiKey = TranslationKey.apikey;
+  }
 
   ngOnInit(): void {
   }

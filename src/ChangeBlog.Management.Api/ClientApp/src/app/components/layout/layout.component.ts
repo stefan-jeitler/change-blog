@@ -10,14 +10,13 @@ import {filter} from "rxjs/operators";
 })
 export class LayoutComponent implements OnInit {
   showMobileSideNav: boolean;
-  title = 'change-blog';
 
   constructor(private router: Router, private authService: OAuthService) {
     this.showMobileSideNav = false;
 
     this.router.events
       .pipe(filter(event => event instanceof ActivationEnd))
-      .subscribe((event) => {
+      .subscribe((_) => {
         this.showMobileSideNav = false;
       });
   }

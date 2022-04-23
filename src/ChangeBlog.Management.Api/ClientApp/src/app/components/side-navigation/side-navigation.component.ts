@@ -2,6 +2,7 @@ import {Component, Inject, Input, OnInit} from '@angular/core';
 import {MenuItem} from "primeng/api";
 import {APP_CONFIG, AppConfig} from "app.config";
 import {translate, TranslocoService} from "@ngneat/transloco";
+import {TranslationKey} from "../../generated/TranslationKey";
 
 @Component({
   selector: 'app-side-navigation',
@@ -21,21 +22,21 @@ export class SideNavigationComponent implements OnInit {
     this.currentYear = new Date().getUTCFullYear();
     this.showTitle = false;
 
-    // listen to profile only is enough and update all other labels
+    // listen to userProfile only is enough and update all other labels
     this.translationService
-      .selectTranslate('profile')
+      .selectTranslate(TranslationKey.userProfile)
       .subscribe(x => this.populateMenuItems());
   }
 
   private populateMenuItems() {
     this.menuItems = [
       {
-        label: translate('profile'),
+        label: translate(TranslationKey.userProfile),
         icon: 'pi pi-fw pi-user',
         routerLink: '/app/profile'
       },
       {
-        label: translate('apikey'),
+        label: translate(TranslationKey.apikey),
         icon: 'pi pi-fw pi-key',
         routerLink: "/app/apikey"
       }

@@ -1,5 +1,6 @@
 import { ChangeBlogApi } from '../../../clients/ChangeBlogApiClient';
 import { Component, OnInit } from '@angular/core';
+import {TranslationKey} from "../../generated/TranslationKey";
 
 @Component({
   selector: 'app-profile',
@@ -19,9 +20,11 @@ export class ProfileComponent implements OnInit {
 
   constructor(private changeBlogApiClient: ChangeBlogApi.Client) {
     this._currentUser = this.emptyUser;
+    this.titleTranslationKey = TranslationKey.userProfile;
   }
 
   private _currentUser: ChangeBlogApi.IUserDto;
+  titleTranslationKey: string;
 
   get currentUser(): ChangeBlogApi.IUserDto {
     return this._currentUser ?? this.emptyUser;

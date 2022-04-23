@@ -4,6 +4,8 @@
   "scripts": {
     "ng": "ng",
     "start": "ng serve",
+    "pre-build": "ts-node ./src/scripts/dev-pre-build.ts",
+    "build:dev": "npm run pre-build && npm run build -- --configuration=development",
     "build": "ng build",
     "build:ssr": "ng run Test:server:dev",
     "test": "ng test",
@@ -42,6 +44,7 @@
     "karma-coverage": "~2.0.3",
     "karma-jasmine": "~4.0.0",
     "karma-jasmine-html-reporter": "~1.7.0",
+    "ts-node": "^10.7.0",
     "typescript": "~4.5.5"
   }
 }

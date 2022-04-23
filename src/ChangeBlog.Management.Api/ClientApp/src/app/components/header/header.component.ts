@@ -5,6 +5,7 @@ import {translate, TranslocoService} from "@ngneat/transloco";
 import {filter} from "rxjs/operators";
 import {LanguageInfo} from "../../transloco-root.module";
 import {IdentityUser} from "../../models/identityUser.interface";
+import {TranslationKey} from "../../generated/TranslationKey";
 
 @Component({
   selector: 'app-header',
@@ -27,16 +28,15 @@ export class HeaderComponent implements OnInit {
     this.translationService.events$
       .pipe(filter(e => e.type === 'translationLoadSuccess' && e.wasFailure))
       .subscribe((x) => {
-          const key = 'genericErrorMessageShort';
-          const genericerrorMessage = translate(key);
-          const isTranslationAvailableAtAll = !!genericerrorMessage && genericerrorMessage !== key;
+          const genericerrorMessage = translate(TranslationKey.genericErrorMessageShort);
+          const isTranslationAvailableAtAll = !!genericerrorMessage && genericerrorMessage !== TranslationKey.genericErrorMessageShort;
 
           // show error message only if at least one translation is available
           if (isTranslationAvailableAtAll) {
             this.messageService.add({
               severity: 'error',
               summary: genericerrorMessage,
-              detail: translate('genericErrorMessage')
+              detail: translate(TranslationKey.genericErrorMessage)
             });
           }
         }
@@ -80,12 +80,12 @@ export class HeaderComponent implements OnInit {
         separator: true
       },
       {
-        label: translate('profile'),
+        label: translate(TranslationKey.userProfile),
         routerLink: '/app/profile',
         icon: 'pi pi-fw pi-user'
       },
       {
-        label: translate('logout'),
+        label: translate(TranslationKey.logout),
         icon: 'pi pi-fw pi-sign-out',
         command: () => {
           this.logout();
@@ -120,8 +120,8 @@ export class HeaderComponent implements OnInit {
           localStorage.setItem('language', targetLang.id);
           this.messageService.add({
             severity: 'success',
-            summary: translate('languageChangedShort'),
-            detail: translate('languageChanged', {lang: targetLang.label})
+            summary: translate(TranslationKey.languageChangedShort),
+            detail: translate(TranslationKey.languageChanged, {lang: targetLang.label})
           });
         });
 

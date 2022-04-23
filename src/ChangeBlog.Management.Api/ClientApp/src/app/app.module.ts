@@ -116,8 +116,10 @@ export function initializeApp(
     OAuthModule.forRoot({
       resourceServer: {
         sendAccessToken: true,
+        // TODO: get urls from app config
         allowedUrls: [
           'https://app-change-blog-staging.azurewebsites.net',
+          'https://app-change-blog.azurewebsites.net',
           'http://localhost:6430',
           '/',
         ],

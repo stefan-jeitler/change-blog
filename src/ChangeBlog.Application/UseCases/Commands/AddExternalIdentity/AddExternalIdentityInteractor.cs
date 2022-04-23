@@ -70,7 +70,7 @@ public class AddExternalIdentityInteractor : IAddExternalIdentity
         }
 
         var externalIdentity = new ExternalIdentity(Guid.NewGuid(), user.Id, externalUserId,
-            DateTime.UtcNow);
+            externalExternalUserInfo.IdentityProvider, DateTime.UtcNow);
 
         var (isSuccess, _, error) = await _userDao.AddExternalIdentity(externalIdentity);
 

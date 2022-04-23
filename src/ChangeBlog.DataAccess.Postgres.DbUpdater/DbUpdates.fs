@@ -59,4 +59,5 @@ let dbUpdates: DbUpdate list =
       { Version = v "12.1.5"; Update = VersionTable.addProductIdToSearchVectorIndex }
       { Version = v "13.0.0"; Update = UserTable.addCultureColumn }
       { Version = v "13.1.0"; Update = UserDataTable.create }
-      { Version = v "14.0.0"; Update = ExternalIdentityTable.dropColumnIdentityProvider } ]
+      { Version = v "14.0.0"; Update = ExternalIdentityTable.dropColumnIdentityProvider }
+      { Version = v "14.1.0"; Update = ExternalIdentityTable.addColumnIdentityProvider } ]

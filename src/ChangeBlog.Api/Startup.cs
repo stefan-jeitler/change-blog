@@ -44,7 +44,7 @@ public class Startup
         var connectionString = _configuration.GetConnectionString("ChangeBlogDb");
         services.AddPostgresDataAccess(connectionString);
         services.AddHttpContextAccessor();
-        services.AddScoped<IExternalUserInfoDao, TokenClaimsUserInfo>();
+        services.AddScoped<IExternalUserInfoDao, TokenClaimsUserInfoDao>();
 
         services.AddMemoryCache();
         services.AddApplicationUseCases();

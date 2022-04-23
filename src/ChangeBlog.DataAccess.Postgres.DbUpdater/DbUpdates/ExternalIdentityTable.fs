@@ -3,7 +3,6 @@
 open System.Data
 open Dapper
 
-
 let private createTableSql =
     """
     CREATE TABLE IF NOT EXISTS external_identity
@@ -21,8 +20,13 @@ let private createTableSql =
 
 let private dropColumnIdentityProviderSql = "ALTER TABLE external_identity DROP COLUMN IF EXISTS identity_provider"
 
+let private addColumnIdentityProviderSql = "ALTER TABLE external_identity ADD COLUMN IF NOT EXISTS identity_provider text"
+
 let create (dbConnection: IDbConnection) =
     dbConnection.Execute(createTableSql) |> ignore
     
 let dropColumnIdentityProvider (dbConnection: IDbConnection) =
     dbConnection.Execute(dropColumnIdentityProviderSql) |> ignore
+    
+let addColumnIdentityProvider (dbConnection: IDbConnection) =
+    dbConnection.Execute(addColumnIdentityProviderSql) |> ignore

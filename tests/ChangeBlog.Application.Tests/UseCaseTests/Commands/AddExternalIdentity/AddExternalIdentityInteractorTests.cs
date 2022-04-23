@@ -60,7 +60,8 @@ public class AddExternalIdentityInteractorTests
         _fakeExternalUserInfoDao.ExternalUserInfo = new ExternalUserInfo(externalUserId,
             testUser.Email,
             testUser.FirstName,
-            testUser.FirstName);
+            testUser.FirstName,
+            "TestIdentity");
         _fakeUserDao.Users.Add(testUser);
 
         var interactor = CreateInteractor();
@@ -78,7 +79,7 @@ public class AddExternalIdentityInteractorTests
         // arrange
         const string externalUserId = "123456";
         _fakeUserDao.ExternalIdentities.Add(new ExternalIdentity(Guid.NewGuid(), TestAccount.UserId,
-            externalUserId, DateTime.Parse("2021-09-06")));
+            externalUserId, "TestIdentity", DateTime.Parse("2021-09-06")));
         _fakeUserDao.Users.Add(TestAccount.User);
         var interactor = CreateInteractor();
 
@@ -107,7 +108,8 @@ public class AddExternalIdentityInteractorTests
         _fakeExternalUserInfoDao.ExternalUserInfo = new ExternalUserInfo(externalUserId,
             testUser.Email,
             testUser.FirstName,
-            testUser.FirstName);
+            testUser.FirstName,
+            "TestIdentity");
         _fakeUserDao.Users.Add(testUser);
 
         var interactor = CreateInteractor();
@@ -137,10 +139,11 @@ public class AddExternalIdentityInteractorTests
         _fakeExternalUserInfoDao.ExternalUserInfo = new ExternalUserInfo(externalUserId,
             testUser.Email,
             testUser.FirstName,
-            testUser.FirstName);
+            testUser.FirstName,
+            "TestIdentity");
         _fakeUserDao.Users.Add(testUser);
         _fakeUserDao.ExternalIdentities.Add(new ExternalIdentity(Guid.NewGuid(), TestAccount.UserId,
-            externalUserId, DateTime.Parse("2021-09-06")));
+            externalUserId, "TestIdentity", DateTime.Parse("2021-09-06")));
 
         var interactor = CreateInteractor();
 
@@ -168,7 +171,8 @@ public class AddExternalIdentityInteractorTests
         _fakeExternalUserInfoDao.ExternalUserInfo = new ExternalUserInfo(externalUserId,
             testUser.Email,
             testUser.FirstName,
-            testUser.FirstName);
+            testUser.FirstName,
+            "TestIdentity");
 
         var interactor = CreateInteractor();
 
@@ -204,7 +208,8 @@ public class AddExternalIdentityInteractorTests
         _fakeExternalUserInfoDao.ExternalUserInfo = new ExternalUserInfo(externalUserId,
             testUser.Email,
             testUser.FirstName,
-            testUser.FirstName);
+            testUser.FirstName,
+            "TestIdentity");
 
         _fakeUserDao.ProduceFailureWhileImporting = true;
         var interactor = CreateInteractor();

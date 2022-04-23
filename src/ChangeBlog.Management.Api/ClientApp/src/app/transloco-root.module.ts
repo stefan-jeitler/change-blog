@@ -1,14 +1,15 @@
-import { HttpClient } from '@angular/common/http';
+import {HttpClient} from '@angular/common/http';
 import {
-  TRANSLOCO_LOADER,
   Translation,
-  TranslocoLoader,
   TRANSLOCO_CONFIG,
+  TRANSLOCO_LOADER,
   translocoConfig,
+  TranslocoLoader,
   TranslocoModule
 } from '@ngneat/transloco';
-import { Injectable, NgModule } from '@angular/core';
-import { environment } from '../environments/environment';
+import {Injectable, NgModule} from '@angular/core';
+import {environment} from '../environments/environment';
+import {TranslocoLocaleModule} from "@ngneat/transloco-locale";
 
 
 export interface LanguageInfo {
@@ -16,7 +17,7 @@ export interface LanguageInfo {
   label: string;
 }
 
-@Injectable({ providedIn: 'root' })
+@Injectable({providedIn: 'root'})
 export class TranslocoHttpLoader implements TranslocoLoader {
   constructor(private http: HttpClient) {
 
@@ -28,14 +29,20 @@ export class TranslocoHttpLoader implements TranslocoLoader {
 }
 
 @NgModule({
-  exports: [ TranslocoModule ],
+  imports: [TranslocoLocaleModule.forRoot({
+    langToLocaleMapping: {
+      en: 'en-US',
+      de: 'de-AT'
+    }
+  })],
+  exports: [TranslocoModule],
   providers: [
     {
       provide: TRANSLOCO_CONFIG,
       useValue: translocoConfig({
         availableLangs: [
-          { id: 'en', label: 'English' },
-          { id: 'de', label: 'Deutsch' }
+          {id: 'en', label: 'English'},
+          {id: 'de', label: 'Deutsch'}
         ],
         defaultLang: 'en',
         fallbackLang: 'en',
@@ -47,7 +54,8 @@ export class TranslocoHttpLoader implements TranslocoLoader {
         prodMode: environment.production
       })
     },
-    { provide: TRANSLOCO_LOADER, useClass: TranslocoHttpLoader }
+    {provide: TRANSLOCO_LOADER, useClass: TranslocoHttpLoader}
   ]
 })
-export class TranslocoRootModule {}
+export class TranslocoRootModule {
+}

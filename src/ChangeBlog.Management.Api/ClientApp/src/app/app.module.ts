@@ -42,6 +42,7 @@ import {MessagesModule} from "primeng/messages";
 import {MessageService} from "primeng/api";
 import {ToastModule} from "primeng/toast";
 import {DEBUG} from "@angular/compiler-cli/src/ngtsc/logging/src/console_logger";
+import {TranslocoLocaleModule} from "@ngneat/transloco-locale";
 
 export function initializeApp(
   router: Router,
@@ -141,7 +142,8 @@ export function initializeApp(
     RadioButtonModule,
     MessageModule,
     MessagesModule,
-    ToastModule
+    ToastModule,
+    TranslocoLocaleModule
   ],
   providers: [
     {

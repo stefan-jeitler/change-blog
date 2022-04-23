@@ -66,7 +66,7 @@ export class HeaderComponent implements OnInit {
         label: this.userName,
         style: {
           'pointer-events': 'none'
-        },
+        }
       },
       {
         separator: true

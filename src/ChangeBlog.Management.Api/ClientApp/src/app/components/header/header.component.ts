@@ -27,11 +27,18 @@ export class HeaderComponent implements OnInit {
     this.translationService.events$
       .pipe(filter(e => e.type === 'translationLoadSuccess' && e.wasFailure))
       .subscribe((x) => {
-          this.messageService.add({
-            severity: 'error',
-            summary: translate('genericErrorMessageShort'),
-            detail: translate('genericErrorMessage')
-          });
+          const key = 'genericErrorMessageShort';
+          const genericerrorMessage = translate(key);
+          const isTranslationAvailableAtAll = !!genericerrorMessage && genericerrorMessage !== key;
+
+          // show error message only if at least one translation is available
+          if (isTranslationAvailableAtAll) {
+            this.messageService.add({
+              severity: 'error',
+              summary: genericerrorMessage,
+              detail: translate('genericErrorMessage')
+            });
+          }
         }
       );
   }

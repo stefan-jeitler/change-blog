@@ -17,7 +17,7 @@ public class TokenClaimsUserInfoDao : IExternalUserInfoDao
         _httpContextAccessor = httpContextAccessor;
     }
 
-    // TODO: use userinfo endpoint instead of claims
+    // TODO: use userinfo endpoint instead of extracting from claims
     public ExternalUserInfo GetUserInfo()
     {
         if (_httpContextAccessor.HttpContext is null)
@@ -35,8 +35,7 @@ public class TokenClaimsUserInfoDao : IExternalUserInfoDao
         var lastName = user.FindFirstValue(ClaimTypes.Surname) ??
                        throw new ArgumentNullException(nameof(ClaimTypes.Surname));
         
-        var identityProvider = user.FindFirstValue(IdentityProviderClaim) ??
-                               throw new ArgumentNullException(nameof(IdentityProviderClaim));
+        var identityProvider = user.FindFirstValue(IdentityProviderClaim);
 
         return new ExternalUserInfo(userId, email, firstName, lastName, identityProvider);
     }

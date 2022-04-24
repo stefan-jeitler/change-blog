@@ -24,8 +24,12 @@ span, p {
   text-decoration: inherit;
 }
 
+.main-content {
+  margin: $default-margin;
+}
 
-// override primeng styling when necessary
+
+// override PrimeNG styles when necessary
 .p-sidebar-content {
   padding: 0 !important;
 }

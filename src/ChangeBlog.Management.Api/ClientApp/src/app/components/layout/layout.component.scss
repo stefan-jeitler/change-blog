@@ -28,10 +28,6 @@ p-sidebar {
   grid-area: content;
 }
 
-.inner-content {
-  margin: $default-margin;
-}
-
 @media (max-width: $mobile-breakpoint) {
   .wrapper {
     grid-template-columns: auto;

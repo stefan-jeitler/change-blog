@@ -3,7 +3,7 @@
   "apikey": "Api Key",
   "logout": "Logout",
   "languageChangedShort": "Language changed",
-  "languageChanged": "The Language was set to {{ lang }}.",
+  "languageChanged": "The Language has been changed to {{ lang }}.",
   "genericErrorMessageShort": "Error",
   "genericErrorMessage": "An Error occured while performing this action."
 }

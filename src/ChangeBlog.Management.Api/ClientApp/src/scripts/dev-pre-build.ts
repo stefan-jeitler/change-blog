@@ -1,7 +1,9 @@
 import {generateTranslationKeys} from './translation-steps';
+import {generateRouterLinks} from "./router-steps";
 
 const PreBuildSteps: (() => void)[] = [
-  generateTranslationKeys
+  generateTranslationKeys,
+  generateRouterLinks
 ];
 
 console.log("Run Dev-Pre-Build Steps ...");

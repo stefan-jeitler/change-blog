@@ -8,7 +8,7 @@ import {ApikeyComponent} from "./components/apikey/apikey.component";
 import {AuthGuard} from "./guards/auth.guard";
 import {RedirectComponent} from "./components/redirect/redirect.component";
 
-const routes: Routes = [
+export const routes: Routes = [
   {
     path: 'app',
     component: LayoutComponent,

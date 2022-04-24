@@ -9,7 +9,7 @@
     <div class="flex align-items-center">
       <div>
         <button (click)="langMenu.toggle($event)"
-                class="p-button-rounded p-button-secondary  p-button-sm bg-primary-reverse"
+                class="p-button-rounded p-button-secondary p-button-sm bg-primary-reverse"
                 label="{{currentLang}}" pButton
                 type="button"></button>
         <p-menu #langMenu [model]="langItems" [popup]="true" [style]="{'width': 'auto'}"></p-menu>

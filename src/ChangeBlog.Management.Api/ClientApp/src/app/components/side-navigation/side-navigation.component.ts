@@ -12,14 +12,12 @@ import {TranslationKey} from "../../generated/TranslationKey";
 export class SideNavigationComponent implements OnInit {
 
   menuItems: MenuItem[] = [];
-  currentYear: number;
 
   constructor(@Inject(APP_CONFIG)
               private appConfig: AppConfig,
               private translationService: TranslocoService) {
     this.populateMenuItems();
 
-    this.currentYear = new Date().getUTCFullYear();
     this.showTitle = false;
 
     // listen to userProfile only is enough and update all other labels

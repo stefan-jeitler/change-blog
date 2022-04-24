@@ -13,7 +13,6 @@ export class ProfileComponent implements OnInit {
     email: '',
     firstName: '',
     lastName: '',
-    createdAt: undefined,
     timeZone: '',
     culture: ''
   };

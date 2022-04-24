@@ -13,7 +13,6 @@ import {ApikeyComponent} from './components/apikey/apikey.component';
 
 import {ChangeBlogApi} from 'src/clients/ChangeBlogApiClient';
 import {ChangeBlogManagementApi} from 'src/clients/ChangeBlogManagementApiClient';
-import {filter, mergeMap} from 'rxjs/operators';
 import {APP_CONFIG, AppConfig} from 'app.config';
 import {SidebarModule} from "primeng/sidebar";
 import {SideNavigationComponent} from './components/side-navigation/side-navigation.component';
@@ -35,67 +34,16 @@ import {LayoutComponent} from './components/layout/layout.component';
 import {RedirectComponent} from './components/redirect/redirect.component';
 import {CheckboxModule} from "primeng/checkbox";
 import {RadioButtonModule} from "primeng/radiobutton";
-import {LanguageInfo, TranslocoRootModule} from './transloco-root.module';
-import {getBrowserLang, TranslocoService} from "@ngneat/transloco";
+import {TranslocoRootModule} from './transloco-root.module';
+import {TranslocoService} from "@ngneat/transloco";
 import {MessageModule} from "primeng/message";
 import {MessagesModule} from "primeng/messages";
 import {MessageService} from "primeng/api";
 import {ToastModule} from "primeng/toast";
-import {DEBUG} from "@angular/compiler-cli/src/ngtsc/logging/src/console_logger";
 import {TranslocoLocaleModule} from "@ngneat/transloco-locale";
 import { ContentHeaderComponent } from './components/content-header/content-header.component';
+import {initializeApp} from "./app-init";
 
-export function initializeApp(
-  router: Router,
-  oAuthService: OAuthService,
-  appConfig: AppConfig,
-  apiClient: ChangeBlogManagementApi.Client,
-  translationService: TranslocoService
-): () => Promise<void> {
-  return () => {
-    // TODO: get out of here
-    return new Promise<void>((resolve, reject) => {
-      // Router
-      router.onSameUrlNavigation = 'reload';
-
-      // Auth
-      oAuthService.configure(appConfig.authConfig);
-      oAuthService.setupAutomaticSilentRefresh();
-
-      oAuthService.events
-        .pipe(
-          filter(
-            (e) => e.type === 'token_received' && oAuthService.hasValidAccessToken()
-          ),
-          mergeMap((x) => apiClient.ensureUserIsImported())
-        )
-        .subscribe(
-          (x) => console.debug(x),
-          (e) => console.error(e)
-        );
-
-      const authSetup = oAuthService.loadDiscoveryDocument(appConfig.discoveryDocument);
-
-      // i18n
-      const getValueOrDefault = (v: string | undefined | null) => v ? v : undefined;
-
-      const storedLang = getValueOrDefault(localStorage.getItem('language'));
-      const browserLang = getValueOrDefault(getBrowserLang());
-      const defaultLang = getValueOrDefault(translationService.getDefaultLang());
-
-      const chosenLang = storedLang ?? browserLang ?? defaultLang ?? 'en-US';
-      const finalLang = (<LanguageInfo[]>translationService.getAvailableLangs()).find(x => x.id === chosenLang)?.id ?? defaultLang;
-
-      translationService.setActiveLang(finalLang!);
-      const i18nSetup = translationService.load(finalLang!).toPromise();
-
-      // wait till setup is finished
-      Promise.all([authSetup, i18nSetup])
-        .then(() => resolve());
-    });
-
-  };
-}
 
 @NgModule({
   declarations: [
@@ -129,6 +77,7 @@ export function initializeApp(
       },
     }),
     TranslocoRootModule,
+    TranslocoLocaleModule,
     FormsModule,
     InputTextModule,
     RippleModule,
@@ -144,8 +93,7 @@ export function initializeApp(
     RadioButtonModule,
     MessageModule,
     MessagesModule,
-    ToastModule,
-    TranslocoLocaleModule
+    ToastModule
   ],
   providers: [
     {

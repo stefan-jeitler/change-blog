@@ -1,5 +1,5 @@
 export class TranslationKey {
-  public static userProfile = 'userProfile';
+	public static userProfile = 'userProfile';
 	public static apikey = 'apikey';
 	public static logout = 'logout';
 	public static languageChangedShort = 'languageChangedShort';

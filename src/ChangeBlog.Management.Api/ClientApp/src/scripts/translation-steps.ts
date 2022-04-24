@@ -5,57 +5,57 @@ import * as fs from 'fs';
 type TranslationObject = { [key: string]: any };
 const translations = defaultTranslations as TranslationObject;
 
+function normalizeKey(key: string) {
+  if(!key)
+    throw 'key is falsy';
+
+  return key.replace('-', '_');
+}
+
+function findInTranslations(transl: TranslationObject, key: string): object | string | undefined {
+  if(typeof transl !== 'object')
+    return undefined;
+
+  if(transl.hasOwnProperty(key))
+    return transl[key];
+
+  for(const t in transl){
+    if(transl.hasOwnProperty(t) && typeof transl[t] === 'object')
+      return findInTranslations(transl[t], key);
+  }
+
+  return undefined;
+}
+
+function generateEntry(transl: TranslationObject, key: string): string {
+  if(!key)
+    return '';
+
+  const currentItem = findInTranslations(transl, key);
+
+  if(!currentItem){
+    return '';
+  }
+
+  if(typeof currentItem === 'string')
+    return `public static ${normalizeKey(key)} = '${key}';`;
+
+  if(typeof currentItem !== 'object')
+    return '';
+
+  const nested = Object.keys(currentItem)
+    .filter(x => currentItem.hasOwnProperty(x))
+    .map(x => generateEntry(currentItem, x))
+    .join('');
+
+  return `public static ${normalizeKey(key)} = class { public static $key = '${normalizeKey(key)}';${nested}};`;
+}
+
 export function generateTranslationKeys(): void {
   const targetFile = 'src/app/generated/TranslationKey.ts';
 
   console.log('Use source file: ../assets/i18n/en.json');
   console.log('Use target file: ' + targetFile)
-
-  function normalizeKey(key: string) {
-    if(!key)
-      throw 'key is falsy';
-
-    return key.replace('-', '_');
-  }
-
-  function findInTranslations(transl: TranslationObject, key: string): object | string | undefined {
-    if(typeof transl !== 'object')
-      return undefined;
-
-    if(transl.hasOwnProperty(key))
-      return transl[key];
-
-    for(const t in transl){
-      if(transl.hasOwnProperty(t) && typeof transl[t] === 'object')
-        return findInTranslations(transl[t], key);
-    }
-
-    return undefined;
-  }
-
-  function generateEntry(transl: TranslationObject, key: string): string {
-    if(!key)
-      return '';
-
-    const currentItem = findInTranslations(transl, key);
-
-    if(!currentItem){
-      return '';
-    }
-
-    if(typeof currentItem === 'string')
-      return `public static ${normalizeKey(key)} = '${key}';`;
-
-    if(typeof currentItem !== 'object')
-      return '';
-
-    const nested = Object.keys(currentItem)
-      .filter(x => currentItem.hasOwnProperty(x))
-      .map(x => generateEntry(currentItem, x))
-      .join('');
-
-    return `public static ${normalizeKey(key)} = class { public static $key = '${normalizeKey(key)}';${nested}};`;
-  }
 
   console.log('Generating translation keys ...');
   const fields = Object.keys(translations)

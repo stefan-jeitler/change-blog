@@ -1,7 +1,12 @@
 {
+  "$name": "Name",
+  "email": "Email",
+  "timezone": "Zeitzone",
+  "culture": "Region",
   "userProfile": "Benutzerprofil",
   "apikey": "Api Schlüssel",
   "logout": "Abmelden",
+  "save": "Speichern",
   "languageChangedShort": "Sprache umgestellt",
   "languageChanged": "Die Sprache wurde auf {{ lang }} umgestellt.",
   "genericErrorMessageShort": "Fehler",

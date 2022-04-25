@@ -40,9 +40,12 @@ import {MessageModule} from "primeng/message";
 import {MessagesModule} from "primeng/messages";
 import {MessageService} from "primeng/api";
 import {ToastModule} from "primeng/toast";
+import {DropdownModule} from 'primeng/dropdown';
+import {ProgressSpinnerModule} from 'primeng/progressspinner';
 import {TranslocoLocaleModule} from "@ngneat/transloco-locale";
-import { ContentHeaderComponent } from './components/content-header/content-header.component';
+import {ContentHeaderComponent} from './components/content-header/content-header.component';
 import {initializeApp} from "./app-init";
+import { LoadingSpinnerComponent } from './components/loading-spinner/loading-spinner.component';
 
 
 @NgModule({
@@ -58,6 +61,7 @@ import {initializeApp} from "./app-init";
     LayoutComponent,
     RedirectComponent,
     ContentHeaderComponent,
+    LoadingSpinnerComponent,
   ],
   imports: [
     BrowserModule,
@@ -93,7 +97,9 @@ import {initializeApp} from "./app-init";
     RadioButtonModule,
     MessageModule,
     MessagesModule,
-    ToastModule
+    ToastModule,
+    DropdownModule,
+    ProgressSpinnerModule
   ],
   providers: [
     {
@@ -108,7 +114,7 @@ import {initializeApp} from "./app-init";
       deps: [APP_CONFIG],
       multi: true
     },
-    { provide: OAuthStorage, useValue: localStorage },
+    {provide: OAuthStorage, useValue: localStorage},
     ChangeBlogApi.Client,
     ChangeBlogManagementApi.Client,
     MessageService

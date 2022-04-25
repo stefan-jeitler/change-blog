@@ -1,33 +1,55 @@
 <app-content-header [title]="titleTranslationKey | transloco"></app-content-header>
 
-<div class="main-content">
-
-  <div class="flex align-items-center flex-row flex-wrap">
-    <div class="flex ml-2">
-      <div class="p-inputgroup">
-        <input [(ngModel)]="firstAndLastName" pInputText readonly type="text">
-      </div>
+<div class="app-content-container">
+  <div>
+    <div class="flex flex-column align-items-start">
+      <label class="ml-1 font-medium" for="first-name-input">{{ nameTranslationKey | transloco }}</label>
+      <input [(ngModel)]="firstAndLastName" class="mt-2 w-12 sm:w-12 md:w-30rem" id="first-name-input"
+             pInputText readonly type="text">
     </div>
 
-    <div class="flex ml-2">
-      <div class="p-inputgroup">
-        <span class="p-inputgroup-addon"><i class="pi pi-at"></i></span>
-        <input [(ngModel)]="currentUser.email" pInputText readonly type="text">
-      </div>
+    <div class="flex-column align-items-start mt-3 flex">
+      <label class="ml-1 font-medium" for="email-input">{{ emailTranslationKey | transloco }}</label>
+      <input [(ngModel)]="currentUser.email" class="mt-2 w-12 sm:w-12 md:w-30rem" id="email-input"
+             pInputText readonly type="text">
     </div>
 
-    <div class="flex ml-2">
-      <div class="p-inputgroup">
-        <span class="p-inputgroup-addon">TZ</span>
-        <input [(ngModel)]="currentUser.timeZone" pInputText readonly type="text">
-      </div>
+    <div class="flex flex-column align-items-start mt-3">
+      <label class="ml-1 font-medium" for="timezone-dropdown">{{ timezoneTranslationKey | transloco }}</label>
+      <p-dropdown [(ngModel)]="currentUser.timeZone"
+                  [options]="availableTimezones"
+                  [showClear]="false"
+                  styleClass="w-12 sm:w-12 md:w-30rem"
+                  id="timezone-dropdown"
+                  class="mt-2 w-12">
+
+      </p-dropdown>
     </div>
 
-    <div class="flex ml-2">
-      <div class="p-inputgroup">
-        <span class="p-inputgroup-addon">C</span>
-        <input [ngModel]="currentUser.culture" pInputText readonly type="text">
-      </div>
+    <div class="flex flex-column align-items-start mt-3">
+      <label class="ml-1 font-medium" for="culture-dropdown">{{ cultureTranslationKey | transloco }}</label>
+      <p-dropdown [(ngModel)]="currentUser.culture"
+                  [options]="availableCultures"
+                  [showClear]="false"
+                  scrollHeight="280px"
+                  styleClass="w-12 sm:w-12 md:w-30rem"
+                  id="culture-dropdown"
+                  class="mt-2 w-12">
+
+      </p-dropdown>
+    </div>
+
+    <div class="flex flex flex-row justify-content-end mt-6 mb-8 w-12 sm:w-12 md:w-30rem">
+      <button [loading]="false"
+              [label]="saveTranslationKey | transloco"
+              pButton
+              pRipple
+              type="button"
+              class="p-button"
+              icon="pi pi-save"
+              iconPos="right">
+
+      </button>
     </div>
   </div>
 </div>

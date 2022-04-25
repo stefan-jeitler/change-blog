@@ -27,12 +27,7 @@ h2 {
   padding-bottom: 1px;
 }
 
-.user-icon {
-  //height: 40px !important;
-  //width: 40px;
-}
-
-@media (min-width: calc(#{$mobile-breakpoint} + 1px)) {
+@media (min-width: $mobile-breakpoint) {
   .menu-icon {
     display: none;
   }

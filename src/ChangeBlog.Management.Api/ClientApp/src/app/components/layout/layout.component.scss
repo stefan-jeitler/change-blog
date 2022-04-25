@@ -28,7 +28,7 @@ p-sidebar {
   grid-area: content;
 }
 
-@media (max-width: $mobile-breakpoint) {
+@media (max-width: calc(#{$mobile-breakpoint} - 1px)) {
   .wrapper {
     grid-template-columns: auto;
     grid-template-areas:

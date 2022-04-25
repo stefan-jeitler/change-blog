@@ -20,10 +20,37 @@ export class ProfileComponent implements OnInit {
   constructor(private changeBlogApiClient: ChangeBlogApi.Client) {
     this._currentUser = this.emptyUser;
     this.titleTranslationKey = TranslationKey.userProfile;
+    this.nameTranslationKey = TranslationKey.$name
+    this.emailTranslationKey = TranslationKey.email;
+    this.timezoneTranslationKey = TranslationKey.timezone;
+    this.cultureTranslationKey = TranslationKey.culture;
+    this.saveTranslationKey = TranslationKey.save;
+
+    this.availableTimezones = [
+      'Europe/Berlin',
+      'Europe/Vienna',
+      'Europe/London',
+      'America/New_York'
+    ];
+
+    this.availableCultures = [
+      'de-AT',
+      'de-DE',
+      'de-CH',
+      'en-US',
+      'en-GB'
+    ];
   }
 
   private _currentUser: ChangeBlogApi.IUserDto;
   titleTranslationKey: string;
+  nameTranslationKey: string;
+  emailTranslationKey: string;
+  timezoneTranslationKey: string;
+  cultureTranslationKey: string;
+  saveTranslationKey: string;
+  availableTimezones: (string | undefined)[];
+  availableCultures: (string | undefined)[];
 
   get currentUser(): ChangeBlogApi.IUserDto {
     return this._currentUser ?? this.emptyUser;

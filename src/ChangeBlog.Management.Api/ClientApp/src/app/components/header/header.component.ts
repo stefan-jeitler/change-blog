@@ -46,7 +46,7 @@ export class HeaderComponent implements OnInit {
   get userName(): string {
     const claims = this.authService.getIdentityClaims() as IdentityUser;
 
-    return claims.emails.length > 0
+    return claims.emails?.length ?? 0 > 0
       ? claims.emails[0]
       : `${claims.given_name} ${claims.family_name}`;
   }

@@ -21,6 +21,8 @@ both should depend on a web service.
 
 The development team automatically pushes their changes during deployment with all the information the management team needs.
 
+[![Build Status](https://dev.azure.com/stefanjeitler/ChangeBlog/_apis/build/status/stefan-jeitler.changeblog?branchName=main)
+
 ## Table of Contents
 
 * [Basic Concept](#basic-concept)

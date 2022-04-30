@@ -1,28 +1,28 @@
-<app-content-header [title]="titleTranslationKey | transloco"></app-content-header>
+<app-content-header [title]="translationKey.userProfile | transloco"></app-content-header>
 <app-loading-spinner [show]="!isLoadingFinished"></app-loading-spinner>
 
 <div class="app-content-container">
   <div>
     <div class="flex flex-column align-items-start w-12 sm:w-12 md:w-30rem">
-      <div class="flex flex-row justify-content-between w-full">
-        <label class="ml-1 font-medium" for="first-name-input">{{ nameTranslationKey | transloco }}</label>
-        <i class="pi pi-info-circle" [pTooltip]="usernameTooltipTranslationKey | transloco"></i>
+      <div class="flex flex-row w-full">
+        <label class="font-medium" for="first-name-input">{{ translationKey.$name | transloco }}</label>
+        <i class="pi pi-info-circle ml-2" [pTooltip]="translationKey.userProfileUsernameInfo | transloco"></i>
       </div>
       <input [(ngModel)]="firstAndLastName" class="w-full mt-2" id="first-name-input"
              pInputText readonly type="text">
     </div>
 
     <div class="flex flex-column align-items-start mt-3 w-12 sm:w-12 md:w-30rem">
-      <div class="flex flex-row justify-content-between w-full">
-        <label class="ml-1 font-medium" for="first-name-input">{{ emailTranslationKey | transloco }}</label>
-        <i class="pi pi-info-circle" [pTooltip]="emailTooltipTranslationKey | transloco"></i>
+      <div class="flex flex-row w-full">
+        <label class="font-medium" for="first-name-input">{{ translationKey.email | transloco }}</label>
+        <i class="pi pi-info-circle ml-2" [pTooltip]="translationKey.userProfileEmailInfo | transloco"></i>
       </div>
       <input [(ngModel)]="currentUser.email" class="w-full mt-2" id="email-input"
              pInputText readonly type="text">
     </div>
 
     <div class="flex flex-column align-items-start mt-3">
-      <label class="ml-1 font-medium" for="timezone-dropdown">{{ timezoneTranslationKey | transloco }}</label>
+      <label class="font-medium" for="timezone-dropdown">{{ translationKey.timezone | transloco }}</label>
       <p-dropdown [(ngModel)]="currentUser.timeZone"
                   [options]="availableTimezones"
                   [showClear]="false"
@@ -34,7 +34,7 @@
     </div>
 
     <div class="flex flex-column align-items-start mt-3">
-      <label class="ml-1 font-medium" for="culture-dropdown">{{ cultureTranslationKey | transloco }}</label>
+      <label class="font-medium" for="culture-dropdown">{{ translationKey.culture | transloco }}</label>
       <p-dropdown [(ngModel)]="currentUser.culture"
                   [options]="availableCultures"
                   [showClear]="false"
@@ -48,7 +48,7 @@
 
     <div class="flex flex flex-row justify-content-end mt-6 mb-8 w-12 sm:w-12 md:w-30rem">
       <button [loading]="false"
-              [label]="saveTranslationKey | transloco"
+              [label]="translationKey.save | transloco"
               pButton
               pRipple
               type="button"

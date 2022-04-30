@@ -7,10 +7,8 @@ import {TranslationKey} from "../../generated/TranslationKey";
   styleUrls: ['./apikey.component.scss']
 })
 export class ApikeyComponent implements OnInit {
-  apiKey: string;
 
-  constructor() {
-    this.apiKey = TranslationKey.apikey;
+  constructor(public translationKey: TranslationKey) {
   }
 
   ngOnInit(): void {

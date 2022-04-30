@@ -1,16 +1,16 @@
 export class TranslationKey {
-	public static $name = '$name';
-	public static email = 'email';
-	public static timezone = 'timezone';
-	public static culture = 'culture';
-	public static userProfile = 'userProfile';
-	public static userProfileUsernameInfo = 'userProfileUsernameInfo';
-	public static userProfileEmailInfo = 'userProfileEmailInfo';
-	public static apikey = 'apikey';
-	public static logout = 'logout';
-	public static save = 'save';
-	public static languageChangedShort = 'languageChangedShort';
-	public static languageChanged = 'languageChanged';
-	public static genericErrorMessageShort = 'genericErrorMessageShort';
-	public static genericErrorMessage = 'genericErrorMessage';
+	public $name = '$name';
+	public email = 'email';
+	public timezone = 'timezone';
+	public culture = 'culture';
+	public userProfile = 'userProfile';
+	public userProfileUsernameInfo = 'userProfileUsernameInfo';
+	public userProfileEmailInfo = 'userProfileEmailInfo';
+	public apikey = 'apikey';
+	public logout = 'logout';
+	public save = 'save';
+	public languageChangedShort = 'languageChangedShort';
+	public languageChanged = 'languageChanged';
+	public genericErrorMessageShort = 'genericErrorMessageShort';
+	public genericErrorMessage = 'genericErrorMessage';
 }

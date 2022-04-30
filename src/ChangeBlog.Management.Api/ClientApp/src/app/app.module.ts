@@ -46,6 +46,7 @@ import {TranslocoLocaleModule} from "@ngneat/transloco-locale";
 import {ContentHeaderComponent} from './components/content-header/content-header.component';
 import {initializeApp} from "./app-init";
 import { LoadingSpinnerComponent } from './components/loading-spinner/loading-spinner.component';
+import {TranslationKey} from "./generated/TranslationKey";
 
 
 @NgModule({
@@ -117,7 +118,8 @@ import { LoadingSpinnerComponent } from './components/loading-spinner/loading-sp
     {provide: OAuthStorage, useValue: localStorage},
     ChangeBlogApi.Client,
     ChangeBlogManagementApi.Client,
-    MessageService
+    MessageService,
+    TranslationKey
   ],
   bootstrap: [AppComponent],
 })

@@ -38,7 +38,7 @@ function generateEntry(transl: TranslationObject, key: string): string {
   }
 
   if(typeof currentItem === 'string')
-    return `public static ${normalizeKey(key)} = '${key}';`;
+    return `public ${normalizeKey(key)} = '${key}';`;
 
   if(typeof currentItem !== 'object')
     return '';
@@ -48,7 +48,8 @@ function generateEntry(transl: TranslationObject, key: string): string {
     .map(x => generateEntry(currentItem, x))
     .join('');
 
-  return `public static ${normalizeKey(key)} = class { public static $key = '${normalizeKey(key)}';${nested}};`;
+  const nestedClassDeclaration = `public _${normalizeKey(key)} = class { public $key = '${normalizeKey(key)}';${nested}};`;
+  return `${nestedClassDeclaration} public ${normalizeKey(key)} = new this._${normalizeKey(key)}();`;
 }
 
 export function generateTranslationKeys(): void {

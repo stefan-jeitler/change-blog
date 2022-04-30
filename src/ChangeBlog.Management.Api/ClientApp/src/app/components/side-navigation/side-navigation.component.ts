@@ -15,6 +15,7 @@ export class SideNavigationComponent implements OnInit {
 
   constructor(@Inject(APP_CONFIG)
               private appConfig: AppConfig,
+              public translationKey: TranslationKey,
               private translationService: TranslocoService) {
     this.populateMenuItems();
 
@@ -22,19 +23,19 @@ export class SideNavigationComponent implements OnInit {
 
     // listen to userProfile only is enough and update all other labels
     this.translationService
-      .selectTranslate(TranslationKey.userProfile)
+      .selectTranslate(this.translationKey.userProfile)
       .subscribe(x => this.populateMenuItems());
   }
 
   private populateMenuItems() {
     this.menuItems = [
       {
-        label: translate(TranslationKey.userProfile),
+        label: translate(this.translationKey.userProfile),
         icon: 'pi pi-fw pi-user',
         routerLink: '/app/profile'
       },
       {
-        label: translate(TranslationKey.apikey),
+        label: translate(this.translationKey.apikey),
         icon: 'pi pi-fw pi-key',
         routerLink: "/app/apikey"
       }

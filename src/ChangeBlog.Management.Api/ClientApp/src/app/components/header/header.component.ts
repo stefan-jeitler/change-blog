@@ -18,8 +18,9 @@ export class HeaderComponent implements OnInit {
   langItems: MenuItem[];
 
   constructor(
-    private authService: OAuthService,
+    public translationKey: TranslationKey,
     private translationService: TranslocoService,
+    private authService: OAuthService,
     private messageService: MessageService
   ) {
     this.menuItems = [];
@@ -28,15 +29,15 @@ export class HeaderComponent implements OnInit {
     this.translationService.events$
       .pipe(filter(e => e.type === 'translationLoadSuccess' && e.wasFailure))
       .subscribe((x) => {
-          const genericerrorMessage = translate(TranslationKey.genericErrorMessageShort);
-          const isTranslationAvailableAtAll = !!genericerrorMessage && genericerrorMessage !== TranslationKey.genericErrorMessageShort;
+          const genericerrorMessage = translate(this.translationKey.genericErrorMessageShort);
+          const isTranslationAvailableAtAll = !!genericerrorMessage && genericerrorMessage !== this.translationKey.genericErrorMessageShort;
 
           // show error message only if at least one translation is available
           if (isTranslationAvailableAtAll) {
             this.messageService.add({
               severity: 'error',
               summary: genericerrorMessage,
-              detail: translate(TranslationKey.genericErrorMessage)
+              detail: translate(this.translationKey.genericErrorMessage)
             });
           }
         }
@@ -80,12 +81,12 @@ export class HeaderComponent implements OnInit {
         separator: true
       },
       {
-        label: translate(TranslationKey.userProfile),
+        label: translate(this.translationKey.userProfile),
         routerLink: '/app/profile',
         icon: 'pi pi-fw pi-user'
       },
       {
-        label: translate(TranslationKey.logout),
+        label: translate(this.translationKey.logout),
         icon: 'pi pi-fw pi-sign-out',
         command: () => {
           this.logout();
@@ -120,8 +121,8 @@ export class HeaderComponent implements OnInit {
           localStorage.setItem('language', targetLang.id);
           this.messageService.add({
             severity: 'success',
-            summary: translate(TranslationKey.languageChangedShort),
-            detail: translate(TranslationKey.languageChanged, {lang: targetLang.label})
+            summary: translate(this.translationKey.languageChangedShort),
+            detail: translate(this.translationKey.languageChanged, {lang: targetLang.label})
           });
         });
 

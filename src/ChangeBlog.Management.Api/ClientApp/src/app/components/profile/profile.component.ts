@@ -9,16 +9,6 @@ import {tap} from "rxjs/operators";
   styleUrls: ['./profile.component.scss']
 })
 export class ProfileComponent implements OnInit {
-  translationKey: TranslationKey = TranslationKey;
-
-  titleTranslationKey: string;
-  nameTranslationKey: string;
-  emailTranslationKey: string;
-  timezoneTranslationKey: string;
-  cultureTranslationKey: string;
-  saveTranslationKey: string;
-  usernameTooltipTranslationKey: string;
-  emailTooltipTranslationKey: string;
   availableTimezones: (string | undefined)[];
   availableCultures: (string | undefined)[];
   isLoadingFinished: boolean;
@@ -31,18 +21,8 @@ export class ProfileComponent implements OnInit {
     culture: ''
   };
 
-  constructor(private changeBlogApiClient: ChangeBlogApi.Client) {
+  constructor(public translationKey: TranslationKey, private changeBlogApiClient: ChangeBlogApi.Client) {
     this._currentUser = this.emptyUser;
-    this.titleTranslationKey = TranslationKey.userProfile;
-    this.nameTranslationKey = TranslationKey.$name
-    this.emailTranslationKey = TranslationKey.email;
-    this.timezoneTranslationKey = TranslationKey.timezone;
-    this.cultureTranslationKey = TranslationKey.culture;
-    this.saveTranslationKey = TranslationKey.save;
-    this.usernameTooltipTranslationKey = TranslationKey.userProfileUsernameInfo;
-    this.emailTooltipTranslationKey = TranslationKey.userProfileEmailInfo;
-
-    this.translationKey = TranslationKey;
 
     this.availableTimezones = [
       'Europe/Berlin',

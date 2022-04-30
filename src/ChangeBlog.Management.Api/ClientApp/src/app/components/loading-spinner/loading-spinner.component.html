@@ -1,5 +1,3 @@
-<div class="loading-overlay flex flex-row align-items-center justify-content-center">
-  <div class="align-items-center justify-content-center">
-    <p-progressSpinner styleClass="loading-spinner"></p-progressSpinner>
-  </div>
+<div *ngIf="showOverlay" class="loading-overlay flex flex-row justify-content-center">
+    <p-progressSpinner *ngIf="showSpinner" class="mt-6" styleClass="loading-spinner"></p-progressSpinner>
 </div>

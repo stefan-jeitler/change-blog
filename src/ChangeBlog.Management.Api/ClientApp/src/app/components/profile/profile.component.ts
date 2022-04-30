@@ -1,6 +1,7 @@
-import { ChangeBlogApi } from '../../../clients/ChangeBlogApiClient';
-import { Component, OnInit } from '@angular/core';
+import {ChangeBlogApi} from '../../../clients/ChangeBlogApiClient';
+import {Component, OnInit} from '@angular/core';
 import {TranslationKey} from "../../generated/TranslationKey";
+import {tap} from "rxjs/operators";
 
 @Component({
   selector: 'app-profile',
@@ -8,6 +9,15 @@ import {TranslationKey} from "../../generated/TranslationKey";
   styleUrls: ['./profile.component.scss'],
 })
 export class ProfileComponent implements OnInit {
+  titleTranslationKey: string;
+  nameTranslationKey: string;
+  emailTranslationKey: string;
+  timezoneTranslationKey: string;
+  cultureTranslationKey: string;
+  saveTranslationKey: string;
+  availableTimezones: (string | undefined)[];
+  availableCultures: (string | undefined)[];
+  isLoadingFinished: boolean;
   private readonly emptyUser: ChangeBlogApi.IUserDto = {
     id: '',
     email: '',
@@ -40,17 +50,11 @@ export class ProfileComponent implements OnInit {
       'en-US',
       'en-GB'
     ];
+
+    this.isLoadingFinished = false;
   }
 
   private _currentUser: ChangeBlogApi.IUserDto;
-  titleTranslationKey: string;
-  nameTranslationKey: string;
-  emailTranslationKey: string;
-  timezoneTranslationKey: string;
-  cultureTranslationKey: string;
-  saveTranslationKey: string;
-  availableTimezones: (string | undefined)[];
-  availableCultures: (string | undefined)[];
 
   get currentUser(): ChangeBlogApi.IUserDto {
     return this._currentUser ?? this.emptyUser;
@@ -59,11 +63,17 @@ export class ProfileComponent implements OnInit {
   get firstAndLastName(): string {
     return `${this.currentUser.firstName} ${this.currentUser.lastName}`;
   }
-  set firstAndLastName(value) {}
+
+  set firstAndLastName(value) {
+  }
 
   ngOnInit(): void {
     this.changeBlogApiClient
       .getUserInfo()
-      .subscribe((u) => (this._currentUser = u));
+      .pipe(tap(x => this.isLoadingFinished = true))
+      .subscribe((u) => {
+          this._currentUser = u;
+        },
+        error => console.error(error));
   }
 }

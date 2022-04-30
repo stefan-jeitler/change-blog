@@ -26,6 +26,7 @@ p-sidebar {
 
 .content {
   grid-area: content;
+  position: relative;
 }
 
 @media (max-width: calc(#{$mobile-breakpoint} - 1px)) {

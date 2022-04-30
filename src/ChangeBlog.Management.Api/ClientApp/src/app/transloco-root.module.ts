@@ -1,12 +1,4 @@
-import {HttpClient} from '@angular/common/http';
-import {
-  Translation,
-  TRANSLOCO_CONFIG,
-  TRANSLOCO_LOADER,
-  translocoConfig,
-  TranslocoLoader,
-  TranslocoModule
-} from '@ngneat/transloco';
+import {TRANSLOCO_CONFIG, TRANSLOCO_LOADER, translocoConfig, TranslocoLoader, TranslocoModule} from '@ngneat/transloco';
 import {Injectable, NgModule} from '@angular/core';
 import {environment} from '../environments/environment';
 import {TranslocoLocaleModule} from "@ngneat/transloco-locale";
@@ -19,12 +11,11 @@ export interface LanguageInfo {
 
 @Injectable({providedIn: 'root'})
 export class TranslocoHttpLoader implements TranslocoLoader {
-  constructor(private http: HttpClient) {
-
+  constructor() {
   }
 
   getTranslation(lang: string) {
-    return this.http.get<Translation>(`/assets/i18n/${lang}.json`);
+    return import(`../assets/i18n/${lang}.json`).then(res => res.default);
   }
 }
 

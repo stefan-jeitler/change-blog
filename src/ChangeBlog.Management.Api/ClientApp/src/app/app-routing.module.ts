@@ -42,8 +42,7 @@ export const routes: Routes = [
   },
   {
     path: '**',
-    component: RedirectComponent,
-
+    component: RedirectComponent
   }
 ];
 

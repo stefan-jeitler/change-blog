@@ -8,7 +8,7 @@
         <label class="font-medium" for="first-name-input">{{ translationKey.$name | transloco }}</label>
         <i class="pi pi-info-circle ml-2" [pTooltip]="translationKey.userProfileUsernameInfo | transloco"></i>
       </div>
-      <input [(ngModel)]="firstAndLastName" class="w-full mt-2" id="first-name-input"
+      <input [ngModel]="firstAndLastName" class="w-full mt-2" id="first-name-input"
              pInputText readonly type="text">
     </div>
 
@@ -17,7 +17,7 @@
         <label class="font-medium" for="first-name-input">{{ translationKey.email | transloco }}</label>
         <i class="pi pi-info-circle ml-2" [pTooltip]="translationKey.userProfileEmailInfo | transloco"></i>
       </div>
-      <input [(ngModel)]="currentUser.email" class="w-full mt-2" id="email-input"
+      <input [ngModel]="currentUser.email" class="w-full mt-2" id="email-input"
              pInputText readonly type="text">
     </div>
 

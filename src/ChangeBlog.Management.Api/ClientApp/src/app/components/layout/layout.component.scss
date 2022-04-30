@@ -39,5 +39,11 @@ p-sidebar {
     .side-nav {
       display: none;
     }
+
+    .head {
+      position: sticky;
+      top: 0;
+      z-index: 2;
+    }
   }
 }

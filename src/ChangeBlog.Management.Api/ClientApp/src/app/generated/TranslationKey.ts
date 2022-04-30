@@ -5,6 +5,7 @@ export class TranslationKey {
 	public static culture = 'culture';
 	public static userProfile = 'userProfile';
 	public static userProfileUsernameInfo = 'userProfileUsernameInfo';
+	public static userProfileEmailInfo = 'userProfileEmailInfo';
 	public static apikey = 'apikey';
 	public static logout = 'logout';
 	public static save = 'save';

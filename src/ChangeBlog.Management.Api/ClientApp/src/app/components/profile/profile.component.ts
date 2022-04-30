@@ -18,6 +18,7 @@ export class ProfileComponent implements OnInit {
   cultureTranslationKey: string;
   saveTranslationKey: string;
   usernameTooltipTranslationKey: string;
+  emailTooltipTranslationKey: string;
   availableTimezones: (string | undefined)[];
   availableCultures: (string | undefined)[];
   isLoadingFinished: boolean;
@@ -39,7 +40,7 @@ export class ProfileComponent implements OnInit {
     this.cultureTranslationKey = TranslationKey.culture;
     this.saveTranslationKey = TranslationKey.save;
     this.usernameTooltipTranslationKey = TranslationKey.userProfileUsernameInfo;
-
+    this.emailTooltipTranslationKey = TranslationKey.userProfileEmailInfo;
 
     this.translationKey = TranslationKey;
 

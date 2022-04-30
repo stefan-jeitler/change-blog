@@ -5,6 +5,7 @@
   "culture": "Region",
   "userProfile": "Benutzerprofil",
   "userProfileUsernameInfo": "Der Name kommt vom Identity Provider und kann deshalb nicht geändert werden",
+  "userProfileEmailInfo": "Die Emailadresse kommt vom Identity Provider und kann deshalb nicht geändert werden",
   "apikey": "Api Schlüssel",
   "logout": "Abmelden",
   "save": "Speichern",

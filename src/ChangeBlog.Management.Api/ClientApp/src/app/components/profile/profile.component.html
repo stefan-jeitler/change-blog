@@ -12,9 +12,12 @@
              pInputText readonly type="text">
     </div>
 
-    <div class="flex-column align-items-start mt-3 flex">
-      <label class="ml-1 font-medium" for="email-input">{{ emailTranslationKey | transloco }}</label>
-      <input [(ngModel)]="currentUser.email" class="mt-2 w-12 sm:w-12 md:w-30rem" id="email-input"
+    <div class="flex flex-column align-items-start mt-3 w-12 sm:w-12 md:w-30rem">
+      <div class="flex flex-row justify-content-between w-full">
+        <label class="ml-1 font-medium" for="first-name-input">{{ emailTranslationKey | transloco }}</label>
+        <i class="pi pi-info-circle" [pTooltip]="emailTooltipTranslationKey | transloco"></i>
+      </div>
+      <input [(ngModel)]="currentUser.email" class="w-full mt-2" id="email-input"
              pInputText readonly type="text">
     </div>
 

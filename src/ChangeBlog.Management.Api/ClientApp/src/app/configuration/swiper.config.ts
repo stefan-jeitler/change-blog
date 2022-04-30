@@ -5,6 +5,8 @@ import * as Hammer from "hammerjs";
 @Injectable()
 export class SwiperConfig extends HammerGestureConfig {
   overrides = <any>{
-    swipe: {direction: Hammer.DIRECTION_ALL},
+    swipe: {direction: Hammer.DIRECTION_HORIZONTAL},
+    pinch: { enable: false },
+    rotate: { enable: false }
   };
 }

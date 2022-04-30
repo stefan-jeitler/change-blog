@@ -1,6 +1,5 @@
-import { Component, OnInit } from '@angular/core';
+import {Component} from '@angular/core';
 import {ActivationEnd, Router} from "@angular/router";
-import {OAuthService} from "angular-oauth2-oidc";
 import {filter} from "rxjs/operators";
 import {Constants} from "../../../constants";
 
@@ -9,7 +8,7 @@ import {Constants} from "../../../constants";
   templateUrl: './layout.component.html',
   styleUrls: ['./layout.component.scss']
 })
-export class LayoutComponent implements OnInit {
+export class LayoutComponent {
   showMobileSideNav: boolean;
 
   constructor(private router: Router) {
@@ -26,12 +25,27 @@ export class LayoutComponent implements OnInit {
     this.showMobileSideNav = true;
   }
 
+  onSwipeRight($event: any) {
+    if (window.innerWidth < Constants.MobileBreakpoint.value) {
+      this.triggerMobileSideNav();
 
-  ngOnInit(): void {
+      setTimeout(() => {
+        let overlaySelector = '.p-component-overlay, .p-sidebar-mask, .p-component-overlay-enter';
+        const overlay: HTMLElement = document.querySelector(overlaySelector) as HTMLElement;
+
+        if (!!overlay) {
+          const manager = new Hammer(overlay)
+          manager.on('swipeleft', e => {
+            this.onSwipeLeft();
+            manager.off('swipeleft')
+          });
+        }
+
+      }, 100);
+    }
   }
 
-  onSwipeRight($event: any) {
-    if(window.innerWidth < Constants.MobileBreakpoint.value)
-      this.triggerMobileSideNav();
+  onSwipeLeft() {
+    this.showMobileSideNav = false;
   }
 }

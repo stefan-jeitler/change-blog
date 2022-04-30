@@ -4,6 +4,7 @@ export class TranslationKey {
 	public static timezone = 'timezone';
 	public static culture = 'culture';
 	public static userProfile = 'userProfile';
+	public static userProfileUsernameInfo = 'userProfileUsernameInfo';
 	public static apikey = 'apikey';
 	public static logout = 'logout';
 	public static save = 'save';

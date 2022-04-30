@@ -4,6 +4,7 @@
   "timezone": "Timezone",
   "culture": "Culture",
   "userProfile": "User Profile",
+  "userProfileUsernameInfo": "The username comes from the identity provider and therefore can't be modified in this application",
   "apikey": "Api Key",
   "logout": "Logout",
   "save": "Save",

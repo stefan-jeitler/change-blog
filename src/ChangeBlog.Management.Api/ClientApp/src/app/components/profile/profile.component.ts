@@ -6,15 +6,18 @@ import {tap} from "rxjs/operators";
 @Component({
   selector: 'app-profile',
   templateUrl: './profile.component.html',
-  styleUrls: ['./profile.component.scss'],
+  styleUrls: ['./profile.component.scss']
 })
 export class ProfileComponent implements OnInit {
+  translationKey: TranslationKey = TranslationKey;
+
   titleTranslationKey: string;
   nameTranslationKey: string;
   emailTranslationKey: string;
   timezoneTranslationKey: string;
   cultureTranslationKey: string;
   saveTranslationKey: string;
+  usernameTooltipTranslationKey: string;
   availableTimezones: (string | undefined)[];
   availableCultures: (string | undefined)[];
   isLoadingFinished: boolean;
@@ -35,6 +38,10 @@ export class ProfileComponent implements OnInit {
     this.timezoneTranslationKey = TranslationKey.timezone;
     this.cultureTranslationKey = TranslationKey.culture;
     this.saveTranslationKey = TranslationKey.save;
+    this.usernameTooltipTranslationKey = TranslationKey.userProfileUsernameInfo;
+
+
+    this.translationKey = TranslationKey;
 
     this.availableTimezones = [
       'Europe/Berlin',

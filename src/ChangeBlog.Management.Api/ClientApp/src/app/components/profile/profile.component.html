@@ -3,9 +3,12 @@
 
 <div class="app-content-container">
   <div>
-    <div class="flex flex-column align-items-start">
-      <label class="ml-1 font-medium" for="first-name-input">{{ nameTranslationKey | transloco }}</label>
-      <input [(ngModel)]="firstAndLastName" class="mt-2 w-12 sm:w-12 md:w-30rem" id="first-name-input"
+    <div class="flex flex-column align-items-start w-12 sm:w-12 md:w-30rem">
+      <div class="flex flex-row justify-content-between w-full">
+        <label class="ml-1 font-medium" for="first-name-input">{{ nameTranslationKey | transloco }}</label>
+        <i class="pi pi-info-circle" [pTooltip]="usernameTooltipTranslationKey | transloco"></i>
+      </div>
+      <input [(ngModel)]="firstAndLastName" class="w-full mt-2" id="first-name-input"
              pInputText readonly type="text">
     </div>
 

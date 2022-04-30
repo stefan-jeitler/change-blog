@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import {ActivationEnd, Router} from "@angular/router";
 import {OAuthService} from "angular-oauth2-oidc";
 import {filter} from "rxjs/operators";
+import {Constants} from "../../../constants";
 
 @Component({
   selector: 'app-layout',
@@ -11,7 +12,7 @@ import {filter} from "rxjs/operators";
 export class LayoutComponent implements OnInit {
   showMobileSideNav: boolean;
 
-  constructor(private router: Router, private authService: OAuthService) {
+  constructor(private router: Router) {
     this.showMobileSideNav = false;
 
     this.router.events
@@ -25,11 +26,12 @@ export class LayoutComponent implements OnInit {
     this.showMobileSideNav = true;
   }
 
-  get isLoggedIn(): boolean {
-    return this.authService.hasValidIdToken();
-  }
 
   ngOnInit(): void {
   }
 
+  onSwipeRight($event: any) {
+    if(window.innerWidth < Constants.MobileBreakpoint.value)
+      this.triggerMobileSideNav();
+  }
 }

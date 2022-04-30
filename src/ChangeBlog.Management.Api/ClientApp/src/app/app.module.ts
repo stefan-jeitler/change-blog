@@ -1,5 +1,5 @@
-import {APP_INITIALIZER, NgModule} from '@angular/core';
-import {BrowserModule} from '@angular/platform-browser';
+import {APP_INITIALIZER, Injectable, NgModule} from '@angular/core';
+import {BrowserModule, HAMMER_GESTURE_CONFIG, HammerGestureConfig, HammerModule} from '@angular/platform-browser';
 import {HttpClientModule} from '@angular/common/http';
 
 import {AppRoutingModule} from './app-routing.module';
@@ -47,7 +47,7 @@ import {ContentHeaderComponent} from './components/content-header/content-header
 import {initializeApp} from "./app-init";
 import { LoadingSpinnerComponent } from './components/loading-spinner/loading-spinner.component';
 import {TranslationKey} from "./generated/TranslationKey";
-
+import {SwiperConfig} from "./configuration/swiper.config";
 
 @NgModule({
   declarations: [
@@ -100,7 +100,8 @@ import {TranslationKey} from "./generated/TranslationKey";
     MessagesModule,
     ToastModule,
     DropdownModule,
-    ProgressSpinnerModule
+    ProgressSpinnerModule,
+    HammerModule
   ],
   providers: [
     {
@@ -116,6 +117,7 @@ import {TranslationKey} from "./generated/TranslationKey";
       multi: true
     },
     {provide: OAuthStorage, useValue: localStorage},
+    { provide: HAMMER_GESTURE_CONFIG, useClass: SwiperConfig },
     ChangeBlogApi.Client,
     ChangeBlogManagementApi.Client,
     MessageService,

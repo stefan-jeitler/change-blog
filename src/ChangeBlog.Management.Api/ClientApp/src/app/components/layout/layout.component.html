@@ -7,7 +7,8 @@
     <app-side-navigation [showTitle]="false"></app-side-navigation>
   </nav>
 
-  <section class="content surface-ground">
+  <section class="content surface-ground"
+           (swiperight)="onSwipeRight($event)">
       <router-outlet></router-outlet>
   </section>
 </div>

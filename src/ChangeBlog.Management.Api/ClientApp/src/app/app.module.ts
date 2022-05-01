@@ -1,5 +1,5 @@
-import {APP_INITIALIZER, Injectable, NgModule} from '@angular/core';
-import {BrowserModule, HAMMER_GESTURE_CONFIG, HammerGestureConfig, HammerModule} from '@angular/platform-browser';
+import {APP_INITIALIZER, NgModule} from '@angular/core';
+import {BrowserModule, HAMMER_GESTURE_CONFIG, HammerModule} from '@angular/platform-browser';
 import {HttpClientModule} from '@angular/common/http';
 
 import {AppRoutingModule} from './app-routing.module';
@@ -45,9 +45,9 @@ import {ProgressSpinnerModule} from 'primeng/progressspinner';
 import {TranslocoLocaleModule} from "@ngneat/transloco-locale";
 import {ContentHeaderComponent} from './components/content-header/content-header.component';
 import {initializeApp} from "./app-init";
-import { LoadingSpinnerComponent } from './components/loading-spinner/loading-spinner.component';
+import {LoadingSpinnerComponent} from './components/loading-spinner/loading-spinner.component';
 import {TranslationKey} from "./generated/TranslationKey";
-import {SwiperConfig} from "./configuration/swiper.config";
+import {SwipeConfig} from "./configuration/swipe-config.service";
 
 @NgModule({
   declarations: [
@@ -117,7 +117,7 @@ import {SwiperConfig} from "./configuration/swiper.config";
       multi: true
     },
     {provide: OAuthStorage, useValue: localStorage},
-    { provide: HAMMER_GESTURE_CONFIG, useClass: SwiperConfig },
+    {provide: HAMMER_GESTURE_CONFIG, useClass: SwipeConfig},
     ChangeBlogApi.Client,
     ChangeBlogManagementApi.Client,
     MessageService,

@@ -2,7 +2,8 @@ import {ChangeBlogApi} from '../../../clients/ChangeBlogApiClient';
 import {Component, OnInit} from '@angular/core';
 import {TranslationKey} from "../../generated/TranslationKey";
 import {tap} from "rxjs/operators";
-import {ChangeBlogManagementApi as MngmtApiClient} from "../../../clients/ChangeBlogManagementApiClient";
+import { ChangeBlogManagementApi as MngmtApiClient
+} from "../../../clients/ChangeBlogManagementApiClient";
 import {zip} from "rxjs";
 import ITimezoneDto = MngmtApiClient.ITimezoneDto;
 
@@ -70,5 +71,16 @@ export class ProfileComponent implements OnInit {
           },
           error => console.error(error));
     });
+  }
+
+  updateUserProfile() {
+    const dto = new MngmtApiClient.UpdateUserProfileDto()
+    dto.culture = this.currentUser.culture;
+    dto.timezone = this.selectedTimeZone.olsonId;
+
+    this.mngmtApiClient.updateUserProfile(dto)
+      .subscribe(x => {
+        console.log(x);
+      });
   }
 }

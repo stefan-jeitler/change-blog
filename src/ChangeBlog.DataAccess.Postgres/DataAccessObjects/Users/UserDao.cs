@@ -196,7 +196,7 @@ public class UserDao : IUserDao
             {
                 userId = user.Id,
                 timezone = user.TimeZone,
-                cutlure = user.Culture
+                culture = user.Culture
             });
         
         return Result.Success<User, Conflict>(await GetUserAsync(user.Id));

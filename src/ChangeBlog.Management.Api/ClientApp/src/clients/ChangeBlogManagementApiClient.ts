@@ -242,6 +242,83 @@ export class Client {
     }
 
     /**
+     * @param body (optional) 
+     * @return Success
+     */
+    updateUserProfile(body: UpdateUserProfileDto | undefined): Observable<DefaultResponse> {
+        let url_ = this.baseUrl + "/api/v1/user/profile";
+        url_ = url_.replace(/[?&]$/, "");
+
+        const content_ = JSON.stringify(body);
+
+        let options_ : any = {
+            body: content_,
+            observe: "response",
+            responseType: "blob",
+            headers: new HttpHeaders({
+                "Content-Type": "application/json",
+                "Accept": "application/json"
+            })
+        };
+
+        return this.http.request("patch", url_, options_).pipe(_observableMergeMap((response_ : any) => {
+            return this.processUpdateUserProfile(response_);
+        })).pipe(_observableCatch((response_: any) => {
+            if (response_ instanceof HttpResponseBase) {
+                try {
+                    return this.processUpdateUserProfile(response_ as any);
+                } catch (e) {
+                    return _observableThrow(e) as any as Observable<DefaultResponse>;
+                }
+            } else
+                return _observableThrow(response_) as any as Observable<DefaultResponse>;
+        }));
+    }
+
+    protected processUpdateUserProfile(response: HttpResponseBase): Observable<DefaultResponse> {
+        const status = response.status;
+        const responseBlob =
+            response instanceof HttpResponse ? response.body :
+            (response as any).error instanceof Blob ? (response as any).error : undefined;
+
+        let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
+        if (status === 401) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            let result401: any = null;
+            let resultData401 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            result401 = DefaultResponse.fromJS(resultData401);
+            return throwException("Unauthorized", status, _responseText, _headers, result401);
+            }));
+        } else if (status === 200) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            let result200: any = null;
+            let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            result200 = DefaultResponse.fromJS(resultData200);
+            return _observableOf(result200);
+            }));
+        } else if (status === 404) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            let result404: any = null;
+            let resultData404 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            result404 = DefaultResponse.fromJS(resultData404);
+            return throwException("Not Found", status, _responseText, _headers, result404);
+            }));
+        } else if (status === 409) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            let result409: any = null;
+            let resultData409 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            result409 = DefaultResponse.fromJS(resultData409);
+            return throwException("Conflict", status, _responseText, _headers, result409);
+            }));
+        } else if (status !== 200 && status !== 204) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            }));
+        }
+        return _observableOf<DefaultResponse>(null as any);
+    }
+
+    /**
      * @return Success
      */
     getSupportedCultures(): Observable<string[]> {
@@ -510,6 +587,46 @@ export interface ITimezoneDto {
     windowsId: string | undefined;
     olsonId: string | undefined;
     offset: string | undefined;
+}
+
+export class UpdateUserProfileDto implements IUpdateUserProfileDto {
+    timezone!: string | undefined;
+    culture!: string | undefined;
+
+    constructor(data?: IUpdateUserProfileDto) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+        }
+    }
+
+    init(_data?: any) {
+        if (_data) {
+            this.timezone = _data["timezone"];
+            this.culture = _data["culture"];
+        }
+    }
+
+    static fromJS(data: any): UpdateUserProfileDto {
+        data = typeof data === 'object' ? data : {};
+        let result = new UpdateUserProfileDto();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        data["timezone"] = this.timezone;
+        data["culture"] = this.culture;
+        return data;
+    }
+}
+
+export interface IUpdateUserProfileDto {
+    timezone: string | undefined;
+    culture: string | undefined;
 }
 
 export class UserDto implements IUserDto {

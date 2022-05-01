@@ -1,6 +1,8 @@
+export type DistanceUnit = 'px' | 'rem' | 'em' | '%' | 'vw' | 'vh' ;
+
 export interface Distance {
   value: number,
-  unit: string
+  unit: DistanceUnit
 }
 
 export class Constants {

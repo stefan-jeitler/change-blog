@@ -21,13 +21,13 @@ export class LayoutComponent {
       });
   }
 
-  triggerMobileSideNav() {
+  openMobileSideNav() {
     this.showMobileSideNav = true;
   }
 
   onSwipeRight($event: any) {
     if (window.innerWidth < Constants.MobileBreakpoint.value) {
-      this.triggerMobileSideNav();
+      this.openMobileSideNav();
 
       setTimeout(() => {
         let overlaySelector = '.p-component-overlay, .p-sidebar-mask, .p-component-overlay-enter';

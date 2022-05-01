@@ -14,8 +14,8 @@ public interface IUserDao
 
     Task<Maybe<User>> FindByExternalUserIdAsync(string externalUserId);
 
+    Task<Maybe<User>> FindByEmailAsync(string email);
     Task<Result> AddAsync(User user);
     Task<Result> AddExternalIdentity(Models.ExternalIdentity externalIdentity);
-
-    Task<Maybe<User>> FindByEmailAsync(string email);
+    Task<Result<User, Conflict>> UpdateCultureAndTimezoneAsync(User user);
 }

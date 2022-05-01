@@ -51,4 +51,14 @@ public class User
     public DateTime? DeletedAt { get; }
 
     public DateTime CreatedAt { get; }
+    
+    public User UpdateTimezone(Name timezone)
+    {
+        return new User(Id, Email, FirstName, LastName, timezone, Culture, DeletedAt, CreatedAt);
+    }
+
+    public User UpdateCulture(Name culture)
+    {
+        return new User(Id, Email, FirstName, LastName, TimeZone, culture, DeletedAt, CreatedAt);
+    }
 }

@@ -21,7 +21,6 @@ namespace ChangeBlog.Management.Api.Controllers.v1;
 [Route("api/v1/user")]
 [Produces(MediaTypeNames.Application.Json)]
 [ProducesResponseType(typeof(DefaultResponse), StatusCodes.Status401Unauthorized)]
-[ProducesResponseType(typeof(DefaultResponse), StatusCodes.Status403Forbidden)]
 [SwaggerControllerOrder(1)]
 public class UserController : ControllerBase
 {
@@ -40,7 +39,7 @@ public class UserController : ControllerBase
         return Ok(DefaultResponse.Create("It has now been ensured that the user is available in the app."));
     }
     
-    [HttpGet("info", Name = "GetUserInfo")]
+    [HttpGet("profile", Name = "GetUserProfile")]
     [ProducesResponseType(StatusCodes.Status200OK)]
     [SkipAuthorization]
     public async Task<ActionResult<UserDto>> GetUserInfoAsync()

@@ -23,7 +23,7 @@ export class ProfileComponent implements OnInit {
     firstName: '',
     lastName: '',
     timeZone: '',
-    culture: ''
+    culture: 'en-US'
   };
   private readonly utc: ITimezoneDto = {
     windowsId: 'UTC',
@@ -62,7 +62,7 @@ export class ProfileComponent implements OnInit {
 
     zip(loadTimezones, loadCulture).subscribe(() => {
       this.mngmtApiClient
-        .getUserInfo()
+        .getUserProfile()
         .pipe(tap(x => this.isLoadingFinished = true))
         .subscribe((u) => {
             this.currentUser = u;

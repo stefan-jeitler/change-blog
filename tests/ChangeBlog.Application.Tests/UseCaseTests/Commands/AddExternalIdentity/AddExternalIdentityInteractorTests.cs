@@ -211,7 +211,7 @@ public class AddExternalIdentityInteractorTests
             testUser.FirstName,
             "TestIdentity");
 
-        _fakeUserDao.ProduceFailureWhileImporting = true;
+        _fakeUserDao.ProduceFailure = true;
         var interactor = CreateInteractor();
 
         // act

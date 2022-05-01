@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using ChangeBlog.Application.Boundaries.DataAccess;
 using ChangeBlog.Application.Boundaries.DataAccess.Users;
 using ChangeBlog.Application.Models;
 using ChangeBlog.Domain;
@@ -13,7 +14,7 @@ public class FakeUserDao : IUserDao
 {
     public List<User> Users { get; } = new();
     public List<ExternalIdentity> ExternalIdentities { get; } = new();
-    public bool ProduceFailureWhileImporting { get; set; }
+    public bool ProduceFailure { get; set; }
 
     public async Task<User> GetUserAsync(Guid userId)
     {
@@ -59,7 +60,7 @@ public class FakeUserDao : IUserDao
     {
         await Task.Yield();
 
-        if (ProduceFailureWhileImporting)
+        if (ProduceFailure)
         {
             return Result.Failure("Something went wrong.");
         }
@@ -67,6 +68,23 @@ public class FakeUserDao : IUserDao
         ExternalIdentities.Add(externalIdentity);
 
         return Result.Success();
+    }
+
+    public async Task<Result<User, Conflict>> UpdateCultureAndTimezoneAsync(User user)
+    {
+        await Task.Yield();
+
+        if (ProduceFailure)
+            return Result.Failure<User, Conflict>(new ConflictStub());
+        
+        var existingUserIndex = Users.FindIndex(x => x.Id == user.Id);
+
+        if (existingUserIndex != -1)
+        {
+            Users[existingUserIndex] = user;
+        }
+
+        return Result.Success<User, Conflict>(user);
     }
 
     public async Task<Maybe<User>> FindByEmailAsync(string email)

@@ -168,13 +168,6 @@ export class Client {
             result401 = DefaultResponse.fromJS(resultData401);
             return throwException("Unauthorized", status, _responseText, _headers, result401);
             }));
-        } else if (status === 403) {
-            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
-            let result403: any = null;
-            let resultData403 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
-            result403 = DefaultResponse.fromJS(resultData403);
-            return throwException("Forbidden", status, _responseText, _headers, result403);
-            }));
         } else if (status === 200) {
             return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
             let result200: any = null;
@@ -193,8 +186,8 @@ export class Client {
     /**
      * @return Success
      */
-    getUserInfo(): Observable<UserDto> {
-        let url_ = this.baseUrl + "/api/v1/user/info";
+    getUserProfile(): Observable<UserDto> {
+        let url_ = this.baseUrl + "/api/v1/user/profile";
         url_ = url_.replace(/[?&]$/, "");
 
         let options_ : any = {
@@ -206,11 +199,11 @@ export class Client {
         };
 
         return this.http.request("get", url_, options_).pipe(_observableMergeMap((response_ : any) => {
-            return this.processGetUserInfo(response_);
+            return this.processGetUserProfile(response_);
         })).pipe(_observableCatch((response_: any) => {
             if (response_ instanceof HttpResponseBase) {
                 try {
-                    return this.processGetUserInfo(response_ as any);
+                    return this.processGetUserProfile(response_ as any);
                 } catch (e) {
                     return _observableThrow(e) as any as Observable<UserDto>;
                 }
@@ -219,7 +212,7 @@ export class Client {
         }));
     }
 
-    protected processGetUserInfo(response: HttpResponseBase): Observable<UserDto> {
+    protected processGetUserProfile(response: HttpResponseBase): Observable<UserDto> {
         const status = response.status;
         const responseBlob =
             response instanceof HttpResponse ? response.body :
@@ -232,13 +225,6 @@ export class Client {
             let resultData401 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
             result401 = DefaultResponse.fromJS(resultData401);
             return throwException("Unauthorized", status, _responseText, _headers, result401);
-            }));
-        } else if (status === 403) {
-            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
-            let result403: any = null;
-            let resultData403 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
-            result403 = DefaultResponse.fromJS(resultData403);
-            return throwException("Forbidden", status, _responseText, _headers, result403);
             }));
         } else if (status === 200) {
             return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
@@ -297,13 +283,6 @@ export class Client {
             let resultData401 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
             result401 = DefaultResponse.fromJS(resultData401);
             return throwException("Unauthorized", status, _responseText, _headers, result401);
-            }));
-        } else if (status === 403) {
-            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
-            let result403: any = null;
-            let resultData403 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
-            result403 = DefaultResponse.fromJS(resultData403);
-            return throwException("Forbidden", status, _responseText, _headers, result403);
             }));
         } else if (status === 200) {
             return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
@@ -369,13 +348,6 @@ export class Client {
             let resultData401 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
             result401 = DefaultResponse.fromJS(resultData401);
             return throwException("Unauthorized", status, _responseText, _headers, result401);
-            }));
-        } else if (status === 403) {
-            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
-            let result403: any = null;
-            let resultData403 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
-            result403 = DefaultResponse.fromJS(resultData403);
-            return throwException("Forbidden", status, _responseText, _headers, result403);
             }));
         } else if (status === 200) {
             return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {

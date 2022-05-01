@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
+using ChangeBlog.Application.Boundaries.DataAccess;
 using ChangeBlog.Application.Boundaries.DataAccess.Users;
 using ChangeBlog.Application.Models;
 using ChangeBlog.Domain;
@@ -184,6 +185,21 @@ public class UserDao : IUserDao
             _logger.LogError(exception, "Error while adding external identity");
             return Result.Failure(exception.Message);
         }
+    }
+
+    public async Task<Result<User, Conflict>> UpdateCultureAndTimezoneAsync(User user)
+    {
+        const string updateSql = @"UPDATE ""user"" SET timezone = @timezone, culture = @culture WHERE id = @userId";
+
+        await _dbAccessor.DbConnection
+            .ExecuteAsync(updateSql, new
+            {
+                userId = user.Id,
+                timezone = user.TimeZone,
+                cutlure = user.Culture
+            });
+        
+        return Result.Success<User, Conflict>(await GetUserAsync(user.Id));
     }
 
     public async Task<Result> AddAsync(User user)

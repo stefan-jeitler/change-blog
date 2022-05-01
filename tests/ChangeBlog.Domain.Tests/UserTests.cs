@@ -19,7 +19,7 @@ public class UserTests
     public UserTests()
     {
         _testUserId = Guid.Parse("315dc849-7c17-4268-93a1-40b7ab337c68");
-        _testEmail = Email.Parse("stefan@changeLog");
+        _testEmail = Email.Parse("stefan@changeBlog");
         _testFirstName = Name.Parse("Stefan");
         _testLastName = Name.Parse("Jeitler");
         _testTimeZone = Name.Parse("Europe/Berlin");
@@ -130,5 +130,54 @@ public class UserTests
         var act = CreateUser;
 
         act.Should().ThrowExactly<ArgumentException>();
+    }
+    
+    [Fact]
+    public void UpdateTimezone_ValidTimezone_ReturnsUserWithUpdatedTimezone()
+    {
+        _testTimeZone = Name.Parse("Europe/Berlin");
+        var newTimezone = Name.Parse("Europe/Vienna");
+        var testUser = CreateUser();
+
+        var updatedUser = testUser.UpdateTimezone(newTimezone);
+
+        updatedUser.TimeZone.Should().Be(newTimezone);
+        testUser.TimeZone.Should().Be(_testTimeZone);
+    }
+        
+    [Fact]
+    public void UpdateTimezone_WithNullArgument_ArgumentNullException()
+    {
+        _testTimeZone = Name.Parse("Europe/Berlin");
+        var testUser = CreateUser();
+
+        var act = () => testUser.UpdateTimezone(null);
+
+        act.Should().ThrowExactly<ArgumentNullException>();
+    }
+    
+        
+    [Fact]
+    public void UpdateCulture_ValidTimezone_ReturnsUserWithUpdatedTimezone()
+    {
+        _testCulture = Name.Parse("de-AT");
+        var newCulture = Name.Parse("en-US");
+        var testUser = CreateUser();
+
+        var updatedUser = testUser.UpdateCulture(newCulture);
+
+        updatedUser.Culture.Should().Be(newCulture);
+        testUser.Culture.Should().Be(_testCulture);
+    }
+        
+    [Fact]
+    public void UpdateCulture_WithNullArgument_ArgumentNullException()
+    {
+        _testTimeZone = Name.Parse("Europe/Berlin");
+        var testUser = CreateUser();
+
+        var act = () => testUser.UpdateTimezone(null);
+
+        act.Should().ThrowExactly<ArgumentNullException>();
     }
 }

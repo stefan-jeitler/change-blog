@@ -5,11 +5,12 @@ import * as Hammer from "hammerjs";
 @Injectable()
 export class SwipeConfig extends HammerGestureConfig {
   overrides = <any>{
-    swipe: {direction: Hammer.DIRECTION_RIGHT},
+    swipe: {direction: Hammer.DIRECTION_HORIZONTAL},
     pinch: { enable: false },
-    rotate: { enable: false },
-    pan: {enable: false},
-    press: {enable: false},
-    tap: {enable: false}
-  }
+    rotate: { enable: false }
+  };
+
+  options = <any>{
+    touchAction: 'pan-y'
+  };
 }

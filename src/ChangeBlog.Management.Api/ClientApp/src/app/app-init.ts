@@ -1,12 +1,12 @@
 import {Router} from "@angular/router";
 import {OAuthService} from "angular-oauth2-oidc";
 import {AppConfig} from "../../app.config";
-import {ChangeBlogManagementApi} from "../clients/ChangeBlogManagementApiClient";
+import {ChangeBlogManagementApi as MngmtApiClient} from "../clients/ChangeBlogManagementApiClient";
 import {getBrowserLang, TranslocoService} from "@ngneat/transloco";
 import {filter, mergeMap} from "rxjs/operators";
-import {LanguageInfo} from "./transloco-root.module";
+import {TranslocoLocaleService} from "@ngneat/transloco-locale";
 
-function initializeAuthentication(oAuthService: OAuthService, appConfig: AppConfig, apiClient: ChangeBlogManagementApi.Client) {
+function initializeAuthentication(oAuthService: OAuthService, appConfig: AppConfig, apiClient: MngmtApiClient.Client) {
   oAuthService.configure(appConfig.authConfig);
   oAuthService.setupAutomaticSilentRefresh();
 
@@ -25,33 +25,41 @@ function initializeAuthentication(oAuthService: OAuthService, appConfig: AppConf
   return oAuthService.loadDiscoveryDocument(appConfig.discoveryDocument);
 }
 
-function initializeI18n(translationService: TranslocoService) {
-  const getValueOrDefault = (v: string | undefined | null) => v ? v : undefined;
+function initializeI18n(translationService: TranslocoService, translocoLocaleService: TranslocoLocaleService, apiClient: MngmtApiClient.Client) {
+  return new Promise<void>((resolve, reject) => {
+    apiClient.getUserProfile()
+      .subscribe(x => {
+        debugger;
 
-  const storedLang = getValueOrDefault(localStorage.getItem('language'));
-  const browserLang = getValueOrDefault(getBrowserLang());
-  const defaultLang = getValueOrDefault(translationService.getDefaultLang());
+        const lang = x.culture?.split("-")[0];
+        translocoLocaleService.setLocale(x.culture ?? 'en-US');
 
-  const chosenLang = storedLang ?? browserLang ?? defaultLang ?? 'en-US';
-  const finalLang = (<LanguageInfo[]>translationService.getAvailableLangs()).find(x => x.id === chosenLang)?.id ?? defaultLang;
+        const language = lang ?? getBrowserLang() ?? translationService.getDefaultLang();
 
-  translationService.setActiveLang(finalLang!);
-  return translationService.load(finalLang!).toPromise();
+        translationService.setActiveLang(language);
+        translationService.load(language)
+          .toPromise()
+          .then(x => {
+            resolve();
+          });
+      });
+  });
 }
 
 export function initializeApp(
   router: Router,
   oAuthService: OAuthService,
   appConfig: AppConfig,
-  apiClient: ChangeBlogManagementApi.Client,
-  translationService: TranslocoService
+  apiClient: MngmtApiClient.Client,
+  translationService: TranslocoService,
+  translocoLocaleService: TranslocoLocaleService
 ): () => Promise<void> {
   return () => {
     return new Promise<void>((resolve, reject) => {
       router.onSameUrlNavigation = 'reload';
 
       const authSetup = initializeAuthentication(oAuthService, appConfig, apiClient);
-      const i18nSetup = initializeI18n(translationService);
+      const i18nSetup = initializeI18n(translationService, translocoLocaleService, apiClient);
 
       // wait till setup is finished
       Promise.all([authSetup, i18nSetup])

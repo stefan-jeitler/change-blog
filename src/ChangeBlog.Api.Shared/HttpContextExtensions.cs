@@ -9,7 +9,7 @@ public static class HttpContextExtensions
     public static Guid GetUserId(this HttpContext httpContext)
     {
         var userIdValue = httpContext
-            .User.FindFirstValue(Constants.AppClaims.UserId);
+            .User.FindFirstValue(ApiConstants.AppClaims.UserId);
 
         return Guid.TryParse(userIdValue, out var userId)
             ? userId

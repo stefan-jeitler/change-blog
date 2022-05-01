@@ -22,13 +22,22 @@
 
   <div class="flex flex-column align-items-start mt-3 w-12 md:w-30rem">
     <label class="font-medium" for="timezone-dropdown">{{ translationKey.timezone | transloco }}</label>
-    <p-dropdown [(ngModel)]="currentUser.timeZone"
+    <p-dropdown [(ngModel)]="selectedTimeZone"
                 [options]="availableTimezones"
                 [showClear]="false"
+                [filter]="true" filterBy="windowsId,offset"
                 class="mt-2 w-12"
                 id="timezone-dropdown"
-                styleClass="w-full">
-
+                styleClass="w-full"
+                scrollHeight="300px">
+      <ng-template pTemplate="selectedItem">
+        <div class="timezone-item timezone-item-value"  *ngIf="selectedTimeZone">
+          <span>({{selectedTimeZone.offset}}) {{selectedTimeZone.windowsId}}</span>
+        </div>
+      </ng-template>
+      <ng-template let-timezone pTemplate="item">
+        <span>({{timezone.offset}}) {{timezone.windowsId}}</span>
+      </ng-template>
     </p-dropdown>
   </div>
 

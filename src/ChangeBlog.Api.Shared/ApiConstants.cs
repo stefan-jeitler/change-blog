@@ -1,6 +1,6 @@
 ﻿namespace ChangeBlog.Api.Shared;
 
-public static class Constants
+public static class ApiConstants
 {
     public static class AppClaims
     {

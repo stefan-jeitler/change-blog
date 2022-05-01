@@ -10,6 +10,7 @@ using ChangeBlog.Api.DTOs.V1.Product;
 using ChangeBlog.Api.Shared;
 using ChangeBlog.Api.Shared.Authorization;
 using ChangeBlog.Api.Shared.DTOs;
+using ChangeBlog.Api.Shared.DTOs.V1.User;
 using ChangeBlog.Api.Shared.Swagger;
 using ChangeBlog.Application.UseCases.Queries.GetAccounts;
 using ChangeBlog.Application.UseCases.Queries.GetProducts;

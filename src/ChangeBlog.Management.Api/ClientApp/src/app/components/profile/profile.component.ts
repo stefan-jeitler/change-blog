@@ -2,6 +2,10 @@ import {ChangeBlogApi} from '../../../clients/ChangeBlogApiClient';
 import {Component, OnInit} from '@angular/core';
 import {TranslationKey} from "../../generated/TranslationKey";
 import {tap} from "rxjs/operators";
+import {ChangeBlogManagementApi as MngmtApiClient} from "../../../clients/ChangeBlogManagementApiClient";
+import {zip} from "rxjs";
+import ITimezoneDto = MngmtApiClient.ITimezoneDto;
+
 
 @Component({
   selector: 'app-profile',
@@ -9,9 +13,10 @@ import {tap} from "rxjs/operators";
   styleUrls: ['./profile.component.scss']
 })
 export class ProfileComponent implements OnInit {
-  availableTimezones: (string | undefined)[];
-  availableCultures: (string | undefined)[];
+  availableTimezones: ITimezoneDto[];
+  availableCultures: string[];
   isLoadingFinished: boolean;
+  selectedTimeZone: ITimezoneDto;
   private readonly emptyUser: ChangeBlogApi.IUserDto = {
     id: '',
     email: '',
@@ -20,33 +25,23 @@ export class ProfileComponent implements OnInit {
     timeZone: '',
     culture: ''
   };
+  private readonly utc: ITimezoneDto = {
+    windowsId: 'UTC',
+    olsonId: 'Etc/UTC',
+    offset: '+00:00'
+  };
 
-  constructor(public translationKey: TranslationKey, private changeBlogApiClient: ChangeBlogApi.Client) {
-    this._currentUser = this.emptyUser;
+  constructor(public translationKey: TranslationKey, private mngmtApiClient: MngmtApiClient.Client) {
+    this.currentUser = this.emptyUser;
+    this.selectedTimeZone = this.utc;
 
-    this.availableTimezones = [
-      'Europe/Berlin',
-      'Europe/Vienna',
-      'Europe/London',
-      'America/New_York'
-    ];
-
-    this.availableCultures = [
-      'de-AT',
-      'de-DE',
-      'de-CH',
-      'en-US',
-      'en-GB'
-    ];
+    this.availableTimezones = [];
+    this.availableCultures = [];
 
     this.isLoadingFinished = false;
   }
 
-  private _currentUser: ChangeBlogApi.IUserDto;
-
-  get currentUser(): ChangeBlogApi.IUserDto {
-    return this._currentUser ?? this.emptyUser;
-  }
+  currentUser: ChangeBlogApi.IUserDto;
 
   get firstAndLastName(): string {
     return `${this.currentUser.firstName} ${this.currentUser.lastName}`;
@@ -56,12 +51,24 @@ export class ProfileComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    this.changeBlogApiClient
-      .getUserInfo()
-      .pipe(tap(x => this.isLoadingFinished = true))
-      .subscribe((u) => {
-          this._currentUser = u;
-        },
-        error => console.error(error));
+
+    const loadTimezones = this.mngmtApiClient
+      .getSupportedTimezones();
+    loadTimezones.subscribe(t => this.availableTimezones = t);
+
+    const loadCulture = this.mngmtApiClient
+      .getSupportedCultures()
+    loadCulture.subscribe(x => this.availableCultures = x);
+
+    zip(loadTimezones, loadCulture).subscribe(() => {
+      this.mngmtApiClient
+        .getUserInfo()
+        .pipe(tap(x => this.isLoadingFinished = true))
+        .subscribe((u) => {
+            this.currentUser = u;
+            this.selectedTimeZone = this.availableTimezones.find(x => x.olsonId === u.timeZone) ?? this.utc;
+          },
+          error => console.error(error));
+    });
   }
 }

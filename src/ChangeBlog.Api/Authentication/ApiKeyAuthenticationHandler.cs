@@ -51,7 +51,7 @@ public class ApiKeyAuthenticationHandler : AuthenticationHandler<ApiKeyAuthentic
     {
         var identity = new ClaimsIdentity(new List<Claim>
         {
-            new(Constants.AppClaims.UserId, userId.ToString())
+            new(ApiConstants.AppClaims.UserId, userId.ToString())
         }, ApiKeyAuthenticationOptions.AuthenticationType);
 
         var identities = new List<ClaimsIdentity> {identity};

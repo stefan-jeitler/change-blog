@@ -1,7 +1,7 @@
 using System;
 using ChangeBlog.Application.UseCases.Queries.GetUsers;
 
-namespace ChangeBlog.Api.DTOs.V1.Account;
+namespace ChangeBlog.Api.Shared.DTOs.V1.User;
 
 public class UserDto
 {

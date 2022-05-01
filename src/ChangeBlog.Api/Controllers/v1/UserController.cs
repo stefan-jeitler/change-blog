@@ -11,7 +11,6 @@ using ChangeBlog.Api.Shared.Authorization;
 using ChangeBlog.Api.Shared.DTOs;
 using ChangeBlog.Api.Shared.Swagger;
 using ChangeBlog.Application.UseCases.Queries.GetProducts;
-using ChangeBlog.Application.UseCases.Queries.GetUsers;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
@@ -25,13 +24,11 @@ namespace ChangeBlog.Api.Controllers.V1;
 [SwaggerControllerOrder(2)]
 public class UserController : ControllerBase
 {
-    private readonly IGetUsers _getUser;
     private readonly IGetUserProducts _getUserProducts;
 
-    public UserController(IGetUserProducts getUserProducts, IGetUsers getUser)
+    public UserController(IGetUserProducts getUserProducts)
     {
         _getUserProducts = getUserProducts;
-        _getUser = getUser;
     }
 
     [HttpGet("products", Name = "GetUserProducts")]
@@ -52,16 +49,5 @@ public class UserController : ControllerBase
         var products = await _getUserProducts.ExecuteAsync(requestModel);
 
         return Ok(products.Select(ProductDto.FromResponseModel));
-    }
-
-    [HttpGet("info", Name = "GetUserInfo")]
-    [ProducesResponseType(StatusCodes.Status200OK)]
-    [SkipAuthorization]
-    public async Task<ActionResult<UserDto>> GetUserInfoAsync()
-    {
-        var userId = HttpContext.GetUserId();
-        var user = await _getUser.ExecuteAsync(userId);
-
-        return Ok(UserDto.FromResponseModel(user));
     }
 }

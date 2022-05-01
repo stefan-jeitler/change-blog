@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 using ChangeBlog.Api.DTOs;
 using ChangeBlog.Api.DTOs.V1.Account;
 using ChangeBlog.Api.DTOs.V1.Product;
+using ChangeBlog.Api.Shared.DTOs.V1.User;
 using FluentAssertions;
 using Microsoft.AspNetCore.Mvc.Testing;
 using Xunit;

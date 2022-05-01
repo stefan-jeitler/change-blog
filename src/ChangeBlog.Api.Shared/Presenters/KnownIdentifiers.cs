@@ -1,4 +1,4 @@
-﻿namespace ChangeBlog.Api.Presenters;
+﻿namespace ChangeBlog.Api.Shared.Presenters;
 
 public static class KnownIdentifiers
 {

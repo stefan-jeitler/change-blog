@@ -1,6 +1,6 @@
 using Microsoft.AspNetCore.Mvc;
 
-namespace ChangeBlog.Api.Presenters;
+namespace ChangeBlog.Api.Shared.Presenters;
 
 public abstract class BaseApiPresenter
 {

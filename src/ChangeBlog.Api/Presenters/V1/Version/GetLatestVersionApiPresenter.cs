@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using ChangeBlog.Api.DTOs.V1.Version;
 using ChangeBlog.Api.Shared.DTOs;
+using ChangeBlog.Api.Shared.Presenters;
 using ChangeBlog.Application.UseCases.Queries.GetLatestVersion;
 using ChangeBlog.Application.UseCases.Queries.SharedModels;
 using Microsoft.AspNetCore.Mvc;

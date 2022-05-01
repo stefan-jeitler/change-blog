@@ -192,8 +192,7 @@ public class UpdateUserProfileInteractorTests
 
         _outputPortMock.Setup(m => m.Conflict(It.IsAny<Conflict>()));
 
-        _fakeUserDao.Users.Add(testUser);
-        _fakeUserDao.ProduceFailure = true;
+        _fakeUserDao.Users.Add(testUser); _fakeUserDao.ProduceFailure = true;
         var updateProfileRequestModel = new UpdateUserProfileRequestModel(testUser.Id, newTimezone, null);
         var interactor = CreateInteractor();
 

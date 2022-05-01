@@ -1,5 +1,4 @@
-﻿using System.Collections.Generic;
-using System.Globalization;
+﻿using System.Globalization;
 using System.Linq;
 using System.Net.Mime;
 using System.Threading.Tasks;
@@ -8,8 +7,11 @@ using ChangeBlog.Api.Shared.Authorization;
 using ChangeBlog.Api.Shared.DTOs;
 using ChangeBlog.Api.Shared.DTOs.V1.User;
 using ChangeBlog.Api.Shared.Swagger;
+using ChangeBlog.Application.UseCases.Commands.UpdateUserProfile;
 using ChangeBlog.Application.UseCases.Queries.GetUsers;
 using ChangeBlog.Domain;
+using ChangeBlog.Management.Api.DTOs.V1;
+using ChangeBlog.Management.Api.Presenters.V1;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using NodaTime;
@@ -38,7 +40,7 @@ public class UserController : ControllerBase
     {
         return Ok(DefaultResponse.Create("It has now been ensured that the user is available in the app."));
     }
-    
+
     [HttpGet("profile", Name = "GetUserProfile")]
     [ProducesResponseType(StatusCodes.Status200OK)]
     [SkipAuthorization]
@@ -48,6 +50,24 @@ public class UserController : ControllerBase
         var user = await _getUser.ExecuteAsync(userId);
 
         return Ok(UserDto.FromResponseModel(user));
+    }
+
+    [HttpPatch("profile", Name = "UpdateUserProfile")]
+    [ProducesResponseType(StatusCodes.Status200OK)]
+    [ProducesResponseType(typeof(DefaultResponse), StatusCodes.Status404NotFound)]
+    [ProducesResponseType(typeof(DefaultResponse), StatusCodes.Status409Conflict)]
+    [SkipAuthorization]
+    public async Task<ActionResult<DefaultResponse>> UpdateUserProfile(
+        [FromServices] IUpdateUserProfile updateUserProfile,
+        [FromBody] UpdateUserProfileDto updateUserProfileDto)
+    {
+        var userId = HttpContext.GetUserId();
+        var requestModel =
+            new UpdateUserProfileRequestModel(userId, updateUserProfileDto?.Timezone, updateUserProfileDto?.Culture);
+        var presenter = new UpdateUserProfileApiPresenter();
+        await updateUserProfile.ExecuteAsync(presenter, requestModel);
+
+        return presenter.Response;
     }
 
     [HttpGet("supported-cultures", Name = "GetSupportedCultures")]
@@ -60,8 +80,7 @@ public class UserController : ControllerBase
 
         return Ok(supportedCultures);
     }
-    
-    
+
     [HttpGet("supported-timezones", Name = "GetSupportedTimezones")]
     [ProducesResponseType(StatusCodes.Status200OK)]
     [SkipAuthorization]

@@ -25,24 +25,26 @@ function initializeAuthentication(oAuthService: OAuthService, appConfig: AppConf
   return oAuthService.loadDiscoveryDocument(appConfig.discoveryDocument);
 }
 
-function initializeI18n(translationService: TranslocoService, translocoLocaleService: TranslocoLocaleService, apiClient: MngmtApiClient.Client) {
+function initializeI18n(oAuthService: OAuthService,translationService: TranslocoService, translocoLocaleService: TranslocoLocaleService, apiClient: MngmtApiClient.Client) {
   return new Promise<void>((resolve, reject) => {
-    apiClient.getUserProfile()
-      .subscribe(x => {
-        debugger;
+    if(oAuthService.hasValidIdToken()){
+      apiClient.getUserProfile()
+        .subscribe(x => {
+          const lang = x.culture?.split("-")[0];
+          translocoLocaleService.setLocale(x.culture ?? 'en-US');
 
-        const lang = x.culture?.split("-")[0];
-        translocoLocaleService.setLocale(x.culture ?? 'en-US');
+          const language = lang ?? getBrowserLang() ?? translationService.getDefaultLang();
 
-        const language = lang ?? getBrowserLang() ?? translationService.getDefaultLang();
-
-        translationService.setActiveLang(language);
-        translationService.load(language)
-          .toPromise()
-          .then(x => {
-            resolve();
-          });
-      });
+          translationService.setActiveLang(language);
+          translationService.load(language)
+            .toPromise()
+            .then(x => {
+              resolve();
+            });
+        });
+    }
+    else
+      resolve();
   });
 }
 
@@ -59,11 +61,10 @@ export function initializeApp(
       router.onSameUrlNavigation = 'reload';
 
       const authSetup = initializeAuthentication(oAuthService, appConfig, apiClient);
-      const i18nSetup = initializeI18n(translationService, translocoLocaleService, apiClient);
+      const i18nSetup = () => initializeI18n(oAuthService, translationService, translocoLocaleService, apiClient);
 
-      // wait till setup is finished
-      Promise.all([authSetup, i18nSetup])
-        .then(() => resolve());
+      authSetup
+        .then(() => i18nSetup().then(() => resolve()));
     });
 
   };

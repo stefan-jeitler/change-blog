@@ -25,26 +25,34 @@ function initializeAuthentication(oAuthService: OAuthService, appConfig: AppConf
   return oAuthService.loadDiscoveryDocument(appConfig.discoveryDocument);
 }
 
+
+
 function initializeI18n(oAuthService: OAuthService,translationService: TranslocoService, translocoLocaleService: TranslocoLocaleService, apiClient: MngmtApiClient.Client) {
   return new Promise<void>((resolve, reject) => {
     if(oAuthService.hasValidIdToken()){
-      apiClient.getUserProfile()
+      apiClient.getUserCulture()
         .subscribe(x => {
-          const lang = x.culture?.split("-")[0];
+          debugger;
           translocoLocaleService.setLocale(x.culture ?? 'en-US');
 
-          const language = lang ?? getBrowserLang() ?? translationService.getDefaultLang();
+          const language = x.language ?? getBrowserLang() ?? translationService.getDefaultLang();
 
           translationService.setActiveLang(language);
           translationService.load(language)
-            .toPromise()
-            .then(x => {
+            .subscribe(_ => {
               resolve();
             });
         });
     }
-    else
-      resolve();
+    else {
+      const language = getBrowserLang() ?? translationService.getDefaultLang();
+
+      translationService.setActiveLang(language);
+      translationService.load(language)
+        .subscribe(_ => {
+          resolve();
+        });
+    }
   });
 }
 
@@ -63,8 +71,7 @@ export function initializeApp(
       const authSetup = initializeAuthentication(oAuthService, appConfig, apiClient);
       const i18nSetup = () => initializeI18n(oAuthService, translationService, translocoLocaleService, apiClient);
 
-      authSetup
-        .then(() => i18nSetup().then(() => resolve()));
+      authSetup.then(() => i18nSetup().then(() => resolve()));
     });
 
   };

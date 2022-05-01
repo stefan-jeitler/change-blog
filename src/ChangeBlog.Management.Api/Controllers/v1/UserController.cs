@@ -44,7 +44,7 @@ public class UserController : ControllerBase
     [HttpGet("profile", Name = "GetUserProfile")]
     [ProducesResponseType(StatusCodes.Status200OK)]
     [SkipAuthorization]
-    public async Task<ActionResult<UserDto>> GetUserInfoAsync()
+    public async Task<ActionResult<UserDto>> GetUserProfileAsync()
     {
         var userId = HttpContext.GetUserId();
         var user = await _getUser.ExecuteAsync(userId);
@@ -68,6 +68,25 @@ public class UserController : ControllerBase
         await updateUserProfile.ExecuteAsync(presenter, requestModel);
 
         return presenter.Response;
+    }
+    
+    
+    [HttpGet("culture", Name = "GetUserCulture")]
+    [ProducesResponseType(StatusCodes.Status200OK)]
+    [SkipAuthorization]
+    public async Task<ActionResult<CultureDto>> GetUserCultureAsync()
+    {
+        var userId = HttpContext.GetUserId();
+        var user = await _getUser.ExecuteAsync(userId);
+
+        var cultureInfo = CultureInfo.GetCultureInfo(user.Culture);
+        var regionInfo = new RegionInfo(cultureInfo.Name);
+        
+        var cultureDto = new CultureDto(user.Culture,
+            cultureInfo.TwoLetterISOLanguageName,
+            regionInfo.TwoLetterISORegionName);
+
+        return Ok(cultureDto);
     }
 
     [HttpGet("supported-cultures", Name = "GetSupportedCultures")]

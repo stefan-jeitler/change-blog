@@ -30,7 +30,6 @@ function initializeI18n(oAuthService: OAuthService, translationService: Transloc
     if (oAuthService.hasValidIdToken()) {
       apiClient.getUserCulture()
         .subscribe(x => {
-          debugger;
           translocoLocaleService.setLocale(x.culture ?? 'en-US');
 
           const language = x.language ?? getBrowserLang() ?? translationService.getDefaultLang();

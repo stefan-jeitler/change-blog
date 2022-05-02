@@ -25,11 +25,9 @@ function initializeAuthentication(oAuthService: OAuthService, appConfig: AppConf
   return oAuthService.loadDiscoveryDocument(appConfig.discoveryDocument);
 }
 
-
-
-function initializeI18n(oAuthService: OAuthService,translationService: TranslocoService, translocoLocaleService: TranslocoLocaleService, apiClient: MngmtApiClient.Client) {
+function initializeI18n(oAuthService: OAuthService, translationService: TranslocoService, translocoLocaleService: TranslocoLocaleService, apiClient: MngmtApiClient.Client) {
   return new Promise<void>((resolve, reject) => {
-    if(oAuthService.hasValidIdToken()){
+    if (oAuthService.hasValidIdToken()) {
       apiClient.getUserCulture()
         .subscribe(x => {
           debugger;
@@ -43,8 +41,7 @@ function initializeI18n(oAuthService: OAuthService,translationService: Transloco
               resolve();
             });
         });
-    }
-    else {
+    } else {
       const language = getBrowserLang() ?? translationService.getDefaultLang();
 
       translationService.setActiveLang(language);

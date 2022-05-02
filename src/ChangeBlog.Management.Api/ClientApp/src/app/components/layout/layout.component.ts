@@ -39,9 +39,7 @@ export class LayoutComponent {
       const overlay: HTMLElement = document.querySelector(overlaySelector) as HTMLElement;
 
       if (!!overlay) {
-        const manager = new Hammer(overlay, {
-          touchAction: 'auto'
-        })
+        const manager = new Hammer(overlay)
         manager.on('swipeleft', e => {
           this.onSwipeLeft();
           manager.off('swipeleft')

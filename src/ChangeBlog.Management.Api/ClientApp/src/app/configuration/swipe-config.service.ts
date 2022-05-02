@@ -11,6 +11,9 @@ export class SwipeConfig extends HammerGestureConfig {
   };
 
   options = <any>{
-    touchAction: 'pan-y'
+    touchAction: 'pan-y',
+    cssProps: {
+      userSelect: 'auto'
+    }
   };
 }

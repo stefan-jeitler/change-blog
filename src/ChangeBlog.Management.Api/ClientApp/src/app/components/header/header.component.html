@@ -7,13 +7,6 @@
   </a>
   <div class="user-section">
     <div class="flex align-items-center">
-      <div>
-        <button (click)="langMenu.toggle($event)"
-                class="p-button-rounded p-button-secondary p-button-sm bg-primary-reverse"
-                label="{{currentLang}}" pButton
-                type="button"></button>
-        <p-menu #langMenu [model]="langItems" [popup]="true" [style]="{'width': 'auto'}"></p-menu>
-      </div>
       <div class="ml-3">
         <button (click)="userMenu.toggle($event)"
                 class="p-button-rounded p-button-secondary bg-primary-reverse"

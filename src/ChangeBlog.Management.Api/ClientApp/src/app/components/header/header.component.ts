@@ -52,13 +52,8 @@ export class HeaderComponent implements OnInit {
       : `${claims.given_name} ${claims.family_name}`;
   }
 
-  get currentLang() {
-    return this.translationService.getActiveLang().toUpperCase();
-  }
-
   ngOnInit() {
     this.populateMenuItems();
-    this.populateLangItems();
   }
 
   logout() {
@@ -93,38 +88,5 @@ export class HeaderComponent implements OnInit {
         }
       }
     ];
-  }
-
-  private populateLangItems() {
-    const createLangItem: (x: LanguageInfo) => MenuItem = x => {
-      return {
-        label: x.id.toUpperCase(),
-        command: () => this.changeLanguage(x)
-      };
-    }
-
-    this.langItems = (<LanguageInfo[]>this.translationService.getAvailableLangs())
-      .map(createLangItem);
-  }
-
-  private changeLanguage(targetLang: LanguageInfo) {
-    if (targetLang.id.toUpperCase() === this.currentLang.toUpperCase())
-      return;
-
-    this.translationService.setActiveLang(targetLang.id);
-
-    this.translationService
-      .load(targetLang.id)
-      .subscribe(
-        x => {
-          this.populateMenuItems();
-          localStorage.setItem('language', targetLang.id);
-          this.messageService.add({
-            severity: 'success',
-            summary: translate(this.translationKey.languageChangedShort),
-            detail: translate(this.translationKey.languageChanged, {lang: targetLang.label})
-          });
-        });
-
   }
 }

@@ -22,27 +22,33 @@ export class LayoutComponent {
   }
 
   openMobileSideNav() {
-    this.showMobileSideNav = true;
+    this.showSideMobileNavAndAddCloseSwipeHandler();
   }
 
   onSwipeRight($event: any) {
     if (window.innerWidth < Constants.MobileBreakpoint.value) {
-      this.openMobileSideNav();
-
-      setTimeout(() => {
-        let overlaySelector = '.p-component-overlay, .p-sidebar-mask, .p-component-overlay-enter';
-        const overlay: HTMLElement = document.querySelector(overlaySelector) as HTMLElement;
-
-        if (!!overlay) {
-          const manager = new Hammer(overlay)
-          manager.on('swipeleft', e => {
-            this.onSwipeLeft();
-            manager.off('swipeleft')
-          });
-        }
-
-      }, 100);
+      this.showSideMobileNavAndAddCloseSwipeHandler();
     }
+  }
+
+  private showSideMobileNavAndAddCloseSwipeHandler() {
+    this.showMobileSideNav = true;
+
+    setTimeout(() => {
+      let overlaySelector = '.p-component-overlay, .p-sidebar-mask, .p-component-overlay-enter';
+      const overlay: HTMLElement = document.querySelector(overlaySelector) as HTMLElement;
+
+      if (!!overlay) {
+        const manager = new Hammer(overlay, {
+          touchAction: 'auto'
+        })
+        manager.on('swipeleft', e => {
+          this.onSwipeLeft();
+          manager.off('swipeleft')
+        });
+      }
+
+    }, 100);
   }
 
   onSwipeLeft() {

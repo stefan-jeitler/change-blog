@@ -3,53 +3,27 @@ import {OAuthService} from "angular-oauth2-oidc";
 import {AppConfig} from "../../app.config";
 import {ChangeBlogManagementApi as MngmtApiClient} from "../clients/ChangeBlogManagementApiClient";
 import {getBrowserLang, TranslocoService} from "@ngneat/transloco";
-import {filter, mergeMap} from "rxjs/operators";
 import {TranslocoLocaleService} from "@ngneat/transloco-locale";
 
-function initializeAuthentication(oAuthService: OAuthService, appConfig: AppConfig, apiClient: MngmtApiClient.Client) {
-  oAuthService.configure(appConfig.authConfig);
-  oAuthService.setupAutomaticSilentRefresh();
+async function setBrowserLanguageOrDefault(oAuthService: OAuthService,
+                                           translationService: TranslocoService) {
+  const language = getBrowserLang() ?? translationService.getDefaultLang();
 
-  oAuthService.events
-    .pipe(
-      filter(
-        (e) => e.type === 'token_received' && oAuthService.hasValidAccessToken()
-      ),
-      mergeMap((x) => apiClient.ensureUserIsImported())
-    )
-    .subscribe(
-      (x) => console.debug(x),
-      (e) => console.error(e)
-    );
-
-  return oAuthService.loadDiscoveryDocument(appConfig.discoveryDocument);
+  translationService.setActiveLang(language);
+  await translationService.load(language).toPromise();
 }
 
-function initializeI18n(oAuthService: OAuthService, translationService: TranslocoService, translocoLocaleService: TranslocoLocaleService, apiClient: MngmtApiClient.Client) {
-  return new Promise<void>((resolve, reject) => {
-    if (oAuthService.hasValidIdToken()) {
-      apiClient.getUserCulture()
-        .subscribe(x => {
-          translocoLocaleService.setLocale(x.culture ?? 'en-US');
+async function setUserCulture(userCulture: MngmtApiClient.ICultureDto, translationService: TranslocoService, translocoLocaleService: TranslocoLocaleService) {
+  const activeCulture = translocoLocaleService.getLocale();
 
-          const language = x.language ?? getBrowserLang() ?? translationService.getDefaultLang();
+  if (activeCulture === userCulture.culture)
+    return;
 
-          translationService.setActiveLang(language);
-          translationService.load(language)
-            .subscribe(_ => {
-              resolve();
-            });
-        });
-    } else {
-      const language = getBrowserLang() ?? translationService.getDefaultLang();
+  const language = userCulture.language ?? getBrowserLang() ?? translationService.getDefaultLang();
 
-      translationService.setActiveLang(language);
-      translationService.load(language)
-        .subscribe(_ => {
-          resolve();
-        });
-    }
-  });
+  translocoLocaleService.setLocale(userCulture.culture ?? 'en-US');
+  translationService.setActiveLang(language);
+  await translationService.load(language).toPromise();
 }
 
 export function initializeApp(
@@ -60,15 +34,21 @@ export function initializeApp(
   translationService: TranslocoService,
   translocoLocaleService: TranslocoLocaleService
 ): () => Promise<void> {
-  return () => {
-    return new Promise<void>((resolve, reject) => {
-      router.onSameUrlNavigation = 'reload';
+  return async () => {
+    router.onSameUrlNavigation = 'reload';
+    oAuthService.configure(appConfig.authConfig);
+    oAuthService.setupAutomaticSilentRefresh();
 
-      const authSetup = initializeAuthentication(oAuthService, appConfig, apiClient);
-      const i18nSetup = () => initializeI18n(oAuthService, translationService, translocoLocaleService, apiClient);
+    await setBrowserLanguageOrDefault(oAuthService, translationService);
+    await oAuthService.loadDiscoveryDocument(appConfig.discoveryDocument);
+    await oAuthService.tryLoginCodeFlow();
 
-      authSetup.then(() => i18nSetup().then(() => resolve()));
-    });
+    if (oAuthService.hasValidIdToken()) {
+      const userCulture = await apiClient
+        .getUserCulture()
+        .toPromise();
 
+      await setUserCulture(userCulture, translationService, translocoLocaleService);
+    }
   };
 }

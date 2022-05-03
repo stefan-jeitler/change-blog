@@ -4,6 +4,7 @@ import {AppConfig} from "../../app.config";
 import {ChangeBlogManagementApi as MngmtApiClient} from "../clients/ChangeBlogManagementApiClient";
 import {getBrowserLang, TranslocoService} from "@ngneat/transloco";
 import {TranslocoLocaleService} from "@ngneat/transloco-locale";
+import {filter, mergeMap} from "rxjs/operators";
 
 async function setBrowserLanguageOrDefault(oAuthService: OAuthService,
                                            translationService: TranslocoService) {
@@ -26,6 +27,18 @@ async function setUserCulture(userCulture: MngmtApiClient.ICultureDto, translati
   await translationService.load(language).toPromise();
 }
 
+function subscribeTokenReceived(oAuthService: OAuthService, apiClient: MngmtApiClient.Client) {
+  oAuthService.events
+    .pipe(
+      filter((e) => e.type === 'token_received' && oAuthService.hasValidAccessToken()),
+      mergeMap((x) => apiClient.ensureUserIsImported())
+    )
+    .subscribe(
+      (x) => console.debug(x),
+      (e) => console.error(e)
+    );
+}
+
 export function initializeApp(
   router: Router,
   oAuthService: OAuthService,
@@ -40,10 +53,12 @@ export function initializeApp(
     oAuthService.setupAutomaticSilentRefresh();
 
     await setBrowserLanguageOrDefault(oAuthService, translationService);
+    subscribeTokenReceived(oAuthService, apiClient);
     await oAuthService.loadDiscoveryDocument(appConfig.discoveryDocument);
     await oAuthService.tryLoginCodeFlow();
 
-    if (oAuthService.hasValidIdToken()) {
+    const isLoggedIn = oAuthService.hasValidIdToken() && oAuthService.hasValidAccessToken();
+    if (isLoggedIn) {
       const userCulture = await apiClient
         .getUserCulture()
         .toPromise();

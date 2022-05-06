@@ -1,11 +1,19 @@
-import {ChangeBlogApi} from '../../../clients/ChangeBlogApiClient';
 import {Component, OnInit} from '@angular/core';
 import {TranslationKey} from "../../generated/TranslationKey";
-import {tap} from "rxjs/operators";
-import { ChangeBlogManagementApi as MngmtApiClient
+import {finalize, tap} from "rxjs/operators";
+import {
+  ChangeBlogManagementApi,
+  ChangeBlogManagementApi as MngmtApiClient
 } from "../../../clients/ChangeBlogManagementApiClient";
-import {zip} from "rxjs";
+import {firstValueFrom} from "rxjs";
+import {FormBuilder, FormControl, FormGroup} from "@angular/forms";
+import {ValidationMessage} from "../../types/validation-message";
+import {MessageService} from "primeng/api";
+import {TranslocoService} from "@ngneat/transloco";
 import ITimezoneDto = MngmtApiClient.ITimezoneDto;
+import SwaggerException = ChangeBlogManagementApi.SwaggerException;
+import ErrorMessage = ChangeBlogManagementApi.ErrorMessage;
+import {TranslocoLocaleService} from "@ngneat/transloco-locale";
 
 
 @Component({
@@ -17,70 +25,107 @@ export class ProfileComponent implements OnInit {
   availableTimezones: ITimezoneDto[];
   availableCultures: string[];
   isLoadingFinished: boolean;
-  selectedTimeZone: ITimezoneDto;
-  private readonly emptyUser: ChangeBlogApi.IUserDto = {
-    id: '',
-    email: '',
-    firstName: '',
-    lastName: '',
-    timeZone: '',
-    culture: 'en-US'
-  };
-  private readonly utc: ITimezoneDto = {
-    windowsId: 'UTC',
-    olsonId: 'Etc/UTC',
-    offset: '+00:00'
-  };
+  userProfileForm: FormGroup;
 
-  constructor(public translationKey: TranslationKey, private mngmtApiClient: MngmtApiClient.Client) {
-    this.currentUser = this.emptyUser;
-    this.selectedTimeZone = this.utc;
+  constructor(public translationKey: TranslationKey,
+              private translationService: TranslocoService,
+              private localService: TranslocoLocaleService,
+              private messageService: MessageService,
+              private mngmtApiClient: MngmtApiClient.Client,
+              private formBuilder: FormBuilder) {
 
     this.availableTimezones = [];
     this.availableCultures = [];
 
     this.isLoadingFinished = false;
+
+    this.userProfileForm = this.formBuilder.group({
+      fullName: new FormControl({value: null, disabled: true}),
+      email: new FormControl({value: null, disabled: true}),
+      timezone: new FormControl(''),
+      culture: new FormControl('')
+    });
   }
 
-  currentUser: ChangeBlogApi.IUserDto;
-
-  get firstAndLastName(): string {
-    return `${this.currentUser.firstName} ${this.currentUser.lastName}`;
+  errorMessage(formControl: string): string {
+    return this.userProfileForm.get(formControl)?.errors?.serverError?.message ?? 'Unknown';
   }
 
-  set firstAndLastName(value) {
+  async ngOnInit(): Promise<void> {
+
+    await this.loadAvailableDropdownOptions();
+    const userProfile = await this.loadUserProfile();
+
+    this.userProfileForm.patchValue({
+      fullName: `${userProfile.firstName} ${userProfile.lastName}`,
+      email: userProfile.email,
+      timezone: this.availableTimezones.find(x => x.olsonId === userProfile.timeZone),
+      culture: userProfile.culture
+    })
   }
 
-  ngOnInit(): void {
+  async updateProfile(userProfileForm: FormGroup) {
+    userProfileForm.resetValidation();
+    userProfileForm.disable();
 
+    const dto = new MngmtApiClient.UpdateUserProfileDto()
+    dto.culture = userProfileForm.value.culture;
+    dto.timezone = userProfileForm.value.timezone.olsonId;
+
+    this.mngmtApiClient.updateUserProfile(dto)
+      .subscribe({
+        next: r => this.profileUpdated(r),
+        error: (error: SwaggerException) => {
+          userProfileForm.enable();
+
+          if (error.status >= 400 && error.status < 500) {
+            for (const e of error.result.errors.filter((x: ErrorMessage) => !!x.property)) {
+              const formControl = this.userProfileForm.get(e.property.toLowerCase());
+              const validationMessage = new ValidationMessage({message: e.message});
+
+              formControl?.setErrors(validationMessage);
+            }
+          }
+        },
+        complete: () => userProfileForm.enable()
+      });
+  }
+
+  showErrorMessage(formControl: string) {
+    return this.userProfileForm.get(formControl)?.invalid
+  }
+
+  private async loadUserProfile() {
+    const loadUserProfile = this.mngmtApiClient
+      .getUserProfile()
+      .pipe(tap(_ => this.isLoadingFinished = true))
+
+    return await firstValueFrom(loadUserProfile);
+  }
+
+  private async loadAvailableDropdownOptions() {
     const loadTimezones = this.mngmtApiClient
       .getSupportedTimezones();
     loadTimezones.subscribe(t => this.availableTimezones = t);
 
     const loadCulture = this.mngmtApiClient
       .getSupportedCultures()
-    loadCulture.subscribe(x => this.availableCultures = x);
+    loadCulture.subscribe(c => this.availableCultures = c);
 
-    zip(loadTimezones, loadCulture).subscribe(() => {
-      this.mngmtApiClient
-        .getUserProfile()
-        .pipe(tap(x => this.isLoadingFinished = true))
-        .subscribe((u) => {
-            this.currentUser = u;
-            this.selectedTimeZone = this.availableTimezones.find(x => x.olsonId === u.timeZone) ?? this.utc;
-          },
-          error => console.error(error));
-    });
+    await Promise.all([firstValueFrom(loadTimezones), firstValueFrom(loadCulture)]);
   }
 
-  updateUserProfile() {
-    const dto = new MngmtApiClient.UpdateUserProfileDto()
-    dto.culture = this.currentUser.culture;
-    dto.timezone = this.selectedTimeZone.olsonId;
+  private async profileUpdated(response: ChangeBlogManagementApi.SuccessResponse) {
+    const profile = await firstValueFrom(this.mngmtApiClient.getUserCulture());
 
-    this.mngmtApiClient.updateUserProfile(dto)
-      .subscribe(x => {
-        console.log(x);
-      });
+    this.localService.setLocale(profile.culture!);
+    this.translationService.setActiveLang(profile.language!);
+    await firstValueFrom(this.translationService.load(profile.language!));
+
+    const successMessage = await firstValueFrom(this.translationService.selectTranslate(this.translationKey.success));
+
+    const message = {severity: 'success', summary: successMessage, detail: response.message}
+    this.messageService.add(message);
+
   }
 }

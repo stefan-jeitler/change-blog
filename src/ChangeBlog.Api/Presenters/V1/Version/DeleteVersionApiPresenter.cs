@@ -17,7 +17,7 @@ public class DeleteVersionApiPresenter : BaseApiPresenter, IDeleteVersionOutputP
             [KnownIdentifiers.VersionId] = versionId.ToString()
         };
 
-        Response = new NotFoundObjectResult(DefaultResponse.Create("Version not found.", resourceIds));
+        Response = new NotFoundObjectResult(ErrorResponse.Create("Version not found.", resourceIds));
     }
 
     public void RelatedProductClosed(Guid productId)
@@ -28,7 +28,7 @@ public class DeleteVersionApiPresenter : BaseApiPresenter, IDeleteVersionOutputP
         };
 
         Response = new ConflictObjectResult(
-            DefaultResponse.Create("The related product has been closed.", resourceIds));
+            ErrorResponse.Create("The related product has been closed.", resourceIds));
     }
 
     public void VersionAlreadyDeleted(Guid versionId)
@@ -38,7 +38,7 @@ public class DeleteVersionApiPresenter : BaseApiPresenter, IDeleteVersionOutputP
             [KnownIdentifiers.VersionId] = versionId.ToString()
         };
 
-        Response = new OkObjectResult(DefaultResponse.Create("Version deleted.", resourceIds));
+        Response = new OkObjectResult(SuccessResponse.Create("Version deleted.", resourceIds));
     }
 
     public void VersionAlreadyReleased(Guid versionId)
@@ -49,7 +49,7 @@ public class DeleteVersionApiPresenter : BaseApiPresenter, IDeleteVersionOutputP
         };
 
         Response = new ConflictObjectResult(
-            DefaultResponse.Create("Version released. Released versions can no longer be modified.", resourceIds));
+            ErrorResponse.Create("Version released. Released versions can no longer be modified.", resourceIds));
     }
 
     public void VersionDeleted(Guid versionId)
@@ -59,7 +59,7 @@ public class DeleteVersionApiPresenter : BaseApiPresenter, IDeleteVersionOutputP
             [KnownIdentifiers.VersionId] = versionId.ToString()
         };
 
-        Response = new OkObjectResult(DefaultResponse.Create("Version deleted.", resourceIds));
+        Response = new OkObjectResult(SuccessResponse.Create("Version deleted.", resourceIds));
     }
 
     public void Conflict(Conflict conflict)

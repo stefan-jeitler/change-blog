@@ -19,9 +19,9 @@ namespace ChangeBlog.Api.Controllers.V1;
 [ApiController]
 [Route("api/v1/changelogs/{changeLogLineId:Guid}/issues")]
 [Produces(MediaTypeNames.Application.Json)]
-[ProducesResponseType(typeof(DefaultResponse), StatusCodes.Status400BadRequest)]
-[ProducesResponseType(typeof(DefaultResponse), StatusCodes.Status401Unauthorized)]
-[ProducesResponseType(typeof(DefaultResponse), StatusCodes.Status403Forbidden)]
+[ProducesResponseType(typeof(ErrorResponse), StatusCodes.Status400BadRequest)]
+[ProducesResponseType(typeof(ErrorResponse), StatusCodes.Status401Unauthorized)]
+[ProducesResponseType(typeof(ErrorResponse), StatusCodes.Status403Forbidden)]
 [SwaggerControllerOrder(8)]
 public class IssuesController : ControllerBase
 {
@@ -37,12 +37,12 @@ public class IssuesController : ControllerBase
     }
 
     [HttpPut("{issue}", Name = "AddIssue")]
-    [ProducesResponseType(typeof(DefaultResponse), StatusCodes.Status200OK)]
-    [ProducesResponseType(typeof(DefaultResponse), StatusCodes.Status404NotFound)]
-    [ProducesResponseType(typeof(DefaultResponse), StatusCodes.Status409Conflict)]
-    [ProducesResponseType(typeof(DefaultResponse), StatusCodes.Status422UnprocessableEntity)]
+    [ProducesResponseType( StatusCodes.Status200OK)]
+    [ProducesResponseType(typeof(ErrorResponse), StatusCodes.Status404NotFound)]
+    [ProducesResponseType(typeof(ErrorResponse), StatusCodes.Status409Conflict)]
+    [ProducesResponseType(typeof(ErrorResponse), StatusCodes.Status422UnprocessableEntity)]
     [NeedsPermission(Permission.AddOrUpdateChangeLogLine)]
-    public async Task<ActionResult> AddIssueAsync(
+    public async Task<ActionResult<SuccessResponse>> AddIssueAsync(
         [FromServices] IAddChangeLogLineIssue addChangeLogLineIssue,
         Guid changeLogLineId, string issue)
     {
@@ -55,11 +55,11 @@ public class IssuesController : ControllerBase
     }
 
     [HttpDelete("{issue}", Name = "DeleteIssue")]
-    [ProducesResponseType(typeof(DefaultResponse), StatusCodes.Status200OK)]
-    [ProducesResponseType(typeof(DefaultResponse), StatusCodes.Status404NotFound)]
-    [ProducesResponseType(typeof(DefaultResponse), StatusCodes.Status409Conflict)]
+    [ProducesResponseType(StatusCodes.Status200OK)]
+    [ProducesResponseType(typeof(ErrorResponse), StatusCodes.Status404NotFound)]
+    [ProducesResponseType(typeof(ErrorResponse), StatusCodes.Status409Conflict)]
     [NeedsPermission(Permission.AddOrUpdateChangeLogLine)]
-    public async Task<ActionResult> DeleteIssueAsync(
+    public async Task<ActionResult<SuccessResponse>> DeleteIssueAsync(
         [FromServices] IDeleteChangeLogLineIssue deleteChangeLogLineIssue,
         Guid changeLogLineId, string issue)
     {

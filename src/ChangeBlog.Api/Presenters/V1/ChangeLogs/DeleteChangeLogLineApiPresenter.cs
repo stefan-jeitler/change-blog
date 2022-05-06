@@ -17,7 +17,7 @@ public class DeleteChangeLogLineApiPresenter : BaseApiPresenter, IDeleteChangeLo
             [KnownIdentifiers.ChangeLogLineId] = changeLogLineId.ToString()
         };
 
-        Response = new NotFoundObjectResult(DefaultResponse.Create("The requested ChangeLogLine does not exist.",
+        Response = new NotFoundObjectResult(ErrorResponse.Create("The requested ChangeLogLine does not exist.",
             resourceIds));
     }
 
@@ -28,7 +28,7 @@ public class DeleteChangeLogLineApiPresenter : BaseApiPresenter, IDeleteChangeLo
             [KnownIdentifiers.ChangeLogLineId] = changeLogLineId.ToString()
         };
 
-        Response = new OkObjectResult(DefaultResponse.Create("Line successfully deleted.", resourceIds));
+        Response = new OkObjectResult(SuccessResponse.Create("Line successfully deleted.", resourceIds));
     }
 
     public void Conflict(Conflict conflict)
@@ -43,7 +43,7 @@ public class DeleteChangeLogLineApiPresenter : BaseApiPresenter, IDeleteChangeLo
             [KnownIdentifiers.ChangeLogLineId] = changeLogLineId.ToString()
         };
 
-        Response = new ConflictObjectResult(DefaultResponse.Create("The requested change log line is not pending.",
+        Response = new ConflictObjectResult(ErrorResponse.Create("The requested change log line is not pending.",
             resourceIds));
     }
 
@@ -54,7 +54,7 @@ public class DeleteChangeLogLineApiPresenter : BaseApiPresenter, IDeleteChangeLo
             [KnownIdentifiers.ChangeLogLineId] = changeLogLineId.ToString()
         };
 
-        Response = new ConflictObjectResult(DefaultResponse.Create("The requested change log line is pending.",
+        Response = new ConflictObjectResult(ErrorResponse.Create("The requested change log line is pending.",
             resourceIds));
     }
 }

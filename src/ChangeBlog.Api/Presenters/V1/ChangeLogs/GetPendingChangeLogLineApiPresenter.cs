@@ -17,7 +17,7 @@ public class GetPendingChangeLogLineApiPresenter : BaseApiPresenter, IGetPending
             [KnownIdentifiers.ChangeLogLineId] = changeLogLineId.ToString()
         };
 
-        Response = new NotFoundObjectResult(DefaultResponse.Create("ChangeLogLine not found.", resourceIds));
+        Response = new NotFoundObjectResult(ErrorResponse.Create("ChangeLogLine not found.", resourceIds));
     }
 
     public void LineIsNotPending(Guid changeLogLineId)
@@ -27,7 +27,7 @@ public class GetPendingChangeLogLineApiPresenter : BaseApiPresenter, IGetPending
             [KnownIdentifiers.ChangeLogLineId] = changeLogLineId.ToString()
         };
 
-        Response = new NotFoundObjectResult(DefaultResponse.Create("The requested change log line is not pending.",
+        Response = new NotFoundObjectResult(ErrorResponse.Create("The requested change log line is not pending.",
             resourceIds));
     }
 

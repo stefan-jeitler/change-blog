@@ -24,11 +24,11 @@ public class GetLatestVersionApiPresenter : BaseApiPresenter, IGetLatestVersionO
         };
 
         Response = new NotFoundObjectResult(
-            DefaultResponse.Create("Product does not contain any version.", resourceIds));
+            ErrorResponse.Create("Product does not contain any version.", resourceIds));
     }
 
     public void ProductDoesNotExist()
     {
-        Response = new NotFoundObjectResult(DefaultResponse.Create("Product not found."));
+        Response = new NotFoundObjectResult(ErrorResponse.Create("Product not found."));
     }
 }

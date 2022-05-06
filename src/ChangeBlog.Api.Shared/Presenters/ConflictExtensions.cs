@@ -32,7 +32,7 @@ public static class ConflictExtensions
             [KnownIdentifiers.VersionId] = versionId.ToString()
         };
 
-        var responseMessage = DefaultResponse.Create("The related version has already been released.", resourceIds);
+        var responseMessage = ErrorResponse.Create("The related version has already been released.", resourceIds);
 
         return new ConflictObjectResult(responseMessage);
     }
@@ -45,7 +45,7 @@ public static class ConflictExtensions
             [KnownIdentifiers.VersionId] = versionId.ToString()
         };
 
-        var responseMessage = DefaultResponse.Create("The related version has been deleted.",
+        var responseMessage = ErrorResponse.Create("The related version has been deleted.",
             resourceIds);
 
         return new ConflictObjectResult(responseMessage);
@@ -60,7 +60,7 @@ public static class ConflictExtensions
         };
 
         var responseMessage =
-            DefaultResponse.Create("The related product has been closed.", resourceIds);
+            ErrorResponse.Create("The related product has been closed.", resourceIds);
 
         return new ConflictObjectResult(responseMessage);
     }
@@ -73,7 +73,7 @@ public static class ConflictExtensions
             [KnownIdentifiers.ChangeLogLineId] = changeLogLineId.ToString()
         };
 
-        var responseMessage = DefaultResponse.Create(
+        var responseMessage = ErrorResponse.Create(
             "The requested ChangeLogLine has been deleted.", resourceIds);
 
         return new ConflictObjectResult(responseMessage);
@@ -98,7 +98,7 @@ public static class ConflictExtensions
         }
 
         var responseMessage =
-            DefaultResponse.Create("Error while inserting or updating ChangeLogLines. Please try again later.",
+            ErrorResponse.Create("Error while inserting or updating ChangeLogLines. Please try again later.",
                 resourceIds);
 
         return new ConflictObjectResult(responseMessage);

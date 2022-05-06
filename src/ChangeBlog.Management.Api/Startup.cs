@@ -103,6 +103,6 @@ public class Startup
             .Value?.Errors.FirstOrDefault()?
             .ErrorMessage ?? "Unknown";
 
-        return new BadRequestObjectResult(DefaultResponse.Create(firstError));
+        return new BadRequestObjectResult(ErrorResponse.Create(firstError));
     }
 }

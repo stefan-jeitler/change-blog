@@ -26,9 +26,9 @@ namespace ChangeBlog.Api.Controllers.V1;
 [ApiController]
 [Route("api/v1")]
 [Produces(MediaTypeNames.Application.Json)]
-[ProducesResponseType(typeof(DefaultResponse), StatusCodes.Status400BadRequest)]
-[ProducesResponseType(typeof(DefaultResponse), StatusCodes.Status401Unauthorized)]
-[ProducesResponseType(typeof(DefaultResponse), StatusCodes.Status403Forbidden)]
+[ProducesResponseType(typeof(ErrorResponse), StatusCodes.Status400BadRequest)]
+[ProducesResponseType(typeof(ErrorResponse), StatusCodes.Status401Unauthorized)]
+[ProducesResponseType(typeof(ErrorResponse), StatusCodes.Status403Forbidden)]
 [SwaggerControllerOrder(5)]
 public class PendingChangeLogsController : ControllerBase
 {
@@ -47,7 +47,7 @@ public class PendingChangeLogsController : ControllerBase
 
     [HttpGet("pending-changelogs/{changeLogLineId:Guid}", Name = "GetPendingChangeLogLine")]
     [ProducesResponseType(StatusCodes.Status200OK)]
-    [ProducesResponseType(typeof(DefaultResponse), StatusCodes.Status404NotFound)]
+    [ProducesResponseType(typeof(ErrorResponse), StatusCodes.Status404NotFound)]
     [NeedsPermission(Permission.ViewPendingChangeLogLines)]
     public async Task<ActionResult<PendingChangeLogLineDto>> GetPendingChangeLogLineAsync(
         [FromServices] IGetPendingChangeLogLine getPendingChangeLogLine,
@@ -62,12 +62,12 @@ public class PendingChangeLogsController : ControllerBase
     }
 
     [HttpPost("products/{productId:Guid}/pending-changelogs", Name = "AddPendingChangeLogLine")]
-    [ProducesResponseType(typeof(DefaultResponse), StatusCodes.Status201Created)]
-    [ProducesResponseType(typeof(DefaultResponse), StatusCodes.Status404NotFound)]
-    [ProducesResponseType(typeof(DefaultResponse), StatusCodes.Status409Conflict)]
-    [ProducesResponseType(typeof(DefaultResponse), StatusCodes.Status422UnprocessableEntity)]
+    [ProducesResponseType(StatusCodes.Status201Created)]
+    [ProducesResponseType(typeof(ErrorResponse), StatusCodes.Status404NotFound)]
+    [ProducesResponseType(typeof(ErrorResponse), StatusCodes.Status409Conflict)]
+    [ProducesResponseType(typeof(ErrorResponse), StatusCodes.Status422UnprocessableEntity)]
     [NeedsPermission(Permission.AddOrUpdateChangeLogLine)]
-    public async Task<ActionResult> AddPendingChangeLogLineAsync(
+    public async Task<ActionResult<SuccessResponse>> AddPendingChangeLogLineAsync(
         [FromServices] IAddPendingChangeLogLine addPendingChangeLogLine,
         Guid productId,
         [FromBody] AddOrUpdateChangeLogLineDto pendingChangeLogLine)
@@ -87,12 +87,12 @@ public class PendingChangeLogsController : ControllerBase
 
 
     [HttpPatch("pending-changelogs/{changeLogLineId:Guid}", Name = "UpdatePendingChangeLogLine")]
-    [ProducesResponseType(typeof(DefaultResponse), StatusCodes.Status200OK)]
-    [ProducesResponseType(typeof(DefaultResponse), StatusCodes.Status404NotFound)]
-    [ProducesResponseType(typeof(DefaultResponse), StatusCodes.Status409Conflict)]
-    [ProducesResponseType(typeof(DefaultResponse), StatusCodes.Status422UnprocessableEntity)]
+    [ProducesResponseType(StatusCodes.Status200OK)]
+    [ProducesResponseType(typeof(ErrorResponse), StatusCodes.Status404NotFound)]
+    [ProducesResponseType(typeof(ErrorResponse), StatusCodes.Status409Conflict)]
+    [ProducesResponseType(typeof(ErrorResponse), StatusCodes.Status422UnprocessableEntity)]
     [NeedsPermission(Permission.AddOrUpdateChangeLogLine)]
-    public async Task<ActionResult> UpdateChangeLogLine(
+    public async Task<ActionResult<SuccessResponse>> UpdateChangeLogLine(
         [FromServices] IUpdateChangeLogLine updateChangeLogLine,
         Guid changeLogLineId,
         [FromBody] PatchChangeLogLineDto patchChangeLogLineDto)
@@ -110,18 +110,18 @@ public class PendingChangeLogsController : ControllerBase
     }
 
     [HttpPost("pending-changelogs/{changeLogLineId:Guid}/move", Name = "MovePendingChangeLogLine")]
-    [ProducesResponseType(typeof(DefaultResponse), StatusCodes.Status200OK)]
-    [ProducesResponseType(typeof(DefaultResponse), StatusCodes.Status404NotFound)]
-    [ProducesResponseType(typeof(DefaultResponse), StatusCodes.Status409Conflict)]
-    [ProducesResponseType(typeof(DefaultResponse), StatusCodes.Status422UnprocessableEntity)]
+    [ProducesResponseType(StatusCodes.Status200OK)]
+    [ProducesResponseType(typeof(ErrorResponse), StatusCodes.Status404NotFound)]
+    [ProducesResponseType(typeof(ErrorResponse), StatusCodes.Status409Conflict)]
+    [ProducesResponseType(typeof(ErrorResponse), StatusCodes.Status422UnprocessableEntity)]
     [NeedsPermission(Permission.MoveChangeLogLines)]
-    public async Task<ActionResult> MovePendingChangeLogLineAsync(
+    public async Task<ActionResult<SuccessResponse>> MovePendingChangeLogLineAsync(
         [FromServices] IAssignPendingLineToVersion assignPendingLineToVersion,
         Guid changeLogLineId,
         [FromBody] MoveChangeLogLineDto moveChangeLogLineDto)
     {
         if (moveChangeLogLineDto.TargetVersionId == Guid.Empty)
-            return BadRequest(DefaultResponse.Create("TargetVersionId cannot be empty."));
+            return BadRequest(ErrorResponse.Create("TargetVersionId cannot be empty."));
 
         var requestModel =
             new VersionIdAssignmentRequestModel(moveChangeLogLineDto.TargetVersionId, changeLogLineId);
@@ -133,18 +133,18 @@ public class PendingChangeLogsController : ControllerBase
     }
 
     [HttpPost("products/{productId:Guid}/pending-changelogs/move", Name = "MoveAllPendingChangeLogs")]
-    [ProducesResponseType(typeof(DefaultResponse), StatusCodes.Status200OK)]
-    [ProducesResponseType(typeof(DefaultResponse), StatusCodes.Status404NotFound)]
-    [ProducesResponseType(typeof(DefaultResponse), StatusCodes.Status409Conflict)]
-    [ProducesResponseType(typeof(DefaultResponse), StatusCodes.Status422UnprocessableEntity)]
+    [ProducesResponseType(StatusCodes.Status200OK)]
+    [ProducesResponseType(typeof(ErrorResponse), StatusCodes.Status404NotFound)]
+    [ProducesResponseType(typeof(ErrorResponse), StatusCodes.Status409Conflict)]
+    [ProducesResponseType(typeof(ErrorResponse), StatusCodes.Status422UnprocessableEntity)]
     [NeedsPermission(Permission.MoveChangeLogLines)]
-    public async Task<ActionResult> MoveAllPendingChangeLogLineAsync(
+    public async Task<ActionResult<SuccessResponse>> MoveAllPendingChangeLogLineAsync(
         [FromServices] IAssignAllPendingLinesToVersion assignAllPendingLinesToVersion,
         Guid productId,
         [FromBody] MoveChangeLogLineDto moveChangeLogLineDto)
     {
         if (moveChangeLogLineDto.TargetVersionId == Guid.Empty)
-            return BadRequest(DefaultResponse.Create("TargetVersionId cannot be empty."));
+            return BadRequest(ErrorResponse.Create("TargetVersionId cannot be empty."));
 
         var requestModel =
             new Application.UseCases.Commands.AssignAllPendingLinesToVersion.Models.VersionIdAssignmentRequestModel(
@@ -157,11 +157,11 @@ public class PendingChangeLogsController : ControllerBase
     }
 
     [HttpDelete("pending-changelogs/{changeLogLineId:Guid}", Name = "DeletePendingChangeLogLine")]
-    [ProducesResponseType(typeof(DefaultResponse), StatusCodes.Status200OK)]
-    [ProducesResponseType(typeof(DefaultResponse), StatusCodes.Status404NotFound)]
-    [ProducesResponseType(typeof(DefaultResponse), StatusCodes.Status409Conflict)]
+    [ProducesResponseType(StatusCodes.Status200OK)]
+    [ProducesResponseType(typeof(ErrorResponse), StatusCodes.Status404NotFound)]
+    [ProducesResponseType(typeof(ErrorResponse), StatusCodes.Status409Conflict)]
     [NeedsPermission(Permission.DeleteChangeLogLine)]
-    public async Task<ActionResult> DeletePendingChangeLogLineAsync(
+    public async Task<ActionResult<SuccessResponse>> DeletePendingChangeLogLineAsync(
         [FromServices] IDeleteChangeLogLine deleteChangeLogLine,
         Guid changeLogLineId)
     {
@@ -174,14 +174,14 @@ public class PendingChangeLogsController : ControllerBase
     }
 
     [HttpDelete("products/{productId:Guid}/pending-changelogs", Name = "DeleteAllPendingChangeLogs")]
-    [ProducesResponseType(typeof(DefaultResponse), StatusCodes.Status200OK)]
+    [ProducesResponseType(StatusCodes.Status200OK)]
     [NeedsPermission(Permission.DeleteChangeLogLine)]
-    public async Task<ActionResult> DeleteAllPendingChangeLogLineAsync(
+    public async Task<ActionResult<SuccessResponse>> DeleteAllPendingChangeLogLineAsync(
         [FromServices] IDeleteAllPendingChangeLogLines deleteAllPendingChangeLogLines,
         Guid productId)
     {
         await deleteAllPendingChangeLogLines.ExecuteAsync(productId);
 
-        return Ok(DefaultResponse.Create("Pending ChangeLogLines successfully deleted."));
+        return Ok(ErrorResponse.Create("Pending ChangeLogLines successfully deleted."));
     }
 }

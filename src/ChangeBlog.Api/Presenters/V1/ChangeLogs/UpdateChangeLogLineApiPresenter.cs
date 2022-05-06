@@ -12,32 +12,32 @@ public class UpdateChangeLogLineApiPresenter : BaseApiPresenter, IUpdateChangeLo
 {
     public void InvalidChangeLogLineText(string text)
     {
-        Response = new BadRequestObjectResult(DefaultResponse.Create($"Invalid change log text '{text}'."));
+        Response = new BadRequestObjectResult(ErrorResponse.Create($"Invalid change log text '{text}'."));
     }
 
     public void InvalidIssue(string changeLogText, string issue)
     {
         Response = new BadRequestObjectResult(
-            DefaultResponse.Create($"Invalid issue '{issue}' for change log '{changeLogText}'."));
+            ErrorResponse.Create($"Invalid issue '{issue}' for change log '{changeLogText}'."));
     }
 
     public void TooManyIssues(string changeLogText, int maxIssues)
     {
         Response = new UnprocessableEntityObjectResult(
-            DefaultResponse.Create(
+            ErrorResponse.Create(
                 $"The change log '{changeLogText}' has too many issues. Max issues: '{maxIssues}'."));
     }
 
     public void InvalidLabel(string changeLogText, string label)
     {
         Response = new BadRequestObjectResult(
-            DefaultResponse.Create($"Invalid label '{label}' for change log '{changeLogText}'."));
+            ErrorResponse.Create($"Invalid label '{label}' for change log '{changeLogText}'."));
     }
 
     public void TooManyLabels(string changeLogText, int maxLabels)
     {
         Response = new UnprocessableEntityObjectResult(
-            DefaultResponse.Create(
+            ErrorResponse.Create(
                 $"The change log '{changeLogText}' has too many labels. Max labels: '{maxLabels}'."));
     }
 
@@ -48,12 +48,12 @@ public class UpdateChangeLogLineApiPresenter : BaseApiPresenter, IUpdateChangeLo
             [KnownIdentifiers.ChangeLogLineId] = changeLogLineId.ToString()
         };
 
-        Response = new OkObjectResult(DefaultResponse.Create("ChangeLogLine successfully updated.", resourceIds));
+        Response = new OkObjectResult(SuccessResponse.Create("ChangeLogLine successfully updated.", resourceIds));
     }
 
     public void ChangeLogLineDoesNotExist()
     {
-        Response = new NotFoundObjectResult(DefaultResponse.Create("ChangeLogLine not found."));
+        Response = new NotFoundObjectResult(ErrorResponse.Create("ChangeLogLine not found."));
     }
 
     public void Conflict(Conflict conflict)
@@ -64,7 +64,7 @@ public class UpdateChangeLogLineApiPresenter : BaseApiPresenter, IUpdateChangeLo
     public void LineWithSameTextAlreadyExists(string text)
     {
         Response = new UnprocessableEntityObjectResult(
-            DefaultResponse.Create($"Lines with same text are not allowed. Duplicate: '{text}'"));
+            ErrorResponse.Create($"Lines with same text are not allowed. Duplicate: '{text}'"));
     }
 
     public void RequestedLineIsNotPending(Guid changeLogLineId)
@@ -74,7 +74,7 @@ public class UpdateChangeLogLineApiPresenter : BaseApiPresenter, IUpdateChangeLo
             [KnownIdentifiers.ChangeLogLineId] = changeLogLineId.ToString()
         };
 
-        Response = new ConflictObjectResult(DefaultResponse.Create("The requested change log line is not pending.",
+        Response = new ConflictObjectResult(ErrorResponse.Create("The requested change log line is not pending.",
             resourceIds));
     }
 
@@ -85,7 +85,7 @@ public class UpdateChangeLogLineApiPresenter : BaseApiPresenter, IUpdateChangeLo
             [KnownIdentifiers.ChangeLogLineId] = changeLogLineId.ToString()
         };
 
-        Response = new ConflictObjectResult(DefaultResponse.Create("The requested change log line is pending.",
+        Response = new ConflictObjectResult(ErrorResponse.Create("The requested change log line is pending.",
             resourceIds));
     }
 }

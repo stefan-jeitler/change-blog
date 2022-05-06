@@ -14,18 +14,18 @@ public class AssignPendingLineToVersionApiPresenter : BaseApiPresenter,
     public void InvalidVersionFormat(string version)
     {
         Response = new UnprocessableEntityObjectResult(
-            DefaultResponse.Create($"Invalid version format '{version}'"));
+            ErrorResponse.Create($"Invalid version format '{version}'"));
     }
 
     public void VersionDoesNotExist()
     {
-        Response = new NotFoundObjectResult(DefaultResponse.Create("Version not found."));
+        Response = new NotFoundObjectResult(ErrorResponse.Create("Version not found."));
     }
 
     public void MaxChangeLogLinesReached(int maxChangeLogLines)
     {
         Response = new ConflictObjectResult(
-            DefaultResponse.Create(
+            ErrorResponse.Create(
                 $"The target version has reached the max lines count. Max lines: {maxChangeLogLines}"));
     }
 
@@ -36,7 +36,7 @@ public class AssignPendingLineToVersionApiPresenter : BaseApiPresenter,
             [KnownIdentifiers.ChangeLogLineId] = changeLogLineId.ToString()
         };
 
-        Response = new NotFoundObjectResult(DefaultResponse.Create("ChangeLogLine not found.", resourceIds));
+        Response = new NotFoundObjectResult(ErrorResponse.Create("ChangeLogLine not found.", resourceIds));
     }
 
     public void Conflict(Conflict conflict)
@@ -52,7 +52,7 @@ public class AssignPendingLineToVersionApiPresenter : BaseApiPresenter,
             [KnownIdentifiers.ChangeLogLineId] = changeLogLineId.ToString()
         };
 
-        Response = new OkObjectResult(DefaultResponse.Create("Line successfully moved.", resourceIds));
+        Response = new OkObjectResult(SuccessResponse.Create("Line successfully moved.", resourceIds));
     }
 
     public void ChangeLogLineIsNotPending(Guid changeLogLineId)
@@ -62,14 +62,14 @@ public class AssignPendingLineToVersionApiPresenter : BaseApiPresenter,
             [KnownIdentifiers.ChangeLogLineId] = changeLogLineId.ToString()
         };
 
-        Response = new ConflictObjectResult(DefaultResponse.Create("The given ChangeLogLine is not pending",
+        Response = new ConflictObjectResult(ErrorResponse.Create("The given ChangeLogLine is not pending",
             resourceIds));
     }
 
     public void LineWithSameTextAlreadyExists(string text)
     {
         Response = new UnprocessableEntityObjectResult(
-            DefaultResponse.Create(
+            ErrorResponse.Create(
                 $"The target version contains already lines with an identical text. Duplicate: {text}"));
     }
 
@@ -80,7 +80,7 @@ public class AssignPendingLineToVersionApiPresenter : BaseApiPresenter,
             [KnownIdentifiers.ProductId] = targetVersionProductId.ToString()
         };
 
-        Response = new ConflictObjectResult(DefaultResponse.Create("The target version belongs to a different product.",
+        Response = new ConflictObjectResult(ErrorResponse.Create("The target version belongs to a different product.",
             resourceIds));
     }
 }

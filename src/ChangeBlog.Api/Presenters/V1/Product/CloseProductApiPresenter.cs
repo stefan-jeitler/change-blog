@@ -16,7 +16,7 @@ public class CloseProductApiPresenter : BaseApiPresenter, ICloseProductOutputPor
             [KnownIdentifiers.ProductId] = productId.ToString()
         };
 
-        Response = new OkObjectResult(DefaultResponse.Create("Project successfully closed.", resourceIds));
+        Response = new OkObjectResult(SuccessResponse.Create("Project successfully closed.", resourceIds));
     }
 
     public void ProductDoesNotExist(Guid productId)
@@ -26,7 +26,7 @@ public class CloseProductApiPresenter : BaseApiPresenter, ICloseProductOutputPor
             [KnownIdentifiers.ProductId] = productId.ToString()
         };
 
-        Response = new NotFoundObjectResult(DefaultResponse.Create("Product not found.", resourceIds));
+        Response = new NotFoundObjectResult(ErrorResponse.Create("Product not found.", resourceIds));
     }
 
     public void ProductClosed(Guid productId)
@@ -36,6 +36,6 @@ public class CloseProductApiPresenter : BaseApiPresenter, ICloseProductOutputPor
             [KnownIdentifiers.ProductId] = productId.ToString()
         };
 
-        Response = new OkObjectResult(DefaultResponse.Create("Project successfully closed.", resourceIds));
+        Response = new OkObjectResult(SuccessResponse.Create("Project successfully closed.", resourceIds));
     }
 }

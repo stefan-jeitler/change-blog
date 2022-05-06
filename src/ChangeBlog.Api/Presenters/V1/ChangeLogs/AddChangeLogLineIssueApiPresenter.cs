@@ -17,7 +17,7 @@ public class AddChangeLogLineIssueApiPresenter : BaseApiPresenter, IAddChangeLog
             [KnownIdentifiers.ChangeLogLineId] = changeLogLineId.ToString()
         };
 
-        Response = new OkObjectResult(DefaultResponse.Create("Issue successfully added.", resourceIds));
+        Response = new OkObjectResult(SuccessResponse.Create("Issue successfully added.", resourceIds));
     }
 
     public void Conflict(Conflict conflict)
@@ -27,18 +27,18 @@ public class AddChangeLogLineIssueApiPresenter : BaseApiPresenter, IAddChangeLog
 
     public void ChangeLogLineDoesNotExist()
     {
-        Response = new NotFoundObjectResult(DefaultResponse.Create("ChangeLogLine not found."));
+        Response = new NotFoundObjectResult(ErrorResponse.Create("ChangeLogLine not found."));
     }
 
     public void InvalidIssue(string issue)
     {
         Response = new BadRequestObjectResult(
-            DefaultResponse.Create($"Invalid issue '{issue}'."));
+            ErrorResponse.Create($"Invalid issue '{issue}'."));
     }
 
     public void MaxIssuesReached(int maxIssues)
     {
         Response = new UnprocessableEntityObjectResult(
-            DefaultResponse.Create($"Max issues count reached. Max issues: {maxIssues}"));
+            ErrorResponse.Create($"Max issues count reached. Max issues: {maxIssues}"));
     }
 }

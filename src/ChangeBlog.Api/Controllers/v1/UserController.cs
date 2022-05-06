@@ -19,8 +19,8 @@ namespace ChangeBlog.Api.Controllers.V1;
 [ApiController]
 [Route("api/v1/user")]
 [Produces(MediaTypeNames.Application.Json)]
-[ProducesResponseType(typeof(DefaultResponse), StatusCodes.Status401Unauthorized)]
-[ProducesResponseType(typeof(DefaultResponse), StatusCodes.Status403Forbidden)]
+[ProducesResponseType(typeof(ErrorResponse), StatusCodes.Status401Unauthorized)]
+[ProducesResponseType(typeof(ErrorResponse), StatusCodes.Status403Forbidden)]
 [SwaggerControllerOrder(2)]
 public class UserController : ControllerBase
 {
@@ -33,7 +33,7 @@ public class UserController : ControllerBase
 
     [HttpGet("products", Name = "GetUserProducts")]
     [ProducesResponseType(StatusCodes.Status200OK)]
-    [ProducesResponseType(typeof(DefaultResponse), StatusCodes.Status400BadRequest)]
+    [ProducesResponseType(typeof(ErrorResponse), StatusCodes.Status400BadRequest)]
     [SkipAuthorization]
     public async Task<ActionResult<List<ProductDto>>> GetUserProductsAsync(Guid? lastProductId = null,
         [Range(1, UserProductQueryRequestModel.MaxLimit)]

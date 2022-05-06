@@ -2,13 +2,15 @@
 <app-loading-spinner [show]="!isLoadingFinished"></app-loading-spinner>
 
 <div class="app-content-container">
+  <form [formGroup]="userProfileForm" (ngSubmit)="updateProfile(userProfileForm)">
+
   <div class="flex flex-column align-items-start w-12 md:w-30rem">
     <div class="flex flex-row w-full">
       <label class="font-medium" for="first-name-input">{{ translationKey.$name | transloco }}</label>
       <i [pTooltip]="translationKey.userProfileUsernameInfo | transloco" class="pi pi-info-circle ml-2"></i>
     </div>
-    <input [ngModel]="firstAndLastName" class="w-full mt-2" id="first-name-input"
-           pInputText readonly type="text">
+    <input formControlName="fullName" class="w-full mt-2" id="first-name-input"
+           pInputText type="text">
   </div>
 
   <div class="flex flex-column align-items-start mt-3 w-12 md:w-30rem">
@@ -16,56 +18,63 @@
       <label class="font-medium" for="first-name-input">{{ translationKey.email | transloco }}</label>
       <i [pTooltip]="translationKey.userProfileEmailInfo | transloco" class="pi pi-info-circle ml-2"></i>
     </div>
-    <input [ngModel]="currentUser.email" class="w-full mt-2" id="email-input"
-           pInputText readonly type="text">
+    <input formControlName="email" class="w-full mt-2" id="email-input"
+           pInputText type="text">
   </div>
+
 
   <div class="flex flex-column align-items-start mt-3 w-12 md:w-30rem">
     <label class="font-medium" for="timezone-dropdown">{{ translationKey.timezone | transloco }}</label>
-    <p-dropdown [(ngModel)]="selectedTimeZone"
+    <p-dropdown formControlName="timezone"
                 [options]="availableTimezones"
                 [showClear]="false"
                 [filter]="true" filterBy="windowsId,offset"
-                (onChange)="updateUserProfile()"
                 class="mt-2 w-12"
                 id="timezone-dropdown"
                 styleClass="w-full"
-                scrollHeight="300px">
-      <ng-template pTemplate="selectedItem">
-        <div class="timezone-item timezone-item-value"  *ngIf="selectedTimeZone">
-          <span>({{selectedTimeZone.offset}}) {{selectedTimeZone.windowsId}}</span>
+                scrollHeight="300px"
+                aria-describedby="timezone-error">
+      <ng-template let-item pTemplate="selectedItem">
+        <div class="timezone-item timezone-item-value">
+          <span>({{item.offset}}) {{item.windowsId}}</span>
         </div>
       </ng-template>
       <ng-template let-timezone pTemplate="item">
         <span>({{timezone.offset}}) {{timezone.windowsId}}</span>
       </ng-template>
     </p-dropdown>
+    <div *ngIf="showErrorMessage('timezone')">
+      <small id="timezone-error" class="pt-1 p-error block">{{ errorMessage('timezone') }}</small>
+    </div>
   </div>
 
   <div class="flex flex-column align-items-start mt-3 w-12 md:w-30rem">
     <label class="font-medium" for="culture-dropdown">{{ translationKey.culture | transloco }}</label>
-    <p-dropdown [(ngModel)]="currentUser.culture"
+    <p-dropdown formControlName="culture"
                 [options]="availableCultures"
                 [showClear]="false"
-                (onChange)="updateUserProfile()"
                 class="mt-2 w-12"
                 id="culture-dropdown"
                 scrollHeight="280px"
-                styleClass="w-full">
-
+                styleClass="w-full"
+                aria-describedby="culture-error">
     </p-dropdown>
+    <div *ngIf="showErrorMessage('culture')">
+      <small id="culture-error" class="pt-1 p-error block">{{ errorMessage('culture') }}</small>
+    </div>
   </div>
 
   <div class="flex flex flex-row justify-content-end mt-6 mb-8 w-12 sm:w-12 md:w-30rem">
     <button [label]="translationKey.save | transloco"
-            [loading]="false"
+            [loading]="userProfileForm.disabled"
             class="p-button"
             icon="pi pi-save"
             iconPos="right"
             pButton
             pRipple
-            type="button">
-
+            type="submit">
     </button>
   </div>
+
+  </form>
 </div>

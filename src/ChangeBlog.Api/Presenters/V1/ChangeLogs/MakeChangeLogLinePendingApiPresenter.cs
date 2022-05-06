@@ -17,12 +17,12 @@ public class MakeChangeLogLinePendingApiPresenter : BaseApiPresenter, IMakeChang
             [KnownIdentifiers.ChangeLogLineId] = changeLogLineId.ToString()
         };
 
-        Response = new OkObjectResult(DefaultResponse.Create("Line was made pending.", resourceIds));
+        Response = new OkObjectResult(SuccessResponse.Create("Line was made pending.", resourceIds));
     }
 
     public void ChangeLogLineDoesNotExist()
     {
-        Response = new NotFoundObjectResult(DefaultResponse.Create("ChangeLogLine not found."));
+        Response = new NotFoundObjectResult(ErrorResponse.Create("ChangeLogLine not found."));
     }
 
     public void ChangeLogLineIsAlreadyPending(Guid changeLogLineId)
@@ -32,7 +32,7 @@ public class MakeChangeLogLinePendingApiPresenter : BaseApiPresenter, IMakeChang
             [KnownIdentifiers.ChangeLogLineId] = changeLogLineId.ToString()
         };
 
-        Response = new OkObjectResult(DefaultResponse.Create("Line was made pending.", resourceIds));
+        Response = new OkObjectResult(SuccessResponse.Create("Line was made pending.", resourceIds));
     }
 
     public void VersionAlreadyReleased(Guid versionId)
@@ -42,7 +42,7 @@ public class MakeChangeLogLinePendingApiPresenter : BaseApiPresenter, IMakeChang
             [KnownIdentifiers.VersionId] = versionId.ToString()
         };
 
-        Response = new ConflictObjectResult(DefaultResponse.Create("The related version has already been released.",
+        Response = new ConflictObjectResult(ErrorResponse.Create("The related version has already been released.",
             resourceIds));
     }
 
@@ -53,14 +53,14 @@ public class MakeChangeLogLinePendingApiPresenter : BaseApiPresenter, IMakeChang
             [KnownIdentifiers.VersionId] = versionId.ToString()
         };
 
-        Response = new ConflictObjectResult(DefaultResponse.Create("The related version has been deleted.",
+        Response = new ConflictObjectResult(ErrorResponse.Create("The related version has been deleted.",
             resourceIds));
     }
 
     public void TooManyPendingLines(int maxChangeLogLines)
     {
         Response = new UnprocessableEntityObjectResult(
-            DefaultResponse.Create($"Too many lines. Max lines: {maxChangeLogLines}"));
+            ErrorResponse.Create($"Too many lines. Max lines: {maxChangeLogLines}"));
     }
 
     public void Conflict(Conflict conflict)
@@ -76,6 +76,6 @@ public class MakeChangeLogLinePendingApiPresenter : BaseApiPresenter, IMakeChang
         };
 
         Response = new UnprocessableEntityObjectResult(
-            DefaultResponse.Create($"Lines with same text are not allowed. Duplicate: '{duplicate}'", resourceIds));
+            ErrorResponse.Create($"Lines with same text are not allowed. Duplicate: '{duplicate}'", resourceIds));
     }
 }

@@ -25,8 +25,8 @@ namespace ChangeBlog.Api.Controllers.V1;
 [ApiController]
 [Route("api/v1/accounts")]
 [Produces(MediaTypeNames.Application.Json)]
-[ProducesResponseType(typeof(DefaultResponse), StatusCodes.Status401Unauthorized)]
-[ProducesResponseType(typeof(DefaultResponse), StatusCodes.Status403Forbidden)]
+[ProducesResponseType(typeof(ErrorResponse), StatusCodes.Status401Unauthorized)]
+[ProducesResponseType(typeof(ErrorResponse), StatusCodes.Status403Forbidden)]
 [SwaggerControllerOrder(1)]
 public class AccountController : ControllerBase
 {
@@ -44,7 +44,7 @@ public class AccountController : ControllerBase
 
     [HttpGet("{accountId:Guid}", Name = "GetAccount")]
     [ProducesResponseType(StatusCodes.Status200OK)]
-    [ProducesResponseType(typeof(DefaultResponse), StatusCodes.Status400BadRequest)]
+    [ProducesResponseType(typeof(ErrorResponse), StatusCodes.Status400BadRequest)]
     [NeedsPermission(Permission.ViewAccount)]
     public async Task<ActionResult<AccountDto>> GetAccountAsync([FromServices] IGetAccount getAccount,
         Guid accountId)
@@ -57,7 +57,7 @@ public class AccountController : ControllerBase
 
     [HttpGet("{accountId:Guid}/users", Name = "GetAccountUsers")]
     [ProducesResponseType(StatusCodes.Status200OK)]
-    [ProducesResponseType(typeof(DefaultResponse), StatusCodes.Status400BadRequest)]
+    [ProducesResponseType(typeof(ErrorResponse), StatusCodes.Status400BadRequest)]
     [NeedsPermission(Permission.ViewAccountUsers)]
     public async Task<ActionResult<List<UserDto>>> GetAccountUsersAsync(
         [FromServices] IGetUsers getUsers,
@@ -79,7 +79,7 @@ public class AccountController : ControllerBase
 
     [HttpGet("{accountId:Guid}/products", Name = "GetAccountProducts")]
     [ProducesResponseType(StatusCodes.Status200OK)]
-    [ProducesResponseType(typeof(DefaultResponse), StatusCodes.Status400BadRequest)]
+    [ProducesResponseType(typeof(ErrorResponse), StatusCodes.Status400BadRequest)]
     [NeedsPermission(Permission.ViewAccountProducts)]
     public async Task<ActionResult<List<ProductDto>>> GetAccountProductsAsync(
         [FromServices] IGetAccountProducts getAccountProducts,
@@ -104,7 +104,7 @@ public class AccountController : ControllerBase
 
     [HttpGet("roles", Name = "GetRoles")]
     [ProducesResponseType(StatusCodes.Status200OK)]
-    [ProducesResponseType(typeof(DefaultResponse), StatusCodes.Status400BadRequest)]
+    [ProducesResponseType(typeof(ErrorResponse), StatusCodes.Status400BadRequest)]
     [SkipAuthorization]
     public async Task<ActionResult<List<RoleDto>>> GetRolesAsync([FromServices] IGetRoles getRoles,
         string filter = null,

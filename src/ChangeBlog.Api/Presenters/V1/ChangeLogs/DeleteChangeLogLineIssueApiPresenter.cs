@@ -17,7 +17,7 @@ public class DeleteChangeLogLineIssueApiPresenter : BaseApiPresenter, IDeleteCha
             [KnownIdentifiers.ChangeLogLineId] = changeLogLineId.ToString()
         };
 
-        Response = new OkObjectResult(DefaultResponse.Create("Issue successfully deleted.", resourceIds));
+        Response = new OkObjectResult(SuccessResponse.Create("Issue successfully deleted.", resourceIds));
     }
 
     public void Conflict(Conflict conflict)
@@ -27,12 +27,12 @@ public class DeleteChangeLogLineIssueApiPresenter : BaseApiPresenter, IDeleteCha
 
     public void ChangeLogLineDoesNotExist()
     {
-        Response = new NotFoundObjectResult(DefaultResponse.Create("ChangeLogLine not found."));
+        Response = new NotFoundObjectResult(ErrorResponse.Create("ChangeLogLine not found."));
     }
 
     public void InvalidIssue(string issue)
     {
         Response = new BadRequestObjectResult(
-            DefaultResponse.Create($"Invalid issue '{issue}'."));
+            ErrorResponse.Create($"Invalid issue '{issue}'."));
     }
 }

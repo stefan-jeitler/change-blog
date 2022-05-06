@@ -26,7 +26,7 @@ public class AddProductApiPresenter : BaseApiPresenter, IAddProductOutputPort
             [KnownIdentifiers.AccountId] = accountId.ToString()
         };
 
-        Response = new NotFoundObjectResult(DefaultResponse.Create("Account not found.", resourceIds));
+        Response = new NotFoundObjectResult(ErrorResponse.Create("Account not found.", resourceIds));
     }
 
     public void AccountDeleted(Guid accountId)
@@ -37,12 +37,12 @@ public class AddProductApiPresenter : BaseApiPresenter, IAddProductOutputPort
         };
 
         Response = new UnprocessableEntityObjectResult(
-            DefaultResponse.Create("The requested account has been deleted.", resourceIds));
+            ErrorResponse.Create("The requested account has been deleted.", resourceIds));
     }
 
     public void InvalidName(string name)
     {
-        Response = new BadRequestObjectResult(DefaultResponse.Create($"Invalid name {name}."));
+        Response = new BadRequestObjectResult(ErrorResponse.Create($"Invalid name {name}."));
     }
 
     public void ProductAlreadyExists(Guid productId)
@@ -53,7 +53,7 @@ public class AddProductApiPresenter : BaseApiPresenter, IAddProductOutputPort
         };
 
         Response = new ConflictObjectResult(
-            DefaultResponse.Create("Product already exists.", resourceIds));
+            ErrorResponse.Create("Product already exists.", resourceIds));
     }
 
     public void VersioningSchemeDoesNotExist(Guid versioningSchemeId)
@@ -63,7 +63,7 @@ public class AddProductApiPresenter : BaseApiPresenter, IAddProductOutputPort
             [KnownIdentifiers.VersioningSchemeId] = versioningSchemeId.ToString()
         };
 
-        Response = new NotFoundObjectResult(DefaultResponse.Create("VersioningScheme not found.",
+        Response = new NotFoundObjectResult(ErrorResponse.Create("VersioningScheme not found.",
             resourceIds));
     }
 
@@ -81,13 +81,13 @@ public class AddProductApiPresenter : BaseApiPresenter, IAddProductOutputPort
         };
 
         var location = _httpContext.CreateLinkTo($"api/v1/products/{productId}");
-        Response = new CreatedResult(location, DefaultResponse.Create("Product added.", resourceIds));
+        Response = new CreatedResult(location, SuccessResponse.Create("Product added.", resourceIds));
     }
 
     public void NotSupportedLanguageCode(string languageCode, IEnumerable<string> supportedLangCodes)
     {
         Response = new UnprocessableEntityObjectResult(
-            DefaultResponse.Create(
+            ErrorResponse.Create(
                 $"The given LanguageCode {languageCode} is not supported. Supported Codes are {string.Join(", ", supportedLangCodes)}"));
     }
 }

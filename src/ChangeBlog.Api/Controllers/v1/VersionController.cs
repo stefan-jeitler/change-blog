@@ -25,9 +25,9 @@ namespace ChangeBlog.Api.Controllers.V1;
 [ApiController]
 [Route("api/v1")]
 [Produces(MediaTypeNames.Application.Json)]
-[ProducesResponseType(typeof(DefaultResponse), StatusCodes.Status400BadRequest)]
-[ProducesResponseType(typeof(DefaultResponse), StatusCodes.Status401Unauthorized)]
-[ProducesResponseType(typeof(DefaultResponse), StatusCodes.Status403Forbidden)]
+[ProducesResponseType(typeof(ErrorResponse), StatusCodes.Status400BadRequest)]
+[ProducesResponseType(typeof(ErrorResponse), StatusCodes.Status401Unauthorized)]
+[ProducesResponseType(typeof(ErrorResponse), StatusCodes.Status403Forbidden)]
 [SwaggerControllerOrder(4)]
 public class VersionController : ControllerBase
 {
@@ -40,7 +40,7 @@ public class VersionController : ControllerBase
 
     [HttpGet("versions/{versionId:Guid}", Name = "GetVersion")]
     [ProducesResponseType(StatusCodes.Status200OK)]
-    [ProducesResponseType(typeof(DefaultResponse), StatusCodes.Status404NotFound)]
+    [ProducesResponseType(typeof(ErrorResponse), StatusCodes.Status404NotFound)]
     [NeedsPermission(Permission.ViewVersions)]
     public async Task<ActionResult<VersionDto>> GetVersionAsync(
         Guid versionId,
@@ -49,7 +49,7 @@ public class VersionController : ControllerBase
         var userId = HttpContext.GetUserId();
         var version = await getVersion.ExecuteAsync(userId, versionId);
 
-        if (version.HasNoValue) return new NotFoundObjectResult(DefaultResponse.Create("Version not found"));
+        if (version.HasNoValue) return new NotFoundObjectResult(ErrorResponse.Create("Version not found"));
 
         return Ok(VersionDto.FromResponseModel(version.GetValueOrThrow()));
     }
@@ -80,7 +80,7 @@ public class VersionController : ControllerBase
 
     [HttpGet("products/{productId:Guid}/versions/latest", Name = "GetLatestVersion")]
     [ProducesResponseType(StatusCodes.Status200OK)]
-    [ProducesResponseType(typeof(DefaultResponse), StatusCodes.Status404NotFound)]
+    [ProducesResponseType(typeof(ErrorResponse), StatusCodes.Status404NotFound)]
     [NeedsPermission(Permission.ViewVersions)]
     public async Task<ActionResult<VersionDto>> GetLatestProductVersionAsync(
         [FromServices] IGetLatestVersion getLatestVersion,
@@ -95,7 +95,7 @@ public class VersionController : ControllerBase
 
     [HttpGet("products/{productId:Guid}/versions/{version}", Name = "GetProductVersion")]
     [ProducesResponseType(StatusCodes.Status200OK)]
-    [ProducesResponseType(typeof(DefaultResponse), StatusCodes.Status404NotFound)]
+    [ProducesResponseType(typeof(ErrorResponse), StatusCodes.Status404NotFound)]
     [NeedsPermission(Permission.ViewVersions)]
     public async Task<ActionResult<List<VersionDto>>> GetProductVersionAsync(
         [FromServices] IGetVersion getVersion,
@@ -106,22 +106,22 @@ public class VersionController : ControllerBase
         var clVersion = await getVersion.ExecuteAsync(userId, productId, version);
 
         if (clVersion.HasNoValue) 
-            return new NotFoundObjectResult(DefaultResponse.Create("Version not found"));
+            return new NotFoundObjectResult(ErrorResponse.Create("Version not found"));
 
         return Ok(VersionDto.FromResponseModel(clVersion.GetValueOrThrow()));
     }
 
     [HttpPost("products/{productId:Guid}/versions", Name = "AddVersion")]
-    [ProducesResponseType(typeof(DefaultResponse), StatusCodes.Status201Created)]
-    [ProducesResponseType(typeof(DefaultResponse), StatusCodes.Status404NotFound)]
-    [ProducesResponseType(typeof(DefaultResponse), StatusCodes.Status409Conflict)]
-    [ProducesResponseType(typeof(DefaultResponse), StatusCodes.Status422UnprocessableEntity)]
+    [ProducesResponseType(StatusCodes.Status201Created)]
+    [ProducesResponseType(typeof(ErrorResponse), StatusCodes.Status404NotFound)]
+    [ProducesResponseType(typeof(ErrorResponse), StatusCodes.Status409Conflict)]
+    [ProducesResponseType(typeof(ErrorResponse), StatusCodes.Status422UnprocessableEntity)]
     [NeedsPermission(Permission.AddVersion)]
-    public async Task<ActionResult> AddVersionAsync([FromServices] IAddVersion addVersion,
+    public async Task<ActionResult<SuccessResponse>> AddVersionAsync([FromServices] IAddVersion addVersion,
         Guid productId,
         [FromBody] AddVersionDto versionDto)
     {
-        if (versionDto is null) return new BadRequestObjectResult(DefaultResponse.Create("Missing version dto."));
+        if (versionDto is null) return new BadRequestObjectResult(ErrorResponse.Create("Missing version dto."));
 
         var lines = versionDto.ChangeLogLines
             .Select(x =>
@@ -141,11 +141,11 @@ public class VersionController : ControllerBase
     }
 
     [HttpPost("versions/{versionId:Guid}/release", Name = "ReleaseVersion")]
-    [ProducesResponseType(typeof(DefaultResponse), StatusCodes.Status200OK)]
-    [ProducesResponseType(typeof(DefaultResponse), StatusCodes.Status404NotFound)]
-    [ProducesResponseType(typeof(DefaultResponse), StatusCodes.Status409Conflict)]
+    [ProducesResponseType(StatusCodes.Status200OK)]
+    [ProducesResponseType(typeof(ErrorResponse), StatusCodes.Status404NotFound)]
+    [ProducesResponseType(typeof(ErrorResponse), StatusCodes.Status409Conflict)]
     [NeedsPermission(Permission.ReleaseVersion)]
-    public async Task<ActionResult> ReleaseVersionAsync([FromServices] IReleaseVersion releaseVersion,
+    public async Task<ActionResult<SuccessResponse>> ReleaseVersionAsync([FromServices] IReleaseVersion releaseVersion,
         Guid versionId)
     {
         var presenter = new ReleaseVersionApiPresenter();
@@ -155,13 +155,13 @@ public class VersionController : ControllerBase
     }
 
     [HttpPut("products/{productId:Guid}/versions/{version}", Name = "UpdateVersion")]
-    [ProducesResponseType(typeof(DefaultResponse), StatusCodes.Status200OK)]
-    [ProducesResponseType(typeof(DefaultResponse), StatusCodes.Status201Created)]
-    [ProducesResponseType(typeof(DefaultResponse), StatusCodes.Status404NotFound)]
-    [ProducesResponseType(typeof(DefaultResponse), StatusCodes.Status409Conflict)]
-    [ProducesResponseType(typeof(DefaultResponse), StatusCodes.Status422UnprocessableEntity)]
+    [ProducesResponseType( StatusCodes.Status200OK)]
+    [ProducesResponseType(typeof(ErrorResponse), StatusCodes.Status201Created)]
+    [ProducesResponseType(typeof(ErrorResponse), StatusCodes.Status404NotFound)]
+    [ProducesResponseType(typeof(ErrorResponse), StatusCodes.Status409Conflict)]
+    [ProducesResponseType(typeof(ErrorResponse), StatusCodes.Status422UnprocessableEntity)]
     [NeedsPermission(Permission.AddOrUpdateVersion)]
-    public async Task<ActionResult> AddOrUpdateVersionAsync([FromServices] IAddOrUpdateVersion addOrUpdateVersion,
+    public async Task<ActionResult<SuccessResponse>> AddOrUpdateVersionAsync([FromServices] IAddOrUpdateVersion addOrUpdateVersion,
         Guid productId,
         string version,
         [FromBody] AddOrUpdateVersionDto addOrUpdateVersionDto)
@@ -190,11 +190,11 @@ public class VersionController : ControllerBase
     }
 
     [HttpDelete("versions/{versionId:Guid}", Name = "DeleteVersion")]
-    [ProducesResponseType(typeof(DefaultResponse), StatusCodes.Status200OK)]
-    [ProducesResponseType(typeof(DefaultResponse), StatusCodes.Status404NotFound)]
-    [ProducesResponseType(typeof(DefaultResponse), StatusCodes.Status409Conflict)]
+    [ProducesResponseType(StatusCodes.Status200OK)]
+    [ProducesResponseType(typeof(ErrorResponse), StatusCodes.Status404NotFound)]
+    [ProducesResponseType(typeof(ErrorResponse), StatusCodes.Status409Conflict)]
     [NeedsPermission(Permission.DeleteVersion)]
-    public async Task<ActionResult> DeleteVersionAsync([FromServices] IDeleteVersion deleteVersion, Guid versionId)
+    public async Task<ActionResult<SuccessResponse>> DeleteVersionAsync([FromServices] IDeleteVersion deleteVersion, Guid versionId)
     {
         var presenter = new DeleteVersionApiPresenter();
         await deleteVersion.ExecuteAsync(presenter, versionId);

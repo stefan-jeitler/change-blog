@@ -19,9 +19,9 @@ namespace ChangeBlog.Api.Controllers.V1;
 [ApiController]
 [Route("api/v1/changelogs/{changeLogLineId:Guid}/labels")]
 [Produces(MediaTypeNames.Application.Json)]
-[ProducesResponseType(typeof(DefaultResponse), StatusCodes.Status400BadRequest)]
-[ProducesResponseType(typeof(DefaultResponse), StatusCodes.Status401Unauthorized)]
-[ProducesResponseType(typeof(DefaultResponse), StatusCodes.Status403Forbidden)]
+[ProducesResponseType(typeof(ErrorResponse), StatusCodes.Status400BadRequest)]
+[ProducesResponseType(typeof(ErrorResponse), StatusCodes.Status401Unauthorized)]
+[ProducesResponseType(typeof(ErrorResponse), StatusCodes.Status403Forbidden)]
 [SwaggerControllerOrder(7)]
 public class LabelsController : ControllerBase
 {
@@ -37,12 +37,12 @@ public class LabelsController : ControllerBase
     }
 
     [HttpPut("{label}", Name = "AddLabel")]
-    [ProducesResponseType(typeof(DefaultResponse), StatusCodes.Status200OK)]
-    [ProducesResponseType(typeof(DefaultResponse), StatusCodes.Status404NotFound)]
-    [ProducesResponseType(typeof(DefaultResponse), StatusCodes.Status409Conflict)]
-    [ProducesResponseType(typeof(DefaultResponse), StatusCodes.Status422UnprocessableEntity)]
+    [ProducesResponseType(StatusCodes.Status200OK)]
+    [ProducesResponseType(typeof(ErrorResponse), StatusCodes.Status404NotFound)]
+    [ProducesResponseType(typeof(ErrorResponse), StatusCodes.Status409Conflict)]
+    [ProducesResponseType(typeof(ErrorResponse), StatusCodes.Status422UnprocessableEntity)]
     [NeedsPermission(Permission.AddOrUpdateChangeLogLine)]
-    public async Task<ActionResult> AddLabelAsync(
+    public async Task<ActionResult<SuccessResponse>> AddLabelAsync(
         [FromServices] IAddChangeLogLineLabel addChangeLogLineLabel,
         Guid changeLogLineId, string label)
     {
@@ -55,11 +55,11 @@ public class LabelsController : ControllerBase
     }
 
     [HttpDelete("{label}", Name = "DeleteLabel")]
-    [ProducesResponseType(typeof(DefaultResponse), StatusCodes.Status200OK)]
-    [ProducesResponseType(typeof(DefaultResponse), StatusCodes.Status404NotFound)]
-    [ProducesResponseType(typeof(DefaultResponse), StatusCodes.Status409Conflict)]
+    [ProducesResponseType(StatusCodes.Status200OK)]
+    [ProducesResponseType(typeof(ErrorResponse), StatusCodes.Status404NotFound)]
+    [ProducesResponseType(typeof(ErrorResponse), StatusCodes.Status409Conflict)]
     [NeedsPermission(Permission.AddOrUpdateChangeLogLine)]
-    public async Task<ActionResult> DeleteLabelAsync(
+    public async Task<ActionResult<SuccessResponse>> DeleteLabelAsync(
         [FromServices] IDeleteChangeLogLineLabel deleteChangeLogLineLabel,
         Guid changeLogLineId, string label)
     {

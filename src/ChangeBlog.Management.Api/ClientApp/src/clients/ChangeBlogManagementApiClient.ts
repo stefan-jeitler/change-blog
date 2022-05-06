@@ -81,7 +81,7 @@ export class Client {
     /**
      * @return Success
      */
-    getAppSettings(): Observable<void> {
+    getAppSettings(): Observable<ClientAppSettings> {
         let url_ = this.baseUrl + "/api/appsettings";
         url_ = url_.replace(/[?&]$/, "");
 
@@ -89,6 +89,7 @@ export class Client {
             observe: "response",
             responseType: "blob",
             headers: new HttpHeaders({
+                "Accept": "application/json"
             })
         };
 
@@ -99,14 +100,14 @@ export class Client {
                 try {
                     return this.processGetAppSettings(response_ as any);
                 } catch (e) {
-                    return _observableThrow(e) as any as Observable<void>;
+                    return _observableThrow(e) as any as Observable<ClientAppSettings>;
                 }
             } else
-                return _observableThrow(response_) as any as Observable<void>;
+                return _observableThrow(response_) as any as Observable<ClientAppSettings>;
         }));
     }
 
-    protected processGetAppSettings(response: HttpResponseBase): Observable<void> {
+    protected processGetAppSettings(response: HttpResponseBase): Observable<ClientAppSettings> {
         const status = response.status;
         const responseBlob =
             response instanceof HttpResponse ? response.body :
@@ -115,7 +116,10 @@ export class Client {
         let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
         if (status === 200) {
             return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
-            return _observableOf(null as any);
+            let result200: any = null;
+            let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            result200 = ClientAppSettings.fromJS(resultData200);
+            return _observableOf(result200);
             }));
         } else if (status !== 200 && status !== 204) {
             return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
@@ -128,7 +132,7 @@ export class Client {
     /**
      * @return Success
      */
-    ensureUserIsImported(): Observable<DefaultResponse> {
+    ensureUserIsImported(): Observable<SuccessResponse> {
         let url_ = this.baseUrl + "/api/v1/user/import";
         url_ = url_.replace(/[?&]$/, "");
 
@@ -147,14 +151,14 @@ export class Client {
                 try {
                     return this.processEnsureUserIsImported(response_ as any);
                 } catch (e) {
-                    return _observableThrow(e) as any as Observable<DefaultResponse>;
+                    return _observableThrow(e) as any as Observable<SuccessResponse>;
                 }
             } else
-                return _observableThrow(response_) as any as Observable<DefaultResponse>;
+                return _observableThrow(response_) as any as Observable<SuccessResponse>;
         }));
     }
 
-    protected processEnsureUserIsImported(response: HttpResponseBase): Observable<DefaultResponse> {
+    protected processEnsureUserIsImported(response: HttpResponseBase): Observable<SuccessResponse> {
         const status = response.status;
         const responseBlob =
             response instanceof HttpResponse ? response.body :
@@ -165,14 +169,14 @@ export class Client {
             return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
             let result401: any = null;
             let resultData401 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
-            result401 = DefaultResponse.fromJS(resultData401);
+            result401 = ErrorResponse.fromJS(resultData401);
             return throwException("Unauthorized", status, _responseText, _headers, result401);
             }));
         } else if (status === 200) {
             return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
             let result200: any = null;
             let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
-            result200 = DefaultResponse.fromJS(resultData200);
+            result200 = SuccessResponse.fromJS(resultData200);
             return _observableOf(result200);
             }));
         } else if (status !== 200 && status !== 204) {
@@ -223,7 +227,7 @@ export class Client {
             return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
             let result401: any = null;
             let resultData401 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
-            result401 = DefaultResponse.fromJS(resultData401);
+            result401 = ErrorResponse.fromJS(resultData401);
             return throwException("Unauthorized", status, _responseText, _headers, result401);
             }));
         } else if (status === 200) {
@@ -245,7 +249,7 @@ export class Client {
      * @param body (optional) 
      * @return Success
      */
-    updateUserProfile(body: UpdateUserProfileDto | undefined): Observable<DefaultResponse> {
+    updateUserProfile(body: UpdateUserProfileDto | undefined): Observable<SuccessResponse> {
         let url_ = this.baseUrl + "/api/v1/user/profile";
         url_ = url_.replace(/[?&]$/, "");
 
@@ -268,14 +272,14 @@ export class Client {
                 try {
                     return this.processUpdateUserProfile(response_ as any);
                 } catch (e) {
-                    return _observableThrow(e) as any as Observable<DefaultResponse>;
+                    return _observableThrow(e) as any as Observable<SuccessResponse>;
                 }
             } else
-                return _observableThrow(response_) as any as Observable<DefaultResponse>;
+                return _observableThrow(response_) as any as Observable<SuccessResponse>;
         }));
     }
 
-    protected processUpdateUserProfile(response: HttpResponseBase): Observable<DefaultResponse> {
+    protected processUpdateUserProfile(response: HttpResponseBase): Observable<SuccessResponse> {
         const status = response.status;
         const responseBlob =
             response instanceof HttpResponse ? response.body :
@@ -286,28 +290,28 @@ export class Client {
             return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
             let result401: any = null;
             let resultData401 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
-            result401 = DefaultResponse.fromJS(resultData401);
+            result401 = ErrorResponse.fromJS(resultData401);
             return throwException("Unauthorized", status, _responseText, _headers, result401);
             }));
         } else if (status === 200) {
             return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
             let result200: any = null;
             let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
-            result200 = DefaultResponse.fromJS(resultData200);
+            result200 = SuccessResponse.fromJS(resultData200);
             return _observableOf(result200);
             }));
         } else if (status === 404) {
             return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
             let result404: any = null;
             let resultData404 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
-            result404 = DefaultResponse.fromJS(resultData404);
+            result404 = ErrorResponse.fromJS(resultData404);
             return throwException("Not Found", status, _responseText, _headers, result404);
             }));
         } else if (status === 409) {
             return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
             let result409: any = null;
             let resultData409 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
-            result409 = DefaultResponse.fromJS(resultData409);
+            result409 = ErrorResponse.fromJS(resultData409);
             return throwException("Conflict", status, _responseText, _headers, result409);
             }));
         } else if (status !== 200 && status !== 204) {
@@ -358,7 +362,7 @@ export class Client {
             return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
             let result401: any = null;
             let resultData401 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
-            result401 = DefaultResponse.fromJS(resultData401);
+            result401 = ErrorResponse.fromJS(resultData401);
             return throwException("Unauthorized", status, _responseText, _headers, result401);
             }));
         } else if (status === 200) {
@@ -416,7 +420,7 @@ export class Client {
             return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
             let result401: any = null;
             let resultData401 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
-            result401 = DefaultResponse.fromJS(resultData401);
+            result401 = ErrorResponse.fromJS(resultData401);
             return throwException("Unauthorized", status, _responseText, _headers, result401);
             }));
         } else if (status === 200) {
@@ -481,7 +485,7 @@ export class Client {
             return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
             let result401: any = null;
             let resultData401 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
-            result401 = DefaultResponse.fromJS(resultData401);
+            result401 = ErrorResponse.fromJS(resultData401);
             return throwException("Unauthorized", status, _responseText, _headers, result401);
             }));
         } else if (status === 200) {
@@ -551,6 +555,122 @@ export interface IApiInfo {
     environment: string | undefined;
 }
 
+export class AuthConfig implements IAuthConfig {
+    issuer!: string | undefined;
+    tokenEndpoint!: string | undefined;
+    redirectUri!: string | undefined;
+    logoutUrl!: string | undefined;
+    oidc!: boolean;
+    clientId!: string | undefined;
+    responseType!: string | undefined;
+    scope!: string | undefined;
+    strictDiscoveryDocumentValidation!: boolean;
+    showDebugInformation!: boolean;
+
+    constructor(data?: IAuthConfig) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+        }
+    }
+
+    init(_data?: any) {
+        if (_data) {
+            this.issuer = _data["issuer"];
+            this.tokenEndpoint = _data["tokenEndpoint"];
+            this.redirectUri = _data["redirectUri"];
+            this.logoutUrl = _data["logoutUrl"];
+            this.oidc = _data["oidc"];
+            this.clientId = _data["clientId"];
+            this.responseType = _data["responseType"];
+            this.scope = _data["scope"];
+            this.strictDiscoveryDocumentValidation = _data["strictDiscoveryDocumentValidation"];
+            this.showDebugInformation = _data["showDebugInformation"];
+        }
+    }
+
+    static fromJS(data: any): AuthConfig {
+        data = typeof data === 'object' ? data : {};
+        let result = new AuthConfig();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        data["issuer"] = this.issuer;
+        data["tokenEndpoint"] = this.tokenEndpoint;
+        data["redirectUri"] = this.redirectUri;
+        data["logoutUrl"] = this.logoutUrl;
+        data["oidc"] = this.oidc;
+        data["clientId"] = this.clientId;
+        data["responseType"] = this.responseType;
+        data["scope"] = this.scope;
+        data["strictDiscoveryDocumentValidation"] = this.strictDiscoveryDocumentValidation;
+        data["showDebugInformation"] = this.showDebugInformation;
+        return data;
+    }
+}
+
+export interface IAuthConfig {
+    issuer: string | undefined;
+    tokenEndpoint: string | undefined;
+    redirectUri: string | undefined;
+    logoutUrl: string | undefined;
+    oidc: boolean;
+    clientId: string | undefined;
+    responseType: string | undefined;
+    scope: string | undefined;
+    strictDiscoveryDocumentValidation: boolean;
+    showDebugInformation: boolean;
+}
+
+export class ClientAppSettings implements IClientAppSettings {
+    changeBlogApiBaseUrl!: string | undefined;
+    discoveryDocument!: string | undefined;
+    authConfig!: AuthConfig;
+
+    constructor(data?: IClientAppSettings) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+        }
+    }
+
+    init(_data?: any) {
+        if (_data) {
+            this.changeBlogApiBaseUrl = _data["changeBlogApiBaseUrl"];
+            this.discoveryDocument = _data["discoveryDocument"];
+            this.authConfig = _data["authConfig"] ? AuthConfig.fromJS(_data["authConfig"]) : <any>undefined;
+        }
+    }
+
+    static fromJS(data: any): ClientAppSettings {
+        data = typeof data === 'object' ? data : {};
+        let result = new ClientAppSettings();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        data["changeBlogApiBaseUrl"] = this.changeBlogApiBaseUrl;
+        data["discoveryDocument"] = this.discoveryDocument;
+        data["authConfig"] = this.authConfig ? this.authConfig.toJSON() : <any>undefined;
+        return data;
+    }
+}
+
+export interface IClientAppSettings {
+    changeBlogApiBaseUrl: string | undefined;
+    discoveryDocument: string | undefined;
+    authConfig: AuthConfig;
+}
+
 export class CultureDto implements ICultureDto {
     culture!: string | undefined;
     language!: string | undefined;
@@ -595,11 +715,111 @@ export interface ICultureDto {
     country: string | undefined;
 }
 
-export class DefaultResponse implements IDefaultResponse {
+export class ErrorMessage implements IErrorMessage {
+    message!: string | undefined;
+    property!: string | undefined;
+
+    constructor(data?: IErrorMessage) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+        }
+    }
+
+    init(_data?: any) {
+        if (_data) {
+            this.message = _data["message"];
+            this.property = _data["property"];
+        }
+    }
+
+    static fromJS(data: any): ErrorMessage {
+        data = typeof data === 'object' ? data : {};
+        let result = new ErrorMessage();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        data["message"] = this.message;
+        data["property"] = this.property;
+        return data;
+    }
+}
+
+export interface IErrorMessage {
+    message: string | undefined;
+    property: string | undefined;
+}
+
+export class ErrorResponse implements IErrorResponse {
+    readonly errors!: ErrorMessage[] | undefined;
+    resourceIds!: { [key: string]: string; } | undefined;
+
+    constructor(data?: IErrorResponse) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+        }
+    }
+
+    init(_data?: any) {
+        if (_data) {
+            if (Array.isArray(_data["errors"])) {
+                (<any>this).errors = [] as any;
+                for (let item of _data["errors"])
+                    (<any>this).errors!.push(ErrorMessage.fromJS(item));
+            }
+            if (_data["resourceIds"]) {
+                this.resourceIds = {} as any;
+                for (let key in _data["resourceIds"]) {
+                    if (_data["resourceIds"].hasOwnProperty(key))
+                        (<any>this.resourceIds)![key] = _data["resourceIds"][key];
+                }
+            }
+        }
+    }
+
+    static fromJS(data: any): ErrorResponse {
+        data = typeof data === 'object' ? data : {};
+        let result = new ErrorResponse();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        if (Array.isArray(this.errors)) {
+            data["errors"] = [];
+            for (let item of this.errors)
+                data["errors"].push(item.toJSON());
+        }
+        if (this.resourceIds) {
+            data["resourceIds"] = {};
+            for (let key in this.resourceIds) {
+                if (this.resourceIds.hasOwnProperty(key))
+                    (<any>data["resourceIds"])[key] = this.resourceIds[key];
+            }
+        }
+        return data;
+    }
+}
+
+export interface IErrorResponse {
+    errors: ErrorMessage[] | undefined;
+    resourceIds: { [key: string]: string; } | undefined;
+}
+
+export class SuccessResponse implements ISuccessResponse {
     message!: string | undefined;
     resourceIds!: { [key: string]: string; } | undefined;
 
-    constructor(data?: IDefaultResponse) {
+    constructor(data?: ISuccessResponse) {
         if (data) {
             for (var property in data) {
                 if (data.hasOwnProperty(property))
@@ -621,9 +841,9 @@ export class DefaultResponse implements IDefaultResponse {
         }
     }
 
-    static fromJS(data: any): DefaultResponse {
+    static fromJS(data: any): SuccessResponse {
         data = typeof data === 'object' ? data : {};
-        let result = new DefaultResponse();
+        let result = new SuccessResponse();
         result.init(data);
         return result;
     }
@@ -642,7 +862,7 @@ export class DefaultResponse implements IDefaultResponse {
     }
 }
 
-export interface IDefaultResponse {
+export interface ISuccessResponse {
     message: string | undefined;
     resourceIds: { [key: string]: string; } | undefined;
 }
@@ -816,10 +1036,7 @@ export class SwaggerException extends Error {
 }
 
 function throwException(message: string, status: number, response: string, headers: { [key: string]: any; }, result?: any): Observable<any> {
-    if (result !== null && result !== undefined)
-        return _observableThrow(result);
-    else
-        return _observableThrow(new SwaggerException(message, status, response, headers, null));
+    return _observableThrow(new SwaggerException(message, status, response, headers, result));
 }
 
 function blobToText(blob: any): Observable<string> {

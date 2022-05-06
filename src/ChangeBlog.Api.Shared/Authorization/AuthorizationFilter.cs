@@ -18,13 +18,13 @@ namespace ChangeBlog.Api.Shared.Authorization;
 public class AuthorizationFilter : IAsyncActionFilter
 {
     private static readonly ActionResult UnauthorizedResult =
-        new ObjectResult(DefaultResponse.Create("You don't have permission to access this resource."))
+        new ObjectResult(ErrorResponse.Create("You don't have permission to access this resource."))
         {
             StatusCode = StatusCodes.Status403Forbidden
         };
 
     private static readonly ActionResult NotFoundResult =
-        new NotFoundObjectResult(DefaultResponse.Create("Requested resource not found."));
+        new NotFoundObjectResult(ErrorResponse.Create("Requested resource not found."));
 
     private static readonly ActionResult InternalServerError =
         new StatusCodeResult(StatusCodes.Status500InternalServerError);

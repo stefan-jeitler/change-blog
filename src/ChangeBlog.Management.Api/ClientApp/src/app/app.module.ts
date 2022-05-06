@@ -26,7 +26,7 @@ import {Router} from "@angular/router";
 import {LoginComponent} from './components/login/login.component';
 import {LandingComponent} from './components/landing/landing.component';
 import {DialogModule} from "primeng/dialog";
-import {FormsModule} from "@angular/forms";
+import {FormsModule, ReactiveFormsModule} from "@angular/forms";
 import {TooltipModule} from "primeng/tooltip";
 import {InputTextModule} from "primeng/inputtext";
 import {RippleModule} from "primeng/ripple";
@@ -69,6 +69,7 @@ import {SwipeConfig} from "./configuration/swipe-config.service";
     BrowserAnimationsModule,
     HttpClientModule,
     AppRoutingModule,
+    ReactiveFormsModule,
     OAuthModule.forRoot({
       resourceServer: {
         sendAccessToken: true,

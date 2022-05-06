@@ -65,7 +65,7 @@ public class ApiKeyAuthenticationHandler : AuthenticationHandler<ApiKeyAuthentic
     {
         Response.StatusCode = StatusCodes.Status401Unauthorized;
         Response.ContentType = MediaTypeNames.Application.Json;
-        var responseBody = DefaultResponse.Create("You are not authenticated. Please add a valid api key.");
+        var responseBody = ErrorResponse.Create("You are not authenticated. Please add a valid api key.");
 
         await Response.WriteAsync(JsonSerializer.Serialize(responseBody, new JsonSerializerOptions
         {

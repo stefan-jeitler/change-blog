@@ -20,7 +20,7 @@ public static class JwtAuthUtils
             var message = context.AuthenticateFailure?.Message ?? "Please add a valid JWT Bearer Token.";
 
             context.Response.ContentType = MediaTypeNames.Application.Json;
-            var responseBody = DefaultResponse.Create($"You are not authenticated. {message}");
+            var responseBody = ErrorResponse.Create($"You are not authenticated. {message}");
 
             await context.Response.WriteAsync(JsonSerializer.Serialize(responseBody,
                 new JsonSerializerOptions

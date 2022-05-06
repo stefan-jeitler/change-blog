@@ -17,7 +17,7 @@ public class ReleaseVersionApiPresenter : BaseApiPresenter, IReleaseVersionOutpu
             [KnownIdentifiers.VersionId] = versionId.ToString()
         };
 
-        Response = new ConflictObjectResult(DefaultResponse.Create("The version has been deleted.", resourceIds));
+        Response = new ConflictObjectResult(SuccessResponse.Create("The version has been deleted.", resourceIds));
     }
 
     public void VersionAlreadyReleased(Guid versionId)
@@ -28,7 +28,7 @@ public class ReleaseVersionApiPresenter : BaseApiPresenter, IReleaseVersionOutpu
         };
 
         Response = new ConflictObjectResult(
-            DefaultResponse.Create("The version has already been released.", resourceIds));
+            ErrorResponse.Create("The version has already been released.", resourceIds));
     }
 
     public void VersionReleased(Guid versionId)
@@ -38,7 +38,7 @@ public class ReleaseVersionApiPresenter : BaseApiPresenter, IReleaseVersionOutpu
             [KnownIdentifiers.VersionId] = versionId.ToString()
         };
 
-        Response = new OkObjectResult(DefaultResponse.Create("Version successfully released.", resourceIds));
+        Response = new OkObjectResult(SuccessResponse.Create("Version successfully released.", resourceIds));
     }
 
     public void Conflict(Conflict conflict)
@@ -53,7 +53,7 @@ public class ReleaseVersionApiPresenter : BaseApiPresenter, IReleaseVersionOutpu
             [KnownIdentifiers.VersionId] = versionId.ToString()
         };
 
-        Response = new NotFoundObjectResult(DefaultResponse.Create("Version not found", resourceIds));
+        Response = new NotFoundObjectResult(ErrorResponse.Create("Version not found", resourceIds));
     }
 
     public void RelatedProductClosed(Guid productId)
@@ -64,6 +64,6 @@ public class ReleaseVersionApiPresenter : BaseApiPresenter, IReleaseVersionOutpu
         };
 
         Response = new ConflictObjectResult(
-            DefaultResponse.Create("The related product has been closed.", resourceIds));
+            ErrorResponse.Create("The related product has been closed.", resourceIds));
     }
 }

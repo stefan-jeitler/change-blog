@@ -24,15 +24,15 @@ namespace ChangeBlog.Api.Controllers.V1;
 [ApiController]
 [Route("api/v1")]
 [Produces(MediaTypeNames.Application.Json)]
-[ProducesResponseType(typeof(DefaultResponse), StatusCodes.Status400BadRequest)]
-[ProducesResponseType(typeof(DefaultResponse), StatusCodes.Status401Unauthorized)]
-[ProducesResponseType(typeof(DefaultResponse), StatusCodes.Status403Forbidden)]
+[ProducesResponseType(typeof(ErrorResponse), StatusCodes.Status400BadRequest)]
+[ProducesResponseType(typeof(ErrorResponse), StatusCodes.Status401Unauthorized)]
+[ProducesResponseType(typeof(ErrorResponse), StatusCodes.Status403Forbidden)]
 [SwaggerControllerOrder(6)]
 public class ChangeLogsController : ControllerBase
 {
     [HttpGet("changelogs/{changeLogLineId:Guid}", Name = "GetChangeLogLine")]
     [ProducesResponseType(StatusCodes.Status200OK)]
-    [ProducesResponseType(typeof(DefaultResponse), StatusCodes.Status404NotFound)]
+    [ProducesResponseType(typeof(ErrorResponse), StatusCodes.Status404NotFound)]
     [NeedsPermission(Permission.ViewChangeLogLines)]
     public async Task<ActionResult<ChangeLogLineDto>> GetChangeLogLineAsync(
         [FromServices] IGetChangeLogLine getChangeLogLine,
@@ -47,11 +47,11 @@ public class ChangeLogsController : ControllerBase
     }
 
     [HttpDelete("changelogs/{changeLogLineId:Guid}", Name = "DeleteChangeLogLine")]
-    [ProducesResponseType(typeof(DefaultResponse), StatusCodes.Status200OK)]
-    [ProducesResponseType(typeof(DefaultResponse), StatusCodes.Status404NotFound)]
-    [ProducesResponseType(typeof(DefaultResponse), StatusCodes.Status409Conflict)]
+    [ProducesResponseType(typeof(ErrorResponse), StatusCodes.Status200OK)]
+    [ProducesResponseType(typeof(ErrorResponse), StatusCodes.Status404NotFound)]
+    [ProducesResponseType(typeof(ErrorResponse), StatusCodes.Status409Conflict)]
     [NeedsPermission(Permission.DeleteChangeLogLine)]
-    public async Task<ActionResult> DeleteChangeLogLineAsync(
+    public async Task<ActionResult<SuccessResponse>> DeleteChangeLogLineAsync(
         [FromServices] IDeleteChangeLogLine deleteChangeLogLine,
         Guid changeLogLineId)
     {
@@ -64,12 +64,12 @@ public class ChangeLogsController : ControllerBase
     }
 
     [HttpPost("versions/{versionId:Guid}/changelogs", Name = "AddChangeLogLine")]
-    [ProducesResponseType(typeof(DefaultResponse), StatusCodes.Status201Created)]
-    [ProducesResponseType(typeof(DefaultResponse), StatusCodes.Status404NotFound)]
-    [ProducesResponseType(typeof(DefaultResponse), StatusCodes.Status409Conflict)]
-    [ProducesResponseType(typeof(DefaultResponse), StatusCodes.Status422UnprocessableEntity)]
+    [ProducesResponseType(StatusCodes.Status201Created)]
+    [ProducesResponseType(typeof(ErrorResponse), StatusCodes.Status404NotFound)]
+    [ProducesResponseType(typeof(ErrorResponse), StatusCodes.Status409Conflict)]
+    [ProducesResponseType(typeof(ErrorResponse), StatusCodes.Status422UnprocessableEntity)]
     [NeedsPermission(Permission.AddOrUpdateChangeLogLine)]
-    public async Task<ActionResult> AddChangeLogLineAsync(
+    public async Task<ActionResult<SuccessResponse>> AddChangeLogLineAsync(
         [FromServices] IAddChangeLogLine addChangeLogLine,
         Guid versionId,
         [FromBody] AddOrUpdateChangeLogLineDto addChangeLogLineDto)
@@ -88,11 +88,11 @@ public class ChangeLogsController : ControllerBase
     }
 
     [HttpPatch("changelogs/{changeLogLineId:Guid}", Name = "UpdateChangeLogLine")]
-    [ProducesResponseType(typeof(DefaultResponse), StatusCodes.Status200OK)]
-    [ProducesResponseType(typeof(DefaultResponse), StatusCodes.Status409Conflict)]
-    [ProducesResponseType(typeof(DefaultResponse), StatusCodes.Status422UnprocessableEntity)]
+    [ProducesResponseType(StatusCodes.Status200OK)]
+    [ProducesResponseType(typeof(ErrorResponse), StatusCodes.Status409Conflict)]
+    [ProducesResponseType(typeof(ErrorResponse), StatusCodes.Status422UnprocessableEntity)]
     [NeedsPermission(Permission.AddOrUpdateChangeLogLine)]
-    public async Task<ActionResult> UpdateChangeLogLine(
+    public async Task<ActionResult<SuccessResponse>> UpdateChangeLogLine(
         [FromServices] IUpdateChangeLogLine updateChangeLogLine,
         Guid changeLogLineId,
         [FromBody] PatchChangeLogLineDto patchChangeLogLineDto)
@@ -110,12 +110,12 @@ public class ChangeLogsController : ControllerBase
     }
 
     [HttpPost("changelogs/{changeLogLineId:Guid}/make-pending", Name = "MakeChangeLogLinePending")]
-    [ProducesResponseType(typeof(DefaultResponse), StatusCodes.Status200OK)]
-    [ProducesResponseType(typeof(DefaultResponse), StatusCodes.Status404NotFound)]
-    [ProducesResponseType(typeof(DefaultResponse), StatusCodes.Status409Conflict)]
-    [ProducesResponseType(typeof(DefaultResponse), StatusCodes.Status422UnprocessableEntity)]
+    [ProducesResponseType( StatusCodes.Status200OK)]
+    [ProducesResponseType(typeof(ErrorResponse), StatusCodes.Status404NotFound)]
+    [ProducesResponseType(typeof(ErrorResponse), StatusCodes.Status409Conflict)]
+    [ProducesResponseType(typeof(ErrorResponse), StatusCodes.Status422UnprocessableEntity)]
     [NeedsPermission(Permission.MoveChangeLogLines)]
-    public async Task<ActionResult> MakeChangeLogLinePendingAsync(
+    public async Task<ActionResult<SuccessResponse>> MakeChangeLogLinePendingAsync(
         [FromServices] IMakeChangeLogLinePending makeChangeLogLinePending,
         Guid changeLogLineId)
     {
@@ -126,12 +126,12 @@ public class ChangeLogsController : ControllerBase
     }
 
     [HttpPost("versions/{versionId:Guid}/changelogs/make-pending", Name = "MakeAllChangeLogLinesPending")]
-    [ProducesResponseType(typeof(DefaultResponse), StatusCodes.Status200OK)]
-    [ProducesResponseType(typeof(DefaultResponse), StatusCodes.Status404NotFound)]
-    [ProducesResponseType(typeof(DefaultResponse), StatusCodes.Status409Conflict)]
-    [ProducesResponseType(typeof(DefaultResponse), StatusCodes.Status422UnprocessableEntity)]
+    [ProducesResponseType(StatusCodes.Status200OK)]
+    [ProducesResponseType(typeof(ErrorResponse), StatusCodes.Status404NotFound)]
+    [ProducesResponseType(typeof(ErrorResponse), StatusCodes.Status409Conflict)]
+    [ProducesResponseType(typeof(ErrorResponse), StatusCodes.Status422UnprocessableEntity)]
     [NeedsPermission(Permission.MoveChangeLogLines)]
-    public async Task<ActionResult> MakeVersionChangeLogLinesPendingAsync(
+    public async Task<ActionResult<SuccessResponse>> MakeVersionChangeLogLinesPendingAsync(
         [FromServices] IMakeAllChangeLogLinesPending makeAllChangeLogLinesPending,
         Guid versionId)
     {

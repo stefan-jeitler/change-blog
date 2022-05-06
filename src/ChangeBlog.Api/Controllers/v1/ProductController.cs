@@ -19,15 +19,15 @@ namespace ChangeBlog.Api.Controllers.V1;
 [ApiController]
 [Route("api/v1/products")]
 [Produces(MediaTypeNames.Application.Json)]
-[ProducesResponseType(typeof(DefaultResponse), StatusCodes.Status400BadRequest)]
-[ProducesResponseType(typeof(DefaultResponse), StatusCodes.Status401Unauthorized)]
-[ProducesResponseType(typeof(DefaultResponse), StatusCodes.Status403Forbidden)]
+[ProducesResponseType(typeof(ErrorResponse), StatusCodes.Status400BadRequest)]
+[ProducesResponseType(typeof(ErrorResponse), StatusCodes.Status401Unauthorized)]
+[ProducesResponseType(typeof(ErrorResponse), StatusCodes.Status403Forbidden)]
 [SwaggerControllerOrder(3)]
 public class ProductController : ControllerBase
 {
     [HttpGet("{productId:Guid}", Name = "GetProduct")]
     [ProducesResponseType(StatusCodes.Status200OK)]
-    [ProducesResponseType(typeof(DefaultResponse), StatusCodes.Status404NotFound)]
+    [ProducesResponseType(typeof(ErrorResponse), StatusCodes.Status404NotFound)]
     [NeedsPermission(Permission.ViewAccountProducts)]
     public async Task<ActionResult<ProductDto>> GetProductAsync([FromServices] IGetProduct getProduct,
         Guid productId)
@@ -35,22 +35,22 @@ public class ProductController : ControllerBase
         var userId = HttpContext.GetUserId();
         var product = await getProduct.ExecuteAsync(userId, productId);
 
-        if (product.HasNoValue) return NotFound(DefaultResponse.Create("Product not found"));
+        if (product.HasNoValue) return NotFound(ErrorResponse.Create("Product not found"));
 
         return Ok(ProductDto.FromResponseModel(product.GetValueOrThrow()));
     }
 
     [HttpPost(Name = "AddProduct")]
-    [ProducesResponseType(typeof(DefaultResponse), StatusCodes.Status201Created)]
-    [ProducesResponseType(typeof(DefaultResponse), StatusCodes.Status404NotFound)]
-    [ProducesResponseType(typeof(DefaultResponse), StatusCodes.Status409Conflict)]
-    [ProducesResponseType(typeof(DefaultResponse), StatusCodes.Status422UnprocessableEntity)]
+    [ProducesResponseType(StatusCodes.Status201Created)]
+    [ProducesResponseType(typeof(ErrorResponse), StatusCodes.Status404NotFound)]
+    [ProducesResponseType(typeof(ErrorResponse), StatusCodes.Status409Conflict)]
+    [ProducesResponseType(typeof(ErrorResponse), StatusCodes.Status422UnprocessableEntity)]
     [NeedsPermission(Permission.AddOrUpdateProduct)]
-    public async Task<ActionResult> AddProductAsync([FromServices] IAddProduct addProduct,
+    public async Task<ActionResult<SuccessResponse>> AddProductAsync([FromServices] IAddProduct addProduct,
         [FromBody] AddOrUpdateProductDto addOrUpdateProductDto)
     {
         if (addOrUpdateProductDto.VersioningSchemeId == Guid.Empty)
-            return BadRequest(DefaultResponse.Create("VersioningSchemeId cannot be empty."));
+            return BadRequest(ErrorResponse.Create("VersioningSchemeId cannot be empty."));
 
         var userId = HttpContext.GetUserId();
 
@@ -67,10 +67,10 @@ public class ProductController : ControllerBase
     }
 
     [HttpPost("{productId:Guid}/close", Name = "CloseProduct")]
-    [ProducesResponseType(typeof(DefaultResponse), StatusCodes.Status200OK)]
-    [ProducesResponseType(typeof(DefaultResponse), StatusCodes.Status404NotFound)]
+    [ProducesResponseType(StatusCodes.Status200OK)]
+    [ProducesResponseType(typeof(ErrorResponse), StatusCodes.Status404NotFound)]
     [NeedsPermission(Permission.CloseProduct)]
-    public async Task<ActionResult> CloseProductAsync([FromServices] ICloseProduct closeProduct,
+    public async Task<ActionResult<SuccessResponse>> CloseProductAsync([FromServices] ICloseProduct closeProduct,
         Guid productId)
     {
         var presenter = new CloseProductApiPresenter();

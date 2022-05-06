@@ -17,24 +17,24 @@ public class AssignAllPendingLinesApiPresenter : BaseApiPresenter, IAssignAllPen
             [KnownIdentifiers.VersionId] = versionId.ToString()
         };
 
-        Response = new OkObjectResult(DefaultResponse.Create("Lines successfully moved.", resourceIds));
+        Response = new OkObjectResult(SuccessResponse.Create("Lines successfully moved.", resourceIds));
     }
 
     public void InvalidVersionFormat(string version)
     {
         Response = new UnprocessableEntityObjectResult(
-            DefaultResponse.Create($"Invalid version format '{version}'"));
+            ErrorResponse.Create($"Invalid version format '{version}'"));
     }
 
     public void VersionDoesNotExist()
     {
-        Response = new NotFoundObjectResult(DefaultResponse.Create("Version not found."));
+        Response = new NotFoundObjectResult(ErrorResponse.Create("Version not found."));
     }
 
     public void TooManyLinesToAdd(uint remainingLinesToAdd)
     {
         Response = new UnprocessableEntityObjectResult(
-            DefaultResponse.Create($"Too many lines. Remaining lines: {remainingLinesToAdd}"));
+            ErrorResponse.Create($"Too many lines. Remaining lines: {remainingLinesToAdd}"));
     }
 
     public void Conflict(Conflict conflict)
@@ -49,13 +49,13 @@ public class AssignAllPendingLinesApiPresenter : BaseApiPresenter, IAssignAllPen
             [KnownIdentifiers.ProductId] = productId.ToString()
         };
 
-        Response = new OkObjectResult(DefaultResponse.Create("There are no Lines to assign.", resourceIds));
+        Response = new OkObjectResult(ErrorResponse.Create("There are no Lines to assign.", resourceIds));
     }
 
     public void LineWithSameTextAlreadyExists(IEnumerable<string> texts)
     {
         Response = new UnprocessableEntityObjectResult(
-            DefaultResponse.Create(
+            ErrorResponse.Create(
                 $"The target version contains already lines with an identical text. Duplicates: {string.Join(", ", texts)}"));
     }
 
@@ -66,7 +66,7 @@ public class AssignAllPendingLinesApiPresenter : BaseApiPresenter, IAssignAllPen
             [KnownIdentifiers.ProductId] = targetVersionProductId.ToString()
         };
 
-        Response = new ConflictObjectResult(DefaultResponse.Create("The target version belongs to a different product.",
+        Response = new ConflictObjectResult(ErrorResponse.Create("The target version belongs to a different product.",
             resourceIds));
     }
 }

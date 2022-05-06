@@ -12,5 +12,6 @@
   "languageChangedShort": "Language changed",
   "languageChanged": "The Language has been changed to {{ lang }}.",
   "genericErrorMessageShort": "Error",
-  "genericErrorMessage": "An Error occured while performing this action."
+  "genericErrorMessage": "An Error occured while performing this action.",
+  "success": "Success"
 }

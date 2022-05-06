@@ -17,13 +17,13 @@ public class DeleteChangeLogLineLabelApiPresenter : BaseApiPresenter, IDeleteCha
             [KnownIdentifiers.ChangeLogLineId] = changeLogLineId.ToString()
         };
 
-        Response = new OkObjectResult(DefaultResponse.Create("Label successfully deleted.", resourceIds));
+        Response = new OkObjectResult(SuccessResponse.Create("Label successfully deleted.", resourceIds));
     }
 
     public void InvalidLabel(string label)
     {
         Response = new BadRequestObjectResult(
-            DefaultResponse.Create($"Invalid label '{label}'."));
+            ErrorResponse.Create($"Invalid label '{label}'."));
     }
 
     public void Conflict(Conflict conflict)
@@ -33,6 +33,6 @@ public class DeleteChangeLogLineLabelApiPresenter : BaseApiPresenter, IDeleteCha
 
     public void ChangeLogLineDoesNotExist()
     {
-        Response = new NotFoundObjectResult(DefaultResponse.Create("ChangeLogLine not found."));
+        Response = new NotFoundObjectResult(ErrorResponse.Create("ChangeLogLine not found."));
     }
 }

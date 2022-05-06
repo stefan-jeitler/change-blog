@@ -27,7 +27,7 @@ public class AddOrUpdateVersionApiPresenter : BaseApiPresenter, IAddOrUpdateVers
         };
 
         Response = new ConflictObjectResult(
-            DefaultResponse.Create("You cannot add or update versions that have been released.", resourceIds));
+            ErrorResponse.Create("You cannot add or update versions that have been released.", resourceIds));
     }
 
     public void Created(Guid versionId)
@@ -38,30 +38,30 @@ public class AddOrUpdateVersionApiPresenter : BaseApiPresenter, IAddOrUpdateVers
         };
 
         var location = _httpContext.CreateLinkTo($"api/v1/versions/{versionId}");
-        Response = new CreatedResult(location, DefaultResponse.Create("Version added.", resourceIds));
+        Response = new CreatedResult(location, SuccessResponse.Create("Version added.", resourceIds));
     }
 
     public void InvalidVersionFormat(string version)
     {
-        Response = new UnprocessableEntityObjectResult(DefaultResponse.Create($"Invalid format '{version}'."));
+        Response = new UnprocessableEntityObjectResult(ErrorResponse.Create($"Invalid format '{version}'."));
     }
 
     public void VersionDoesNotMatchScheme(string version, string versioningSchemeName)
     {
         Response = new UnprocessableEntityObjectResult(
-            DefaultResponse.Create(
+            ErrorResponse.Create(
                 $"Version does not match your product's versioning scheme. Version '{version}', Scheme: {versioningSchemeName}"));
     }
 
     public void LinesWithSameTextsAreNotAllowed(IList<string> duplicates)
     {
         Response = new UnprocessableEntityObjectResult(
-            DefaultResponse.Create($"Lines with same texts are not allowed. Duplicates: {duplicates}"));
+            ErrorResponse.Create($"Lines with same texts are not allowed. Duplicates: {duplicates}"));
     }
 
     public void InvalidVersionName(string name)
     {
-        Response = new UnprocessableEntityObjectResult(DefaultResponse.Create($"Invalid name '{name}'."));
+        Response = new UnprocessableEntityObjectResult(ErrorResponse.Create($"Invalid name '{name}'."));
     }
 
     public void InsertConflict(Conflict conflict)
@@ -76,7 +76,7 @@ public class AddOrUpdateVersionApiPresenter : BaseApiPresenter, IAddOrUpdateVers
             [KnownIdentifiers.VersionId] = versionId.ToString()
         };
 
-        Response = new OkObjectResult(DefaultResponse.Create("Version successfully updated.", resourceIds));
+        Response = new OkObjectResult(SuccessResponse.Create("Version successfully updated.", resourceIds));
     }
 
     public void ProductDoesNotExist(Guid productId)
@@ -86,7 +86,7 @@ public class AddOrUpdateVersionApiPresenter : BaseApiPresenter, IAddOrUpdateVers
             [KnownIdentifiers.ProductId] = productId.ToString()
         };
 
-        Response = new NotFoundObjectResult(DefaultResponse.Create("Product does not exist", resourceIds));
+        Response = new NotFoundObjectResult(ErrorResponse.Create("Product does not exist", resourceIds));
     }
 
     public void VersionAlreadyExists(Guid versionId)
@@ -96,13 +96,13 @@ public class AddOrUpdateVersionApiPresenter : BaseApiPresenter, IAddOrUpdateVers
             [KnownIdentifiers.VersionId] = versionId.ToString()
         };
 
-        Response = new ConflictObjectResult(DefaultResponse.Create("Version already exists.", resourceIds));
+        Response = new ConflictObjectResult(ErrorResponse.Create("Version already exists.", resourceIds));
     }
 
     public void TooManyLines(int maxChangeLogLines)
     {
         Response = new UnprocessableEntityObjectResult(
-            DefaultResponse.Create($"Too many lines. Max lines: {maxChangeLogLines}"));
+            ErrorResponse.Create($"Too many lines. Max lines: {maxChangeLogLines}"));
     }
 
     public void RelatedProductClosed(Guid productId)
@@ -113,7 +113,7 @@ public class AddOrUpdateVersionApiPresenter : BaseApiPresenter, IAddOrUpdateVers
         };
 
         Response = new ConflictObjectResult(
-            DefaultResponse.Create("The related product has been closed.", resourceIds));
+            ErrorResponse.Create("The related product has been closed.", resourceIds));
     }
 
     public void UpdateConflict(Conflict conflict)
@@ -129,37 +129,37 @@ public class AddOrUpdateVersionApiPresenter : BaseApiPresenter, IAddOrUpdateVers
         };
 
         Response = new ConflictObjectResult(
-            DefaultResponse.Create("You cannot add or update versions that have been deleted.", resourceIds));
+            ErrorResponse.Create("You cannot add or update versions that have been deleted.", resourceIds));
     }
 
     public void InvalidChangeLogLineText(string text)
     {
-        Response = new BadRequestObjectResult(DefaultResponse.Create($"Invalid change log text '{text}'."));
+        Response = new BadRequestObjectResult(ErrorResponse.Create($"Invalid change log text '{text}'."));
     }
 
     public void InvalidIssue(string changeLogText, string issue)
     {
         Response = new BadRequestObjectResult(
-            DefaultResponse.Create($"Invalid issue '{issue}' for change log '{changeLogText}'."));
+            ErrorResponse.Create($"Invalid issue '{issue}' for change log '{changeLogText}'."));
     }
 
     public void TooManyIssues(string changeLogText, int maxIssues)
     {
         Response = new UnprocessableEntityObjectResult(
-            DefaultResponse.Create(
+            ErrorResponse.Create(
                 $"The change log '{changeLogText}' has too many issues. Max issues: '{maxIssues}'."));
     }
 
     public void InvalidLabel(string changeLogText, string label)
     {
         Response = new BadRequestObjectResult(
-            DefaultResponse.Create($"Invalid label '{label}' for change log '{changeLogText}'."));
+            ErrorResponse.Create($"Invalid label '{label}' for change log '{changeLogText}'."));
     }
 
     public void TooManyLabels(string changeLogText, int maxLabels)
     {
         Response = new UnprocessableEntityObjectResult(
-            DefaultResponse.Create(
+            ErrorResponse.Create(
                 $"The change log '{changeLogText}' has too many labels. Max labels: '{maxLabels}'."));
     }
 }

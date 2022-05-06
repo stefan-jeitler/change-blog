@@ -21,12 +21,12 @@ public class AddChangeLogLineApiPresenter : BaseApiPresenter, IAddChangeLogLineO
 
     public void InvalidVersionFormat(string version)
     {
-        Response = new UnprocessableEntityObjectResult(DefaultResponse.Create($"Invalid format '{version}'."));
+        Response = new UnprocessableEntityObjectResult(ErrorResponse.Create($"Invalid format '{version}'."));
     }
 
     public void VersionDoesNotExist()
     {
-        Response = new NotFoundObjectResult(DefaultResponse.Create("Version not found."));
+        Response = new NotFoundObjectResult(ErrorResponse.Create("Version not found."));
     }
 
     public void LineWithSameTextAlreadyExists(Guid changeLogLineId, string duplicate)
@@ -37,7 +37,7 @@ public class AddChangeLogLineApiPresenter : BaseApiPresenter, IAddChangeLogLineO
         };
 
         Response = new UnprocessableEntityObjectResult(
-            DefaultResponse.Create($"Lines with same text are not allowed. Duplicate: '{duplicate}'", resourceIds));
+            ErrorResponse.Create($"Lines with same text are not allowed. Duplicate: '{duplicate}'", resourceIds));
     }
 
     public void Created(Guid changeLogLineId)
@@ -49,7 +49,7 @@ public class AddChangeLogLineApiPresenter : BaseApiPresenter, IAddChangeLogLineO
 
         var location = _httpContext.CreateLinkTo($"api/v1/pending-changelogs/{changeLogLineId}");
         Response = new CreatedResult(location,
-            DefaultResponse.Create("ChangeLogLine successfully added.", resourceIds));
+            SuccessResponse.Create("ChangeLogLine successfully added.", resourceIds));
     }
 
     public void Conflict(Conflict conflict)
@@ -60,37 +60,37 @@ public class AddChangeLogLineApiPresenter : BaseApiPresenter, IAddChangeLogLineO
     public void TooManyLines(int maxChangeLogLines)
     {
         Response = new UnprocessableEntityObjectResult(
-            DefaultResponse.Create($"Too many lines. Max lines: {maxChangeLogLines}"));
+            ErrorResponse.Create($"Too many lines. Max lines: {maxChangeLogLines}"));
     }
 
     public void InvalidChangeLogLineText(string text)
     {
-        Response = new BadRequestObjectResult(DefaultResponse.Create($"Invalid change log text '{text}'."));
+        Response = new BadRequestObjectResult(ErrorResponse.Create($"Invalid change log text '{text}'."));
     }
 
     public void InvalidIssue(string changeLogText, string issue)
     {
         Response = new BadRequestObjectResult(
-            DefaultResponse.Create($"Invalid issue '{issue}' for change log '{changeLogText}'."));
+            ErrorResponse.Create($"Invalid issue '{issue}' for change log '{changeLogText}'."));
     }
 
     public void TooManyIssues(string changeLogText, int maxIssues)
     {
         Response = new UnprocessableEntityObjectResult(
-            DefaultResponse.Create(
+            ErrorResponse.Create(
                 $"The change log '{changeLogText}' has too many issues. Max issues: '{maxIssues}'."));
     }
 
     public void InvalidLabel(string changeLogText, string label)
     {
         Response = new BadRequestObjectResult(
-            DefaultResponse.Create($"Invalid label '{label}' for change log '{changeLogText}'."));
+            ErrorResponse.Create($"Invalid label '{label}' for change log '{changeLogText}'."));
     }
 
     public void TooManyLabels(string changeLogText, int maxLabels)
     {
         Response = new UnprocessableEntityObjectResult(
-            DefaultResponse.Create(
+            ErrorResponse.Create(
                 $"The change log '{changeLogText}' has too many labels. Max labels: '{maxLabels}'."));
     }
 }

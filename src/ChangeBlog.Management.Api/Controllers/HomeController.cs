@@ -58,7 +58,7 @@ public class HomeController : ControllerBase
     [HttpGet("appsettings", Name = "GetAppSettings")]
     [ProducesResponseType(StatusCodes.Status200OK)]
     [AllowAnonymous]
-    public ActionResult AppSettings()
+    public ActionResult<ClientAppSettings> AppSettings()
     {
         var appSettings = _configuration
             .GetSection(nameof(Configuration.ClientAppSettings))

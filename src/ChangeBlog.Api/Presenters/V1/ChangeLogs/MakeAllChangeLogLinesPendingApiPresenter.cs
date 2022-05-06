@@ -13,7 +13,7 @@ public class MakeAllChangeLogLinesPendingApiPresenter : BaseApiPresenter, IMakeA
 {
     public void VersionDoesNotExist()
     {
-        Response = new NotFoundObjectResult(DefaultResponse.Create("Version not found."));
+        Response = new NotFoundObjectResult(ErrorResponse.Create("Version not found."));
     }
 
     public void VersionAlreadyReleased(Guid versionId)
@@ -23,7 +23,7 @@ public class MakeAllChangeLogLinesPendingApiPresenter : BaseApiPresenter, IMakeA
             [KnownIdentifiers.VersionId] = versionId.ToString()
         };
 
-        Response = new ConflictObjectResult(DefaultResponse.Create("The related version has already been released.",
+        Response = new ConflictObjectResult(ErrorResponse.Create("The related version has already been released.",
             resourceIds));
     }
 
@@ -34,14 +34,14 @@ public class MakeAllChangeLogLinesPendingApiPresenter : BaseApiPresenter, IMakeA
             [KnownIdentifiers.VersionId] = versionId.ToString()
         };
 
-        Response = new ConflictObjectResult(DefaultResponse.Create("The related version has been deleted.",
+        Response = new ConflictObjectResult(ErrorResponse.Create("The related version has been deleted.",
             resourceIds));
     }
 
     public void TooManyPendingLines(int maxChangeLogLines)
     {
         Response = new UnprocessableEntityObjectResult(
-            DefaultResponse.Create($"Too many lines. Max lines: {maxChangeLogLines}"));
+            ErrorResponse.Create($"Too many lines. Max lines: {maxChangeLogLines}"));
     }
 
     public void LineWithSameTextAlreadyExists(IEnumerable<string> duplicates)
@@ -49,7 +49,7 @@ public class MakeAllChangeLogLinesPendingApiPresenter : BaseApiPresenter, IMakeA
         var duplicatesFormatted = string.Join(", ", duplicates.Select(x => $"'{x}'"));
 
         Response = new UnprocessableEntityObjectResult(
-            DefaultResponse.Create($"Lines with same text are not allowed. Duplicates: '{duplicatesFormatted}'"));
+            ErrorResponse.Create($"Lines with same text are not allowed. Duplicates: '{duplicatesFormatted}'"));
     }
 
     public void Conflict(Conflict conflict)
@@ -64,11 +64,11 @@ public class MakeAllChangeLogLinesPendingApiPresenter : BaseApiPresenter, IMakeA
             [KnownIdentifiers.ProductId] = productId.ToString()
         };
 
-        Response = new OkObjectResult(DefaultResponse.Create($"{count} Lines were made pending.", resourceIds));
+        Response = new OkObjectResult(SuccessResponse.Create($"{count} Lines were made pending.", resourceIds));
     }
 
     public void InvalidVersionFormat(string version)
     {
-        Response = new UnprocessableEntityObjectResult(DefaultResponse.Create($"Invalid format '{version}'."));
+        Response = new UnprocessableEntityObjectResult(ErrorResponse.Create($"Invalid format '{version}'."));
     }
 }

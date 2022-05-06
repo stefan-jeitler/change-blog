@@ -5,6 +5,7 @@ using System.Threading.Tasks;
 using ChangeBlog.Api.Shared;
 using ChangeBlog.Api.Shared.Authorization;
 using ChangeBlog.Api.Shared.DTOs;
+using ChangeBlog.Api.Shared.DTOs.V1;
 using ChangeBlog.Api.Shared.DTOs.V1.User;
 using ChangeBlog.Api.Shared.Swagger;
 using ChangeBlog.Application.UseCases.Commands.UpdateUserProfile;
@@ -22,7 +23,7 @@ namespace ChangeBlog.Management.Api.Controllers.v1;
 [ApiController]
 [Route("api/v1/user")]
 [Produces(MediaTypeNames.Application.Json)]
-[ProducesResponseType(typeof(DefaultResponse), StatusCodes.Status401Unauthorized)]
+[ProducesResponseType(typeof(ErrorResponse), StatusCodes.Status401Unauthorized)]
 [SwaggerControllerOrder(1)]
 public class UserController : ControllerBase
 {
@@ -34,11 +35,11 @@ public class UserController : ControllerBase
     }
 
     [HttpPost("import", Name = "EnsureUserIsImported")]
-    [ProducesResponseType(typeof(DefaultResponse), StatusCodes.Status200OK)]
+    [ProducesResponseType( StatusCodes.Status200OK)]
     [SkipAuthorization]
-    public ActionResult<DefaultResponse> EnsureUserIsImported()
+    public ActionResult<SuccessResponse> EnsureUserIsImported()
     {
-        return Ok(DefaultResponse.Create("It has now been ensured that the user is available in the app."));
+        return Ok(ErrorResponse.Create("It has now been ensured that the user is available in the app."));
     }
 
     [HttpGet("profile", Name = "GetUserProfile")]
@@ -54,10 +55,10 @@ public class UserController : ControllerBase
 
     [HttpPatch("profile", Name = "UpdateUserProfile")]
     [ProducesResponseType(StatusCodes.Status200OK)]
-    [ProducesResponseType(typeof(DefaultResponse), StatusCodes.Status404NotFound)]
-    [ProducesResponseType(typeof(DefaultResponse), StatusCodes.Status409Conflict)]
+    [ProducesResponseType(typeof(ErrorResponse), StatusCodes.Status404NotFound)]
+    [ProducesResponseType(typeof(ErrorResponse), StatusCodes.Status409Conflict)]
     [SkipAuthorization]
-    public async Task<ActionResult<DefaultResponse>> UpdateUserProfile(
+    public async Task<ActionResult<SuccessResponse>> UpdateUserProfile(
         [FromServices] IUpdateUserProfile updateUserProfile,
         [FromBody] UpdateUserProfileDto updateUserProfileDto)
     {

@@ -13,4 +13,5 @@ export class TranslationKey {
 	public languageChanged = 'languageChanged';
 	public genericErrorMessageShort = 'genericErrorMessageShort';
 	public genericErrorMessage = 'genericErrorMessage';
+	public success = 'success';
 }

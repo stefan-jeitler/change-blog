@@ -64,18 +64,18 @@ export class Client {
 
         let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
         if (status === 200) {
-            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
             let result200: any = null;
             let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
             result200 = ApiInfo.fromJS(resultData200);
             return _observableOf(result200);
             }));
         } else if (status !== 200 && status !== 204) {
-            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
             return throwException("An unexpected server error occurred.", status, _responseText, _headers);
             }));
         }
-        return _observableOf<ApiInfo>(null as any);
+        return _observableOf(null as any);
     }
 
     /**
@@ -114,15 +114,15 @@ export class Client {
 
         let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
         if (status === 200) {
-            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
-            return _observableOf<void>(null as any);
+            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
+            return _observableOf(null as any);
             }));
         } else if (status !== 200 && status !== 204) {
-            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
             return throwException("An unexpected server error occurred.", status, _responseText, _headers);
             }));
         }
-        return _observableOf<void>(null as any);
+        return _observableOf(null as any);
     }
 
     /**
@@ -162,25 +162,25 @@ export class Client {
 
         let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
         if (status === 401) {
-            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
             let result401: any = null;
             let resultData401 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
             result401 = DefaultResponse.fromJS(resultData401);
             return throwException("Unauthorized", status, _responseText, _headers, result401);
             }));
         } else if (status === 200) {
-            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
             let result200: any = null;
             let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
             result200 = DefaultResponse.fromJS(resultData200);
             return _observableOf(result200);
             }));
         } else if (status !== 200 && status !== 204) {
-            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
             return throwException("An unexpected server error occurred.", status, _responseText, _headers);
             }));
         }
-        return _observableOf<DefaultResponse>(null as any);
+        return _observableOf(null as any);
     }
 
     /**
@@ -220,25 +220,25 @@ export class Client {
 
         let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
         if (status === 401) {
-            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
             let result401: any = null;
             let resultData401 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
             result401 = DefaultResponse.fromJS(resultData401);
             return throwException("Unauthorized", status, _responseText, _headers, result401);
             }));
         } else if (status === 200) {
-            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
             let result200: any = null;
             let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
             result200 = UserDto.fromJS(resultData200);
             return _observableOf(result200);
             }));
         } else if (status !== 200 && status !== 204) {
-            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
             return throwException("An unexpected server error occurred.", status, _responseText, _headers);
             }));
         }
-        return _observableOf<UserDto>(null as any);
+        return _observableOf(null as any);
     }
 
     /**
@@ -283,39 +283,39 @@ export class Client {
 
         let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
         if (status === 401) {
-            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
             let result401: any = null;
             let resultData401 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
             result401 = DefaultResponse.fromJS(resultData401);
             return throwException("Unauthorized", status, _responseText, _headers, result401);
             }));
         } else if (status === 200) {
-            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
             let result200: any = null;
             let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
             result200 = DefaultResponse.fromJS(resultData200);
             return _observableOf(result200);
             }));
         } else if (status === 404) {
-            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
             let result404: any = null;
             let resultData404 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
             result404 = DefaultResponse.fromJS(resultData404);
             return throwException("Not Found", status, _responseText, _headers, result404);
             }));
         } else if (status === 409) {
-            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
             let result409: any = null;
             let resultData409 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
             result409 = DefaultResponse.fromJS(resultData409);
             return throwException("Conflict", status, _responseText, _headers, result409);
             }));
         } else if (status !== 200 && status !== 204) {
-            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
             return throwException("An unexpected server error occurred.", status, _responseText, _headers);
             }));
         }
-        return _observableOf<DefaultResponse>(null as any);
+        return _observableOf(null as any);
     }
 
     /**
@@ -355,25 +355,25 @@ export class Client {
 
         let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
         if (status === 401) {
-            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
             let result401: any = null;
             let resultData401 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
             result401 = DefaultResponse.fromJS(resultData401);
             return throwException("Unauthorized", status, _responseText, _headers, result401);
             }));
         } else if (status === 200) {
-            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
             let result200: any = null;
             let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
             result200 = CultureDto.fromJS(resultData200);
             return _observableOf(result200);
             }));
         } else if (status !== 200 && status !== 204) {
-            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
             return throwException("An unexpected server error occurred.", status, _responseText, _headers);
             }));
         }
-        return _observableOf<CultureDto>(null as any);
+        return _observableOf(null as any);
     }
 
     /**
@@ -413,14 +413,14 @@ export class Client {
 
         let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
         if (status === 401) {
-            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
             let result401: any = null;
             let resultData401 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
             result401 = DefaultResponse.fromJS(resultData401);
             return throwException("Unauthorized", status, _responseText, _headers, result401);
             }));
         } else if (status === 200) {
-            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
             let result200: any = null;
             let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
             if (Array.isArray(resultData200)) {
@@ -434,11 +434,11 @@ export class Client {
             return _observableOf(result200);
             }));
         } else if (status !== 200 && status !== 204) {
-            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
             return throwException("An unexpected server error occurred.", status, _responseText, _headers);
             }));
         }
-        return _observableOf<string[]>(null as any);
+        return _observableOf(null as any);
     }
 
     /**
@@ -478,14 +478,14 @@ export class Client {
 
         let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
         if (status === 401) {
-            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
             let result401: any = null;
             let resultData401 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
             result401 = DefaultResponse.fromJS(resultData401);
             return throwException("Unauthorized", status, _responseText, _headers, result401);
             }));
         } else if (status === 200) {
-            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
             let result200: any = null;
             let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
             if (Array.isArray(resultData200)) {
@@ -499,11 +499,11 @@ export class Client {
             return _observableOf(result200);
             }));
         } else if (status !== 200 && status !== 204) {
-            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
             return throwException("An unexpected server error occurred.", status, _responseText, _headers);
             }));
         }
-        return _observableOf<TimezoneDto[]>(null as any);
+        return _observableOf(null as any);
     }
 }
 

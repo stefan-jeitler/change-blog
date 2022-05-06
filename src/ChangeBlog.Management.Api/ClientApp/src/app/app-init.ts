@@ -5,38 +5,38 @@ import {ChangeBlogManagementApi as MngmtApiClient} from "../clients/ChangeBlogMa
 import {getBrowserLang, TranslocoService} from "@ngneat/transloco";
 import {TranslocoLocaleService} from "@ngneat/transloco-locale";
 import {filter, mergeMap} from "rxjs/operators";
+import {firstValueFrom} from "rxjs";
 
 async function setBrowserLanguageOrDefault(oAuthService: OAuthService,
                                            translationService: TranslocoService) {
   const language = getBrowserLang() ?? translationService.getDefaultLang();
 
   translationService.setActiveLang(language);
-  await translationService.load(language).toPromise();
+  await firstValueFrom(translationService.load(language))
 }
 
-async function setUserCulture(userCulture: MngmtApiClient.ICultureDto, translationService: TranslocoService, translocoLocaleService: TranslocoLocaleService) {
-  const activeCulture = translocoLocaleService.getLocale();
+async function setUserCulture(userCulture: MngmtApiClient.ICultureDto,
+                              translationService: TranslocoService,
+                              localeService: TranslocoLocaleService) {
+  const activeCulture = localeService.getLocale();
 
   if (activeCulture === userCulture.culture)
     return;
 
   const language = userCulture.language ?? getBrowserLang() ?? translationService.getDefaultLang();
 
-  translocoLocaleService.setLocale(userCulture.culture ?? 'en-US');
+  localeService.setLocale(userCulture.culture ?? 'en-US');
   translationService.setActiveLang(language);
-  await translationService.load(language).toPromise();
+  await firstValueFrom(translationService.load(language));
 }
 
-function subscribeTokenReceived(oAuthService: OAuthService, apiClient: MngmtApiClient.Client) {
-  oAuthService.events
+function subscribeTokenReceived(authService: OAuthService, apiClient: MngmtApiClient.Client) {
+  authService.events
     .pipe(
-      filter((e) => e.type === 'token_received' && oAuthService.hasValidAccessToken()),
+      filter((e) => e.type === 'token_received' && authService.hasValidAccessToken()),
       mergeMap((x) => apiClient.ensureUserIsImported())
     )
-    .subscribe(
-      (x) => console.debug(x),
-      (e) => console.error(e)
-    );
+    .subscribe((x) => console.debug(x));
 }
 
 export function initializeApp(
@@ -45,7 +45,7 @@ export function initializeApp(
   appConfig: AppConfig,
   apiClient: MngmtApiClient.Client,
   translationService: TranslocoService,
-  translocoLocaleService: TranslocoLocaleService
+  localeService: TranslocoLocaleService
 ): () => Promise<void> {
   return async () => {
     router.onSameUrlNavigation = 'reload';
@@ -59,11 +59,12 @@ export function initializeApp(
 
     const isLoggedIn = oAuthService.hasValidIdToken() && oAuthService.hasValidAccessToken();
     if (isLoggedIn) {
-      const userCulture = await apiClient
-        .getUserCulture()
-        .toPromise();
+      const userCultureObservable = await apiClient
+        .getUserCulture();
 
-      await setUserCulture(userCulture, translationService, translocoLocaleService);
+      let userCulture = await firstValueFrom(userCultureObservable);
+
+      await setUserCulture(userCulture, translationService, localeService);
     }
   };
 }

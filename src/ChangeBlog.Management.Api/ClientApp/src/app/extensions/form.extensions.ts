@@ -1,6 +1,6 @@
 import {FormGroup} from '@angular/forms';
 import {ChangeBlogManagementApi} from "../../clients/ChangeBlogManagementApiClient";
-import {ValidationError} from "../types/validation-error";
+import {ValidationError} from "../types/validation-error.type";
 import ErrorMessage = ChangeBlogManagementApi.ErrorMessage;
 
 declare module "@angular/forms" {

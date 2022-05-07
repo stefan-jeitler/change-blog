@@ -1,6 +1,6 @@
 import {APP_INITIALIZER, NgModule} from '@angular/core';
 import {BrowserModule, HAMMER_GESTURE_CONFIG, HammerModule} from '@angular/platform-browser';
-import {HttpClientModule} from '@angular/common/http';
+import {HTTP_INTERCEPTORS, HttpClientModule} from '@angular/common/http';
 
 import {AppRoutingModule} from './app-routing.module';
 import {AppComponent} from './app.component';
@@ -48,6 +48,7 @@ import {initializeApp} from "./app-init";
 import {LoadingSpinnerComponent} from './components/loading-spinner/loading-spinner.component';
 import {TranslationKey} from "./generated/TranslationKey";
 import {SwipeConfig} from "./configuration/swipe-config.service";
+import {DefaultRequestHeadersInterceptor} from "./interceptors/default-request-headers.interceptor";
 
 @NgModule({
   declarations: [
@@ -119,6 +120,7 @@ import {SwipeConfig} from "./configuration/swipe-config.service";
     },
     {provide: OAuthStorage, useValue: localStorage},
     {provide: HAMMER_GESTURE_CONFIG, useClass: SwipeConfig},
+    {provide: HTTP_INTERCEPTORS, useClass: DefaultRequestHeadersInterceptor, multi: true},
     ChangeBlogApi.Client,
     ChangeBlogManagementApi.Client,
     MessageService,

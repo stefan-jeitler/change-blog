@@ -4,8 +4,9 @@ import {AppConfig} from "../../app.config";
 import {ChangeBlogManagementApi as MngmtApiClient} from "../clients/ChangeBlogManagementApiClient";
 import {getBrowserLang, TranslocoService} from "@ngneat/transloco";
 import {TranslocoLocaleService} from "@ngneat/transloco-locale";
-import {filter, mergeMap} from "rxjs/operators";
+import {filter, first, mergeMap, pluck} from "rxjs/operators";
 import {firstValueFrom} from "rxjs";
+import {registerLocaleData} from "@angular/common";
 
 async function setBrowserLanguageOrDefault(oAuthService: OAuthService,
                                            translationService: TranslocoService) {

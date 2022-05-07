@@ -42,7 +42,6 @@ public class HomeController : ControllerBase
         _configuration = configuration;
     }
 
-
     [HttpGet("info", Name = "GetAppInfo")]
     [ProducesResponseType(StatusCodes.Status200OK)]
     [AllowAnonymous]
@@ -61,7 +60,7 @@ public class HomeController : ControllerBase
     public ActionResult<ClientAppSettings> AppSettings()
     {
         var appSettings = _configuration
-            .GetSection(nameof(Configuration.ClientAppSettings))
+            .GetSection(nameof(ClientAppSettings))
             .Get<ClientAppSettings>();
 
         return Ok(appSettings);

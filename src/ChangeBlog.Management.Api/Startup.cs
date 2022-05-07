@@ -6,6 +6,7 @@ using ChangeBlog.Api.Shared.DTOs;
 using ChangeBlog.Api.Shared.UserInfo;
 using ChangeBlog.Application.Boundaries.DataAccess.ExternalIdentity;
 using ChangeBlog.DataAccess.Postgres;
+using ChangeBlog.Domain;
 using ChangeBlog.Management.Api.Authentication;
 using ChangeBlog.Management.Api.Extensions;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
@@ -49,12 +50,15 @@ public class Startup
 
         services
             .AddSwagger()
-            .AddApplicationUseCases();
+            .AddApplicationUseCases()
+            .AddPresenters(typeof(Startup).Assembly);
 
         var connectionString = _configuration.GetConnectionString("ChangeBlogDb");
         services.AddPostgresDataAccess(connectionString);
         services.AddHttpContextAccessor();
         services.AddScoped<IExternalUserInfoDao, TokenClaimsUserInfoDao>();
+
+        services.AddLocalization();
     }
 
     public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
@@ -79,6 +83,9 @@ public class Startup
         app.UseAuthentication();
         app.UseAuthorization();
 
+        var localizationOptions = GetLocalizationOptions();
+        app.UseRequestLocalization(localizationOptions);
+
         app.UseEndpoints(endpoints =>
         {
             endpoints
@@ -93,6 +100,20 @@ public class Startup
             if (env.IsDevelopment())
                 spa.UseAngularCliServer("start");
         });
+    }
+
+    private static RequestLocalizationOptions GetLocalizationOptions()
+    {
+        var supportedCultures = Constants.SupportedCultures
+            .Select(x => x.Value)
+            .ToArray();
+        
+        var defaultCulture = Default.Culture;
+
+        return new RequestLocalizationOptions()
+            .SetDefaultCulture(defaultCulture)
+            .AddSupportedCultures(supportedCultures)
+            .AddSupportedUICultures(supportedCultures);
     }
 
     private static ActionResult CustomErrorMessage(ActionContext context)

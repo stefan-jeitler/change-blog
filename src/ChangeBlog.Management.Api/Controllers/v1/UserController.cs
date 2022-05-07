@@ -2,6 +2,7 @@
 using System.Linq;
 using System.Net.Mime;
 using System.Threading.Tasks;
+using ChangeBlog.Api.Localization.Resources;
 using ChangeBlog.Api.Shared;
 using ChangeBlog.Api.Shared.Authorization;
 using ChangeBlog.Api.Shared.DTOs;
@@ -15,6 +16,7 @@ using ChangeBlog.Management.Api.DTOs.V1;
 using ChangeBlog.Management.Api.Presenters.V1;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Localization;
 using NodaTime;
 using NodaTime.TimeZones;
 
@@ -28,10 +30,12 @@ namespace ChangeBlog.Management.Api.Controllers.v1;
 public class UserController : ControllerBase
 {
     private readonly IGetUsers _getUser;
+    private readonly IStringLocalizer<ChangeBlogStrings> _stringLocalizer;
 
-    public UserController(IGetUsers getUser)
+    public UserController(IGetUsers getUser, IStringLocalizer<ChangeBlogStrings> stringLocalizer)
     {
         _getUser = getUser;
+        _stringLocalizer = stringLocalizer;
     }
 
     [HttpPost("import", Name = "EnsureUserIsImported")]
@@ -60,12 +64,12 @@ public class UserController : ControllerBase
     [SkipAuthorization]
     public async Task<ActionResult<SuccessResponse>> UpdateUserProfile(
         [FromServices] IUpdateUserProfile updateUserProfile,
+        [FromServices] UpdateUserProfileApiPresenter presenter,
         [FromBody] UpdateUserProfileDto updateUserProfileDto)
     {
         var userId = HttpContext.GetUserId();
         var requestModel =
             new UpdateUserProfileRequestModel(userId, updateUserProfileDto?.Timezone, updateUserProfileDto?.Culture);
-        var presenter = new UpdateUserProfileApiPresenter();
         await updateUserProfile.ExecuteAsync(presenter, requestModel);
 
         return presenter.Response;

@@ -127,16 +127,16 @@ export class ProfileComponent implements OnInit {
   }
 
   private async profileUpdated(response: ChangeBlogManagementApi.SuccessResponse) {
-    const profile = await firstValueFrom(this.mngmtApiClient.getUserCulture());
+    const successMessage = await firstValueFrom(this.translationService.selectTranslate(this.translationKey.success));
+
+    const profile = await firstValueFrom(this.mngmtApiClient
+      .getUserCulture());
 
     this.localService.setLocale(profile.culture!);
     this.translationService.setActiveLang(profile.language!);
     await firstValueFrom(this.translationService.load(profile.language!));
 
-    const successMessage = await firstValueFrom(this.translationService.selectTranslate(this.translationKey.success));
-
     const message = {severity: 'success', summary: successMessage, detail: response.message}
     this.messageService.add(message);
-
   }
 }

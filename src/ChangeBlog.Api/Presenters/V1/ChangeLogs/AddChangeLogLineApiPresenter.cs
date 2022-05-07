@@ -52,7 +52,7 @@ public class AddChangeLogLineApiPresenter : BaseApiPresenter, IAddChangeLogLineO
 
         var location = _httpContext.CreateLinkTo($"api/v1/pending-changelogs/{changeLogLineId}");
         Response = new CreatedResult(location,
-            SuccessResponse.Create("ChangeLogLine successfully added.", resourceIds));
+            SuccessResponse.Create(ChangeBlogStrings.ChangeLogLineAdded, resourceIds));
     }
 
     public void Conflict(Conflict conflict)
@@ -63,37 +63,35 @@ public class AddChangeLogLineApiPresenter : BaseApiPresenter, IAddChangeLogLineO
     public void TooManyLines(int maxChangeLogLines)
     {
         Response = new UnprocessableEntityObjectResult(
-            ErrorResponse.Create($"Too many lines. Max lines: {maxChangeLogLines}"));
+            ErrorResponse.Create(string.Format(ChangeBlogStrings.TooManyChangeLogLines, maxChangeLogLines)));
     }
 
     public void InvalidChangeLogLineText(string text)
     {
-        Response = new BadRequestObjectResult(ErrorResponse.Create($"Invalid change log text '{text}'."));
+        Response = new BadRequestObjectResult(ErrorResponse.Create(string.Format(ChangeBlogStrings.InvalidChangeLogText, text)));
     }
 
     public void InvalidIssue(string changeLogText, string issue)
     {
         Response = new BadRequestObjectResult(
-            ErrorResponse.Create($"Invalid issue '{issue}' for change log '{changeLogText}'."));
+            ErrorResponse.Create(string.Format(ChangeBlogStrings.InvalidIssue, issue)));
     }
 
     public void TooManyIssues(string changeLogText, int maxIssues)
     {
         Response = new UnprocessableEntityObjectResult(
-            ErrorResponse.Create(
-                $"The change log '{changeLogText}' has too many issues. Max issues: '{maxIssues}'."));
+            ErrorResponse.Create(string.Format(ChangeBlogStrings.TooManyIssuesForChangeLogLine, changeLogText, maxIssues)));
     }
 
     public void InvalidLabel(string changeLogText, string label)
     {
         Response = new BadRequestObjectResult(
-            ErrorResponse.Create($"Invalid label '{label}' for change log '{changeLogText}'."));
+            ErrorResponse.Create(String.Format(ChangeBlogStrings.InvalidLabel, label)));
     }
 
     public void TooManyLabels(string changeLogText, int maxLabels)
     {
         Response = new UnprocessableEntityObjectResult(
-            ErrorResponse.Create(
-                $"The change log '{changeLogText}' has too many labels. Max labels: '{maxLabels}'."));
+            ErrorResponse.Create(string.Format(ChangeBlogStrings.TooManyLabelsForChangeLogLine, changeLogText, maxLabels)));
     }
 }

@@ -61,6 +61,15 @@ namespace ChangeBlog.Api.Localization.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Changelog line successfully added.
+        /// </summary>
+        public static string ChangeLogLineAdded {
+            get {
+                return ResourceManager.GetString("ChangeLogLineAdded", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to The requested Changelog line has been deleted.
         /// </summary>
         public static string ChangeLogLineDeleted {
@@ -88,11 +97,38 @@ namespace ChangeBlog.Api.Localization.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Invalid changelog text &apos;{0}&apos;.
+        /// </summary>
+        public static string InvalidChangeLogText {
+            get {
+                return ResourceManager.GetString("InvalidChangeLogText", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Invalid format &apos;{0}&apos;.
         /// </summary>
         public static string InvalidFormat {
             get {
                 return ResourceManager.GetString("InvalidFormat", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Invalid issue &apos;{0}&apos;.
+        /// </summary>
+        public static string InvalidIssue {
+            get {
+                return ResourceManager.GetString("InvalidIssue", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Invalid label &apos;{0}&apos;.
+        /// </summary>
+        public static string InvalidLabel {
+            get {
+                return ResourceManager.GetString("InvalidLabel", resourceCulture);
             }
         }
         
@@ -156,6 +192,33 @@ namespace ChangeBlog.Api.Localization.Resources {
         public static string ResourceNotFound {
             get {
                 return ResourceManager.GetString("ResourceNotFound", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Too many Changelog lines. Max {0} lines.
+        /// </summary>
+        public static string TooManyChangeLogLines {
+            get {
+                return ResourceManager.GetString("TooManyChangeLogLines", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to The changelog line &apos;{0}&apos; has too many issues. Max {1} issues possible.
+        /// </summary>
+        public static string TooManyIssuesForChangeLogLine {
+            get {
+                return ResourceManager.GetString("TooManyIssuesForChangeLogLine", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to The changelog line &apos;{0}&apos; has too many labels. Max {1} labels possible.
+        /// </summary>
+        public static string TooManyLabelsForChangeLogLine {
+            get {
+                return ResourceManager.GetString("TooManyLabelsForChangeLogLine", resourceCulture);
             }
         }
         

@@ -165,4 +165,25 @@
   <data name="ChangeLogLineSameText" xml:space="preserve">
     <value>Lines with same text are not allowed. Duplicate: '{0}'</value>
   </data>
+  <data name="ChangeLogLineAdded" xml:space="preserve">
+    <value>Changelog line successfully added</value>
+  </data>
+  <data name="TooManyChangeLogLines" xml:space="preserve">
+    <value>Too many Changelog lines. Max {0} lines</value>
+  </data>
+  <data name="InvalidChangeLogText" xml:space="preserve">
+    <value>Invalid changelog text '{0}'</value>
+  </data>
+  <data name="InvalidIssue" xml:space="preserve">
+    <value>Invalid issue '{0}'</value>
+  </data>
+  <data name="TooManyIssuesForChangeLogLine" xml:space="preserve">
+    <value>The changelog line '{0}' has too many issues. Max {1} issues possible</value>
+  </data>
+  <data name="InvalidLabel" xml:space="preserve">
+    <value>Invalid label '{0}'</value>
+  </data>
+  <data name="TooManyLabelsForChangeLogLine" xml:space="preserve">
+    <value>The changelog line '{0}' has too many labels. Max {1} labels possible</value>
+  </data>
 </root>

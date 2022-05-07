@@ -43,7 +43,7 @@ public class UserController : ControllerBase
     [SkipAuthorization]
     public ActionResult<SuccessResponse> EnsureUserIsImported()
     {
-        return Ok(ErrorResponse.Create("It has now been ensured that the user is available in the app."));
+        return Ok(SuccessResponse.Create("It has now been ensured that the user is available in the app."));
     }
 
     [HttpGet("profile", Name = "GetUserProfile")]

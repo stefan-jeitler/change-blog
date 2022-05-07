@@ -51,11 +51,11 @@ public class PendingChangeLogsController : ControllerBase
     [NeedsPermission(Permission.ViewPendingChangeLogLines)]
     public async Task<ActionResult<PendingChangeLogLineDto>> GetPendingChangeLogLineAsync(
         [FromServices] IGetPendingChangeLogLine getPendingChangeLogLine,
+        [FromServices] GetPendingChangeLogLineApiPresenter presenter,
         Guid changeLogLineId)
     {
         var userId = HttpContext.GetUserId();
 
-        var presenter = new GetPendingChangeLogLineApiPresenter();
         await getPendingChangeLogLine.ExecuteAsync(presenter, userId, changeLogLineId);
 
         return presenter.Response;
@@ -69,6 +69,7 @@ public class PendingChangeLogsController : ControllerBase
     [NeedsPermission(Permission.AddOrUpdateChangeLogLine)]
     public async Task<ActionResult<SuccessResponse>> AddPendingChangeLogLineAsync(
         [FromServices] IAddPendingChangeLogLine addPendingChangeLogLine,
+        [FromServices] AddPendingChangeLogLineApiPresenter presenter,
         Guid productId,
         [FromBody] AddOrUpdateChangeLogLineDto pendingChangeLogLine)
     {
@@ -79,7 +80,6 @@ public class PendingChangeLogsController : ControllerBase
             pendingChangeLogLine.Labels ?? new List<string>(0),
             pendingChangeLogLine.Issues ?? new List<string>(0));
 
-        var presenter = new AddPendingChangeLogLineApiPresenter(HttpContext);
         await addPendingChangeLogLine.ExecuteAsync(presenter, requestModel);
 
         return presenter.Response;

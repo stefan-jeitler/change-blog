@@ -14,9 +14,9 @@ public class AddOrUpdateVersionApiPresenter : BaseApiPresenter, IAddOrUpdateVers
 {
     private readonly HttpContext _httpContext;
 
-    public AddOrUpdateVersionApiPresenter(HttpContext httpContext)
+    public AddOrUpdateVersionApiPresenter(IHttpContextAccessor httpContextAccessor)
     {
-        _httpContext = httpContext;
+        _httpContext = httpContextAccessor.HttpContext;
     }
 
     public void VersionAlreadyReleased(Guid versionId)

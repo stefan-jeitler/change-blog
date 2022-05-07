@@ -47,6 +47,7 @@ public class ProductController : ControllerBase
     [ProducesResponseType(typeof(ErrorResponse), StatusCodes.Status422UnprocessableEntity)]
     [NeedsPermission(Permission.AddOrUpdateProduct)]
     public async Task<ActionResult<SuccessResponse>> AddProductAsync([FromServices] IAddProduct addProduct,
+        [FromServices] AddProductApiPresenter presenter,
         [FromBody] AddOrUpdateProductDto addOrUpdateProductDto)
     {
         if (addOrUpdateProductDto.VersioningSchemeId == Guid.Empty)
@@ -60,7 +61,6 @@ public class ProductController : ControllerBase
             addOrUpdateProductDto.LanguageCode,
             userId);
 
-        var presenter = new AddProductApiPresenter(HttpContext);
         await addProduct.ExecuteAsync(presenter, requestModel);
 
         return presenter.Response;
@@ -71,9 +71,9 @@ public class ProductController : ControllerBase
     [ProducesResponseType(typeof(ErrorResponse), StatusCodes.Status404NotFound)]
     [NeedsPermission(Permission.CloseProduct)]
     public async Task<ActionResult<SuccessResponse>> CloseProductAsync([FromServices] ICloseProduct closeProduct,
+        [FromServices] CloseProductApiPresenter presenter,
         Guid productId)
     {
-        var presenter = new CloseProductApiPresenter();
         await closeProduct.ExecuteAsync(presenter, productId);
 
         return presenter.Response;

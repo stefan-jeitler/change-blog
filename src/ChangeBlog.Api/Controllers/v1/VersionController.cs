@@ -84,10 +84,10 @@ public class VersionController : ControllerBase
     [NeedsPermission(Permission.ViewVersions)]
     public async Task<ActionResult<VersionDto>> GetLatestProductVersionAsync(
         [FromServices] IGetLatestVersion getLatestVersion,
+        [FromServices] GetLatestVersionApiPresenter presenter,
         Guid productId)
     {
         var userId = HttpContext.GetUserId();
-        var presenter = new GetLatestVersionApiPresenter();
         await getLatestVersion.ExecuteAsync(presenter, userId, productId);
 
         return presenter.Response;
@@ -118,6 +118,7 @@ public class VersionController : ControllerBase
     [ProducesResponseType(typeof(ErrorResponse), StatusCodes.Status422UnprocessableEntity)]
     [NeedsPermission(Permission.AddVersion)]
     public async Task<ActionResult<SuccessResponse>> AddVersionAsync([FromServices] IAddVersion addVersion,
+        [FromServices] AddOrUpdateVersionApiPresenter presenter,
         Guid productId,
         [FromBody] AddVersionDto versionDto)
     {
@@ -134,7 +135,6 @@ public class VersionController : ControllerBase
         var requestModel = new VersionRequestModel(userId, productId,
             versionDto.Version, versionDto.Name, lines, versionDto.ReleaseImmediately);
 
-        var presenter = new AddOrUpdateVersionApiPresenter(HttpContext);
         await addVersion.ExecuteAsync(presenter, requestModel);
 
         return presenter.Response;
@@ -146,9 +146,9 @@ public class VersionController : ControllerBase
     [ProducesResponseType(typeof(ErrorResponse), StatusCodes.Status409Conflict)]
     [NeedsPermission(Permission.ReleaseVersion)]
     public async Task<ActionResult<SuccessResponse>> ReleaseVersionAsync([FromServices] IReleaseVersion releaseVersion,
+        [FromServices] ReleaseVersionApiPresenter presenter,
         Guid versionId)
     {
-        var presenter = new ReleaseVersionApiPresenter();
         await releaseVersion.ExecuteAsync(presenter, versionId);
 
         return presenter.Response;
@@ -162,6 +162,7 @@ public class VersionController : ControllerBase
     [ProducesResponseType(typeof(ErrorResponse), StatusCodes.Status422UnprocessableEntity)]
     [NeedsPermission(Permission.AddOrUpdateVersion)]
     public async Task<ActionResult<SuccessResponse>> AddOrUpdateVersionAsync([FromServices] IAddOrUpdateVersion addOrUpdateVersion,
+        [FromServices] AddOrUpdateVersionApiPresenter presenter,
         Guid productId,
         string version,
         [FromBody] AddOrUpdateVersionDto addOrUpdateVersionDto)
@@ -183,7 +184,6 @@ public class VersionController : ControllerBase
                 lines,
                 addOrUpdateVersionDto.ReleaseImmediately);
 
-        var presenter = new AddOrUpdateVersionApiPresenter(HttpContext);
         await addOrUpdateVersion.ExecuteAsync(presenter, updateVersionRequestModel);
 
         return presenter.Response;
@@ -194,9 +194,10 @@ public class VersionController : ControllerBase
     [ProducesResponseType(typeof(ErrorResponse), StatusCodes.Status404NotFound)]
     [ProducesResponseType(typeof(ErrorResponse), StatusCodes.Status409Conflict)]
     [NeedsPermission(Permission.DeleteVersion)]
-    public async Task<ActionResult<SuccessResponse>> DeleteVersionAsync([FromServices] IDeleteVersion deleteVersion, Guid versionId)
+    public async Task<ActionResult<SuccessResponse>> DeleteVersionAsync([FromServices] IDeleteVersion deleteVersion,
+        [FromServices] DeleteVersionApiPresenter presenter,
+        Guid versionId)
     {
-        var presenter = new DeleteVersionApiPresenter();
         await deleteVersion.ExecuteAsync(presenter, versionId);
 
         return presenter.Response;

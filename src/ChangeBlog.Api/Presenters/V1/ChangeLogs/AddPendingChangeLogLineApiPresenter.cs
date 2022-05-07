@@ -14,9 +14,9 @@ public class AddPendingChangeLogLineApiPresenter : BaseApiPresenter, IAddPending
 {
     private readonly HttpContext _httpContext;
 
-    public AddPendingChangeLogLineApiPresenter(HttpContext httpContext)
+    public AddPendingChangeLogLineApiPresenter(IHttpContextAccessor httpContextAccessor)
     {
-        _httpContext = httpContext;
+        _httpContext = httpContextAccessor.HttpContext;
     }
 
     public void ProductDoesNotExist(Guid productId)

@@ -18,7 +18,6 @@ public static class LocalizationOptions
 
         return new RequestLocalizationOptions()
             .SetDefaultCulture(defaultCulture)
-            .AddSupportedCultures(supportedCultures)
             .AddSupportedUICultures(supportedCultures);
     }
 }

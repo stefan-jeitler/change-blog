@@ -13,5 +13,6 @@
   "languageChanged": "The Language has been changed to {{ lang }}.",
   "genericErrorMessageShort": "Error",
   "genericErrorMessage": "An Error occured while performing this action.",
-  "success": "Success"
+  "success": "Success",
+  "userProfileUpdated": "User Profile successfully updated"
 }

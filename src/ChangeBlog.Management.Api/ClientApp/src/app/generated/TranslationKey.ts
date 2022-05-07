@@ -14,4 +14,5 @@ export class TranslationKey {
 	public genericErrorMessageShort = 'genericErrorMessageShort';
 	public genericErrorMessage = 'genericErrorMessage';
 	public success = 'success';
+	public userProfileUpdated = 'userProfileUpdated';
 }

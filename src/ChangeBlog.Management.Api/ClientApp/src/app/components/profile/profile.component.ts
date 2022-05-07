@@ -127,7 +127,6 @@ export class ProfileComponent implements OnInit {
   }
 
   private async profileUpdated(response: ChangeBlogManagementApi.SuccessResponse) {
-    const successMessage = await firstValueFrom(this.translationService.selectTranslate(this.translationKey.success));
 
     const profile = await firstValueFrom(this.mngmtApiClient
       .getUserCulture());
@@ -136,7 +135,10 @@ export class ProfileComponent implements OnInit {
     this.translationService.setActiveLang(profile.language!);
     await firstValueFrom(this.translationService.load(profile.language!));
 
-    const message = {severity: 'success', summary: successMessage, detail: response.message}
+    const success = await firstValueFrom(this.translationService.selectTranslate(this.translationKey.success));
+    const profileUpdated = await firstValueFrom(this.translationService.selectTranslate(this.translationKey.userProfileUpdated));
+
+    const message = {severity: 'success', summary: success, detail: profileUpdated}
     this.messageService.add(message);
   }
 }

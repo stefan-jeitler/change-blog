@@ -5,6 +5,7 @@
     </PropertyGroup>
 
     <ItemGroup>
+        <ProjectReference Include="..\ChangeBlog.Api.Localization\ChangeBlog.Api.Localization.csproj" />
         <ProjectReference Include="..\ChangeBlog.Application\ChangeBlog.Application.csproj" />
     </ItemGroup>
 

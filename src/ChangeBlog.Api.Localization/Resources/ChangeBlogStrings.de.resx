@@ -120,4 +120,13 @@
   <data name="UserProfileUpdated" xml:space="preserve">
     <value>Benutzerprofil erfolgreich aktualisiert</value>
   </data>
+  <data name="UnknownError" xml:space="preserve">
+    <value>Unbekannter Fehler</value>
+  </data>
+  <data name="ProductWithoutVersions" xml:space="preserve">
+    <value>Das Produkt enhält keine Versionen</value>
+  </data>
+  <data name="NoPermissionToPerformThisOperation" xml:space="preserve">
+    <value>Sie haben keine Berechtigung diese Operation auszuführen</value>
+  </data>
 </root>

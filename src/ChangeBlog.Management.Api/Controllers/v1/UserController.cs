@@ -1,8 +1,8 @@
-﻿using System.Globalization;
+﻿using System;
+using System.Globalization;
 using System.Linq;
 using System.Net.Mime;
 using System.Threading.Tasks;
-using ChangeBlog.Api.Localization.Resources;
 using ChangeBlog.Api.Shared;
 using ChangeBlog.Api.Shared.Authorization;
 using ChangeBlog.Api.Shared.DTOs;
@@ -16,7 +16,6 @@ using ChangeBlog.Management.Api.DTOs.V1;
 using ChangeBlog.Management.Api.Presenters.V1;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.Extensions.Localization;
 using NodaTime;
 using NodaTime.TimeZones;
 
@@ -30,12 +29,10 @@ namespace ChangeBlog.Management.Api.Controllers.v1;
 public class UserController : ControllerBase
 {
     private readonly IGetUsers _getUser;
-    private readonly IStringLocalizer<ChangeBlogStrings> _stringLocalizer;
 
-    public UserController(IGetUsers getUser, IStringLocalizer<ChangeBlogStrings> stringLocalizer)
+    public UserController(IGetUsers getUser)
     {
         _getUser = getUser;
-        _stringLocalizer = stringLocalizer;
     }
 
     [HttpPost("import", Name = "EnsureUserIsImported")]
@@ -68,13 +65,13 @@ public class UserController : ControllerBase
         [FromBody] UpdateUserProfileDto updateUserProfileDto)
     {
         var userId = HttpContext.GetUserId();
+
         var requestModel =
             new UpdateUserProfileRequestModel(userId, updateUserProfileDto?.Timezone, updateUserProfileDto?.Culture);
-        await updateUserProfile.ExecuteAsync(presenter, requestModel);
+        await updateUserProfile.ExecuteAsync(presenter, requestModel).ConfigureAwait(false);
 
         return presenter.Response;
     }
-    
     
     [HttpGet("culture", Name = "GetUserCulture")]
     [ProducesResponseType(StatusCodes.Status200OK)]

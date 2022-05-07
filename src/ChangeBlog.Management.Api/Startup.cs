@@ -1,4 +1,5 @@
 using System.Linq;
+using ChangeBlog.Api.Localization.Resources;
 using ChangeBlog.Api.Shared;
 using ChangeBlog.Api.Shared.Authentication;
 using ChangeBlog.Api.Shared.Authorization;
@@ -57,8 +58,6 @@ public class Startup
         services.AddPostgresDataAccess(connectionString);
         services.AddHttpContextAccessor();
         services.AddScoped<IExternalUserInfoDao, TokenClaimsUserInfoDao>();
-
-        services.AddLocalization();
     }
 
     public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
@@ -80,11 +79,11 @@ public class Startup
 
         app.UseRouting();
 
-        app.UseAuthentication();
-        app.UseAuthorization();
-
         var localizationOptions = GetLocalizationOptions();
         app.UseRequestLocalization(localizationOptions);
+        
+        app.UseAuthentication();
+        app.UseAuthorization();
 
         app.UseEndpoints(endpoints =>
         {
@@ -122,7 +121,7 @@ public class Startup
             .Where(x => x.Value is not null)
             .FirstOrDefault(x => x.Value.Errors.Count > 0)
             .Value?.Errors.FirstOrDefault()?
-            .ErrorMessage ?? "Unknown";
+            .ErrorMessage ?? ChangeBlogStrings.UnknownError;
 
         return new BadRequestObjectResult(ErrorResponse.Create(firstError));
     }

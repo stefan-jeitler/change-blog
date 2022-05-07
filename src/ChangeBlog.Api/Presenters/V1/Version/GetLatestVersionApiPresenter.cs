@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using ChangeBlog.Api.DTOs.V1.Version;
+using ChangeBlog.Api.Localization.Resources;
 using ChangeBlog.Api.Shared.DTOs;
 using ChangeBlog.Api.Shared.Presenters;
 using ChangeBlog.Application.UseCases.Queries.GetLatestVersion;
@@ -24,7 +25,7 @@ public class GetLatestVersionApiPresenter : BaseApiPresenter, IGetLatestVersionO
         };
 
         Response = new NotFoundObjectResult(
-            ErrorResponse.Create("Product does not contain any version.", resourceIds));
+            ErrorResponse.Create(ChangeBlogStrings.ProductWithoutVersions, resourceIds));
     }
 
     public void ProductDoesNotExist()

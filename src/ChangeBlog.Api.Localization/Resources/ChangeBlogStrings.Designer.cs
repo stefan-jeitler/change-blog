@@ -61,6 +61,33 @@ namespace ChangeBlog.Api.Localization.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to You don&apos;t have permission to perform this operation.
+        /// </summary>
+        public static string NoPermissionToPerformThisOperation {
+            get {
+                return ResourceManager.GetString("NoPermissionToPerformThisOperation", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Product does not contain any versions.
+        /// </summary>
+        public static string ProductWithoutVersions {
+            get {
+                return ResourceManager.GetString("ProductWithoutVersions", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Unknown Error.
+        /// </summary>
+        public static string UnknownError {
+            get {
+                return ResourceManager.GetString("UnknownError", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to User Profile successfully updated.
         /// </summary>
         public static string UserProfileUpdated {

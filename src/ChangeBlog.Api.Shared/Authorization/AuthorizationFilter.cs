@@ -1,6 +1,7 @@
 using System;
 using System.Linq;
 using System.Threading.Tasks;
+using ChangeBlog.Api.Localization.Resources;
 using ChangeBlog.Api.Shared.DTOs;
 using ChangeBlog.Domain.Authorization;
 using CSharpFunctionalExtensions;
@@ -17,13 +18,13 @@ namespace ChangeBlog.Api.Shared.Authorization;
 
 public class AuthorizationFilter : IAsyncActionFilter
 {
-    private static readonly ActionResult UnauthorizedResult =
-        new ObjectResult(ErrorResponse.Create("You don't have permission to access this resource."))
+    private readonly ActionResult UnauthorizedResult =
+        new ObjectResult(ErrorResponse.Create(ChangeBlogStrings.NoPermissionToPerformThisOperation))
         {
             StatusCode = StatusCodes.Status403Forbidden
         };
 
-    private static readonly ActionResult NotFoundResult =
+    private readonly ActionResult NotFoundResult =
         new NotFoundObjectResult(ErrorResponse.Create("Requested resource not found."));
 
     private static readonly ActionResult InternalServerError =

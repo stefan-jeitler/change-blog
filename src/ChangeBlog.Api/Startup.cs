@@ -72,8 +72,8 @@ public class Startup
 
         app.AddSwagger();
         app.UseRouting();
-        
-        var localizationOptions = GetLocalizationOptions();
+
+        var localizationOptions = LocalizationOptions.Get();
         app.UseRequestLocalization(localizationOptions);
         
         app.UseAuthentication();
@@ -92,21 +92,7 @@ public class Startup
             .AddControllers(o => { o.Filters.Add(typeof(AuthorizationFilter)); })
             .ConfigureApiBehaviorOptions(o => o.InvalidModelStateResponseFactory = CustomErrorMessage);
     }
-    
-    private static RequestLocalizationOptions GetLocalizationOptions()
-    {
-        var supportedCultures = Constants.SupportedCultures
-            .Select(x => x.Value)
-            .ToArray();
-        
-        var defaultCulture = Default.Culture;
 
-        return new RequestLocalizationOptions()
-            .SetDefaultCulture(defaultCulture)
-            .AddSupportedCultures(supportedCultures)
-            .AddSupportedUICultures(supportedCultures);
-    }
-    
     private static ActionResult CustomErrorMessage(ActionContext context)
     {
         var firstError = context.ModelState

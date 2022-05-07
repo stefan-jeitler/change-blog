@@ -79,7 +79,7 @@ public class Startup
 
         app.UseRouting();
 
-        var localizationOptions = GetLocalizationOptions();
+        var localizationOptions = LocalizationOptions.Get();
         app.UseRequestLocalization(localizationOptions);
         
         app.UseAuthentication();
@@ -99,20 +99,6 @@ public class Startup
             if (env.IsDevelopment())
                 spa.UseAngularCliServer("start");
         });
-    }
-
-    private static RequestLocalizationOptions GetLocalizationOptions()
-    {
-        var supportedCultures = Constants.SupportedCultures
-            .Select(x => x.Value)
-            .ToArray();
-        
-        var defaultCulture = Default.Culture;
-
-        return new RequestLocalizationOptions()
-            .SetDefaultCulture(defaultCulture)
-            .AddSupportedCultures(supportedCultures)
-            .AddSupportedUICultures(supportedCultures);
     }
 
     private static ActionResult CustomErrorMessage(ActionContext context)

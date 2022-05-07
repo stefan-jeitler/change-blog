@@ -117,13 +117,11 @@ export class ProfileComponent implements OnInit {
   private async loadAvailableDropdownOptions() {
     const loadTimezones = this.mngmtApiClient
       .getSupportedTimezones();
-    loadTimezones.subscribe(t => this.availableTimezones = t);
+    this.availableTimezones = await firstValueFrom(loadTimezones);
 
     const loadCulture = this.mngmtApiClient
       .getSupportedCultures()
-    loadCulture.subscribe(c => this.availableCultures = c);
-
-    await Promise.all([firstValueFrom(loadTimezones), firstValueFrom(loadCulture)]);
+    this.availableCultures = await firstValueFrom(loadCulture);
   }
 
   private async profileUpdated(response: ChangeBlogManagementApi.SuccessResponse) {

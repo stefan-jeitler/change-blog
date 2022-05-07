@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Net.Mime;
 using System.Threading.Tasks;
 using ChangeBlog.Api.DTOs.V1.ChangeLog;
+using ChangeBlog.Api.Localization.Resources;
 using ChangeBlog.Api.Presenters.V1.ChangeLogs;
 using ChangeBlog.Api.Shared;
 using ChangeBlog.Api.Shared.Authorization;
@@ -121,7 +122,7 @@ public class PendingChangeLogsController : ControllerBase
         [FromBody] MoveChangeLogLineDto moveChangeLogLineDto)
     {
         if (moveChangeLogLineDto.TargetVersionId == Guid.Empty)
-            return BadRequest(ErrorResponse.Create("TargetVersionId cannot be empty."));
+            return BadRequest(ErrorResponse.Create(ChangeBlogStrings.InvalidVersionId));
 
         var requestModel =
             new VersionIdAssignmentRequestModel(moveChangeLogLineDto.TargetVersionId, changeLogLineId);
@@ -144,7 +145,7 @@ public class PendingChangeLogsController : ControllerBase
         [FromBody] MoveChangeLogLineDto moveChangeLogLineDto)
     {
         if (moveChangeLogLineDto.TargetVersionId == Guid.Empty)
-            return BadRequest(ErrorResponse.Create("TargetVersionId cannot be empty."));
+            return BadRequest(ErrorResponse.Create(ChangeBlogStrings.InvalidVersionId));
 
         var requestModel =
             new Application.UseCases.Commands.AssignAllPendingLinesToVersion.Models.VersionIdAssignmentRequestModel(

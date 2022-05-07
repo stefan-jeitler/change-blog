@@ -25,7 +25,7 @@ public class AuthorizationFilter : IAsyncActionFilter
         };
 
     private readonly ActionResult NotFoundResult =
-        new NotFoundObjectResult(ErrorResponse.Create("Requested resource not found."));
+        new NotFoundObjectResult(ErrorResponse.Create(ChangeBlogStrings.ResourceNotFound));
 
     private static readonly ActionResult InternalServerError =
         new StatusCodeResult(StatusCodes.Status500InternalServerError);

@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using ChangeBlog.Api.Localization.Resources;
 using ChangeBlog.Api.Shared;
 using ChangeBlog.Api.Shared.DTOs;
 using ChangeBlog.Api.Shared.Presenters;
@@ -21,12 +22,13 @@ public class AddChangeLogLineApiPresenter : BaseApiPresenter, IAddChangeLogLineO
 
     public void InvalidVersionFormat(string version)
     {
-        Response = new UnprocessableEntityObjectResult(ErrorResponse.Create($"Invalid format '{version}'."));
+        var message = string.Format(ChangeBlogStrings.InvalidFormat, version);
+        Response = new UnprocessableEntityObjectResult(ErrorResponse.Create(message));
     }
 
     public void VersionDoesNotExist()
     {
-        Response = new NotFoundObjectResult(ErrorResponse.Create("Version not found."));
+        Response = new NotFoundObjectResult(ErrorResponse.Create(ChangeBlogStrings.VersionNotFound));
     }
 
     public void LineWithSameTextAlreadyExists(Guid changeLogLineId, string duplicate)
@@ -36,8 +38,9 @@ public class AddChangeLogLineApiPresenter : BaseApiPresenter, IAddChangeLogLineO
             [KnownIdentifiers.ChangeLogLineId] = changeLogLineId.ToString()
         };
 
+        var message = string.Format(ChangeBlogStrings.ChangeLogLineSameText, duplicate);
         Response = new UnprocessableEntityObjectResult(
-            ErrorResponse.Create($"Lines with same text are not allowed. Duplicate: '{duplicate}'", resourceIds));
+            ErrorResponse.Create(message, resourceIds));
     }
 
     public void Created(Guid changeLogLineId)

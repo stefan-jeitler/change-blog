@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using ChangeBlog.Api.Localization.Resources;
 using ChangeBlog.Api.Shared.DTOs;
 using ChangeBlog.Application.Boundaries.DataAccess;
 using ChangeBlog.Application.Boundaries.DataAccess.Conflicts;
@@ -32,7 +33,7 @@ public static class ConflictExtensions
             [KnownIdentifiers.VersionId] = versionId.ToString()
         };
 
-        var responseMessage = ErrorResponse.Create("The related version has already been released.", resourceIds);
+        var responseMessage = ErrorResponse.Create(ChangeBlogStrings.VersionAlreadyReleased, resourceIds);
 
         return new ConflictObjectResult(responseMessage);
     }
@@ -45,7 +46,7 @@ public static class ConflictExtensions
             [KnownIdentifiers.VersionId] = versionId.ToString()
         };
 
-        var responseMessage = ErrorResponse.Create("The related version has been deleted.",
+        var responseMessage = ErrorResponse.Create(ChangeBlogStrings.VersionDeleted,
             resourceIds);
 
         return new ConflictObjectResult(responseMessage);
@@ -60,7 +61,7 @@ public static class ConflictExtensions
         };
 
         var responseMessage =
-            ErrorResponse.Create("The related product has been closed.", resourceIds);
+            ErrorResponse.Create(ChangeBlogStrings.ProductHasBeenClosed, resourceIds);
 
         return new ConflictObjectResult(responseMessage);
     }
@@ -73,8 +74,7 @@ public static class ConflictExtensions
             [KnownIdentifiers.ChangeLogLineId] = changeLogLineId.ToString()
         };
 
-        var responseMessage = ErrorResponse.Create(
-            "The requested ChangeLogLine has been deleted.", resourceIds);
+        var responseMessage = ErrorResponse.Create(ChangeBlogStrings.ChangeLogLineDeleted, resourceIds);
 
         return new ConflictObjectResult(responseMessage);
     }
@@ -98,7 +98,7 @@ public static class ConflictExtensions
         }
 
         var responseMessage =
-            ErrorResponse.Create("Error while inserting or updating ChangeLogLines. Please try again later.",
+            ErrorResponse.Create(ChangeBlogStrings.ChangeLogLineErrorOnInsertOrUpdate,
                 resourceIds);
 
         return new ConflictObjectResult(responseMessage);

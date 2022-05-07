@@ -2,6 +2,7 @@ using System;
 using System.Net.Mime;
 using System.Threading.Tasks;
 using ChangeBlog.Api.DTOs.V1.Product;
+using ChangeBlog.Api.Localization.Resources;
 using ChangeBlog.Api.Presenters.V1.Product;
 using ChangeBlog.Api.Shared;
 using ChangeBlog.Api.Shared.Authorization;
@@ -51,7 +52,7 @@ public class ProductController : ControllerBase
         [FromBody] AddOrUpdateProductDto addOrUpdateProductDto)
     {
         if (addOrUpdateProductDto.VersioningSchemeId == Guid.Empty)
-            return BadRequest(ErrorResponse.Create("VersioningSchemeId cannot be empty."));
+            return BadRequest(ErrorResponse.Create(ChangeBlogStrings.InvalidVersioningSchemeId));
 
         var userId = HttpContext.GetUserId();
 

@@ -129,4 +129,40 @@
   <data name="NoPermissionToPerformThisOperation" xml:space="preserve">
     <value>Sie haben keine Berechtigung diese Operation auszuführen</value>
   </data>
+  <data name="ResourceNotFound" xml:space="preserve">
+    <value>Resource nicht gefunden</value>
+  </data>
+  <data name="VersionAlreadyReleased" xml:space="preserve">
+    <value>Die Version wurde bereits released</value>
+  </data>
+  <data name="VersionDeleted" xml:space="preserve">
+    <value>Die Version wurde gelöscht</value>
+  </data>
+  <data name="ProductHasBeenClosed" xml:space="preserve">
+    <value>Das Produkt wurde eingestampt</value>
+  </data>
+  <data name="ChangeLogLineDeleted" xml:space="preserve">
+    <value>Der Changelog Eintrag wurde gelöscht</value>
+  </data>
+  <data name="ChangeLogLineErrorOnInsertOrUpdate" xml:space="preserve">
+    <value>Beim Einfügen oder Aktualisieren von Changelog Einträgen ist ein Fehler aufgetreten. Bitte versuchen Sie es zu einem späteren Zeitpunkt erneut.</value>
+  </data>
+  <data name="InvalidVersionId" xml:space="preserve">
+    <value>Versions-Id ist nicht gültig</value>
+  </data>
+  <data name="InvalidVersioningSchemeId" xml:space="preserve">
+    <value>Id des Versionierungsschemas ist nicht gültig</value>
+  </data>
+  <data name="VersionNotFound" xml:space="preserve">
+    <value>Version nicht gefunden</value>
+  </data>
+  <data name="MissingRequestData" xml:space="preserve">
+    <value>Request enthält keine oder zu wenig Daten</value>
+  </data>
+  <data name="InvalidFormat" xml:space="preserve">
+    <value>Ungültiges Format '{0}'</value>
+  </data>
+  <data name="ChangeLogLineSameText" xml:space="preserve">
+    <value>Einträge mit dem gleichen Text sind nicht erlaubt. Duplikat: '{0}'</value>
+  </data>
 </root>

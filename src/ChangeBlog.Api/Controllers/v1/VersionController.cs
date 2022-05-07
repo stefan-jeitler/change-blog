@@ -5,6 +5,7 @@ using System.Linq;
 using System.Net.Mime;
 using System.Threading.Tasks;
 using ChangeBlog.Api.DTOs.V1.Version;
+using ChangeBlog.Api.Localization.Resources;
 using ChangeBlog.Api.Presenters.V1.Version;
 using ChangeBlog.Api.Shared;
 using ChangeBlog.Api.Shared.Authorization;
@@ -49,7 +50,7 @@ public class VersionController : ControllerBase
         var userId = HttpContext.GetUserId();
         var version = await getVersion.ExecuteAsync(userId, versionId);
 
-        if (version.HasNoValue) return new NotFoundObjectResult(ErrorResponse.Create("Version not found"));
+        if (version.HasNoValue) return new NotFoundObjectResult(ErrorResponse.Create(ChangeBlogStrings.VersionNotFound));
 
         return Ok(VersionDto.FromResponseModel(version.GetValueOrThrow()));
     }
@@ -106,7 +107,7 @@ public class VersionController : ControllerBase
         var clVersion = await getVersion.ExecuteAsync(userId, productId, version);
 
         if (clVersion.HasNoValue) 
-            return new NotFoundObjectResult(ErrorResponse.Create("Version not found"));
+            return new NotFoundObjectResult(ErrorResponse.Create(ChangeBlogStrings.VersionNotFound));
 
         return Ok(VersionDto.FromResponseModel(clVersion.GetValueOrThrow()));
     }
@@ -122,7 +123,8 @@ public class VersionController : ControllerBase
         Guid productId,
         [FromBody] AddVersionDto versionDto)
     {
-        if (versionDto is null) return new BadRequestObjectResult(ErrorResponse.Create("Missing version dto."));
+        if (versionDto is null) 
+            return new BadRequestObjectResult(ErrorResponse.Create(ChangeBlogStrings.MissingRequestData));
 
         var lines = versionDto.ChangeLogLines
             .Select(x =>

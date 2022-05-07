@@ -43,8 +43,8 @@
         <span>({{timezone.offset}}) {{timezone.windowsId}}</span>
       </ng-template>
     </p-dropdown>
-    <div *ngIf="showErrorMessage('timezone')">
-      <small id="timezone-error" class="pt-1 p-error block">{{ errorMessage('timezone') }}</small>
+    <div *ngIf="userProfileForm.showErrorMessage('timezone')">
+      <small id="timezone-error" class="pt-1 p-error block">{{ userProfileForm.getServerErrorMessage('timezone') }}</small>
     </div>
   </div>
 
@@ -59,8 +59,8 @@
                 styleClass="w-full"
                 aria-describedby="culture-error">
     </p-dropdown>
-    <div *ngIf="showErrorMessage('culture')">
-      <small id="culture-error" class="pt-1 p-error block">{{ errorMessage('culture') }}</small>
+    <div *ngIf="userProfileForm.showErrorMessage('culture')">
+      <small id="culture-error" class="pt-1 p-error block">{{ userProfileForm.getServerErrorMessage('culture') }}</small>
     </div>
   </div>
 

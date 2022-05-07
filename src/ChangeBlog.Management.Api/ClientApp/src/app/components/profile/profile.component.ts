@@ -1,19 +1,17 @@
 import {Component, OnInit} from '@angular/core';
 import {TranslationKey} from "../../generated/TranslationKey";
-import {finalize, tap} from "rxjs/operators";
+import {tap} from "rxjs/operators";
 import {
   ChangeBlogManagementApi,
   ChangeBlogManagementApi as MngmtApiClient
 } from "../../../clients/ChangeBlogManagementApiClient";
 import {firstValueFrom} from "rxjs";
 import {FormBuilder, FormControl, FormGroup} from "@angular/forms";
-import {ValidationError} from "../../types/validation-error";
 import {MessageService} from "primeng/api";
 import {TranslocoService} from "@ngneat/transloco";
+import {TranslocoLocaleService} from "@ngneat/transloco-locale";
 import ITimezoneDto = MngmtApiClient.ITimezoneDto;
 import SwaggerException = ChangeBlogManagementApi.SwaggerException;
-import ErrorMessage = ChangeBlogManagementApi.ErrorMessage;
-import {TranslocoLocaleService} from "@ngneat/transloco-locale";
 
 
 @Component({
@@ -47,10 +45,6 @@ export class ProfileComponent implements OnInit {
     });
   }
 
-  errorMessage(formControl: string): string {
-    return this.userProfileForm.get(formControl)?.errors?.serverError?.message ?? 'Unknown';
-  }
-
   async ngOnInit(): Promise<void> {
 
     await this.loadAvailableDropdownOptions();
@@ -65,13 +59,13 @@ export class ProfileComponent implements OnInit {
   }
 
   enableForm() {
-    for(const controlKey of ['timezone', 'culture']) {
+    for (const controlKey of ['timezone', 'culture']) {
       this.userProfileForm.controls[controlKey].enable();
     }
   }
 
   disableForm() {
-    for(const controlKey of ['timezone', 'culture']) {
+    for (const controlKey of ['timezone', 'culture']) {
       this.userProfileForm.controls[controlKey].disable();
     }
   }
@@ -88,17 +82,28 @@ export class ProfileComponent implements OnInit {
       .subscribe({
         next: r => this.profileUpdated(r),
         error: (error: SwaggerException) => {
-          this.enableForm();
-
-          if (error.status >= 400 && error.status < 500)
-            userProfileForm.setServerError(error.result.errors);
+          this.handleError(error);
         },
         complete: () => this.enableForm()
       });
   }
 
-  showErrorMessage(formControl: string) {
-    return this.userProfileForm.get(formControl)?.invalid
+  private async handleError(error: ChangeBlogManagementApi.SwaggerException) {
+    this.enableForm();
+
+    if (error.status >= 400 && error.status < 500)
+      this.userProfileForm.setServerError(error.result.errors);
+    else {
+      await this.showGenericErrorMessage();
+    }
+  }
+
+  private async showGenericErrorMessage() {
+    const errorMessageHeader = await firstValueFrom(this.translationService.selectTranslate(this.translationKey.genericErrorMessageShort));
+    const errorMessage = await firstValueFrom(this.translationService.selectTranslate(this.translationKey.genericErrorMessage));
+
+    const message = {severity: 'error', summary: errorMessageHeader, detail: errorMessage}
+    this.messageService.add(message);
   }
 
   private async loadUserProfile() {

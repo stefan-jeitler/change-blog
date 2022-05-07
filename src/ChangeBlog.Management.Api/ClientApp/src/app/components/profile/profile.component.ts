@@ -7,7 +7,7 @@ import {
 } from "../../../clients/ChangeBlogManagementApiClient";
 import {firstValueFrom} from "rxjs";
 import {FormBuilder, FormControl, FormGroup} from "@angular/forms";
-import {ValidationMessage} from "../../types/validation-message";
+import {ValidationError} from "../../types/validation-error";
 import {MessageService} from "primeng/api";
 import {TranslocoService} from "@ngneat/transloco";
 import ITimezoneDto = MngmtApiClient.ITimezoneDto;
@@ -64,9 +64,21 @@ export class ProfileComponent implements OnInit {
     })
   }
 
+  enableForm() {
+    for(const controlKey of ['timezone', 'culture']) {
+      this.userProfileForm.controls[controlKey].enable();
+    }
+  }
+
+  disableForm() {
+    for(const controlKey of ['timezone', 'culture']) {
+      this.userProfileForm.controls[controlKey].disable();
+    }
+  }
+
   async updateProfile(userProfileForm: FormGroup) {
     userProfileForm.resetValidation();
-    userProfileForm.disable();
+    this.disableForm()
 
     const dto = new MngmtApiClient.UpdateUserProfileDto()
     dto.culture = userProfileForm.value.culture;
@@ -76,18 +88,12 @@ export class ProfileComponent implements OnInit {
       .subscribe({
         next: r => this.profileUpdated(r),
         error: (error: SwaggerException) => {
-          userProfileForm.enable();
+          this.enableForm();
 
-          if (error.status >= 400 && error.status < 500) {
-            for (const e of error.result.errors.filter((x: ErrorMessage) => !!x.property)) {
-              const formControl = this.userProfileForm.get(e.property.toLowerCase());
-              const validationMessage = new ValidationMessage({message: e.message});
-
-              formControl?.setErrors(validationMessage);
-            }
-          }
+          if (error.status >= 400 && error.status < 500)
+            userProfileForm.setServerError(error.result.errors);
         },
-        complete: () => userProfileForm.enable()
+        complete: () => this.enableForm()
       });
   }
 

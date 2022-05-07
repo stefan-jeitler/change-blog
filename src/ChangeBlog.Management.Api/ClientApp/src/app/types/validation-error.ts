@@ -2,7 +2,7 @@ export interface ServerError {
   message: string;
 }
 
-export class ValidationMessage {
+export class ValidationError {
   constructor(public serverError: ServerError) {
   }
 }

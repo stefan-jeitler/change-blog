@@ -1,12 +1,14 @@
 ﻿using System.Net.Mime;
 using System.Text.Json;
 using System.Threading.Tasks;
+using ChangeBlog.Api.Localization.Resources;
 using ChangeBlog.Api.Shared.Authentication;
 using ChangeBlog.Api.Shared.DTOs;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Logging;
 using Microsoft.Identity.Web;
 
 namespace ChangeBlog.Management.Api.Authentication;
@@ -56,10 +58,14 @@ public static class ServiceCollectionExtensions
     {
         context.Response.OnStarting(async () =>
         {
-            var message = context.AuthenticateFailure?.Message ?? "Please add a valid JWT Bearer Token.";
+            var logger = context.HttpContext.RequestServices.GetRequiredService<ILogger>();
+            
+            var authException = context.AuthenticateFailure;
+            if(authException is not null)
+                logger.LogCritical(authException, "Error while authenticating user.");
 
             context.Response.ContentType = MediaTypeNames.Application.Json;
-            var responseBody = ErrorResponse.Create($"You are not authenticated. {message}");
+            var responseBody = ErrorResponse.Create(ChangeBlogStrings.NotAuthenticated);
 
             await context.Response.WriteAsync(JsonSerializer.Serialize(responseBody,
                 new JsonSerializerOptions

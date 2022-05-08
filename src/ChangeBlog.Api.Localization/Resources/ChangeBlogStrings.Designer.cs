@@ -322,6 +322,15 @@ namespace ChangeBlog.Api.Localization.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to &apos;sub&apos; claim is missing in the access token.
+        /// </summary>
+        public static string MissingSubClaim {
+            get {
+                return ResourceManager.GetString("MissingSubClaim", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to There are no Chnagelog lines to assign.
         /// </summary>
         public static string NoChangeLogLinesToAssign {
@@ -336,6 +345,15 @@ namespace ChangeBlog.Api.Localization.Resources {
         public static string NoPermissionToPerformThisOperation {
             get {
                 return ResourceManager.GetString("NoPermissionToPerformThisOperation", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to You are not authenticated. Please add a valid api key or access token.
+        /// </summary>
+        public static string NotAuthenticated {
+            get {
+                return ResourceManager.GetString("NotAuthenticated", resourceCulture);
             }
         }
         
@@ -480,6 +498,15 @@ namespace ChangeBlog.Api.Localization.Resources {
         public static string UnknownError {
             get {
                 return ResourceManager.GetString("UnknownError", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to User does not exist in the app.
+        /// </summary>
+        public static string UserNotExistingInApp {
+            get {
+                return ResourceManager.GetString("UserNotExistingInApp", resourceCulture);
             }
         }
         

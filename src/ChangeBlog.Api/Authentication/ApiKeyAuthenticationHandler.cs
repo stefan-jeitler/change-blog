@@ -6,6 +6,7 @@ using System.Security.Claims;
 using System.Text.Encodings.Web;
 using System.Text.Json;
 using System.Threading.Tasks;
+using ChangeBlog.Api.Localization.Resources;
 using ChangeBlog.Api.Shared;
 using ChangeBlog.Api.Shared.DTOs;
 using Microsoft.AspNetCore.Authentication;
@@ -65,7 +66,7 @@ public class ApiKeyAuthenticationHandler : AuthenticationHandler<ApiKeyAuthentic
     {
         Response.StatusCode = StatusCodes.Status401Unauthorized;
         Response.ContentType = MediaTypeNames.Application.Json;
-        var responseBody = ErrorResponse.Create("You are not authenticated. Please add a valid api key.");
+        var responseBody = ErrorResponse.Create(ChangeBlogStrings.NotAuthenticated);
 
         await Response.WriteAsync(JsonSerializer.Serialize(responseBody, new JsonSerializerOptions
         {

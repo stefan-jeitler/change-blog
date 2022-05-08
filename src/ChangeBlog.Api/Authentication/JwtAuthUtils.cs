@@ -3,11 +3,13 @@ using System.Net.Mime;
 using System.Security.Claims;
 using System.Text.Json;
 using System.Threading.Tasks;
+using ChangeBlog.Api.Localization.Resources;
 using ChangeBlog.Api.Shared;
 using ChangeBlog.Api.Shared.DTOs;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Logging;
 
 namespace ChangeBlog.Api.Authentication;
 
@@ -17,10 +19,14 @@ public static class JwtAuthUtils
     {
         context.Response.OnStarting(async () =>
         {
-            var message = context.AuthenticateFailure?.Message ?? "Please add a valid JWT Bearer Token.";
+            var logger = context.HttpContext.RequestServices.GetRequiredService<ILogger>();
+            
+            var authException = context.AuthenticateFailure;
+            if(authException is not null)
+                logger.LogCritical(authException, "Error while authenticating user.");
 
             context.Response.ContentType = MediaTypeNames.Application.Json;
-            var responseBody = ErrorResponse.Create($"You are not authenticated. {message}");
+            var responseBody = ErrorResponse.Create(ChangeBlogStrings.NotAuthenticated);
 
             await context.Response.WriteAsync(JsonSerializer.Serialize(responseBody,
                 new JsonSerializerOptions
@@ -39,7 +45,7 @@ public static class JwtAuthUtils
 
         if (string.IsNullOrWhiteSpace(externalUserId))
         {
-            context.Fail("Missing 'sub' claim.");
+            context.Fail(ChangeBlogStrings.MissingSubClaim);
             return;
         }
 
@@ -47,7 +53,7 @@ public static class JwtAuthUtils
 
         if (!appUserId.HasValue)
         {
-            context.Fail("User does not exist in app.");
+            context.Fail(ChangeBlogStrings.UserNotExistingInApp);
             return;
         }
 

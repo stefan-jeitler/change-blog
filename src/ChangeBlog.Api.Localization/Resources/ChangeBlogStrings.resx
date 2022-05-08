@@ -294,4 +294,13 @@
   <data name="VersionReleased" xml:space="preserve">
     <value>Version successfully released</value>
   </data>
+  <data name="NotAuthenticated" xml:space="preserve">
+    <value>You are not authenticated. Please add a valid api key or access token</value>
+  </data>
+  <data name="MissingSubClaim" xml:space="preserve">
+    <value>'sub' claim is missing in the access token</value>
+  </data>
+  <data name="UserNotExistingInApp" xml:space="preserve">
+    <value>User does not exist in the app</value>
+  </data>
 </root>

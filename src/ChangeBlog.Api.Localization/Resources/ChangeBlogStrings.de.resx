@@ -294,4 +294,13 @@
   <data name="VersionReleased" xml:space="preserve">
     <value>Version erfolgreich released</value>
   </data>
+  <data name="NotAuthenticated" xml:space="preserve">
+    <value>Sie sind nicht authentifiziert. Bitte senden Sie einen validen API-KEY oder Access Token mit</value>
+  </data>
+  <data name="MissingSubClaim" xml:space="preserve">
+    <value>'sub' Claim ist im Access Token nicht enthalten</value>
+  </data>
+  <data name="UserNotExistingInApp" xml:space="preserve">
+    <value>Der Benutzer existiert nicht in der Anwendung </value>
+  </data>
 </root>

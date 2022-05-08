@@ -1,7 +1,8 @@
 <app-content-header [title]="translationKey.userProfile | transloco"></app-content-header>
-<app-loading-spinner [show]="!isLoadingFinished"></app-loading-spinner>
 
 <div class="app-content-container">
+  <app-loading-spinner [show]="!isLoadingFinished"></app-loading-spinner>
+
   <form [formGroup]="userProfileForm" (ngSubmit)="updateProfile(userProfileForm)">
 
   <div class="flex flex-column align-items-start w-12 md:w-30rem">

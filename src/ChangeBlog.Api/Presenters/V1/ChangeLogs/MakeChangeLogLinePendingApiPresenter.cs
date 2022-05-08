@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using ChangeBlog.Api.Localization.Resources;
 using ChangeBlog.Api.Shared.DTOs;
 using ChangeBlog.Api.Shared.Presenters;
 using ChangeBlog.Application.Boundaries.DataAccess;
@@ -17,12 +18,12 @@ public class MakeChangeLogLinePendingApiPresenter : BaseApiPresenter, IMakeChang
             [KnownIdentifiers.ChangeLogLineId] = changeLogLineId.ToString()
         };
 
-        Response = new OkObjectResult(SuccessResponse.Create("Line was made pending.", resourceIds));
+        Response = new OkObjectResult(SuccessResponse.Create(ChangeBlogStrings.ChangeLogLineMadePending, resourceIds));
     }
 
     public void ChangeLogLineDoesNotExist()
     {
-        Response = new NotFoundObjectResult(ErrorResponse.Create("ChangeLogLine not found."));
+        Response = new NotFoundObjectResult(ErrorResponse.Create(ChangeBlogStrings.ChangeLogLineNotFound));
     }
 
     public void ChangeLogLineIsAlreadyPending(Guid changeLogLineId)
@@ -32,7 +33,7 @@ public class MakeChangeLogLinePendingApiPresenter : BaseApiPresenter, IMakeChang
             [KnownIdentifiers.ChangeLogLineId] = changeLogLineId.ToString()
         };
 
-        Response = new OkObjectResult(SuccessResponse.Create("Line was made pending.", resourceIds));
+        Response = new OkObjectResult(SuccessResponse.Create(ChangeBlogStrings.ChangeLogLineMadePending, resourceIds));
     }
 
     public void VersionAlreadyReleased(Guid versionId)
@@ -42,7 +43,7 @@ public class MakeChangeLogLinePendingApiPresenter : BaseApiPresenter, IMakeChang
             [KnownIdentifiers.VersionId] = versionId.ToString()
         };
 
-        Response = new ConflictObjectResult(ErrorResponse.Create("The related version has already been released.",
+        Response = new ConflictObjectResult(ErrorResponse.Create(ChangeBlogStrings.VersionAlreadyReleased,
             resourceIds));
     }
 
@@ -53,14 +54,14 @@ public class MakeChangeLogLinePendingApiPresenter : BaseApiPresenter, IMakeChang
             [KnownIdentifiers.VersionId] = versionId.ToString()
         };
 
-        Response = new ConflictObjectResult(ErrorResponse.Create("The related version has been deleted.",
+        Response = new ConflictObjectResult(ErrorResponse.Create(ChangeBlogStrings.VersionAlreadyDeleted,
             resourceIds));
     }
 
     public void TooManyPendingLines(int maxChangeLogLines)
     {
         Response = new UnprocessableEntityObjectResult(
-            ErrorResponse.Create($"Too many lines. Max lines: {maxChangeLogLines}"));
+            ErrorResponse.Create(string.Format(ChangeBlogStrings.TooManyChangeLogLines, maxChangeLogLines)));
     }
 
     public void Conflict(Conflict conflict)
@@ -76,6 +77,6 @@ public class MakeChangeLogLinePendingApiPresenter : BaseApiPresenter, IMakeChang
         };
 
         Response = new UnprocessableEntityObjectResult(
-            ErrorResponse.Create($"Lines with same text are not allowed. Duplicate: '{duplicate}'", resourceIds));
+            ErrorResponse.Create(string.Format(ChangeBlogStrings.ChangeLogLineSameText, duplicate), resourceIds));
     }
 }

@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using ChangeBlog.Api.Localization.Resources;
 using ChangeBlog.Api.Shared.DTOs;
 using ChangeBlog.Api.Shared.Presenters;
 using ChangeBlog.Application.Boundaries.DataAccess;
@@ -17,7 +18,7 @@ public class AddChangeLogLineIssueApiPresenter : BaseApiPresenter, IAddChangeLog
             [KnownIdentifiers.ChangeLogLineId] = changeLogLineId.ToString()
         };
 
-        Response = new OkObjectResult(SuccessResponse.Create("Issue successfully added.", resourceIds));
+        Response = new OkObjectResult(SuccessResponse.Create(ChangeBlogStrings.IssueAdded, resourceIds));
     }
 
     public void Conflict(Conflict conflict)
@@ -27,18 +28,18 @@ public class AddChangeLogLineIssueApiPresenter : BaseApiPresenter, IAddChangeLog
 
     public void ChangeLogLineDoesNotExist()
     {
-        Response = new NotFoundObjectResult(ErrorResponse.Create("ChangeLogLine not found."));
+        Response = new NotFoundObjectResult(ErrorResponse.Create(ChangeBlogStrings.ChangeLogLineNotFound));
     }
 
     public void InvalidIssue(string issue)
     {
         Response = new BadRequestObjectResult(
-            ErrorResponse.Create($"Invalid issue '{issue}'."));
+            ErrorResponse.Create(string.Format(ChangeBlogStrings.InvalidIssue, issue)));
     }
 
     public void MaxIssuesReached(int maxIssues)
     {
         Response = new UnprocessableEntityObjectResult(
-            ErrorResponse.Create($"Max issues count reached. Max issues: {maxIssues}"));
+            ErrorResponse.Create(string.Format(ChangeBlogStrings.MaxIssuesReached, maxIssues)));
     }
 }

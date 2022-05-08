@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using ChangeBlog.Api.Localization.Resources;
 using ChangeBlog.Api.Shared.DTOs;
 using ChangeBlog.Api.Shared.Presenters;
 using ChangeBlog.Application.Boundaries.DataAccess;
@@ -17,7 +18,7 @@ public class DeleteChangeLogLineApiPresenter : BaseApiPresenter, IDeleteChangeLo
             [KnownIdentifiers.ChangeLogLineId] = changeLogLineId.ToString()
         };
 
-        Response = new NotFoundObjectResult(ErrorResponse.Create("The requested ChangeLogLine does not exist.",
+        Response = new NotFoundObjectResult(ErrorResponse.Create(ChangeBlogStrings.ChangeLogLineNotFound,
             resourceIds));
     }
 
@@ -28,7 +29,7 @@ public class DeleteChangeLogLineApiPresenter : BaseApiPresenter, IDeleteChangeLo
             [KnownIdentifiers.ChangeLogLineId] = changeLogLineId.ToString()
         };
 
-        Response = new OkObjectResult(SuccessResponse.Create("Line successfully deleted.", resourceIds));
+        Response = new OkObjectResult(SuccessResponse.Create(ChangeBlogStrings.ChangeLogLineDeleted, resourceIds));
     }
 
     public void Conflict(Conflict conflict)
@@ -43,7 +44,7 @@ public class DeleteChangeLogLineApiPresenter : BaseApiPresenter, IDeleteChangeLo
             [KnownIdentifiers.ChangeLogLineId] = changeLogLineId.ToString()
         };
 
-        Response = new ConflictObjectResult(ErrorResponse.Create("The requested change log line is not pending.",
+        Response = new ConflictObjectResult(ErrorResponse.Create(ChangeBlogStrings.ChnageLogLineNotPending,
             resourceIds));
     }
 
@@ -54,7 +55,6 @@ public class DeleteChangeLogLineApiPresenter : BaseApiPresenter, IDeleteChangeLo
             [KnownIdentifiers.ChangeLogLineId] = changeLogLineId.ToString()
         };
 
-        Response = new ConflictObjectResult(ErrorResponse.Create("The requested change log line is pending.",
-            resourceIds));
+        Response = new ConflictObjectResult(ErrorResponse.Create(ChangeBlogStrings.ChangeLogLinePending, resourceIds));
     }
 }

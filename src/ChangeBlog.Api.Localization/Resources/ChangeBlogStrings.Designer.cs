@@ -88,11 +88,74 @@ namespace ChangeBlog.Api.Localization.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to The changelog line has been made pending.
+        /// </summary>
+        public static string ChangeLogLineMadePending {
+            get {
+                return ResourceManager.GetString("ChangeLogLineMadePending", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Changelog line(s) successfully moved.
+        /// </summary>
+        public static string ChangeLogLineMoved {
+            get {
+                return ResourceManager.GetString("ChangeLogLineMoved", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Changelog line not found.
+        /// </summary>
+        public static string ChangeLogLineNotFound {
+            get {
+                return ResourceManager.GetString("ChangeLogLineNotFound", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Changelog line is pending.
+        /// </summary>
+        public static string ChangeLogLinePending {
+            get {
+                return ResourceManager.GetString("ChangeLogLinePending", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Lines with same text are not allowed. Duplicate: &apos;{0}&apos;.
         /// </summary>
         public static string ChangeLogLineSameText {
             get {
                 return ResourceManager.GetString("ChangeLogLineSameText", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to {0} changelog lines has been made pending.
+        /// </summary>
+        public static string ChangeLogLinesMadePending {
+            get {
+                return ResourceManager.GetString("ChangeLogLinesMadePending", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Chnagelog line successfully updated.
+        /// </summary>
+        public static string ChangeLogLineUpdated {
+            get {
+                return ResourceManager.GetString("ChangeLogLineUpdated", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to The changelog line is not pending.
+        /// </summary>
+        public static string ChnageLogLineNotPending {
+            get {
+                return ResourceManager.GetString("ChnageLogLineNotPending", resourceCulture);
             }
         }
         
@@ -133,6 +196,15 @@ namespace ChangeBlog.Api.Localization.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to The version &apos;{0}&apos; isn&apos;t properly formatted.
+        /// </summary>
+        public static string InvalidVersionFormat {
+            get {
+                return ResourceManager.GetString("InvalidVersionFormat", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Invalid version id.
         /// </summary>
         public static string InvalidVersionId {
@@ -151,11 +223,74 @@ namespace ChangeBlog.Api.Localization.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Issue successfully added.
+        /// </summary>
+        public static string IssueAdded {
+            get {
+                return ResourceManager.GetString("IssueAdded", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Issue successfully deleted.
+        /// </summary>
+        public static string IssueDeleted {
+            get {
+                return ResourceManager.GetString("IssueDeleted", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Label successfully added.
+        /// </summary>
+        public static string LabelAdded {
+            get {
+                return ResourceManager.GetString("LabelAdded", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Label successfully deleted.
+        /// </summary>
+        public static string LabelDeleted {
+            get {
+                return ResourceManager.GetString("LabelDeleted", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to You can&apos;t add more Issues. The max number of Issues is {0}.
+        /// </summary>
+        public static string MaxIssuesReached {
+            get {
+                return ResourceManager.GetString("MaxIssuesReached", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to You can&apos;t add more Labels. The max number of Labels is {0}.
+        /// </summary>
+        public static string MaxLabelsReached {
+            get {
+                return ResourceManager.GetString("MaxLabelsReached", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Missing request data.
         /// </summary>
         public static string MissingRequestData {
             get {
                 return ResourceManager.GetString("MissingRequestData", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to There are no Chnagelog lines to assign.
+        /// </summary>
+        public static string NoChangeLogLinesToAssign {
+            get {
+                return ResourceManager.GetString("NoChangeLogLinesToAssign", resourceCulture);
             }
         }
         
@@ -169,11 +304,29 @@ namespace ChangeBlog.Api.Localization.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Pending Changelog line successfully added.
+        /// </summary>
+        public static string PendingChangeLogLineAdded {
+            get {
+                return ResourceManager.GetString("PendingChangeLogLineAdded", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to The related product has been closed.
         /// </summary>
         public static string ProductHasBeenClosed {
             get {
                 return ResourceManager.GetString("ProductHasBeenClosed", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Product not found.
+        /// </summary>
+        public static string ProductNotFound {
+            get {
+                return ResourceManager.GetString("ProductNotFound", resourceCulture);
             }
         }
         
@@ -196,11 +349,47 @@ namespace ChangeBlog.Api.Localization.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to The target version belongs to a different product.
+        /// </summary>
+        public static string TargetVersionBelongsToDifferentProduct {
+            get {
+                return ResourceManager.GetString("TargetVersionBelongsToDifferentProduct", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to The target version has already lines with an identical text. Duplicates: &apos;{0}&apos;.
+        /// </summary>
+        public static string TargetVersionContainsLinesWithSameText {
+            get {
+                return ResourceManager.GetString("TargetVersionContainsLinesWithSameText", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to The target version has reached the max count of changelog lines. Max {0} lines possible.
+        /// </summary>
+        public static string TargetVersionTooManyChangeLogLines {
+            get {
+                return ResourceManager.GetString("TargetVersionTooManyChangeLogLines", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Too many Changelog lines. Max {0} lines.
         /// </summary>
         public static string TooManyChangeLogLines {
             get {
                 return ResourceManager.GetString("TooManyChangeLogLines", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to There are too many Changelog lines to add. You can only add {0} more.
+        /// </summary>
+        public static string TooManyChangeLogLines_Remaining {
+            get {
+                return ResourceManager.GetString("TooManyChangeLogLines_Remaining", resourceCulture);
             }
         }
         
@@ -237,6 +426,15 @@ namespace ChangeBlog.Api.Localization.Resources {
         public static string UserProfileUpdated {
             get {
                 return ResourceManager.GetString("UserProfileUpdated", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to The version has already been deleted.
+        /// </summary>
+        public static string VersionAlreadyDeleted {
+            get {
+                return ResourceManager.GetString("VersionAlreadyDeleted", resourceCulture);
             }
         }
         

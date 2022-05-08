@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using ChangeBlog.Api.Localization.Resources;
 using ChangeBlog.Api.Shared.DTOs;
 using ChangeBlog.Api.Shared.Presenters;
 using ChangeBlog.Application.Boundaries.DataAccess;
@@ -17,24 +18,24 @@ public class AssignAllPendingLinesApiPresenter : BaseApiPresenter, IAssignAllPen
             [KnownIdentifiers.VersionId] = versionId.ToString()
         };
 
-        Response = new OkObjectResult(SuccessResponse.Create("Lines successfully moved.", resourceIds));
+        Response = new OkObjectResult(SuccessResponse.Create(ChangeBlogStrings.ChangeLogLineMoved, resourceIds));
     }
 
     public void InvalidVersionFormat(string version)
     {
         Response = new UnprocessableEntityObjectResult(
-            ErrorResponse.Create($"Invalid version format '{version}'"));
+            ErrorResponse.Create(string.Format(ChangeBlogStrings.InvalidVersionFormat, version)));
     }
 
     public void VersionDoesNotExist()
     {
-        Response = new NotFoundObjectResult(ErrorResponse.Create("Version not found."));
+        Response = new NotFoundObjectResult(ErrorResponse.Create(ChangeBlogStrings.VersionNotFound));
     }
 
     public void TooManyLinesToAdd(uint remainingLinesToAdd)
     {
         Response = new UnprocessableEntityObjectResult(
-            ErrorResponse.Create($"Too many lines. Remaining lines: {remainingLinesToAdd}"));
+            ErrorResponse.Create(string.Format(ChangeBlogStrings.TooManyChangeLogLines_Remaining, remainingLinesToAdd)));
     }
 
     public void Conflict(Conflict conflict)
@@ -49,14 +50,13 @@ public class AssignAllPendingLinesApiPresenter : BaseApiPresenter, IAssignAllPen
             [KnownIdentifiers.ProductId] = productId.ToString()
         };
 
-        Response = new OkObjectResult(ErrorResponse.Create("There are no Lines to assign.", resourceIds));
+        Response = new OkObjectResult(ErrorResponse.Create(ChangeBlogStrings.NoChangeLogLinesToAssign, resourceIds));
     }
 
     public void LineWithSameTextAlreadyExists(IEnumerable<string> texts)
     {
         Response = new UnprocessableEntityObjectResult(
-            ErrorResponse.Create(
-                $"The target version contains already lines with an identical text. Duplicates: {string.Join(", ", texts)}"));
+            ErrorResponse.Create(string.Format(ChangeBlogStrings.TargetVersionContainsLinesWithSameText, string.Join(", ", texts))));
     }
 
     public void TargetVersionBelongsToDifferentProduct(Guid productId, Guid targetVersionProductId)
@@ -66,7 +66,7 @@ public class AssignAllPendingLinesApiPresenter : BaseApiPresenter, IAssignAllPen
             [KnownIdentifiers.ProductId] = targetVersionProductId.ToString()
         };
 
-        Response = new ConflictObjectResult(ErrorResponse.Create("The target version belongs to a different product.",
+        Response = new ConflictObjectResult(ErrorResponse.Create(ChangeBlogStrings.TargetVersionBelongsToDifferentProduct,
             resourceIds));
     }
 }

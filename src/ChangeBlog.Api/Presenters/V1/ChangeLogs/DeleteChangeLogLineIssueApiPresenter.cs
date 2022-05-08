@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using ChangeBlog.Api.Localization.Resources;
 using ChangeBlog.Api.Shared.DTOs;
 using ChangeBlog.Api.Shared.Presenters;
 using ChangeBlog.Application.Boundaries.DataAccess;
@@ -17,7 +18,7 @@ public class DeleteChangeLogLineIssueApiPresenter : BaseApiPresenter, IDeleteCha
             [KnownIdentifiers.ChangeLogLineId] = changeLogLineId.ToString()
         };
 
-        Response = new OkObjectResult(SuccessResponse.Create("Issue successfully deleted.", resourceIds));
+        Response = new OkObjectResult(SuccessResponse.Create(ChangeBlogStrings.IssueDeleted, resourceIds));
     }
 
     public void Conflict(Conflict conflict)
@@ -27,12 +28,12 @@ public class DeleteChangeLogLineIssueApiPresenter : BaseApiPresenter, IDeleteCha
 
     public void ChangeLogLineDoesNotExist()
     {
-        Response = new NotFoundObjectResult(ErrorResponse.Create("ChangeLogLine not found."));
+        Response = new NotFoundObjectResult(ErrorResponse.Create(ChangeBlogStrings.ChangeLogLineNotFound));
     }
 
     public void InvalidIssue(string issue)
     {
         Response = new BadRequestObjectResult(
-            ErrorResponse.Create($"Invalid issue '{issue}'."));
+            ErrorResponse.Create(string.Format(ChangeBlogStrings.InvalidIssue, issue)));
     }
 }

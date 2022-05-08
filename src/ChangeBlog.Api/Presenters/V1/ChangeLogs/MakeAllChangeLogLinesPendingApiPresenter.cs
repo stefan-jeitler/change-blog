@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using ChangeBlog.Api.Localization.Resources;
 using ChangeBlog.Api.Shared.DTOs;
 using ChangeBlog.Api.Shared.Presenters;
 using ChangeBlog.Application.Boundaries.DataAccess;
@@ -13,7 +14,7 @@ public class MakeAllChangeLogLinesPendingApiPresenter : BaseApiPresenter, IMakeA
 {
     public void VersionDoesNotExist()
     {
-        Response = new NotFoundObjectResult(ErrorResponse.Create("Version not found."));
+        Response = new NotFoundObjectResult(ErrorResponse.Create(ChangeBlogStrings.VersionNotFound));
     }
 
     public void VersionAlreadyReleased(Guid versionId)
@@ -23,7 +24,7 @@ public class MakeAllChangeLogLinesPendingApiPresenter : BaseApiPresenter, IMakeA
             [KnownIdentifiers.VersionId] = versionId.ToString()
         };
 
-        Response = new ConflictObjectResult(ErrorResponse.Create("The related version has already been released.",
+        Response = new ConflictObjectResult(ErrorResponse.Create(ChangeBlogStrings.VersionAlreadyDeleted,
             resourceIds));
     }
 
@@ -34,22 +35,23 @@ public class MakeAllChangeLogLinesPendingApiPresenter : BaseApiPresenter, IMakeA
             [KnownIdentifiers.VersionId] = versionId.ToString()
         };
 
-        Response = new ConflictObjectResult(ErrorResponse.Create("The related version has been deleted.",
+        Response = new ConflictObjectResult(ErrorResponse.Create(ChangeBlogStrings.VersionDeleted,
             resourceIds));
     }
 
     public void TooManyPendingLines(int maxChangeLogLines)
     {
         Response = new UnprocessableEntityObjectResult(
-            ErrorResponse.Create($"Too many lines. Max lines: {maxChangeLogLines}"));
+            ErrorResponse.Create(string.Format(ChangeBlogStrings.TooManyChangeLogLines, maxChangeLogLines)));
     }
 
     public void LineWithSameTextAlreadyExists(IEnumerable<string> duplicates)
     {
         var duplicatesFormatted = string.Join(", ", duplicates.Select(x => $"'{x}'"));
+        var message = string.Format(ChangeBlogStrings.ChangeLogLineSameText, duplicatesFormatted);
 
         Response = new UnprocessableEntityObjectResult(
-            ErrorResponse.Create($"Lines with same text are not allowed. Duplicates: '{duplicatesFormatted}'"));
+            ErrorResponse.Create(message));
     }
 
     public void Conflict(Conflict conflict)
@@ -64,11 +66,11 @@ public class MakeAllChangeLogLinesPendingApiPresenter : BaseApiPresenter, IMakeA
             [KnownIdentifiers.ProductId] = productId.ToString()
         };
 
-        Response = new OkObjectResult(SuccessResponse.Create($"{count} Lines were made pending.", resourceIds));
+        Response = new OkObjectResult(SuccessResponse.Create(string.Format(ChangeBlogStrings.ChangeLogLinesMadePending, count), resourceIds));
     }
 
     public void InvalidVersionFormat(string version)
     {
-        Response = new UnprocessableEntityObjectResult(ErrorResponse.Create($"Invalid format '{version}'."));
+        Response = new UnprocessableEntityObjectResult(ErrorResponse.Create(string.Format(ChangeBlogStrings.InvalidVersionFormat, version)));
     }
 }

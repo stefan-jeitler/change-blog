@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using ChangeBlog.Api.Localization.Resources;
 using ChangeBlog.Api.Shared.DTOs;
 using ChangeBlog.Api.Shared.Presenters;
 using ChangeBlog.Application.Boundaries.DataAccess;
@@ -17,13 +18,13 @@ public class DeleteChangeLogLineLabelApiPresenter : BaseApiPresenter, IDeleteCha
             [KnownIdentifiers.ChangeLogLineId] = changeLogLineId.ToString()
         };
 
-        Response = new OkObjectResult(SuccessResponse.Create("Label successfully deleted.", resourceIds));
+        Response = new OkObjectResult(SuccessResponse.Create(ChangeBlogStrings.LabelDeleted, resourceIds));
     }
 
     public void InvalidLabel(string label)
     {
         Response = new BadRequestObjectResult(
-            ErrorResponse.Create($"Invalid label '{label}'."));
+            ErrorResponse.Create(string.Format(ChangeBlogStrings.InvalidLabel, label)));
     }
 
     public void Conflict(Conflict conflict)
@@ -33,6 +34,6 @@ public class DeleteChangeLogLineLabelApiPresenter : BaseApiPresenter, IDeleteCha
 
     public void ChangeLogLineDoesNotExist()
     {
-        Response = new NotFoundObjectResult(ErrorResponse.Create("ChangeLogLine not found."));
+        Response = new NotFoundObjectResult(ErrorResponse.Create(ChangeBlogStrings.ChangeLogLineNotFound));
     }
 }

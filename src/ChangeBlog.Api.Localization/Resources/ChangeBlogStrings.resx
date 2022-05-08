@@ -186,4 +186,70 @@
   <data name="TooManyLabelsForChangeLogLine" xml:space="preserve">
     <value>The changelog line '{0}' has too many labels. Max {1} labels possible</value>
   </data>
+  <data name="IssueAdded" xml:space="preserve">
+    <value>Issue successfully added</value>
+  </data>
+  <data name="ChangeLogLineNotFound" xml:space="preserve">
+    <value>Changelog line not found</value>
+  </data>
+  <data name="MaxIssuesReached" xml:space="preserve">
+    <value>You can't add more Issues. The max number of Issues is {0}</value>
+  </data>
+  <data name="LabelAdded" xml:space="preserve">
+    <value>Label successfully added</value>
+  </data>
+  <data name="MaxLabelsReached" xml:space="preserve">
+    <value>You can't add more Labels. The max number of Labels is {0}</value>
+  </data>
+  <data name="ProductNotFound" xml:space="preserve">
+    <value>Product not found</value>
+  </data>
+  <data name="PendingChangeLogLineAdded" xml:space="preserve">
+    <value>Pending Changelog line successfully added</value>
+  </data>
+  <data name="ChangeLogLineMoved" xml:space="preserve">
+    <value>Changelog line(s) successfully moved</value>
+  </data>
+  <data name="InvalidVersionFormat" xml:space="preserve">
+    <value>The version '{0}' isn't properly formatted</value>
+  </data>
+  <data name="TooManyChangeLogLines_Remaining" xml:space="preserve">
+    <value>There are too many Changelog lines to add. You can only add {0} more</value>
+  </data>
+  <data name="NoChangeLogLinesToAssign" xml:space="preserve">
+    <value>There are no Chnagelog lines to assign</value>
+  </data>
+  <data name="TargetVersionContainsLinesWithSameText" xml:space="preserve">
+    <value>The target version has already lines with an identical text. Duplicates: '{0}'</value>
+  </data>
+  <data name="TargetVersionBelongsToDifferentProduct" xml:space="preserve">
+    <value>The target version belongs to a different product</value>
+  </data>
+  <data name="TargetVersionTooManyChangeLogLines" xml:space="preserve">
+    <value>The target version has reached the max count of changelog lines. Max {0} lines possible</value>
+  </data>
+  <data name="ChnageLogLineNotPending" xml:space="preserve">
+    <value>The changelog line is not pending</value>
+  </data>
+  <data name="ChangeLogLinePending" xml:space="preserve">
+    <value>Changelog line is pending</value>
+  </data>
+  <data name="IssueDeleted" xml:space="preserve">
+    <value>Issue successfully deleted</value>
+  </data>
+  <data name="LabelDeleted" xml:space="preserve">
+    <value>Label successfully deleted</value>
+  </data>
+  <data name="VersionAlreadyDeleted" xml:space="preserve">
+    <value>The version has already been deleted</value>
+  </data>
+  <data name="ChangeLogLinesMadePending" xml:space="preserve">
+    <value>{0} changelog lines has been made pending</value>
+  </data>
+  <data name="ChangeLogLineMadePending" xml:space="preserve">
+    <value>The changelog line has been made pending</value>
+  </data>
+  <data name="ChangeLogLineUpdated" xml:space="preserve">
+    <value>Chnagelog line successfully updated</value>
+  </data>
 </root>

@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using ChangeBlog.Api.Localization.Resources;
 using ChangeBlog.Api.Shared;
 using ChangeBlog.Api.Shared.DTOs;
 using ChangeBlog.Api.Shared.Presenters;
@@ -26,7 +27,7 @@ public class AddPendingChangeLogLineApiPresenter : BaseApiPresenter, IAddPending
             [KnownIdentifiers.ProductId] = productId.ToString()
         };
 
-        Response = new NotFoundObjectResult(ErrorResponse.Create("Product does not exist.", resourceIds));
+        Response = new NotFoundObjectResult(ErrorResponse.Create(ChangeBlogStrings.ProductNotFound, resourceIds));
     }
 
     public void Created(Guid changeLogLineId)
@@ -38,7 +39,7 @@ public class AddPendingChangeLogLineApiPresenter : BaseApiPresenter, IAddPending
 
         var location = _httpContext.CreateLinkTo($"api/v1/pending-changelogs/{changeLogLineId}");
         Response = new CreatedResult(location,
-            SuccessResponse.Create("Pending ChangeLogLine successfully added.", resourceIds));
+            SuccessResponse.Create(ChangeBlogStrings.PendingChangeLogLineAdded, resourceIds));
     }
 
     public void Conflict(Conflict conflict)
@@ -49,7 +50,7 @@ public class AddPendingChangeLogLineApiPresenter : BaseApiPresenter, IAddPending
     public void TooManyLines(int maxChangeLogLines)
     {
         Response = new UnprocessableEntityObjectResult(
-            ErrorResponse.Create($"Too many lines. Max lines: {maxChangeLogLines}"));
+            ErrorResponse.Create(string.Format(ChangeBlogStrings.TooManyChangeLogLines, maxChangeLogLines)));
     }
 
     public void LinesWithSameTextsAreNotAllowed(Guid changeLogLineId, string duplicate)
@@ -60,37 +61,35 @@ public class AddPendingChangeLogLineApiPresenter : BaseApiPresenter, IAddPending
         };
 
         Response = new UnprocessableEntityObjectResult(
-            ErrorResponse.Create($"Lines with same text are not allowed. Duplicate: '{duplicate}'", resourceIds));
+            ErrorResponse.Create(string.Format(ChangeBlogStrings.ChangeLogLineSameText, duplicate), resourceIds));
     }
 
     public void InvalidChangeLogLineText(string text)
     {
-        Response = new BadRequestObjectResult(ErrorResponse.Create($"Invalid change log text '{text}'."));
+        Response = new BadRequestObjectResult(ErrorResponse.Create(string.Format(ChangeBlogStrings.InvalidChangeLogText, text)));
     }
 
     public void InvalidIssue(string changeLogText, string issue)
     {
         Response = new BadRequestObjectResult(
-            ErrorResponse.Create($"Invalid issue '{issue}' for change log '{changeLogText}'."));
+            ErrorResponse.Create(string.Format(ChangeBlogStrings.InvalidIssue, issue)));
     }
 
     public void TooManyIssues(string changeLogText, int maxIssues)
     {
         Response = new UnprocessableEntityObjectResult(
-            ErrorResponse.Create(
-                $"The change log '{changeLogText}' has too many issues. Max issues: '{maxIssues}'."));
+            ErrorResponse.Create(string.Format(ChangeBlogStrings.TooManyIssuesForChangeLogLine, changeLogText, maxIssues)));
     }
 
     public void InvalidLabel(string changeLogText, string label)
     {
         Response = new BadRequestObjectResult(
-            ErrorResponse.Create($"Invalid label '{label}' for change log '{changeLogText}'."));
+            ErrorResponse.Create(string.Format(ChangeBlogStrings.InvalidLabel, label)));
     }
 
     public void TooManyLabels(string changeLogText, int maxLabels)
     {
         Response = new UnprocessableEntityObjectResult(
-            ErrorResponse.Create(
-                $"The change log '{changeLogText}' has too many labels. Max labels: '{maxLabels}'."));
+            ErrorResponse.Create(string.Format(ChangeBlogStrings.TooManyLabelsForChangeLogLine, changeLogText, maxLabels)));
     }
 }

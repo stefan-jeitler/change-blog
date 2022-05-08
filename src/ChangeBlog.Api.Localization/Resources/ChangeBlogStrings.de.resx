@@ -175,15 +175,81 @@
     <value>Changelog Text ist ungültig '{0}'</value>
   </data>
   <data name="InvalidIssue" xml:space="preserve">
-    <value>Issue '{0}' ungültig</value>
+    <value>Issue '{0}' ist ungültig</value>
   </data>
   <data name="TooManyIssuesForChangeLogLine" xml:space="preserve">
     <value>Der Changelog Eintrag '{0}' hat zu viele Issues. Max {1} Issues möglich</value>
   </data>
   <data name="InvalidLabel" xml:space="preserve">
-    <value>Label '{0}' ungültig</value>
+    <value>Label '{0}' ist ungültig</value>
   </data>
   <data name="TooManyLabelsForChangeLogLine" xml:space="preserve">
     <value>Der Changelog Eintrag '{0}' hat zu viele Labels. Max {1} Labels möglich</value>
+  </data>
+  <data name="IssueAdded" xml:space="preserve">
+    <value>Issue erfolgreich hinzugefügt</value>
+  </data>
+  <data name="ChangeLogLineNotFound" xml:space="preserve">
+    <value>Changelog Eintrag nicht gefunden</value>
+  </data>
+  <data name="MaxIssuesReached" xml:space="preserve">
+    <value>Sie können keine Issues mehr hinzufügen. Die max. Anzahl an Issues ist {0}</value>
+  </data>
+  <data name="LabelAdded" xml:space="preserve">
+    <value>Label erfolgreich hinzugefügt</value>
+  </data>
+  <data name="MaxLabelsReached" xml:space="preserve">
+    <value>Sie können keine Labels mehr hinzufügen. Die max. Anzahl an Labels ist {0}</value>
+  </data>
+  <data name="ProductNotFound" xml:space="preserve">
+    <value>Produkt nicht gefunden</value>
+  </data>
+  <data name="PendingChangeLogLineAdded" xml:space="preserve">
+    <value>Pending Changelog Eintrag erfolgreich hinzugefügt</value>
+  </data>
+  <data name="ChangeLogLineMoved" xml:space="preserve">
+    <value>Changelog Einträg(e) erfolgreich verschoben</value>
+  </data>
+  <data name="InvalidVersionFormat" xml:space="preserve">
+    <value>Die Version '{0}' ist nicht korrekt formattiert</value>
+  </data>
+  <data name="TooManyChangeLogLines_Remaining" xml:space="preserve">
+    <value>Die Anzahl der zu hinzufügenden Changelog Einträge ist zu groß. Sie können nur mehr {0} hinzufügen</value>
+  </data>
+  <data name="NoChangeLogLinesToAssign" xml:space="preserve">
+    <value>Es gibt keine Changelog Einträge zum Zuweisen</value>
+  </data>
+  <data name="TargetVersionContainsLinesWithSameText" xml:space="preserve">
+    <value>Die Zielversion hat bereits Einträge mit identischem Text. Duplikate: '{0}'</value>
+  </data>
+  <data name="TargetVersionBelongsToDifferentProduct" xml:space="preserve">
+    <value>Die Zielversion gehört zu einem anderen Produkt</value>
+  </data>
+  <data name="TargetVersionTooManyChangeLogLines" xml:space="preserve">
+    <value>Die Zielversion hat die maximale Anzahl an Changelog Einträgen erreicht. Max {0} Einträge möglich.</value>
+  </data>
+  <data name="ChnageLogLineNotPending" xml:space="preserve">
+    <value>Der Changelog Eintrag ist nicht pending.</value>
+  </data>
+  <data name="ChangeLogLinePending" xml:space="preserve">
+    <value>Changelog Eintrag ist pending</value>
+  </data>
+  <data name="IssueDeleted" xml:space="preserve">
+    <value>Issue erfolgreich gelöscht</value>
+  </data>
+  <data name="LabelDeleted" xml:space="preserve">
+    <value>Label erfolgreich gelöscht</value>
+  </data>
+  <data name="VersionAlreadyDeleted" xml:space="preserve">
+    <value>Die Version wurde bereits gelöscht</value>
+  </data>
+  <data name="ChangeLogLinesMadePending" xml:space="preserve">
+    <value>{0} Chnagelog Einträge wurden pending gemacht</value>
+  </data>
+  <data name="ChangeLogLineMadePending" xml:space="preserve">
+    <value>Der Changelog Eintrag wurde als pending markiert</value>
+  </data>
+  <data name="ChangeLogLineUpdated" xml:space="preserve">
+    <value>Changelog Eintrag erfolgreich aktualisiert</value>
   </data>
 </root>

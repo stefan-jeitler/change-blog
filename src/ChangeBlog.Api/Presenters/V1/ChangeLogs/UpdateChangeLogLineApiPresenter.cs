@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using ChangeBlog.Api.Localization.Resources;
 using ChangeBlog.Api.Shared.DTOs;
 using ChangeBlog.Api.Shared.Presenters;
 using ChangeBlog.Application.Boundaries.DataAccess;
@@ -12,33 +13,31 @@ public class UpdateChangeLogLineApiPresenter : BaseApiPresenter, IUpdateChangeLo
 {
     public void InvalidChangeLogLineText(string text)
     {
-        Response = new BadRequestObjectResult(ErrorResponse.Create($"Invalid change log text '{text}'."));
+        Response = new BadRequestObjectResult(ErrorResponse.Create(string.Format(ChangeBlogStrings.InvalidChangeLogText, text)));
     }
 
     public void InvalidIssue(string changeLogText, string issue)
     {
         Response = new BadRequestObjectResult(
-            ErrorResponse.Create($"Invalid issue '{issue}' for change log '{changeLogText}'."));
+            ErrorResponse.Create(string.Format(ChangeBlogStrings.InvalidIssue, issue)));
     }
 
     public void TooManyIssues(string changeLogText, int maxIssues)
     {
         Response = new UnprocessableEntityObjectResult(
-            ErrorResponse.Create(
-                $"The change log '{changeLogText}' has too many issues. Max issues: '{maxIssues}'."));
+            ErrorResponse.Create(string.Format(ChangeBlogStrings.TooManyIssuesForChangeLogLine, changeLogText, maxIssues)));
     }
 
     public void InvalidLabel(string changeLogText, string label)
     {
         Response = new BadRequestObjectResult(
-            ErrorResponse.Create($"Invalid label '{label}' for change log '{changeLogText}'."));
+            ErrorResponse.Create(string.Format(ChangeBlogStrings.InvalidLabel, label)));
     }
 
     public void TooManyLabels(string changeLogText, int maxLabels)
     {
         Response = new UnprocessableEntityObjectResult(
-            ErrorResponse.Create(
-                $"The change log '{changeLogText}' has too many labels. Max labels: '{maxLabels}'."));
+            ErrorResponse.Create(string.Format(ChangeBlogStrings.TooManyLabelsForChangeLogLine, changeLogText, maxLabels)));
     }
 
     public void Updated(Guid changeLogLineId)
@@ -48,12 +47,12 @@ public class UpdateChangeLogLineApiPresenter : BaseApiPresenter, IUpdateChangeLo
             [KnownIdentifiers.ChangeLogLineId] = changeLogLineId.ToString()
         };
 
-        Response = new OkObjectResult(SuccessResponse.Create("ChangeLogLine successfully updated.", resourceIds));
+        Response = new OkObjectResult(SuccessResponse.Create(ChangeBlogStrings.ChangeLogLineUpdated, resourceIds));
     }
 
     public void ChangeLogLineDoesNotExist()
     {
-        Response = new NotFoundObjectResult(ErrorResponse.Create("ChangeLogLine not found."));
+        Response = new NotFoundObjectResult(ErrorResponse.Create(ChangeBlogStrings.ChangeLogLineNotFound));
     }
 
     public void Conflict(Conflict conflict)
@@ -64,7 +63,7 @@ public class UpdateChangeLogLineApiPresenter : BaseApiPresenter, IUpdateChangeLo
     public void LineWithSameTextAlreadyExists(string text)
     {
         Response = new UnprocessableEntityObjectResult(
-            ErrorResponse.Create($"Lines with same text are not allowed. Duplicate: '{text}'"));
+            ErrorResponse.Create(string.Format(ChangeBlogStrings.ChangeLogLineSameText, text)));
     }
 
     public void RequestedLineIsNotPending(Guid changeLogLineId)
@@ -74,7 +73,7 @@ public class UpdateChangeLogLineApiPresenter : BaseApiPresenter, IUpdateChangeLo
             [KnownIdentifiers.ChangeLogLineId] = changeLogLineId.ToString()
         };
 
-        Response = new ConflictObjectResult(ErrorResponse.Create("The requested change log line is not pending.",
+        Response = new ConflictObjectResult(ErrorResponse.Create(ChangeBlogStrings.ChnageLogLineNotPending,
             resourceIds));
     }
 
@@ -85,7 +84,7 @@ public class UpdateChangeLogLineApiPresenter : BaseApiPresenter, IUpdateChangeLo
             [KnownIdentifiers.ChangeLogLineId] = changeLogLineId.ToString()
         };
 
-        Response = new ConflictObjectResult(ErrorResponse.Create("The requested change log line is pending.",
+        Response = new ConflictObjectResult(ErrorResponse.Create(ChangeBlogStrings.ChangeLogLinePending,
             resourceIds));
     }
 }

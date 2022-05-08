@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using ChangeBlog.Api.Localization.Resources;
 using ChangeBlog.Api.Shared.DTOs;
 using ChangeBlog.Api.Shared.Presenters;
 using ChangeBlog.Application.Boundaries.DataAccess;
@@ -14,19 +15,20 @@ public class AssignPendingLineToVersionApiPresenter : BaseApiPresenter,
     public void InvalidVersionFormat(string version)
     {
         Response = new UnprocessableEntityObjectResult(
-            ErrorResponse.Create($"Invalid version format '{version}'"));
+            ErrorResponse.Create(string.Format(ChangeBlogStrings.InvalidVersionFormat, version)));
     }
 
     public void VersionDoesNotExist()
     {
-        Response = new NotFoundObjectResult(ErrorResponse.Create("Version not found."));
+        Response = new NotFoundObjectResult(ErrorResponse.Create(ChangeBlogStrings.VersionNotFound));
     }
 
     public void MaxChangeLogLinesReached(int maxChangeLogLines)
     {
+        var message = string.Format(ChangeBlogStrings.TargetVersionTooManyChangeLogLines, maxChangeLogLines);
+        
         Response = new ConflictObjectResult(
-            ErrorResponse.Create(
-                $"The target version has reached the max lines count. Max lines: {maxChangeLogLines}"));
+            ErrorResponse.Create(message));
     }
 
     public void ChangeLogLineDoesNotExist(Guid changeLogLineId)
@@ -36,7 +38,7 @@ public class AssignPendingLineToVersionApiPresenter : BaseApiPresenter,
             [KnownIdentifiers.ChangeLogLineId] = changeLogLineId.ToString()
         };
 
-        Response = new NotFoundObjectResult(ErrorResponse.Create("ChangeLogLine not found.", resourceIds));
+        Response = new NotFoundObjectResult(ErrorResponse.Create(ChangeBlogStrings.ChangeLogLineNotFound, resourceIds));
     }
 
     public void Conflict(Conflict conflict)
@@ -52,7 +54,7 @@ public class AssignPendingLineToVersionApiPresenter : BaseApiPresenter,
             [KnownIdentifiers.ChangeLogLineId] = changeLogLineId.ToString()
         };
 
-        Response = new OkObjectResult(SuccessResponse.Create("Line successfully moved.", resourceIds));
+        Response = new OkObjectResult(SuccessResponse.Create(ChangeBlogStrings.ChangeLogLineAdded, resourceIds));
     }
 
     public void ChangeLogLineIsNotPending(Guid changeLogLineId)
@@ -62,15 +64,14 @@ public class AssignPendingLineToVersionApiPresenter : BaseApiPresenter,
             [KnownIdentifiers.ChangeLogLineId] = changeLogLineId.ToString()
         };
 
-        Response = new ConflictObjectResult(ErrorResponse.Create("The given ChangeLogLine is not pending",
+        Response = new ConflictObjectResult(ErrorResponse.Create(ChangeBlogStrings.ChnageLogLineNotPending,
             resourceIds));
     }
 
     public void LineWithSameTextAlreadyExists(string text)
     {
         Response = new UnprocessableEntityObjectResult(
-            ErrorResponse.Create(
-                $"The target version contains already lines with an identical text. Duplicate: {text}"));
+            ErrorResponse.Create(string.Format(ChangeBlogStrings.TargetVersionContainsLinesWithSameText, text)));
     }
 
     public void TargetVersionBelongsToDifferentProduct(Guid changeLogLineProductId, Guid targetVersionProductId)
@@ -80,7 +81,6 @@ public class AssignPendingLineToVersionApiPresenter : BaseApiPresenter,
             [KnownIdentifiers.ProductId] = targetVersionProductId.ToString()
         };
 
-        Response = new ConflictObjectResult(ErrorResponse.Create("The target version belongs to a different product.",
-            resourceIds));
+        Response = new ConflictObjectResult(ErrorResponse.Create(ChangeBlogStrings.TargetVersionBelongsToDifferentProduct,resourceIds));
     }
 }

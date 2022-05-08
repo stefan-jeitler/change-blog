@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using ChangeBlog.Api.DTOs.V1.ChangeLog;
+using ChangeBlog.Api.Localization.Resources;
 using ChangeBlog.Api.Shared.DTOs;
 using ChangeBlog.Api.Shared.Presenters;
 using ChangeBlog.Application.UseCases.Queries.GetChangeLogLine;
@@ -18,7 +19,7 @@ public class GetChangeLogLineApiPresenter : BaseApiPresenter, IGetChangeLogLineO
             [KnownIdentifiers.ChangeLogLineId] = changeLogLineId.ToString()
         };
 
-        Response = new NotFoundObjectResult(ErrorResponse.Create("ChangeLogLine not found.", resourceIds));
+        Response = new NotFoundObjectResult(ErrorResponse.Create(ChangeBlogStrings.ChangeLogLineNotFound, resourceIds));
     }
 
     public void LineIsPending(Guid changeLogLineId)
@@ -28,8 +29,7 @@ public class GetChangeLogLineApiPresenter : BaseApiPresenter, IGetChangeLogLineO
             [KnownIdentifiers.ChangeLogLineId] = changeLogLineId.ToString()
         };
 
-        Response = new NotFoundObjectResult(ErrorResponse.Create("The requested change log line is pending.",
-            resourceIds));
+        Response = new NotFoundObjectResult(ErrorResponse.Create(ChangeBlogStrings.ChangeLogLinePending, resourceIds));
     }
 
     public void LineFound(ChangeLogLineResponseModel responseModel)

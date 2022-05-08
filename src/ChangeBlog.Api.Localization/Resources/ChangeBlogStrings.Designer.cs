@@ -61,6 +61,24 @@ namespace ChangeBlog.Api.Localization.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to The Account has been deleted.
+        /// </summary>
+        public static string AccountDeleted {
+            get {
+                return ResourceManager.GetString("AccountDeleted", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Account not found.
+        /// </summary>
+        public static string AccountNotFound {
+            get {
+                return ResourceManager.GetString("AccountNotFound", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Changelog line successfully added.
         /// </summary>
         public static string ChangeLogLineAdded {
@@ -196,6 +214,15 @@ namespace ChangeBlog.Api.Localization.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Invalid name &apos;{0}&apos;.
+        /// </summary>
+        public static string InvalidName {
+            get {
+                return ResourceManager.GetString("InvalidName", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to The version &apos;{0}&apos; isn&apos;t properly formatted.
         /// </summary>
         public static string InvalidVersionFormat {
@@ -259,6 +286,15 @@ namespace ChangeBlog.Api.Localization.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to The given language code &apos;{0}&apos; is not supported. Supported codes are &apos;{1}&apos;.
+        /// </summary>
+        public static string LanguageCodeNotSupported {
+            get {
+                return ResourceManager.GetString("LanguageCodeNotSupported", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to You can&apos;t add more Issues. The max number of Issues is {0}.
         /// </summary>
         public static string MaxIssuesReached {
@@ -309,6 +345,33 @@ namespace ChangeBlog.Api.Localization.Resources {
         public static string PendingChangeLogLineAdded {
             get {
                 return ResourceManager.GetString("PendingChangeLogLineAdded", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Product successfully added.
+        /// </summary>
+        public static string ProductAdded {
+            get {
+                return ResourceManager.GetString("ProductAdded", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to The product is already closed.
+        /// </summary>
+        public static string ProductAlreadyClosed {
+            get {
+                return ResourceManager.GetString("ProductAlreadyClosed", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to The Product already exists.
+        /// </summary>
+        public static string ProductAlreadyExists {
+            get {
+                return ResourceManager.GetString("ProductAlreadyExists", resourceCulture);
             }
         }
         
@@ -430,11 +493,29 @@ namespace ChangeBlog.Api.Localization.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Version successfully added.
+        /// </summary>
+        public static string VersionAdded {
+            get {
+                return ResourceManager.GetString("VersionAdded", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to The version has already been deleted.
         /// </summary>
         public static string VersionAlreadyDeleted {
             get {
                 return ResourceManager.GetString("VersionAlreadyDeleted", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to The version already exists.
+        /// </summary>
+        public static string VersionAlreadyExists {
+            get {
+                return ResourceManager.GetString("VersionAlreadyExists", resourceCulture);
             }
         }
         
@@ -457,11 +538,56 @@ namespace ChangeBlog.Api.Localization.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to The Version &apos;{0}&apos; does not match your product&apos;s versioning scheme. Versioningscheme: {1}.
+        /// </summary>
+        public static string VersioningSchemeMismatch {
+            get {
+                return ResourceManager.GetString("VersioningSchemeMismatch", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Versioningscheme not found.
+        /// </summary>
+        public static string VersioningSchemeNotFound {
+            get {
+                return ResourceManager.GetString("VersioningSchemeNotFound", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Version not found.
         /// </summary>
         public static string VersionNotFound {
             get {
                 return ResourceManager.GetString("VersionNotFound", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Version successfully released.
+        /// </summary>
+        public static string VersionReleased {
+            get {
+                return ResourceManager.GetString("VersionReleased", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Version successfully update.
+        /// </summary>
+        public static string VersionUpdated {
+            get {
+                return ResourceManager.GetString("VersionUpdated", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to You cannot add or update versions that have been released or deleted.
+        /// </summary>
+        public static string VersionUpdateForbidden {
+            get {
+                return ResourceManager.GetString("VersionUpdateForbidden", resourceCulture);
             }
         }
     }

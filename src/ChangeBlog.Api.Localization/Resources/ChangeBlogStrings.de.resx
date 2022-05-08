@@ -252,4 +252,46 @@
   <data name="ChangeLogLineUpdated" xml:space="preserve">
     <value>Changelog Eintrag erfolgreich aktualisiert</value>
   </data>
+  <data name="AccountNotFound" xml:space="preserve">
+    <value>Account nicht gefunden</value>
+  </data>
+  <data name="AccountDeleted" xml:space="preserve">
+    <value>Der Account wurde gelöscht</value>
+  </data>
+  <data name="InvalidName" xml:space="preserve">
+    <value>Name '{0}' ist ungültig</value>
+  </data>
+  <data name="ProductAlreadyExists" xml:space="preserve">
+    <value>Das Produkt existiert bereits</value>
+  </data>
+  <data name="VersioningSchemeNotFound" xml:space="preserve">
+    <value>Versionierungsschema nicht gefunden</value>
+  </data>
+  <data name="ProductAdded" xml:space="preserve">
+    <value>Produkt erfolgreich hinzugefügt</value>
+  </data>
+  <data name="LanguageCodeNotSupported" xml:space="preserve">
+    <value>Die angegebene Sprache '{0}' wird nicht unterstützt. Unterstützte Sprachen sind '{1}'</value>
+  </data>
+  <data name="VersionAlreadyExists" xml:space="preserve">
+    <value>Die Version existiert bereits</value>
+  </data>
+  <data name="ProductAlreadyClosed" xml:space="preserve">
+    <value>Das Produkt wurde bereits eingestampft</value>
+  </data>
+  <data name="VersionUpdateForbidden" xml:space="preserve">
+    <value>Sie können keine Versionen aktualisieren, die bereits released oder gelöscht wurden</value>
+  </data>
+  <data name="VersionAdded" xml:space="preserve">
+    <value>Version erfolgreich hinzugefügt</value>
+  </data>
+  <data name="VersionUpdated" xml:space="preserve">
+    <value>Version erfolgreich aktualisiert</value>
+  </data>
+  <data name="VersioningSchemeMismatch" xml:space="preserve">
+    <value>Die Version '{0}' entspricht nicht dem Versionierungsschema ihres Produktes. Versionierungsschema: {1}</value>
+  </data>
+  <data name="VersionReleased" xml:space="preserve">
+    <value>Version erfolgreich released</value>
+  </data>
 </root>

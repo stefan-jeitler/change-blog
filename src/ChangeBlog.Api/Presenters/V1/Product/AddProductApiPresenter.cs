@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using ChangeBlog.Api.Localization.Resources;
 using ChangeBlog.Api.Shared;
 using ChangeBlog.Api.Shared.DTOs;
 using ChangeBlog.Api.Shared.Presenters;
@@ -26,7 +27,7 @@ public class AddProductApiPresenter : BaseApiPresenter, IAddProductOutputPort
             [KnownIdentifiers.AccountId] = accountId.ToString()
         };
 
-        Response = new NotFoundObjectResult(ErrorResponse.Create("Account not found.", resourceIds));
+        Response = new NotFoundObjectResult(ErrorResponse.Create(ChangeBlogStrings.AccountNotFound, resourceIds));
     }
 
     public void AccountDeleted(Guid accountId)
@@ -37,12 +38,12 @@ public class AddProductApiPresenter : BaseApiPresenter, IAddProductOutputPort
         };
 
         Response = new UnprocessableEntityObjectResult(
-            ErrorResponse.Create("The requested account has been deleted.", resourceIds));
+            ErrorResponse.Create(ChangeBlogStrings.AccountDeleted, resourceIds));
     }
 
     public void InvalidName(string name)
     {
-        Response = new BadRequestObjectResult(ErrorResponse.Create($"Invalid name {name}."));
+        Response = new BadRequestObjectResult(ErrorResponse.Create(string.Format(ChangeBlogStrings.InvalidName, name)));
     }
 
     public void ProductAlreadyExists(Guid productId)
@@ -53,7 +54,7 @@ public class AddProductApiPresenter : BaseApiPresenter, IAddProductOutputPort
         };
 
         Response = new ConflictObjectResult(
-            ErrorResponse.Create("Product already exists.", resourceIds));
+            ErrorResponse.Create(ChangeBlogStrings.ProductAlreadyExists, resourceIds));
     }
 
     public void VersioningSchemeDoesNotExist(Guid versioningSchemeId)
@@ -63,7 +64,7 @@ public class AddProductApiPresenter : BaseApiPresenter, IAddProductOutputPort
             [KnownIdentifiers.VersioningSchemeId] = versioningSchemeId.ToString()
         };
 
-        Response = new NotFoundObjectResult(ErrorResponse.Create("VersioningScheme not found.",
+        Response = new NotFoundObjectResult(ErrorResponse.Create(ChangeBlogStrings.VersioningSchemeNotFound,
             resourceIds));
     }
 
@@ -81,13 +82,14 @@ public class AddProductApiPresenter : BaseApiPresenter, IAddProductOutputPort
         };
 
         var location = _httpContext.CreateLinkTo($"api/v1/products/{productId}");
-        Response = new CreatedResult(location, SuccessResponse.Create("Product added.", resourceIds));
+        Response = new CreatedResult(location, SuccessResponse.Create(ChangeBlogStrings.ProductAdded, resourceIds));
     }
 
     public void NotSupportedLanguageCode(string languageCode, IEnumerable<string> supportedLangCodes)
     {
+        var message = string.Format(ChangeBlogStrings.LanguageCodeNotSupported, languageCode,
+            string.Join(", ", supportedLangCodes));
         Response = new UnprocessableEntityObjectResult(
-            ErrorResponse.Create(
-                $"The given LanguageCode {languageCode} is not supported. Supported Codes are {string.Join(", ", supportedLangCodes)}"));
+            ErrorResponse.Create(message));
     }
 }

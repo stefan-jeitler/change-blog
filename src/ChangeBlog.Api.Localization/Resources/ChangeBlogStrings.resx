@@ -252,4 +252,46 @@
   <data name="ChangeLogLineUpdated" xml:space="preserve">
     <value>Chnagelog line successfully updated</value>
   </data>
+  <data name="AccountNotFound" xml:space="preserve">
+    <value>Account not found</value>
+  </data>
+  <data name="AccountDeleted" xml:space="preserve">
+    <value>The Account has been deleted</value>
+  </data>
+  <data name="InvalidName" xml:space="preserve">
+    <value>Invalid name '{0}'</value>
+  </data>
+  <data name="ProductAlreadyExists" xml:space="preserve">
+    <value>The Product already exists</value>
+  </data>
+  <data name="VersioningSchemeNotFound" xml:space="preserve">
+    <value>Versioningscheme not found</value>
+  </data>
+  <data name="ProductAdded" xml:space="preserve">
+    <value>Product successfully added</value>
+  </data>
+  <data name="LanguageCodeNotSupported" xml:space="preserve">
+    <value>The given language code '{0}' is not supported. Supported codes are '{1}'</value>
+  </data>
+  <data name="VersionAlreadyExists" xml:space="preserve">
+    <value>The version already exists</value>
+  </data>
+  <data name="ProductAlreadyClosed" xml:space="preserve">
+    <value>The product is already closed</value>
+  </data>
+  <data name="VersionUpdateForbidden" xml:space="preserve">
+    <value>You cannot add or update versions that have been released or deleted</value>
+  </data>
+  <data name="VersionAdded" xml:space="preserve">
+    <value>Version successfully added</value>
+  </data>
+  <data name="VersionUpdated" xml:space="preserve">
+    <value>Version successfully update</value>
+  </data>
+  <data name="VersioningSchemeMismatch" xml:space="preserve">
+    <value>The Version '{0}' does not match your product's versioning scheme. Versioningscheme: {1}</value>
+  </data>
+  <data name="VersionReleased" xml:space="preserve">
+    <value>Version successfully released</value>
+  </data>
 </root>

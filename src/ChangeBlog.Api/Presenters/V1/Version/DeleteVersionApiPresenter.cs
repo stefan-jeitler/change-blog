@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using ChangeBlog.Api.Localization.Resources;
 using ChangeBlog.Api.Shared.DTOs;
 using ChangeBlog.Api.Shared.Presenters;
 using ChangeBlog.Application.Boundaries.DataAccess;
@@ -17,7 +18,7 @@ public class DeleteVersionApiPresenter : BaseApiPresenter, IDeleteVersionOutputP
             [KnownIdentifiers.VersionId] = versionId.ToString()
         };
 
-        Response = new NotFoundObjectResult(ErrorResponse.Create("Version not found.", resourceIds));
+        Response = new NotFoundObjectResult(ErrorResponse.Create(ChangeBlogStrings.VersionNotFound, resourceIds));
     }
 
     public void RelatedProductClosed(Guid productId)
@@ -28,7 +29,7 @@ public class DeleteVersionApiPresenter : BaseApiPresenter, IDeleteVersionOutputP
         };
 
         Response = new ConflictObjectResult(
-            ErrorResponse.Create("The related product has been closed.", resourceIds));
+            ErrorResponse.Create(ChangeBlogStrings.ProductAlreadyClosed, resourceIds));
     }
 
     public void VersionAlreadyDeleted(Guid versionId)
@@ -38,7 +39,7 @@ public class DeleteVersionApiPresenter : BaseApiPresenter, IDeleteVersionOutputP
             [KnownIdentifiers.VersionId] = versionId.ToString()
         };
 
-        Response = new OkObjectResult(SuccessResponse.Create("Version deleted.", resourceIds));
+        Response = new OkObjectResult(SuccessResponse.Create(ChangeBlogStrings.VersionAlreadyDeleted, resourceIds));
     }
 
     public void VersionAlreadyReleased(Guid versionId)
@@ -49,7 +50,7 @@ public class DeleteVersionApiPresenter : BaseApiPresenter, IDeleteVersionOutputP
         };
 
         Response = new ConflictObjectResult(
-            ErrorResponse.Create("Version released. Released versions can no longer be modified.", resourceIds));
+            ErrorResponse.Create(ChangeBlogStrings.VersionReleased, resourceIds));
     }
 
     public void VersionDeleted(Guid versionId)
@@ -59,7 +60,7 @@ public class DeleteVersionApiPresenter : BaseApiPresenter, IDeleteVersionOutputP
             [KnownIdentifiers.VersionId] = versionId.ToString()
         };
 
-        Response = new OkObjectResult(SuccessResponse.Create("Version deleted.", resourceIds));
+        Response = new OkObjectResult(SuccessResponse.Create(ChangeBlogStrings.VersionDeleted, resourceIds));
     }
 
     public void Conflict(Conflict conflict)

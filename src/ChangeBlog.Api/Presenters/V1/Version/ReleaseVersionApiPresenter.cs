@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using ChangeBlog.Api.Localization.Resources;
 using ChangeBlog.Api.Shared.DTOs;
 using ChangeBlog.Api.Shared.Presenters;
 using ChangeBlog.Application.Boundaries.DataAccess;
@@ -17,7 +18,7 @@ public class ReleaseVersionApiPresenter : BaseApiPresenter, IReleaseVersionOutpu
             [KnownIdentifiers.VersionId] = versionId.ToString()
         };
 
-        Response = new ConflictObjectResult(SuccessResponse.Create("The version has been deleted.", resourceIds));
+        Response = new ConflictObjectResult(SuccessResponse.Create(ChangeBlogStrings.VersionAlreadyDeleted, resourceIds));
     }
 
     public void VersionAlreadyReleased(Guid versionId)
@@ -28,7 +29,7 @@ public class ReleaseVersionApiPresenter : BaseApiPresenter, IReleaseVersionOutpu
         };
 
         Response = new ConflictObjectResult(
-            ErrorResponse.Create("The version has already been released.", resourceIds));
+            ErrorResponse.Create(ChangeBlogStrings.VersionAlreadyReleased, resourceIds));
     }
 
     public void VersionReleased(Guid versionId)
@@ -38,7 +39,7 @@ public class ReleaseVersionApiPresenter : BaseApiPresenter, IReleaseVersionOutpu
             [KnownIdentifiers.VersionId] = versionId.ToString()
         };
 
-        Response = new OkObjectResult(SuccessResponse.Create("Version successfully released.", resourceIds));
+        Response = new OkObjectResult(SuccessResponse.Create(ChangeBlogStrings.VersionReleased, resourceIds));
     }
 
     public void Conflict(Conflict conflict)
@@ -53,7 +54,7 @@ public class ReleaseVersionApiPresenter : BaseApiPresenter, IReleaseVersionOutpu
             [KnownIdentifiers.VersionId] = versionId.ToString()
         };
 
-        Response = new NotFoundObjectResult(ErrorResponse.Create("Version not found", resourceIds));
+        Response = new NotFoundObjectResult(ErrorResponse.Create(ChangeBlogStrings.VersionNotFound, resourceIds));
     }
 
     public void RelatedProductClosed(Guid productId)
@@ -64,6 +65,6 @@ public class ReleaseVersionApiPresenter : BaseApiPresenter, IReleaseVersionOutpu
         };
 
         Response = new ConflictObjectResult(
-            ErrorResponse.Create("The related product has been closed.", resourceIds));
+            ErrorResponse.Create(ChangeBlogStrings.ProductAlreadyClosed, resourceIds));
     }
 }

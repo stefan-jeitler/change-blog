@@ -30,6 +30,6 @@ public class GetLatestVersionApiPresenter : BaseApiPresenter, IGetLatestVersionO
 
     public void ProductDoesNotExist()
     {
-        Response = new NotFoundObjectResult(ErrorResponse.Create("Product not found."));
+        Response = new NotFoundObjectResult(ErrorResponse.Create(ChangeBlogStrings.ProductNotFound));
     }
 }

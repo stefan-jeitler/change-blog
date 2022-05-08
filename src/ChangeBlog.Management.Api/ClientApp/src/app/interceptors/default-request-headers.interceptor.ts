@@ -7,11 +7,11 @@ import {TranslocoLocaleService} from "@ngneat/transloco-locale";
 @Injectable()
 export class DefaultRequestHeadersInterceptor implements HttpInterceptor {
   constructor(private translationService: TranslocoService,
-              private localService: TranslocoLocaleService) {
+              private localeService: TranslocoLocaleService) {
   }
 
   intercept(httpRequest: HttpRequest<any>, next: HttpHandler): Observable<HttpEvent<any>> {
-    const locale = this.localService.getLocale();
+    const locale = this.localeService.getLocale();
     const lang = this.translationService.getActiveLang();
 
     const acceptLanguage = `${locale},${lang}`;

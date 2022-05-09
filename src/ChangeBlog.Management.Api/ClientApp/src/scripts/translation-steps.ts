@@ -7,7 +7,7 @@ const translations = defaultTranslations as TranslationObject;
 
 function normalizeKey(key: string) {
   if(!key)
-    throw 'key is falsy';
+    throw `key '${key}' is falsy`;
 
   return key.replace('-', '_');
 }

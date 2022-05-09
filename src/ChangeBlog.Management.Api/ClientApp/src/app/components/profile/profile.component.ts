@@ -1,18 +1,13 @@
 import {Component, OnInit} from '@angular/core';
 import {TranslationKey} from "../../generated/TranslationKey";
 import {tap} from "rxjs/operators";
-import {
-  ChangeBlogManagementApi,
-  ChangeBlogManagementApi as MngmtApiClient
-} from "../../../clients/ChangeBlogManagementApiClient";
+import {ChangeBlogManagementApi as MngmtApiClient} from "../../../clients/ChangeBlogManagementApiClient";
 import {firstValueFrom} from "rxjs";
 import {FormBuilder, FormControl, FormGroup} from "@angular/forms";
 import {MessageService} from "primeng/api";
 import {TranslocoService} from "@ngneat/transloco";
 import {TranslocoLocaleService} from "@ngneat/transloco-locale";
 import ITimezoneDto = MngmtApiClient.ITimezoneDto;
-import SwaggerException = ChangeBlogManagementApi.SwaggerException;
-
 
 @Component({
   selector: 'app-profile',
@@ -81,14 +76,14 @@ export class ProfileComponent implements OnInit {
     this.mngmtApiClient.updateUserProfile(dto)
       .subscribe({
         next: r => this.profileUpdated(r),
-        error: (error: SwaggerException) => {
+        error: (error: MngmtApiClient.SwaggerException) => {
           this.handleError(error);
         },
         complete: () => this.enableForm()
       });
   }
 
-  private async handleError(error: ChangeBlogManagementApi.SwaggerException) {
+  private async handleError(error: MngmtApiClient.SwaggerException) {
     this.enableForm();
 
     if (error.status >= 400 && error.status < 500)
@@ -124,7 +119,7 @@ export class ProfileComponent implements OnInit {
     this.availableCultures = await firstValueFrom(loadCulture);
   }
 
-  private async profileUpdated(response: ChangeBlogManagementApi.SuccessResponse) {
+  private async profileUpdated(response: MngmtApiClient.SuccessResponse) {
 
     const profile = await firstValueFrom(this.mngmtApiClient
       .getUserCulture());

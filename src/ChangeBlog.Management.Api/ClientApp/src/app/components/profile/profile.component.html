@@ -3,79 +3,85 @@
 <div class="app-content-container">
   <app-loading-spinner [show]="!isLoadingFinished"></app-loading-spinner>
 
-  <form [formGroup]="userProfileForm" (ngSubmit)="updateProfile(userProfileForm)">
+  <form (ngSubmit)="updateProfile(userProfileForm)" [formGroup]="userProfileForm">
 
-  <div class="flex flex-column align-items-start w-12 md:w-30rem">
-    <div class="flex flex-row w-full">
-      <label class="font-medium" for="first-name-input">{{ translationKey.$name | transloco }}</label>
-      <i [pTooltip]="translationKey.userProfileUsernameInfo | transloco" class="pi pi-info-circle ml-2"></i>
+    <div class="flex flex-column align-items-start w-12 md:w-30rem">
+      <div class="flex flex-row w-full">
+        <label class="font-medium" for="first-name-input">{{ translationKey.$name | transloco }}</label>
+        <i [pTooltip]="translationKey.userProfileUsernameInfo | transloco" class="pi pi-info-circle ml-2"></i>
+      </div>
+      <input class="w-full mt-2" formControlName="fullName" id="first-name-input"
+             pInputText type="text">
     </div>
-    <input formControlName="fullName" class="w-full mt-2" id="first-name-input"
-           pInputText type="text">
-  </div>
 
-  <div class="flex flex-column align-items-start mt-3 w-12 md:w-30rem">
-    <div class="flex flex-row w-full">
-      <label class="font-medium" for="first-name-input">{{ translationKey.email | transloco }}</label>
-      <i [pTooltip]="translationKey.userProfileEmailInfo | transloco" class="pi pi-info-circle ml-2"></i>
+    <div class="flex flex-column align-items-start mt-3 w-12 md:w-30rem">
+      <div class="flex flex-row w-full">
+        <label class="font-medium" for="first-name-input">{{ translationKey.email | transloco }}</label>
+        <i [pTooltip]="translationKey.userProfileEmailInfo | transloco" class="pi pi-info-circle ml-2"></i>
+      </div>
+      <input class="w-full mt-2" formControlName="email" id="email-input"
+             pInputText type="text">
     </div>
-    <input formControlName="email" class="w-full mt-2" id="email-input"
-           pInputText type="text">
-  </div>
 
 
-  <div class="flex flex-column align-items-start mt-3 w-12 md:w-30rem">
-    <label class="font-medium" for="timezone-dropdown">{{ translationKey.timezone | transloco }}</label>
-    <p-dropdown formControlName="timezone"
-                [options]="availableTimezones"
-                [showClear]="false"
-                [filter]="true" filterBy="windowsId,offset"
-                class="mt-2 w-12"
-                id="timezone-dropdown"
-                styleClass="w-full"
-                scrollHeight="300px"
-                aria-describedby="timezone-error">
-      <ng-template let-item pTemplate="selectedItem">
-        <div class="timezone-item timezone-item-value">
-          <span>({{item.offset}}) {{item.windowsId}}</span>
-        </div>
-      </ng-template>
-      <ng-template let-timezone pTemplate="item">
-        <span>({{timezone.offset}}) {{timezone.windowsId}}</span>
-      </ng-template>
-    </p-dropdown>
-    <div *ngIf="userProfileForm.showErrorMessage('timezone')">
-      <small id="timezone-error" class="pt-1 p-error block">{{ userProfileForm.getServerErrorMessage('timezone') }}</small>
+    <div class="flex flex-column align-items-start mt-3 w-12 md:w-30rem">
+      <label class="font-medium" for="timezone-dropdown">{{ translationKey.timezone | transloco }}</label>
+      <p-dropdown [filter]="true"
+                  [options]="availableTimezones"
+                  [showClear]="false"
+                  aria-describedby="timezone-error" class="mt-2 w-12"
+                  filterBy="windowsId,offset"
+                  formControlName="timezone"
+                  id="timezone-dropdown"
+                  scrollHeight="300px"
+                  styleClass="w-full">
+        <ng-template let-item pTemplate="selectedItem">
+          <div class="timezone-item timezone-item-value">
+            <span>({{item.offset}}) {{item.windowsId}}</span>
+          </div>
+        </ng-template>
+        <ng-template let-timezone pTemplate="item">
+          <span>({{timezone.offset}}) {{timezone.windowsId}}</span>
+        </ng-template>
+      </p-dropdown>
+      <div *ngIf="userProfileForm.showErrorMessage('timezone')">
+        <small class="pt-1 p-error block"
+               id="timezone-error">{{ userProfileForm.getServerErrorMessage('timezone') }}</small>
+      </div>
     </div>
-  </div>
 
-  <div class="flex flex-column align-items-start mt-3 w-12 md:w-30rem">
-    <label class="font-medium" for="culture-dropdown">{{ translationKey.culture | transloco }}</label>
-    <p-dropdown formControlName="culture"
-                [options]="availableCultures"
-                [showClear]="false"
-                class="mt-2 w-12"
-                id="culture-dropdown"
-                scrollHeight="280px"
-                styleClass="w-full"
-                aria-describedby="culture-error">
-    </p-dropdown>
-    <div *ngIf="userProfileForm.showErrorMessage('culture')">
-      <small id="culture-error" class="pt-1 p-error block">{{ userProfileForm.getServerErrorMessage('culture') }}</small>
+    <div class="flex flex-column align-items-start mt-3 w-12 md:w-30rem">
+      <label class="font-medium" for="culture-dropdown">{{ translationKey.culture | transloco }}</label>
+      <p-dropdown [options]="availableCultures"
+                  [showClear]="false"
+                  aria-describedby="culture-error"
+                  class="mt-2 w-12"
+                  formControlName="culture"
+                  id="culture-dropdown"
+                  scrollHeight="280px"
+                  styleClass="w-full">
+      </p-dropdown>
+      <div *ngIf="userProfileForm.showErrorMessage('culture')">
+        <small class="pt-1 p-error block"
+               id="culture-error">{{ userProfileForm.getServerErrorMessage('culture') }}</small>
+      </div>
     </div>
-  </div>
 
-  <div class="flex flex flex-row justify-content-end mt-6 mb-8 w-12 md:w-30rem">
-    <button [label]="translationKey.save | transloco"
-            [loading]="userProfileForm.disabled"
-            class="p-button"
-            icon="pi pi-check"
-            iconPos="left"
-            pButton
-            pRipple
-            type="submit">
-    </button>
-  </div>
-
+    <div class="flex flex flex-column mt-6 mb-8 w-12 md:w-30rem">
+      <div class="align-self-end">
+        <button [label]="translationKey.save | transloco"
+                [loading]="userProfileForm.disabled"
+                class="p-button"
+                icon="pi pi-check"
+                iconPos="left"
+                pButton
+                pRipple
+                type="submit">
+        </button>
+      </div>
+      <div class="mt-5">
+        <p-messages [(value)]="messages" [enableService]="false"></p-messages>
+      </div>
+    </div>
   </form>
 </div>

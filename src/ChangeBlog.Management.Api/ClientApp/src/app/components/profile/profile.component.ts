@@ -1,10 +1,10 @@
-import {Component, OnInit} from '@angular/core';
+import { Component, OnInit} from '@angular/core';
 import {TranslationKey} from "../../generated/TranslationKey";
 import {tap} from "rxjs/operators";
 import {ChangeBlogManagementApi as MngmtApiClient} from "../../../clients/ChangeBlogManagementApiClient";
 import {firstValueFrom} from "rxjs";
 import {FormBuilder, FormControl, FormGroup} from "@angular/forms";
-import {MessageService} from "primeng/api";
+import {MessageService, Message} from "primeng/api";
 import {TranslocoService} from "@ngneat/transloco";
 import {TranslocoLocaleService} from "@ngneat/transloco-locale";
 import ITimezoneDto = MngmtApiClient.ITimezoneDto;
@@ -19,6 +19,8 @@ export class ProfileComponent implements OnInit {
   availableCultures: string[];
   isLoadingFinished: boolean;
   userProfileForm: FormGroup;
+  messages: Message[];
+  messageHidingTimeout: NodeJS.Timeout | undefined;
 
   constructor(public translationKey: TranslationKey,
               private translationService: TranslocoService,
@@ -29,6 +31,8 @@ export class ProfileComponent implements OnInit {
 
     this.availableTimezones = [];
     this.availableCultures = [];
+
+    this.messages = [];
 
     this.isLoadingFinished = false;
 
@@ -127,5 +131,13 @@ export class ProfileComponent implements OnInit {
     this.localService.setLocale(profile.culture!);
     this.translationService.setActiveLang(profile.language!);
     await firstValueFrom(this.translationService.load(profile.language!));
+
+    const userProfileUpdateMessage = await firstValueFrom(this.translationService.selectTranslate(this.translationKey.userProfileUpdated));
+
+    if(!!this.messageHidingTimeout)
+      clearTimeout(this.messageHidingTimeout);
+
+    this.messages = [{severity:'success', summary: '', detail: userProfileUpdateMessage}];
+    this.messageHidingTimeout = setTimeout(() => this.messages = [], 4000);
   }
 }

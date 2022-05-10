@@ -318,4 +318,19 @@
   <data name="ApiKeyExpirationTooLong" xml:space="preserve">
     <value>The api key expiration is too long. Expiration must be smaller than 2 years</value>
   </data>
+  <data name="OneWeek" xml:space="preserve">
+    <value>One week</value>
+  </data>
+  <data name="OneMonth" xml:space="preserve">
+    <value>One month</value>
+  </data>
+  <data name="SixMonths" xml:space="preserve">
+    <value>Six months</value>
+  </data>
+  <data name="OneYear" xml:space="preserve">
+    <value>One year</value>
+  </data>
+  <data name="TwoYears" xml:space="preserve">
+    <value>Two years</value>
+  </data>
 </root>

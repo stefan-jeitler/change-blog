@@ -1,4 +1,6 @@
 using System;
+using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Net.Mime;
 using System.Threading.Tasks;
@@ -13,6 +15,7 @@ using ChangeBlog.Management.Api.DTOs.V1;
 using ChangeBlog.Management.Api.Presenters.V1;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.OpenApi.Extensions;
 
 namespace ChangeBlog.Management.Api.Controllers.v1;
 
@@ -50,5 +53,17 @@ public class ApiKeysController : ControllerBase
         await addApiKey.ExecuteAsync(presenter, userId, TimeSpan.FromDays(expiresInWeeks * 7));
 
         return presenter.Response;
+    }
+
+    [HttpGet("expiration-intervals", Name = "GetPossibleExpirationIntervals")]
+    [ProducesResponseType(StatusCodes.Status200OK)]
+    [SkipAuthorization]
+    public ActionResult<IEnumerable<string>> GetApiKeyExpirationIntervals()
+    {
+        var intervals = Enum.GetValues(typeof(ApiKeyExpirationIntervals))
+            .Cast<ApiKeyExpirationIntervals>()
+            .Select(x => x.GetAttributeOfType<DisplayAttribute>().GetName());
+        
+        return Ok(intervals);
     }
 }

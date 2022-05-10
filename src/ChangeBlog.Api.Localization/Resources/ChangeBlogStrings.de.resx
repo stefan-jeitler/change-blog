@@ -318,4 +318,19 @@
   <data name="ApiKeyExpirationTooLong" xml:space="preserve">
     <value>Die Gültigkeitsdauer des Api Schlüssels ist zu lang. Die maximale Dauer beträgt 2 Jahre</value>
   </data>
+  <data name="OneWeek" xml:space="preserve">
+    <value>Eine Woche</value>
+  </data>
+  <data name="OneMonth" xml:space="preserve">
+    <value>Einen Monat</value>
+  </data>
+  <data name="SixMonths" xml:space="preserve">
+    <value>Sechs Monate</value>
+  </data>
+  <data name="OneYear" xml:space="preserve">
+    <value>Ein Jahr</value>
+  </data>
+  <data name="TwoYears" xml:space="preserve">
+    <value>Zwei Jahre</value>
+  </data>
 </root>

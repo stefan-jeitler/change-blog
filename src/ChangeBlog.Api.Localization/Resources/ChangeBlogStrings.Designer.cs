@@ -385,6 +385,33 @@ namespace ChangeBlog.Api.Localization.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to One month.
+        /// </summary>
+        public static string OneMonth {
+            get {
+                return ResourceManager.GetString("OneMonth", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to One week.
+        /// </summary>
+        public static string OneWeek {
+            get {
+                return ResourceManager.GetString("OneWeek", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to One year.
+        /// </summary>
+        public static string OneYear {
+            get {
+                return ResourceManager.GetString("OneYear", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Pending Changelog line successfully added.
         /// </summary>
         public static string PendingChangeLogLineAdded {
@@ -457,6 +484,15 @@ namespace ChangeBlog.Api.Localization.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Six months.
+        /// </summary>
+        public static string SixMonths {
+            get {
+                return ResourceManager.GetString("SixMonths", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to The target version belongs to a different product.
         /// </summary>
         public static string TargetVersionBelongsToDifferentProduct {
@@ -516,6 +552,15 @@ namespace ChangeBlog.Api.Localization.Resources {
         public static string TooManyLabelsForChangeLogLine {
             get {
                 return ResourceManager.GetString("TooManyLabelsForChangeLogLine", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Two years.
+        /// </summary>
+        public static string TwoYears {
+            get {
+                return ResourceManager.GetString("TwoYears", resourceCulture);
             }
         }
         

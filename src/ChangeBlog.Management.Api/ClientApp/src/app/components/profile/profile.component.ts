@@ -50,7 +50,7 @@ export class ProfileComponent implements OnInit {
       email: userProfile.email,
       timezone: this.availableTimezones.find(x => x.olsonId === userProfile.timeZone),
       culture: userProfile.culture
-    })
+    });
   }
 
   enableForm() {
@@ -65,9 +65,9 @@ export class ProfileComponent implements OnInit {
     }
   }
 
-  async updateProfile(userProfileForm: FormGroup) {
+  updateProfile(userProfileForm: FormGroup) {
     userProfileForm.resetValidation();
-    this.disableForm()
+    this.disableForm();
 
     const dto = new MngmtApiClient.UpdateUserProfileDto()
     dto.culture = userProfileForm.value.culture;
@@ -76,8 +76,8 @@ export class ProfileComponent implements OnInit {
     this.mngmtApiClient.updateUserProfile(dto)
       .subscribe({
         next: r => this.profileUpdated(r),
-        error: (error: MngmtApiClient.SwaggerException) => {
-          this.handleError(error);
+        error: async (error: MngmtApiClient.SwaggerException) => {
+          await this.handleError(error);
         },
         complete: () => this.enableForm()
       });
@@ -127,11 +127,5 @@ export class ProfileComponent implements OnInit {
     this.localService.setLocale(profile.culture!);
     this.translationService.setActiveLang(profile.language!);
     await firstValueFrom(this.translationService.load(profile.language!));
-
-    const success = await firstValueFrom(this.translationService.selectTranslate(this.translationKey.success));
-    const profileUpdated = await firstValueFrom(this.translationService.selectTranslate(this.translationKey.userProfileUpdated));
-
-    const message = {severity: 'success', summary: success, detail: profileUpdated}
-    this.messageService.add(message);
   }
 }

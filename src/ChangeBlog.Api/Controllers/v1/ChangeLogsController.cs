@@ -35,12 +35,12 @@ public class ChangeLogsController : ControllerBase
     [ProducesResponseType(typeof(ErrorResponse), StatusCodes.Status404NotFound)]
     [NeedsPermission(Permission.ViewChangeLogLines)]
     public async Task<ActionResult<ChangeLogLineDto>> GetChangeLogLineAsync(
-        [FromServices] GetChangeLogLineApiPresenter presenter,
         [FromServices] IGetChangeLogLine getChangeLogLine,
         Guid changeLogLineId)
     {
         var userId = HttpContext.GetUserId();
 
+        var presenter = new GetChangeLogLineApiPresenter();
         await getChangeLogLine.ExecuteAsync(presenter, userId, changeLogLineId);
 
         return presenter.Response;
@@ -52,12 +52,12 @@ public class ChangeLogsController : ControllerBase
     [ProducesResponseType(typeof(ErrorResponse), StatusCodes.Status409Conflict)]
     [NeedsPermission(Permission.DeleteChangeLogLine)]
     public async Task<ActionResult<SuccessResponse>> DeleteChangeLogLineAsync(
-        [FromServices] DeleteChangeLogLineApiPresenter presenter,
         [FromServices] IDeleteChangeLogLine deleteChangeLogLine,
         Guid changeLogLineId)
     {
         var requestModel = new DeleteChangeLogLineRequestModel(changeLogLineId, ChangeLogLineType.NotPending);
 
+        var presenter = new DeleteChangeLogLineApiPresenter();
         await deleteChangeLogLine.ExecuteAsync(presenter, requestModel);
 
         return presenter.Response;
@@ -70,7 +70,6 @@ public class ChangeLogsController : ControllerBase
     [ProducesResponseType(typeof(ErrorResponse), StatusCodes.Status422UnprocessableEntity)]
     [NeedsPermission(Permission.AddOrUpdateChangeLogLine)]
     public async Task<ActionResult<SuccessResponse>> AddChangeLogLineAsync(
-        [FromServices] AddChangeLogLineApiPresenter presenter,
         [FromServices] IAddChangeLogLine addChangeLogLine,
         Guid versionId,
         [FromBody] AddOrUpdateChangeLogLineDto addChangeLogLineDto)
@@ -82,6 +81,7 @@ public class ChangeLogsController : ControllerBase
             addChangeLogLineDto.Labels ?? new List<string>(0),
             addChangeLogLineDto.Issues ?? new List<string>(0));
 
+        var presenter = new AddChangeLogLineApiPresenter(HttpContext);
         await addChangeLogLine.ExecuteAsync(presenter, requestModel);
 
         return presenter.Response;
@@ -93,7 +93,6 @@ public class ChangeLogsController : ControllerBase
     [ProducesResponseType(typeof(ErrorResponse), StatusCodes.Status422UnprocessableEntity)]
     [NeedsPermission(Permission.AddOrUpdateChangeLogLine)]
     public async Task<ActionResult<SuccessResponse>> UpdateChangeLogLine(
-        [FromServices] UpdateChangeLogLineApiPresenter presenter,
         [FromServices] IUpdateChangeLogLine updateChangeLogLine,
         Guid changeLogLineId,
         [FromBody] PatchChangeLogLineDto patchChangeLogLineDto)
@@ -104,6 +103,7 @@ public class ChangeLogsController : ControllerBase
             patchChangeLogLineDto.Labels,
             patchChangeLogLineDto.Issues);
 
+        var presenter = new UpdateChangeLogLineApiPresenter();
         await updateChangeLogLine.ExecuteAsync(presenter, requestModel);
 
         return presenter.Response;
@@ -116,10 +116,10 @@ public class ChangeLogsController : ControllerBase
     [ProducesResponseType(typeof(ErrorResponse), StatusCodes.Status422UnprocessableEntity)]
     [NeedsPermission(Permission.MoveChangeLogLines)]
     public async Task<ActionResult<SuccessResponse>> MakeChangeLogLinePendingAsync(
-        [FromServices] MakeChangeLogLinePendingApiPresenter presenter,
         [FromServices] IMakeChangeLogLinePending makeChangeLogLinePending,
         Guid changeLogLineId)
     {
+        var presenter = new MakeChangeLogLinePendingApiPresenter();
         await makeChangeLogLinePending.ExecuteAsync(presenter, changeLogLineId);
 
         return presenter.Response;
@@ -132,10 +132,10 @@ public class ChangeLogsController : ControllerBase
     [ProducesResponseType(typeof(ErrorResponse), StatusCodes.Status422UnprocessableEntity)]
     [NeedsPermission(Permission.MoveChangeLogLines)]
     public async Task<ActionResult<SuccessResponse>> MakeVersionChangeLogLinesPendingAsync(
-        [FromServices] MakeAllChangeLogLinesPendingApiPresenter presenter,
         [FromServices] IMakeAllChangeLogLinesPending makeAllChangeLogLinesPending,
         Guid versionId)
     {
+        var presenter = new MakeAllChangeLogLinesPendingApiPresenter();
         await makeAllChangeLogLinesPending.ExecuteAsync(presenter, versionId);
 
         return presenter.Response;

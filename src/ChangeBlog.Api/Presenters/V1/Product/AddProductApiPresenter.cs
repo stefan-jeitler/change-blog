@@ -15,9 +15,9 @@ public class AddProductApiPresenter : BaseApiPresenter, IAddProductOutputPort
 {
     private readonly HttpContext _httpContext;
 
-    public AddProductApiPresenter(IHttpContextAccessor httpContextAccessor)
+    public AddProductApiPresenter(HttpContext httpContext)
     {
-        _httpContext = httpContextAccessor.HttpContext;
+        _httpContext = httpContext;
     }
 
     public void AccountDoesNotExist(Guid accountId)

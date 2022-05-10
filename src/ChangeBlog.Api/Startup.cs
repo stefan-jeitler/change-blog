@@ -50,7 +50,6 @@ public class Startup
 
         services.AddMemoryCache();
         services.AddApplicationUseCases();
-        services.AddPresenters(typeof(Startup).Assembly);
 
         var corsUrls = _configuration
             .GetSection("AppSettings:CorsUrls")

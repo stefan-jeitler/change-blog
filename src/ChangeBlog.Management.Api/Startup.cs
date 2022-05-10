@@ -51,8 +51,7 @@ public class Startup
 
         services
             .AddSwagger()
-            .AddApplicationUseCases()
-            .AddPresenters(typeof(Startup).Assembly);
+            .AddApplicationUseCases();
 
         var connectionString = _configuration.GetConnectionString("ChangeBlogDb");
         services.AddPostgresDataAccess(connectionString);

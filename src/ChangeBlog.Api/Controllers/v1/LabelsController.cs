@@ -44,11 +44,11 @@ public class LabelsController : ControllerBase
     [NeedsPermission(Permission.AddOrUpdateChangeLogLine)]
     public async Task<ActionResult<SuccessResponse>> AddLabelAsync(
         [FromServices] IAddChangeLogLineLabel addChangeLogLineLabel,
-        [FromServices] AddChangeLogLineLabelApiPresenter presenter,
         Guid changeLogLineId, string label)
     {
         var requestModel = new ChangeLogLineLabelRequestModel(changeLogLineId, label);
 
+        var presenter = new AddChangeLogLineLabelApiPresenter();
         await addChangeLogLineLabel.ExecuteAsync(presenter, requestModel);
 
         return presenter.Response;
@@ -61,11 +61,11 @@ public class LabelsController : ControllerBase
     [NeedsPermission(Permission.AddOrUpdateChangeLogLine)]
     public async Task<ActionResult<SuccessResponse>> DeleteLabelAsync(
         [FromServices] IDeleteChangeLogLineLabel deleteChangeLogLineLabel,
-        [FromServices] DeleteChangeLogLineLabelApiPresenter presenter,
         Guid changeLogLineId, string label)
     {
         var requestModel = new ChangeLogLineLabelRequestModel(changeLogLineId, label);
 
+        var presenter = new DeleteChangeLogLineLabelApiPresenter();
         await deleteChangeLogLineLabel.ExecuteAsync(presenter, requestModel);
 
         return presenter.Response;

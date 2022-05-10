@@ -61,14 +61,14 @@ public class UserController : ControllerBase
     [SkipAuthorization]
     public async Task<ActionResult<SuccessResponse>> UpdateUserProfile(
         [FromServices] IUpdateUserProfile updateUserProfile,
-        [FromServices] UpdateUserProfileApiPresenter presenter,
         [FromBody] UpdateUserProfileDto updateUserProfileDto)
     {
         var userId = HttpContext.GetUserId();
 
+        var presenter = new UpdateUserProfileApiPresenter();
         var requestModel =
             new UpdateUserProfileRequestModel(userId, updateUserProfileDto?.Timezone, updateUserProfileDto?.Culture);
-        await updateUserProfile.ExecuteAsync(presenter, requestModel).ConfigureAwait(false);
+        await updateUserProfile.ExecuteAsync(presenter, requestModel);
 
         return presenter.Response;
     }

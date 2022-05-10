@@ -15,9 +15,9 @@ public class AddChangeLogLineApiPresenter : BaseApiPresenter, IAddChangeLogLineO
 {
     private readonly HttpContext _httpContext;
 
-    public AddChangeLogLineApiPresenter(IHttpContextAccessor httpContextAccessor)
+    public AddChangeLogLineApiPresenter(HttpContext httpContext)
     {
-        _httpContext = httpContextAccessor.HttpContext;
+        _httpContext = httpContext;
     }
 
     public void InvalidVersionFormat(string version)

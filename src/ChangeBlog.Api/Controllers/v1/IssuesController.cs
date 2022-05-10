@@ -43,12 +43,12 @@ public class IssuesController : ControllerBase
     [ProducesResponseType(typeof(ErrorResponse), StatusCodes.Status422UnprocessableEntity)]
     [NeedsPermission(Permission.AddOrUpdateChangeLogLine)]
     public async Task<ActionResult<SuccessResponse>> AddIssueAsync(
-        [FromServices] AddChangeLogLineIssueApiPresenter presenter,
         [FromServices] IAddChangeLogLineIssue addChangeLogLineIssue,
         Guid changeLogLineId, string issue)
     {
         var requestModel = new ChangeLogLineIssueRequestModel(changeLogLineId, issue);
 
+        var presenter = new AddChangeLogLineIssueApiPresenter();
         await addChangeLogLineIssue.ExecuteAsync(presenter, requestModel);
 
         return presenter.Response;
@@ -61,11 +61,11 @@ public class IssuesController : ControllerBase
     [NeedsPermission(Permission.AddOrUpdateChangeLogLine)]
     public async Task<ActionResult<SuccessResponse>> DeleteIssueAsync(
         [FromServices] IDeleteChangeLogLineIssue deleteChangeLogLineIssue,
-        [FromServices] DeleteChangeLogLineIssueApiPresenter presenter,
         Guid changeLogLineId, string issue)
     {
         var requestModel = new ChangeLogLineIssueRequestModel(changeLogLineId, issue);
 
+        var presenter = new DeleteChangeLogLineIssueApiPresenter();
         await deleteChangeLogLineIssue.ExecuteAsync(presenter, requestModel);
 
         return presenter.Response;

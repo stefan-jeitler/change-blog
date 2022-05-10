@@ -303,4 +303,10 @@
   <data name="UserNotExistingInApp" xml:space="preserve">
     <value>Der Benutzer existiert nicht in der Anwendung </value>
   </data>
+  <data name="VersionCannotBeDeletedBecauseReleased" xml:space="preserve">
+    <value>Die Version wurde bereits released und kann daher nicht mehr gelöscht werden</value>
+  </data>
+  <data name="VersionCannotBeReleasedBecauseDeleted" xml:space="preserve">
+    <value>Die Version wurde bereits gelöscht und kann daher nicht mehr released werden</value>
+  </data>
 </root>

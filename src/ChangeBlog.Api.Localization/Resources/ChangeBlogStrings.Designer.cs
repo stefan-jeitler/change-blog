@@ -556,6 +556,24 @@ namespace ChangeBlog.Api.Localization.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to The version cannot be deleted because it has already been released.
+        /// </summary>
+        public static string VersionCannotBeDeletedBecauseReleased {
+            get {
+                return ResourceManager.GetString("VersionCannotBeDeletedBecauseReleased", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to The version cannot be released because it has already been deleted.
+        /// </summary>
+        public static string VersionCannotBeReleasedBecauseDeleted {
+            get {
+                return ResourceManager.GetString("VersionCannotBeReleasedBecauseDeleted", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to The related version has been deleted.
         /// </summary>
         public static string VersionDeleted {

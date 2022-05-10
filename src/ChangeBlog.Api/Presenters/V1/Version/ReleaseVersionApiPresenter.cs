@@ -18,7 +18,7 @@ public class ReleaseVersionApiPresenter : BaseApiPresenter, IReleaseVersionOutpu
             [KnownIdentifiers.VersionId] = versionId.ToString()
         };
 
-        Response = new ConflictObjectResult(SuccessResponse.Create(ChangeBlogStrings.VersionAlreadyDeleted, resourceIds));
+        Response = new ConflictObjectResult(SuccessResponse.Create(ChangeBlogStrings.VersionCannotBeReleasedBecauseDeleted, resourceIds));
     }
 
     public void VersionAlreadyReleased(Guid versionId)

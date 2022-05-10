@@ -50,7 +50,7 @@ public class DeleteVersionApiPresenter : BaseApiPresenter, IDeleteVersionOutputP
         };
 
         Response = new ConflictObjectResult(
-            ErrorResponse.Create(ChangeBlogStrings.VersionReleased, resourceIds));
+            ErrorResponse.Create(ChangeBlogStrings.VersionCannotBeDeletedBecauseReleased, resourceIds));
     }
 
     public void VersionDeleted(Guid versionId)

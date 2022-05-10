@@ -7,4 +7,5 @@ public static class KnownIdentifiers
     public const string VersionId = "versionId";
     public const string ChangeLogLineId = "changeLogLineId";
     public const string VersioningSchemeId = "versioningSchemeId";
+    public const string ApiKeyId = "apiKeyId";
 }

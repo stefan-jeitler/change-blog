@@ -309,4 +309,13 @@
   <data name="VersionCannotBeReleasedBecauseDeleted" xml:space="preserve">
     <value>The version cannot be released because it has already been deleted</value>
   </data>
+  <data name="ApiKeyAdded" xml:space="preserve">
+    <value>Api Key successfully added</value>
+  </data>
+  <data name="ApiKeyExpirationTooShort" xml:space="preserve">
+    <value>The api key expiration is too short. Expiration must be at least 1 week</value>
+  </data>
+  <data name="ApiKeyExpirationTooLong" xml:space="preserve">
+    <value>The api key expiration is too long. Expiration must be smaller than 2 years</value>
+  </data>
 </root>

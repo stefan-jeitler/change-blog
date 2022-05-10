@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
+using ChangeBlog.Application.Models;
 using ChangeBlog.Domain;
 using CSharpFunctionalExtensions;
 

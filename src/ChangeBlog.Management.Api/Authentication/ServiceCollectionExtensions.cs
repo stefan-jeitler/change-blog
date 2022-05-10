@@ -58,7 +58,7 @@ public static class ServiceCollectionExtensions
     {
         context.Response.OnStarting(async () =>
         {
-            var logger = context.HttpContext.RequestServices.GetRequiredService<ILogger>();
+            var logger = context.HttpContext.RequestServices.GetRequiredService<ILogger<AppAuthenticationHandler>>();
             
             var authException = context.AuthenticateFailure;
             if(authException is not null)

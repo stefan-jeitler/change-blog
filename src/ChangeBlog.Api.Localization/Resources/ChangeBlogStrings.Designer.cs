@@ -79,6 +79,33 @@ namespace ChangeBlog.Api.Localization.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Api Key successfully added.
+        /// </summary>
+        public static string ApiKeyAdded {
+            get {
+                return ResourceManager.GetString("ApiKeyAdded", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to The api key expiration is too long. Expiration must be smaller than 2 years.
+        /// </summary>
+        public static string ApiKeyExpirationTooLong {
+            get {
+                return ResourceManager.GetString("ApiKeyExpirationTooLong", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to The api key expiration is too short. Expiration must be at least 1 week.
+        /// </summary>
+        public static string ApiKeyExpirationTooShort {
+            get {
+                return ResourceManager.GetString("ApiKeyExpirationTooShort", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Changelog line successfully added.
         /// </summary>
         public static string ChangeLogLineAdded {

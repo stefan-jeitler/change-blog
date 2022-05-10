@@ -309,4 +309,13 @@
   <data name="VersionCannotBeReleasedBecauseDeleted" xml:space="preserve">
     <value>Die Version wurde bereits gelöscht und kann daher nicht mehr released werden</value>
   </data>
+  <data name="ApiKeyAdded" xml:space="preserve">
+    <value>Api Schlüssel wurde hinzugefügt</value>
+  </data>
+  <data name="ApiKeyExpirationTooShort" xml:space="preserve">
+    <value>Die Gültigkeitsdauer des Api Schlüssels ist zu kurz. Die minimale Dauer beträgt 7 Tage</value>
+  </data>
+  <data name="ApiKeyExpirationTooLong" xml:space="preserve">
+    <value>Die Gültigkeitsdauer des Api Schlüssels ist zu lang. Die maximale Dauer beträgt 2 Jahre</value>
+  </data>
 </root>

@@ -46,7 +46,7 @@ public class FakeUserDao : IUserDao
 
         return Users;
     }
-
+    
     public async Task<Maybe<User>> FindByExternalUserIdAsync(string externalUserId)
     {
         await Task.Yield();

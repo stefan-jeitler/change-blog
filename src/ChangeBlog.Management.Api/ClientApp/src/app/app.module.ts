@@ -49,6 +49,7 @@ import {LoadingSpinnerComponent} from './components/loading-spinner/loading-spin
 import {TranslationKey} from "./generated/TranslationKey";
 import {SwipeConfig} from "./configuration/swipe-config.service";
 import {DefaultRequestHeadersInterceptor} from "./interceptors/default-request-headers.interceptor";
+import {AppCultureService} from "./services/app-culture.service";
 
 @NgModule({
   declarations: [
@@ -109,7 +110,7 @@ import {DefaultRequestHeadersInterceptor} from "./interceptors/default-request-h
     {
       provide: APP_INITIALIZER,
       useFactory: initializeApp,
-      deps: [Router, OAuthService, APP_CONFIG, ChangeBlogManagementApi.Client, TranslocoService, TranslocoLocaleService],
+      deps: [Router, OAuthService, APP_CONFIG, ChangeBlogManagementApi.Client, TranslocoService, AppCultureService],
       multi: true,
     },
     {

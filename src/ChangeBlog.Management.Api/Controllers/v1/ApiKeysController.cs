@@ -39,7 +39,6 @@ public class ApiKeysController : ControllerBase
         return Ok(dto);
     }
 
-
     [HttpPost(Name = "GenerateUserApiKey")]
     [ProducesResponseType(StatusCodes.Status200OK)]
     [SkipAuthorization]

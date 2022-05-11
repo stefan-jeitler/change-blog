@@ -861,6 +861,8 @@ export class CultureDto implements ICultureDto {
     culture!: string | undefined;
     language!: string | undefined;
     country!: string | undefined;
+    shortDateFormat!: string | undefined;
+    firstDayOfWeek!: number;
 
     constructor(data?: ICultureDto) {
         if (data) {
@@ -876,6 +878,8 @@ export class CultureDto implements ICultureDto {
             this.culture = _data["culture"];
             this.language = _data["language"];
             this.country = _data["country"];
+            this.shortDateFormat = _data["shortDateFormat"];
+            this.firstDayOfWeek = _data["firstDayOfWeek"];
         }
     }
 
@@ -891,6 +895,8 @@ export class CultureDto implements ICultureDto {
         data["culture"] = this.culture;
         data["language"] = this.language;
         data["country"] = this.country;
+        data["shortDateFormat"] = this.shortDateFormat;
+        data["firstDayOfWeek"] = this.firstDayOfWeek;
         return data;
     }
 }
@@ -899,6 +905,8 @@ export interface ICultureDto {
     culture: string | undefined;
     language: string | undefined;
     country: string | undefined;
+    shortDateFormat: string | undefined;
+    firstDayOfWeek: number;
 }
 
 export class ErrorMessage implements IErrorMessage {

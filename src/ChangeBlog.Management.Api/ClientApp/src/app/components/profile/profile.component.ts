@@ -8,6 +8,7 @@ import {MessageService, Message} from "primeng/api";
 import {TranslocoService} from "@ngneat/transloco";
 import {TranslocoLocaleService} from "@ngneat/transloco-locale";
 import ITimezoneDto = MngmtApiClient.ITimezoneDto;
+import {AppCultureService} from "../../services/app-culture.service";
 
 @Component({
   selector: 'app-profile',
@@ -24,7 +25,7 @@ export class ProfileComponent implements OnInit {
 
   constructor(public translationKey: TranslationKey,
               private translationService: TranslocoService,
-              private localService: TranslocoLocaleService,
+              private appCultureService: AppCultureService,
               private messageService: MessageService,
               private mngmtApiClient: MngmtApiClient.Client,
               private formBuilder: FormBuilder) {
@@ -124,13 +125,7 @@ export class ProfileComponent implements OnInit {
   }
 
   private async profileUpdated(response: MngmtApiClient.SuccessResponse) {
-
-    const profile = await firstValueFrom(this.mngmtApiClient
-      .getUserCulture());
-
-    this.localService.setLocale(profile.culture!);
-    this.translationService.setActiveLang(profile.language!);
-    await firstValueFrom(this.translationService.load(profile.language!));
+    await this.appCultureService.applyUserCulture();
 
     const userProfileUpdateMessage = await firstValueFrom(this.translationService.selectTranslate(this.translationKey.userProfileUpdated));
 

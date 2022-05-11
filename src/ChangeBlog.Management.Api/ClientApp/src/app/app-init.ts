@@ -3,10 +3,9 @@ import {OAuthService} from "angular-oauth2-oidc";
 import {AppConfig} from "../../app.config";
 import {ChangeBlogManagementApi as MngmtApiClient} from "../clients/ChangeBlogManagementApiClient";
 import {getBrowserLang, TranslocoService} from "@ngneat/transloco";
-import {TranslocoLocaleService} from "@ngneat/transloco-locale";
-import {filter, first, mergeMap, pluck} from "rxjs/operators";
+import {filter, mergeMap} from "rxjs/operators";
 import {firstValueFrom} from "rxjs";
-import {registerLocaleData} from "@angular/common";
+import {AppCultureService} from "./services/app-culture.service";
 
 async function setBrowserLanguageOrDefault(oAuthService: OAuthService,
                                            translationService: TranslocoService) {
@@ -14,21 +13,6 @@ async function setBrowserLanguageOrDefault(oAuthService: OAuthService,
 
   translationService.setActiveLang(language);
   await firstValueFrom(translationService.load(language))
-}
-
-async function setUserCulture(userCulture: MngmtApiClient.ICultureDto,
-                              translationService: TranslocoService,
-                              localeService: TranslocoLocaleService) {
-  const activeCulture = localeService.getLocale();
-
-  if (activeCulture === userCulture.culture)
-    return;
-
-  const language = userCulture.language ?? getBrowserLang() ?? translationService.getDefaultLang();
-
-  localeService.setLocale(userCulture.culture ?? 'en-US');
-  translationService.setActiveLang(language);
-  await firstValueFrom(translationService.load(language));
 }
 
 function subscribeTokenReceived(authService: OAuthService, apiClient: MngmtApiClient.Client) {
@@ -46,7 +30,7 @@ export function initializeApp(
   appConfig: AppConfig,
   apiClient: MngmtApiClient.Client,
   translationService: TranslocoService,
-  localeService: TranslocoLocaleService
+  appCulture: AppCultureService
 ): () => Promise<void> {
   return async () => {
     router.onSameUrlNavigation = 'reload';
@@ -60,12 +44,7 @@ export function initializeApp(
 
     const isLoggedIn = oAuthService.hasValidIdToken() && oAuthService.hasValidAccessToken();
     if (isLoggedIn) {
-      const userCultureObservable = await apiClient
-        .getUserCulture();
-
-      let userCulture = await firstValueFrom(userCultureObservable);
-
-      await setUserCulture(userCulture, translationService, localeService);
+      await appCulture.applyUserCulture();
     }
   };
 }

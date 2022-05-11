@@ -1,6 +1,6 @@
-import { ComponentFixture, TestBed } from '@angular/core/testing';
+import {ComponentFixture, TestBed} from '@angular/core/testing';
 
-import { ApikeyComponent } from './apikey.component';
+import {ApikeyComponent} from './apikey.component';
 
 describe('ApikeyComponent', () => {
   let component: ApikeyComponent;
@@ -8,9 +8,9 @@ describe('ApikeyComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      declarations: [ ApikeyComponent ]
+      declarations: [ApikeyComponent]
     })
-    .compileComponents();
+      .compileComponents();
   });
 
   beforeEach(() => {

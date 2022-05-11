@@ -17,7 +17,7 @@ export class AppCultureService {
               private primeNgConfig: PrimeNGConfig) {
   }
 
-  async applyUserCulture(){
+  async applyUserCulture() {
     const activeCulture = this.localeService.getLocale();
     const userCulture = await firstValueFrom(this.mngmApiClient.getUserCulture());
 

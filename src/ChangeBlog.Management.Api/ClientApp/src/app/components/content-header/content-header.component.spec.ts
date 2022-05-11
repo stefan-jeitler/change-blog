@@ -1,6 +1,6 @@
-import { ComponentFixture, TestBed } from '@angular/core/testing';
+import {ComponentFixture, TestBed} from '@angular/core/testing';
 
-import { ContentHeaderComponent } from './content-header.component';
+import {ContentHeaderComponent} from './content-header.component';
 
 describe('ContentHeaderComponent', () => {
   let component: ContentHeaderComponent;
@@ -8,9 +8,9 @@ describe('ContentHeaderComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      declarations: [ ContentHeaderComponent ]
+      declarations: [ContentHeaderComponent]
     })
-    .compileComponents();
+      .compileComponents();
   });
 
   beforeEach(() => {

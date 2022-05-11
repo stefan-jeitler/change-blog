@@ -15,10 +15,7 @@ public class FindUserId
 
     public async Task<Guid?> FindByExternalUserIdAsync(string externalUserId)
     {
-        if (string.IsNullOrEmpty(externalUserId))
-        {
-            return null;
-        }
+        if (string.IsNullOrEmpty(externalUserId)) return null;
 
         return await _userAccessDao.FindActiveUserByExternalUserId(externalUserId);
     }

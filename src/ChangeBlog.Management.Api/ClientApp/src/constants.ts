@@ -1,4 +1,4 @@
-export type DistanceUnit = 'px' | 'rem' | 'em' | '%' | 'vw' | 'vh' ;
+export type DistanceUnit = 'px' | 'rem' | 'em' | '%' | 'vw' | 'vh';
 
 export interface Distance {
   value: number,

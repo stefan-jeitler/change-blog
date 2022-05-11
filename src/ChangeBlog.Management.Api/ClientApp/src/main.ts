@@ -2,7 +2,7 @@ import './app/extensions/form.extensions';
 import {enableProdMode} from '@angular/core';
 import {platformBrowserDynamic} from '@angular/platform-browser-dynamic';
 
-import { APP_CONFIG } from 'app.config';
+import {APP_CONFIG} from 'app.config';
 import {AppModule} from './app/app.module';
 
 import {environment} from './environments/environment';
@@ -18,7 +18,7 @@ fetch("/api/appsettings")
     }
 
     platformBrowserDynamic([
-      { provide: APP_CONFIG, useValue: config }])
+      {provide: APP_CONFIG, useValue: config}])
       .bootstrapModule(AppModule)
       .catch((err) => console.error(err));
   });

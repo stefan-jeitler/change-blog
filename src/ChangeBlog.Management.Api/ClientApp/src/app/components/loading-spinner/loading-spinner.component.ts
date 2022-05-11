@@ -28,7 +28,7 @@ export class LoadingSpinnerComponent implements OnInit {
   }
 
   stop() {
-    if(!!this.runningTimeout)
+    if (!!this.runningTimeout)
       clearTimeout(this.runningTimeout);
 
     this.showOverlay = false;

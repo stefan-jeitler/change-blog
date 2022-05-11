@@ -1,14 +1,13 @@
-import { Component, OnInit} from '@angular/core';
+import {Component, OnInit} from '@angular/core';
 import {TranslationKey} from "../../generated/TranslationKey";
 import {tap} from "rxjs/operators";
 import {ChangeBlogManagementApi as MngmtApiClient} from "../../../clients/ChangeBlogManagementApiClient";
 import {firstValueFrom} from "rxjs";
 import {FormBuilder, FormControl, FormGroup} from "@angular/forms";
-import {MessageService, Message} from "primeng/api";
+import {Message, MessageService} from "primeng/api";
 import {TranslocoService} from "@ngneat/transloco";
-import {TranslocoLocaleService} from "@ngneat/transloco-locale";
-import ITimezoneDto = MngmtApiClient.ITimezoneDto;
 import {AppCultureService} from "../../services/app-culture.service";
+import ITimezoneDto = MngmtApiClient.ITimezoneDto;
 
 @Component({
   selector: 'app-profile',
@@ -129,10 +128,10 @@ export class ProfileComponent implements OnInit {
 
     const userProfileUpdateMessage = await firstValueFrom(this.translationService.selectTranslate(this.translationKey.userProfileUpdated));
 
-    if(!!this.messageHidingTimeout)
+    if (!!this.messageHidingTimeout)
       clearTimeout(this.messageHidingTimeout);
 
-    this.messages = [{severity:'success', summary: '', detail: userProfileUpdateMessage}];
+    this.messages = [{severity: 'success', summary: '', detail: userProfileUpdateMessage}];
     this.messageHidingTimeout = setTimeout(() => this.messages = [], 4000);
   }
 }

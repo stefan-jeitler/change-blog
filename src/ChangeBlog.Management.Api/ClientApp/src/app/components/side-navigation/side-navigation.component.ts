@@ -12,6 +12,7 @@ import {TranslationKey} from "../../generated/TranslationKey";
 export class SideNavigationComponent implements OnInit {
 
   menuItems: MenuItem[] = [];
+  @Input() showTitle: boolean;
 
   constructor(@Inject(APP_CONFIG)
               private appConfig: AppConfig,
@@ -27,6 +28,14 @@ export class SideNavigationComponent implements OnInit {
       .subscribe(x => this.populateMenuItems());
   }
 
+  get appVersion(): string {
+    return this.appConfig.appVersion!;
+  }
+
+  ngOnInit(): void {
+
+  }
+
   private populateMenuItems() {
     this.menuItems = [
       {
@@ -40,15 +49,5 @@ export class SideNavigationComponent implements OnInit {
         routerLink: "/app/apikey"
       }
     ];
-  }
-
-  ngOnInit(): void {
-
-  }
-
-  @Input() showTitle: boolean;
-
-  get appVersion(): string {
-    return this.appConfig.appVersion!;
   }
 }

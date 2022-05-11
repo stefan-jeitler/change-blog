@@ -14,9 +14,9 @@
     </PropertyGroup>
 
     <ItemGroup>
-        <PackageReference Include="Microsoft.Identity.Web" Version="1.24.1" />
-        <PackageReference Include="Swashbuckle.AspNetCore" Version="6.3.1" />
-        <PackageReference Include="Microsoft.AspNetCore.SpaServices.Extensions" Version="6.0.4" />
+        <PackageReference Include="Microsoft.Identity.Web" Version="1.24.1"/>
+        <PackageReference Include="Swashbuckle.AspNetCore" Version="6.3.1"/>
+        <PackageReference Include="Microsoft.AspNetCore.SpaServices.Extensions" Version="6.0.4"/>
         <PackageReference Include="NSwag.MSBuild" Version="13.15.10">
             <PrivateAssets>all</PrivateAssets>
             <IncludeAssets>runtime; build; native; contentfiles; analyzers</IncludeAssets>
@@ -24,40 +24,40 @@
     </ItemGroup>
 
     <ItemGroup>
-        <Content Remove="$(SpaRoot)**" />
-        <None Remove="$(SpaRoot)**" />
-        <None Include="$(SpaRoot)**" Exclude="$(SpaRoot)node_modules\**" />
+        <Content Remove="$(SpaRoot)**"/>
+        <None Remove="$(SpaRoot)**"/>
+        <None Include="$(SpaRoot)**" Exclude="$(SpaRoot)node_modules\**"/>
         <None Update="client-config.nswag">
-          <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+            <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
         </None>
     </ItemGroup>
 
     <ItemGroup>
-        <ProjectReference Include="..\ChangeBlog.Api.Shared\ChangeBlog.Api.Shared.csproj" />
-        <ProjectReference Include="..\ChangeBlog.Application\ChangeBlog.Application.csproj" />
-        <ProjectReference Include="..\ChangeBlog.DataAccess.Postgres\ChangeBlog.DataAccess.Postgres.csproj" />
+        <ProjectReference Include="..\ChangeBlog.Api.Shared\ChangeBlog.Api.Shared.csproj"/>
+        <ProjectReference Include="..\ChangeBlog.Application\ChangeBlog.Application.csproj"/>
+        <ProjectReference Include="..\ChangeBlog.DataAccess.Postgres\ChangeBlog.DataAccess.Postgres.csproj"/>
     </ItemGroup>
 
     <Target Name="DebugEnsureNodeEnv" BeforeTargets="Build" Condition=" '$(Configuration)' == 'Debug' And !Exists('$(SpaRoot)node_modules') ">
         <!-- Ensure Node.js is installed -->
         <Exec Command="node --version" ContinueOnError="true">
-            <Output TaskParameter="ExitCode" PropertyName="ErrorCode" />
+            <Output TaskParameter="ExitCode" PropertyName="ErrorCode"/>
         </Exec>
-        <Error Condition="'$(ErrorCode)' != '0'" Text="Node.js is required to build and run this project. To continue, please install Node.js from https://nodejs.org/, and then restart your command prompt or IDE." />
-        <Message Importance="high" Text="Restoring dependencies using 'npm'. This may take several minutes..." />
-        <Exec WorkingDirectory="$(SpaRoot)" Command="npm install" />
+        <Error Condition="'$(ErrorCode)' != '0'" Text="Node.js is required to build and run this project. To continue, please install Node.js from https://nodejs.org/, and then restart your command prompt or IDE."/>
+        <Message Importance="high" Text="Restoring dependencies using 'npm'. This may take several minutes..."/>
+        <Exec WorkingDirectory="$(SpaRoot)" Command="npm install"/>
     </Target>
-    
+
     <Target Name="PublishRunWebpack" AfterTargets="ComputeFilesToPublish">
-        <Exec WorkingDirectory="$(SpaRoot)" Command="npm install" />
-        <Exec WorkingDirectory="$(SpaRoot)" Command="npm version $(Version) --allow-same-version" />
-        <Exec WorkingDirectory="$(SpaRoot)" Command="npm run build" />
-        <Exec WorkingDirectory="$(SpaRoot)" Command="npm run build:ssr" Condition=" '$(BuildServerSideRenderer)' == 'true' " />
+        <Exec WorkingDirectory="$(SpaRoot)" Command="npm install"/>
+        <Exec WorkingDirectory="$(SpaRoot)" Command="npm version $(Version) --allow-same-version"/>
+        <Exec WorkingDirectory="$(SpaRoot)" Command="npm run build"/>
+        <Exec WorkingDirectory="$(SpaRoot)" Command="npm run build:ssr" Condition=" '$(BuildServerSideRenderer)' == 'true' "/>
 
         <!-- Include the newly-built files in the publish output -->
         <ItemGroup>
-            <DistFiles Include="$(SpaRoot)dist\**; $(SpaRoot)dist-server\**" />
-            <DistFiles Include="$(SpaRoot)node_modules\**" Condition="'$(BuildServerSideRenderer)' == 'true'" />
+            <DistFiles Include="$(SpaRoot)dist\**; $(SpaRoot)dist-server\**"/>
+            <DistFiles Include="$(SpaRoot)node_modules\**" Condition="'$(BuildServerSideRenderer)' == 'true'"/>
             <ResolvedFileToPublish Include="@(DistFiles->'%(FullPath)')" Exclude="@(ResolvedFileToPublish)">
                 <RelativePath>%(DistFiles.Identity)</RelativePath>
                 <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
@@ -72,24 +72,24 @@
             <ApiVersion>v1</ApiVersion>
         </PropertyGroup>
 
-        <CallTarget Targets="Clean;Restore;Build" />
+        <CallTarget Targets="Clean;Restore;Build"/>
 
-        <Message Text="Install SwashBuckle.AspNetCore.Cli" Importance="high" />
-        <Exec Command="dotnet new tool-manifest --force" WorkingDirectory="$(OutDir)" />
-        <Exec Command="dotnet tool update SwashBuckle.AspNetCore.Cli" WorkingDirectory="$(OutDir)" />
+        <Message Text="Install SwashBuckle.AspNetCore.Cli" Importance="high"/>
+        <Exec Command="dotnet new tool-manifest --force" WorkingDirectory="$(OutDir)"/>
+        <Exec Command="dotnet tool update SwashBuckle.AspNetCore.Cli" WorkingDirectory="$(OutDir)"/>
 
-        <Message Text="Creating directory for clients" Importance="high" />
-        <RemoveDir Directories="$(OutDir)/clients/" />
-        <MakeDir Directories="$(OutDir)/clients/" />
+        <Message Text="Creating directory for clients" Importance="high"/>
+        <RemoveDir Directories="$(OutDir)/clients/"/>
+        <MakeDir Directories="$(OutDir)/clients/"/>
 
-        <Message Text="Generating client" Importance="high" />
-        <Exec Command="dotnet swagger tofile --output ./clients/ChangeBlog-Management-Api-Swagger.yaml --yaml $(AssemblyName).dll $(ApiVersion)" WorkingDirectory="$(OutDir)" />
-        <Exec Command="dotnet swagger tofile --output ./clients/ChangeBlog-Management-Api-Swagger.json $(AssemblyName).dll $(ApiVersion)" WorkingDirectory="$(OutDir)" />
+        <Message Text="Generating client" Importance="high"/>
+        <Exec Command="dotnet swagger tofile --output ./clients/ChangeBlog-Management-Api-Swagger.yaml --yaml $(AssemblyName).dll $(ApiVersion)" WorkingDirectory="$(OutDir)"/>
+        <Exec Command="dotnet swagger tofile --output ./clients/ChangeBlog-Management-Api-Swagger.json $(AssemblyName).dll $(ApiVersion)" WorkingDirectory="$(OutDir)"/>
 
-        <Exec Command="$(NSwagExe) run client-config.nswag /variables:input=.\clients\ChangeBlog-Management-Api-Swagger.json,output=.\clients\ChangeBlogManagementApiClient.ts" WorkingDirectory="$(OutDir)" />
+        <Exec Command="$(NSwagExe) run client-config.nswag /variables:input=.\clients\ChangeBlog-Management-Api-Swagger.json,output=.\clients\ChangeBlogManagementApiClient.ts" WorkingDirectory="$(OutDir)"/>
 
-        <Message Text="Copy client to frontend app. Dir: $(TypeScriptClientOutput)" Importance="high" />
-        <Copy SourceFiles="$(OutDir)/clients/ChangeBlogManagementApiClient.ts" DestinationFolder="$(TypeScriptClientOutput)" />
+        <Message Text="Copy client to frontend app. Dir: $(TypeScriptClientOutput)" Importance="high"/>
+        <Copy SourceFiles="$(OutDir)/clients/ChangeBlogManagementApiClient.ts" DestinationFolder="$(TypeScriptClientOutput)"/>
     </Target>
 
 </Project>

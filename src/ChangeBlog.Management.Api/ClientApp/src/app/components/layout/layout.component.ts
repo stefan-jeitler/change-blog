@@ -31,6 +31,10 @@ export class LayoutComponent {
     }
   }
 
+  onSwipeLeft() {
+    this.showMobileSideNav = false;
+  }
+
   private showSideMobileNavAndAddCloseSwipeHandler() {
     this.showMobileSideNav = true;
 
@@ -47,9 +51,5 @@ export class LayoutComponent {
       }
 
     }, 100);
-  }
-
-  onSwipeLeft() {
-    this.showMobileSideNav = false;
   }
 }

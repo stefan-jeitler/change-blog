@@ -15,7 +15,7 @@ public static class Program
         await ApproveDbSchemaVersionAsync(host);
         await host.RunAsync();
     }
-    
+
     private static async Task ApproveDbSchemaVersionAsync(IHost host)
     {
         using var scope = host.Services.CreateScope();

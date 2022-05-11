@@ -3,7 +3,6 @@ import {MenuItem, MessageService} from "primeng/api";
 import {OAuthService} from "angular-oauth2-oidc";
 import {translate, TranslocoService} from "@ngneat/transloco";
 import {filter} from "rxjs/operators";
-import {LanguageInfo} from "../../transloco-root.module";
 import {IdentityUser} from "../../models/identityUser.interface";
 import {TranslationKey} from "../../generated/TranslationKey";
 

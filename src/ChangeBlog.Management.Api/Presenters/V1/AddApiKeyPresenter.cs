@@ -34,7 +34,7 @@ public class AddApiKeyPresenter : BaseApiPresenter, IAddApiKeyOutputPort
         {
             [KnownIdentifiers.ApiKeyId] = apiKeyId.ToString()
         };
-        
+
         Response = new OkObjectResult(SuccessResponse.Create(ChangeBlogStrings.ApiKeyAdded, resourceIds));
     }
 }

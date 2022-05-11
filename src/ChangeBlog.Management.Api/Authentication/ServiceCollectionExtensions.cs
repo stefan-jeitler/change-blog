@@ -19,19 +19,19 @@ public static class ServiceCollectionExtensions
         MicrosoftIdentityAuthenticationSettings settings)
     {
         authBuilder.AddMicrosoftIdentityWebApi(o =>
-                o.Events = new JwtBearerEvents
-                {
-                    OnTokenValidated = OnTokenValidated,
-                    OnChallenge = OnChallenge
-                }, o =>
+            o.Events = new JwtBearerEvents
             {
-                o.Instance = settings.Instance;
-                o.Domain = settings.Domain;
-                o.SignUpSignInPolicyId = settings.SignUpSignInPolicyId;
-                o.TenantId = settings.TenantId;
-                o.ClientId = settings.ClientId;
-                o.ClientSecret = settings.ClientSecret;
-            });
+                OnTokenValidated = OnTokenValidated,
+                OnChallenge = OnChallenge
+            }, o =>
+        {
+            o.Instance = settings.Instance;
+            o.Domain = settings.Domain;
+            o.SignUpSignInPolicyId = settings.SignUpSignInPolicyId;
+            o.TenantId = settings.TenantId;
+            o.ClientId = settings.ClientId;
+            o.ClientSecret = settings.ClientSecret;
+        });
 
         return authBuilder;
     }
@@ -48,7 +48,7 @@ public static class ServiceCollectionExtensions
     private static async Task OnTokenValidated(TokenValidatedContext context)
     {
         context.HttpContext.User = context.Principal!;
-        
+
         var authHandler = context.HttpContext.RequestServices.GetRequiredService<AppAuthenticationHandler>();
 
         await authHandler.HandleAsync(context);
@@ -59,9 +59,9 @@ public static class ServiceCollectionExtensions
         context.Response.OnStarting(async () =>
         {
             var logger = context.HttpContext.RequestServices.GetRequiredService<ILogger<AppAuthenticationHandler>>();
-            
+
             var authException = context.AuthenticateFailure;
-            if(authException is not null)
+            if (authException is not null)
                 logger.LogCritical(authException, "Error while authenticating user.");
 
             context.Response.ContentType = MediaTypeNames.Application.Json;

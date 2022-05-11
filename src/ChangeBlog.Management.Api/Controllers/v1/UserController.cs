@@ -35,7 +35,7 @@ public class UserController : ControllerBase
     }
 
     [HttpPost("import", Name = "EnsureUserIsImported")]
-    [ProducesResponseType( StatusCodes.Status200OK)]
+    [ProducesResponseType(StatusCodes.Status200OK)]
     [SkipAuthorization]
     public ActionResult<SuccessResponse> EnsureUserIsImported()
     {
@@ -71,7 +71,7 @@ public class UserController : ControllerBase
 
         return presenter.Response;
     }
-    
+
     [HttpGet("culture", Name = "GetUserCulture")]
     [ProducesResponseType(StatusCodes.Status200OK)]
     [SkipAuthorization]
@@ -83,8 +83,8 @@ public class UserController : ControllerBase
         var cultureInfo = CultureInfo.GetCultureInfo(user.Culture);
         var regionInfo = new RegionInfo(cultureInfo.Name);
         var shortDateFormat = cultureInfo.DateTimeFormat.ShortDatePattern;
-        var firstDayOfWeek = (ushort)cultureInfo.DateTimeFormat.FirstDayOfWeek;
-        
+        var firstDayOfWeek = (ushort) cultureInfo.DateTimeFormat.FirstDayOfWeek;
+
         var cultureDto = new CultureDto(user.Culture,
             cultureInfo.TwoLetterISOLanguageName,
             regionInfo.TwoLetterISORegionName,

@@ -7,7 +7,6 @@ using ChangeBlog.Api.Shared.DTOs;
 using ChangeBlog.Api.Shared.UserInfo;
 using ChangeBlog.Application.Boundaries.DataAccess.ExternalIdentity;
 using ChangeBlog.DataAccess.Postgres;
-using ChangeBlog.Domain;
 using ChangeBlog.Management.Api.Authentication;
 using ChangeBlog.Management.Api.Extensions;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
@@ -40,7 +39,7 @@ public class Startup
             .AddAuthenticationServices()
             .AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
             .AddAppAuthentication(settings);
-        
+
         services.AddPermissionHandler();
 
         services
@@ -70,17 +69,14 @@ public class Startup
 
         app.UseSpaStaticFiles(new StaticFileOptions
         {
-            OnPrepareResponse = context =>
-            {
-                context.Context.Response.Headers.Add("Cache-Control", "no-cache");
-            }
+            OnPrepareResponse = context => { context.Context.Response.Headers.Add("Cache-Control", "no-cache"); }
         });
 
         app.UseRouting();
 
         var localizationOptions = LocalizationOptions.Get();
         app.UseRequestLocalization(localizationOptions);
-        
+
         app.UseAuthentication();
         app.UseAuthorization();
 

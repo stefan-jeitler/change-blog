@@ -6,8 +6,8 @@ import * as Hammer from "hammerjs";
 export class SwipeConfig extends HammerGestureConfig {
   overrides = <any>{
     swipe: {direction: Hammer.DIRECTION_HORIZONTAL},
-    pinch: { enable: false },
-    rotate: { enable: false }
+    pinch: {enable: false},
+    rotate: {enable: false}
   };
 
   options = <any>{

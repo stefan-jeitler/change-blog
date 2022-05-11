@@ -1,4 +1,4 @@
-<p-toast position="bottom-center" [breakpoints]="{'476px': {width: '100%'}}"></p-toast>
+<p-toast [breakpoints]="{'476px': {width: '100%'}}" position="bottom-center"></p-toast>
 
 <div class="wrapper">
   <app-header (triggerMobileSideNav)="openMobileSideNav()" class="head surface-800"></app-header>
@@ -7,13 +7,13 @@
     <app-side-navigation [showTitle]="false"></app-side-navigation>
   </nav>
 
-  <section class="content surface-ground"
-           (swiperight)="onSwipeRight($event)">
-      <router-outlet></router-outlet>
+  <section (swiperight)="onSwipeRight($event)"
+           class="content surface-ground">
+    <router-outlet></router-outlet>
   </section>
 </div>
 
-<p-sidebar class="surface-200" [showCloseIcon]="false" [(visible)]="showMobileSideNav" [baseZIndex]="10000"
-           [style]="{'width': 'var(--side-nav-width)'}">
+<p-sidebar [(visible)]="showMobileSideNav" [baseZIndex]="10000" [showCloseIcon]="false" [style]="{'width': 'var(--side-nav-width)'}"
+           class="surface-200">
   <app-side-navigation [showTitle]="true"></app-side-navigation>
 </p-sidebar>

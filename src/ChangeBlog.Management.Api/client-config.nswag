@@ -1,8 +1,8 @@
 ﻿{
   "runtime": "Default",
-  "swaggerGenerator":{
-    "fromSwagger":{
-      "json":"$(input)"
+  "swaggerGenerator": {
+    "fromSwagger": {
+      "json": "$(input)"
     }
   },
   "codeGenerators": {

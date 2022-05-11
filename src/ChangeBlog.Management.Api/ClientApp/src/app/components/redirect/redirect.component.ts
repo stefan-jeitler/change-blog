@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import {Component, OnInit} from '@angular/core';
 import {OAuthService} from "angular-oauth2-oidc";
 import {Router} from "@angular/router";
 
@@ -19,7 +19,7 @@ export class RedirectComponent implements OnInit {
 
     this.authService.tryLogin()
       .then(x => {
-        if(this.isLoggedIn())
+        if (this.isLoggedIn())
           this.router.navigateByUrl('/app/home');
         else
           this.router.navigateByUrl('/home');

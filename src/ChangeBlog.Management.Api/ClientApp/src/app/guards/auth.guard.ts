@@ -17,12 +17,12 @@ export class AuthGuard implements CanActivate {
     const isLoggedIn = () => this.authService.hasValidIdToken() && this.authService.hasValidAccessToken();
     const gotoLandingPage = () => this.router.navigateByUrl('/home');
 
-    if(isLoggedIn())
+    if (isLoggedIn())
       return true;
 
     await this.authService.tryLoginCodeFlow();
 
-    if(isLoggedIn())
+    if (isLoggedIn())
       return true;
 
     await gotoLandingPage();

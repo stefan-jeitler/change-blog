@@ -37,4 +37,9 @@ public class AddApiKeyPresenter : BaseApiPresenter, IAddApiKeyOutputPort
 
         Response = new OkObjectResult(SuccessResponse.Create(ChangeBlogStrings.ApiKeyAdded, resourceIds));
     }
+
+    public void InvalidTitle(string title)
+    {
+        Response = new BadRequestObjectResult(ErrorResponse.Create(ChangeBlogStrings.InvalidApiKeyTitle));
+    }
 }

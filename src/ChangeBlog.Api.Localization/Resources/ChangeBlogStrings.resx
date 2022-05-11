@@ -321,4 +321,7 @@
   <data name="ApiKeyDeleted" xml:space="preserve">
     <value>Api Key successfully deleted</value>
   </data>
+  <data name="InvalidApiKeyTitle" xml:space="preserve">
+    <value>Api Key Title is invalid</value>
+  </data>
 </root>

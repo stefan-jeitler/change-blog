@@ -10,4 +10,5 @@ public interface IAddApiKeyOutputPort
     void ExpirationTooLong(string userCulture, TimeSpan expiresIn, TimeSpan maxExpiration);
     void Conflict(Conflict conflict);
     void ApiKeyAdded(Guid apiKeyId);
+    void InvalidTitle(string title);
 }

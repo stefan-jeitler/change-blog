@@ -1,4 +1,5 @@
 using System;
+using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Net.Mime;
 using System.Threading.Tasks;
@@ -45,12 +46,16 @@ public class ApiKeysController : ControllerBase
     [SkipAuthorization]
     public async Task<ActionResult<UserDto>> GenerateUserApiKeyAsync(
         [FromServices] IAddApiKey addApiKey,
-        uint expiresInWeeks)
+        [Required]
+        string title,
+        [Required]
+        uint expiresInDays)
     {
         var userId = HttpContext.GetUserId();
         var presenter = new AddApiKeyPresenter();
+        var requestModel = new AddApiKeyRequestModel(userId, title, TimeSpan.FromDays(expiresInDays));
 
-        await addApiKey.ExecuteAsync(presenter, userId, TimeSpan.FromDays(expiresInWeeks * 7));
+        await addApiKey.ExecuteAsync(presenter, requestModel);
 
         return presenter.Response;
     }

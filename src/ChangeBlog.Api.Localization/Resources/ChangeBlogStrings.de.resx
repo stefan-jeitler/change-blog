@@ -321,4 +321,7 @@
   <data name="ApiKeyDeleted" xml:space="preserve">
     <value>Api Schlüssel erfolgreich gelöscht</value>
   </data>
+  <data name="InvalidApiKeyTitle" xml:space="preserve">
+    <value>Api Schlüssel Bezeichnung ist nicht gültig</value>
+  </data>
 </root>

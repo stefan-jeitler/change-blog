@@ -8,7 +8,7 @@ namespace ChangeBlog.Application.Boundaries.DataAccess.Users;
 
 public interface IApiKeysDao
 {
-    Task<IList<UserApiKey>> GetUserApiKeysAsync(Guid userId);
-    Task<Result<Guid, Conflict>> AddAsync(UserApiKey userApiKey);
+    Task<IList<ApiKey>> GetUserApiKeysAsync(Guid userId);
+    Task<Result<Guid, Conflict>> AddAsync(ApiKey apiKey);
     Task DeleteApiKeyAsync(Guid userId, Guid apiKeyId);
 }

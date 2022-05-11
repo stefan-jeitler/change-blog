@@ -214,6 +214,15 @@ namespace ChangeBlog.Api.Localization.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Api Key Title is invalid.
+        /// </summary>
+        public static string InvalidApiKeyTitle {
+            get {
+                return ResourceManager.GetString("InvalidApiKeyTitle", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Invalid changelog text &apos;{0}&apos;.
         /// </summary>
         public static string InvalidChangeLogText {

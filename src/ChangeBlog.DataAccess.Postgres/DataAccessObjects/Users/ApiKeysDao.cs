@@ -21,7 +21,7 @@ public class ApiKeysDao : IApiKeysDao
         _logger = logger;
     }
 
-    public async Task<IList<UserApiKey>> GetUserApiKeysAsync(Guid userId)
+    public async Task<IList<ApiKey>> GetUserApiKeysAsync(Guid userId)
     {
         const string sql = @"SELECT user_id    AS userId,
                                        id         as apiKeyId,
@@ -30,7 +30,7 @@ public class ApiKeysDao : IApiKeysDao
                                 FROM api_key
                                 WHERE user_id = @userId";
 
-        var result = await _dbAccessor.DbConnection.QueryAsync<UserApiKey>(sql, new
+        var result = await _dbAccessor.DbConnection.QueryAsync<ApiKey>(sql, new
         {
             userId
         });
@@ -38,7 +38,7 @@ public class ApiKeysDao : IApiKeysDao
         return result.AsList();
     }
 
-    public async Task<Result<Guid, Conflict>> AddAsync(UserApiKey userApiKey)
+    public async Task<Result<Guid, Conflict>> AddAsync(ApiKey apiKey)
     {
         
         const string insertNewApiKeySql = @"
@@ -50,13 +50,13 @@ public class ApiKeysDao : IApiKeysDao
             await _dbAccessor.DbConnection
                 .ExecuteAsync(insertNewApiKeySql, new
                 {
-                    id = userApiKey.ApiKeyId,
-                    userId = userApiKey.UserId,
-                    apiKey = userApiKey.ApiKey,
-                    expiresAt = userApiKey.ExpiresAt
+                    id = apiKey.ApiKeyId,
+                    userId = apiKey.UserId,
+                    apiKey = apiKey.Key,
+                    expiresAt = apiKey.ExpiresAt
                 });
 
-            return Result.Success<Guid, Conflict>(userApiKey.ApiKeyId);
+            return Result.Success<Guid, Conflict>(apiKey.ApiKeyId);
         }
         catch (Exception exception)
         {

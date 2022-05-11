@@ -3,6 +3,7 @@ using System.Security.Cryptography;
 using System.Threading.Tasks;
 using ChangeBlog.Application.Boundaries.DataAccess.Users;
 using ChangeBlog.Application.Models;
+using ChangeBlog.Domain.Miscellaneous;
 using CSharpFunctionalExtensions;
 
 namespace ChangeBlog.Application.UseCases.Commands.AddApiKey;
@@ -21,29 +22,35 @@ public class AddApiKeyInteractor : IAddApiKey
         _apiKeysDao = apiKeysDao ?? throw new ArgumentNullException(nameof(apiKeysDao));
     }
 
-    public async Task ExecuteAsync(IAddApiKeyOutputPort output, Guid userId, TimeSpan expiresIn)
+    public async Task ExecuteAsync(IAddApiKeyOutputPort output, AddApiKeyRequestModel requestModel)
     {
-        if (userId == Guid.Empty)
+        if (requestModel.UserId == Guid.Empty)
             throw new ArgumentException("userId must not be empty.");
         
-        var currentUser = await _userDao.GetUserAsync(userId);
+        var currentUser = await _userDao.GetUserAsync(requestModel.UserId);
 
-        if (expiresIn < MinExpiration)
+        if (requestModel.ExpiresIn < MinExpiration)
         {
-            output.ExpirationTooShort(currentUser.Culture, expiresIn, MinExpiration);
+            output.ExpirationTooShort(currentUser.Culture, requestModel.ExpiresIn, MinExpiration);
             return;
         }
 
-        if (expiresIn > MaxExpiration)
+        if (requestModel.ExpiresIn > MaxExpiration)
         {
-            output.ExpirationTooLong(currentUser.Culture, expiresIn, MaxExpiration);
+            output.ExpirationTooLong(currentUser.Culture, requestModel.ExpiresIn, MaxExpiration);
             return;
         }
 
-        var expiresAt = DateTime.UtcNow + expiresIn;
+        if (!Name.TryParse(requestModel.Title, out var title))
+        {
+            output.InvalidTitle(requestModel.Title);
+            return;
+        }
+
+        var expiresAt = DateTime.UtcNow + requestModel.ExpiresIn;
         var apiKey = GenerateUniqueApiKey();
 
-        var userApiKey = new UserApiKey(currentUser.Id, Guid.NewGuid(), apiKey, expiresAt);
+        var userApiKey = new ApiKey(currentUser.Id, Guid.NewGuid(), requestModel.Title, apiKey, expiresAt);
 
         await _apiKeysDao.AddAsync(userApiKey)
             .Match(Finish, output.Conflict);

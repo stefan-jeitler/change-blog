@@ -5,5 +5,5 @@ namespace ChangeBlog.Application.UseCases.Commands.AddApiKey;
 
 public interface IAddApiKey
 {
-    Task ExecuteAsync(IAddApiKeyOutputPort output, Guid userId, TimeSpan expiresIn);
+    Task ExecuteAsync(IAddApiKeyOutputPort output, AddApiKeyRequestModel requestModel);
 }

@@ -13,12 +13,12 @@ public class AddApiKeyInteractor : IAddApiKey
     private static readonly TimeSpan MinExpiration = TimeSpan.FromDays(7);
     
     private readonly IUserDao _userDao;
-    private readonly IUserApiKeysDao _userApiKeysDao;
+    private readonly IApiKeysDao _apiKeysDao;
 
-    public AddApiKeyInteractor(IUserDao userDao, IUserApiKeysDao userApiKeysDao)
+    public AddApiKeyInteractor(IUserDao userDao, IApiKeysDao apiKeysDao)
     {
         _userDao = userDao ?? throw new ArgumentNullException(nameof(userDao));
-        _userApiKeysDao = userApiKeysDao ?? throw new ArgumentNullException(nameof(userApiKeysDao));
+        _apiKeysDao = apiKeysDao ?? throw new ArgumentNullException(nameof(apiKeysDao));
     }
 
     public async Task ExecuteAsync(IAddApiKeyOutputPort output, Guid userId, TimeSpan expiresIn)
@@ -45,7 +45,7 @@ public class AddApiKeyInteractor : IAddApiKey
 
         var userApiKey = new UserApiKey(currentUser.Id, Guid.NewGuid(), apiKey, expiresAt);
 
-        await _userApiKeysDao.AddAsync(userApiKey)
+        await _apiKeysDao.AddAsync(userApiKey)
             .Match(Finish, output.Conflict);
         
         void Finish(Guid apiKeyId)

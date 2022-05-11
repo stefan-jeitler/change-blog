@@ -318,4 +318,7 @@
   <data name="ApiKeyExpirationTooLong" xml:space="preserve">
     <value>The api key expiration is too long. Expiration must be smaller than 2 years</value>
   </data>
+  <data name="ApiKeyDeleted" xml:space="preserve">
+    <value>Api Key successfully deleted</value>
+  </data>
 </root>

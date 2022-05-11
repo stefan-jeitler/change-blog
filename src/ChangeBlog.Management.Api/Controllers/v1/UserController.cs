@@ -117,6 +117,7 @@ public class UserController : ControllerBase
                 var now = SystemClock.Instance.GetCurrentInstant();
                 var offset = DateTimeZoneProviders.Tzdb[x.Value].GetUtcOffset(now);
                 var offsetFormatted = offset.ToString("m", CultureInfo.InvariantCulture);
+                
                 return new TimezoneDto(x.Key, x.Value, offsetFormatted);
             });
 

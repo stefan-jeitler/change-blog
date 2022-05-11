@@ -10,12 +10,12 @@ using Microsoft.Extensions.Logging;
 
 namespace ChangeBlog.DataAccess.Postgres.DataAccessObjects.Users;
 
-public class UserApiKeysDao : IUserApiKeysDao
+public class ApiKeysDao : IApiKeysDao
 {
     private readonly IDbAccessor _dbAccessor;
-    private readonly ILogger<UserApiKeysDao> _logger;
+    private readonly ILogger<ApiKeysDao> _logger;
 
-    public UserApiKeysDao(IDbAccessor dbAccessor, ILogger<UserApiKeysDao> logger)
+    public ApiKeysDao(IDbAccessor dbAccessor, ILogger<ApiKeysDao> logger)
     {
         _dbAccessor = dbAccessor;
         _logger = logger;
@@ -63,5 +63,15 @@ public class UserApiKeysDao : IUserApiKeysDao
             _logger.LogError(exception, "Error while adding api key.");
             throw;
         }
+    }
+
+    public Task DeleteApiKeyAsync(Guid userId, Guid apiKeyId)
+    {
+        return _dbAccessor.DbConnection.ExecuteAsync(@"DELETE FROM api_key WHERE user_id = @userId AND id = @apiKeyId",
+            new
+            {
+                userId,
+                apiKeyId
+            });
     }
 }

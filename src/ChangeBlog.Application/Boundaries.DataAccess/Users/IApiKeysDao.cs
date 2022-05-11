@@ -6,8 +6,9 @@ using CSharpFunctionalExtensions;
 
 namespace ChangeBlog.Application.Boundaries.DataAccess.Users;
 
-public interface IUserApiKeysDao
+public interface IApiKeysDao
 {
     Task<IList<UserApiKey>> GetUserApiKeysAsync(Guid userId);
     Task<Result<Guid, Conflict>> AddAsync(UserApiKey userApiKey);
+    Task DeleteApiKeyAsync(Guid userId, Guid apiKeyId);
 }

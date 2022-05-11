@@ -52,7 +52,7 @@ public static class ServiceCollectionExtensions
             .AddScoped<IProductDao, ProductDao>()
             .AddScoped<IVersioningSchemeDao, VersioningSchemeDao>()
             .AddScoped<IUserDao, UserDao>()
-            .AddScoped<IUserApiKeysDao, UserApiKeysDao>()
+            .AddScoped<IApiKeysDao, ApiKeysDao>()
             .AddScoped<IRolesDao, RolesDao>()
             .AddScoped<IVersionDao, VersionDao>()
             .AddScoped<IChangeLogQueriesDao, ChangeLogQueriesDao>();

@@ -88,6 +88,15 @@ namespace ChangeBlog.Api.Localization.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Api Key successfully deleted.
+        /// </summary>
+        public static string ApiKeyDeleted {
+            get {
+                return ResourceManager.GetString("ApiKeyDeleted", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to The api key expiration is too long. Expiration must be smaller than 2 years.
         /// </summary>
         public static string ApiKeyExpirationTooLong {

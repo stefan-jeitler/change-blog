@@ -2,12 +2,14 @@ using System;
 using System.Linq;
 using System.Net.Mime;
 using System.Threading.Tasks;
+using ChangeBlog.Api.Localization.Resources;
 using ChangeBlog.Api.Shared;
 using ChangeBlog.Api.Shared.Authorization;
 using ChangeBlog.Api.Shared.DTOs;
 using ChangeBlog.Api.Shared.DTOs.V1.User;
 using ChangeBlog.Api.Shared.Swagger;
 using ChangeBlog.Application.UseCases.Commands.AddApiKey;
+using ChangeBlog.Application.UseCases.Commands.DeleteApiKey;
 using ChangeBlog.Application.UseCases.Queries.GetApiKeys;
 using ChangeBlog.Management.Api.DTOs.V1;
 using ChangeBlog.Management.Api.Presenters.V1;
@@ -38,6 +40,8 @@ public class ApiKeysController : ControllerBase
 
     [HttpPost(Name = "GenerateUserApiKey")]
     [ProducesResponseType(StatusCodes.Status200OK)]
+    [ProducesResponseType(typeof(ErrorResponse), StatusCodes.Status400BadRequest)]
+    [ProducesResponseType(typeof(ErrorResponse), StatusCodes.Status409Conflict)]
     [SkipAuthorization]
     public async Task<ActionResult<UserDto>> GenerateUserApiKeyAsync(
         [FromServices] IAddApiKey addApiKey,
@@ -50,4 +54,18 @@ public class ApiKeysController : ControllerBase
 
         return presenter.Response;
     }
+
+    [HttpDelete("{apiKeyId:Guid}", Name = "DeleteApiKey")]
+    [ProducesResponseType(StatusCodes.Status200OK)]
+    [SkipAuthorization]
+    public async Task<ActionResult> DeleteApiKeyAsync(
+        [FromServices] IDeleteApiKey deleteApiKey,
+        Guid apiKeyId)
+    {
+        var userId = HttpContext.GetUserId();
+        await deleteApiKey.ExecuteAsync(userId, apiKeyId);
+        
+        return Ok(SuccessResponse.Create(ChangeBlogStrings.ApiKeyDeleted));
+    }
+
 }

@@ -28,6 +28,7 @@ public class GetApiKeysInteractor : IGetApiKeys
 
         return apiKeys
             .Select(x => new ApiKeyResponseModel(x.ApiKeyId,
+                x.Title,
                 x.Key,
                 x.ExpiresAt.ToLocal(currentUser.TimeZone)))
             .ToList();

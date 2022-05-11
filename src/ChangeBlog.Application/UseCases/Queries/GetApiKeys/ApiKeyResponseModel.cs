@@ -4,12 +4,16 @@ namespace ChangeBlog.Application.UseCases.Queries.GetApiKeys;
 
 public class ApiKeyResponseModel
 {
-    public ApiKeyResponseModel(Guid apiKeyId, string apiKey, DateTimeOffset expiresAt)
+    public ApiKeyResponseModel(Guid apiKeyId, string title, string apiKey, DateTimeOffset expiresAt)
     {
         if (apiKeyId == Guid.Empty)
             throw new ArgumentException("apiKeyId must not be empty.");
 
         ApiKeyId = apiKeyId;
+        
+        ArgumentNullException.ThrowIfNull(title);
+
+        Title = title;
         
         ArgumentNullException.ThrowIfNull(apiKey);
 
@@ -25,6 +29,7 @@ public class ApiKeyResponseModel
     }
 
     public Guid ApiKeyId { get;}
+    public string Title { get; set; }
     public string ApiKey { get; }
     public DateTimeOffset ExpiresAt { get; }
 }

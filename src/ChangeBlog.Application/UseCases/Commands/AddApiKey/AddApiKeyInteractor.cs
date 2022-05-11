@@ -50,7 +50,7 @@ public class AddApiKeyInteractor : IAddApiKey
         var expiresAt = DateTime.UtcNow + requestModel.ExpiresIn;
         var apiKey = GenerateUniqueApiKey();
 
-        var userApiKey = new ApiKey(currentUser.Id, Guid.NewGuid(), requestModel.Title, apiKey, expiresAt);
+        var userApiKey = new ApiKey(currentUser.Id, Guid.NewGuid(), title, apiKey, expiresAt);
 
         await _apiKeysDao.AddAsync(userApiKey)
             .Match(Finish, output.Conflict);

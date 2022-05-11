@@ -17,6 +17,17 @@ let private createApiKeySql =
         	CONSTRAINT apikey_key_unique UNIQUE ("key")
         )
     """
+    
+let private addTitleColumnSql = [
+    "ALTER TABLE api_key ADD COLUMN IF NOT EXISTS title TEXT"
+    "UPDATE api_key SET title = '' WHERE title IS NULL"
+    "ALTER TABLE api_key ALTER COLUMN title SET NOT NULL"
+]
 
 let create (dbConnection: IDbConnection) =
     dbConnection.Execute(createApiKeySql) |> ignore
+
+let addTitleColumn (dbConnection: IDbConnection) =
+    addTitleColumnSql
+    |> List.map dbConnection.Execute
+    |> ignore

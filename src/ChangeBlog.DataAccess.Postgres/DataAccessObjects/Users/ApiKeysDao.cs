@@ -25,6 +25,7 @@ public class ApiKeysDao : IApiKeysDao
     {
         const string sql = @"SELECT user_id    AS userId,
                                        id         as apiKeyId,
+                                       title      as title,
                                        key        as apiKey,
                                        expires_at as expiresAt
                                 FROM api_key
@@ -42,8 +43,8 @@ public class ApiKeysDao : IApiKeysDao
     {
         
         const string insertNewApiKeySql = @"
-            INSERT INTO api_key (id, user_id, key, expires_at, deleted_at, created_at)
-            VALUES (@id, @userId, @apiKey, @expiresAt, null, now())";
+            INSERT INTO api_key (id, user_id, title, key, expires_at, deleted_at, created_at)
+            VALUES (@id, @userId, @title, @apiKey, @expiresAt, null, now())";
 
         try
         {
@@ -52,6 +53,7 @@ public class ApiKeysDao : IApiKeysDao
                 {
                     id = apiKey.ApiKeyId,
                     userId = apiKey.UserId,
+                    title = apiKey.Title,
                     apiKey = apiKey.Key,
                     expiresAt = apiKey.ExpiresAt
                 });

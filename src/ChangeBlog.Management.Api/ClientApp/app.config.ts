@@ -1,5 +1,5 @@
-import { InjectionToken } from "@angular/core"
-import { AuthConfig } from "angular-oauth2-oidc"
+import {InjectionToken} from "@angular/core"
+import {AuthConfig} from "angular-oauth2-oidc"
 
 export interface AppConfig {
   changeBlogApiBaseUrl: string;

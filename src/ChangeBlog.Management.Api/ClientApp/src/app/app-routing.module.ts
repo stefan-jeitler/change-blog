@@ -1,5 +1,5 @@
-import { NgModule } from '@angular/core';
-import { RouterModule, Routes } from '@angular/router';
+import {NgModule} from '@angular/core';
+import {RouterModule, Routes} from '@angular/router';
 import {LandingComponent} from "./components/landing/landing.component";
 import {HomeComponent} from "./components/home/home.component";
 import {LayoutComponent} from "./components/layout/layout.component";

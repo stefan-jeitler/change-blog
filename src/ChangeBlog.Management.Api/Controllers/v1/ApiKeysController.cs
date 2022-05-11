@@ -53,16 +53,4 @@ public class ApiKeysController : ControllerBase
 
         return presenter.Response;
     }
-
-    [HttpGet("expiration-intervals", Name = "GetPossibleExpirationIntervals")]
-    [ProducesResponseType(StatusCodes.Status200OK)]
-    [SkipAuthorization]
-    public ActionResult<IEnumerable<string>> GetApiKeyExpirationIntervals()
-    {
-        var intervals = Enum.GetValues(typeof(ApiKeyExpirationIntervals))
-            .Cast<ApiKeyExpirationIntervals>()
-            .Select(x => x.GetAttributeOfType<DisplayAttribute>().GetName());
-        
-        return Ok(intervals);
-    }
 }

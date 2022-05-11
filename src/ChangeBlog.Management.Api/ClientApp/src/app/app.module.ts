@@ -42,7 +42,7 @@ import {MessageService} from "primeng/api";
 import {ToastModule} from "primeng/toast";
 import {DropdownModule} from 'primeng/dropdown';
 import {ProgressSpinnerModule} from 'primeng/progressspinner';
-import {TranslocoLocaleModule, TranslocoLocaleService} from "@ngneat/transloco-locale";
+import {TranslocoLocaleModule} from "@ngneat/transloco-locale";
 import {ContentHeaderComponent} from './components/content-header/content-header.component';
 import {initializeApp} from "./app-init";
 import {LoadingSpinnerComponent} from './components/loading-spinner/loading-spinner.component';

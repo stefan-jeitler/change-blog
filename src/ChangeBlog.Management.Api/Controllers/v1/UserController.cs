@@ -1,5 +1,4 @@
-﻿using System;
-using System.Globalization;
+﻿using System.Globalization;
 using System.Linq;
 using System.Net.Mime;
 using System.Threading.Tasks;
@@ -10,7 +9,6 @@ using ChangeBlog.Api.Shared.DTOs.V1;
 using ChangeBlog.Api.Shared.DTOs.V1.User;
 using ChangeBlog.Api.Shared.Swagger;
 using ChangeBlog.Application.UseCases.Commands.UpdateUserProfile;
-using ChangeBlog.Application.UseCases.Queries.GetApiKeys;
 using ChangeBlog.Application.UseCases.Queries.GetUsers;
 using ChangeBlog.Domain;
 using ChangeBlog.Management.Api.DTOs.V1;

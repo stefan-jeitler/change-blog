@@ -17,7 +17,6 @@ EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "src", "src", "{423A20CE-5392-4973-8C90-C3BDEB319B05}"
 	ProjectSection(SolutionItems) = preProject
 		src\.dockerignore = src\.dockerignore
-		src\Directory.Build.props = src\Directory.Build.props
 	EndProjectSection
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ChangeBlog.Api", "src\ChangeBlog.Api\ChangeBlog.Api.csproj", "{619C25E8-E2CB-4E62-8906-06C8209B7B2E}"

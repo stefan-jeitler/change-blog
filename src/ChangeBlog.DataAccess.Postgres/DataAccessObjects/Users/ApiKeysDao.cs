@@ -21,7 +21,7 @@ public class ApiKeysDao : IApiKeysDao
         _logger = logger;
     }
 
-    public async Task<IList<ApiKey>> GetUserApiKeysAsync(Guid userId)
+    public async Task<IList<ApiKey>> GetApiKeysAsync(Guid userId)
     {
         const string sql = @"SELECT user_id    AS userId,
                                        id         as apiKeyId,
@@ -75,5 +75,56 @@ public class ApiKeysDao : IApiKeysDao
                 userId,
                 apiKeyId
             });
+    }
+
+    public async Task<Maybe<ApiKey>> GetApiKeyAsync(Guid apiKeyId)
+    {
+        const string sql = @"SELECT user_id    AS userId,
+                                       id         as apiKeyId,
+                                       title      as title,
+                                       key        as apiKey,
+                                       expires_at as expiresAt
+                                FROM api_key
+                                WHERE id = @apiKeyId";
+        
+        var apiKey = await _dbAccessor.DbConnection.QuerySingleOrDefaultAsync<ApiKey>(sql,
+            new {apiKeyId});
+
+        return apiKey == default
+            ? Maybe<ApiKey>.None
+            : Maybe.From(apiKey);
+    }
+
+    public Task<int> GetApiKeysCountAsync(Guid userId)
+    {
+        const string sql = "SELECT COUNT(*) FROM api_key WHERE user_id = @userId";
+        
+        return _dbAccessor.DbConnection.ExecuteScalarAsync<int>(sql, new {userId});
+    }
+
+    public async Task<Result<Guid, Conflict>> UpdateApiKeyAsync(ApiKey apiKey)
+    {
+        
+        const string updateApiKeySql = @"
+            UPDATE api_key SET title = @title, expires_at = @expiresAt 
+            WHERE id = @id";
+
+        try
+        {
+            await _dbAccessor.DbConnection
+                .ExecuteAsync(updateApiKeySql, new
+                {
+                    id = apiKey.ApiKeyId,
+                    title = apiKey.Title,
+                    expiresAt = apiKey.ExpiresAt
+                });
+
+            return Result.Success<Guid, Conflict>(apiKey.ApiKeyId);
+        }
+        catch (Exception exception)
+        {
+            _logger.LogError(exception, "Error while adding api key.");
+            throw;
+        }
     }
 }

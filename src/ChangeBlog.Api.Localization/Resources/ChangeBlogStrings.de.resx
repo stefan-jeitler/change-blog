@@ -324,4 +324,16 @@
   <data name="InvalidApiKeyTitle" xml:space="preserve">
     <value>Api Schlüssel Bezeichnung ist nicht gültig</value>
   </data>
+  <data name="MaxApiKeysCountReached" xml:space="preserve">
+    <value>Die Anzahl der Api Schlüssel ist auf {0} begrenzt</value>
+  </data>
+  <data name="ExpirationDateInThePast" xml:space="preserve">
+    <value>Das Ablaufdatum kann nicht in der Vergangenheit liegen</value>
+  </data>
+  <data name="ApiKeyNotFound" xml:space="preserve">
+    <value>Api Schlüssel nicht gefunden</value>
+  </data>
+  <data name="ApiKeyUpdated" xml:space="preserve">
+    <value>Api Schlüssel erfolgreich aktualisiert</value>
+  </data>
 </root>

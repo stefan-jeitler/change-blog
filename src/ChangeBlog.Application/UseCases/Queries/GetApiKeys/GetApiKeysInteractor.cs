@@ -24,7 +24,7 @@ public class GetApiKeysInteractor : IGetApiKeys
             throw new ArgumentException("userId must not be empty.");
 
         var currentUser = await _userDao.GetUserAsync(userId);
-        var apiKeys = await _apiKeysDao.GetUserApiKeysAsync(userId);
+        var apiKeys = await _apiKeysDao.GetApiKeysAsync(userId);
 
         return apiKeys
             .Select(x => new ApiKeyResponseModel(x.ApiKeyId,

@@ -3,6 +3,7 @@ using System.Security.Cryptography;
 using System.Threading.Tasks;
 using ChangeBlog.Application.Boundaries.DataAccess.Users;
 using ChangeBlog.Application.Models;
+using ChangeBlog.Domain;
 using ChangeBlog.Domain.Miscellaneous;
 using CSharpFunctionalExtensions;
 
@@ -10,8 +11,9 @@ namespace ChangeBlog.Application.UseCases.Commands.AddApiKey;
 
 public class AddApiKeyInteractor : IAddApiKey
 {
-    private static readonly TimeSpan MaxExpiration = TimeSpan.FromDays(731);
-    private static readonly TimeSpan MinExpiration = TimeSpan.FromDays(7);
+    public const ushort MaxApiKeys = 5;
+    public static readonly TimeSpan MaxExpiration = TimeSpan.FromDays(731);
+    public static readonly TimeSpan MinExpiration = TimeSpan.FromDays(7);
     
     private readonly IUserDao _userDao;
     private readonly IApiKeysDao _apiKeysDao;
@@ -26,42 +28,59 @@ public class AddApiKeyInteractor : IAddApiKey
     {
         if (requestModel.UserId == Guid.Empty)
             throw new ArgumentException("userId must not be empty.");
-        
-        var currentUser = await _userDao.GetUserAsync(requestModel.UserId);
 
-        if (requestModel.ExpiresIn < MinExpiration)
+        if (requestModel.ExpiresAt < DateTime.UtcNow)
         {
-            output.ExpirationTooShort(currentUser.Culture, requestModel.ExpiresIn, MinExpiration);
+            output.ExpirationDateInThePast(requestModel.ExpiresAt);
+        }
+
+        var expiresIn =  requestModel.ExpiresAt - DateTime.UtcNow;
+        if (expiresIn < MinExpiration)
+        {
+            output.ExpirationTooShort(expiresIn, MinExpiration);
             return;
         }
 
-        if (requestModel.ExpiresIn > MaxExpiration)
+        if (expiresIn > MaxExpiration)
         {
-            output.ExpirationTooLong(currentUser.Culture, requestModel.ExpiresIn, MaxExpiration);
+            output.ExpirationTooLong(expiresIn, MaxExpiration);
             return;
         }
 
-        if (!Name.TryParse(requestModel.Title, out var title))
+        if (!OptionalName.TryParse(requestModel.Title, out var title))
         {
             output.InvalidTitle(requestModel.Title);
             return;
         }
 
-        var expiresAt = DateTime.UtcNow + requestModel.ExpiresIn;
-        var apiKey = GenerateUniqueApiKey();
+        await AddNewApiKeyAsync(output, requestModel, title);
+    }
 
-        var userApiKey = new ApiKey(currentUser.Id, Guid.NewGuid(), title, apiKey, expiresAt);
+    private async Task AddNewApiKeyAsync(IAddApiKeyOutputPort output, AddApiKeyRequestModel requestModel, OptionalName title)
+    {
+        var currentUser = await _userDao.GetUserAsync(requestModel.UserId);
+        var existingApiKeysCount = await _apiKeysDao.GetApiKeysCountAsync(currentUser.Id);
 
-        await _apiKeysDao.AddAsync(userApiKey)
-            .Match(Finish, output.Conflict);
+        if (existingApiKeysCount >= MaxApiKeys)
+        {
+            output.MaxApiKeyCountReached(MaxApiKeys);
+            return;
+        }
         
+        var expiresAt = requestModel.ExpiresAt;
+        var generatedKey = GenerateUniqueApiKey();
+
+        var apiKey = new ApiKey(currentUser.Id, Guid.NewGuid(), title, generatedKey, expiresAt);
+
+        await _apiKeysDao.AddAsync(apiKey)
+            .Match(Finish, output.Conflict);
+
         void Finish(Guid apiKeyId)
         {
             output.ApiKeyAdded(apiKeyId);
         }
-
     }
-    
+
     private static string GenerateUniqueApiKey()
     {
         var key = new byte[32];

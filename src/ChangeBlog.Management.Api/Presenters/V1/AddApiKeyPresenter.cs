@@ -11,13 +11,13 @@ namespace ChangeBlog.Management.Api.Presenters.V1;
 
 public class AddApiKeyPresenter : BaseApiPresenter, IAddApiKeyOutputPort
 {
-    public void ExpirationTooShort(string userCulture, TimeSpan expiresIn, TimeSpan minExpiration)
+    public void ExpirationTooShort(TimeSpan expiresIn, TimeSpan minExpiration)
     {
         Response = new BadRequestObjectResult(
             ErrorResponse.Create(ChangeBlogStrings.ApiKeyExpirationTooShort));
     }
 
-    public void ExpirationTooLong(string userCulture, TimeSpan expiresIn, TimeSpan maxExpiration)
+    public void ExpirationTooLong(TimeSpan expiresIn, TimeSpan maxExpiration)
     {
         Response = new BadRequestObjectResult(
             ErrorResponse.Create(ChangeBlogStrings.ApiKeyExpirationTooLong));
@@ -41,5 +41,15 @@ public class AddApiKeyPresenter : BaseApiPresenter, IAddApiKeyOutputPort
     public void InvalidTitle(string title)
     {
         Response = new BadRequestObjectResult(ErrorResponse.Create(ChangeBlogStrings.InvalidApiKeyTitle));
+    }
+
+    public void MaxApiKeyCountReached(ushort maxApiKeys)
+    {
+        Response = new UnprocessableEntityObjectResult(ErrorResponse.Create(string.Format(ChangeBlogStrings.MaxApiKeysCountReached, maxApiKeys)));
+    }
+
+    public void ExpirationDateInThePast(DateTime expiresAt)
+    {
+        Response = new BadRequestObjectResult(ErrorResponse.Create(ChangeBlogStrings.ExpirationDateInThePast));
     }
 }

@@ -324,4 +324,16 @@
   <data name="InvalidApiKeyTitle" xml:space="preserve">
     <value>Api Key Title is invalid</value>
   </data>
+  <data name="MaxApiKeysCountReached" xml:space="preserve">
+    <value>You can only add up to {0} api keys</value>
+  </data>
+  <data name="ExpirationDateInThePast" xml:space="preserve">
+    <value>The expiration date must not be in the past</value>
+  </data>
+  <data name="ApiKeyNotFound" xml:space="preserve">
+    <value>Api Key not found</value>
+  </data>
+  <data name="ApiKeyUpdated" xml:space="preserve">
+    <value>Api Key successfully updated</value>
+  </data>
 </root>

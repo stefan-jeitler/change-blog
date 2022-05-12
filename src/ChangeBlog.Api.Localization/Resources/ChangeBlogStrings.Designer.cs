@@ -115,6 +115,24 @@ namespace ChangeBlog.Api.Localization.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Api Key not found.
+        /// </summary>
+        public static string ApiKeyNotFound {
+            get {
+                return ResourceManager.GetString("ApiKeyNotFound", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Api Key successfully updated.
+        /// </summary>
+        public static string ApiKeyUpdated {
+            get {
+                return ResourceManager.GetString("ApiKeyUpdated", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Changelog line successfully added.
         /// </summary>
         public static string ChangeLogLineAdded {
@@ -210,6 +228,15 @@ namespace ChangeBlog.Api.Localization.Resources {
         public static string ChnageLogLineNotPending {
             get {
                 return ResourceManager.GetString("ChnageLogLineNotPending", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to The expiration date must not be in the past.
+        /// </summary>
+        public static string ExpirationDateInThePast {
+            get {
+                return ResourceManager.GetString("ExpirationDateInThePast", resourceCulture);
             }
         }
         
@@ -336,6 +363,15 @@ namespace ChangeBlog.Api.Localization.Resources {
         public static string LanguageCodeNotSupported {
             get {
                 return ResourceManager.GetString("LanguageCodeNotSupported", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to You can only add up to {0} api keys.
+        /// </summary>
+        public static string MaxApiKeysCountReached {
+            get {
+                return ResourceManager.GetString("MaxApiKeysCountReached", resourceCulture);
             }
         }
         

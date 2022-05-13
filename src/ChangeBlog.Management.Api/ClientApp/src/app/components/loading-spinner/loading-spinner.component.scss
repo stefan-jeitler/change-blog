@@ -1,6 +1,6 @@
 .loading-overlay {
   position: absolute;
-  width: 91%;
+  width: calc(100% - 40px);
   min-height: 83%;
   margin: 0;
   z-index: 2;

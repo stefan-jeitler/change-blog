@@ -1,6 +1,7 @@
 using System;
 using System.Threading.Tasks;
 using ChangeBlog.Application.Boundaries.DataAccess.Users;
+using ChangeBlog.Application.Extensions;
 using ChangeBlog.Application.Models;
 using ChangeBlog.Application.UseCases.Commands.AddApiKey;
 using ChangeBlog.Domain.Miscellaneous;
@@ -11,10 +12,12 @@ namespace ChangeBlog.Application.UseCases.Commands.UpdateApiKey;
 public class UpdateApiKeyInteractor : IUpdateApiKey
 {
     private readonly IApiKeysDao _apiKeysDao;
+    private readonly IUserDao _userDao;
 
-    public UpdateApiKeyInteractor(IApiKeysDao apiKeysDao)
+    public UpdateApiKeyInteractor(IApiKeysDao apiKeysDao, IUserDao userDao)
     {
         _apiKeysDao = apiKeysDao ?? throw new ArgumentNullException(nameof(apiKeysDao));
+        _userDao = userDao ?? throw new ArgumentNullException(nameof(userDao));
     }
 
     public async Task ExecuteAsync(IUpdateApiKeyOutputPort output, UpdateApiKeyRequestModel requestModel)
@@ -35,7 +38,7 @@ public class UpdateApiKeyInteractor : IUpdateApiKey
             return;
         }
 
-        var expiresAt = GetExpirationDate(output, existingApiKey.GetValueOrDefault(), requestModel.ExpiresIn);
+        var expiresAt = await GetExpirationDateAsync(output, existingApiKey.GetValueOrDefault(), requestModel.ExpiresIn);
         if (expiresAt.HasNoValue)
             return;
 
@@ -61,7 +64,7 @@ public class UpdateApiKeyInteractor : IUpdateApiKey
         }
     }
 
-    private static Maybe<DateTime> GetExpirationDate(IUpdateApiKeyOutputPort output, ApiKey existingApiKey,
+    private async Task<Maybe<DateTime>> GetExpirationDateAsync(IUpdateApiKeyOutputPort output, ApiKey existingApiKey,
         DateTime? expiresAt)
     {
         if (!expiresAt.HasValue)
@@ -87,6 +90,10 @@ public class UpdateApiKeyInteractor : IUpdateApiKey
             return Maybe<DateTime>.None;
         }
 
-        return Maybe<DateTime>.From(expiresAt.Value);
+        var currentUser = await _userDao.GetUserAsync(existingApiKey.UserId);
+        var expiresAtUtc = expiresAt.Value.Kind != DateTimeKind.Utc 
+            ? expiresAt.Value.ToUtc(currentUser.TimeZone) 
+            : expiresAt.Value;
+        return Maybe<DateTime>.From(expiresAtUtc);
     }
 }

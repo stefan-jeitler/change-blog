@@ -1,1 +1,158 @@
 <app-content-header [title]="translationKey.apikey | transloco"></app-content-header>
+
+<div class="app-content-container">
+  <app-loading-spinner [show]="!isLoadingFinished"></app-loading-spinner>
+  <div class="card mb-8">
+    <p-toolbar styleClass="mb-4">
+      <ng-template pTemplate="left">
+        <div
+          [pTooltip]="translationKey.apiKeyLimitReached | transloco"
+          [tooltipDisabled]="apiKeys.length < maxApiKeysCount"
+          tooltipPosition="bottom">
+          <button (click)="createNewApiKey()"
+                  [disabled]="apiKeys.length >= maxApiKeysCount"
+                  [label]="this.translationKey.new | transloco"
+                  class="mr-2"
+                  icon="pi pi-plus"
+                  pButton pRipple>
+          </button>
+        </div>
+        <button (click)="deleteSelectedApiKeys()"
+                [disabled]="!selectedApiKeys || !selectedApiKeys.length"
+                [label]="this.translationKey.delete | transloco"
+                class="p-button-warning"
+                icon="pi pi-trash"
+                pButton
+                pRipple>
+        </button>
+      </ng-template>
+      <ng-template pTemplate="right">
+        <a class="disable-link-styling" [href]="apiBaseUrl" target="_blank">
+          <button pButton
+                  pRipple
+                  type="button"
+                  [label]="translationKey.linkToApi | transloco"
+                  class="p-button-text"></button>
+        </a>
+      </ng-template>
+    </p-toolbar>
+
+    <p-table #dt
+             [(selection)]="selectedApiKeys"
+             [paginator]="false"
+             [rowHover]="true"
+             [rows]="maxApiKeysCount"
+             [showCurrentPageReport]="true"
+             [value]="apiKeys"
+             currentPageReportTemplate="Showing {first} to {last} of {totalRecords} entries"
+             dataKey="id"
+             responsiveLayout="scroll">
+      <ng-template pTemplate="header">
+        <tr>
+          <th style="width: 3rem">
+            <p-tableHeaderCheckbox></p-tableHeaderCheckbox>
+          </th>
+          <th pSortableColumn="title">{{ translationKey.title | transloco }}
+            <p-sortIcon field="title"></p-sortIcon>
+          </th>
+          <th>{{ translationKey.key | transloco }} </th>
+          <th pSortableColumn="expires">{{ translationKey.expires | transloco }}
+            <p-sortIcon field="expires"></p-sortIcon>
+          </th>
+          <th></th>
+        </tr>
+      </ng-template>
+      <ng-template let-apiKey pTemplate="body">
+        <tr>
+          <td>
+            <p-tableCheckbox [value]="apiKey"></p-tableCheckbox>
+          </td>
+          <td>{{apiKey.title}}</td>
+          <td>{{apiKey.key}}</td>
+          <td>{{apiKey.expires | translocoDate }}</td>
+          <td>
+            <button (click)="copyToClipBoard(apiKey)" [pTooltip]="translationKey.copyToClipboard | transloco" [showDelay]="800"
+                    class="p-button-rounded p-button-secondary mr-2"
+                    icon="pi pi-copy"
+                    pButton
+                    pRipple
+                    tooltipPosition="left">
+            </button>
+            <button (click)="updateApiKey(apiKey)" [pTooltip]="translationKey.edit | transloco" [showDelay]="800"
+                    class="p-button-rounded mr-2"
+                    icon="pi pi-pencil"
+                    pButton
+                    pRipple
+                    tooltipPosition="bottom">
+            </button>
+            <button (click)="deleteApiKey(apiKey)" [pTooltip]="translationKey.delete | transloco" [showDelay]="800"
+                    class="p-button-rounded p-button-warning"
+                    icon="pi pi-trash"
+                    pButton
+                    pRipple
+                    tooltipPosition="right">
+            </button>
+          </td>
+        </tr>
+      </ng-template>
+    </p-table>
+
+    <p-dialog [(visible)]="showApiKeyDialog" [header]="translationKey.apikey | transloco" [modal]="true"
+              [style]="{width: '450px'}" styleClass="p-fluid">
+      <ng-template pTemplate="content">
+        <form (ngSubmit)="onApiKeySubmit(apiKeyForm)" [formGroup]="apiKeyForm" id="apiKeyForm">
+          <div class="field">
+            <div class="flex flex-column align-items-start w-12 md:w-22rem">
+              <div class="flex flex-row w-full">
+                <label class="font-medium" for="title-input">{{ translationKey.title | transloco }}</label>
+              </div>
+              <input class="w-full mt-2" formControlName="title" id="title-input" pInputText type="text">
+            </div>
+            <div *ngIf="apiKeyForm.showErrorMessage('title')">
+              <small class="pt-1 p-error block"
+                     id="title-error">{{ apiKeyForm.getServerErrorMessage('title') }}</small>
+            </div>
+          </div>
+          <div class="field">
+            <div class="flex flex-column align-items-start w-12 md:w-22rem">
+              <div class="flex flex-row w-full">
+                <label class="font-medium" for="expires-input">{{ translationKey.expires | transloco }}</label>
+              </div>
+              <p-calendar id="expires-input"
+                          class="w-full mt-2"
+                          appendTo="body"
+                          formControlName="expires">
+              </p-calendar>
+            </div>
+            <div *ngIf="apiKeyForm.showErrorMessage('expires')">
+              <small class="pt-1 p-error block"
+                     id="expires-error">{{ apiKeyForm.getServerErrorMessage('expires') }}</small>
+            </div>
+          </div>
+          <input formControlName="id" type="hidden">
+        </form>
+      </ng-template>
+
+      <ng-template pTemplate="footer">
+        <button (click)="closeApiKeyDialog()" [label]="translationKey.cancel | transloco"
+                class="p-button-text"
+                icon="pi pi-times" pButton
+                pRipple></button>
+        <button [label]="translationKey.save | transloco"
+                [loading]="apiKeyForm.disabled"
+                class="p-button-text"
+                form="apiKeyForm"
+                icon="pi pi-check"
+                pButton
+                pRipple
+                type="submit">
+        </button>
+      </ng-template>
+    </p-dialog>
+
+    <p-confirmDialog [style]="{width: '450px'}"
+                     rejectButtonStyleClass="p-button-outlined p-button-text"
+                     acceptButtonStyleClass="p-button-outlined p-button-text">
+    </p-confirmDialog>
+  </div>
+</div>

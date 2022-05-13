@@ -513,7 +513,7 @@ export class Client {
     /**
      * @return Success
      */
-    getUserApiKeys(): Observable<UserDto> {
+    getApiKeys(): Observable<ApiKeyDto[]> {
         let url_ = this.baseUrl + "/api/v1/user/apikeys";
         url_ = url_.replace(/[?&]$/, "");
 
@@ -526,20 +526,20 @@ export class Client {
         };
 
         return this.http.request("get", url_, options_).pipe(_observableMergeMap((response_ : any) => {
-            return this.processGetUserApiKeys(response_);
+            return this.processGetApiKeys(response_);
         })).pipe(_observableCatch((response_: any) => {
             if (response_ instanceof HttpResponseBase) {
                 try {
-                    return this.processGetUserApiKeys(response_ as any);
+                    return this.processGetApiKeys(response_ as any);
                 } catch (e) {
-                    return _observableThrow(e) as any as Observable<UserDto>;
+                    return _observableThrow(e) as any as Observable<ApiKeyDto[]>;
                 }
             } else
-                return _observableThrow(response_) as any as Observable<UserDto>;
+                return _observableThrow(response_) as any as Observable<ApiKeyDto[]>;
         }));
     }
 
-    protected processGetUserApiKeys(response: HttpResponseBase): Observable<UserDto> {
+    protected processGetApiKeys(response: HttpResponseBase): Observable<ApiKeyDto[]> {
         const status = response.status;
         const responseBlob =
             response instanceof HttpResponse ? response.body :
@@ -557,7 +557,14 @@ export class Client {
             return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
             let result200: any = null;
             let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
-            result200 = UserDto.fromJS(resultData200);
+            if (Array.isArray(resultData200)) {
+                result200 = [] as any;
+                for (let item of resultData200)
+                    result200!.push(ApiKeyDto.fromJS(item));
+            }
+            else {
+                result200 = <any>null;
+            }
             return _observableOf(result200);
             }));
         } else if (status !== 200 && status !== 204) {
@@ -569,18 +576,19 @@ export class Client {
     }
 
     /**
+     * @param title (optional) 
      * @return Success
      */
-    generateUserApiKey(title: string, expiresInDays: number): Observable<UserDto> {
+    generateApiKey(title: string | undefined, expiresAt: Date): Observable<SuccessResponse> {
         let url_ = this.baseUrl + "/api/v1/user/apikeys?";
-        if (title === undefined || title === null)
-            throw new Error("The parameter 'title' must be defined and cannot be null.");
-        else
+        if (title === null)
+            throw new Error("The parameter 'title' cannot be null.");
+        else if (title !== undefined)
             url_ += "title=" + encodeURIComponent("" + title) + "&";
-        if (expiresInDays === undefined || expiresInDays === null)
-            throw new Error("The parameter 'expiresInDays' must be defined and cannot be null.");
+        if (expiresAt === undefined || expiresAt === null)
+            throw new Error("The parameter 'expiresAt' must be defined and cannot be null.");
         else
-            url_ += "expiresInDays=" + encodeURIComponent("" + expiresInDays) + "&";
+            url_ += "expiresAt=" + encodeURIComponent(expiresAt ? "" + expiresAt.toISOString() : "") + "&";
         url_ = url_.replace(/[?&]$/, "");
 
         let options_ : any = {
@@ -592,20 +600,20 @@ export class Client {
         };
 
         return this.http.request("post", url_, options_).pipe(_observableMergeMap((response_ : any) => {
-            return this.processGenerateUserApiKey(response_);
+            return this.processGenerateApiKey(response_);
         })).pipe(_observableCatch((response_: any) => {
             if (response_ instanceof HttpResponseBase) {
                 try {
-                    return this.processGenerateUserApiKey(response_ as any);
+                    return this.processGenerateApiKey(response_ as any);
                 } catch (e) {
-                    return _observableThrow(e) as any as Observable<UserDto>;
+                    return _observableThrow(e) as any as Observable<SuccessResponse>;
                 }
             } else
-                return _observableThrow(response_) as any as Observable<UserDto>;
+                return _observableThrow(response_) as any as Observable<SuccessResponse>;
         }));
     }
 
-    protected processGenerateUserApiKey(response: HttpResponseBase): Observable<UserDto> {
+    protected processGenerateApiKey(response: HttpResponseBase): Observable<SuccessResponse> {
         const status = response.status;
         const responseBlob =
             response instanceof HttpResponse ? response.body :
@@ -623,7 +631,92 @@ export class Client {
             return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
             let result200: any = null;
             let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
-            result200 = UserDto.fromJS(resultData200);
+            result200 = SuccessResponse.fromJS(resultData200);
+            return _observableOf(result200);
+            }));
+        } else if (status === 400) {
+            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
+            let result400: any = null;
+            let resultData400 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            result400 = ErrorResponse.fromJS(resultData400);
+            return throwException("Bad Request", status, _responseText, _headers, result400);
+            }));
+        } else if (status === 409) {
+            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
+            let result409: any = null;
+            let resultData409 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            result409 = ErrorResponse.fromJS(resultData409);
+            return throwException("Conflict", status, _responseText, _headers, result409);
+            }));
+        } else if (status !== 200 && status !== 204) {
+            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            }));
+        }
+        return _observableOf(null as any);
+    }
+
+    /**
+     * @param title (optional) 
+     * @param expiresAt (optional) 
+     * @return Success
+     */
+    updateApiKey(apiKeyId: string, title: string | undefined, expiresAt: Date | undefined): Observable<SuccessResponse> {
+        let url_ = this.baseUrl + "/api/v1/user/apikeys/{apiKeyId}?";
+        if (apiKeyId === undefined || apiKeyId === null)
+            throw new Error("The parameter 'apiKeyId' must be defined.");
+        url_ = url_.replace("{apiKeyId}", encodeURIComponent("" + apiKeyId));
+        if (title === null)
+            throw new Error("The parameter 'title' cannot be null.");
+        else if (title !== undefined)
+            url_ += "title=" + encodeURIComponent("" + title) + "&";
+        if (expiresAt === null)
+            throw new Error("The parameter 'expiresAt' cannot be null.");
+        else if (expiresAt !== undefined)
+            url_ += "expiresAt=" + encodeURIComponent(expiresAt ? "" + expiresAt.toISOString() : "") + "&";
+        url_ = url_.replace(/[?&]$/, "");
+
+        let options_ : any = {
+            observe: "response",
+            responseType: "blob",
+            headers: new HttpHeaders({
+                "Accept": "application/json"
+            })
+        };
+
+        return this.http.request("patch", url_, options_).pipe(_observableMergeMap((response_ : any) => {
+            return this.processUpdateApiKey(response_);
+        })).pipe(_observableCatch((response_: any) => {
+            if (response_ instanceof HttpResponseBase) {
+                try {
+                    return this.processUpdateApiKey(response_ as any);
+                } catch (e) {
+                    return _observableThrow(e) as any as Observable<SuccessResponse>;
+                }
+            } else
+                return _observableThrow(response_) as any as Observable<SuccessResponse>;
+        }));
+    }
+
+    protected processUpdateApiKey(response: HttpResponseBase): Observable<SuccessResponse> {
+        const status = response.status;
+        const responseBlob =
+            response instanceof HttpResponse ? response.body :
+            (response as any).error instanceof Blob ? (response as any).error : undefined;
+
+        let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
+        if (status === 401) {
+            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
+            let result401: any = null;
+            let resultData401 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            result401 = ErrorResponse.fromJS(resultData401);
+            return throwException("Unauthorized", status, _responseText, _headers, result401);
+            }));
+        } else if (status === 200) {
+            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
+            let result200: any = null;
+            let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            result200 = SuccessResponse.fromJS(resultData200);
             return _observableOf(result200);
             }));
         } else if (status === 400) {
@@ -651,7 +744,7 @@ export class Client {
     /**
      * @return Success
      */
-    deleteApiKey(apiKeyId: string): Observable<void> {
+    deleteApiKey(apiKeyId: string): Observable<SuccessResponse> {
         let url_ = this.baseUrl + "/api/v1/user/apikeys/{apiKeyId}";
         if (apiKeyId === undefined || apiKeyId === null)
             throw new Error("The parameter 'apiKeyId' must be defined.");
@@ -662,6 +755,7 @@ export class Client {
             observe: "response",
             responseType: "blob",
             headers: new HttpHeaders({
+                "Accept": "application/json"
             })
         };
 
@@ -672,14 +766,14 @@ export class Client {
                 try {
                     return this.processDeleteApiKey(response_ as any);
                 } catch (e) {
-                    return _observableThrow(e) as any as Observable<void>;
+                    return _observableThrow(e) as any as Observable<SuccessResponse>;
                 }
             } else
-                return _observableThrow(response_) as any as Observable<void>;
+                return _observableThrow(response_) as any as Observable<SuccessResponse>;
         }));
     }
 
-    protected processDeleteApiKey(response: HttpResponseBase): Observable<void> {
+    protected processDeleteApiKey(response: HttpResponseBase): Observable<SuccessResponse> {
         const status = response.status;
         const responseBlob =
             response instanceof HttpResponse ? response.body :
@@ -695,7 +789,10 @@ export class Client {
             }));
         } else if (status === 200) {
             return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
-            return _observableOf(null as any);
+            let result200: any = null;
+            let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            result200 = SuccessResponse.fromJS(resultData200);
+            return _observableOf(result200);
             }));
         } else if (status !== 200 && status !== 204) {
             return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
@@ -748,6 +845,54 @@ export interface IApiInfo {
     name: string | undefined;
     version: string | undefined;
     environment: string | undefined;
+}
+
+export class ApiKeyDto implements IApiKeyDto {
+    apiKeyId!: string;
+    apiKey!: string | undefined;
+    title!: string | undefined;
+    expiresAt!: Date;
+
+    constructor(data?: IApiKeyDto) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+        }
+    }
+
+    init(_data?: any) {
+        if (_data) {
+            this.apiKeyId = _data["apiKeyId"];
+            this.apiKey = _data["apiKey"];
+            this.title = _data["title"];
+            this.expiresAt = _data["expiresAt"] ? new Date(_data["expiresAt"].toString()) : <any>undefined;
+        }
+    }
+
+    static fromJS(data: any): ApiKeyDto {
+        data = typeof data === 'object' ? data : {};
+        let result = new ApiKeyDto();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        data["apiKeyId"] = this.apiKeyId;
+        data["apiKey"] = this.apiKey;
+        data["title"] = this.title;
+        data["expiresAt"] = this.expiresAt ? this.expiresAt.toISOString() : <any>undefined;
+        return data;
+    }
+}
+
+export interface IApiKeyDto {
+    apiKeyId: string;
+    apiKey: string | undefined;
+    title: string | undefined;
+    expiresAt: Date;
 }
 
 export class AuthConfig implements IAuthConfig {

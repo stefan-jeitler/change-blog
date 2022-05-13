@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Net.Mime;
@@ -30,7 +31,7 @@ public class ApiKeysController : ControllerBase
     [HttpGet(Name = "GetApiKeys")]
     [ProducesResponseType(StatusCodes.Status200OK)]
     [SkipAuthorization]
-    public async Task<ActionResult<UserDto>> GetApiKeysAsync(
+    public async Task<ActionResult<IEnumerable<ApiKeyDto>>> GetApiKeysAsync(
         [FromServices] IGetApiKeys getApiKeys)
     {
         var userId = HttpContext.GetUserId();
@@ -45,7 +46,7 @@ public class ApiKeysController : ControllerBase
     [ProducesResponseType(typeof(ErrorResponse), StatusCodes.Status400BadRequest)]
     [ProducesResponseType(typeof(ErrorResponse), StatusCodes.Status409Conflict)]
     [SkipAuthorization]
-    public async Task<ActionResult<UserDto>> GenerateApiKeyAsync(
+    public async Task<ActionResult<SuccessResponse>> GenerateApiKeyAsync(
         [FromServices] IAddApiKey addApiKey,
         string title,
         [Required]
@@ -65,7 +66,7 @@ public class ApiKeysController : ControllerBase
     [ProducesResponseType(typeof(ErrorResponse), StatusCodes.Status400BadRequest)]
     [ProducesResponseType(typeof(ErrorResponse), StatusCodes.Status409Conflict)]
     [SkipAuthorization]
-    public async Task<ActionResult> UpdateApiKeyAsync(
+    public async Task<ActionResult<SuccessResponse>> UpdateApiKeyAsync(
         [FromServices] IUpdateApiKey updateApiKey,
         Guid apiKeyId,
         string title,
@@ -79,11 +80,10 @@ public class ApiKeysController : ControllerBase
         return presenter.Response;
     }
 
-    
     [HttpDelete("{apiKeyId:Guid}", Name = "DeleteApiKey")]
     [ProducesResponseType(StatusCodes.Status200OK)]
     [SkipAuthorization]
-    public async Task<ActionResult> DeleteApiKeyAsync(
+    public async Task<ActionResult<SuccessResponse>> DeleteApiKeyAsync(
         [FromServices] IDeleteApiKey deleteApiKey,
         Guid apiKeyId)
     {
@@ -92,5 +92,4 @@ public class ApiKeysController : ControllerBase
         
         return Ok(SuccessResponse.Create(ChangeBlogStrings.ApiKeyDeleted));
     }
-
 }

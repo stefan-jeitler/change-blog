@@ -38,7 +38,7 @@ import {TranslocoRootModule} from './transloco-root.module';
 import {TranslocoService} from "@ngneat/transloco";
 import {MessageModule} from "primeng/message";
 import {MessagesModule} from "primeng/messages";
-import {MessageService} from "primeng/api";
+import {ConfirmationService, MessageService} from "primeng/api";
 import {ToastModule} from "primeng/toast";
 import {DropdownModule} from 'primeng/dropdown';
 import {ProgressSpinnerModule} from 'primeng/progressspinner';
@@ -50,6 +50,10 @@ import {TranslationKey} from "./generated/TranslationKey";
 import {SwipeConfig} from "./configuration/swipe-config.service";
 import {DefaultRequestHeadersInterceptor} from "./interceptors/default-request-headers.interceptor";
 import {AppCultureService} from "./services/app-culture.service";
+import {TableModule} from "primeng/table";
+import {ConfirmDialogModule} from "primeng/confirmdialog";
+import {ToolbarModule} from "primeng/toolbar";
+import {CalendarModule} from "primeng/calendar";
 
 @NgModule({
   declarations: [
@@ -104,7 +108,11 @@ import {AppCultureService} from "./services/app-culture.service";
     ToastModule,
     DropdownModule,
     ProgressSpinnerModule,
-    HammerModule
+    HammerModule,
+    TableModule,
+    ConfirmDialogModule,
+    ToolbarModule,
+    CalendarModule
   ],
   providers: [
     {
@@ -125,6 +133,7 @@ import {AppCultureService} from "./services/app-culture.service";
     ChangeBlogApi.Client,
     ChangeBlogManagementApi.Client,
     MessageService,
+    ConfirmationService,
     TranslationKey
   ],
   bootstrap: [AppComponent],

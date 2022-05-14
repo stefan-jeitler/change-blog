@@ -5,7 +5,7 @@ import {ChangeBlogManagementApi as MngmtApiClient} from "../clients/ChangeBlogMa
 import {getBrowserLang, TranslocoService} from "@ngneat/transloco";
 import {filter, mergeMap} from "rxjs/operators";
 import {firstValueFrom} from "rxjs";
-import {AppCultureService} from "./services/app-culture.service";
+import {AppUserService} from "./services/app-user.service";
 
 async function setBrowserLanguageOrDefault(oAuthService: OAuthService,
                                            translationService: TranslocoService) {
@@ -30,7 +30,7 @@ export function initializeApp(
   appConfig: AppConfig,
   apiClient: MngmtApiClient.Client,
   translationService: TranslocoService,
-  appCulture: AppCultureService
+  appCulture: AppUserService
 ): () => Promise<void> {
   return async () => {
     router.onSameUrlNavigation = 'reload';
@@ -44,7 +44,7 @@ export function initializeApp(
 
     const isLoggedIn = oAuthService.hasValidIdToken() && oAuthService.hasValidAccessToken();
     if (isLoggedIn) {
-      await appCulture.applyUserCulture();
+      await appCulture.applyUserSettings();
     }
   };
 }

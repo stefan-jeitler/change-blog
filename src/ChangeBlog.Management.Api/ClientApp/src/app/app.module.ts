@@ -49,7 +49,7 @@ import {LoadingSpinnerComponent} from './components/loading-spinner/loading-spin
 import {TranslationKey} from "./generated/TranslationKey";
 import {SwipeConfig} from "./configuration/swipe-config.service";
 import {DefaultRequestHeadersInterceptor} from "./interceptors/default-request-headers.interceptor";
-import {AppCultureService} from "./services/app-culture.service";
+import {AppUserService} from "./services/app-user.service";
 import {TableModule} from "primeng/table";
 import {ConfirmDialogModule} from "primeng/confirmdialog";
 import {ToolbarModule} from "primeng/toolbar";
@@ -118,7 +118,7 @@ import {CalendarModule} from "primeng/calendar";
     {
       provide: APP_INITIALIZER,
       useFactory: initializeApp,
-      deps: [Router, OAuthService, APP_CONFIG, ChangeBlogManagementApi.Client, TranslocoService, AppCultureService],
+      deps: [Router, OAuthService, APP_CONFIG, ChangeBlogManagementApi.Client, TranslocoService, AppUserService],
       multi: true,
     },
     {

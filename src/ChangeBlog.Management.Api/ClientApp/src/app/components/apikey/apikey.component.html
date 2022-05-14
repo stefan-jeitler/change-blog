@@ -42,9 +42,7 @@
              [paginator]="false"
              [rowHover]="true"
              [rows]="maxApiKeysCount"
-             [showCurrentPageReport]="true"
              [value]="apiKeys"
-             currentPageReportTemplate="Showing {first} to {last} of {totalRecords} entries"
              dataKey="id"
              responsiveLayout="scroll">
       <ng-template pTemplate="header">
@@ -69,7 +67,7 @@
           </td>
           <td>{{apiKey.title}}</td>
           <td>{{apiKey.key}}</td>
-          <td>{{apiKey.expires | translocoDate }}</td>
+          <td>{{apiKey.expires | translocoDate: { dateStyle: 'medium' } }}</td>
           <td>
             <button (click)="copyToClipBoard(apiKey)" [pTooltip]="translationKey.copyToClipboard | transloco" [showDelay]="800"
                     class="p-button-rounded p-button-secondary mr-2"
@@ -121,6 +119,8 @@
               <p-calendar id="expires-input"
                           class="w-full mt-2"
                           appendTo="body"
+                          [minDate]="minExpires"
+                          [maxDate]="maxExpires"
                           formControlName="expires">
               </p-calendar>
             </div>

@@ -6,7 +6,7 @@ import {firstValueFrom} from "rxjs";
 import {FormBuilder, FormControl, FormGroup} from "@angular/forms";
 import {Message, MessageService} from "primeng/api";
 import {TranslocoService} from "@ngneat/transloco";
-import {AppCultureService} from "../../services/app-culture.service";
+import {AppUserService} from "../../services/app-user.service";
 import ITimezoneDto = MngmtApiClient.ITimezoneDto;
 
 @Component({
@@ -24,7 +24,7 @@ export class ProfileComponent implements OnInit {
 
   constructor(public translationKey: TranslationKey,
               private translationService: TranslocoService,
-              private appCultureService: AppCultureService,
+              private appCultureService: AppUserService,
               private messageService: MessageService,
               private mngmtApiClient: MngmtApiClient.Client,
               private formBuilder: FormBuilder) {
@@ -124,7 +124,7 @@ export class ProfileComponent implements OnInit {
   }
 
   private async profileUpdated(response: MngmtApiClient.SuccessResponse) {
-    await this.appCultureService.applyUserCulture();
+    await this.appCultureService.applyUserSettings();
 
     const userProfileUpdateMessage = await firstValueFrom(this.translationService.selectTranslate(this.translationKey.userProfileUpdated));
 

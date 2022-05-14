@@ -20,12 +20,7 @@ export class TranslocoHttpLoader implements TranslocoLoader {
 }
 
 @NgModule({
-  imports: [TranslocoLocaleModule.forRoot({
-    langToLocaleMapping: {
-      en: 'en-US',
-      de: 'de-AT'
-    }
-  })],
+  imports: [TranslocoLocaleModule.forRoot({})],
   exports: [TranslocoModule],
   providers: [
     {

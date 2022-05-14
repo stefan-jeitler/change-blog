@@ -28,6 +28,8 @@ export class ApikeyComponent implements OnInit {
   showApiKeyDialog: boolean;
   apiKeyForm: FormGroup;
   maxApiKeysCount: number = 5;
+  minExpires: Date;
+  maxExpires: Date;
 
   constructor(public translationKey: TranslationKey,
               private messageService: MessageService,
@@ -49,6 +51,11 @@ export class ApikeyComponent implements OnInit {
 
     this.selectedApiKeys = [];
     this.apiKeys = [];
+
+    this.minExpires = new Date(new Date().getTime()+(8*24*60*60*1000));
+    const twoYearsAhead = new Date();
+    twoYearsAhead.setFullYear(twoYearsAhead.getFullYear() + 2)
+    this.maxExpires = twoYearsAhead;
   }
 
   async ngOnInit() {

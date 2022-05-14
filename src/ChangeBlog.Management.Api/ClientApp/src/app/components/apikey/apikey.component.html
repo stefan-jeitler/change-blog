@@ -149,7 +149,7 @@
               </button>
             </div>
             <div class="xl:hidden">
-              <button (click)="userMenu.toggle($event)"
+              <button (click)="actionMenuTarget = apiKey; userMenu.toggle($event)"
                       class="p-button-rounded p-button-outlined"
                       icon="pi pi-ellipsis-v"
                       pButton
@@ -158,6 +158,7 @@
                       [model]="contextMenuItems"
                       [popup]="true"
                       [style]="{'width': 'auto'}"
+
                       appendTo="body"
               ></p-menu>
             </div>

@@ -23,6 +23,7 @@ interface ApiKey {
 export class ApikeyComponent implements OnInit {
   selectedApiKeys: ApiKey[];
   apiKeys: ApiKey[];
+  actionMenuTarget: ApiKey | undefined;
   isLoadingFinished: boolean;
   showApiKeyDialog: boolean;
   apiKeyForm: FormGroup;
@@ -52,17 +53,26 @@ export class ApikeyComponent implements OnInit {
     this.contextMenuItems = [
       {
         label: translate(this.translationKey.copyToClipboard),
-        command: () => {},
+        command: async (event) => {
+          if(!!this.actionMenuTarget)
+            await this.copyToClipBoard(this.actionMenuTarget);
+        },
         icon: 'pi pi-fw pi-copy'
       },
       {
         label: translate(this.translationKey.edit),
-        command: () => {},
+        command: async (event) => {
+          if(!!this.actionMenuTarget)
+            await this.updateApiKey(this.actionMenuTarget);
+        },
         icon: 'pi pi-fw pi-pencil'
       },
       {
         label: translate(this.translationKey.delete),
-        command: () => {},
+        command: async (event) => {
+          if(!!this.actionMenuTarget)
+            await this.deleteApiKey(this.actionMenuTarget);
+        },
         icon: 'pi pi-fw pi-trash'
       }
     ];

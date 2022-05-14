@@ -29,6 +29,8 @@
   "confirmApiKeyDeletion": "Möchten Sie den Api Schlüssel '<b>{{ apiKeyTitle }}</b>' wirklich löschen?",
   "apiKeyDeleted": "Api Schlüssel gelöscht",
   "linkToApi": "Hier gehts zur Api",
+  "actions": "Aktionen",
+  "noEntries": "Keine Einträge",
   "primeng": {
     "startsWith": "Beginnt mit",
     "contains": "Enthält",

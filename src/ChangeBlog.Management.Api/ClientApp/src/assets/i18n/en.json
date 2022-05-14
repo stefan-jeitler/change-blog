@@ -29,6 +29,8 @@
   "confirmApiKeyDeletion": "Are you sure you want to delete the api key '<b>{{ apiKeyTitle }}</b>'?",
   "apiKeyDeleted": "Api Key deleted",
   "linkToApi": "Go to the Api",
+  "actions": "Actions",
+  "noEntries": "No Entries",
   "primeng": {
     "startsWith": "Starts with",
     "contains": "Contains",

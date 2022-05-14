@@ -1,12 +1,11 @@
 import {Component, Inject, OnInit} from '@angular/core';
 import {TranslationKey} from "../../generated/TranslationKey";
-import {ConfirmationService, MessageService} from "primeng/api";
+import {ConfirmationService, MenuItem, MessageService} from "primeng/api";
 import {ChangeBlogManagementApi} from "../../../clients/ChangeBlogManagementApiClient";
 import {firstValueFrom} from "rxjs";
 import {FormBuilder, FormControl, FormGroup} from "@angular/forms";
 import {Clipboard} from '@angular/cdk/clipboard';
-import {TranslocoService} from "@ngneat/transloco";
-import {AppConfig} from "../../../../app.config";
+import {translate, TranslocoService} from "@ngneat/transloco";
 import {ChangeBlogApi} from "../../../clients/ChangeBlogApiClient";
 
 interface ApiKey {
@@ -30,6 +29,7 @@ export class ApikeyComponent implements OnInit {
   maxApiKeysCount: number = 5;
   minExpires: Date;
   maxExpires: Date;
+  contextMenuItems: MenuItem[];
 
   constructor(public translationKey: TranslationKey,
               private messageService: MessageService,
@@ -48,6 +48,24 @@ export class ApikeyComponent implements OnInit {
       title: new FormControl(''),
       expires: new FormControl('')
     });
+
+    this.contextMenuItems = [
+      {
+        label: translate(this.translationKey.copyToClipboard),
+        command: () => {},
+        icon: 'pi pi-fw pi-copy'
+      },
+      {
+        label: translate(this.translationKey.edit),
+        command: () => {},
+        icon: 'pi pi-fw pi-pencil'
+      },
+      {
+        label: translate(this.translationKey.delete),
+        command: () => {},
+        icon: 'pi pi-fw pi-trash'
+      }
+    ];
 
     this.selectedApiKeys = [];
     this.apiKeys = [];

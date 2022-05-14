@@ -12,6 +12,7 @@ namespace ChangeBlog.Application.UseCases.Commands.AddApiKey;
 
 public class AddApiKeyInteractor : IAddApiKey
 {
+    private const int ApiKeyLength = 26;
     public const ushort MaxApiKeys = 5;
     public static readonly TimeSpan MaxExpiration = TimeSpan.FromDays(731);
     public static readonly TimeSpan MinExpiration = TimeSpan.FromDays(7);
@@ -84,7 +85,7 @@ public class AddApiKeyInteractor : IAddApiKey
 
     private static string GenerateUniqueApiKey()
     {
-        var key = new byte[32];
+        var key = new byte[ApiKeyLength];
         using var generator = RandomNumberGenerator.Create(); 
         generator.GetBytes(key);
         

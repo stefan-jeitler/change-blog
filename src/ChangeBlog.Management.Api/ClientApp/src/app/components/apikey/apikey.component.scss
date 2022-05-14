@@ -11,3 +11,9 @@
   height: 40px !important;
   width: 40px;
 }
+
+@media (max-width: $md) {
+  .action-menu {
+    display: none;
+  }
+}

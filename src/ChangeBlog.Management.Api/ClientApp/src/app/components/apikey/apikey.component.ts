@@ -108,7 +108,6 @@ export class ApikeyComponent implements OnInit {
 
     const title = await firstValueFrom(this.translationService.selectTranslate(this.translationKey.confirm));
     const confirmationQuestion = await firstValueFrom(this.translationService.selectTranslate(this.translationKey.confirmSelecetedApiKeysDeletion));
-    const success = await firstValueFrom(this.translationService.selectTranslate(this.translationKey.success));
     const apiKeysDeletedMessage = await firstValueFrom(this.translationService.selectTranslate(this.translationKey.apiKeyDeleted));
     this.confirmationService.confirm({
       message: confirmationQuestion,
@@ -116,7 +115,7 @@ export class ApikeyComponent implements OnInit {
       icon: 'pi pi-exclamation-triangle',
       accept: async () => {
         await deleteKeys();
-        this.messageService.add({severity: 'success', summary: success, detail: apiKeysDeletedMessage, life: 3000});
+        this.messageService.add({severity: 'info', detail: apiKeysDeletedMessage, life: 3000});
       }
     });
   }
@@ -151,14 +150,14 @@ export class ApikeyComponent implements OnInit {
       {apiKeyTitle: apiKey.title}));
 
     const success = await firstValueFrom(this.translationService.selectTranslate(this.translationKey.success));
-    const apiKeysDeletedMessage = await firstValueFrom(this.translationService.selectTranslate(this.translationKey.apiKeyDeleted));
+    const apiKeyDeletedMessage = await firstValueFrom(this.translationService.selectTranslate(this.translationKey.apiKeyDeleted));
     this.confirmationService.confirm({
       message: confirmationQuestion,
       header: title,
       icon: 'pi pi-exclamation-triangle',
       accept: async () => {
         await firstValueFrom(this.mngmtApiClient.deleteApiKey(apiKey.id));
-        this.messageService.add({severity: 'success', summary: success, detail: apiKeysDeletedMessage, life: 3000});
+        this.messageService.add({severity: 'info', summary: success, detail: apiKeyDeletedMessage, life: 3000});
         await this.loadApiKeys();
       }
     });
@@ -184,12 +183,10 @@ export class ApikeyComponent implements OnInit {
   async copyToClipBoard(apiKey: ApiKey) {
     this.clipboard.copy(apiKey.key);
 
-    const summary = await firstValueFrom(this.translationService.selectTranslate(this.translationKey.info));
     let messageTranslation = this.translationService.selectTranslate(this.translationKey.ApiKeyCopiedToClipboard);
     const message = await firstValueFrom(messageTranslation);
     this.messageService.add({
-      severity: 'success',
-      summary: summary,
+      severity: 'info',
       detail: message,
       life: 4000
     });

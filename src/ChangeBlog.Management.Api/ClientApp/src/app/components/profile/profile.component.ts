@@ -19,8 +19,6 @@ export class ProfileComponent implements OnInit {
   availableCultures: string[];
   isLoadingFinished: boolean;
   userProfileForm: FormGroup;
-  messages: Message[];
-  messageHidingTimeout: NodeJS.Timeout | undefined;
 
   constructor(public translationKey: TranslationKey,
               private translationService: TranslocoService,
@@ -31,8 +29,6 @@ export class ProfileComponent implements OnInit {
 
     this.availableTimezones = [];
     this.availableCultures = [];
-
-    this.messages = [];
 
     this.isLoadingFinished = false;
 
@@ -128,10 +124,9 @@ export class ProfileComponent implements OnInit {
 
     const userProfileUpdateMessage = await firstValueFrom(this.translationService.selectTranslate(this.translationKey.userProfileUpdated));
 
-    if (!!this.messageHidingTimeout)
-      clearTimeout(this.messageHidingTimeout);
-
-    this.messages = [{severity: 'success', summary: '', detail: userProfileUpdateMessage}];
-    this.messageHidingTimeout = setTimeout(() => this.messages = [], 4000);
+    this.messageService.add({
+      severity: 'success',
+      detail: userProfileUpdateMessage
+    });
   }
 }

@@ -51,7 +51,7 @@
       <ng-template pTemplate="right">
         <a [href]="apiBaseUrl" class="disable-link-styling" target="_blank">
           <button [label]="translationKey.linkToApi | transloco"
-                  class="p-button-text"
+                  class="p-button-text pr-0"
                   pButton
                   pRipple
                   type="button"></button>
@@ -114,11 +114,11 @@
           </td>
           <td>
             <span class="p-column-title">{{ translationKey.title | transloco }}</span>
-            <div class="truncate-text text-right md:text-left w-12rem sm:w-8rem lg:w-12rem xl:w-full">{{apiKey.title}}</div>
+            <div class="truncate-text text-right md:text-left w-10rem sm:w-14rem md:w-8rem lg:w-14rem xl:w-full">{{apiKey.title}}</div>
           </td>
           <td>
             <span class="p-column-title">{{ translationKey.key | transloco }}</span>
-            <div class="truncate-text text-right md:text-left w-12rem sm:w-14rem md:w-8rem lg:w-16rem xl:w-full">{{apiKey.key}}</div>
+            <div class="truncate-text text-right md:text-left w-10rem sm:w-14rem md:w-8rem lg:w-16rem xl:w-full">{{apiKey.key}}</div>
           </td>
           <td>
             <span class="p-column-title">{{ translationKey.expires | transloco }}</span>

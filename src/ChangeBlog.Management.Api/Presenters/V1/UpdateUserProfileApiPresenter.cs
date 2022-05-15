@@ -21,13 +21,13 @@ public class UpdateUserProfileApiPresenter : BaseApiPresenter, IUpdateUserProfil
     public void TimezoneNotFound(string timezone)
     {
         Response = new NotFoundObjectResult(
-            ErrorResponse.Create($"Unknown Timezone '{timezone}'", nameof(UpdateUserProfileDto.Timezone)));
+            ErrorResponse.Create(string.Format(ChangeBlogStrings.TimezoneNotFound, timezone), "timezone"));
     }
 
     public void CultureNotFound(string culture)
     {
-        Response = new NotFoundObjectResult(ErrorResponse.Create($"Unknown Culture '{culture}'",
-            nameof(UpdateUserProfileDto.Culture)));
+        Response = new NotFoundObjectResult(ErrorResponse.Create(string.Format(ChangeBlogStrings.CultureNotSupported, culture),
+            "culture"));
     }
 
     public void Conflict(Conflict conflict)

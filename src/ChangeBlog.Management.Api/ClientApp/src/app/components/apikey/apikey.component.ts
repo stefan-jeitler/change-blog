@@ -1,18 +1,22 @@
 import {Component, Inject, OnInit} from '@angular/core';
 import {TranslationKey} from "../../generated/TranslationKey";
 import {ConfirmationService, MenuItem, MessageService} from "primeng/api";
-import {ChangeBlogManagementApi} from "../../../clients/ChangeBlogManagementApiClient";
+import {
+  ChangeBlogManagementApi as MngmtApiClient,
+  ChangeBlogManagementApi
+} from "../../../clients/ChangeBlogManagementApiClient";
 import {firstValueFrom} from "rxjs";
-import {FormBuilder, FormControl, FormGroup} from "@angular/forms";
+import {FormBuilder, FormControl, FormGroup, Validators} from "@angular/forms";
 import {Clipboard} from '@angular/cdk/clipboard';
 import {translate, TranslocoService} from "@ngneat/transloco";
 import {ChangeBlogApi} from "../../../clients/ChangeBlogApiClient";
+import ErrorMessage = ChangeBlogManagementApi.ErrorMessage;
 
 interface ApiKey {
   id: string,
   title: string,
   key: string,
-  expires: Date
+  expiresAt: Date
 }
 
 @Component({
@@ -31,6 +35,7 @@ export class ApikeyComponent implements OnInit {
   minExpires: Date;
   maxExpires: Date;
   contextMenuItems: MenuItem[];
+  showDatatableLoadingOverlay: boolean;
 
   constructor(public translationKey: TranslationKey,
               private messageService: MessageService,
@@ -43,18 +48,19 @@ export class ApikeyComponent implements OnInit {
 
     this.isLoadingFinished = false;
     this.showApiKeyDialog = false;
+    this.showDatatableLoadingOverlay = false;
 
     this.apiKeyForm = this.formBuilder.group({
       id: new FormControl(''),
-      title: new FormControl(''),
-      expires: new FormControl('')
+      title: new FormControl('', Validators.required),
+      expiresAt: new FormControl('', Validators.required)
     });
 
     this.contextMenuItems = [
       {
         label: translate(this.translationKey.copyToClipboard),
         command: async (event) => {
-          if(!!this.actionMenuTarget)
+          if (!!this.actionMenuTarget)
             await this.copyToClipBoard(this.actionMenuTarget);
         },
         icon: 'pi pi-fw pi-copy'
@@ -62,7 +68,7 @@ export class ApikeyComponent implements OnInit {
       {
         label: translate(this.translationKey.edit),
         command: async (event) => {
-          if(!!this.actionMenuTarget)
+          if (!!this.actionMenuTarget)
             await this.updateApiKey(this.actionMenuTarget);
         },
         icon: 'pi pi-fw pi-pencil'
@@ -70,7 +76,7 @@ export class ApikeyComponent implements OnInit {
       {
         label: translate(this.translationKey.delete),
         command: async (event) => {
-          if(!!this.actionMenuTarget)
+          if (!!this.actionMenuTarget)
             await this.deleteApiKey(this.actionMenuTarget);
         },
         icon: 'pi pi-fw pi-trash'
@@ -80,7 +86,7 @@ export class ApikeyComponent implements OnInit {
     this.selectedApiKeys = [];
     this.apiKeys = [];
 
-    this.minExpires = new Date(new Date().getTime()+(8*24*60*60*1000));
+    this.minExpires = new Date(new Date().getTime() + (5 * 24 * 60 * 60 * 1000));
     const twoYearsAhead = new Date();
     twoYearsAhead.setFullYear(twoYearsAhead.getFullYear() + 2)
     this.maxExpires = twoYearsAhead;
@@ -93,29 +99,31 @@ export class ApikeyComponent implements OnInit {
 
   async createNewApiKey() {
     this.apiKeyForm.reset();
+    this.apiKeyForm.resetValidation()
     this.showApiKeyDialog = true;
   }
 
   async deleteSelectedApiKeys() {
-
     const deleteKeys = async () => {
+      this.showDatatableLoadingOverlay = true;
+
       for (const x of this.selectedApiKeys) {
         await firstValueFrom(this.mngmtApiClient.deleteApiKey(x.id));
       }
 
       await this.loadApiKeys();
+      this.selectedApiKeys = [];
+      this.showDatatableLoadingOverlay = false;
     };
 
     const title = await firstValueFrom(this.translationService.selectTranslate(this.translationKey.confirm));
     const confirmationQuestion = await firstValueFrom(this.translationService.selectTranslate(this.translationKey.confirmSelecetedApiKeysDeletion));
-    const apiKeysDeletedMessage = await firstValueFrom(this.translationService.selectTranslate(this.translationKey.apiKeyDeleted));
     this.confirmationService.confirm({
       message: confirmationQuestion,
       header: title,
       icon: 'pi pi-exclamation-triangle',
       accept: async () => {
         await deleteKeys();
-        this.messageService.add({severity: 'info', detail: apiKeysDeletedMessage, life: 3000});
       }
     });
   }
@@ -124,7 +132,7 @@ export class ApikeyComponent implements OnInit {
     this.apiKeyForm.patchValue({
       id: apiKey.id,
       title: apiKey.title,
-      expires: apiKey.expires
+      expiresAt: apiKey.expiresAt
     });
 
     this.showApiKeyDialog = true;
@@ -137,10 +145,9 @@ export class ApikeyComponent implements OnInit {
         id: x.apiKeyId,
         title: x.title!,
         key: x.apiKey!,
-        expires: x.expiresAt
+        expiresAt: x.expiresAt
       }
     });
-
   }
 
   async deleteApiKey(apiKey: ApiKey) {
@@ -149,16 +156,15 @@ export class ApikeyComponent implements OnInit {
       this.translationKey.confirmApiKeyDeletion,
       {apiKeyTitle: apiKey.title}));
 
-    const success = await firstValueFrom(this.translationService.selectTranslate(this.translationKey.success));
-    const apiKeyDeletedMessage = await firstValueFrom(this.translationService.selectTranslate(this.translationKey.apiKeyDeleted));
     this.confirmationService.confirm({
       message: confirmationQuestion,
       header: title,
       icon: 'pi pi-exclamation-triangle',
       accept: async () => {
+        this.showDatatableLoadingOverlay = true;
         await firstValueFrom(this.mngmtApiClient.deleteApiKey(apiKey.id));
-        this.messageService.add({severity: 'info', summary: success, detail: apiKeyDeletedMessage, life: 3000});
         await this.loadApiKeys();
+        this.showDatatableLoadingOverlay = false;
       }
     });
   }
@@ -168,27 +174,66 @@ export class ApikeyComponent implements OnInit {
   }
 
   async onApiKeySubmit(apiKeyForm: FormGroup) {
+    this.apiKeyForm.disable();
+
+    let apiKeyId = this.apiKeyForm.value.id;
     const title = this.apiKeyForm.value.title;
-    const expires = this.apiKeyForm.value.expires
+    const expires = this.apiKeyForm.value.expiresAt;
 
-    if(!!apiKeyForm.value.id)
-      await firstValueFrom(this.mngmtApiClient.updateApiKey(apiKeyForm.value.id, title, expires))
-    else
-      await firstValueFrom(this.mngmtApiClient.generateApiKey(title, expires))
+    const updateRequest = !!apiKeyId
+      ? this.mngmtApiClient.updateApiKey(apiKeyId, title, expires)
+      : this.mngmtApiClient.generateApiKey(title, expires);
 
-    this.showApiKeyDialog = false;
-    await this.loadApiKeys();
+    updateRequest
+      .subscribe({
+        next: async x => {
+          this.showDatatableLoadingOverlay = true;
+          this.apiKeyForm.enable();
+          this.showApiKeyDialog = false;
+          await this.loadApiKeys();
+          this.showDatatableLoadingOverlay = false;
+        },
+        error: (error: MngmtApiClient.SwaggerException) => {
+          this.apiKeyForm.enable();
+          this.handleError(error);
+        }
+      });
   }
 
   async copyToClipBoard(apiKey: ApiKey) {
     this.clipboard.copy(apiKey.key);
 
-    let messageTranslation = this.translationService.selectTranslate(this.translationKey.ApiKeyCopiedToClipboard);
-    const message = await firstValueFrom(messageTranslation);
+    let copiedMessage = this.translationService.selectTranslate(this.translationKey.ApiKeyCopiedToClipboard);
     this.messageService.add({
       severity: 'info',
-      detail: message,
+      detail: await firstValueFrom(copiedMessage),
       life: 4000
     });
+  }
+
+  private async handleError(error: MngmtApiClient.SwaggerException) {
+    this.apiKeyForm.enable();
+
+    if (error.status >= 400 && error.status < 500) {
+      this.apiKeyForm.setServerError(error.result.errors);
+      this.handleGeneralError(error.result.errors);
+    } else {
+      await this.showGenericErrorMessage();
+    }
+  }
+
+  private async showGenericErrorMessage() {
+    const errorMessageHeader = await firstValueFrom(this.translationService.selectTranslate(this.translationKey.genericErrorMessageShort));
+    const errorMessage = await firstValueFrom(this.translationService.selectTranslate(this.translationKey.genericErrorMessage));
+
+    const message = {severity: 'error', summary: errorMessageHeader, detail: errorMessage}
+    this.messageService.add(message);
+  }
+
+  private handleGeneralError(errorMessages: ErrorMessage[]) {
+    const generalErrorMessage = errorMessages.find((x: ErrorMessage) => !x.property);
+    if (!!generalErrorMessage) {
+      this.messageService.add({severity: 'error', detail: generalErrorMessage.message});
+    }
   }
 }

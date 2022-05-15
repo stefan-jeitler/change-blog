@@ -18,6 +18,5 @@ public class ErrorMessage
 
     public string Message { get; }
     
-    [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
     public string Property { get;}
 }

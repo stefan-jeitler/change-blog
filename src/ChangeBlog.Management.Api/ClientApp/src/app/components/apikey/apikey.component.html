@@ -62,8 +62,9 @@
     <p-table [(selection)]="selectedApiKeys"
              [rowHover]="true"
              [value]="apiKeys"
-             breakpoint="768px"
              [autoLayout]="true"
+             [loading]="showDatatableLoadingOverlay"
+             breakpoint="768px"
              dataKey="id"
              styleClass="p-datatable-sm"
              responsiveLayout="stack">
@@ -123,10 +124,10 @@
           <td>
             <span class="p-column-title">{{ translationKey.expires | transloco }}</span>
             <span
-              [pTooltip]="apiKey.expires.toISOString()"
+              [pTooltip]="apiKey.expiresAt.toISOString()"
               appendTo="body"
               tooltipPosition="bottom">
-              {{ apiKey.expires | translocoDate: {dateStyle: 'medium'} }}
+              {{ apiKey.expiresAt | translocoDate: {dateStyle: 'medium'} }}
             </span>
           </td>
           <td>
@@ -178,7 +179,7 @@
     <p-dialog [(visible)]="showApiKeyDialog" [header]="translationKey.apikey | transloco" [modal]="true"
               [style]="{width: '450px'}" styleClass="p-fluid">
       <ng-template pTemplate="content">
-        <form id="apiKeyForm"
+        <form id="api-key-form"
               class="pt-3"
               (ngSubmit)="onApiKeySubmit(apiKeyForm)"
               [formGroup]="apiKeyForm">
@@ -203,13 +204,13 @@
                           [minDate]="minExpires"
                           appendTo="body"
                           class="w-full mt-2"
-                          formControlName="expires"
+                          formControlName="expiresAt"
                           id="expires-input">
               </p-calendar>
             </div>
-            <div *ngIf="apiKeyForm.showErrorMessage('expires')">
+            <div *ngIf="apiKeyForm.showErrorMessage('expiresAt')">
               <small class="pt-1 p-error block"
-                     id="expires-error">{{ apiKeyForm.getServerErrorMessage('expires') }}</small>
+                     id="expiresAt-error">{{ apiKeyForm.getServerErrorMessage('expiresAt') }}</small>
             </div>
           </div>
           <input formControlName="id" type="hidden">
@@ -223,8 +224,9 @@
                 pRipple></button>
         <button [label]="translationKey.save | transloco"
                 [loading]="apiKeyForm.disabled"
+                [disabled]="!apiKeyForm.valid"
                 class="p-button-text"
-                form="apiKeyForm"
+                form="api-key-form"
                 icon="pi pi-check"
                 pButton
                 pRipple

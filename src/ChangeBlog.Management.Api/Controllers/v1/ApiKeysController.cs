@@ -64,6 +64,7 @@ public class ApiKeysController : ControllerBase
     [HttpPatch("{apiKeyId:Guid}", Name = "UpdateApiKey")]
     [ProducesResponseType(StatusCodes.Status200OK)]
     [ProducesResponseType(typeof(ErrorResponse), StatusCodes.Status400BadRequest)]
+    [ProducesResponseType(typeof(ErrorResponse), StatusCodes.Status404NotFound)]
     [ProducesResponseType(typeof(ErrorResponse), StatusCodes.Status409Conflict)]
     [SkipAuthorization]
     public async Task<ActionResult<SuccessResponse>> UpdateApiKeyAsync(

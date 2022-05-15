@@ -160,7 +160,7 @@
     <value>Request enthält keine oder zu wenig Daten</value>
   </data>
   <data name="InvalidFormat" xml:space="preserve">
-    <value>Ungültiges Format '{0}'</value>
+    <value>Ungültiges Format "{0}"</value>
   </data>
   <data name="ChangeLogLineSameText" xml:space="preserve">
     <value>Einträge mit dem gleichen Text sind nicht erlaubt. Duplikat: '{0}'</value>
@@ -172,19 +172,19 @@
     <value>Zu viele Changelog Einträge. Max {0} Einträge möglich</value>
   </data>
   <data name="InvalidChangeLogText" xml:space="preserve">
-    <value>Changelog Text ist ungültig '{0}'</value>
+    <value>Changelog Text ist ungültig "{0}"</value>
   </data>
   <data name="InvalidIssue" xml:space="preserve">
-    <value>Issue '{0}' ist ungültig</value>
+    <value>Issue "{0}" ist ungültig</value>
   </data>
   <data name="TooManyIssuesForChangeLogLine" xml:space="preserve">
-    <value>Der Changelog Eintrag '{0}' hat zu viele Issues. Max {1} Issues möglich</value>
+    <value>Der Changelog Eintrag "{0}" hat zu viele Issues. Max {1} Issues möglich</value>
   </data>
   <data name="InvalidLabel" xml:space="preserve">
-    <value>Label '{0}' ist ungültig</value>
+    <value>Label "{0}" ist ungültig</value>
   </data>
   <data name="TooManyLabelsForChangeLogLine" xml:space="preserve">
-    <value>Der Changelog Eintrag '{0}' hat zu viele Labels. Max {1} Labels möglich</value>
+    <value>Der Changelog Eintrag "{0}" hat zu viele Labels. Max {1} Labels möglich</value>
   </data>
   <data name="IssueAdded" xml:space="preserve">
     <value>Issue erfolgreich hinzugefügt</value>
@@ -211,7 +211,7 @@
     <value>Changelog Einträg(e) erfolgreich verschoben</value>
   </data>
   <data name="InvalidVersionFormat" xml:space="preserve">
-    <value>Die Version '{0}' ist nicht korrekt formattiert</value>
+    <value>Die Version "{0}" ist nicht korrekt formattiert</value>
   </data>
   <data name="TooManyChangeLogLines_Remaining" xml:space="preserve">
     <value>Die Anzahl der zu hinzufügenden Changelog Einträge ist zu groß. Sie können nur mehr {0} hinzufügen</value>
@@ -220,7 +220,7 @@
     <value>Es gibt keine Changelog Einträge zum Zuweisen</value>
   </data>
   <data name="TargetVersionContainsLinesWithSameText" xml:space="preserve">
-    <value>Die Zielversion hat bereits Einträge mit identischem Text. Duplikate: '{0}'</value>
+    <value>Die Zielversion hat bereits Einträge mit identischem Text. Duplikate: "{0}"</value>
   </data>
   <data name="TargetVersionBelongsToDifferentProduct" xml:space="preserve">
     <value>Die Zielversion gehört zu einem anderen Produkt</value>
@@ -259,7 +259,7 @@
     <value>Der Account wurde gelöscht</value>
   </data>
   <data name="InvalidName" xml:space="preserve">
-    <value>Name '{0}' ist ungültig</value>
+    <value>Name "{0}" ist ungültig</value>
   </data>
   <data name="ProductAlreadyExists" xml:space="preserve">
     <value>Das Produkt existiert bereits</value>
@@ -271,7 +271,7 @@
     <value>Produkt erfolgreich hinzugefügt</value>
   </data>
   <data name="LanguageCodeNotSupported" xml:space="preserve">
-    <value>Die angegebene Sprache '{0}' wird nicht unterstützt. Unterstützte Sprachen sind '{1}'</value>
+    <value>Die angegebene Sprache "{0}" wird nicht unterstützt. Unterstützte Sprachen sind "{1}"</value>
   </data>
   <data name="VersionAlreadyExists" xml:space="preserve">
     <value>Die Version existiert bereits</value>
@@ -289,7 +289,7 @@
     <value>Version erfolgreich aktualisiert</value>
   </data>
   <data name="VersioningSchemeMismatch" xml:space="preserve">
-    <value>Die Version '{0}' entspricht nicht dem Versionierungsschema ihres Produktes. Versionierungsschema: {1}</value>
+    <value>Die Version "{0}" entspricht nicht dem Versionierungsschema ihres Produktes. Versionierungsschema: {1}</value>
   </data>
   <data name="VersionReleased" xml:space="preserve">
     <value>Version erfolgreich released</value>
@@ -335,5 +335,11 @@
   </data>
   <data name="ApiKeyUpdated" xml:space="preserve">
     <value>Api Schlüssel erfolgreich aktualisiert</value>
+  </data>
+  <data name="CultureNotSupported" xml:space="preserve">
+    <value>Die Region "{0}" wird nicht unterstützt</value>
+  </data>
+  <data name="TimezoneNotFound" xml:space="preserve">
+    <value>Zeitzone "{0}" nicht gefunden</value>
   </data>
 </root>

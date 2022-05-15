@@ -14,13 +14,13 @@ public class AddApiKeyPresenter : BaseApiPresenter, IAddApiKeyOutputPort
     public void ExpirationTooShort(TimeSpan expiresIn, TimeSpan minExpiration)
     {
         Response = new BadRequestObjectResult(
-            ErrorResponse.Create(ChangeBlogStrings.ApiKeyExpirationTooShort));
+            ErrorResponse.Create(ChangeBlogStrings.ApiKeyExpirationTooShort, "expiresAt"));
     }
 
     public void ExpirationTooLong(TimeSpan expiresIn, TimeSpan maxExpiration)
     {
         Response = new BadRequestObjectResult(
-            ErrorResponse.Create(ChangeBlogStrings.ApiKeyExpirationTooLong));
+            ErrorResponse.Create(ChangeBlogStrings.ApiKeyExpirationTooLong, "expiresAt"));
     }
 
     public void Conflict(Conflict conflict)
@@ -40,7 +40,7 @@ public class AddApiKeyPresenter : BaseApiPresenter, IAddApiKeyOutputPort
 
     public void InvalidTitle(string title)
     {
-        Response = new BadRequestObjectResult(ErrorResponse.Create(ChangeBlogStrings.InvalidApiKeyTitle));
+        Response = new BadRequestObjectResult(ErrorResponse.Create(ChangeBlogStrings.InvalidApiKeyTitle, "title"));
     }
 
     public void MaxApiKeyCountReached(ushort maxApiKeys)
@@ -50,6 +50,6 @@ public class AddApiKeyPresenter : BaseApiPresenter, IAddApiKeyOutputPort
 
     public void ExpirationDateInThePast(DateTime expiresAt)
     {
-        Response = new BadRequestObjectResult(ErrorResponse.Create(ChangeBlogStrings.ExpirationDateInThePast));
+        Response = new BadRequestObjectResult(ErrorResponse.Create(ChangeBlogStrings.ExpirationDateInThePast, "expiresAt"));
     }
 }

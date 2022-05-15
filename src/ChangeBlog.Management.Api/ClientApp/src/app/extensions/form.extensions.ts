@@ -18,13 +18,17 @@ declare module "@angular/forms" {
 FormGroup.prototype.resetValidation = function (this: FormGroup) {
   for (const key of Object.keys(this.controls)) {
     const control = this.controls[key];
-    control.setErrors(null);
+    control.setErrors(null, {
+      emitEvent: true
+    });
+    control.reset();
+    control.markAsUntouched();
   }
 }
 
 FormGroup.prototype.setServerError = function (this: FormGroup, errorMessages: ErrorMessage[]) {
   for (const e of errorMessages.filter((x: ErrorMessage) => !!x.property)) {
-    const formControl = this.get(e.property!.toLowerCase());
+    const formControl = this.get(e.property!);
     const validationMessage = new ValidationError({message: e.message!});
 
     formControl?.setErrors(validationMessage);
@@ -36,5 +40,5 @@ FormGroup.prototype.showErrorMessage = function (this: FormGroup, formControlNam
 }
 
 FormGroup.prototype.getServerErrorMessage = function (this: FormGroup, formControlName: string) {
-  return this.get(formControlName)?.errors?.serverError?.message ?? 'Unknown';
+  return this.get(formControlName)?.errors?.serverError?.message;
 }

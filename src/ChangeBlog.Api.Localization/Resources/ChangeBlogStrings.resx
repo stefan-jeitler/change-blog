@@ -160,7 +160,7 @@
     <value>Missing request data</value>
   </data>
   <data name="InvalidFormat" xml:space="preserve">
-    <value>Invalid format '{0}'</value>
+    <value>Invalid format "{0}"</value>
   </data>
   <data name="ChangeLogLineSameText" xml:space="preserve">
     <value>Lines with same text are not allowed. Duplicate: '{0}'</value>
@@ -172,19 +172,19 @@
     <value>Too many Changelog lines. Max {0} lines</value>
   </data>
   <data name="InvalidChangeLogText" xml:space="preserve">
-    <value>Invalid changelog text '{0}'</value>
+    <value>Invalid changelog text "{0}"</value>
   </data>
   <data name="InvalidIssue" xml:space="preserve">
-    <value>Invalid issue '{0}'</value>
+    <value>Invalid issue "{0}"</value>
   </data>
   <data name="TooManyIssuesForChangeLogLine" xml:space="preserve">
-    <value>The changelog line '{0}' has too many issues. Max {1} issues possible</value>
+    <value>The changelog line "{0}" has too many issues. Max {1} issues possible</value>
   </data>
   <data name="InvalidLabel" xml:space="preserve">
-    <value>Invalid label '{0}'</value>
+    <value>Invalid label "{0}"'</value>
   </data>
   <data name="TooManyLabelsForChangeLogLine" xml:space="preserve">
-    <value>The changelog line '{0}' has too many labels. Max {1} labels possible</value>
+    <value>The changelog line "{0}" has too many labels. Max {1} labels possible</value>
   </data>
   <data name="IssueAdded" xml:space="preserve">
     <value>Issue successfully added</value>
@@ -211,7 +211,7 @@
     <value>Changelog line(s) successfully moved</value>
   </data>
   <data name="InvalidVersionFormat" xml:space="preserve">
-    <value>The version '{0}' isn't properly formatted</value>
+    <value>The version "{0}" isn't properly formatted</value>
   </data>
   <data name="TooManyChangeLogLines_Remaining" xml:space="preserve">
     <value>There are too many Changelog lines to add. You can only add {0} more</value>
@@ -220,7 +220,7 @@
     <value>There are no Chnagelog lines to assign</value>
   </data>
   <data name="TargetVersionContainsLinesWithSameText" xml:space="preserve">
-    <value>The target version has already lines with an identical text. Duplicates: '{0}'</value>
+    <value>The target version has already lines with an identical text. Duplicates: "{0}"</value>
   </data>
   <data name="TargetVersionBelongsToDifferentProduct" xml:space="preserve">
     <value>The target version belongs to a different product</value>
@@ -259,7 +259,7 @@
     <value>The Account has been deleted</value>
   </data>
   <data name="InvalidName" xml:space="preserve">
-    <value>Invalid name '{0}'</value>
+    <value>Invalid name "{0}"'</value>
   </data>
   <data name="ProductAlreadyExists" xml:space="preserve">
     <value>The Product already exists</value>
@@ -271,7 +271,7 @@
     <value>Product successfully added</value>
   </data>
   <data name="LanguageCodeNotSupported" xml:space="preserve">
-    <value>The given language code '{0}' is not supported. Supported codes are '{1}'</value>
+    <value>The given language code "{0}" is not supported. Supported codes are "{1}"</value>
   </data>
   <data name="VersionAlreadyExists" xml:space="preserve">
     <value>The version already exists</value>
@@ -289,7 +289,7 @@
     <value>Version successfully update</value>
   </data>
   <data name="VersioningSchemeMismatch" xml:space="preserve">
-    <value>The Version '{0}' does not match your product's versioning scheme. Versioningscheme: {1}</value>
+    <value>The Version "{0}" does not match your product's versioning scheme. Versioningscheme: {1}</value>
   </data>
   <data name="VersionReleased" xml:space="preserve">
     <value>Version successfully released</value>
@@ -335,5 +335,11 @@
   </data>
   <data name="ApiKeyUpdated" xml:space="preserve">
     <value>Api Key successfully updated</value>
+  </data>
+  <data name="CultureNotSupported" xml:space="preserve">
+    <value>The Culture "{0}" is not supported</value>
+  </data>
+  <data name="TimezoneNotFound" xml:space="preserve">
+    <value>Timezone "{0}" not found</value>
   </data>
 </root>

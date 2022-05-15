@@ -178,7 +178,10 @@
     <p-dialog [(visible)]="showApiKeyDialog" [header]="translationKey.apikey | transloco" [modal]="true"
               [style]="{width: '450px'}" styleClass="p-fluid">
       <ng-template pTemplate="content">
-        <form (ngSubmit)="onApiKeySubmit(apiKeyForm)" [formGroup]="apiKeyForm" id="apiKeyForm">
+        <form id="apiKeyForm"
+              class="pt-5"
+              (ngSubmit)="onApiKeySubmit(apiKeyForm)"
+              [formGroup]="apiKeyForm">
           <div class="field">
             <div class="flex flex-column align-items-start w-12 md:w-22rem">
               <div class="flex flex-row w-full">

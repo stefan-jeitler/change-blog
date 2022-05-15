@@ -38,6 +38,8 @@ public static class SwaggerExtensions
                     Array.Empty<string>()
                 }
             });
+            
+            c.OperationFilter<AcceptLanguageHeaderOperationFilter>();
 
             c.OrderActionsBy(api =>
             {

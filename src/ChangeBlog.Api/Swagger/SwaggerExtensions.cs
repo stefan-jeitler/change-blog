@@ -62,7 +62,9 @@ public static class SwaggerExtensions
                     Array.Empty<string>()
                 }
             });
-
+            
+            c.OperationFilter<AcceptLanguageHeaderOperationFilter>();
+            
             c.OrderActionsBy(api =>
             {
                 if (api.ActionDescriptor is not ControllerActionDescriptor descriptor) return string.Empty;

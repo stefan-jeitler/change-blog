@@ -20,7 +20,9 @@ public static class JwtAuthUtils
     {
         context.Response.OnStarting(async () =>
         {
-            var logger = context.HttpContext.RequestServices.GetRequiredService<ILogger>();
+            var logger = context.HttpContext.RequestServices
+                .GetRequiredService<ILoggerFactory>()
+                .CreateLogger(nameof(JwtAuthUtils));
             
             var authException = context.AuthenticateFailure;
             if(authException is not null)

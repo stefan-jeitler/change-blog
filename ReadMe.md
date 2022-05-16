@@ -19,7 +19,8 @@ both should depend on a web service.
 
 ![Dependencies](https://changeblog.blob.core.windows.net/images/ChangeBlog.png)
 
-The development team automatically pushes their changes during deployment with all the information the management team needs.
+The development team automatically pushes their changes during deployment with all the information the management team
+needs.
 
 ## Table of Contents
 
@@ -42,7 +43,8 @@ An Account is a grouping of users and products.
 User roles can be assigned on account and product level.  
 Product roles have precedence over account roles.
 
-For instance, a user with a developer role on account level and a support role for one specific product within the account has for all account products developer permissions except the one specific product.  
+For instance, a user with a developer role on account level and a support role for one specific product within the
+account has for all account products developer permissions except the one specific product.  
 This is restricted to support permissions.
 
 It works the other way around as well.  
@@ -106,7 +108,7 @@ The max number of change logs is 100.
 
 ### Overview
 
-![Concept](https://changeblog.blob.core.windows.net/images/ChangeBlogConcept.png) 
+![Concept](https://changeblog.blob.core.windows.net/images/ChangeBlogConcept.png)
 
 ## Key Features
 
@@ -122,8 +124,10 @@ The architecture of the app is strongly influenced by
 
 * Robert C. Martin's book Clean Architecture
 * Mark Seemann's book Dependency Injection Principles, Practices and Patterns
-* Plainionist's article series [Implementing-Clean-Architecture](http://www.plainionist.net/Implementing-Clean-Architecture/)
-* candied_orange's [answers](https://softwareengineering.stackexchange.com/search?q=user:131624+[clean-architecture]) on [softwareengineering.stackexchange](https://softwareengineering.stackexchange.com/)
+* Plainionist's article
+  series [Implementing-Clean-Architecture](http://www.plainionist.net/Implementing-Clean-Architecture/)
+* candied_orange's [answers](https://softwareengineering.stackexchange.com/search?q=user:131624+[clean-architecture])
+  on [softwareengineering.stackexchange](https://softwareengineering.stackexchange.com/)
 
 ### My take on the Clean Architecture
 
@@ -131,7 +135,8 @@ I would like to point out that I don't implement the Clean Architecture strictly
 There are two major differences.
 
 **First**  
-My solution contains only three circles and not four as shown [here](https://blog.cleancoder.com/uncle-bob/images/2012-08-13-the-clean-architecture/CleanArchitecture.jpg).
+My solution contains only three circles and not four as
+shown [here](https://blog.cleancoder.com/uncle-bob/images/2012-08-13-the-clean-architecture/CleanArchitecture.jpg).
 I brought together the two outermost circles.
 
 * Domain: **Enterprise Business Rules**
@@ -173,9 +178,9 @@ Maybe I can't see it, but let controllers know about presenters is not that bad.
 However, you might wonder why not inject presenters?
 
 Mark Seemann states in his book:
->"Volatile Dependencies are the focal point of DI. It’s for Volatile
-Dependencies rather than Stable Dependencies that you introduce Seams
-into your application. Again, this obligates you to compose them using DI."
+> "Volatile Dependencies are the focal point of DI. It’s for Volatile
+> Dependencies rather than Stable Dependencies that you introduce Seams
+> into your application. Again, this obligates you to compose them using DI."
 
 I don't see presenters as being that volatile.
 
@@ -186,7 +191,7 @@ Adding a new package is easy and often seems to have no drawbacks.
 But the surprise may come later if you use it without care throughout your codebase.
 
 Let me do a little case study about dependencies.  
-I will start at the domain layer that tries to solve the domain problem.  
+I will start at the domain layer that tries to solve the domain problem.
 
 What dependencies are there?
 
@@ -204,15 +209,16 @@ As you can see, there are no outgoing dependencies.
 It lacks of `PackageReference`s and `ProjectReference`s.
 
 This makes the domain stable and it can be referenced by components which are less stable.  
-What I call domain is the innermost circle that is supposed to be referenced by other components, otherwise it would be useless.   
+What I call domain is the innermost circle that is supposed to be referenced by other components, otherwise it would be
+useless.   
 But be aware there is a dependency you won't see at first glance.  
 It's the .NET Base Class Library(BCL).
 
 Uncle Bob Martin states in Clean Architecture
 
->"There are some frameworks that you simply must marry. If you are using C++, for
-example, you will likely have to marry STL—it’s hard to avoid. If you are using Java,
-you will almost certainly have to marry the standard library."
+> "There are some frameworks that you simply must marry. If you are using C++, for
+> example, you will likely have to marry STL—it’s hard to avoid. If you are using Java,
+> you will almost certainly have to marry the standard library."
 
 So I have to marry the BCL.  
 All in all, the domain layer is not that bad.  
@@ -245,9 +251,11 @@ Let's take a look at the project file.
 
 The first outgoing dependency you'll see is the domain layer which can be referenced safely from here.  
 But what about nuget packages?  
-I will only discuss two of them to illustrate the basic problem that comes with such dependencies.  
+I will only discuss two of them to illustrate the basic problem that comes with such dependencies.
 
-**NodaTime** is well encapsulated [here](https://dev.azure.com/stefanjeitler/_git/ChangeBlog?path=%2Fsrc%2FChangeBlog.Application%2FExtensions%2FDateTimeExtensions.cs&version=GBmain&line=8&lineEnd=9&lineStartColumn=1&lineEndColumn=1&lineStyle=plain&_a=contents). This is the only place where it is used.  
+**NodaTime** is well
+encapsulated [here](https://dev.azure.com/stefanjeitler/_git/ChangeBlog?path=%2Fsrc%2FChangeBlog.Application%2FExtensions%2FDateTimeExtensions.cs&version=GBmain&line=8&lineEnd=9&lineStartColumn=1&lineEndColumn=1&lineStyle=plain&_a=contents)
+. This is the only place where it is used.  
 Replacing NodaTime with a different time zone library is quite easy,  
 only the implementation in the extension method has to be swapped out.  
 I think such libraries do not harm applications.  
@@ -259,12 +267,12 @@ Hiding this library is too much work, I would have to create too many methods.
 But what if the author of CSharpFunctionalExtensions introduces breaking changes  
 to one of his methods that is frequently used in my app.  
 After updating the package, Visual Studio will give me plenty of compile time errors.  
-Fixing all usages would be a pain in the ass.  
+Fixing all usages would be a pain in the ass.
 
 Using libraries this way in the inner circles gives me a bad feeling.  
 I use it anyway because the library doesn't do too much — is more or less simple —  
 and so I do not expect breaking changes.  
-I hope I'm not wrong.  
+I hope I'm not wrong.
 
 **Update 2021-10-02**:  
 It happened or something like that.  
@@ -273,12 +281,12 @@ the `Value` Property of the `Maybe` type got marked as deprecated and
 I received over 150 Warnings after building the app.  
 `GetValueOrThrow()` should be used instead of `Value` from now on.  
 In order to get rid of all Warnings I had to update every single usage.  
-It was done in a short time, in about 15 minutes.  
+It was done in a short time, in about 15 minutes.
 
-Now, we come to my outermost circle that contains all the details.  
+Now, we come to my outermost circle that contains all the details.
 
 I do not print any project file here because that would be too much.  
-This layer is not supposed to contain any business logic.  
+This layer is not supposed to contain any business logic.
 
 ... tbd
 
@@ -295,7 +303,8 @@ In these situations I like to experiment and this often leads to frequent change
 
 On the other hand, pure functions are qualified for TDD.  
 Pure functions have often a stable api that is not likely to change frequently.  
-This prevents me from the **Oh No** moment where you change something in the api of your implementation and many tests will no longer compile.
+This prevents me from the **Oh No** moment where you change something in the api of your implementation and many tests
+will no longer compile.
 
 However, there is one test approach I like the most.
 
@@ -311,7 +320,7 @@ The **Continuous Delivery** stage will run afterwards if the commit was tagged.
 By doing so, the app gets deployed to the staging environment
 and after a manual approval to the production environment.
 
-Tag names must be a valid SemVer 2.0.0.  
+Tag names must be a valid SemVer 2.0.0.
 
 The api can be deployed without a downtime.  
 But it works only if there are no breaking changes in the db updates.  
@@ -319,7 +328,7 @@ The app will be stopped during deployment if there are breaking changes.
 
 I call these two deploy strategies **Rolling Deployment** and **Breaking Deployment**.  
 Noticing breaking changes is easy since db update versions are made of semantic versions.  
-This is done automatically in the release pipeline.  
+This is done automatically in the release pipeline.
 
 ### CI/CD Overview
 
@@ -344,7 +353,7 @@ Actual app
 
 Demo User
 
-&nbsp;&nbsp;&nbsp;&nbsp;ApiKey: AwqQoytQJ8MUS1OOx4ta  
+&nbsp;&nbsp;&nbsp;&nbsp;ApiKey: AwqQoytQJ8MUS1OOx4ta
 
 &nbsp;&nbsp;&nbsp;&nbsp;Assigned Roles:
 
@@ -404,20 +413,20 @@ Things to keep in mind when working with `IDbAccessor`
 
 Imagine you're developing a feature that requires a new table in your db.  
 You create the table by the book and your new relation is in the third normal form.  
-You think to yourself, well done.  
+You think to yourself, well done.
 
 After deploying to production a DBA tells you that querying your table leads  
 to high cpu utilization on the database server.  
 The query is among the top 10 most resource consuming queries and  
-if you can't fix it more cpu cores must be purchased.  
+if you can't fix it more cpu cores must be purchased.
 
 The feature you have developed was considered as a cross-cutting concern and  
-was placed in an `ASP.NET` ActionFilter that is invoked on every http request.  
+was placed in an `ASP.NET` ActionFilter that is invoked on every http request.
 
 The solution was easy.  
 The columns in the where clause were not indexed and  
 every execution caused a full table scan.  
-Adding a proper index solved the perfomance problem.  
+Adding a proper index solved the perfomance problem.
 
 Causing such issues in a high load environment is really annoying.  
 To inherently avoid those issues I had the following in mind during development

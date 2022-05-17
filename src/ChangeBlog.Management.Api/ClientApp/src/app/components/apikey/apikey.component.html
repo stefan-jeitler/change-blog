@@ -64,7 +64,7 @@
              [value]="apiKeys"
              [autoLayout]="true"
              [loading]="showDatatableLoadingOverlay"
-             breakpoint="768px"
+             breakpoint="576px"
              dataKey="id"
              styleClass="p-datatable-sm"
              responsiveLayout="stack">
@@ -101,7 +101,8 @@
         <tr>
           <td>
             <p-tableCheckbox [value]="apiKey"></p-tableCheckbox>
-            <div class="md:hidden text-center"
+            <div class="sm:hidden text-center"
+                 style="cursor:pointer;"
                  (click)="actionMenuTarget = apiKey; userMenu.toggle($event)">
               <i class="pi pi-ellipsis-v">
               </i>
@@ -115,11 +116,11 @@
           </td>
           <td>
             <span class="p-column-title">{{ translationKey.title | transloco }}</span>
-            <div class="truncate-text text-right md:text-left w-10rem sm:w-14rem md:w-8rem lg:w-14rem xl:w-full">{{apiKey.title}}</div>
+            <div class="truncate-text text-right sm:text-left w-10rem sm:w-8rem md:w-8rem lg:w-14rem xl:w-full">{{apiKey.title}}</div>
           </td>
           <td>
             <span class="p-column-title">{{ translationKey.key | transloco }}</span>
-            <div class="truncate-text text-right md:text-left w-10rem sm:w-14rem md:w-8rem lg:w-16rem xl:w-full">{{apiKey.key}}</div>
+            <div class="truncate-text text-right sm:text-left w-10rem sm:w-8rem md:w-8rem lg:w-16rem xl:w-full">{{apiKey.key}}</div>
           </td>
           <td>
             <span class="p-column-title">{{ translationKey.expires | transloco }}</span>
@@ -161,6 +162,7 @@
               </button>
             </div>
             <div class="action-menu xl:hidden text-center"
+                 style="cursor:pointer;"
                  (click)="actionMenuTarget = apiKey; userMenu.toggle($event)">
               <i class="pi pi-ellipsis-v">
               </i>

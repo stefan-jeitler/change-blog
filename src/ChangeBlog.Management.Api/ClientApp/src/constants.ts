@@ -7,7 +7,7 @@ export interface Distance {
 
 export class Constants {
   public static readonly MobileBreakpoint: Distance = {
-    value: 576,
+    value: 768,
     unit: 'px'
   };
 }

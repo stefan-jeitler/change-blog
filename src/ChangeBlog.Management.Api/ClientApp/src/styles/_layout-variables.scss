@@ -1,1 +1,3 @@
-﻿$mobile-breakpoint: 576px;
+﻿@import 'primeflex/src/_variables.scss';
+
+$mobile-breakpoint: $md;

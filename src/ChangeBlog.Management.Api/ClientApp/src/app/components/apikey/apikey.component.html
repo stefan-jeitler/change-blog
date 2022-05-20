@@ -128,7 +128,7 @@
               [pTooltip]="apiKey.expiresAt.toISOString()"
               appendTo="body"
               tooltipPosition="bottom">
-              {{ apiKey.expiresAt | translocoDate: {dateStyle: 'medium'} }}
+              {{ apiKey.expiresAt | translocoDate }}
             </span>
           </td>
           <td>

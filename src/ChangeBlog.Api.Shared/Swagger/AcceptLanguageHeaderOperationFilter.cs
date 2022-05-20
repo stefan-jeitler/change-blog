@@ -1,33 +1,26 @@
 using System.Collections.Generic;
-using System.Linq;
-using Microsoft.OpenApi.Any;
+using JetBrains.Annotations;
 using Microsoft.OpenApi.Models;
 using Swashbuckle.AspNetCore.SwaggerGen;
 
 namespace ChangeBlog.Api.Shared.Swagger;
 
+[UsedImplicitly]
 public class AcceptLanguageHeaderOperationFilter : IOperationFilter
 {
     public void Apply(OpenApiOperation operation, OperationFilterContext context)
     {
         operation.Parameters ??= new List<OpenApiParameter>();
 
-        var supportedLanguages = LocalizationOptions.SupportedLanguages
-            .Select(x => new OpenApiString(x) as IOpenApiAny)
-            .ToList();
-        
-        operation.Parameters.Add(new OpenApiParameter
-        {
-            Name = "Accept-Language",
-            In = ParameterLocation.Header,
-            Description = "Supported languages",
-            Schema = new OpenApiSchema
-            {   
-                Default = new OpenApiString(LocalizationOptions.DefaultLanguage), 
-                Type = "string",
-                Enum = supportedLanguages
-            },
-            Required = false
-        }) ;
+        operation.Parameters.Add(
+            new OpenApiParameter
+            {
+                Reference = new OpenApiReference
+                {
+                    Id = "components/parameters/AcceptLanguage", 
+                    ExternalResource = string.Empty,
+                    Type = ReferenceType.Header,
+                }
+            });
     }
 }

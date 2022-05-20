@@ -82,13 +82,11 @@ public class UserController : ControllerBase
 
         var cultureInfo = CultureInfo.GetCultureInfo(user.Culture);
         var regionInfo = new RegionInfo(cultureInfo.Name);
-        var shortDateFormat = cultureInfo.DateTimeFormat.ShortDatePattern;
         var firstDayOfWeek = (ushort) cultureInfo.DateTimeFormat.FirstDayOfWeek;
 
         var cultureDto = new CultureDto(user.Culture,
             cultureInfo.TwoLetterISOLanguageName,
             regionInfo.TwoLetterISORegionName,
-            shortDateFormat,
             firstDayOfWeek);
 
         return Ok(cultureDto);

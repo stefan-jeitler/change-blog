@@ -28,9 +28,10 @@ export class Client {
     }
 
     /**
+     * @param accept_Language (optional) Supported languages
      * @return Success
      */
-    getApiInfo(): Observable<ApiInfo> {
+    getApiInfo(accept_Language?: AcceptLanguage | undefined): Observable<ApiInfo> {
         let url_ = this.baseUrl + "/api/info";
         url_ = url_.replace(/[?&]$/, "");
 
@@ -38,6 +39,7 @@ export class Client {
             observe: "response",
             responseType: "blob",
             headers: new HttpHeaders({
+                "Accept-Language": accept_Language !== undefined && accept_Language !== null ? "" + accept_Language : "",
                 "Accept": "application/json"
             })
         };
@@ -82,9 +84,10 @@ export class Client {
      * @param searchTerm (optional) 
      * @param lastVersionId (optional) 
      * @param limit (optional) 
+     * @param accept_Language (optional) Supported languages
      * @return Success
      */
-    getApiChangeLogs(searchTerm?: string | undefined, lastVersionId?: string | undefined, limit?: number | undefined): Observable<VersionDto[]> {
+    getApiChangeLogs(searchTerm?: string | undefined, lastVersionId?: string | undefined, limit?: number | undefined, accept_Language?: AcceptLanguage | undefined): Observable<VersionDto[]> {
         let url_ = this.baseUrl + "/api/changes?";
         if (searchTerm === null)
             throw new Error("The parameter 'searchTerm' cannot be null.");
@@ -104,6 +107,7 @@ export class Client {
             observe: "response",
             responseType: "blob",
             headers: new HttpHeaders({
+                "Accept-Language": accept_Language !== undefined && accept_Language !== null ? "" + accept_Language : "",
                 "Accept": "application/json"
             })
         };
@@ -152,9 +156,10 @@ export class Client {
     }
 
     /**
+     * @param accept_Language (optional) Supported languages
      * @return Success
      */
-    getAccounts(): Observable<AccountDto[]> {
+    getAccounts(accept_Language?: AcceptLanguage | undefined): Observable<AccountDto[]> {
         let url_ = this.baseUrl + "/api/v1/accounts";
         url_ = url_.replace(/[?&]$/, "");
 
@@ -162,6 +167,7 @@ export class Client {
             observe: "response",
             responseType: "blob",
             headers: new HttpHeaders({
+                "Accept-Language": accept_Language !== undefined && accept_Language !== null ? "" + accept_Language : "",
                 "Accept": "application/json"
             })
         };
@@ -224,9 +230,10 @@ export class Client {
     }
 
     /**
+     * @param accept_Language (optional) Supported languages
      * @return Success
      */
-    getAccount(accountId: string): Observable<AccountDto> {
+    getAccount(accountId: string, accept_Language?: AcceptLanguage | undefined): Observable<AccountDto> {
         let url_ = this.baseUrl + "/api/v1/accounts/{accountId}";
         if (accountId === undefined || accountId === null)
             throw new Error("The parameter 'accountId' must be defined.");
@@ -237,6 +244,7 @@ export class Client {
             observe: "response",
             responseType: "blob",
             headers: new HttpHeaders({
+                "Accept-Language": accept_Language !== undefined && accept_Language !== null ? "" + accept_Language : "",
                 "Accept": "application/json"
             })
         };
@@ -301,9 +309,10 @@ export class Client {
     /**
      * @param lastUserId (optional) 
      * @param limit (optional) 
+     * @param accept_Language (optional) Supported languages
      * @return Success
      */
-    getAccountUsers(accountId: string, lastUserId?: string | undefined, limit?: number | undefined): Observable<UserDto[]> {
+    getAccountUsers(accountId: string, lastUserId?: string | undefined, limit?: number | undefined, accept_Language?: AcceptLanguage | undefined): Observable<UserDto[]> {
         let url_ = this.baseUrl + "/api/v1/accounts/{accountId}/users?";
         if (accountId === undefined || accountId === null)
             throw new Error("The parameter 'accountId' must be defined.");
@@ -322,6 +331,7 @@ export class Client {
             observe: "response",
             responseType: "blob",
             headers: new HttpHeaders({
+                "Accept-Language": accept_Language !== undefined && accept_Language !== null ? "" + accept_Language : "",
                 "Accept": "application/json"
             })
         };
@@ -394,9 +404,10 @@ export class Client {
      * @param lastProductId (optional) 
      * @param limit (optional) 
      * @param includeClosed (optional) 
+     * @param accept_Language (optional) Supported languages
      * @return Success
      */
-    getAccountProducts(accountId: string, lastProductId?: string | undefined, limit?: number | undefined, includeClosed?: boolean | undefined): Observable<ProductDto[]> {
+    getAccountProducts(accountId: string, lastProductId?: string | undefined, limit?: number | undefined, includeClosed?: boolean | undefined, accept_Language?: AcceptLanguage | undefined): Observable<ProductDto[]> {
         let url_ = this.baseUrl + "/api/v1/accounts/{accountId}/products?";
         if (accountId === undefined || accountId === null)
             throw new Error("The parameter 'accountId' must be defined.");
@@ -419,6 +430,7 @@ export class Client {
             observe: "response",
             responseType: "blob",
             headers: new HttpHeaders({
+                "Accept-Language": accept_Language !== undefined && accept_Language !== null ? "" + accept_Language : "",
                 "Accept": "application/json"
             })
         };
@@ -490,9 +502,10 @@ export class Client {
     /**
      * @param filter (optional) 
      * @param includePermissions (optional) 
+     * @param accept_Language (optional) Supported languages
      * @return Success
      */
-    getRoles(filter?: string | undefined, includePermissions?: boolean | undefined): Observable<RoleDto[]> {
+    getRoles(filter?: string | undefined, includePermissions?: boolean | undefined, accept_Language?: AcceptLanguage | undefined): Observable<RoleDto[]> {
         let url_ = this.baseUrl + "/api/v1/accounts/roles?";
         if (filter === null)
             throw new Error("The parameter 'filter' cannot be null.");
@@ -508,6 +521,7 @@ export class Client {
             observe: "response",
             responseType: "blob",
             headers: new HttpHeaders({
+                "Accept-Language": accept_Language !== undefined && accept_Language !== null ? "" + accept_Language : "",
                 "Accept": "application/json"
             })
         };
@@ -580,9 +594,10 @@ export class Client {
      * @param lastProductId (optional) 
      * @param limit (optional) 
      * @param includeClosed (optional) 
+     * @param accept_Language (optional) Supported languages
      * @return Success
      */
-    getUserProducts(lastProductId?: string | undefined, limit?: number | undefined, includeClosed?: boolean | undefined): Observable<ProductDto[]> {
+    getUserProducts(lastProductId?: string | undefined, limit?: number | undefined, includeClosed?: boolean | undefined, accept_Language?: AcceptLanguage | undefined): Observable<ProductDto[]> {
         let url_ = this.baseUrl + "/api/v1/user/products?";
         if (lastProductId === null)
             throw new Error("The parameter 'lastProductId' cannot be null.");
@@ -602,6 +617,7 @@ export class Client {
             observe: "response",
             responseType: "blob",
             headers: new HttpHeaders({
+                "Accept-Language": accept_Language !== undefined && accept_Language !== null ? "" + accept_Language : "",
                 "Accept": "application/json"
             })
         };
@@ -671,9 +687,10 @@ export class Client {
     }
 
     /**
+     * @param accept_Language (optional) Supported languages
      * @return Success
      */
-    getProduct(productId: string): Observable<ProductDto> {
+    getProduct(productId: string, accept_Language?: AcceptLanguage | undefined): Observable<ProductDto> {
         let url_ = this.baseUrl + "/api/v1/products/{productId}";
         if (productId === undefined || productId === null)
             throw new Error("The parameter 'productId' must be defined.");
@@ -684,6 +701,7 @@ export class Client {
             observe: "response",
             responseType: "blob",
             headers: new HttpHeaders({
+                "Accept-Language": accept_Language !== undefined && accept_Language !== null ? "" + accept_Language : "",
                 "Accept": "application/json"
             })
         };
@@ -753,10 +771,11 @@ export class Client {
     }
 
     /**
+     * @param accept_Language (optional) Supported languages
      * @param body (optional) 
      * @return Created
      */
-    addProduct(body?: AddOrUpdateProductDto | undefined): Observable<SuccessResponse> {
+    addProduct(accept_Language?: AcceptLanguage | undefined, body?: AddOrUpdateProductDto | undefined): Observable<SuccessResponse> {
         let url_ = this.baseUrl + "/api/v1/products";
         url_ = url_.replace(/[?&]$/, "");
 
@@ -767,6 +786,7 @@ export class Client {
             observe: "response",
             responseType: "blob",
             headers: new HttpHeaders({
+                "Accept-Language": accept_Language !== undefined && accept_Language !== null ? "" + accept_Language : "",
                 "Content-Type": "application/json",
                 "Accept": "application/json"
             })
@@ -851,9 +871,10 @@ export class Client {
     }
 
     /**
+     * @param accept_Language (optional) Supported languages
      * @return Success
      */
-    closeProduct(productId: string): Observable<SuccessResponse> {
+    closeProduct(productId: string, accept_Language?: AcceptLanguage | undefined): Observable<SuccessResponse> {
         let url_ = this.baseUrl + "/api/v1/products/{productId}/close";
         if (productId === undefined || productId === null)
             throw new Error("The parameter 'productId' must be defined.");
@@ -864,6 +885,7 @@ export class Client {
             observe: "response",
             responseType: "blob",
             headers: new HttpHeaders({
+                "Accept-Language": accept_Language !== undefined && accept_Language !== null ? "" + accept_Language : "",
                 "Accept": "application/json"
             })
         };
@@ -933,9 +955,10 @@ export class Client {
     }
 
     /**
+     * @param accept_Language (optional) Supported languages
      * @return Success
      */
-    getVersion(versionId: string): Observable<VersionDto> {
+    getVersion(versionId: string, accept_Language?: AcceptLanguage | undefined): Observable<VersionDto> {
         let url_ = this.baseUrl + "/api/v1/versions/{versionId}";
         if (versionId === undefined || versionId === null)
             throw new Error("The parameter 'versionId' must be defined.");
@@ -946,6 +969,7 @@ export class Client {
             observe: "response",
             responseType: "blob",
             headers: new HttpHeaders({
+                "Accept-Language": accept_Language !== undefined && accept_Language !== null ? "" + accept_Language : "",
                 "Accept": "application/json"
             })
         };
@@ -1015,9 +1039,10 @@ export class Client {
     }
 
     /**
+     * @param accept_Language (optional) Supported languages
      * @return Success
      */
-    deleteVersion(versionId: string): Observable<SuccessResponse> {
+    deleteVersion(versionId: string, accept_Language?: AcceptLanguage | undefined): Observable<SuccessResponse> {
         let url_ = this.baseUrl + "/api/v1/versions/{versionId}";
         if (versionId === undefined || versionId === null)
             throw new Error("The parameter 'versionId' must be defined.");
@@ -1028,6 +1053,7 @@ export class Client {
             observe: "response",
             responseType: "blob",
             headers: new HttpHeaders({
+                "Accept-Language": accept_Language !== undefined && accept_Language !== null ? "" + accept_Language : "",
                 "Accept": "application/json"
             })
         };
@@ -1108,9 +1134,10 @@ export class Client {
      * @param lastVersionId (optional) 
      * @param includeDeleted (optional) 
      * @param limit (optional) 
+     * @param accept_Language (optional) Supported languages
      * @return Success
      */
-    gerVersions(productId: string, searchTerm?: string | undefined, lastVersionId?: string | undefined, includeDeleted?: boolean | undefined, limit?: number | undefined): Observable<VersionDto[]> {
+    gerVersions(productId: string, searchTerm?: string | undefined, lastVersionId?: string | undefined, includeDeleted?: boolean | undefined, limit?: number | undefined, accept_Language?: AcceptLanguage | undefined): Observable<VersionDto[]> {
         let url_ = this.baseUrl + "/api/v1/products/{productId}/versions?";
         if (productId === undefined || productId === null)
             throw new Error("The parameter 'productId' must be defined.");
@@ -1137,6 +1164,7 @@ export class Client {
             observe: "response",
             responseType: "blob",
             headers: new HttpHeaders({
+                "Accept-Language": accept_Language !== undefined && accept_Language !== null ? "" + accept_Language : "",
                 "Accept": "application/json"
             })
         };
@@ -1206,10 +1234,11 @@ export class Client {
     }
 
     /**
+     * @param accept_Language (optional) Supported languages
      * @param body (optional) 
      * @return Created
      */
-    addVersion(productId: string, body?: AddVersionDto | undefined): Observable<SuccessResponse> {
+    addVersion(productId: string, accept_Language?: AcceptLanguage | undefined, body?: AddVersionDto | undefined): Observable<SuccessResponse> {
         let url_ = this.baseUrl + "/api/v1/products/{productId}/versions";
         if (productId === undefined || productId === null)
             throw new Error("The parameter 'productId' must be defined.");
@@ -1223,6 +1252,7 @@ export class Client {
             observe: "response",
             responseType: "blob",
             headers: new HttpHeaders({
+                "Accept-Language": accept_Language !== undefined && accept_Language !== null ? "" + accept_Language : "",
                 "Content-Type": "application/json",
                 "Accept": "application/json"
             })
@@ -1307,9 +1337,10 @@ export class Client {
     }
 
     /**
+     * @param accept_Language (optional) Supported languages
      * @return Success
      */
-    getLatestVersion(productId: string): Observable<VersionDto> {
+    getLatestVersion(productId: string, accept_Language?: AcceptLanguage | undefined): Observable<VersionDto> {
         let url_ = this.baseUrl + "/api/v1/products/{productId}/versions/latest";
         if (productId === undefined || productId === null)
             throw new Error("The parameter 'productId' must be defined.");
@@ -1320,6 +1351,7 @@ export class Client {
             observe: "response",
             responseType: "blob",
             headers: new HttpHeaders({
+                "Accept-Language": accept_Language !== undefined && accept_Language !== null ? "" + accept_Language : "",
                 "Accept": "application/json"
             })
         };
@@ -1389,9 +1421,10 @@ export class Client {
     }
 
     /**
+     * @param accept_Language (optional) Supported languages
      * @return Success
      */
-    getProductVersion(productId: string, version: string): Observable<VersionDto[]> {
+    getProductVersion(productId: string, version: string, accept_Language?: AcceptLanguage | undefined): Observable<VersionDto[]> {
         let url_ = this.baseUrl + "/api/v1/products/{productId}/versions/{version}";
         if (productId === undefined || productId === null)
             throw new Error("The parameter 'productId' must be defined.");
@@ -1405,6 +1438,7 @@ export class Client {
             observe: "response",
             responseType: "blob",
             headers: new HttpHeaders({
+                "Accept-Language": accept_Language !== undefined && accept_Language !== null ? "" + accept_Language : "",
                 "Accept": "application/json"
             })
         };
@@ -1481,10 +1515,11 @@ export class Client {
     }
 
     /**
+     * @param accept_Language (optional) Supported languages
      * @param body (optional) 
      * @return Success
      */
-    updateVersion(productId: string, version: string, body?: AddOrUpdateVersionDto | undefined): Observable<SuccessResponse> {
+    updateVersion(productId: string, version: string, accept_Language?: AcceptLanguage | undefined, body?: AddOrUpdateVersionDto | undefined): Observable<SuccessResponse> {
         let url_ = this.baseUrl + "/api/v1/products/{productId}/versions/{version}";
         if (productId === undefined || productId === null)
             throw new Error("The parameter 'productId' must be defined.");
@@ -1501,6 +1536,7 @@ export class Client {
             observe: "response",
             responseType: "blob",
             headers: new HttpHeaders({
+                "Accept-Language": accept_Language !== undefined && accept_Language !== null ? "" + accept_Language : "",
                 "Content-Type": "application/json",
                 "Accept": "application/json"
             })
@@ -1592,9 +1628,10 @@ export class Client {
     }
 
     /**
+     * @param accept_Language (optional) Supported languages
      * @return Success
      */
-    releaseVersion(versionId: string): Observable<SuccessResponse> {
+    releaseVersion(versionId: string, accept_Language?: AcceptLanguage | undefined): Observable<SuccessResponse> {
         let url_ = this.baseUrl + "/api/v1/versions/{versionId}/release";
         if (versionId === undefined || versionId === null)
             throw new Error("The parameter 'versionId' must be defined.");
@@ -1605,6 +1642,7 @@ export class Client {
             observe: "response",
             responseType: "blob",
             headers: new HttpHeaders({
+                "Accept-Language": accept_Language !== undefined && accept_Language !== null ? "" + accept_Language : "",
                 "Accept": "application/json"
             })
         };
@@ -1681,9 +1719,10 @@ export class Client {
     }
 
     /**
+     * @param accept_Language (optional) Supported languages
      * @return Success
      */
-    getPendingChangeLogs(productId: string): Observable<ChangeLogLineDto[]> {
+    getPendingChangeLogs(productId: string, accept_Language?: AcceptLanguage | undefined): Observable<ChangeLogLineDto[]> {
         let url_ = this.baseUrl + "/api/v1/products/{productId}/pending-changelogs";
         if (productId === undefined || productId === null)
             throw new Error("The parameter 'productId' must be defined.");
@@ -1694,6 +1733,7 @@ export class Client {
             observe: "response",
             responseType: "blob",
             headers: new HttpHeaders({
+                "Accept-Language": accept_Language !== undefined && accept_Language !== null ? "" + accept_Language : "",
                 "Accept": "application/json"
             })
         };
@@ -1763,10 +1803,11 @@ export class Client {
     }
 
     /**
+     * @param accept_Language (optional) Supported languages
      * @param body (optional) 
      * @return Created
      */
-    addPendingChangeLogLine(productId: string, body?: AddOrUpdateChangeLogLineDto | undefined): Observable<SuccessResponse> {
+    addPendingChangeLogLine(productId: string, accept_Language?: AcceptLanguage | undefined, body?: AddOrUpdateChangeLogLineDto | undefined): Observable<SuccessResponse> {
         let url_ = this.baseUrl + "/api/v1/products/{productId}/pending-changelogs";
         if (productId === undefined || productId === null)
             throw new Error("The parameter 'productId' must be defined.");
@@ -1780,6 +1821,7 @@ export class Client {
             observe: "response",
             responseType: "blob",
             headers: new HttpHeaders({
+                "Accept-Language": accept_Language !== undefined && accept_Language !== null ? "" + accept_Language : "",
                 "Content-Type": "application/json",
                 "Accept": "application/json"
             })
@@ -1864,9 +1906,10 @@ export class Client {
     }
 
     /**
+     * @param accept_Language (optional) Supported languages
      * @return Success
      */
-    deleteAllPendingChangeLogs(productId: string): Observable<SuccessResponse> {
+    deleteAllPendingChangeLogs(productId: string, accept_Language?: AcceptLanguage | undefined): Observable<SuccessResponse> {
         let url_ = this.baseUrl + "/api/v1/products/{productId}/pending-changelogs";
         if (productId === undefined || productId === null)
             throw new Error("The parameter 'productId' must be defined.");
@@ -1877,6 +1920,7 @@ export class Client {
             observe: "response",
             responseType: "blob",
             headers: new HttpHeaders({
+                "Accept-Language": accept_Language !== undefined && accept_Language !== null ? "" + accept_Language : "",
                 "Accept": "application/json"
             })
         };
@@ -1939,9 +1983,10 @@ export class Client {
     }
 
     /**
+     * @param accept_Language (optional) Supported languages
      * @return Success
      */
-    getPendingChangeLogLine(changeLogLineId: string): Observable<PendingChangeLogLineDto> {
+    getPendingChangeLogLine(changeLogLineId: string, accept_Language?: AcceptLanguage | undefined): Observable<PendingChangeLogLineDto> {
         let url_ = this.baseUrl + "/api/v1/pending-changelogs/{changeLogLineId}";
         if (changeLogLineId === undefined || changeLogLineId === null)
             throw new Error("The parameter 'changeLogLineId' must be defined.");
@@ -1952,6 +1997,7 @@ export class Client {
             observe: "response",
             responseType: "blob",
             headers: new HttpHeaders({
+                "Accept-Language": accept_Language !== undefined && accept_Language !== null ? "" + accept_Language : "",
                 "Accept": "application/json"
             })
         };
@@ -2021,10 +2067,11 @@ export class Client {
     }
 
     /**
+     * @param accept_Language (optional) Supported languages
      * @param body (optional) 
      * @return Success
      */
-    updatePendingChangeLogLine(changeLogLineId: string, body?: PatchChangeLogLineDto | undefined): Observable<SuccessResponse> {
+    updatePendingChangeLogLine(changeLogLineId: string, accept_Language?: AcceptLanguage | undefined, body?: PatchChangeLogLineDto | undefined): Observable<SuccessResponse> {
         let url_ = this.baseUrl + "/api/v1/pending-changelogs/{changeLogLineId}";
         if (changeLogLineId === undefined || changeLogLineId === null)
             throw new Error("The parameter 'changeLogLineId' must be defined.");
@@ -2038,6 +2085,7 @@ export class Client {
             observe: "response",
             responseType: "blob",
             headers: new HttpHeaders({
+                "Accept-Language": accept_Language !== undefined && accept_Language !== null ? "" + accept_Language : "",
                 "Content-Type": "application/json",
                 "Accept": "application/json"
             })
@@ -2122,9 +2170,10 @@ export class Client {
     }
 
     /**
+     * @param accept_Language (optional) Supported languages
      * @return Success
      */
-    deletePendingChangeLogLine(changeLogLineId: string): Observable<SuccessResponse> {
+    deletePendingChangeLogLine(changeLogLineId: string, accept_Language?: AcceptLanguage | undefined): Observable<SuccessResponse> {
         let url_ = this.baseUrl + "/api/v1/pending-changelogs/{changeLogLineId}";
         if (changeLogLineId === undefined || changeLogLineId === null)
             throw new Error("The parameter 'changeLogLineId' must be defined.");
@@ -2135,6 +2184,7 @@ export class Client {
             observe: "response",
             responseType: "blob",
             headers: new HttpHeaders({
+                "Accept-Language": accept_Language !== undefined && accept_Language !== null ? "" + accept_Language : "",
                 "Accept": "application/json"
             })
         };
@@ -2211,10 +2261,11 @@ export class Client {
     }
 
     /**
+     * @param accept_Language (optional) Supported languages
      * @param body (optional) 
      * @return Success
      */
-    movePendingChangeLogLine(changeLogLineId: string, body?: MoveChangeLogLineDto | undefined): Observable<SuccessResponse> {
+    movePendingChangeLogLine(changeLogLineId: string, accept_Language?: AcceptLanguage | undefined, body?: MoveChangeLogLineDto | undefined): Observable<SuccessResponse> {
         let url_ = this.baseUrl + "/api/v1/pending-changelogs/{changeLogLineId}/move";
         if (changeLogLineId === undefined || changeLogLineId === null)
             throw new Error("The parameter 'changeLogLineId' must be defined.");
@@ -2228,6 +2279,7 @@ export class Client {
             observe: "response",
             responseType: "blob",
             headers: new HttpHeaders({
+                "Accept-Language": accept_Language !== undefined && accept_Language !== null ? "" + accept_Language : "",
                 "Content-Type": "application/json",
                 "Accept": "application/json"
             })
@@ -2312,10 +2364,11 @@ export class Client {
     }
 
     /**
+     * @param accept_Language (optional) Supported languages
      * @param body (optional) 
      * @return Success
      */
-    moveAllPendingChangeLogs(productId: string, body?: MoveChangeLogLineDto | undefined): Observable<SuccessResponse> {
+    moveAllPendingChangeLogs(productId: string, accept_Language?: AcceptLanguage | undefined, body?: MoveChangeLogLineDto | undefined): Observable<SuccessResponse> {
         let url_ = this.baseUrl + "/api/v1/products/{productId}/pending-changelogs/move";
         if (productId === undefined || productId === null)
             throw new Error("The parameter 'productId' must be defined.");
@@ -2329,6 +2382,7 @@ export class Client {
             observe: "response",
             responseType: "blob",
             headers: new HttpHeaders({
+                "Accept-Language": accept_Language !== undefined && accept_Language !== null ? "" + accept_Language : "",
                 "Content-Type": "application/json",
                 "Accept": "application/json"
             })
@@ -2413,9 +2467,10 @@ export class Client {
     }
 
     /**
+     * @param accept_Language (optional) Supported languages
      * @return Success
      */
-    getChangeLogLine(changeLogLineId: string): Observable<ChangeLogLineDto> {
+    getChangeLogLine(changeLogLineId: string, accept_Language?: AcceptLanguage | undefined): Observable<ChangeLogLineDto> {
         let url_ = this.baseUrl + "/api/v1/changelogs/{changeLogLineId}";
         if (changeLogLineId === undefined || changeLogLineId === null)
             throw new Error("The parameter 'changeLogLineId' must be defined.");
@@ -2426,6 +2481,7 @@ export class Client {
             observe: "response",
             responseType: "blob",
             headers: new HttpHeaders({
+                "Accept-Language": accept_Language !== undefined && accept_Language !== null ? "" + accept_Language : "",
                 "Accept": "application/json"
             })
         };
@@ -2495,9 +2551,10 @@ export class Client {
     }
 
     /**
+     * @param accept_Language (optional) Supported languages
      * @return Success
      */
-    deleteChangeLogLine(changeLogLineId: string): Observable<ErrorResponse> {
+    deleteChangeLogLine(changeLogLineId: string, accept_Language?: AcceptLanguage | undefined): Observable<ErrorResponse> {
         let url_ = this.baseUrl + "/api/v1/changelogs/{changeLogLineId}";
         if (changeLogLineId === undefined || changeLogLineId === null)
             throw new Error("The parameter 'changeLogLineId' must be defined.");
@@ -2508,6 +2565,7 @@ export class Client {
             observe: "response",
             responseType: "blob",
             headers: new HttpHeaders({
+                "Accept-Language": accept_Language !== undefined && accept_Language !== null ? "" + accept_Language : "",
                 "Accept": "application/json"
             })
         };
@@ -2584,10 +2642,11 @@ export class Client {
     }
 
     /**
+     * @param accept_Language (optional) Supported languages
      * @param body (optional) 
      * @return Success
      */
-    updateChangeLogLine(changeLogLineId: string, body?: PatchChangeLogLineDto | undefined): Observable<SuccessResponse> {
+    updateChangeLogLine(changeLogLineId: string, accept_Language?: AcceptLanguage | undefined, body?: PatchChangeLogLineDto | undefined): Observable<SuccessResponse> {
         let url_ = this.baseUrl + "/api/v1/changelogs/{changeLogLineId}";
         if (changeLogLineId === undefined || changeLogLineId === null)
             throw new Error("The parameter 'changeLogLineId' must be defined.");
@@ -2601,6 +2660,7 @@ export class Client {
             observe: "response",
             responseType: "blob",
             headers: new HttpHeaders({
+                "Accept-Language": accept_Language !== undefined && accept_Language !== null ? "" + accept_Language : "",
                 "Content-Type": "application/json",
                 "Accept": "application/json"
             })
@@ -2678,10 +2738,11 @@ export class Client {
     }
 
     /**
+     * @param accept_Language (optional) Supported languages
      * @param body (optional) 
      * @return Created
      */
-    addChangeLogLine(versionId: string, body?: AddOrUpdateChangeLogLineDto | undefined): Observable<SuccessResponse> {
+    addChangeLogLine(versionId: string, accept_Language?: AcceptLanguage | undefined, body?: AddOrUpdateChangeLogLineDto | undefined): Observable<SuccessResponse> {
         let url_ = this.baseUrl + "/api/v1/versions/{versionId}/changelogs";
         if (versionId === undefined || versionId === null)
             throw new Error("The parameter 'versionId' must be defined.");
@@ -2695,6 +2756,7 @@ export class Client {
             observe: "response",
             responseType: "blob",
             headers: new HttpHeaders({
+                "Accept-Language": accept_Language !== undefined && accept_Language !== null ? "" + accept_Language : "",
                 "Content-Type": "application/json",
                 "Accept": "application/json"
             })
@@ -2779,9 +2841,10 @@ export class Client {
     }
 
     /**
+     * @param accept_Language (optional) Supported languages
      * @return Success
      */
-    makeChangeLogLinePending(changeLogLineId: string): Observable<SuccessResponse> {
+    makeChangeLogLinePending(changeLogLineId: string, accept_Language?: AcceptLanguage | undefined): Observable<SuccessResponse> {
         let url_ = this.baseUrl + "/api/v1/changelogs/{changeLogLineId}/make-pending";
         if (changeLogLineId === undefined || changeLogLineId === null)
             throw new Error("The parameter 'changeLogLineId' must be defined.");
@@ -2792,6 +2855,7 @@ export class Client {
             observe: "response",
             responseType: "blob",
             headers: new HttpHeaders({
+                "Accept-Language": accept_Language !== undefined && accept_Language !== null ? "" + accept_Language : "",
                 "Accept": "application/json"
             })
         };
@@ -2875,9 +2939,10 @@ export class Client {
     }
 
     /**
+     * @param accept_Language (optional) Supported languages
      * @return Success
      */
-    makeAllChangeLogLinesPending(versionId: string): Observable<SuccessResponse> {
+    makeAllChangeLogLinesPending(versionId: string, accept_Language?: AcceptLanguage | undefined): Observable<SuccessResponse> {
         let url_ = this.baseUrl + "/api/v1/versions/{versionId}/changelogs/make-pending";
         if (versionId === undefined || versionId === null)
             throw new Error("The parameter 'versionId' must be defined.");
@@ -2888,6 +2953,7 @@ export class Client {
             observe: "response",
             responseType: "blob",
             headers: new HttpHeaders({
+                "Accept-Language": accept_Language !== undefined && accept_Language !== null ? "" + accept_Language : "",
                 "Accept": "application/json"
             })
         };
@@ -2971,9 +3037,10 @@ export class Client {
     }
 
     /**
+     * @param accept_Language (optional) Supported languages
      * @return Success
      */
-    getLabels(changeLogLineId: string): Observable<string[]> {
+    getLabels(changeLogLineId: string, accept_Language?: AcceptLanguage | undefined): Observable<string[]> {
         let url_ = this.baseUrl + "/api/v1/changelogs/{changeLogLineId}/labels";
         if (changeLogLineId === undefined || changeLogLineId === null)
             throw new Error("The parameter 'changeLogLineId' must be defined.");
@@ -2984,6 +3051,7 @@ export class Client {
             observe: "response",
             responseType: "blob",
             headers: new HttpHeaders({
+                "Accept-Language": accept_Language !== undefined && accept_Language !== null ? "" + accept_Language : "",
                 "Accept": "application/json"
             })
         };
@@ -3053,9 +3121,10 @@ export class Client {
     }
 
     /**
+     * @param accept_Language (optional) Supported languages
      * @return Success
      */
-    addLabel(changeLogLineId: string, label: string): Observable<SuccessResponse> {
+    addLabel(changeLogLineId: string, label: string, accept_Language?: AcceptLanguage | undefined): Observable<SuccessResponse> {
         let url_ = this.baseUrl + "/api/v1/changelogs/{changeLogLineId}/labels/{label}";
         if (changeLogLineId === undefined || changeLogLineId === null)
             throw new Error("The parameter 'changeLogLineId' must be defined.");
@@ -3069,6 +3138,7 @@ export class Client {
             observe: "response",
             responseType: "blob",
             headers: new HttpHeaders({
+                "Accept-Language": accept_Language !== undefined && accept_Language !== null ? "" + accept_Language : "",
                 "Accept": "application/json"
             })
         };
@@ -3152,9 +3222,10 @@ export class Client {
     }
 
     /**
+     * @param accept_Language (optional) Supported languages
      * @return Success
      */
-    deleteLabel(changeLogLineId: string, label: string): Observable<SuccessResponse> {
+    deleteLabel(changeLogLineId: string, label: string, accept_Language?: AcceptLanguage | undefined): Observable<SuccessResponse> {
         let url_ = this.baseUrl + "/api/v1/changelogs/{changeLogLineId}/labels/{label}";
         if (changeLogLineId === undefined || changeLogLineId === null)
             throw new Error("The parameter 'changeLogLineId' must be defined.");
@@ -3168,6 +3239,7 @@ export class Client {
             observe: "response",
             responseType: "blob",
             headers: new HttpHeaders({
+                "Accept-Language": accept_Language !== undefined && accept_Language !== null ? "" + accept_Language : "",
                 "Accept": "application/json"
             })
         };
@@ -3244,9 +3316,10 @@ export class Client {
     }
 
     /**
+     * @param accept_Language (optional) Supported languages
      * @return Success
      */
-    getIssues(changeLogLineId: string): Observable<string[]> {
+    getIssues(changeLogLineId: string, accept_Language?: AcceptLanguage | undefined): Observable<string[]> {
         let url_ = this.baseUrl + "/api/v1/changelogs/{changeLogLineId}/issues";
         if (changeLogLineId === undefined || changeLogLineId === null)
             throw new Error("The parameter 'changeLogLineId' must be defined.");
@@ -3257,6 +3330,7 @@ export class Client {
             observe: "response",
             responseType: "blob",
             headers: new HttpHeaders({
+                "Accept-Language": accept_Language !== undefined && accept_Language !== null ? "" + accept_Language : "",
                 "Accept": "application/json"
             })
         };
@@ -3326,9 +3400,10 @@ export class Client {
     }
 
     /**
+     * @param accept_Language (optional) Supported languages
      * @return Success
      */
-    addIssue(changeLogLineId: string, issue: string): Observable<SuccessResponse> {
+    addIssue(changeLogLineId: string, issue: string, accept_Language?: AcceptLanguage | undefined): Observable<SuccessResponse> {
         let url_ = this.baseUrl + "/api/v1/changelogs/{changeLogLineId}/issues/{issue}";
         if (changeLogLineId === undefined || changeLogLineId === null)
             throw new Error("The parameter 'changeLogLineId' must be defined.");
@@ -3342,6 +3417,7 @@ export class Client {
             observe: "response",
             responseType: "blob",
             headers: new HttpHeaders({
+                "Accept-Language": accept_Language !== undefined && accept_Language !== null ? "" + accept_Language : "",
                 "Accept": "application/json"
             })
         };
@@ -3425,9 +3501,10 @@ export class Client {
     }
 
     /**
+     * @param accept_Language (optional) Supported languages
      * @return Success
      */
-    deleteIssue(changeLogLineId: string, issue: string): Observable<SuccessResponse> {
+    deleteIssue(changeLogLineId: string, issue: string, accept_Language?: AcceptLanguage | undefined): Observable<SuccessResponse> {
         let url_ = this.baseUrl + "/api/v1/changelogs/{changeLogLineId}/issues/{issue}";
         if (changeLogLineId === undefined || changeLogLineId === null)
             throw new Error("The parameter 'changeLogLineId' must be defined.");
@@ -3441,6 +3518,7 @@ export class Client {
             observe: "response",
             responseType: "blob",
             headers: new HttpHeaders({
+                "Accept-Language": accept_Language !== undefined && accept_Language !== null ? "" + accept_Language : "",
                 "Accept": "application/json"
             })
         };
@@ -4457,6 +4535,11 @@ export interface IVersionDto {
     createdAt?: Date;
     releasedAt?: Date | undefined;
     deletedAt?: Date | undefined;
+}
+
+export enum AcceptLanguage {
+    En = "en",
+    De = "de",
 }
 
 export class SwaggerException extends Error {

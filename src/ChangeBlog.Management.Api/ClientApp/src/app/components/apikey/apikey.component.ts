@@ -183,7 +183,7 @@ export class ApikeyComponent implements OnInit {
 
     const updateRequest = !!apiKeyId
       ? this.mngmtApiClient.updateApiKey(apiKeyId, title, expires)
-      : this.mngmtApiClient.generateApiKey(title, expires);
+      : this.mngmtApiClient.generateApiKey(expires, title);
 
     updateRequest
       .subscribe({

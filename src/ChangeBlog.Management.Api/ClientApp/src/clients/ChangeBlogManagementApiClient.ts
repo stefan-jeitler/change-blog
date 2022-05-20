@@ -28,9 +28,10 @@ export class Client {
     }
 
     /**
+     * @param accept_Language (optional) Supported languages
      * @return Success
      */
-    getAppInfo(): Observable<ApiInfo> {
+    getAppInfo(accept_Language?: AcceptLanguage | undefined): Observable<ApiInfo> {
         let url_ = this.baseUrl + "/api/info";
         url_ = url_.replace(/[?&]$/, "");
 
@@ -38,6 +39,7 @@ export class Client {
             observe: "response",
             responseType: "blob",
             headers: new HttpHeaders({
+                "Accept-Language": accept_Language !== undefined && accept_Language !== null ? "" + accept_Language : "",
                 "Accept": "application/json"
             })
         };
@@ -79,9 +81,10 @@ export class Client {
     }
 
     /**
+     * @param accept_Language (optional) Supported languages
      * @return Success
      */
-    getAppSettings(): Observable<ClientAppSettings> {
+    getAppSettings(accept_Language?: AcceptLanguage | undefined): Observable<ClientAppSettings> {
         let url_ = this.baseUrl + "/api/appsettings";
         url_ = url_.replace(/[?&]$/, "");
 
@@ -89,6 +92,7 @@ export class Client {
             observe: "response",
             responseType: "blob",
             headers: new HttpHeaders({
+                "Accept-Language": accept_Language !== undefined && accept_Language !== null ? "" + accept_Language : "",
                 "Accept": "application/json"
             })
         };
@@ -130,9 +134,10 @@ export class Client {
     }
 
     /**
+     * @param accept_Language (optional) Supported languages
      * @return Success
      */
-    ensureUserIsImported(): Observable<SuccessResponse> {
+    ensureUserIsImported(accept_Language?: AcceptLanguage | undefined): Observable<SuccessResponse> {
         let url_ = this.baseUrl + "/api/v1/user/import";
         url_ = url_.replace(/[?&]$/, "");
 
@@ -140,6 +145,7 @@ export class Client {
             observe: "response",
             responseType: "blob",
             headers: new HttpHeaders({
+                "Accept-Language": accept_Language !== undefined && accept_Language !== null ? "" + accept_Language : "",
                 "Accept": "application/json"
             })
         };
@@ -188,9 +194,10 @@ export class Client {
     }
 
     /**
+     * @param accept_Language (optional) Supported languages
      * @return Success
      */
-    getUserProfile(): Observable<UserDto> {
+    getUserProfile(accept_Language?: AcceptLanguage | undefined): Observable<UserDto> {
         let url_ = this.baseUrl + "/api/v1/user/profile";
         url_ = url_.replace(/[?&]$/, "");
 
@@ -198,6 +205,7 @@ export class Client {
             observe: "response",
             responseType: "blob",
             headers: new HttpHeaders({
+                "Accept-Language": accept_Language !== undefined && accept_Language !== null ? "" + accept_Language : "",
                 "Accept": "application/json"
             })
         };
@@ -246,10 +254,11 @@ export class Client {
     }
 
     /**
+     * @param accept_Language (optional) Supported languages
      * @param body (optional) 
      * @return Success
      */
-    updateUserProfile(body: UpdateUserProfileDto | undefined): Observable<SuccessResponse> {
+    updateUserProfile(accept_Language?: AcceptLanguage | undefined, body?: UpdateUserProfileDto | undefined): Observable<SuccessResponse> {
         let url_ = this.baseUrl + "/api/v1/user/profile";
         url_ = url_.replace(/[?&]$/, "");
 
@@ -260,6 +269,7 @@ export class Client {
             observe: "response",
             responseType: "blob",
             headers: new HttpHeaders({
+                "Accept-Language": accept_Language !== undefined && accept_Language !== null ? "" + accept_Language : "",
                 "Content-Type": "application/json",
                 "Accept": "application/json"
             })
@@ -323,9 +333,10 @@ export class Client {
     }
 
     /**
+     * @param accept_Language (optional) Supported languages
      * @return Success
      */
-    getUserCulture(): Observable<CultureDto> {
+    getUserCulture(accept_Language?: AcceptLanguage | undefined): Observable<CultureDto> {
         let url_ = this.baseUrl + "/api/v1/user/culture";
         url_ = url_.replace(/[?&]$/, "");
 
@@ -333,6 +344,7 @@ export class Client {
             observe: "response",
             responseType: "blob",
             headers: new HttpHeaders({
+                "Accept-Language": accept_Language !== undefined && accept_Language !== null ? "" + accept_Language : "",
                 "Accept": "application/json"
             })
         };
@@ -381,9 +393,10 @@ export class Client {
     }
 
     /**
+     * @param accept_Language (optional) Supported languages
      * @return Success
      */
-    getSupportedCultures(): Observable<string[]> {
+    getSupportedCultures(accept_Language?: AcceptLanguage | undefined): Observable<string[]> {
         let url_ = this.baseUrl + "/api/v1/user/supported-cultures";
         url_ = url_.replace(/[?&]$/, "");
 
@@ -391,6 +404,7 @@ export class Client {
             observe: "response",
             responseType: "blob",
             headers: new HttpHeaders({
+                "Accept-Language": accept_Language !== undefined && accept_Language !== null ? "" + accept_Language : "",
                 "Accept": "application/json"
             })
         };
@@ -446,9 +460,10 @@ export class Client {
     }
 
     /**
+     * @param accept_Language (optional) Supported languages
      * @return Success
      */
-    getSupportedTimezones(): Observable<TimezoneDto[]> {
+    getSupportedTimezones(accept_Language?: AcceptLanguage | undefined): Observable<TimezoneDto[]> {
         let url_ = this.baseUrl + "/api/v1/user/supported-timezones";
         url_ = url_.replace(/[?&]$/, "");
 
@@ -456,6 +471,7 @@ export class Client {
             observe: "response",
             responseType: "blob",
             headers: new HttpHeaders({
+                "Accept-Language": accept_Language !== undefined && accept_Language !== null ? "" + accept_Language : "",
                 "Accept": "application/json"
             })
         };
@@ -511,9 +527,10 @@ export class Client {
     }
 
     /**
+     * @param accept_Language (optional) Supported languages
      * @return Success
      */
-    getApiKeys(): Observable<ApiKeyDto[]> {
+    getApiKeys(accept_Language?: AcceptLanguage | undefined): Observable<ApiKeyDto[]> {
         let url_ = this.baseUrl + "/api/v1/user/apikeys";
         url_ = url_.replace(/[?&]$/, "");
 
@@ -521,6 +538,7 @@ export class Client {
             observe: "response",
             responseType: "blob",
             headers: new HttpHeaders({
+                "Accept-Language": accept_Language !== undefined && accept_Language !== null ? "" + accept_Language : "",
                 "Accept": "application/json"
             })
         };
@@ -577,24 +595,26 @@ export class Client {
 
     /**
      * @param title (optional) 
+     * @param accept_Language (optional) Supported languages
      * @return Success
      */
-    generateApiKey(title: string | undefined, expiresAt: Date): Observable<SuccessResponse> {
+    generateApiKey(expiresAt: Date, title?: string | undefined, accept_Language?: AcceptLanguage | undefined): Observable<SuccessResponse> {
         let url_ = this.baseUrl + "/api/v1/user/apikeys?";
-        if (title === null)
-            throw new Error("The parameter 'title' cannot be null.");
-        else if (title !== undefined)
-            url_ += "title=" + encodeURIComponent("" + title) + "&";
         if (expiresAt === undefined || expiresAt === null)
             throw new Error("The parameter 'expiresAt' must be defined and cannot be null.");
         else
             url_ += "expiresAt=" + encodeURIComponent(expiresAt ? "" + expiresAt.toISOString() : "") + "&";
+        if (title === null)
+            throw new Error("The parameter 'title' cannot be null.");
+        else if (title !== undefined)
+            url_ += "title=" + encodeURIComponent("" + title) + "&";
         url_ = url_.replace(/[?&]$/, "");
 
         let options_ : any = {
             observe: "response",
             responseType: "blob",
             headers: new HttpHeaders({
+                "Accept-Language": accept_Language !== undefined && accept_Language !== null ? "" + accept_Language : "",
                 "Accept": "application/json"
             })
         };
@@ -659,9 +679,10 @@ export class Client {
     /**
      * @param title (optional) 
      * @param expiresAt (optional) 
+     * @param accept_Language (optional) Supported languages
      * @return Success
      */
-    updateApiKey(apiKeyId: string, title: string | undefined, expiresAt: Date | undefined): Observable<SuccessResponse> {
+    updateApiKey(apiKeyId: string, title?: string | undefined, expiresAt?: Date | undefined, accept_Language?: AcceptLanguage | undefined): Observable<SuccessResponse> {
         let url_ = this.baseUrl + "/api/v1/user/apikeys/{apiKeyId}?";
         if (apiKeyId === undefined || apiKeyId === null)
             throw new Error("The parameter 'apiKeyId' must be defined.");
@@ -680,6 +701,7 @@ export class Client {
             observe: "response",
             responseType: "blob",
             headers: new HttpHeaders({
+                "Accept-Language": accept_Language !== undefined && accept_Language !== null ? "" + accept_Language : "",
                 "Accept": "application/json"
             })
         };
@@ -749,9 +771,10 @@ export class Client {
     }
 
     /**
+     * @param accept_Language (optional) Supported languages
      * @return Success
      */
-    deleteApiKey(apiKeyId: string): Observable<SuccessResponse> {
+    deleteApiKey(apiKeyId: string, accept_Language?: AcceptLanguage | undefined): Observable<SuccessResponse> {
         let url_ = this.baseUrl + "/api/v1/user/apikeys/{apiKeyId}";
         if (apiKeyId === undefined || apiKeyId === null)
             throw new Error("The parameter 'apiKeyId' must be defined.");
@@ -762,6 +785,7 @@ export class Client {
             observe: "response",
             responseType: "blob",
             headers: new HttpHeaders({
+                "Accept-Language": accept_Language !== undefined && accept_Language !== null ? "" + accept_Language : "",
                 "Accept": "application/json"
             })
         };
@@ -1022,7 +1046,6 @@ export class CultureDto implements ICultureDto {
     culture!: string | undefined;
     language!: string | undefined;
     country!: string | undefined;
-    shortDateFormat!: string | undefined;
     firstDayOfWeek!: number;
 
     constructor(data?: ICultureDto) {
@@ -1039,7 +1062,6 @@ export class CultureDto implements ICultureDto {
             this.culture = _data["culture"];
             this.language = _data["language"];
             this.country = _data["country"];
-            this.shortDateFormat = _data["shortDateFormat"];
             this.firstDayOfWeek = _data["firstDayOfWeek"];
         }
     }
@@ -1056,7 +1078,6 @@ export class CultureDto implements ICultureDto {
         data["culture"] = this.culture;
         data["language"] = this.language;
         data["country"] = this.country;
-        data["shortDateFormat"] = this.shortDateFormat;
         data["firstDayOfWeek"] = this.firstDayOfWeek;
         return data;
     }
@@ -1066,7 +1087,6 @@ export interface ICultureDto {
     culture: string | undefined;
     language: string | undefined;
     country: string | undefined;
-    shortDateFormat: string | undefined;
     firstDayOfWeek: number;
 }
 
@@ -1364,6 +1384,11 @@ export interface IUserDto {
     timeZone: string | undefined;
     culture: string | undefined;
     createdAt: Date;
+}
+
+export enum AcceptLanguage {
+    En = "en",
+    De = "de",
 }
 
 export class SwaggerException extends Error {

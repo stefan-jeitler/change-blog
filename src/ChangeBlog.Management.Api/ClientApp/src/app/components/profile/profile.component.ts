@@ -4,7 +4,7 @@ import {tap} from "rxjs/operators";
 import {ChangeBlogManagementApi as MngmtApiClient} from "../../../clients/ChangeBlogManagementApiClient";
 import {firstValueFrom} from "rxjs";
 import {FormBuilder, FormControl, FormGroup} from "@angular/forms";
-import {Message, MessageService} from "primeng/api";
+import { MessageService} from "primeng/api";
 import {TranslocoService} from "@ngneat/transloco";
 import {AppUserService} from "../../services/app-user.service";
 import ITimezoneDto = MngmtApiClient.ITimezoneDto;
@@ -73,7 +73,7 @@ export class ProfileComponent implements OnInit {
     dto.culture = userProfileForm.value.culture;
     dto.timezone = userProfileForm.value.timezone.olsonId;
 
-    this.mngmtApiClient.updateUserProfile(dto)
+    this.mngmtApiClient.updateUserProfile(undefined, dto)
       .subscribe({
         next: r => this.profileUpdated(r),
         error: async (error: MngmtApiClient.SwaggerException) => {

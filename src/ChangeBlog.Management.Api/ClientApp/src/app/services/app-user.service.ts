@@ -30,9 +30,11 @@ export class AppUserService {
     anything else - literal text
   */
   private primeNgDateFormatAdjustments: { [key: string]: string } = {
-    'M/d/yyyy': 'm/d/yy', // en-US
-    'dd/MM/yyyy': 'dd/mm/yy', // en-GB
-    'dd.MM.yyyy': 'dd.mm.yy' // de-*
+    'US': 'm/d/yy',
+    'GB': 'dd/mm/yy',
+    'AT': 'dd.mm.yy',
+    'DE': 'dd.mm.yy',
+    'CH': 'dd.mm.yy'
   };
 
   constructor(private translationService: TranslocoService,
@@ -58,15 +60,15 @@ export class AppUserService {
     const primeNgConfig = this.translationService.translateObject(this.translationKey.primeng.$key)
 
     primeNgConfig['firstDayOfWeek'] = userCulture.firstDayOfWeek;
-    primeNgConfig['dateFormat'] = this.applyDateFormatAdjustments(userCulture.shortDateFormat!);
+    primeNgConfig['dateFormat'] = this.applyDateFormatAdjustments(userCulture.country!);
 
     this.primeNgConfig.setTranslation(primeNgConfig)
   }
 
-  private applyDateFormatAdjustments(dateFormat: string): string {
-    if (this.primeNgDateFormatAdjustments.hasOwnProperty(dateFormat))
-      return this.primeNgDateFormatAdjustments[dateFormat];
+  private applyDateFormatAdjustments(countryCode: string): string {
+    if (this.primeNgDateFormatAdjustments.hasOwnProperty(countryCode.toUpperCase()))
+      return this.primeNgDateFormatAdjustments[countryCode.toUpperCase()];
 
-    return dateFormat;
+    return countryCode;
   }
 }

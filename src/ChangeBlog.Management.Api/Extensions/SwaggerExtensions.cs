@@ -40,6 +40,7 @@ public static class SwaggerExtensions
             });
             
             c.OperationFilter<AcceptLanguageHeaderOperationFilter>();
+            c.DocumentFilter<AcceptLanguageHeaderDocumentFilter>();
 
             c.OrderActionsBy(api =>
             {

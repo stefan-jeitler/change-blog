@@ -11,7 +11,6 @@ import {Clipboard} from '@angular/cdk/clipboard';
 import {translate, TranslocoService} from "@ngneat/transloco";
 import {ChangeBlogApi} from "../../../clients/ChangeBlogApiClient";
 import ErrorMessage = ChangeBlogManagementApi.ErrorMessage;
-import {Constants} from "../../../constants";
 
 interface ApiKey {
   id: string,
@@ -53,8 +52,8 @@ export class ApikeyComponent implements OnInit {
 
     this.apiKeyForm = this.formBuilder.group({
       id: new FormControl(''),
-      title: new FormControl('', Validators.required),
-      expiresAt: new FormControl('', Validators.required)
+      title: new FormControl(''),
+      expiresAt: new FormControl('')
     });
 
     this.contextMenuItems = [
@@ -178,8 +177,8 @@ export class ApikeyComponent implements OnInit {
     this.apiKeyForm.disable();
 
     let apiKeyId = this.apiKeyForm.value.id;
-    const title = this.apiKeyForm.value.title;
-    const expires = this.apiKeyForm.value.expiresAt;
+    const title = this.apiKeyForm.value.title ?? '';
+    const expires = this.apiKeyForm.value.expiresAt ?? new Date();
 
     const updateRequest = !!apiKeyId
       ? this.mngmtApiClient.updateApiKey(apiKeyId, title, expires)

@@ -33,7 +33,8 @@ FormGroup.prototype.setServerError = function (this: FormGroup, errorMessages: E
 }
 
 FormGroup.prototype.showErrorMessage = function (this: FormGroup, formControlName: string) {
-  return this.get(formControlName)?.invalid ?? false;
+  const control = this.get(formControlName);
+  return (control?.invalid ?? false) && control?.errors instanceof ValidationError;
 }
 
 FormGroup.prototype.getServerErrorMessage = function (this: FormGroup, formControlName: string) {

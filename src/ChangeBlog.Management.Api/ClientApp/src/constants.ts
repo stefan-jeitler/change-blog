@@ -1,12 +1,12 @@
-export type DistanceUnit = 'px' | 'rem' | 'em' | '%' | 'vw' | 'vh';
+export type LengthUnit = 'px' | 'rem' | 'em' | '%' | 'vw' | 'vh';
 
-export interface Distance {
+export interface Length {
   value: number,
-  unit: DistanceUnit
+  unit: LengthUnit
 }
 
 export class Constants {
-  public static readonly MobileBreakpoint: Distance = {
+  public static readonly MobileBreakpoint: Length = {
     value: 768,
     unit: 'px'
   };

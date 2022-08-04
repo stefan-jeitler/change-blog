@@ -23,11 +23,10 @@ export class TranslationKey {
 	public edit = 'edit';
 	public apiKeyLimitReached = 'apiKeyLimitReached';
 	public info = 'info';
-	public ApiKeyCopiedToClipboard = 'ApiKeyCopiedToClipboard';
+	public apiKeyCopiedToClipboard = 'apiKeyCopiedToClipboard';
 	public confirm = 'confirm';
-	public confirmSelecetedApiKeysDeletion = 'confirmSelecetedApiKeysDeletion';
+	public confirmSelectedApiKeysDeletion = 'confirmSelectedApiKeysDeletion';
 	public confirmApiKeyDeletion = 'confirmApiKeyDeletion';
-	public apiKeyDeleted = 'apiKeyDeleted';
 	public linkToApi = 'linkToApi';
 	public actions = 'actions';
 	public noEntries = 'noEntries';

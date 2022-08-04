@@ -117,7 +117,7 @@ export class ApikeyComponent implements OnInit {
     };
 
     const title = await firstValueFrom(this.translationService.selectTranslate(this.translationKey.confirm));
-    const confirmationQuestion = await firstValueFrom(this.translationService.selectTranslate(this.translationKey.confirmSelecetedApiKeysDeletion));
+    const confirmationQuestion = await firstValueFrom(this.translationService.selectTranslate(this.translationKey.confirmSelectedApiKeysDeletion));
     this.confirmationService.confirm({
       message: confirmationQuestion,
       header: title,
@@ -203,7 +203,7 @@ export class ApikeyComponent implements OnInit {
   async copyToClipBoard(apiKey: ApiKey) {
     this.clipboard.copy(apiKey.key);
 
-    let copiedMessage = this.translationService.selectTranslate(this.translationKey.ApiKeyCopiedToClipboard);
+    let copiedMessage = this.translationService.selectTranslate(this.translationKey.apiKeyCopiedToClipboard);
     this.messageService.add({
       severity: 'info',
       detail: await firstValueFrom(copiedMessage),

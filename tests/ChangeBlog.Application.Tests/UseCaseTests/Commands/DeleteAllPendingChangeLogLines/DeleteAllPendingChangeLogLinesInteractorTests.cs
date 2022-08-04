@@ -2,7 +2,7 @@ using System;
 using System.Linq;
 using System.Threading.Tasks;
 using ChangeBlog.Application.Tests.TestDoubles;
-using ChangeBlog.Application.UseCases.Commands.DeleteAllPendingChangeLogLines;
+using ChangeBlog.Application.UseCases.ChangeLogs.DeleteAllPendingChangeLogLines;
 using ChangeBlog.Domain.ChangeLog;
 using FluentAssertions;
 using Xunit;

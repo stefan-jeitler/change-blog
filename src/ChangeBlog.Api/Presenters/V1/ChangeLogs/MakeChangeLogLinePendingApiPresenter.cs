@@ -4,7 +4,7 @@ using ChangeBlog.Api.Localization.Resources;
 using ChangeBlog.Api.Shared.DTOs;
 using ChangeBlog.Api.Shared.Presenters;
 using ChangeBlog.Application.Boundaries.DataAccess;
-using ChangeBlog.Application.UseCases.Commands.MakeChangeLogLinePending;
+using ChangeBlog.Application.UseCases.ChangeLogs.MakeChangeLogLinePending;
 using Microsoft.AspNetCore.Mvc;
 
 namespace ChangeBlog.Api.Presenters.V1.ChangeLogs;

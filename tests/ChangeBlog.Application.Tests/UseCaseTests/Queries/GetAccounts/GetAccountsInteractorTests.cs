@@ -1,7 +1,7 @@
 using System.Threading.Tasks;
 using ChangeBlog.Application.Extensions;
 using ChangeBlog.Application.Tests.TestDoubles;
-using ChangeBlog.Application.UseCases.Queries.GetAccounts;
+using ChangeBlog.Application.UseCases.Accounts.GetAccounts;
 using ChangeBlog.Domain;
 using FluentAssertions;
 using Xunit;

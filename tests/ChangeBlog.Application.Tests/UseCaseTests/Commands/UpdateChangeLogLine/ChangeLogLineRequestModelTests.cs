@@ -1,7 +1,7 @@
 using System;
 using System.Collections.Generic;
-using ChangeBlog.Application.UseCases.Commands.DeleteChangeLogLine;
-using ChangeBlog.Application.UseCases.Commands.UpdateChangeLogLine;
+using ChangeBlog.Application.UseCases.ChangeLogs.DeleteChangeLogLine;
+using ChangeBlog.Application.UseCases.ChangeLogs.UpdateChangeLogLine;
 using FluentAssertions;
 using Xunit;
 

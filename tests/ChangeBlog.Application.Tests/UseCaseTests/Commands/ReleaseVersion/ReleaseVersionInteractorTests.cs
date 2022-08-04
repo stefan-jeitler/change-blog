@@ -2,7 +2,7 @@ using System;
 using System.Threading.Tasks;
 using ChangeBlog.Application.Boundaries.DataAccess;
 using ChangeBlog.Application.Tests.TestDoubles;
-using ChangeBlog.Application.UseCases.Commands.ReleaseVersion;
+using ChangeBlog.Application.UseCases.Versions.ReleaseVersion;
 using ChangeBlog.Domain;
 using ChangeBlog.Domain.Miscellaneous;
 using ChangeBlog.Domain.Version;

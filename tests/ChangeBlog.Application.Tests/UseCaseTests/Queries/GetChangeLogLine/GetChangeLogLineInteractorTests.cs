@@ -1,8 +1,8 @@
 using System;
 using System.Threading.Tasks;
 using ChangeBlog.Application.Tests.TestDoubles;
-using ChangeBlog.Application.UseCases.Queries.GetChangeLogLine;
-using ChangeBlog.Application.UseCases.Queries.SharedModels;
+using ChangeBlog.Application.UseCases.ChangeLogs.GetChangeLogLine;
+using ChangeBlog.Application.UseCases.SharedModels;
 using ChangeBlog.Domain.ChangeLog;
 using FluentAssertions;
 using Moq;

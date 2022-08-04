@@ -5,7 +5,7 @@ using ChangeBlog.Api.Shared;
 using ChangeBlog.Api.Shared.DTOs;
 using ChangeBlog.Api.Shared.Presenters;
 using ChangeBlog.Application.Boundaries.DataAccess;
-using ChangeBlog.Application.UseCases.Commands.AddPendingChangeLogLine;
+using ChangeBlog.Application.UseCases.ChangeLogs.AddPendingChangeLogLine;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 

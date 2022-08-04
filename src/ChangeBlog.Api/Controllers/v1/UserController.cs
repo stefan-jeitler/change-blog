@@ -10,7 +10,7 @@ using ChangeBlog.Api.Shared;
 using ChangeBlog.Api.Shared.Authorization;
 using ChangeBlog.Api.Shared.DTOs;
 using ChangeBlog.Api.Shared.Swagger;
-using ChangeBlog.Application.UseCases.Queries.GetProducts;
+using ChangeBlog.Application.UseCases.Products.GetProducts;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 

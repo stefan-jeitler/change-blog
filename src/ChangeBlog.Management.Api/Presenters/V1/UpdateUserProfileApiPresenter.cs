@@ -3,7 +3,7 @@ using ChangeBlog.Api.Localization.Resources;
 using ChangeBlog.Api.Shared.DTOs;
 using ChangeBlog.Api.Shared.Presenters;
 using ChangeBlog.Application.Boundaries.DataAccess;
-using ChangeBlog.Application.UseCases.Commands.UpdateUserProfile;
+using ChangeBlog.Application.UseCases.Users.UpdateUserProfile;
 using ChangeBlog.Management.Api.DTOs.V1;
 using Microsoft.AspNetCore.Mvc;
 

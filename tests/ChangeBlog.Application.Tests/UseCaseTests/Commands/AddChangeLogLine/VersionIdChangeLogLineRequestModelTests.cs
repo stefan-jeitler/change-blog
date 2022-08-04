@@ -1,6 +1,6 @@
 using System;
 using System.Collections.Generic;
-using ChangeBlog.Application.UseCases.Commands.AddChangeLogLine.Models;
+using ChangeBlog.Application.UseCases.ChangeLogs.AddChangeLogLine.Models;
 using FluentAssertions;
 using Xunit;
 

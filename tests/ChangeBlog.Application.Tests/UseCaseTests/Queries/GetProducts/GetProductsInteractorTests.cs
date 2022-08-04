@@ -2,7 +2,7 @@ using System;
 using System.Threading.Tasks;
 using ChangeBlog.Application.Extensions;
 using ChangeBlog.Application.Tests.TestDoubles;
-using ChangeBlog.Application.UseCases.Queries.GetProducts;
+using ChangeBlog.Application.UseCases.Products.GetProducts;
 using FluentAssertions;
 using Xunit;
 

@@ -1,5 +1,5 @@
 using System;
-using ChangeBlog.Application.UseCases.Queries.GetApiKeys;
+using ChangeBlog.Application.UseCases.Users.GetApiKeys;
 
 namespace ChangeBlog.Management.Api.DTOs.V1;
 

@@ -4,7 +4,7 @@ using ChangeBlog.Api.Localization.Resources;
 using ChangeBlog.Api.Shared.DTOs;
 using ChangeBlog.Api.Shared.Presenters;
 using ChangeBlog.Application.Boundaries.DataAccess;
-using ChangeBlog.Application.UseCases.Commands.UpdateApiKey;
+using ChangeBlog.Application.UseCases.Users.UpdateApiKey;
 using Microsoft.AspNetCore.Mvc;
 
 namespace ChangeBlog.Management.Api.Presenters.V1;

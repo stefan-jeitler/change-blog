@@ -1,6 +1,6 @@
 using System;
 using System.Collections.Generic;
-using ChangeBlog.Application.UseCases.Queries.GetRoles;
+using ChangeBlog.Application.UseCases.Accounts.GetRoles;
 
 namespace ChangeBlog.Api.DTOs;
 

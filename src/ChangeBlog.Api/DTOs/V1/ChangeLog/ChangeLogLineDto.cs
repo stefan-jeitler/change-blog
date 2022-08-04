@@ -1,6 +1,6 @@
 using System;
 using System.Collections.Generic;
-using ChangeBlog.Application.UseCases.Queries.SharedModels;
+using ChangeBlog.Application.UseCases.SharedModels;
 
 namespace ChangeBlog.Api.DTOs.V1.ChangeLog;
 

@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Security.Claims;
 using System.Threading.Tasks;
 using ChangeBlog.Api.Shared;
-using ChangeBlog.Application.UseCases.Commands.AddExternalIdentity;
+using ChangeBlog.Application.UseCases.Users.AddExternalIdentity;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.Extensions.Logging;
 

@@ -1,6 +1,6 @@
 using System.Reflection;
 using ChangeBlog.Api.Shared.Presenters;
-using ChangeBlog.Application.UseCases.Queries.GetVersions;
+using ChangeBlog.Application.UseCases.Versions.GetVersions;
 using Microsoft.Extensions.DependencyInjection;
 
 namespace ChangeBlog.Api.Shared;

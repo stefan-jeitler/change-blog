@@ -1,7 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using ChangeBlog.Application.UseCases.Queries.GetPendingChangeLogs;
+using ChangeBlog.Application.UseCases.ChangeLogs.GetPendingChangeLogs;
 
 namespace ChangeBlog.Api.DTOs.V1.ChangeLog;
 

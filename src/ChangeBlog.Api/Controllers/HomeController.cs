@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 using ChangeBlog.Api.DTOs.V1.Version;
 using ChangeBlog.Api.Shared.DTOs;
 using ChangeBlog.Api.Shared.Swagger;
-using ChangeBlog.Application.UseCases.Queries.GetVersions;
+using ChangeBlog.Application.UseCases.Versions.GetVersions;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;

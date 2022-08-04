@@ -1,5 +1,5 @@
 using System;
-using ChangeBlog.Application.UseCases.Queries.GetUsers;
+using ChangeBlog.Application.UseCases.Users.GetUsers;
 using FluentAssertions;
 using Xunit;
 

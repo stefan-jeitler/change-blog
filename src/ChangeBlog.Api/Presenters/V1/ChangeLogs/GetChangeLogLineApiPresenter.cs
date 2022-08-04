@@ -4,8 +4,8 @@ using ChangeBlog.Api.DTOs.V1.ChangeLog;
 using ChangeBlog.Api.Localization.Resources;
 using ChangeBlog.Api.Shared.DTOs;
 using ChangeBlog.Api.Shared.Presenters;
-using ChangeBlog.Application.UseCases.Queries.GetChangeLogLine;
-using ChangeBlog.Application.UseCases.Queries.SharedModels;
+using ChangeBlog.Application.UseCases.ChangeLogs.GetChangeLogLine;
+using ChangeBlog.Application.UseCases.SharedModels;
 using Microsoft.AspNetCore.Mvc;
 
 namespace ChangeBlog.Api.Presenters.V1.ChangeLogs;

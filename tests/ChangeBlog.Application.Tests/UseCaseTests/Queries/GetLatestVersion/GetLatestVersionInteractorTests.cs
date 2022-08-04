@@ -1,8 +1,8 @@
 using System;
 using System.Threading.Tasks;
 using ChangeBlog.Application.Tests.TestDoubles;
-using ChangeBlog.Application.UseCases.Queries.GetLatestVersion;
-using ChangeBlog.Application.UseCases.Queries.SharedModels;
+using ChangeBlog.Application.UseCases.SharedModels;
+using ChangeBlog.Application.UseCases.Versions.GetLatestVersion;
 using ChangeBlog.Domain.ChangeLog;
 using ChangeBlog.Domain.Miscellaneous;
 using ChangeBlog.Domain.Version;

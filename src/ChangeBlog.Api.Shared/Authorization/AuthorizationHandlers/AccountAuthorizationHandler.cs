@@ -1,7 +1,7 @@
 using System;
 using System.Threading.Tasks;
 using ChangeBlog.Api.Shared.Authorization.RequestBodyIdentifiers;
-using ChangeBlog.Application.UseCases.Queries.GetAuthorizationState;
+using ChangeBlog.Application.UseCases.Accounts.GetAuthorizationState;
 using ChangeBlog.Domain.Authorization;
 using Microsoft.AspNetCore.Mvc.Filters;
 

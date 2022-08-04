@@ -3,7 +3,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using ChangeBlog.Application.Boundaries.DataAccess;
 using ChangeBlog.Application.Tests.TestDoubles;
-using ChangeBlog.Application.UseCases.Commands.MakeChangeLogLinePending;
+using ChangeBlog.Application.UseCases.ChangeLogs.MakeChangeLogLinePending;
 using ChangeBlog.Domain.ChangeLog;
 using ChangeBlog.Domain.Miscellaneous;
 using ChangeBlog.Domain.Version;

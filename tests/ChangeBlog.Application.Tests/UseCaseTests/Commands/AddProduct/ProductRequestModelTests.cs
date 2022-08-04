@@ -1,5 +1,5 @@
 using System;
-using ChangeBlog.Application.UseCases.Commands.AddProduct;
+using ChangeBlog.Application.UseCases.Products.AddProduct;
 using FluentAssertions;
 using Xunit;
 

@@ -4,7 +4,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using ChangeBlog.Application.Boundaries.DataAccess;
 using ChangeBlog.Application.Tests.TestDoubles;
-using ChangeBlog.Application.UseCases.Commands.AddPendingChangeLogLine;
+using ChangeBlog.Application.UseCases.ChangeLogs.AddPendingChangeLogLine;
 using ChangeBlog.Domain;
 using ChangeBlog.Domain.ChangeLog;
 using Moq;

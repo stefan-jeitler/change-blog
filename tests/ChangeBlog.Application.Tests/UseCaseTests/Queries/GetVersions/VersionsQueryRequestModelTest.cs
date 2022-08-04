@@ -1,5 +1,5 @@
 ﻿using System;
-using ChangeBlog.Application.UseCases.Queries.GetVersions;
+using ChangeBlog.Application.UseCases.Versions.GetVersions;
 using FluentAssertions;
 using Xunit;
 

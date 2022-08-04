@@ -4,7 +4,7 @@ using ChangeBlog.Application.Boundaries.DataAccess;
 using ChangeBlog.Application.Boundaries.DataAccess.ExternalIdentity;
 using ChangeBlog.Application.Models;
 using ChangeBlog.Application.Tests.TestDoubles;
-using ChangeBlog.Application.UseCases.Commands.AddExternalIdentity;
+using ChangeBlog.Application.UseCases.Users.AddExternalIdentity;
 using ChangeBlog.Domain;
 using ChangeBlog.Domain.Miscellaneous;
 using CSharpFunctionalExtensions;

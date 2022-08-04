@@ -9,15 +9,15 @@ using ChangeBlog.Api.Shared;
 using ChangeBlog.Api.Shared.Authorization;
 using ChangeBlog.Api.Shared.DTOs;
 using ChangeBlog.Api.Shared.Swagger;
-using ChangeBlog.Application.UseCases.Commands.AddPendingChangeLogLine;
-using ChangeBlog.Application.UseCases.Commands.AssignAllPendingLinesToVersion;
-using ChangeBlog.Application.UseCases.Commands.AssignPendingLineToVersion;
-using ChangeBlog.Application.UseCases.Commands.AssignPendingLineToVersion.Models;
-using ChangeBlog.Application.UseCases.Commands.DeleteAllPendingChangeLogLines;
-using ChangeBlog.Application.UseCases.Commands.DeleteChangeLogLine;
-using ChangeBlog.Application.UseCases.Commands.UpdateChangeLogLine;
-using ChangeBlog.Application.UseCases.Queries.GetPendingChangeLogLine;
-using ChangeBlog.Application.UseCases.Queries.GetPendingChangeLogs;
+using ChangeBlog.Application.UseCases.ChangeLogs.AddPendingChangeLogLine;
+using ChangeBlog.Application.UseCases.ChangeLogs.DeleteAllPendingChangeLogLines;
+using ChangeBlog.Application.UseCases.ChangeLogs.DeleteChangeLogLine;
+using ChangeBlog.Application.UseCases.ChangeLogs.GetPendingChangeLogLine;
+using ChangeBlog.Application.UseCases.ChangeLogs.GetPendingChangeLogs;
+using ChangeBlog.Application.UseCases.ChangeLogs.UpdateChangeLogLine;
+using ChangeBlog.Application.UseCases.Versions.AssignAllPendingLinesToVersion;
+using ChangeBlog.Application.UseCases.Versions.AssignPendingLineToVersion;
+using ChangeBlog.Application.UseCases.Versions.AssignPendingLineToVersion.Models;
 using ChangeBlog.Domain.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -148,7 +148,7 @@ public class PendingChangeLogsController : ControllerBase
             return BadRequest(ErrorResponse.Create(ChangeBlogStrings.InvalidVersionId));
 
         var requestModel =
-            new Application.UseCases.Commands.AssignAllPendingLinesToVersion.Models.VersionIdAssignmentRequestModel(
+            new Application.UseCases.Versions.AssignAllPendingLinesToVersion.Models.VersionIdAssignmentRequestModel(
                 productId, moveChangeLogLineDto.TargetVersionId);
 
         var presenter = new AssignAllPendingLinesApiPresenter();

@@ -8,9 +8,9 @@ using ChangeBlog.Api.Shared;
 using ChangeBlog.Api.Shared.Authorization;
 using ChangeBlog.Api.Shared.DTOs;
 using ChangeBlog.Api.Shared.Swagger;
-using ChangeBlog.Application.UseCases.Commands.AddProduct;
-using ChangeBlog.Application.UseCases.Commands.CloseProduct;
-using ChangeBlog.Application.UseCases.Queries.GetProducts;
+using ChangeBlog.Application.UseCases.Products.AddProduct;
+using ChangeBlog.Application.UseCases.Products.CloseProduct;
+using ChangeBlog.Application.UseCases.Products.GetProducts;
 using ChangeBlog.Domain.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -36,7 +36,8 @@ public class ProductController : ControllerBase
         var userId = HttpContext.GetUserId();
         var product = await getProduct.ExecuteAsync(userId, productId);
 
-        if (product.HasNoValue) return NotFound(ErrorResponse.Create("Product not found"));
+        if (product.HasNoValue) 
+            return NotFound(ErrorResponse.Create("Product not found"));
 
         return Ok(ProductDto.FromResponseModel(product.GetValueOrThrow()));
     }

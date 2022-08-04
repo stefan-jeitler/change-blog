@@ -1,6 +1,6 @@
 using System;
 using System.Collections.Generic;
-using ChangeBlog.Application.UseCases.Commands.AddOrUpdateVersion.Models;
+using ChangeBlog.Application.UseCases.Versions.AddOrUpdateVersion.Models;
 using FluentAssertions;
 using Xunit;
 

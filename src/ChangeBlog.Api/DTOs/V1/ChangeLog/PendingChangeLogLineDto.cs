@@ -1,5 +1,5 @@
 using System;
-using ChangeBlog.Application.UseCases.Queries.GetPendingChangeLogLine;
+using ChangeBlog.Application.UseCases.ChangeLogs.GetPendingChangeLogLine;
 
 namespace ChangeBlog.Api.DTOs.V1.ChangeLog;
 

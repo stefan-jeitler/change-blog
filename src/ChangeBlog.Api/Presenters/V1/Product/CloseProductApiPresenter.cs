@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using ChangeBlog.Api.Localization.Resources;
 using ChangeBlog.Api.Shared.DTOs;
 using ChangeBlog.Api.Shared.Presenters;
-using ChangeBlog.Application.UseCases.Commands.CloseProduct;
+using ChangeBlog.Application.UseCases.Products.CloseProduct;
 using Microsoft.AspNetCore.Mvc;
 
 namespace ChangeBlog.Api.Presenters.V1.Product;

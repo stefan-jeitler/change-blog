@@ -5,7 +5,7 @@ using System.Linq.Expressions;
 using System.Threading.Tasks;
 using ChangeBlog.Application.Boundaries.DataAccess;
 using ChangeBlog.Application.Tests.TestDoubles;
-using ChangeBlog.Application.UseCases.Commands.MakeAllChangeLogLinesPending;
+using ChangeBlog.Application.UseCases.ChangeLogs.MakeAllChangeLogLinesPending;
 using ChangeBlog.Domain.ChangeLog;
 using ChangeBlog.Domain.Miscellaneous;
 using ChangeBlog.Domain.Version;

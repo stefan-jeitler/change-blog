@@ -1,7 +1,7 @@
 using System;
 using System.Threading.Tasks;
 using ChangeBlog.Application.Tests.TestDoubles;
-using ChangeBlog.Application.UseCases.Commands.CloseProduct;
+using ChangeBlog.Application.UseCases.Products.CloseProduct;
 using ChangeBlog.Domain;
 using Moq;
 using Xunit;

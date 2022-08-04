@@ -4,8 +4,8 @@ using ChangeBlog.Api.DTOs.V1.Version;
 using ChangeBlog.Api.Localization.Resources;
 using ChangeBlog.Api.Shared.DTOs;
 using ChangeBlog.Api.Shared.Presenters;
-using ChangeBlog.Application.UseCases.Queries.GetLatestVersion;
-using ChangeBlog.Application.UseCases.Queries.SharedModels;
+using ChangeBlog.Application.UseCases.SharedModels;
+using ChangeBlog.Application.UseCases.Versions.GetLatestVersion;
 using Microsoft.AspNetCore.Mvc;
 
 namespace ChangeBlog.Api.Presenters.V1.Version;

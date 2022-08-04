@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Threading.Tasks;
 using ChangeBlog.Application.Boundaries.DataAccess;
 using ChangeBlog.Application.Tests.TestDoubles;
-using ChangeBlog.Application.UseCases.Commands.AddProduct;
+using ChangeBlog.Application.UseCases.Products.AddProduct;
 using ChangeBlog.Domain;
 using Moq;
 using Xunit;

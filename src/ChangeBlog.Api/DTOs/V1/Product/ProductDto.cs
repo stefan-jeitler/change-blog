@@ -1,5 +1,5 @@
 using System;
-using ChangeBlog.Application.UseCases.Queries.GetProducts;
+using ChangeBlog.Application.UseCases.Products.GetProducts;
 
 namespace ChangeBlog.Api.DTOs.V1.Product;
 

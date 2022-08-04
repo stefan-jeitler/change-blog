@@ -1,5 +1,5 @@
 using System;
-using ChangeBlog.Application.UseCases.Commands.Labels.SharedModels;
+using ChangeBlog.Application.UseCases.ChangeLogs.Labels.SharedModels;
 using FluentAssertions;
 using Xunit;
 

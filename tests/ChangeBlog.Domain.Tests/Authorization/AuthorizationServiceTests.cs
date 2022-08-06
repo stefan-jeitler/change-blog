@@ -101,7 +101,7 @@ public class AuthorizationServiceTests
     }
 
     [Fact]
-    public void GetAuthorizationState_MatchingAccountPermissionAndNoMatchingProductPermission_Authorized()
+    public void GetAuthorizationState_MatchingAccountPermissionAndNoMatchingProductPermission_Unauthorized()
     {
         var accountRoles = new List<Role> { TestDefaultUserRole, TestProductOwnerUserRole };
         var productRoles = new List<Role> { TestDeveloperUserRole };

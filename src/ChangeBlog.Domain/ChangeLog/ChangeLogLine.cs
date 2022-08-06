@@ -133,7 +133,7 @@ public class ChangeLogLine
     {
         if (Issues.Count + issues.Count > MaxIssues)
         {
-            throw new ArgumentException("");
+            throw new ArgumentException($"Too many issues. Max. {MaxIssues} issues.");
         }
 
         Issues = Issues.Union(issues);

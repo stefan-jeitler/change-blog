@@ -5,7 +5,7 @@ namespace ChangeBlog.Api.DTOs.V1.Product;
 
 public class ProductDto
 {
-    public ProductDto(Guid id, Guid accountId, string accountName, string name, Guid versioningSchemeId,
+    private ProductDto(Guid id, Guid accountId, string accountName, string name, Guid versioningSchemeId,
         string versioningScheme, string languageCode, string createdByUser, DateTimeOffset createdAt, bool isClosed)
     {
         Id = id;

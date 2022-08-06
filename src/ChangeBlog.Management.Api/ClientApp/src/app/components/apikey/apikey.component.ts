@@ -6,7 +6,7 @@ import {
   ChangeBlogManagementApi
 } from "../../../clients/ChangeBlogManagementApiClient";
 import {firstValueFrom} from "rxjs";
-import {FormBuilder, FormControl, FormGroup, Validators} from "@angular/forms";
+import {FormControl, UntypedFormBuilder, UntypedFormGroup} from "@angular/forms";
 import {Clipboard} from '@angular/cdk/clipboard';
 import {translate, TranslocoService} from "@ngneat/transloco";
 import {ChangeBlogApi} from "../../../clients/ChangeBlogApiClient";
@@ -30,7 +30,7 @@ export class ApikeyComponent implements OnInit {
   actionMenuTarget: ApiKey | undefined;
   isLoadingFinished: boolean;
   showApiKeyDialog: boolean;
-  apiKeyForm: FormGroup;
+  apiKeyForm: UntypedFormGroup;
   maxApiKeysCount: number = 5;
   minExpires: Date;
   maxExpires: Date;
@@ -40,7 +40,7 @@ export class ApikeyComponent implements OnInit {
   constructor(public translationKey: TranslationKey,
               private messageService: MessageService,
               private mngmtApiClient: ChangeBlogManagementApi.Client,
-              private formBuilder: FormBuilder,
+              private formBuilder: UntypedFormBuilder,
               private confirmationService: ConfirmationService,
               private clipboard: Clipboard,
               private translationService: TranslocoService,
@@ -51,15 +51,15 @@ export class ApikeyComponent implements OnInit {
     this.showDatatableLoadingOverlay = false;
 
     this.apiKeyForm = this.formBuilder.group({
-      id: new FormControl(''),
-      title: new FormControl(''),
-      expiresAt: new FormControl('')
+      id: new FormControl<string>(''),
+      title: new FormControl<string>(''),
+      expiresAt: new FormControl<string>('')
     });
 
     this.contextMenuItems = [
       {
         label: translate(this.translationKey.copyToClipboard),
-        command: async (event) => {
+        command: async () => {
           if (!!this.actionMenuTarget)
             await this.copyToClipBoard(this.actionMenuTarget);
         },
@@ -67,7 +67,7 @@ export class ApikeyComponent implements OnInit {
       },
       {
         label: translate(this.translationKey.edit),
-        command: async (event) => {
+        command: async () => {
           if (!!this.actionMenuTarget)
             await this.updateApiKey(this.actionMenuTarget);
         },
@@ -75,7 +75,7 @@ export class ApikeyComponent implements OnInit {
       },
       {
         label: translate(this.translationKey.delete),
-        command: async (event) => {
+        command: async () => {
           if (!!this.actionMenuTarget)
             await this.deleteApiKey(this.actionMenuTarget);
         },
@@ -173,7 +173,7 @@ export class ApikeyComponent implements OnInit {
     this.showApiKeyDialog = false;
   }
 
-  async onApiKeySubmit(apiKeyForm: FormGroup) {
+  async onApiKeySubmit(apiKeyForm: UntypedFormGroup) {
     this.apiKeyForm.disable();
 
     let apiKeyId = this.apiKeyForm.value.id;
@@ -186,7 +186,7 @@ export class ApikeyComponent implements OnInit {
 
     updateRequest
       .subscribe({
-        next: async x => {
+        next: async () => {
           this.showDatatableLoadingOverlay = true;
           this.apiKeyForm.enable();
           this.showApiKeyDialog = false;

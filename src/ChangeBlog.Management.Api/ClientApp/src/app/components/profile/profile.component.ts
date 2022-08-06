@@ -3,7 +3,7 @@ import {TranslationKey} from "../../generated/TranslationKey";
 import {tap} from "rxjs/operators";
 import {ChangeBlogManagementApi as MngmtApiClient} from "../../../clients/ChangeBlogManagementApiClient";
 import {firstValueFrom} from "rxjs";
-import {FormBuilder, FormControl, FormGroup} from "@angular/forms";
+import {FormControl, UntypedFormBuilder, UntypedFormControl, UntypedFormGroup} from "@angular/forms";
 import { MessageService} from "primeng/api";
 import {TranslocoService} from "@ngneat/transloco";
 import {AppUserService} from "../../services/app-user.service";
@@ -18,14 +18,14 @@ export class ProfileComponent implements OnInit {
   availableTimezones: ITimezoneDto[];
   availableCultures: string[];
   isLoadingFinished: boolean;
-  userProfileForm: FormGroup;
+  userProfileForm: UntypedFormGroup;
 
   constructor(public translationKey: TranslationKey,
               private translationService: TranslocoService,
               private appCultureService: AppUserService,
               private messageService: MessageService,
               private mngmtApiClient: MngmtApiClient.Client,
-              private formBuilder: FormBuilder) {
+              private formBuilder: UntypedFormBuilder) {
 
     this.availableTimezones = [];
     this.availableCultures = [];
@@ -33,10 +33,10 @@ export class ProfileComponent implements OnInit {
     this.isLoadingFinished = false;
 
     this.userProfileForm = this.formBuilder.group({
-      fullName: new FormControl({value: null, disabled: true}),
-      email: new FormControl({value: null, disabled: true}),
-      timezone: new FormControl(''),
-      culture: new FormControl('')
+      fullName: new UntypedFormControl({value: null, disabled: true}),
+      email: new UntypedFormControl({value: null, disabled: true}),
+      timezone: new FormControl<string>(''),
+      culture: new FormControl<string>('')
     });
   }
 
@@ -65,7 +65,7 @@ export class ProfileComponent implements OnInit {
     }
   }
 
-  updateProfile(userProfileForm: FormGroup) {
+  updateProfile(userProfileForm: UntypedFormGroup) {
     userProfileForm.resetValidation();
     this.disableForm();
 

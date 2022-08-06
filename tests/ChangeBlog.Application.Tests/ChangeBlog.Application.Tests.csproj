@@ -26,9 +26,4 @@
         <ProjectReference Include="..\..\src\ChangeBlog.Application\ChangeBlog.Application.csproj" />
     </ItemGroup>
 
-    <ItemGroup>
-        <Folder Include="UseCaseTests\Commands\AddOrUpdateVersion\" />
-        <Folder Include="UseCaseTests\Commands\DeleteAllPendingChangeLogLines\" />
-    </ItemGroup>
-
 </Project>

@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using Ardalis.GuardClauses;
 using ChangeBlog.Application.UseCases.SharedModels;
 
 namespace ChangeBlog.Application.UseCases.ChangeLogs.GetPendingChangeLogs;
@@ -9,21 +10,9 @@ public class PendingChangeLogsResponseModel
     public PendingChangeLogsResponseModel(Guid productId, string productName, Guid accountId,
         List<ChangeLogLineResponseModel> changeLogs)
     {
-        if (productId == Guid.Empty)
-        {
-            throw new ArgumentException("ProductId cannot be empty.");
-        }
-
-        ProductId = productId;
+        ProductId = Guard.Against.NullOrEmpty(productId, nameof(productId));
         ProductName = productName ?? throw new ArgumentNullException(nameof(productName));
-
-        if (accountId == Guid.Empty)
-        {
-            throw new ArgumentException("AccountId cannot be empty.");
-        }
-
-        AccountId = accountId;
-
+        AccountId = Guard.Against.NullOrEmpty(accountId, nameof(accountId));
         ChangeLogs = changeLogs ?? throw new ArgumentNullException(nameof(changeLogs));
     }
 

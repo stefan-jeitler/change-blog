@@ -35,9 +35,7 @@ public class AddProductInteractor : IAddProduct
 
         var account = await GetAccountAsync(output, productRequestModel.AccountId);
         if (account.HasNoValue)
-        {
             return;
-        }
 
         if (!Name.TryParse(productRequestModel.Name, out var name))
         {

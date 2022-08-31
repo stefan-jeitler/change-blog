@@ -1,5 +1,6 @@
 using System;
 using System.Threading.Tasks;
+using Ardalis.GuardClauses;
 using ChangeBlog.Application.Boundaries.DataAccess.Users;
 
 namespace ChangeBlog.Application.UseCases.Users.DeleteApiKey;
@@ -15,8 +16,7 @@ public class DeleteApiKeyInteractor : IDeleteApiKey
 
     public Task ExecuteAsync(Guid userId, Guid apiKeyId)
     {
-        if (userId == Guid.Empty)
-            throw new ArgumentException("userId must not be empty.");
+        Guard.Against.NullOrEmpty(userId, nameof(userId));
 
         return _apiKeysDao.DeleteApiKeyAsync(userId, apiKeyId);
     }

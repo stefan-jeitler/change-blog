@@ -1,28 +1,24 @@
 using System;
 using System.Collections.Generic;
+using Ardalis.GuardClauses;
 
 namespace ChangeBlog.Application.UseCases.SharedModels;
 
 public class ChangeLogLineResponseModel
 {
-    public ChangeLogLineResponseModel(Guid id, string text, List<string> labels, List<string> issues,
+    public ChangeLogLineResponseModel(Guid id,
+        string text,
+        List<string> labels,
+        List<string> issues,
         DateTimeOffset createdAt)
     {
-        if (id == Guid.Empty)
-        {
-            throw new ArgumentException("Id cannot be empty.");
-        }
-
-        Id = id;
-
+        Id = Guard.Against.NullOrEmpty(id, nameof(id));
         Text = text ?? throw new ArgumentNullException(nameof(text));
         Labels = labels ?? throw new ArgumentNullException(nameof(labels));
         Issues = issues ?? throw new ArgumentNullException(nameof(issues));
 
         if (createdAt == DateTimeOffset.MinValue || createdAt == DateTimeOffset.MaxValue)
-        {
             throw new ArgumentException("Invalid creation date.");
-        }
 
         CreatedAt = createdAt;
     }

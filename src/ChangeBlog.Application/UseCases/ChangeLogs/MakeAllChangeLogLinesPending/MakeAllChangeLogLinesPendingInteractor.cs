@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Ardalis.GuardClauses;
 using ChangeBlog.Application.Boundaries.DataAccess;
 using ChangeBlog.Application.Boundaries.DataAccess.ChangeLog;
 using ChangeBlog.Application.Boundaries.DataAccess.Versions;
@@ -31,16 +32,9 @@ public class MakeAllChangeLogLinesPendingInteractor : IMakeAllChangeLogLinesPend
 
     public async Task ExecuteAsync(IMakeAllChangeLogLinesPendingOutputPort output, Guid productId, string version)
     {
-        if (productId == Guid.Empty)
-        {
-            throw new ArgumentException("productId cannot be empty.");
-        }
-
-        if (version is null)
-        {
-            throw new ArgumentNullException(nameof(version));
-        }
-
+        Guard.Against.NullOrEmpty(productId, nameof(productId));
+        Guard.Against.Null(version, nameof(version));
+        
         if (!ClVersionValue.TryParse(version, out var clVersionValue))
         {
             output.InvalidVersionFormat(version);

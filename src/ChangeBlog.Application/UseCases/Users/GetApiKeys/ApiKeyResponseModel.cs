@@ -1,4 +1,5 @@
 using System;
+using Ardalis.GuardClauses;
 
 namespace ChangeBlog.Application.UseCases.Users.GetApiKeys;
 
@@ -6,11 +7,7 @@ public class ApiKeyResponseModel
 {
     public ApiKeyResponseModel(Guid apiKeyId, string title, string apiKey, DateTimeOffset expiresAt)
     {
-        if (apiKeyId == Guid.Empty)
-            throw new ArgumentException("apiKeyId must not be empty.");
-
-        ApiKeyId = apiKeyId;
-        
+        ApiKeyId = Guard.Against.NullOrEmpty(apiKeyId, nameof(apiKeyId));
         ArgumentNullException.ThrowIfNull(title);
 
         Title = title;

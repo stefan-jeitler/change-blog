@@ -1,4 +1,5 @@
 using System;
+using Ardalis.GuardClauses;
 
 namespace ChangeBlog.Application.UseCases.Accounts.GetAccounts;
 
@@ -7,22 +8,13 @@ public class AccountResponseModel
     public AccountResponseModel(Guid id, string name, string defaultVersioningScheme,
         Guid defaultVersioningSchemeId, DateTimeOffset createdAt)
     {
-        if (id == Guid.Empty)
-        {
-            throw new ArgumentException("Id cannot be empty.");
-        }
+        Id = Guard.Against.NullOrEmpty(id, nameof(id));
+        Name = Guard.Against.Null(name, nameof(name));
 
-        Id = id;
-        Name = name ?? throw new ArgumentNullException(nameof(name));
         DefaultVersioningScheme = defaultVersioningScheme ??
                                   throw new ArgumentNullException(nameof(defaultVersioningScheme));
 
-        if (defaultVersioningSchemeId == Guid.Empty)
-        {
-            throw new ArgumentException("VersioningSchemeId cannot be empty.");
-        }
-
-        DefaultVersioningSchemeId = defaultVersioningSchemeId;
+        DefaultVersioningSchemeId = Guard.Against.NullOrEmpty(defaultVersioningSchemeId, nameof(defaultVersioningSchemeId));
         CreatedAt = createdAt;
     }
 

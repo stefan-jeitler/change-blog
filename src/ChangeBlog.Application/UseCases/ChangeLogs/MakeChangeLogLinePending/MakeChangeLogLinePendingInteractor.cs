@@ -1,6 +1,7 @@
 using System;
 using System.Linq;
 using System.Threading.Tasks;
+using Ardalis.GuardClauses;
 using ChangeBlog.Application.Boundaries.DataAccess;
 using ChangeBlog.Application.Boundaries.DataAccess.ChangeLog;
 using ChangeBlog.Application.Boundaries.DataAccess.Versions;
@@ -30,10 +31,7 @@ public class MakeChangeLogLinePendingInteractor : IMakeChangeLogLinePending
 
     public async Task ExecuteAsync(IMakeChangeLogLinePendingOutputPort output, Guid changeLogLineId)
     {
-        if (changeLogLineId == Guid.Empty)
-        {
-            throw new ArgumentException("ChangeLogLineId cannot be empty.");
-        }
+        Guard.Against.NullOrEmpty(changeLogLineId, nameof(changeLogLineId));
 
         _unitOfWork.Start();
 

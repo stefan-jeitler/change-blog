@@ -1,4 +1,5 @@
 using System;
+using Ardalis.GuardClauses;
 
 namespace ChangeBlog.Application.UseCases.Products.GetProducts;
 
@@ -9,13 +10,7 @@ public class UserProductQueryRequestModel
     public UserProductQueryRequestModel(Guid userId, Guid? lastProductId,
         ushort limit, bool includeClosedProducts)
     {
-        if (userId == Guid.Empty)
-        {
-            throw new ArgumentException("UserId cannot be empty.");
-        }
-
-        UserId = userId;
-
+        UserId = Guard.Against.NullOrEmpty(userId, nameof(userId));
         LastProductId = lastProductId;
         Limit = Math.Min(limit, MaxLimit);
         IncludeClosedProducts = includeClosedProducts;

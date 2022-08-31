@@ -1,6 +1,7 @@
 using System;
 using System.Linq;
 using System.Threading.Tasks;
+using Ardalis.GuardClauses;
 using ChangeBlog.Application.Boundaries.DataAccess.ChangeLog;
 using ChangeBlog.Application.Boundaries.DataAccess.Products;
 using ChangeBlog.Application.Boundaries.DataAccess.Users;
@@ -25,15 +26,8 @@ public class GetPendingChangeLogsInteractor : IGetPendingChangeLogs
 
     public async Task<PendingChangeLogsResponseModel> ExecuteAsync(Guid userId, Guid productId)
     {
-        if (userId == Guid.Empty)
-        {
-            throw new ArgumentException("UserId cannot be empty.");
-        }
-
-        if (productId == Guid.Empty)
-        {
-            throw new ArgumentException("ProductId cannot be empty.");
-        }
+        Guard.Against.NullOrEmpty(userId, nameof(userId));
+        Guard.Against.NullOrEmpty(productId, nameof(productId));
 
         return await GetChangeLogsAsync(userId, productId);
     }

@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using Ardalis.GuardClauses;
 
 namespace ChangeBlog.Application.UseCases.SharedModels;
 
@@ -10,30 +11,12 @@ public class VersionResponseModel
         List<ChangeLogLineResponseModel> changeLogs, DateTimeOffset createdAt, DateTimeOffset? releasedAt,
         DateTimeOffset? deletedAt)
     {
-        if (versionId == Guid.Empty)
-        {
-            throw new ArgumentException("VersionId cannot be empty.");
-        }
-
-        VersionId = versionId;
-
+        VersionId = Guard.Against.NullOrEmpty(versionId, nameof(versionId));
         Version = version ?? throw new ArgumentNullException(nameof(version));
         Name = name ?? throw new ArgumentNullException(nameof(name));
-
-        if (productId == Guid.Empty)
-        {
-            throw new ArgumentException("ProductId cannot be empty.");
-        }
-
-        ProductId = productId;
+        ProductId = Guard.Against.NullOrEmpty(productId, nameof(productId));
         ProductName = productName ?? throw new ArgumentNullException(nameof(productName));
-
-        if (accountId == Guid.Empty)
-        {
-            throw new ArgumentException("AccountId cannot be empty.");
-        }
-
-        AccountId = accountId;
+        AccountId = Guard.Against.NullOrEmpty(accountId, nameof(accountId));
 
         if (createdAt == DateTimeOffset.MinValue || createdAt == DateTimeOffset.MaxValue)
         {

@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using Ardalis.GuardClauses;
 
 namespace ChangeBlog.Application.UseCases.ChangeLogs.AddChangeLogLine.Models;
 
@@ -12,20 +13,9 @@ public class VersionChangeLogLineRequestModel : IChangeLogLineRequestModel
         List<string> labels,
         List<string> issues)
     {
-        if (userId == Guid.Empty)
-        {
-            throw new ArgumentException("UserId cannot be empty.");
-        }
-
-        UserId = userId;
-
-        if (productId == Guid.Empty)
-        {
-            throw new ArgumentException("ProductId cannot be empty.");
-        }
-
-        ProductId = productId;
-
+        UserId = Guard.Against.NullOrEmpty(userId, nameof(userId));
+        ProductId = Guard.Against.NullOrEmpty(productId, nameof(productId));
+        
         Version = version ?? throw new ArgumentNullException(nameof(version));
         Text = text ?? throw new ArgumentNullException(nameof(text));
         Labels = labels ?? throw new ArgumentNullException(nameof(labels));

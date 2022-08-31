@@ -1,6 +1,7 @@
 using System;
 using System.Linq;
 using System.Threading.Tasks;
+using Ardalis.GuardClauses;
 using ChangeBlog.Application.Boundaries.DataAccess.ChangeLog;
 using ChangeBlog.Application.Boundaries.DataAccess.Products;
 using ChangeBlog.Application.Boundaries.DataAccess.Users;
@@ -26,15 +27,8 @@ public class GetPendingChangeLogLineInteractor : IGetPendingChangeLogLine
     public async Task ExecuteAsync(IGetPendingChangeLogLineOutputPort output,
         Guid userId, Guid changeLogLineId)
     {
-        if (userId == Guid.Empty)
-        {
-            throw new ArgumentException("UserId cannot be empty.");
-        }
-
-        if (changeLogLineId == Guid.Empty)
-        {
-            throw new ArgumentException("ChangeLogLineId cannot be empty.");
-        }
+        Guard.Against.NullOrEmpty(userId, nameof(userId));
+        Guard.Against.NullOrEmpty(changeLogLineId, nameof(changeLogLineId));
 
         await GetChangeLogLineAsync(output, userId, changeLogLineId);
     }

@@ -30,7 +30,7 @@ public class GetApiKeysInteractor : IGetApiKeys
             .Select(x => new ApiKeyResponseModel(x.ApiKeyId,
                 x.Title,
                 x.Key,
-                DateTimeExtensions.ToLocal(x.ExpiresAt, currentUser.TimeZone)))
+                x.ExpiresAt.ToLocal(currentUser.TimeZone)))
             .ToList();
     }
 }

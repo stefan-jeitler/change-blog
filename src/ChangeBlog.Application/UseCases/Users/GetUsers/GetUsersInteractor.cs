@@ -30,7 +30,7 @@ public class GetUsersInteractor : IGetUsers
                 x.LastName,
                 x.TimeZone,
                 x.Culture,
-                DateTimeExtensions.ToLocal(x.CreatedAt, currentUser.TimeZone)))
+                x.CreatedAt.ToLocal(currentUser.TimeZone)))
             .ToList();
     }
 

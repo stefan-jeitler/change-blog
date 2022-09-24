@@ -23,7 +23,7 @@ public class AccountAuthorizationHandler : AuthorizationHandler
         _getAuthorizationState = getAuthorizationState;
     }
 
-    public override Task<AuthorizationState> GetAuthorizationState(ActionExecutingContext context, Guid userId,
+    public override Task<AuthorizationState> GetAuthorizationStateAsync(ActionExecutingContext context, Guid userId,
         Permission permission)
     {
         var accountIdInRoute = TryFindIdInRoute(context.HttpContext, KnownIdentifiers.AccountId);
@@ -39,6 +39,6 @@ public class AccountAuthorizationHandler : AuthorizationHandler
                 permission);
         }
 
-        return _authorizationHandler.GetAuthorizationState(context, userId, permission);
+        return _authorizationHandler.GetAuthorizationStateAsync(context, userId, permission);
     }
 }

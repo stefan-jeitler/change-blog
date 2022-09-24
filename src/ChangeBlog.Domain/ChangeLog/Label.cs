@@ -19,10 +19,7 @@ public record Label
     {
         var exception = ParseInternal(candidate, out var labelName);
 
-        if (exception is null)
-        {
-            return labelName;
-        }
+        if (exception is null) return labelName;
 
         throw exception;
     }
@@ -38,27 +35,16 @@ public record Label
     {
         label = null;
 
-        if (candidate is null)
-        {
-            return new ArgumentNullException(nameof(candidate), "Label must not be null.");
-        }
+        if (candidate is null) return new ArgumentNullException(nameof(candidate), "Label must not be null.");
 
         var c = candidate.Trim();
 
-        if (c.Contains(' '))
-        {
-            return new ArgumentException("Use single words only.");
-        }
+        if (c.Contains(' ')) return new ArgumentException("Use single words only.");
 
-        if (c == string.Empty)
-        {
-            return new ArgumentException("Label must not be empty.");
-        }
+        if (c == string.Empty) return new ArgumentException("Label must not be empty.");
 
         if (!Regex.IsMatch(c, @"^[a-zA-Z0-9]+$"))
-        {
             return new ArgumentException("Label contains invalid characters. Only letters and numbers allowed.");
-        }
 
         switch (c.Length)
         {

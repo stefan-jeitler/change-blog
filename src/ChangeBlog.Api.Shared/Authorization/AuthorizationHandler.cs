@@ -9,16 +9,16 @@ namespace ChangeBlog.Api.Shared.Authorization;
 
 public abstract class AuthorizationHandler
 {
-    public abstract Task<AuthorizationState> GetAuthorizationState(ActionExecutingContext context, Guid userId,
+    public abstract Task<AuthorizationState> GetAuthorizationStateAsync(
+        ActionExecutingContext context,
+        Guid userId,
         Permission permission);
 
     protected static Guid? TryFindIdInRoute(HttpContext httpContext, string key)
     {
         if (httpContext.Request.RouteValues.TryGetValue(key, out var routeValue) &&
             Guid.TryParse(routeValue?.ToString(), out var idInRoute))
-        {
             return idInRoute;
-        }
 
         return null;
     }
@@ -27,6 +27,6 @@ public abstract class AuthorizationHandler
     {
         var id = context.ActionArguments.Values.SingleOrDefault(x => x is T);
 
-        return (T)id;
+        return (T) id;
     }
 }

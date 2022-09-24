@@ -3,12 +3,14 @@ using System.Threading.Tasks;
 using ChangeBlog.Api.Shared.Authorization.RequestBodyIdentifiers;
 using ChangeBlog.Application.UseCases.Accounts.GetAuthorizationState;
 using ChangeBlog.Domain.Authorization;
+using JetBrains.Annotations;
 using Microsoft.AspNetCore.Mvc.Filters;
 
 // ReSharper disable ConvertIfStatementToReturnStatement
 
 namespace ChangeBlog.Api.Shared.Authorization.AuthorizationHandlers;
 
+[UsedImplicitly]
 public class ProductAuthorizationHandler : AuthorizationHandler
 {
     private readonly AuthorizationHandler _authorizationHandler;
@@ -21,7 +23,7 @@ public class ProductAuthorizationHandler : AuthorizationHandler
         _getAuthorizationState = getAuthorizationState;
     }
 
-    public override Task<AuthorizationState> GetAuthorizationState(ActionExecutingContext context, Guid userId,
+    public override Task<AuthorizationState> GetAuthorizationStateAsync(ActionExecutingContext context, Guid userId,
         Permission permission)
     {
         var productIdInRoute = TryFindIdInRoute(context.HttpContext, KnownIdentifiers.ProductId);
@@ -37,6 +39,6 @@ public class ProductAuthorizationHandler : AuthorizationHandler
                 permission);
         }
 
-        return _authorizationHandler.GetAuthorizationState(context, userId, permission);
+        return _authorizationHandler.GetAuthorizationStateAsync(context, userId, permission);
     }
 }

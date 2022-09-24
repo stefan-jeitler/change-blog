@@ -74,7 +74,7 @@ public class AuthorizationFilter : IAsyncActionFilter
     {
         var userId = context.HttpContext.GetUserId();
         var authState =
-            await _authorizationHandler.GetAuthorizationState(context, userId, permission.GetValueOrThrow().Permission);
+            await _authorizationHandler.GetAuthorizationStateAsync(context, userId, permission.GetValueOrThrow().Permission);
 
         switch (authState)
         {

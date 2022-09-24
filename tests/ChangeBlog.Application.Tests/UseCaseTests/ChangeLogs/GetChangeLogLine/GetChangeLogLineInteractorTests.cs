@@ -112,7 +112,7 @@ public class GetChangeLogLineInteractorTests
 
 
     [Fact]
-    public async Task GetChangeLogLine_EmptyProductId_ArgumentException()
+    public async Task GetChangeLogLine_EmptyUserId_ArgumentException()
     {
         var interactor = CreateInteractor();
         var changeLogLineId = Guid.Parse("bf621860-3fa3-40d4-92ac-530cc57a1a98");

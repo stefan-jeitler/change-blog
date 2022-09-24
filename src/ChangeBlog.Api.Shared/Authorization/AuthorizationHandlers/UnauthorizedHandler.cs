@@ -7,7 +7,7 @@ namespace ChangeBlog.Api.Shared.Authorization.AuthorizationHandlers;
 
 public class UnauthorizedHandler : AuthorizationHandler
 {
-    public override Task<AuthorizationState> GetAuthorizationState(ActionExecutingContext context, Guid userId,
+    public override Task<AuthorizationState> GetAuthorizationStateAsync(ActionExecutingContext context, Guid userId,
         Permission permission)
     {
         return Task.FromResult(AuthorizationState.Unauthorized);

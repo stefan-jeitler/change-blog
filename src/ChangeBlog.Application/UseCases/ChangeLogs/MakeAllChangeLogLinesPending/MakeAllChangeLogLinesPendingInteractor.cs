@@ -34,7 +34,7 @@ public class MakeAllChangeLogLinesPendingInteractor : IMakeAllChangeLogLinesPend
     {
         Guard.Against.NullOrEmpty(productId, nameof(productId));
         Guard.Against.Null(version, nameof(version));
-        
+
         if (!ClVersionValue.TryParse(version, out var clVersionValue))
         {
             output.InvalidVersionFormat(version);
@@ -53,10 +53,7 @@ public class MakeAllChangeLogLinesPendingInteractor : IMakeAllChangeLogLinesPend
 
     public async Task ExecuteAsync(IMakeAllChangeLogLinesPendingOutputPort output, Guid versionId)
     {
-        if (versionId == Guid.Empty)
-        {
-            throw new ArgumentException("versionId cannot be empty.");
-        }
+        if (versionId == Guid.Empty) throw new ArgumentException("versionId cannot be empty.");
 
         var clVersion = await _versionDao.FindVersionAsync(versionId);
         if (clVersion.HasNoValue)
@@ -70,10 +67,8 @@ public class MakeAllChangeLogLinesPendingInteractor : IMakeAllChangeLogLinesPend
 
     private async Task MakeAllLinesPendingAsync(IMakeAllChangeLogLinesPendingOutputPort output, ClVersion clVersion)
     {
-        if (IsVersionReadOnly(output, clVersion))
-        {
+        if (IsVersionReadOnly(output, clVersion)) 
             return;
-        }
 
         _unitOfWork.Start();
 
@@ -92,8 +87,7 @@ public class MakeAllChangeLogLinesPendingInteractor : IMakeAllChangeLogLinesPend
             .FindDuplicateTexts(versionChangeLogs.Lines)
             .ToList();
 
-        if (duplicates.Any())
-        {
+        if (duplicates.Any()) {
             output.LineWithSameTextAlreadyExists(duplicates.Select(x => x.Text.Value).ToList());
             return;
         }
@@ -101,7 +95,7 @@ public class MakeAllChangeLogLinesPendingInteractor : IMakeAllChangeLogLinesPend
         var nextFreePosition = pendingChangeLogs.NextFreePosition;
         var lines = versionChangeLogs.Lines.Select((x, i) => new ChangeLogLine(x.Id,
             null, x.ProductId,
-            x.Text, nextFreePosition + (uint)i,
+            x.Text, nextFreePosition + (uint) i,
             x.CreatedAt, x.Labels, x.Issues, x.CreatedByUser, x.DeletedAt));
 
         await MoveLinesAsync(output, productId, lines);
@@ -109,14 +103,12 @@ public class MakeAllChangeLogLinesPendingInteractor : IMakeAllChangeLogLinesPend
 
     private static bool IsVersionReadOnly(IMakeAllChangeLogLinesPendingOutputPort output, ClVersion clVersion)
     {
-        if (clVersion.IsReleased)
-        {
+        if (clVersion.IsReleased) {
             output.VersionAlreadyReleased(clVersion.Id);
             return true;
         }
 
-        if (clVersion.IsDeleted)
-        {
+        if (clVersion.IsDeleted) {
             output.VersionDeleted(clVersion.Id);
             return true;
         }

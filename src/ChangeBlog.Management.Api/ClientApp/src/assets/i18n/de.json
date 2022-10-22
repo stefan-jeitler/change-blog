@@ -25,7 +25,7 @@
   "info": "Info",
   "apiKeyCopiedToClipboard": "Api Schlüssel wurde in die Zwischenablage kopiert",
   "confirm": "Bestätigen",
-  "confirmSelectedApiKeysDeletion": "Ausgewählte Api Schlüssel wircklich löschen?",
+  "confirmSelectedApiKeysDeletion": "Ausgewählte Api Schlüssel wirklich löschen?",
   "confirmApiKeyDeletion": "Möchten Sie den Api Schlüssel '<b>{{ apiKeyTitle }}</b>' wirklich löschen?",
   "linkToApi": "Hier gehts zur Api",
   "actions": "Aktionen",

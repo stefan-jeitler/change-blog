@@ -45,11 +45,7 @@ export class AppUserService {
   }
 
   async applyUserSettings() {
-    const activeCulture = this.localeService.getLocale();
     const userCulture = await firstValueFrom(this.mngmApiClient.getUserCulture());
-
-    if (activeCulture === userCulture.culture)
-      return;
 
     const language = userCulture.language ?? getBrowserLang() ?? this.translationService.getDefaultLang();
 

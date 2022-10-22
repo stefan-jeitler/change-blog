@@ -18,7 +18,7 @@ declare module "@angular/forms" {
 UntypedFormGroup.prototype.resetValidation = function (this: UntypedFormGroup) {
   for (const key of Object.keys(this.controls)) {
     const control = this.controls[key];
-    control.setErrors(null, );
+    control.setErrors(null,);
     control.markAsUntouched();
   }
 }

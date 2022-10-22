@@ -60,14 +60,14 @@
     </p-toolbar>
 
     <p-table [(selection)]="selectedApiKeys"
-             [rowHover]="true"
-             [value]="apiKeys"
              [autoLayout]="true"
              [loading]="showDatatableLoadingOverlay"
+             [rowHover]="true"
+             [value]="apiKeys"
              breakpoint="576px"
              dataKey="id"
-             styleClass="p-datatable-sm"
-             responsiveLayout="stack">
+             responsiveLayout="stack"
+             styleClass="p-datatable-sm">
       <ng-template pTemplate="emptymessage">
         <tr>
           <td colspan="5">
@@ -101,9 +101,9 @@
         <tr>
           <td>
             <p-tableCheckbox [value]="apiKey"></p-tableCheckbox>
-            <div class="sm:hidden text-center"
-                 style="cursor:pointer;"
-                 (click)="actionMenuTarget = apiKey; userMenu.toggle($event)">
+            <div (click)="actionMenuTarget = apiKey; userMenu.toggle($event)"
+                 class="sm:hidden text-center"
+                 style="cursor:pointer;">
               <i class="pi pi-ellipsis-v">
               </i>
               <p-menu #userMenu
@@ -116,11 +116,13 @@
           </td>
           <td>
             <span class="p-column-title">{{ translationKey.title | transloco }}</span>
-            <div class="truncate-text text-right sm:text-left w-10rem sm:w-8rem md:w-8rem lg:w-14rem xl:w-full">{{apiKey.title}}</div>
+            <div
+              class="truncate-text text-right sm:text-left w-10rem sm:w-8rem md:w-8rem lg:w-14rem xl:w-full">{{apiKey.title}}</div>
           </td>
           <td>
             <span class="p-column-title">{{ translationKey.key | transloco }}</span>
-            <div class="truncate-text text-right sm:text-left w-10rem sm:w-8rem md:w-8rem lg:w-16rem xl:w-full">{{apiKey.key}}</div>
+            <div
+              class="truncate-text text-right sm:text-left w-10rem sm:w-8rem md:w-8rem lg:w-16rem xl:w-full">{{apiKey.key}}</div>
           </td>
           <td>
             <span class="p-column-title">{{ translationKey.expires | transloco }}</span>
@@ -161,9 +163,9 @@
                       tooltipPosition="bottom">
               </button>
             </div>
-            <div class="action-menu xl:hidden text-center"
-                 style="cursor:pointer;"
-                 (click)="actionMenuTarget = apiKey; userMenu.toggle($event)">
+            <div (click)="actionMenuTarget = apiKey; userMenu.toggle($event)"
+                 class="action-menu xl:hidden text-center"
+                 style="cursor:pointer;">
               <i class="pi pi-ellipsis-v">
               </i>
               <p-menu #userMenu
@@ -181,10 +183,10 @@
     <p-dialog [(visible)]="showApiKeyDialog" [header]="translationKey.apikey | transloco" [modal]="true"
               [style]="{width: '450px'}" styleClass="p-fluid">
       <ng-template pTemplate="content">
-        <form id="api-key-form"
+        <form (ngSubmit)="onApiKeySubmit(apiKeyForm)"
+              [formGroup]="apiKeyForm"
               class="pt-3"
-              (ngSubmit)="onApiKeySubmit(apiKeyForm)"
-              [formGroup]="apiKeyForm">
+              id="api-key-form">
           <div class="field">
             <div class="flex flex-column align-items-start w-12 md:w-22rem">
               <div class="flex flex-row w-full">
@@ -224,9 +226,9 @@
                 class="p-button-text"
                 icon="pi pi-times" pButton
                 pRipple></button>
-        <button [label]="translationKey.save | transloco"
+        <button [disabled]="!apiKeyForm.valid"
+                [label]="translationKey.save | transloco"
                 [loading]="apiKeyForm.disabled"
-                [disabled]="!apiKeyForm.valid"
                 class="p-button-text"
                 form="api-key-form"
                 icon="pi pi-check"

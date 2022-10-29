@@ -17,12 +17,13 @@ public class ErrorResponse
     {
     }
 
-    public ErrorResponse(IEnumerable<ErrorMessage> responseMessages,
+    [JsonConstructor]
+    public ErrorResponse(ErrorMessage[] errors,
         IReadOnlyDictionary<string, string> resourceIds = null)
     {
-        ArgumentNullException.ThrowIfNull(responseMessages);
+        ArgumentNullException.ThrowIfNull(errors);
 
-        Errors = responseMessages.ToArray();
+        Errors = errors.ToArray();
         ResourceIds = resourceIds;
     }
 
@@ -31,18 +32,10 @@ public class ErrorResponse
     [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
     public IReadOnlyDictionary<string, string> ResourceIds { get; }
 
-    public static ErrorResponse Create(string message)
-    {
-        return new ErrorResponse(message);
-    }
+    public static ErrorResponse Create(string message) => new(message);
 
-    public static ErrorResponse Create(string message, string property)
-    {
-        return new ErrorResponse(message, property);
-    }
+    public static ErrorResponse Create(string message, string property) => new(message, property);
 
-    public static ErrorResponse Create(string message, IReadOnlyDictionary<string, string> resourceIds)
-    {
-        return new ErrorResponse(message, resourceIds);
-    }
+    public static ErrorResponse Create(string message, IReadOnlyDictionary<string, string> resourceIds) =>
+        new(message, resourceIds);
 }

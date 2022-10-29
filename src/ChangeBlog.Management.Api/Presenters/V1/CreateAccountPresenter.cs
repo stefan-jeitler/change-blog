@@ -44,13 +44,8 @@ public class CreateAccountPresenter : BaseApiPresenter, ICreateAccountOutputPort
 
     public void AccountAlreadyExists(Guid accountId)
     {
-        var resourceIds = new Dictionary<string, string>
-        {
-            [KnownIdentifiers.ApiKeyId] = accountId.ToString()
-        };
-
         Response = new UnprocessableEntityObjectResult(ErrorResponse.Create(ChangeBlogStrings.NameAlreadyTaken,
-            resourceIds));
+            "accountName"));
     }
 
     public void TooManyAccountsCreated(ushort limit)

@@ -45,6 +45,8 @@ public class CreateAccountInteractorTests
         await sut.ExecuteAsync(_outputPortMock.Object, requestModel);
 
         // assert
+        _unitOfWorkMock.Verify(m => m.Start(), Times.Once);
+        _unitOfWorkMock.Verify(m => m.Commit(), Times.Once);
         var createdAccount = _accountDao.Accounts.Single();
         _outputPortMock
             .Verify(m => m.Created(It.Is<Guid>(g => g == createdAccount.Id)), Times.Once);
@@ -63,8 +65,6 @@ public class CreateAccountInteractorTests
         await sut.ExecuteAsync(_outputPortMock.Object, requestModel);
 
         // assert
-        _unitOfWorkMock.Verify(m => m.Start(), Times.Once);
-        _unitOfWorkMock.Verify(m => m.Commit(), Times.Once);
         _outputPortMock.Verify(m => m.Created(It.IsAny<Guid>()), Times.Never);
         _outputPortMock.Verify(m => m.InvalidName(It.Is<string>(n => n == " ")), Times.Once);
     }

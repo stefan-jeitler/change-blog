@@ -6,10 +6,10 @@ namespace ChangeBlog.Management.Api.Tests.Infrastructure;
 
 public static class TestIdentity
 {
-    private static readonly Lazy<Task<string>> AccessTokenValue = new(LoadAccessToken);
+    private static readonly Lazy<Task<string>> AccessTokenValue = new(LoadAccessTokenAsync);
     public static Task<string> AccessToken => AccessTokenValue.Value;
 
-    private static async Task<string> LoadAccessToken()
+    private static async Task<string> LoadAccessTokenAsync()
     {
         var config = new ConfigurationBuilder()
             .SetBasePath(AppContext.BaseDirectory)
@@ -24,7 +24,7 @@ public static class TestIdentity
 
         var tokenClient = new RopcFlowClient();
 
-        var tokenResponse = await tokenClient.AcquireToken(testIdentity);
+        var tokenResponse = await tokenClient.AcquireTokenAsync(testIdentity);
         return tokenResponse.AccessToken;
     }
 }

@@ -1,9 +1,12 @@
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Net;
+using System.Net.Http;
 using System.Net.Http.Headers;
 using System.Net.Http.Json;
 using System.Threading.Tasks;
+using ChangeBlog.Api.Shared.DTOs;
 using ChangeBlog.Api.Shared.DTOs.V1.User;
 using ChangeBlog.Management.Api.DTOs;
 using ChangeBlog.Management.Api.DTOs.V1.Account;
@@ -125,5 +128,25 @@ public class AccountControllerTests : IClassFixture<WebApplicationFactory<Startu
         var response = await client.GetAsync("/api/v1/accounts/roles?includePermissions=false");
 
         response.StatusCode.Should().Be(HttpStatusCode.OK);
+    }
+
+    [Fact]
+    public async Task CreateAccount_AccountAlreadyExists_UnprocessableEntityResult()
+    {
+        var client = _factory.CreateClient();
+        var accessToken = await TestIdentity.AccessToken;
+        client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", accessToken);
+        client.DefaultRequestHeaders.AcceptLanguage.Add(new StringWithQualityHeaderValue("de"));
+
+        var response =
+            await client.PostAsync("api/v1/accounts?accountName=ChangeBlog.Management.Api.Tests",
+                new StringContent(""));
+        var error = await response.Content.ReadFromJsonAsync<ErrorResponse>();
+
+        response.StatusCode.Should().Be(HttpStatusCode.UnprocessableEntity);
+        error.Should().NotBeNull();
+        error!.Errors.Should().HaveCount(1);
+        error.Errors.First().Message.Should().Be("Der Name ist bereits vergeben");
+        error.Errors.First().Property.Should().Be("accountName");
     }
 }

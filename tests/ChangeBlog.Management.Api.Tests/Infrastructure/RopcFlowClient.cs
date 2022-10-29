@@ -34,7 +34,7 @@ public class RopcFlowClient
     }
 
 
-    public async Task<RopcFlowResponse> AcquireToken(RopcFlowConfiguration config)
+    public async Task<RopcFlowResponse> AcquireTokenAsync(RopcFlowConfiguration config)
     {
         var tokenRequestMessage = new HttpRequestMessage(HttpMethod.Post, config.TokenEndpoint)
         {

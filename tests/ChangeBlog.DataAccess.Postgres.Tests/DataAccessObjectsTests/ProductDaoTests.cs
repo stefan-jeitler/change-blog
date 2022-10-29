@@ -34,10 +34,7 @@ public class ProductDaoTests : IAsyncLifetime
         return Task.CompletedTask;
     }
 
-    private ProductDao CreateDao()
-    {
-        return new ProductDao(new DbSession(_lazyDbConnection), NullLogger<ProductDao>.Instance);
-    }
+    private ProductDao CreateDao() => new ProductDao(new DbSession(_lazyDbConnection), NullLogger<ProductDao>.Instance);
 
     [Fact]
     public async Task FindProduct_ByAccountIdAndName_ReturnsProduct()
@@ -147,7 +144,7 @@ public class ProductDaoTests : IAsyncLifetime
         // assert
         result.IsSuccess.Should().BeTrue();
         var exists = await _lazyDbConnection.Value.ExecuteScalarAsync<bool>(
-            "select exists(select null from product where id = @productId)", new { productId = TestData.Product.Id });
+            "select exists(select null from product where id = @productId)", new {productId = TestData.Product.Id});
         exists.Should().BeTrue();
     }
 
@@ -168,7 +165,7 @@ public class ProductDaoTests : IAsyncLifetime
         // assert
         var exists = await _lazyDbConnection.Value.ExecuteScalarAsync<bool>(
             "select exists(select null from product where id = @productId and closed_at is not null)",
-            new { productId = TestData.Product.Id });
+            new {productId = TestData.Product.Id});
         exists.Should().BeTrue();
     }
 
@@ -192,7 +189,7 @@ public class ProductDaoTests : IAsyncLifetime
     private async Task InsertTestAccountAsync()
     {
         const string insertTestAccountSql =
-            "insert into account values (@id, @name, @versioningSchemeId, @deletedAt, @createdAt) on conflict (id) do nothing";
+            "insert into account values (@id, @name, @versioningSchemeId, @deletedAt, @createdAt, @createdBy) on conflict (id) do nothing";
         await _lazyDbConnection.Value.ExecuteAsync(insertTestAccountSql,
             new
             {
@@ -200,7 +197,8 @@ public class ProductDaoTests : IAsyncLifetime
                 name = TestData.Account.Name,
                 versioningSchemeId = TestData.Account.DefaultVersioningSchemeId,
                 deletedAt = TestData.Account.DeletedAt,
-                createdAt = TestData.Account.CreatedAt
+                createdAt = TestData.Account.CreatedAt,
+                createdBy = TestData.Account.CreatedByUser
             });
     }
 }

@@ -14,7 +14,7 @@ using ChangeBlog.Domain.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
-namespace ChangeBlog.Api.Controllers.V1;
+namespace ChangeBlog.Api.Controllers.v1;
 
 [ApiController]
 [Route("api/v1/changelogs/{changeLogLineId:Guid}/issues")]
@@ -37,7 +37,7 @@ public class IssuesController : ControllerBase
     }
 
     [HttpPut("{issue}", Name = "AddIssue")]
-    [ProducesResponseType( StatusCodes.Status200OK)]
+    [ProducesResponseType(StatusCodes.Status200OK)]
     [ProducesResponseType(typeof(ErrorResponse), StatusCodes.Status404NotFound)]
     [ProducesResponseType(typeof(ErrorResponse), StatusCodes.Status409Conflict)]
     [ProducesResponseType(typeof(ErrorResponse), StatusCodes.Status422UnprocessableEntity)]

@@ -24,7 +24,7 @@ namespace ChangeBlog.Management.Api.Controllers.v1;
 [Route("api/v1/user")]
 [Produces(MediaTypeNames.Application.Json)]
 [ProducesResponseType(typeof(ErrorResponse), StatusCodes.Status401Unauthorized)]
-[SwaggerControllerOrder(1)]
+[SwaggerControllerOrder(2)]
 public class UserController : ControllerBase
 {
     private readonly IGetUsers _getUser;

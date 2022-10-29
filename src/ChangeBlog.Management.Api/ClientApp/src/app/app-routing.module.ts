@@ -7,6 +7,7 @@ import {ProfileComponent} from "./components/profile/profile.component";
 import {ApikeyComponent} from "./components/apikey/apikey.component";
 import {AuthGuard} from "./guards/auth.guard";
 import {RedirectComponent} from "./components/redirect/redirect.component";
+import {AccountsComponent} from "./components/accounts/accounts.component";
 
 export const routes: Routes = [
   {
@@ -17,6 +18,11 @@ export const routes: Routes = [
       {
         path: 'home',
         component: HomeComponent,
+        canActivate: [AuthGuard]
+      },
+      {
+        path: 'accounts',
+        component: AccountsComponent,
         canActivate: [AuthGuard]
       },
       {

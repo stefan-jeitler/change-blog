@@ -44,6 +44,11 @@ export class SideNavigationComponent implements OnInit {
         routerLink: '/app/profile'
       },
       {
+        label: translate(this.translationKey.accounts),
+        icon: 'pi pi-fw pi-user',
+        routerLink: '/app/accounts'
+      },
+      {
         label: translate(this.translationKey.apikey),
         icon: 'pi pi-fw pi-key',
         routerLink: "/app/apikey"

@@ -21,7 +21,7 @@ using ChangeBlog.Domain.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
-namespace ChangeBlog.Api.Controllers.V1;
+namespace ChangeBlog.Api.Controllers.v1;
 
 [ApiController]
 [Route("api/v1")]
@@ -50,7 +50,7 @@ public class VersionController : ControllerBase
         var userId = HttpContext.GetUserId();
         var version = await getVersion.ExecuteAsync(userId, versionId);
 
-        if (version.HasNoValue) 
+        if (version.HasNoValue)
             return new NotFoundObjectResult(ErrorResponse.Create(ChangeBlogStrings.VersionNotFound));
 
         return Ok(VersionDto.FromResponseModel(version.GetValueOrThrow()));
@@ -107,7 +107,7 @@ public class VersionController : ControllerBase
         var userId = HttpContext.GetUserId();
         var clVersion = await getVersion.ExecuteAsync(userId, productId, version);
 
-        if (clVersion.HasNoValue) 
+        if (clVersion.HasNoValue)
             return new NotFoundObjectResult(ErrorResponse.Create(ChangeBlogStrings.VersionNotFound));
 
         return Ok(VersionDto.FromResponseModel(clVersion.GetValueOrThrow()));
@@ -123,7 +123,7 @@ public class VersionController : ControllerBase
         Guid productId,
         [FromBody] AddVersionDto versionDto)
     {
-        if (versionDto is null) 
+        if (versionDto is null)
             return new BadRequestObjectResult(ErrorResponse.Create(ChangeBlogStrings.MissingRequestData));
 
         var lines = versionDto.ChangeLogLines
@@ -158,13 +158,14 @@ public class VersionController : ControllerBase
     }
 
     [HttpPut("products/{productId:Guid}/versions/{version}", Name = "UpdateVersion")]
-    [ProducesResponseType( StatusCodes.Status200OK)]
+    [ProducesResponseType(StatusCodes.Status200OK)]
     [ProducesResponseType(typeof(ErrorResponse), StatusCodes.Status201Created)]
     [ProducesResponseType(typeof(ErrorResponse), StatusCodes.Status404NotFound)]
     [ProducesResponseType(typeof(ErrorResponse), StatusCodes.Status409Conflict)]
     [ProducesResponseType(typeof(ErrorResponse), StatusCodes.Status422UnprocessableEntity)]
     [NeedsPermission(Permission.AddOrUpdateVersion)]
-    public async Task<ActionResult<SuccessResponse>> AddOrUpdateVersionAsync([FromServices] IAddOrUpdateVersion addOrUpdateVersion,
+    public async Task<ActionResult<SuccessResponse>> AddOrUpdateVersionAsync(
+        [FromServices] IAddOrUpdateVersion addOrUpdateVersion,
         Guid productId,
         string version,
         [FromBody] AddOrUpdateVersionDto addOrUpdateVersionDto)
@@ -197,7 +198,8 @@ public class VersionController : ControllerBase
     [ProducesResponseType(typeof(ErrorResponse), StatusCodes.Status404NotFound)]
     [ProducesResponseType(typeof(ErrorResponse), StatusCodes.Status409Conflict)]
     [NeedsPermission(Permission.DeleteVersion)]
-    public async Task<ActionResult<SuccessResponse>> DeleteVersionAsync([FromServices] IDeleteVersion deleteVersion, Guid versionId)
+    public async Task<ActionResult<SuccessResponse>> DeleteVersionAsync([FromServices] IDeleteVersion deleteVersion,
+        Guid versionId)
     {
         var presenter = new DeleteVersionApiPresenter();
         await deleteVersion.ExecuteAsync(presenter, versionId);

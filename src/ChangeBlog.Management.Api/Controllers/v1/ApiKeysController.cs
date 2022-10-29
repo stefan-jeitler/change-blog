@@ -25,7 +25,7 @@ namespace ChangeBlog.Management.Api.Controllers.v1;
 [Route("api/v1/user/apikeys")]
 [Produces(MediaTypeNames.Application.Json)]
 [ProducesResponseType(typeof(ErrorResponse), StatusCodes.Status401Unauthorized)]
-[SwaggerControllerOrder(2)]
+[SwaggerControllerOrder(3)]
 public class ApiKeysController : ControllerBase
 {
     [HttpGet(Name = "GetApiKeys")]

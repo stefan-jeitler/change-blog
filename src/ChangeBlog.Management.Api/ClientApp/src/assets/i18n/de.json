@@ -1,4 +1,5 @@
 {
+  "accounts": "Accounts",
   "$name": "Name",
   "email": "Email",
   "timezone": "Zeitzone",

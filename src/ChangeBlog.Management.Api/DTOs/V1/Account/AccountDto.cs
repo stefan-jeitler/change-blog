@@ -1,7 +1,7 @@
 using System;
 using ChangeBlog.Application.UseCases.Accounts.GetAccounts;
 
-namespace ChangeBlog.Api.DTOs.V1.Account;
+namespace ChangeBlog.Management.Api.DTOs.V1.Account;
 
 public class AccountDto
 {

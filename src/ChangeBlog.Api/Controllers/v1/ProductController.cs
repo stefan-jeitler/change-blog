@@ -15,7 +15,7 @@ using ChangeBlog.Domain.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
-namespace ChangeBlog.Api.Controllers.V1;
+namespace ChangeBlog.Api.Controllers.v1;
 
 [ApiController]
 [Route("api/v1/products")]
@@ -36,7 +36,7 @@ public class ProductController : ControllerBase
         var userId = HttpContext.GetUserId();
         var product = await getProduct.ExecuteAsync(userId, productId);
 
-        if (product.HasNoValue) 
+        if (product.HasNoValue)
             return NotFound(ErrorResponse.Create("Product not found"));
 
         return Ok(ProductDto.FromResponseModel(product.GetValueOrThrow()));

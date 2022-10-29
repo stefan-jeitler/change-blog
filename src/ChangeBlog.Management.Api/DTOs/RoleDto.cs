@@ -2,7 +2,7 @@ using System;
 using System.Collections.Generic;
 using ChangeBlog.Application.UseCases.Accounts.GetRoles;
 
-namespace ChangeBlog.Api.DTOs;
+namespace ChangeBlog.Management.Api.DTOs;
 
 public class RoleDto
 {

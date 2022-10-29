@@ -52,6 +52,7 @@ stages:
               publishTestResults: true
             env:
               ConnectionStrings__ChangeBlogDb: $(ConnectionStringChangeBlogDb)
+              TestIdentity__Password: $(TestIdentityPassword)
 
           - task: PublishCodeCoverageResults@1
             displayName: 'Publish code coverage'

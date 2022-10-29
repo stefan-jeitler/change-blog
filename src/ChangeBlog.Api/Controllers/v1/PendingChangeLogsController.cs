@@ -22,7 +22,7 @@ using ChangeBlog.Domain.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
-namespace ChangeBlog.Api.Controllers.V1;
+namespace ChangeBlog.Api.Controllers.v1;
 
 [ApiController]
 [Route("api/v1")]

@@ -10,6 +10,7 @@ public static class TestAccount
     public static readonly Name Name = Name.Parse("Test Account");
     public static readonly Guid UserId = Guid.Parse("a1b89f2d-d13f-4572-8522-8a92fb4fdb6a");
     public static readonly DateTime CreationDate = DateTime.Parse("2021-04-06");
+    public static readonly Guid CreatedByUser = Guid.Parse("a1b89f2d-d13f-4572-8522-8a92fb4fdb6a");
 
     /// <summary>
     ///     Not valid: *.12 | *123.1 | 12* | 12.*.34

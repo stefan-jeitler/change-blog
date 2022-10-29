@@ -21,10 +21,8 @@ public class GetAccountsInteractorTests
         _fakeVersioningSchemeDao = new FakeVersioningSchemeDao();
     }
 
-    private GetAccountsInteractor CreateInteractor()
-    {
-        return new GetAccountsInteractor(_fakeAccountDao, _fakeUserDao, _fakeVersioningSchemeDao);
-    }
+    private GetAccountsInteractor CreateInteractor() =>
+        new GetAccountsInteractor(_fakeAccountDao, _fakeUserDao, _fakeVersioningSchemeDao);
 
     [Fact]
     public async Task GetAccounts_HappyPath_Successful()
@@ -85,7 +83,7 @@ public class GetAccountsInteractorTests
         // arrange
         _fakeUserDao.Users.Add(TestAccount.User);
         _fakeAccountDao.Accounts.Add(new Account(TestAccount.Id, TestAccount.Name, null, TestAccount.CreationDate,
-            null));
+            TestAccount.CreatedByUser, null));
         _fakeVersioningSchemeDao.VersioningSchemes.Add(TestAccount.DefaultScheme);
         var interactor = CreateInteractor();
 

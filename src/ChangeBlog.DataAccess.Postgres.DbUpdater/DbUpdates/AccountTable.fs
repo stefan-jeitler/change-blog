@@ -34,11 +34,24 @@ let private fixUniqueIndexOnAccountNameSql =
     [ "CREATE UNIQUE INDEX IF NOT EXISTS account_name_unique ON account (LOWER(name)) where deleted_at is null"
       "drop index if exists account_name_deletedat_unique" ]
 
+let private addCreatedByUserColumnSql =
+    [ "ALTER TABLE account ADD COLUMN IF NOT EXISTS created_by_user UUID"
+      """
+        insert into "user" (id, email, first_name, last_name, timezone, deleted_at, created_at, culture)
+        values ('f371efb3-a23f-4d8e-9318-5c77b435a250', 'dummy@changeblog.com', 'dummy', 'user', 'UTC', null, now(), 'en-US')
+        on conflict do nothing
+        """
+      "UPDATE account SET created_by_user = 'f371efb3-a23f-4d8e-9318-5c77b435a250' WHERE created_by_user IS NULL"
+      "ALTER TABLE account ALTER COLUMN created_by_user SET NOT NULL"
+      """ALTER TABLE account ADD CONSTRAINT account_createdbyuser_fkey FOREIGN KEY (created_by_user) REFERENCES "user"(id)"""
+      "CREATE INDEX IF NOT EXISTS account_createdbyuser_idx ON account (created_by_user)" ]
+
 let create (dbConnection: IDbConnection) =
     dbConnection.Execute(createAccountSql) |> ignore
 
 let addVersioningSchemeForeignKey (dbConnection: IDbConnection) =
-    let constraintName = "account_versioningschemeid_fkey"
+    let constraintName =
+        "account_versioningschemeid_fkey"
 
     let constraintExists =
         Db.constraintExists dbConnection constraintName
@@ -59,5 +72,10 @@ let addChangeTrackerAccount (dbConnection: IDbConnection) =
 
 let fixUniqueIndexOnAccountName (dbConnection: IDbConnection) =
     fixUniqueIndexOnAccountNameSql
+    |> List.map dbConnection.Execute
+    |> ignore
+
+let addCreatedByUserColumn (dbConnection: IDbConnection) =
+    addCreatedByUserColumnSql
     |> List.map dbConnection.Execute
     |> ignore

@@ -72,23 +72,5 @@ public static class ServiceCollectionExtensions
             {
                 PropertyNamingPolicy = JsonNamingPolicy.CamelCase
             }));
-
-        // context.Response.OnStarting(async () =>
-        // {
-        //     var logger = context.HttpContext.RequestServices.GetRequiredService<ILogger<AppAuthenticationHandler>>();
-        //
-        //     var authException = context.AuthenticateFailure;
-        //     if (authException is not null)
-        //         logger.LogCritical(authException, "Error while authenticating user.");
-        //
-        //     context.Response.ContentType = MediaTypeNames.Application.Json;
-        //     var responseBody = ErrorResponse.Create(ChangeBlogStrings.NotAuthenticated);
-        //
-        //     await context.Response.WriteAsync(JsonSerializer.Serialize(responseBody,
-        //         new JsonSerializerOptions
-        //         {
-        //             PropertyNamingPolicy = JsonNamingPolicy.CamelCase
-        //         }));
-        // });
     }
 }

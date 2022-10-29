@@ -12,6 +12,7 @@ public static class TestData
         Name.Parse("TestAccount DataAccess tests"),
         Default.VersioningSchemeId,
         DateTime.Parse("2021-05-21"),
+        Guid.Parse("9e13bbfc-451b-450e-a73a-72b6b23df64d"),
         null);
 
     public static readonly User User = new(

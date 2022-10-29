@@ -18,7 +18,7 @@ public class SchemaVersion
         _logger = logger;
     }
 
-    private static SemVersion AppSchemaVersion => SemVersion.Parse("14.2.0", SemVersionStyles.Strict);
+    private static SemVersion AppSchemaVersion => SemVersion.Parse("15.0.0", SemVersionStyles.Strict);
 
     public async Task ApproveAsync()
     {
@@ -28,14 +28,10 @@ public class SchemaVersion
         var dbSchemaVersion = SemVersion.Parse(dbSchemaVersionValue, SemVersionStyles.Strict);
 
         if (AppSchemaVersion.Major != dbSchemaVersion.Major)
-        {
             throw new Exception($"Schema version mismatch: App {AppSchemaVersion}; Database {dbSchemaVersion}");
-        }
 
         if (AppSchemaVersion != dbSchemaVersion)
-        {
             _logger.LogWarning("Schema version mismatch: App {AppSchemaVersion}; Database {DbSchemaVersion}",
                 AppSchemaVersion, dbSchemaVersion);
-        }
     }
 }

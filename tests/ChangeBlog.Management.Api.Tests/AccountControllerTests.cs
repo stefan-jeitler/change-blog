@@ -92,7 +92,6 @@ public class AccountControllerTests : IClassFixture<WebApplicationFactory<Startu
         content.Should().HaveCount(7);
     }
 
-
     [Fact]
     public async Task UserAccess_OutdatedToken_NotAuthenticated()
     {
@@ -105,7 +104,6 @@ public class AccountControllerTests : IClassFixture<WebApplicationFactory<Startu
 
         response.StatusCode.Should().Be(HttpStatusCode.Unauthorized);
     }
-
 
     [Fact]
     public async Task UserAccess_NoApiKeyPresent_NotAuthenticated()

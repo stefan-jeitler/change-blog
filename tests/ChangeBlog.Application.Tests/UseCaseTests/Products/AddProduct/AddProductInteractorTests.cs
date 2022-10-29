@@ -27,19 +27,18 @@ public class AddProductInteractorTests
         _outputPortMock = new Mock<IAddProductOutputPort>(MockBehavior.Strict);
     }
 
-    private AddProductInteractor CreateInteractor()
-    {
-        return new AddProductInteractor(_fakeAccountDao,
+    private AddProductInteractor CreateInteractor() =>
+        new AddProductInteractor(_fakeAccountDao,
             _fakeVersioningSchemeDao,
             _fakeProductDao,
             _unitOfWorkMock.Object);
-    }
 
     [Fact]
     public async Task CreateProduct_Successful()
     {
         // arrange
-        var account = new Account(TestAccount.Id, TestAccount.Name, null, TestAccount.CreationDate, null);
+        var account = new Account(TestAccount.Id, TestAccount.Name, null, TestAccount.CreationDate,
+            TestAccount.CreatedByUser, null);
         _fakeAccountDao.Accounts.Add(account);
         _fakeVersioningSchemeDao.VersioningSchemes.Add(TestAccount.CustomVersioningScheme);
         var productRequestModel = new ProductRequestModel(TestAccount.Id, TestAccount.Name.Value,
@@ -82,6 +81,7 @@ public class AddProductInteractorTests
     {
         // arrange
         var deletedAccount = new Account(TestAccount.Id, TestAccount.Name, null, TestAccount.CreationDate,
+            TestAccount.CreatedByUser,
             DateTime.Parse("2021-04-04"));
         _fakeAccountDao.Accounts.Add(deletedAccount);
 
@@ -104,6 +104,7 @@ public class AddProductInteractorTests
     {
         // arrange
         _fakeAccountDao.Accounts.Add(new Account(TestAccount.Id, TestAccount.Name, null, TestAccount.CreationDate,
+            TestAccount.CreatedByUser,
             null));
 
         var productRequestModel = new ProductRequestModel(TestAccount.Id, "", null, "en", TestAccount.UserId);
@@ -123,6 +124,7 @@ public class AddProductInteractorTests
     {
         // arrange
         _fakeAccountDao.Accounts.Add(new Account(TestAccount.Id, TestAccount.Name, null, TestAccount.CreationDate,
+            TestAccount.CreatedByUser,
             null));
         _fakeProductDao.Products.Add(new Product(TestAccount.Id, TestAccount.Name,
             TestAccount.Product.VersioningScheme, TestAccount.UserId, TestAccount.Product.LanguageCode,
@@ -146,6 +148,7 @@ public class AddProductInteractorTests
     {
         // arrange
         _fakeAccountDao.Accounts.Add(new Account(TestAccount.Id, TestAccount.Name, null, TestAccount.CreationDate,
+            TestAccount.CreatedByUser,
             null));
         var notExistingVersioningSchemeId = Guid.Parse("3984bcf2-9930-4d41-984e-b72ccc6d6c87");
 
@@ -169,6 +172,7 @@ public class AddProductInteractorTests
     {
         // arrange
         _fakeAccountDao.Accounts.Add(new Account(TestAccount.Id, TestAccount.Name, null, TestAccount.CreationDate,
+            TestAccount.CreatedByUser,
             null));
         _fakeVersioningSchemeDao.VersioningSchemes.Add(TestAccount.DefaultScheme);
 
@@ -193,6 +197,7 @@ public class AddProductInteractorTests
     {
         // arrange
         _fakeAccountDao.Accounts.Add(new Account(TestAccount.Id, TestAccount.Name, null, TestAccount.CreationDate,
+            TestAccount.CreatedByUser,
             null));
         _fakeVersioningSchemeDao.VersioningSchemes.Add(TestAccount.DefaultScheme);
 
@@ -217,6 +222,7 @@ public class AddProductInteractorTests
     {
         // arrange
         _fakeAccountDao.Accounts.Add(new Account(TestAccount.Id, TestAccount.Name, null, TestAccount.CreationDate,
+            TestAccount.CreatedByUser,
             null));
 
         _fakeVersioningSchemeDao.VersioningSchemes.Add(TestAccount.CustomVersioningScheme);

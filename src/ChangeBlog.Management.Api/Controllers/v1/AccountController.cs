@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Net.Mime;
 using System.Threading.Tasks;
@@ -8,12 +9,14 @@ using ChangeBlog.Api.Shared.Authorization;
 using ChangeBlog.Api.Shared.DTOs;
 using ChangeBlog.Api.Shared.DTOs.V1.User;
 using ChangeBlog.Api.Shared.Swagger;
+using ChangeBlog.Application.UseCases.Accounts.CreateAccount;
 using ChangeBlog.Application.UseCases.Accounts.GetAccounts;
 using ChangeBlog.Application.UseCases.Accounts.GetRoles;
 using ChangeBlog.Application.UseCases.Users.GetUsers;
 using ChangeBlog.Domain.Authorization;
 using ChangeBlog.Management.Api.DTOs;
 using ChangeBlog.Management.Api.DTOs.V1.Account;
+using ChangeBlog.Management.Api.Presenters.V1;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
@@ -50,6 +53,22 @@ public class AccountController : ControllerBase
         var account = await getAccount.ExecuteAsync(userId, accountId);
 
         return Ok(AccountDto.FromResponseModel(account));
+    }
+
+    [HttpPost(Name = "CreateAccount")]
+    [ProducesResponseType(StatusCodes.Status200OK)]
+    [ProducesResponseType(typeof(ErrorResponse), StatusCodes.Status400BadRequest)]
+    [SkipAuthorization]
+    public async Task<IActionResult> CreateAccountAsync([FromServices] ICreateAccount createAccount,
+        [Required] string accountName)
+    {
+        var userId = HttpContext.GetUserId();
+        var requestModel = new CreateAccountRequestModel(accountName, userId);
+        var presenter = new CreateAccountPresenter(HttpContext);
+
+        await createAccount.ExecuteAsync(presenter, requestModel);
+
+        return presenter.Response;
     }
 
     [HttpGet("{accountId:Guid}/users", Name = "GetAccountUsers")]

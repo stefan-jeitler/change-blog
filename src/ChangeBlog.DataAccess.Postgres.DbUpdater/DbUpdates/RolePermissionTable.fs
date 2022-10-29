@@ -122,6 +122,18 @@ let private deleteObsoletePermissionsSql =
         where permission in ('ViewOwnUser', 'ViewRoles', 'ViewUserProducts')
     """
 
+let private addAccountPermissionsSql =
+    [ """
+    INSERT INTO role_permission
+    SELECT id, 'UpdateAccount', now() from role where name in ('PlatformManager')
+    ON CONFLICT (role_id, permission) DO NOTHING
+    """
+      """
+    INSERT INTO role_permission
+    SELECT id, 'DeleteAccount', now() from role where name in ('PlatformManager')
+    ON CONFLICT (role_id, permission) DO NOTHING
+    """ ]
+
 let create (dbConnection: IDbConnection) =
     dbConnection.Execute(createRolePermissionSql)
     |> ignore
@@ -156,4 +168,9 @@ let addChangeLogLinePermissions (dbConnection: IDbConnection) =
 
 let deleteObsoletePermissions (dbConnection: IDbConnection) =
     dbConnection.Execute(deleteObsoletePermissionsSql)
+    |> ignore
+
+let addAccountPermissions (dbConnection: IDbConnection) =
+    addAccountPermissionsSql
+    |> List.map dbConnection.Execute
     |> ignore

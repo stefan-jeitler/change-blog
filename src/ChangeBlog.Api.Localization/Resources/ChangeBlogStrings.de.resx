@@ -1,345 +1,360 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <root>
-  <!-- 
-    Microsoft ResX Schema 
-    
-    Version 2.0
-    
-    The primary goals of this format is to allow a simple XML format 
-    that is mostly human readable. The generation and parsing of the 
-    various data types are done through the TypeConverter classes 
-    associated with the data types.
-    
-    Example:
-    
-    ... ado.net/XML headers & schema ...
-    <resheader name="resmimetype">text/microsoft-resx</resheader>
-    <resheader name="version">2.0</resheader>
-    <resheader name="reader">System.Resources.ResXResourceReader, System.Windows.Forms, ...</resheader>
-    <resheader name="writer">System.Resources.ResXResourceWriter, System.Windows.Forms, ...</resheader>
-    <data name="Name1"><value>this is my long string</value><comment>this is a comment</comment></data>
-    <data name="Color1" type="System.Drawing.Color, System.Drawing">Blue</data>
-    <data name="Bitmap1" mimetype="application/x-microsoft.net.object.binary.base64">
-        <value>[base64 mime encoded serialized .NET Framework object]</value>
-    </data>
-    <data name="Icon1" type="System.Drawing.Icon, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
-        <value>[base64 mime encoded string representing a byte array form of the .NET Framework object]</value>
-        <comment>This is a comment</comment>
-    </data>
-                
-    There are any number of "resheader" rows that contain simple 
-    name/value pairs.
-    
-    Each data row contains a name, and value. The row also contains a 
-    type or mimetype. Type corresponds to a .NET class that support 
-    text/value conversion through the TypeConverter architecture. 
-    Classes that don't support this are serialized and stored with the 
-    mimetype set.
-    
-    The mimetype is used for serialized objects, and tells the 
-    ResXResourceReader how to depersist the object. This is currently not 
-    extensible. For a given mimetype the value must be set accordingly:
-    
-    Note - application/x-microsoft.net.object.binary.base64 is the format 
-    that the ResXResourceWriter will generate, however the reader can 
-    read any of the formats listed below.
-    
-    mimetype: application/x-microsoft.net.object.binary.base64
-    value   : The object must be serialized with 
-            : System.Runtime.Serialization.Formatters.Binary.BinaryFormatter
-            : and then encoded with base64 encoding.
-    
-    mimetype: application/x-microsoft.net.object.soap.base64
-    value   : The object must be serialized with 
-            : System.Runtime.Serialization.Formatters.Soap.SoapFormatter
-            : and then encoded with base64 encoding.
-
-    mimetype: application/x-microsoft.net.object.bytearray.base64
-    value   : The object must be serialized into a byte array 
-            : using a System.ComponentModel.TypeConverter
-            : and then encoded with base64 encoding.
-    -->
-  <xsd:schema id="root" xmlns="" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata">
-    <xsd:import namespace="http://www.w3.org/XML/1998/namespace" />
-    <xsd:element name="root" msdata:IsDataSet="true">
-      <xsd:complexType>
-        <xsd:choice maxOccurs="unbounded">
-          <xsd:element name="metadata">
+    <!-- 
+      Microsoft ResX Schema 
+      
+      Version 2.0
+      
+      The primary goals of this format is to allow a simple XML format 
+      that is mostly human readable. The generation and parsing of the 
+      various data types are done through the TypeConverter classes 
+      associated with the data types.
+      
+      Example:
+      
+      ... ado.net/XML headers & schema ...
+      <resheader name="resmimetype">text/microsoft-resx</resheader>
+      <resheader name="version">2.0</resheader>
+      <resheader name="reader">System.Resources.ResXResourceReader, System.Windows.Forms, ...</resheader>
+      <resheader name="writer">System.Resources.ResXResourceWriter, System.Windows.Forms, ...</resheader>
+      <data name="Name1"><value>this is my long string</value><comment>this is a comment</comment></data>
+      <data name="Color1" type="System.Drawing.Color, System.Drawing">Blue</data>
+      <data name="Bitmap1" mimetype="application/x-microsoft.net.object.binary.base64">
+          <value>[base64 mime encoded serialized .NET Framework object]</value>
+      </data>
+      <data name="Icon1" type="System.Drawing.Icon, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
+          <value>[base64 mime encoded string representing a byte array form of the .NET Framework object]</value>
+          <comment>This is a comment</comment>
+      </data>
+                  
+      There are any number of "resheader" rows that contain simple 
+      name/value pairs.
+      
+      Each data row contains a name, and value. The row also contains a 
+      type or mimetype. Type corresponds to a .NET class that support 
+      text/value conversion through the TypeConverter architecture. 
+      Classes that don't support this are serialized and stored with the 
+      mimetype set.
+      
+      The mimetype is used for serialized objects, and tells the 
+      ResXResourceReader how to depersist the object. This is currently not 
+      extensible. For a given mimetype the value must be set accordingly:
+      
+      Note - application/x-microsoft.net.object.binary.base64 is the format 
+      that the ResXResourceWriter will generate, however the reader can 
+      read any of the formats listed below.
+      
+      mimetype: application/x-microsoft.net.object.binary.base64
+      value   : The object must be serialized with 
+              : System.Runtime.Serialization.Formatters.Binary.BinaryFormatter
+              : and then encoded with base64 encoding.
+      
+      mimetype: application/x-microsoft.net.object.soap.base64
+      value   : The object must be serialized with 
+              : System.Runtime.Serialization.Formatters.Soap.SoapFormatter
+              : and then encoded with base64 encoding.
+  
+      mimetype: application/x-microsoft.net.object.bytearray.base64
+      value   : The object must be serialized into a byte array 
+              : using a System.ComponentModel.TypeConverter
+              : and then encoded with base64 encoding.
+      -->
+    <xsd:schema xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata"
+                id="root"
+                xmlns="">
+        <xsd:import namespace="http://www.w3.org/XML/1998/namespace"/>
+        <xsd:element name="root" msdata:IsDataSet="true">
             <xsd:complexType>
-              <xsd:sequence>
-                <xsd:element name="value" type="xsd:string" minOccurs="0" />
-              </xsd:sequence>
-              <xsd:attribute name="name" use="required" type="xsd:string" />
-              <xsd:attribute name="type" type="xsd:string" />
-              <xsd:attribute name="mimetype" type="xsd:string" />
-              <xsd:attribute ref="xml:space" />
+                <xsd:choice maxOccurs="unbounded">
+                    <xsd:element name="metadata">
+                        <xsd:complexType>
+                            <xsd:sequence>
+                                <xsd:element name="value" type="xsd:string" minOccurs="0"/>
+                            </xsd:sequence>
+                            <xsd:attribute name="name" use="required" type="xsd:string"/>
+                            <xsd:attribute name="type" type="xsd:string"/>
+                            <xsd:attribute name="mimetype" type="xsd:string"/>
+                            <xsd:attribute ref="xml:space"/>
+                        </xsd:complexType>
+                    </xsd:element>
+                    <xsd:element name="assembly">
+                        <xsd:complexType>
+                            <xsd:attribute name="alias" type="xsd:string"/>
+                            <xsd:attribute name="name" type="xsd:string"/>
+                        </xsd:complexType>
+                    </xsd:element>
+                    <xsd:element name="data">
+                        <xsd:complexType>
+                            <xsd:sequence>
+                                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1"/>
+                                <xsd:element name="comment" type="xsd:string" minOccurs="0" msdata:Ordinal="2"/>
+                            </xsd:sequence>
+                            <xsd:attribute name="name" type="xsd:string" use="required" msdata:Ordinal="1"/>
+                            <xsd:attribute name="type" type="xsd:string" msdata:Ordinal="3"/>
+                            <xsd:attribute name="mimetype" type="xsd:string" msdata:Ordinal="4"/>
+                            <xsd:attribute ref="xml:space"/>
+                        </xsd:complexType>
+                    </xsd:element>
+                    <xsd:element name="resheader">
+                        <xsd:complexType>
+                            <xsd:sequence>
+                                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1"/>
+                            </xsd:sequence>
+                            <xsd:attribute name="name" type="xsd:string" use="required"/>
+                        </xsd:complexType>
+                    </xsd:element>
+                </xsd:choice>
             </xsd:complexType>
-          </xsd:element>
-          <xsd:element name="assembly">
-            <xsd:complexType>
-              <xsd:attribute name="alias" type="xsd:string" />
-              <xsd:attribute name="name" type="xsd:string" />
-            </xsd:complexType>
-          </xsd:element>
-          <xsd:element name="data">
-            <xsd:complexType>
-              <xsd:sequence>
-                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
-                <xsd:element name="comment" type="xsd:string" minOccurs="0" msdata:Ordinal="2" />
-              </xsd:sequence>
-              <xsd:attribute name="name" type="xsd:string" use="required" msdata:Ordinal="1" />
-              <xsd:attribute name="type" type="xsd:string" msdata:Ordinal="3" />
-              <xsd:attribute name="mimetype" type="xsd:string" msdata:Ordinal="4" />
-              <xsd:attribute ref="xml:space" />
-            </xsd:complexType>
-          </xsd:element>
-          <xsd:element name="resheader">
-            <xsd:complexType>
-              <xsd:sequence>
-                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
-              </xsd:sequence>
-              <xsd:attribute name="name" type="xsd:string" use="required" />
-            </xsd:complexType>
-          </xsd:element>
-        </xsd:choice>
-      </xsd:complexType>
-    </xsd:element>
-  </xsd:schema>
-  <resheader name="resmimetype">
-    <value>text/microsoft-resx</value>
-  </resheader>
-  <resheader name="version">
-    <value>2.0</value>
-  </resheader>
-  <resheader name="reader">
-    <value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
-  </resheader>
-  <resheader name="writer">
-    <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
-  </resheader>
-  <data name="UserProfileUpdated" xml:space="preserve">
+        </xsd:element>
+    </xsd:schema>
+    <resheader name="resmimetype">
+        <value>text/microsoft-resx</value>
+    </resheader>
+    <resheader name="version">
+        <value>2.0</value>
+    </resheader>
+    <resheader name="reader">
+        <value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=4.0.0.0, Culture=neutral,
+            PublicKeyToken=b77a5c561934e089
+        </value>
+    </resheader>
+    <resheader name="writer">
+        <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral,
+            PublicKeyToken=b77a5c561934e089
+        </value>
+    </resheader>
+    <data name="UserProfileUpdated" xml:space="preserve">
     <value>Benutzerprofil erfolgreich aktualisiert</value>
   </data>
-  <data name="UnknownError" xml:space="preserve">
+    <data name="UnknownError" xml:space="preserve">
     <value>Unbekannter Fehler</value>
   </data>
-  <data name="ProductWithoutVersions" xml:space="preserve">
+    <data name="ProductWithoutVersions" xml:space="preserve">
     <value>Das Produkt enhält keine Versionen</value>
   </data>
-  <data name="NoPermissionToPerformThisOperation" xml:space="preserve">
+    <data name="NoPermissionToPerformThisOperation" xml:space="preserve">
     <value>Sie haben keine Berechtigung diese Operation auszuführen</value>
   </data>
-  <data name="ResourceNotFound" xml:space="preserve">
+    <data name="ResourceNotFound" xml:space="preserve">
     <value>Resource nicht gefunden</value>
   </data>
-  <data name="VersionAlreadyReleased" xml:space="preserve">
+    <data name="VersionAlreadyReleased" xml:space="preserve">
     <value>Die Version wurde bereits released</value>
   </data>
-  <data name="VersionDeleted" xml:space="preserve">
+    <data name="VersionDeleted" xml:space="preserve">
     <value>Die Version wurde gelöscht</value>
   </data>
-  <data name="ProductHasBeenClosed" xml:space="preserve">
+    <data name="ProductHasBeenClosed" xml:space="preserve">
     <value>Das Produkt wurde eingestampt</value>
   </data>
-  <data name="ChangeLogLineDeleted" xml:space="preserve">
+    <data name="ChangeLogLineDeleted" xml:space="preserve">
     <value>Der Changelog Eintrag wurde gelöscht</value>
   </data>
-  <data name="ChangeLogLineErrorOnInsertOrUpdate" xml:space="preserve">
+    <data name="ChangeLogLineErrorOnInsertOrUpdate" xml:space="preserve">
     <value>Beim Einfügen oder Aktualisieren von Changelog Einträgen ist ein Fehler aufgetreten. Bitte versuchen Sie es zu einem späteren Zeitpunkt erneut.</value>
   </data>
-  <data name="InvalidVersionId" xml:space="preserve">
+    <data name="InvalidVersionId" xml:space="preserve">
     <value>Versions-Id ist nicht gültig</value>
   </data>
-  <data name="InvalidVersioningSchemeId" xml:space="preserve">
+    <data name="InvalidVersioningSchemeId" xml:space="preserve">
     <value>Id des Versionierungsschemas ist nicht gültig</value>
   </data>
-  <data name="VersionNotFound" xml:space="preserve">
+    <data name="VersionNotFound" xml:space="preserve">
     <value>Version nicht gefunden</value>
   </data>
-  <data name="MissingRequestData" xml:space="preserve">
+    <data name="MissingRequestData" xml:space="preserve">
     <value>Request enthält keine oder zu wenig Daten</value>
   </data>
-  <data name="InvalidFormat" xml:space="preserve">
+    <data name="InvalidFormat" xml:space="preserve">
     <value>Ungültiges Format "{0}"</value>
   </data>
-  <data name="ChangeLogLineSameText" xml:space="preserve">
+    <data name="ChangeLogLineSameText" xml:space="preserve">
     <value>Einträge mit dem gleichen Text sind nicht erlaubt. Duplikat: '{0}'</value>
   </data>
-  <data name="ChangeLogLineAdded" xml:space="preserve">
+    <data name="ChangeLogLineAdded" xml:space="preserve">
     <value>Changelog Eintrag erfolgreich hinzugefügt</value>
   </data>
-  <data name="TooManyChangeLogLines" xml:space="preserve">
+    <data name="TooManyChangeLogLines" xml:space="preserve">
     <value>Zu viele Changelog Einträge. Max {0} Einträge möglich</value>
   </data>
-  <data name="InvalidChangeLogText" xml:space="preserve">
+    <data name="InvalidChangeLogText" xml:space="preserve">
     <value>Changelog Text ist ungültig "{0}"</value>
   </data>
-  <data name="InvalidIssue" xml:space="preserve">
+    <data name="InvalidIssue" xml:space="preserve">
     <value>Issue "{0}" ist ungültig</value>
   </data>
-  <data name="TooManyIssuesForChangeLogLine" xml:space="preserve">
+    <data name="TooManyIssuesForChangeLogLine" xml:space="preserve">
     <value>Der Changelog Eintrag "{0}" hat zu viele Issues. Max {1} Issues möglich</value>
   </data>
-  <data name="InvalidLabel" xml:space="preserve">
+    <data name="InvalidLabel" xml:space="preserve">
     <value>Label "{0}" ist ungültig</value>
   </data>
-  <data name="TooManyLabelsForChangeLogLine" xml:space="preserve">
+    <data name="TooManyLabelsForChangeLogLine" xml:space="preserve">
     <value>Der Changelog Eintrag "{0}" hat zu viele Labels. Max {1} Labels möglich</value>
   </data>
-  <data name="IssueAdded" xml:space="preserve">
+    <data name="IssueAdded" xml:space="preserve">
     <value>Issue erfolgreich hinzugefügt</value>
   </data>
-  <data name="ChangeLogLineNotFound" xml:space="preserve">
+    <data name="ChangeLogLineNotFound" xml:space="preserve">
     <value>Changelog Eintrag nicht gefunden</value>
   </data>
-  <data name="MaxIssuesReached" xml:space="preserve">
+    <data name="MaxIssuesReached" xml:space="preserve">
     <value>Sie können keine Issues mehr hinzufügen. Die max. Anzahl an Issues ist {0}</value>
   </data>
-  <data name="LabelAdded" xml:space="preserve">
+    <data name="LabelAdded" xml:space="preserve">
     <value>Label erfolgreich hinzugefügt</value>
   </data>
-  <data name="MaxLabelsReached" xml:space="preserve">
+    <data name="MaxLabelsReached" xml:space="preserve">
     <value>Sie können keine Labels mehr hinzufügen. Die max. Anzahl an Labels ist {0}</value>
   </data>
-  <data name="ProductNotFound" xml:space="preserve">
+    <data name="ProductNotFound" xml:space="preserve">
     <value>Produkt nicht gefunden</value>
   </data>
-  <data name="PendingChangeLogLineAdded" xml:space="preserve">
+    <data name="PendingChangeLogLineAdded" xml:space="preserve">
     <value>Pending Changelog Eintrag erfolgreich hinzugefügt</value>
   </data>
-  <data name="ChangeLogLineMoved" xml:space="preserve">
+    <data name="ChangeLogLineMoved" xml:space="preserve">
     <value>Changelog Einträg(e) erfolgreich verschoben</value>
   </data>
-  <data name="InvalidVersionFormat" xml:space="preserve">
+    <data name="InvalidVersionFormat" xml:space="preserve">
     <value>Die Version "{0}" ist nicht korrekt formattiert</value>
   </data>
-  <data name="TooManyChangeLogLines_Remaining" xml:space="preserve">
+    <data name="TooManyChangeLogLines_Remaining" xml:space="preserve">
     <value>Die Anzahl der zu hinzufügenden Changelog Einträge ist zu groß. Sie können nur mehr {0} hinzufügen</value>
   </data>
-  <data name="NoChangeLogLinesToAssign" xml:space="preserve">
+    <data name="NoChangeLogLinesToAssign" xml:space="preserve">
     <value>Es gibt keine Changelog Einträge zum Zuweisen</value>
   </data>
-  <data name="TargetVersionContainsLinesWithSameText" xml:space="preserve">
+    <data name="TargetVersionContainsLinesWithSameText" xml:space="preserve">
     <value>Die Zielversion hat bereits Einträge mit identischem Text. Duplikate: "{0}"</value>
   </data>
-  <data name="TargetVersionBelongsToDifferentProduct" xml:space="preserve">
+    <data name="TargetVersionBelongsToDifferentProduct" xml:space="preserve">
     <value>Die Zielversion gehört zu einem anderen Produkt</value>
   </data>
-  <data name="TargetVersionTooManyChangeLogLines" xml:space="preserve">
+    <data name="TargetVersionTooManyChangeLogLines" xml:space="preserve">
     <value>Die Zielversion hat die maximale Anzahl an Changelog Einträgen erreicht. Max {0} Einträge möglich.</value>
   </data>
-  <data name="ChnageLogLineNotPending" xml:space="preserve">
+    <data name="ChnageLogLineNotPending" xml:space="preserve">
     <value>Der Changelog Eintrag ist nicht pending.</value>
   </data>
-  <data name="ChangeLogLinePending" xml:space="preserve">
+    <data name="ChangeLogLinePending" xml:space="preserve">
     <value>Changelog Eintrag ist pending</value>
   </data>
-  <data name="IssueDeleted" xml:space="preserve">
+    <data name="IssueDeleted" xml:space="preserve">
     <value>Issue erfolgreich gelöscht</value>
   </data>
-  <data name="LabelDeleted" xml:space="preserve">
+    <data name="LabelDeleted" xml:space="preserve">
     <value>Label erfolgreich gelöscht</value>
   </data>
-  <data name="VersionAlreadyDeleted" xml:space="preserve">
+    <data name="VersionAlreadyDeleted" xml:space="preserve">
     <value>Die Version wurde bereits gelöscht</value>
   </data>
-  <data name="ChangeLogLinesMadePending" xml:space="preserve">
+    <data name="ChangeLogLinesMadePending" xml:space="preserve">
     <value>{0} Chnagelog Einträge wurden pending gemacht</value>
   </data>
-  <data name="ChangeLogLineMadePending" xml:space="preserve">
+    <data name="ChangeLogLineMadePending" xml:space="preserve">
     <value>Der Changelog Eintrag wurde als pending markiert</value>
   </data>
-  <data name="ChangeLogLineUpdated" xml:space="preserve">
+    <data name="ChangeLogLineUpdated" xml:space="preserve">
     <value>Changelog Eintrag erfolgreich aktualisiert</value>
   </data>
-  <data name="AccountNotFound" xml:space="preserve">
+    <data name="AccountNotFound" xml:space="preserve">
     <value>Account nicht gefunden</value>
   </data>
-  <data name="AccountDeleted" xml:space="preserve">
+    <data name="AccountDeleted" xml:space="preserve">
     <value>Der Account wurde gelöscht</value>
   </data>
-  <data name="InvalidName" xml:space="preserve">
+    <data name="InvalidName" xml:space="preserve">
     <value>Name "{0}" ist ungültig</value>
   </data>
-  <data name="ProductAlreadyExists" xml:space="preserve">
+    <data name="ProductAlreadyExists" xml:space="preserve">
     <value>Das Produkt existiert bereits</value>
   </data>
-  <data name="VersioningSchemeNotFound" xml:space="preserve">
+    <data name="VersioningSchemeNotFound" xml:space="preserve">
     <value>Versionierungsschema nicht gefunden</value>
   </data>
-  <data name="ProductAdded" xml:space="preserve">
+    <data name="ProductAdded" xml:space="preserve">
     <value>Produkt erfolgreich hinzugefügt</value>
   </data>
-  <data name="LanguageCodeNotSupported" xml:space="preserve">
+    <data name="LanguageCodeNotSupported" xml:space="preserve">
     <value>Die angegebene Sprache "{0}" wird nicht unterstützt. Unterstützte Sprachen sind "{1}"</value>
   </data>
-  <data name="VersionAlreadyExists" xml:space="preserve">
+    <data name="VersionAlreadyExists" xml:space="preserve">
     <value>Die Version existiert bereits</value>
   </data>
-  <data name="ProductAlreadyClosed" xml:space="preserve">
+    <data name="ProductAlreadyClosed" xml:space="preserve">
     <value>Das Produkt wurde bereits eingestampft</value>
   </data>
-  <data name="VersionUpdateForbidden" xml:space="preserve">
+    <data name="VersionUpdateForbidden" xml:space="preserve">
     <value>Sie können keine Versionen aktualisieren, die bereits released oder gelöscht wurden</value>
   </data>
-  <data name="VersionAdded" xml:space="preserve">
+    <data name="VersionAdded" xml:space="preserve">
     <value>Version erfolgreich hinzugefügt</value>
   </data>
-  <data name="VersionUpdated" xml:space="preserve">
+    <data name="VersionUpdated" xml:space="preserve">
     <value>Version erfolgreich aktualisiert</value>
   </data>
-  <data name="VersioningSchemeMismatch" xml:space="preserve">
+    <data name="VersioningSchemeMismatch" xml:space="preserve">
     <value>Die Version "{0}" entspricht nicht dem Versionierungsschema ihres Produktes. Versionierungsschema: {1}</value>
   </data>
-  <data name="VersionReleased" xml:space="preserve">
+    <data name="VersionReleased" xml:space="preserve">
     <value>Version erfolgreich released</value>
   </data>
-  <data name="NotAuthenticated" xml:space="preserve">
+    <data name="NotAuthenticated" xml:space="preserve">
     <value>Sie sind nicht authentifiziert. Bitte senden Sie einen validen API-KEY oder Access Token mit</value>
   </data>
-  <data name="MissingSubClaim" xml:space="preserve">
+    <data name="MissingSubClaim" xml:space="preserve">
     <value>'sub' Claim ist im Access Token nicht enthalten</value>
   </data>
-  <data name="UserNotExistingInApp" xml:space="preserve">
+    <data name="UserNotExistingInApp" xml:space="preserve">
     <value>Der Benutzer existiert nicht in der Anwendung </value>
   </data>
-  <data name="VersionCannotBeDeletedBecauseReleased" xml:space="preserve">
+    <data name="VersionCannotBeDeletedBecauseReleased" xml:space="preserve">
     <value>Die Version wurde bereits released und kann daher nicht mehr gelöscht werden</value>
   </data>
-  <data name="VersionCannotBeReleasedBecauseDeleted" xml:space="preserve">
+    <data name="VersionCannotBeReleasedBecauseDeleted" xml:space="preserve">
     <value>Die Version wurde bereits gelöscht und kann daher nicht mehr released werden</value>
   </data>
-  <data name="ApiKeyAdded" xml:space="preserve">
+    <data name="ApiKeyAdded" xml:space="preserve">
     <value>Api Schlüssel wurde hinzugefügt</value>
   </data>
-  <data name="ApiKeyExpirationTooShort" xml:space="preserve">
+    <data name="ApiKeyExpirationTooShort" xml:space="preserve">
     <value>Die Gültigkeitsdauer des Api Schlüssels ist zu kurz. Die minimale Dauer beträgt 7 Tage</value>
   </data>
-  <data name="ApiKeyExpirationTooLong" xml:space="preserve">
+    <data name="ApiKeyExpirationTooLong" xml:space="preserve">
     <value>Die Gültigkeitsdauer des Api Schlüssels ist zu lang. Die maximale Dauer beträgt 2 Jahre</value>
   </data>
-  <data name="ApiKeyDeleted" xml:space="preserve">
+    <data name="ApiKeyDeleted" xml:space="preserve">
     <value>Api Schlüssel erfolgreich gelöscht</value>
   </data>
-  <data name="InvalidApiKeyTitle" xml:space="preserve">
+    <data name="InvalidApiKeyTitle" xml:space="preserve">
     <value>Api Schlüssel Bezeichnung ist nicht gültig</value>
   </data>
-  <data name="MaxApiKeysCountReached" xml:space="preserve">
+    <data name="MaxApiKeysCountReached" xml:space="preserve">
     <value>Die Anzahl der Api Schlüssel ist auf {0} begrenzt</value>
   </data>
-  <data name="ExpirationDateInThePast" xml:space="preserve">
+    <data name="ExpirationDateInThePast" xml:space="preserve">
     <value>Das Ablaufdatum kann nicht in der Vergangenheit liegen</value>
   </data>
-  <data name="ApiKeyNotFound" xml:space="preserve">
+    <data name="ApiKeyNotFound" xml:space="preserve">
     <value>Api Schlüssel nicht gefunden</value>
   </data>
-  <data name="ApiKeyUpdated" xml:space="preserve">
+    <data name="ApiKeyUpdated" xml:space="preserve">
     <value>Api Schlüssel erfolgreich aktualisiert</value>
   </data>
-  <data name="CultureNotSupported" xml:space="preserve">
+    <data name="CultureNotSupported" xml:space="preserve">
     <value>Die Region "{0}" wird nicht unterstützt</value>
   </data>
-  <data name="TimezoneNotFound" xml:space="preserve">
+    <data name="TimezoneNotFound" xml:space="preserve">
     <value>Zeitzone "{0}" nicht gefunden</value>
   </data>
+    <data name="AccountCreated" xml:space="preserve">
+    <value>Account erfolgreich erstellt</value>
+  </data>
+    <data name="NameAlreadyTaken" xml:space="preserve">
+      <value>Der Name ist bereits vergeben</value>
+    </data>
+    <data name="MaxAccountsCreatedByUserReached" xml:space="preserve">
+      <value>Sie können nicht mehr als {0} Accounts erstellen</value>
+    </data>
 </root>

@@ -39,12 +39,16 @@ let getLatestSchemaVersion (dbConnection: IDbConnection) =
     match tableExists with
     | false -> SemVersion.Parse("0.0.0", SemVersionStyles.Strict)
     | true ->
-        let versionSql = "SELECT version FROM schema_version"
+        let versionSql =
+            "SELECT version FROM schema_version"
 
         let latestVersion =
             dbConnection.ExecuteScalar<string>(versionSql)
 
-        SemVersion.Parse(latestVersion, SemVersionStyles.Strict)
+        if latestVersion = null then
+            SemVersion.Parse("0.0.0", SemVersionStyles.Strict)
+        else
+            SemVersion.Parse(latestVersion, SemVersionStyles.Strict)
 
 let updateSchemaVersion (dbConnection: IDbConnection) (version: SemVersion) =
     let updateSchemaVersionSql =
@@ -53,7 +57,8 @@ let updateSchemaVersion (dbConnection: IDbConnection) (version: SemVersion) =
     let insertSchemaVersionSql =
         "INSERT INTO schema_version (version, updated_at) VALUES(@version, now())"
 
-    let param = dict [ "version" => version.ToString() ]
+    let param =
+        dict [ "version" => version.ToString() ]
 
     let c =
         dbConnection.Execute(updateSchemaVersionSql, param)

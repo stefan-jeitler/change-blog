@@ -12,6 +12,7 @@ public static class TestAccount
     public static readonly Guid Id = Guid.Parse("c1b588ee-069d-453e-8f74-fc43b7ae0649");
     public static readonly Name Name = Name.Parse("Name");
     public static readonly Guid UserId = Guid.Parse("a1b89f2d-d13f-4572-8522-8a92fb4fdb6a");
+    public static readonly Guid CreatedByUser = Guid.Parse("a1b89f2d-d13f-4572-8522-8a92fb4fdb6a");
     public static readonly DateTime CreationDate = DateTime.Parse("2021-04-06");
 
     /// <summary>
@@ -40,7 +41,8 @@ public static class TestAccount
         null,
         DateTime.Parse("2021-04-05T15:00:00"));
 
-    public static readonly Account Account = new(Id, Name, CustomVersioningScheme.Id, CreationDate, null);
+    public static readonly Account
+        Account = new(Id, Name, CustomVersioningScheme.Id, CreationDate, CreatedByUser, null);
 
     public static readonly Product Product = new(Guid.Parse("ab9f36eb-0cc5-4855-bddb-a3d5d8ad0117"),
         Id,

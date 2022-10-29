@@ -10,7 +10,12 @@ public class VersioningSchemeIdFinderTests
     public void FindSchemeIdForProduct_NoCustomSchemeIdPresentAndNoAccountDefaultScheme_ReturnsDefaultSchemeId()
     {
         // arrange
-        var testAccount = new Account(TestAccount.Id, TestAccount.Name, null, TestAccount.CreationDate, null);
+        var testAccount = new Account(TestAccount.Id,
+            TestAccount.Name,
+            null,
+            TestAccount.CreationDate,
+            TestAccount.CreatedByUser,
+            null);
         var service = new VersioningSchemeIdFinder(testAccount);
 
         // act
@@ -26,8 +31,8 @@ public class VersioningSchemeIdFinderTests
     {
         // arrange
         var testAccount = new Account(TestAccount.Id, TestAccount.Name, TestAccount.CustomVersioningScheme.Id,
-            TestAccount.CreationDate, null);
-        var customSchemeId = (Guid?)null;
+            TestAccount.CreationDate, TestAccount.CreatedByUser, null);
+        var customSchemeId = (Guid?) null;
 
         var service = new VersioningSchemeIdFinder(testAccount);
 
@@ -44,7 +49,7 @@ public class VersioningSchemeIdFinderTests
     {
         // arrange
         var testAccount = new Account(TestAccount.Id, TestAccount.Name, TestAccount.CustomVersioningScheme.Id,
-            TestAccount.CreationDate, null);
+            TestAccount.CreationDate, TestAccount.CreatedByUser, null);
         var customSchemeId = Guid.Parse("aaf9047d-1086-4d57-82cd-3325592a0d27");
 
         var service = new VersioningSchemeIdFinder(testAccount);

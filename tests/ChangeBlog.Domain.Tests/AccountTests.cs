@@ -9,6 +9,7 @@ public class AccountTests
 {
     private Guid? _defaultVersioningSchemeId;
     private Guid _testAccountId;
+    private Guid _testCreatedByUser;
     private DateTime _testCreationDate;
     private DateTime _testDeletionDate;
     private Name _testName;
@@ -20,16 +21,16 @@ public class AccountTests
         _defaultVersioningSchemeId = Guid.Parse("042b3384-a149-4739-b281-89e51cbcf549");
         _testCreationDate = DateTime.Parse("2021-04-03");
         _testDeletionDate = DateTime.Parse("2021-04-03");
+        _testCreatedByUser = Guid.Parse("8FD59909-C0DB-4AF0-819A-814F84FF12F4");
     }
 
-    private Account CreateAccount()
-    {
-        return new Account(_testAccountId,
+    private Account CreateAccount() =>
+        new Account(_testAccountId,
             _testName,
             _defaultVersioningSchemeId,
             _testCreationDate,
+            _testCreatedByUser,
             _testDeletionDate);
-    }
 
     [Fact]
     public void Create_WithValidArguments_Successful()
@@ -48,6 +49,16 @@ public class AccountTests
     public void Create_WithEmptyId_ArgumentException()
     {
         _testAccountId = Guid.Empty;
+
+        var act = CreateAccount;
+
+        act.Should().ThrowExactly<ArgumentException>();
+    }
+
+    [Fact]
+    public void Create_WithEmptyCreatedByUser_ArgumentException()
+    {
+        _testCreatedByUser = Guid.Empty;
 
         var act = CreateAccount;
 

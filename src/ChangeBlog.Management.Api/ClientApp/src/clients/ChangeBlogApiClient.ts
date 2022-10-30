@@ -3634,7 +3634,7 @@ export interface IErrorMessage {
 }
 
 export class ErrorResponse implements IErrorResponse {
-    readonly errors?: ErrorMessage[] | undefined;
+    errors?: ErrorMessage[] | undefined;
     resourceIds?: { [key: string]: string; } | undefined;
 
     constructor(data?: IErrorResponse) {
@@ -3649,9 +3649,9 @@ export class ErrorResponse implements IErrorResponse {
     init(_data?: any) {
         if (_data) {
             if (Array.isArray(_data["errors"])) {
-                (<any>this).errors = [] as any;
+                this.errors = [] as any;
                 for (let item of _data["errors"])
-                    (<any>this).errors!.push(ErrorMessage.fromJS(item));
+                    this.errors!.push(ErrorMessage.fromJS(item));
             }
             if (_data["resourceIds"]) {
                 this.resourceIds = {} as any;

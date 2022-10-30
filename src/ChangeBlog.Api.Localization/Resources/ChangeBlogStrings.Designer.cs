@@ -105,7 +105,7 @@ namespace ChangeBlog.Api.Localization.Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Api Key successfully deleted.
+        ///   Looks up a localized string similar to Api Key deleted.
         /// </summary>
         public static string ApiKeyDeleted {
             get {
@@ -114,7 +114,7 @@ namespace ChangeBlog.Api.Localization.Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to The api key expiration is too long. Expiration must be smaller than 2 years.
+        ///   Looks up a localized string similar to The validity period of the api key is too long. The maximum duration is 2 years.
         /// </summary>
         public static string ApiKeyExpirationTooLong {
             get {
@@ -123,7 +123,7 @@ namespace ChangeBlog.Api.Localization.Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to The api key expiration is too short. Expiration must be at least 1 week.
+        ///   Looks up a localized string similar to The validity period of the Api key is too short. The duration must be at least 1 week.
         /// </summary>
         public static string ApiKeyExpirationTooShort {
             get {
@@ -249,7 +249,7 @@ namespace ChangeBlog.Api.Localization.Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to The Culture &quot;{0}&quot; is not supported.
+        ///   Looks up a localized string similar to The Culture &apos;{0}&apos; is not supported.
         /// </summary>
         public static string CultureNotSupported {
             get {
@@ -276,7 +276,7 @@ namespace ChangeBlog.Api.Localization.Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Invalid changelog text &quot;{0}&quot;.
+        ///   Looks up a localized string similar to Invalid changelog text &apos;{0}&apos;.
         /// </summary>
         public static string InvalidChangeLogText {
             get {
@@ -285,7 +285,7 @@ namespace ChangeBlog.Api.Localization.Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Invalid format &quot;{0}&quot;.
+        ///   Looks up a localized string similar to Invalid format &apos;{0}&apos;.
         /// </summary>
         public static string InvalidFormat {
             get {
@@ -294,7 +294,7 @@ namespace ChangeBlog.Api.Localization.Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Invalid issue &quot;{0}&quot;.
+        ///   Looks up a localized string similar to Invalid issue &apos;{0}&apos;.
         /// </summary>
         public static string InvalidIssue {
             get {
@@ -303,7 +303,7 @@ namespace ChangeBlog.Api.Localization.Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Invalid label &quot;{0}&quot;&apos;.
+        ///   Looks up a localized string similar to Invalid label &apos;{0}&apos;.
         /// </summary>
         public static string InvalidLabel {
             get {
@@ -312,7 +312,7 @@ namespace ChangeBlog.Api.Localization.Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Invalid name &quot;{0}&quot;&apos;.
+        ///   Looks up a localized string similar to Invalid name &apos;{0}&apos;.
         /// </summary>
         public static string InvalidName {
             get {
@@ -321,7 +321,7 @@ namespace ChangeBlog.Api.Localization.Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to The version &quot;{0}&quot; isn&apos;t properly formatted.
+        ///   Looks up a localized string similar to The version &apos;{0}&apos; isn&apos;t properly formatted.
         /// </summary>
         public static string InvalidVersionFormat {
             get {
@@ -384,7 +384,7 @@ namespace ChangeBlog.Api.Localization.Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to The given language code &quot;{0}&quot; is not supported. Supported codes are &quot;{1}&quot;.
+        ///   Looks up a localized string similar to The given language code &apos;{0}&apos; is not supported. Supported codes are &apos;{1}&apos;.
         /// </summary>
         public static string LanguageCodeNotSupported {
             get {
@@ -555,6 +555,15 @@ namespace ChangeBlog.Api.Localization.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to &apos;{0}&apos; must be between {1} and {2} characters.
+        /// </summary>
+        public static string StringOutOfRange {
+            get {
+                return ResourceManager.GetString("StringOutOfRange", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to The target version belongs to a different product.
         /// </summary>
         public static string TargetVersionBelongsToDifferentProduct {
@@ -564,7 +573,7 @@ namespace ChangeBlog.Api.Localization.Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to The target version has already lines with an identical text. Duplicates: &quot;{0}&quot;.
+        ///   Looks up a localized string similar to The target version has already lines with an identical text. Duplicates: &apos;{0}&apos;.
         /// </summary>
         public static string TargetVersionContainsLinesWithSameText {
             get {
@@ -582,7 +591,7 @@ namespace ChangeBlog.Api.Localization.Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Timezone &quot;{0}&quot; not found.
+        ///   Looks up a localized string similar to Timezone &apos;{0}&apos; not found.
         /// </summary>
         public static string TimezoneNotFound {
             get {
@@ -609,7 +618,7 @@ namespace ChangeBlog.Api.Localization.Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to The changelog line &quot;{0}&quot; has too many issues. Max {1} issues possible.
+        ///   Looks up a localized string similar to The changelog line &apos;{0}&apos; has too many issues. Max {1} issues possible.
         /// </summary>
         public static string TooManyIssuesForChangeLogLine {
             get {
@@ -618,7 +627,7 @@ namespace ChangeBlog.Api.Localization.Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to The changelog line &quot;{0}&quot; has too many labels. Max {1} labels possible.
+        ///   Looks up a localized string similar to The changelog line &apos;{0}&apos; has too many labels. Max {1} labels possible.
         /// </summary>
         public static string TooManyLabelsForChangeLogLine {
             get {
@@ -717,7 +726,7 @@ namespace ChangeBlog.Api.Localization.Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to The Version &quot;{0}&quot; does not match your product&apos;s versioning scheme. Versioningscheme: {1}.
+        ///   Looks up a localized string similar to The Version &apos;{0}&apos; does not match your product&apos;s versioning scheme. Versioningscheme: {1}.
         /// </summary>
         public static string VersioningSchemeMismatch {
             get {

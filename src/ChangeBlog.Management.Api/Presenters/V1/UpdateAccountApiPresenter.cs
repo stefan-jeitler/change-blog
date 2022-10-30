@@ -11,12 +11,6 @@ namespace ChangeBlog.Management.Api.Presenters.V1;
 
 public class UpdateAccountApiPresenter : BaseApiPresenter, IUpdateAccountOutputPort
 {
-    public void InvalidName(string accountName)
-    {
-        var message = string.Format(ChangeBlogStrings.InvalidName, accountName);
-        Response = new BadRequestObjectResult(ErrorResponse.Create(message, nameof(accountName)));
-    }
-
     public void NewNameAlreadyTaken(string newAccountName)
     {
         Response = new UnprocessableEntityObjectResult(ErrorResponse.Create(ChangeBlogStrings.NameAlreadyTaken,

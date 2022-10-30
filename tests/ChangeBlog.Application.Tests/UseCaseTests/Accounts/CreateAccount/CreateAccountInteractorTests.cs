@@ -53,23 +53,6 @@ public class CreateAccountInteractorTests
     }
 
     [Fact]
-    public async Task CreateAccount_BadName_InvalidNameOutput()
-    {
-        // arrange
-        var requestModel = new CreateAccountRequestModel(" ", TestAccount.UserId);
-        _outputPortMock.Setup(m => m.Created(It.IsAny<Guid>()));
-        _outputPortMock.Setup(m => m.InvalidName(It.IsAny<string>()));
-        var sut = CreateInteractor();
-
-        // act
-        await sut.ExecuteAsync(_outputPortMock.Object, requestModel);
-
-        // assert
-        _outputPortMock.Verify(m => m.Created(It.IsAny<Guid>()), Times.Never);
-        _outputPortMock.Verify(m => m.InvalidName(It.Is<string>(n => n == " ")), Times.Once);
-    }
-
-    [Fact]
     public async Task CreateAccount_AccountWithSameNameExists_AccountAlreadyExistsOutput()
     {
         // arrange

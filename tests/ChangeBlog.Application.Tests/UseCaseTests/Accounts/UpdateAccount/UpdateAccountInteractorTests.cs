@@ -71,21 +71,4 @@ public class UpdateAccountInteractorTests
         _outputPortMock
             .Verify(m => m.NewNameAlreadyTaken(It.Is<string>(x => x == existingName)), Times.Once);
     }
-
-    [Fact]
-    public async Task UpdateName_BadName_InvalidNameOutput()
-    {
-        // arrange
-        const string invalidName = "a";
-        var interactor = CreateInteractor();
-        _outputPortMock.Setup(m => m.InvalidName(It.IsAny<string>()));
-        var requestModel = new UpdateAccountRequestModel(TestAccount.Id, invalidName);
-
-        // act
-        await interactor.ExecuteAsync(_outputPortMock.Object, requestModel);
-
-        // assert
-        _outputPortMock
-            .Verify(m => m.InvalidName(It.Is<string>(x => x == invalidName)), Times.Once);
-    }
 }

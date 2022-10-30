@@ -4,7 +4,6 @@ using ChangeBlog.Api.Shared.DTOs;
 using ChangeBlog.Api.Shared.Presenters;
 using ChangeBlog.Application.Boundaries.DataAccess;
 using ChangeBlog.Application.UseCases.Users.UpdateUserProfile;
-using ChangeBlog.Management.Api.DTOs.V1;
 using Microsoft.AspNetCore.Mvc;
 
 namespace ChangeBlog.Management.Api.Presenters.V1;
@@ -26,7 +25,8 @@ public class UpdateUserProfileApiPresenter : BaseApiPresenter, IUpdateUserProfil
 
     public void CultureNotFound(string culture)
     {
-        Response = new NotFoundObjectResult(ErrorResponse.Create(string.Format(ChangeBlogStrings.CultureNotSupported, culture),
+        Response = new NotFoundObjectResult(ErrorResponse.Create(
+            string.Format(ChangeBlogStrings.CultureNotSupported, culture),
             "culture"));
     }
 

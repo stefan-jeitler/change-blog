@@ -20,12 +20,7 @@ public class UpdateAccountInteractor : IUpdateAccount
 
     public async Task ExecuteAsync(IUpdateAccountOutputPort output, UpdateAccountRequestModel requestModel)
     {
-        if (!Name.TryParse(requestModel.Name, out var newName))
-        {
-            output.InvalidName(requestModel.Name);
-            return;
-        }
-
+        var newName = Name.Parse(requestModel.Name);
         await UpdateNameInternalAsync(output, requestModel.AccountId, newName);
     }
 

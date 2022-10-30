@@ -1,6 +1,5 @@
 using System;
 using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Net.Mime;
 using System.Threading.Tasks;
@@ -13,7 +12,7 @@ using ChangeBlog.Application.UseCases.Users.AddApiKey;
 using ChangeBlog.Application.UseCases.Users.DeleteApiKey;
 using ChangeBlog.Application.UseCases.Users.GetApiKeys;
 using ChangeBlog.Application.UseCases.Users.UpdateApiKey;
-using ChangeBlog.Management.Api.DTOs.V1;
+using ChangeBlog.Management.Api.DTOs.V1.ApiKey;
 using ChangeBlog.Management.Api.Presenters.V1;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -47,12 +46,12 @@ public class ApiKeysController : ControllerBase
     [SkipAuthorization]
     public async Task<ActionResult<SuccessResponse>> GenerateApiKeyAsync(
         [FromServices] IAddApiKey addApiKey,
-        string title,
-        [Required] DateTime expiresAt)
+        [FromBody] GenerateApiKeyDto createApiKeyDto)
     {
         var userId = HttpContext.GetUserId();
         var presenter = new AddApiKeyApiPresenter();
-        var requestModel = new AddApiKeyRequestModel(userId, title, expiresAt);
+        var expiresAt = createApiKeyDto.ExpiresAt!.Value;
+        var requestModel = new AddApiKeyRequestModel(userId, createApiKeyDto.Title, expiresAt);
 
         await addApiKey.ExecuteAsync(presenter, requestModel);
 
@@ -68,11 +67,12 @@ public class ApiKeysController : ControllerBase
     public async Task<ActionResult<SuccessResponse>> UpdateApiKeyAsync(
         [FromServices] IUpdateApiKey updateApiKey,
         Guid apiKeyId,
-        string title,
-        DateTime? expiresAt)
+        [FromBody] UpdateApiKeyDto updateApiKeyDto)
     {
         var presenter = new UpdateApiKeyApiPresenter();
-        var requestModel = new UpdateApiKeyRequestModel(apiKeyId, title, expiresAt);
+        var requestModel = new UpdateApiKeyRequestModel(apiKeyId,
+            updateApiKeyDto.Title,
+            updateApiKeyDto.ExpiresAt);
 
         await updateApiKey.ExecuteAsync(presenter, requestModel);
 

@@ -31,14 +31,10 @@ public class UpdateApiKeyInteractor : IUpdateApiKey
         }
 
         var updateTitle = requestModel.Title is not null;
-        OptionalName title = null;
-        if (updateTitle && !OptionalName.TryParse(requestModel.Title, out title))
-        {
-            output.InvalidTitle(requestModel.Title);
-            return;
-        }
+        var title = OptionalName.Parse(requestModel.Title);
 
-        var expiresAt = await GetExpirationDateAsync(output, existingApiKey.GetValueOrDefault(), requestModel.ExpiresIn);
+        var expiresAt =
+            await GetExpirationDateAsync(output, existingApiKey.GetValueOrDefault(), requestModel.ExpiresIn);
         if (expiresAt.HasNoValue)
             return;
 
@@ -91,8 +87,8 @@ public class UpdateApiKeyInteractor : IUpdateApiKey
         }
 
         var currentUser = await _userDao.GetUserAsync(existingApiKey.UserId);
-        var expiresAtUtc = expiresAt.Value.Kind != DateTimeKind.Utc 
-            ? expiresAt.Value.ToUtc(currentUser.TimeZone) 
+        var expiresAtUtc = expiresAt.Value.Kind != DateTimeKind.Utc
+            ? expiresAt.Value.ToUtc(currentUser.TimeZone)
             : expiresAt.Value;
         return Maybe<DateTime>.From(expiresAtUtc);
     }

@@ -1,7 +1,7 @@
 using System;
 using ChangeBlog.Application.UseCases.Users.GetApiKeys;
 
-namespace ChangeBlog.Management.Api.DTOs.V1;
+namespace ChangeBlog.Management.Api.DTOs.V1.ApiKey;
 
 public class ApiKeyDto
 {

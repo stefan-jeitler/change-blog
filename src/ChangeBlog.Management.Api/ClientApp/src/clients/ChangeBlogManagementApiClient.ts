@@ -209,21 +209,22 @@ export class Client {
 
     /**
      * @param accept_Language (optional) Defines which language should be used for response messages.
+     * @param body (optional) 
      * @return Success
      */
-    createAccount(accountName: string, accept_Language?: AcceptLanguage | undefined): Observable<SuccessResponse> {
-        let url_ = this.baseUrl + "/api/v1/accounts?";
-        if (accountName === undefined || accountName === null)
-            throw new Error("The parameter 'accountName' must be defined and cannot be null.");
-        else
-            url_ += "accountName=" + encodeURIComponent("" + accountName) + "&";
+    createAccount(accept_Language?: AcceptLanguage | undefined, body?: CreateOrUpdateAccountDto | undefined): Observable<SuccessResponse> {
+        let url_ = this.baseUrl + "/api/v1/accounts";
         url_ = url_.replace(/[?&]$/, "");
 
+        const content_ = JSON.stringify(body);
+
         let options_ : any = {
+            body: content_,
             observe: "response",
             responseType: "blob",
             headers: new HttpHeaders({
                 "Accept-Language": accept_Language !== undefined && accept_Language !== null ? "" + accept_Language : "",
+                "Content-Type": "application/json",
                 "Accept": "application/json"
             })
         };
@@ -472,7 +473,7 @@ export class Client {
      * @param body (optional) 
      * @return Success
      */
-    updateAccount(accountId: string, accept_Language?: AcceptLanguage | undefined, body?: UpdateAccountDto | undefined): Observable<SuccessResponse> {
+    updateAccount(accountId: string, accept_Language?: AcceptLanguage | undefined, body?: CreateOrUpdateAccountDto | undefined): Observable<SuccessResponse> {
         let url_ = this.baseUrl + "/api/v1/accounts/{accountId}";
         if (accountId === undefined || accountId === null)
             throw new Error("The parameter 'accountId' must be defined.");
@@ -1209,27 +1210,23 @@ export class Client {
     }
 
     /**
-     * @param title (optional) 
      * @param accept_Language (optional) Defines which language should be used for response messages.
+     * @param body (optional) 
      * @return Success
      */
-    generateApiKey(expiresAt: Date, title?: string | undefined, accept_Language?: AcceptLanguage | undefined): Observable<SuccessResponse> {
-        let url_ = this.baseUrl + "/api/v1/user/apikeys?";
-        if (expiresAt === undefined || expiresAt === null)
-            throw new Error("The parameter 'expiresAt' must be defined and cannot be null.");
-        else
-            url_ += "expiresAt=" + encodeURIComponent(expiresAt ? "" + expiresAt.toISOString() : "") + "&";
-        if (title === null)
-            throw new Error("The parameter 'title' cannot be null.");
-        else if (title !== undefined)
-            url_ += "title=" + encodeURIComponent("" + title) + "&";
+    generateApiKey(accept_Language?: AcceptLanguage | undefined, body?: GenerateApiKeyDto | undefined): Observable<SuccessResponse> {
+        let url_ = this.baseUrl + "/api/v1/user/apikeys";
         url_ = url_.replace(/[?&]$/, "");
 
+        const content_ = JSON.stringify(body);
+
         let options_ : any = {
+            body: content_,
             observe: "response",
             responseType: "blob",
             headers: new HttpHeaders({
                 "Accept-Language": accept_Language !== undefined && accept_Language !== null ? "" + accept_Language : "",
+                "Content-Type": "application/json",
                 "Accept": "application/json"
             })
         };
@@ -1292,31 +1289,26 @@ export class Client {
     }
 
     /**
-     * @param title (optional) 
-     * @param expiresAt (optional) 
      * @param accept_Language (optional) Defines which language should be used for response messages.
+     * @param body (optional) 
      * @return Success
      */
-    updateApiKey(apiKeyId: string, title?: string | undefined, expiresAt?: Date | undefined, accept_Language?: AcceptLanguage | undefined): Observable<SuccessResponse> {
-        let url_ = this.baseUrl + "/api/v1/user/apikeys/{apiKeyId}?";
+    updateApiKey(apiKeyId: string, accept_Language?: AcceptLanguage | undefined, body?: UpdateApiKeyDto | undefined): Observable<SuccessResponse> {
+        let url_ = this.baseUrl + "/api/v1/user/apikeys/{apiKeyId}";
         if (apiKeyId === undefined || apiKeyId === null)
             throw new Error("The parameter 'apiKeyId' must be defined.");
         url_ = url_.replace("{apiKeyId}", encodeURIComponent("" + apiKeyId));
-        if (title === null)
-            throw new Error("The parameter 'title' cannot be null.");
-        else if (title !== undefined)
-            url_ += "title=" + encodeURIComponent("" + title) + "&";
-        if (expiresAt === null)
-            throw new Error("The parameter 'expiresAt' cannot be null.");
-        else if (expiresAt !== undefined)
-            url_ += "expiresAt=" + encodeURIComponent(expiresAt ? "" + expiresAt.toISOString() : "") + "&";
         url_ = url_.replace(/[?&]$/, "");
 
+        const content_ = JSON.stringify(body);
+
         let options_ : any = {
+            body: content_,
             observe: "response",
             responseType: "blob",
             headers: new HttpHeaders({
                 "Accept-Language": accept_Language !== undefined && accept_Language !== null ? "" + accept_Language : "",
+                "Content-Type": "application/json",
                 "Accept": "application/json"
             })
         };
@@ -1709,6 +1701,42 @@ export interface IClientAppSettings {
     authConfig: AuthConfig;
 }
 
+export class CreateOrUpdateAccountDto implements ICreateOrUpdateAccountDto {
+    name!: string | undefined;
+
+    constructor(data?: ICreateOrUpdateAccountDto) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+        }
+    }
+
+    init(_data?: any) {
+        if (_data) {
+            this.name = _data["name"];
+        }
+    }
+
+    static fromJS(data: any): CreateOrUpdateAccountDto {
+        data = typeof data === 'object' ? data : {};
+        let result = new CreateOrUpdateAccountDto();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        data["name"] = this.name;
+        return data;
+    }
+}
+
+export interface ICreateOrUpdateAccountDto {
+    name: string | undefined;
+}
+
 export class CultureDto implements ICultureDto {
     culture!: string | undefined;
     language!: string | undefined;
@@ -1757,48 +1785,8 @@ export interface ICultureDto {
     firstDayOfWeek: number;
 }
 
-export class ErrorMessage implements IErrorMessage {
-    message!: string | undefined;
-    property!: string | undefined;
-
-    constructor(data?: IErrorMessage) {
-        if (data) {
-            for (var property in data) {
-                if (data.hasOwnProperty(property))
-                    (<any>this)[property] = (<any>data)[property];
-            }
-        }
-    }
-
-    init(_data?: any) {
-        if (_data) {
-            this.message = _data["message"];
-            this.property = _data["property"];
-        }
-    }
-
-    static fromJS(data: any): ErrorMessage {
-        data = typeof data === 'object' ? data : {};
-        let result = new ErrorMessage();
-        result.init(data);
-        return result;
-    }
-
-    toJSON(data?: any) {
-        data = typeof data === 'object' ? data : {};
-        data["message"] = this.message;
-        data["property"] = this.property;
-        return data;
-    }
-}
-
-export interface IErrorMessage {
-    message: string | undefined;
-    property: string | undefined;
-}
-
 export class ErrorResponse implements IErrorResponse {
-    errors!: ErrorMessage[] | undefined;
+    errors!: PropertyErrorMessages[] | undefined;
     resourceIds!: { [key: string]: string; } | undefined;
 
     constructor(data?: IErrorResponse) {
@@ -1815,7 +1803,7 @@ export class ErrorResponse implements IErrorResponse {
             if (Array.isArray(_data["errors"])) {
                 this.errors = [] as any;
                 for (let item of _data["errors"])
-                    this.errors!.push(ErrorMessage.fromJS(item));
+                    this.errors!.push(PropertyErrorMessages.fromJS(item));
             }
             if (_data["resourceIds"]) {
                 this.resourceIds = {} as any;
@@ -1853,8 +1841,96 @@ export class ErrorResponse implements IErrorResponse {
 }
 
 export interface IErrorResponse {
-    errors: ErrorMessage[] | undefined;
+    errors: PropertyErrorMessages[] | undefined;
     resourceIds: { [key: string]: string; } | undefined;
+}
+
+export class GenerateApiKeyDto implements IGenerateApiKeyDto {
+    title!: string | undefined;
+    expiresAt!: Date | undefined;
+
+    constructor(data?: IGenerateApiKeyDto) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+        }
+    }
+
+    init(_data?: any) {
+        if (_data) {
+            this.title = _data["title"];
+            this.expiresAt = _data["expiresAt"] ? new Date(_data["expiresAt"].toString()) : <any>undefined;
+        }
+    }
+
+    static fromJS(data: any): GenerateApiKeyDto {
+        data = typeof data === 'object' ? data : {};
+        let result = new GenerateApiKeyDto();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        data["title"] = this.title;
+        data["expiresAt"] = this.expiresAt ? this.expiresAt.toISOString() : <any>undefined;
+        return data;
+    }
+}
+
+export interface IGenerateApiKeyDto {
+    title: string | undefined;
+    expiresAt: Date | undefined;
+}
+
+export class PropertyErrorMessages implements IPropertyErrorMessages {
+    messages!: string[] | undefined;
+    property!: string | undefined;
+
+    constructor(data?: IPropertyErrorMessages) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+        }
+    }
+
+    init(_data?: any) {
+        if (_data) {
+            if (Array.isArray(_data["messages"])) {
+                this.messages = [] as any;
+                for (let item of _data["messages"])
+                    this.messages!.push(item);
+            }
+            this.property = _data["property"];
+        }
+    }
+
+    static fromJS(data: any): PropertyErrorMessages {
+        data = typeof data === 'object' ? data : {};
+        let result = new PropertyErrorMessages();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        if (Array.isArray(this.messages)) {
+            data["messages"] = [];
+            for (let item of this.messages)
+                data["messages"].push(item);
+        }
+        data["property"] = this.property;
+        return data;
+    }
+}
+
+export interface IPropertyErrorMessages {
+    messages: string[] | undefined;
+    property: string | undefined;
 }
 
 export class RoleDto implements IRoleDto {
@@ -2001,10 +2077,11 @@ export interface ITimezoneDto {
     offset: string | undefined;
 }
 
-export class UpdateAccountDto implements IUpdateAccountDto {
-    name!: string;
+export class UpdateApiKeyDto implements IUpdateApiKeyDto {
+    title!: string | undefined;
+    expiresAt!: Date | undefined;
 
-    constructor(data?: IUpdateAccountDto) {
+    constructor(data?: IUpdateApiKeyDto) {
         if (data) {
             for (var property in data) {
                 if (data.hasOwnProperty(property))
@@ -2015,26 +2092,29 @@ export class UpdateAccountDto implements IUpdateAccountDto {
 
     init(_data?: any) {
         if (_data) {
-            this.name = _data["name"];
+            this.title = _data["title"];
+            this.expiresAt = _data["expiresAt"] ? new Date(_data["expiresAt"].toString()) : <any>undefined;
         }
     }
 
-    static fromJS(data: any): UpdateAccountDto {
+    static fromJS(data: any): UpdateApiKeyDto {
         data = typeof data === 'object' ? data : {};
-        let result = new UpdateAccountDto();
+        let result = new UpdateApiKeyDto();
         result.init(data);
         return result;
     }
 
     toJSON(data?: any) {
         data = typeof data === 'object' ? data : {};
-        data["name"] = this.name;
+        data["title"] = this.title;
+        data["expiresAt"] = this.expiresAt ? this.expiresAt.toISOString() : <any>undefined;
         return data;
     }
 }
 
-export interface IUpdateAccountDto {
-    name: string;
+export interface IUpdateApiKeyDto {
+    title: string | undefined;
+    expiresAt: Date | undefined;
 }
 
 export class UpdateUserProfileDto implements IUpdateUserProfileDto {

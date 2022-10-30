@@ -9,7 +9,6 @@ public interface IUpdateApiKeyOutputPort
     void ExpirationTooShort(TimeSpan expiresIn, TimeSpan minExpiration);
     void ExpirationTooLong(TimeSpan expiresIn, TimeSpan maxExpiration);
     void ExpirationDateInThePast(DateTime expiresAt);
-    void InvalidTitle(string title);
     void Conflict(Conflict conflict);
     void Updated(Guid apiKeyId);
 }

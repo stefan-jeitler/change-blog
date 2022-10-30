@@ -37,10 +37,8 @@ public class UserController : ControllerBase
     [HttpPost("import", Name = "EnsureUserIsImported")]
     [ProducesResponseType(StatusCodes.Status200OK)]
     [SkipAuthorization]
-    public ActionResult<SuccessResponse> EnsureUserIsImported()
-    {
-        return Ok(SuccessResponse.Create("It has now been ensured that the user is available in the app."));
-    }
+    public ActionResult<SuccessResponse> EnsureUserIsImported() =>
+        Ok(SuccessResponse.Create("It has now been ensured that the user is available in the app."));
 
     [HttpGet("profile", Name = "GetUserProfile")]
     [ProducesResponseType(StatusCodes.Status200OK)]
@@ -66,7 +64,7 @@ public class UserController : ControllerBase
 
         var presenter = new UpdateUserProfileApiPresenter();
         var requestModel =
-            new UpdateUserProfileRequestModel(userId, updateUserProfileDto?.Timezone, updateUserProfileDto?.Culture);
+            new UpdateUserProfileRequestModel(userId, updateUserProfileDto.Timezone, updateUserProfileDto.Culture);
         await updateUserProfile.ExecuteAsync(presenter, requestModel);
 
         return presenter.Response;
@@ -115,7 +113,7 @@ public class UserController : ControllerBase
                 var now = SystemClock.Instance.GetCurrentInstant();
                 var offset = DateTimeZoneProviders.Tzdb[x.Value].GetUtcOffset(now);
                 var offsetFormatted = offset.ToString("m", CultureInfo.InvariantCulture);
-                
+
                 return new TimezoneDto(x.Key, x.Value, offsetFormatted);
             });
 

@@ -1,6 +1,5 @@
 using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Text.Json.Serialization;
 
 namespace ChangeBlog.Api.Shared.DTOs;
@@ -13,21 +12,21 @@ public class ErrorResponse
     }
 
     public ErrorResponse(string message, string property, IReadOnlyDictionary<string, string> resourceIds = null)
-        : this(new[] {new ErrorMessage(message, property)}, resourceIds)
+        : this(new[] {new PropertyErrorMessages(message, property)}, resourceIds)
     {
     }
 
     [JsonConstructor]
-    public ErrorResponse(ErrorMessage[] errors,
+    public ErrorResponse(PropertyErrorMessages[] errors,
         IReadOnlyDictionary<string, string> resourceIds = null)
     {
         ArgumentNullException.ThrowIfNull(errors);
 
-        Errors = errors.ToArray();
+        Errors = errors;
         ResourceIds = resourceIds;
     }
 
-    public ErrorMessage[] Errors { get; }
+    public PropertyErrorMessages[] Errors { get; }
 
     [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
     public IReadOnlyDictionary<string, string> ResourceIds { get; }

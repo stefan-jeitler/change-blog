@@ -5,6 +5,8 @@ using System.Net;
 using System.Net.Http;
 using System.Net.Http.Headers;
 using System.Net.Http.Json;
+using System.Text;
+using System.Text.Json;
 using System.Threading.Tasks;
 using ChangeBlog.Api.Shared.DTOs;
 using ChangeBlog.Api.Shared.DTOs.V1.User;
@@ -139,15 +141,18 @@ public class AccountControllerTests : IClassFixture<WebApplicationFactory<Startu
         client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", accessToken);
         client.DefaultRequestHeaders.AcceptLanguage.Add(new StringWithQualityHeaderValue("de"));
 
+        var jsonBody = JsonSerializer.Serialize(
+            new CreateOrUpdateAccountDto {Name = "ChangeBlog.Management.Api.Tests"});
         var response =
-            await client.PostAsync("api/v1/accounts?accountName=ChangeBlog.Management.Api.Tests",
-                new StringContent(""));
+            await client.PostAsync("api/v1/accounts/", new StringContent(jsonBody, Encoding.UTF8,
+                "application/json"));
         var error = await response.Content.ReadFromJsonAsync<ErrorResponse>();
 
         response.StatusCode.Should().Be(HttpStatusCode.UnprocessableEntity);
         error.Should().NotBeNull();
         error!.Errors.Should().HaveCount(1);
-        error.Errors.First().Message.Should().Be("Der Name ist bereits vergeben");
-        error.Errors.First().Property.Should().Be("accountName");
+        var firstError = error.Errors.First();
+        firstError.Messages.First().Should().Be("Der Name ist bereits vergeben");
+        firstError.Property.Should().Be("Name");
     }
 }

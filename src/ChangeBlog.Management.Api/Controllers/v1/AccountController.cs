@@ -1,6 +1,5 @@
 using System;
 using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Net.Mime;
 using System.Threading.Tasks;
@@ -63,11 +62,12 @@ public class AccountController : ControllerBase
     [ProducesResponseType(typeof(ErrorResponse), StatusCodes.Status422UnprocessableEntity)]
     [ProducesResponseType(typeof(ErrorResponse), StatusCodes.Status409Conflict)]
     [SkipAuthorization]
-    public async Task<ActionResult<SuccessResponse>> CreateAccountAsync([FromServices] ICreateAccount createAccount,
-        [Required] string accountName)
+    public async Task<ActionResult<SuccessResponse>> CreateAccountAsync(
+        [FromServices] ICreateAccount createAccount,
+        [FromBody] CreateOrUpdateAccountDto createAccountDto)
     {
         var userId = HttpContext.GetUserId();
-        var requestModel = new CreateAccountRequestModel(accountName, userId);
+        var requestModel = new CreateAccountRequestModel(createAccountDto.Name, userId);
         var presenter = new CreateAccountApiPresenter(HttpContext);
 
         await createAccount.ExecuteAsync(presenter, requestModel);
@@ -97,16 +97,15 @@ public class AccountController : ControllerBase
     [ProducesResponseType(typeof(ErrorResponse), StatusCodes.Status409Conflict)]
     [NeedsPermission(Permission.UpdateAccount)]
     public async Task<ActionResult<SuccessResponse>> UpdateAccountAsync([FromServices] IUpdateAccount updateAccount,
-        Guid accountId, [FromBody] UpdateAccountDto updateAccountDto)
+        Guid accountId,
+        [FromBody] CreateOrUpdateAccountDto updateAccountDto)
     {
         var presenter = new UpdateAccountApiPresenter();
         var requestModel = new UpdateAccountRequestModel(accountId, updateAccountDto.Name);
-
         await updateAccount.ExecuteAsync(presenter, requestModel);
 
         return presenter.Response;
     }
-
 
     [HttpGet("{accountId:Guid}/users", Name = "GetAccountUsers")]
     [ProducesResponseType(StatusCodes.Status200OK)]

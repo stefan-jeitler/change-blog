@@ -31,12 +31,6 @@ public class CreateAccountApiPresenter : BaseApiPresenter, ICreateAccountOutputP
         Response = new CreatedResult(resource, SuccessResponse.Create(ChangeBlogStrings.AccountCreated, resourceIds));
     }
 
-    public void InvalidName(string name)
-    {
-        var message = string.Format(ChangeBlogStrings.InvalidName, name);
-        Response = new BadRequestObjectResult(ErrorResponse.Create(message, nameof(name)));
-    }
-
     public void Conflict(Conflict conflict)
     {
         Response = conflict.ToResponse();
@@ -45,7 +39,7 @@ public class CreateAccountApiPresenter : BaseApiPresenter, ICreateAccountOutputP
     public void AccountAlreadyExists(Guid accountId)
     {
         Response = new UnprocessableEntityObjectResult(ErrorResponse.Create(ChangeBlogStrings.NameAlreadyTaken,
-            "accountName"));
+            "Name"));
     }
 
     public void TooManyAccountsCreated(ushort limit)

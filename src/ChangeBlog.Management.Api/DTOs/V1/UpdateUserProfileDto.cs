@@ -1,3 +1,6 @@
+using ChangeBlog.Management.Api.ValidatorExtensions;
+using FluentValidation;
+
 namespace ChangeBlog.Management.Api.DTOs.V1;
 
 public class UpdateUserProfileDto
@@ -8,4 +11,13 @@ public class UpdateUserProfileDto
     public string Timezone { get; set; }
 
     public string Culture { get; set; }
+}
+
+public class UpdateUserProfileDtoValidator : AbstractValidator<UpdateUserProfileDto>
+{
+    public UpdateUserProfileDtoValidator()
+    {
+        RuleFor(x => x.Culture).OptionalName();
+        RuleFor(x => x.Timezone).OptionalName();
+    }
 }

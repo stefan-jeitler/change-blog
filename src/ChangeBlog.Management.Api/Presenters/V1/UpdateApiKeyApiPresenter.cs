@@ -45,11 +45,6 @@ public class UpdateApiKeyApiPresenter : BaseApiPresenter, IUpdateApiKeyOutputPor
         Response = conflict.ToResponse();
     }
 
-    public void InvalidTitle(string title)
-    {
-        Response = new BadRequestObjectResult(ErrorResponse.Create(ChangeBlogStrings.InvalidApiKeyTitle, "title"));
-    }
-
     public void Updated(Guid apiKeyId)
     {
         Response = new OkObjectResult(SuccessResponse.Create(ChangeBlogStrings.ApiKeyUpdated));

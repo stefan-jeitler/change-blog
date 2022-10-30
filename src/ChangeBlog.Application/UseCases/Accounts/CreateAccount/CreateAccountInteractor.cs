@@ -12,7 +12,7 @@ namespace ChangeBlog.Application.UseCases.Accounts.CreateAccount;
 
 public class CreateAccountInteractor : ICreateAccount
 {
-    public const ushort MaxAccountsCreatedByUser = 5;
+    private const ushort MaxAccountsCreatedByUser = 5;
     private readonly IAccountDao _accountDao;
     private readonly IRolesDao _rolesDao;
     private readonly IUnitOfWork _unitOfWork;
@@ -28,12 +28,7 @@ public class CreateAccountInteractor : ICreateAccount
 
     public async Task ExecuteAsync(ICreateAccountOutputPort output, CreateAccountRequestModel requestModel)
     {
-        if (!Name.TryParse(requestModel.Name, out var accountName))
-        {
-            output.InvalidName(requestModel.Name);
-            return;
-        }
-
+        var accountName = Name.Parse(requestModel.Name);
         _unitOfWork.Start();
 
         var existingAccount = await _accountDao.FindAccountAsync(accountName);

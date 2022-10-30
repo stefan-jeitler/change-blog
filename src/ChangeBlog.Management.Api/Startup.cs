@@ -1,18 +1,16 @@
-using System.Linq;
-using ChangeBlog.Api.Localization.Resources;
 using ChangeBlog.Api.Shared;
 using ChangeBlog.Api.Shared.Authentication;
 using ChangeBlog.Api.Shared.Authorization;
-using ChangeBlog.Api.Shared.DTOs;
 using ChangeBlog.Api.Shared.UserInfo;
 using ChangeBlog.Application.Boundaries.DataAccess.ExternalIdentity;
 using ChangeBlog.DataAccess.Postgres;
 using ChangeBlog.Management.Api.Authentication;
 using ChangeBlog.Management.Api.Extensions;
+using FluentValidation;
+using FluentValidation.AspNetCore;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
-using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.SpaServices.AngularCli;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -44,7 +42,11 @@ public class Startup
 
         services
             .AddControllers(o => { o.Filters.Add(typeof(AuthorizationFilter)); })
-            .ConfigureApiBehaviorOptions(o => o.InvalidModelStateResponseFactory = CustomErrorMessage);
+            .ConfigureApiBehaviorOptions(o => o.InvalidModelStateResponseFactory =
+                ctx => ctx.ModelState.ToCustomErrorResponse());
+
+        services.AddValidatorsFromAssemblyContaining<Startup>();
+        services.AddFluentValidationAutoValidation();
 
         services.AddSpaStaticFiles(configuration => { configuration.RootPath = "ClientApp/dist"; });
 
@@ -94,16 +96,5 @@ public class Startup
             if (env.IsDevelopment())
                 spa.UseAngularCliServer("start");
         });
-    }
-
-    private static ActionResult CustomErrorMessage(ActionContext context)
-    {
-        var firstError = context.ModelState
-            .Where(x => x.Value is not null)
-            .FirstOrDefault(x => x.Value.Errors.Count > 0)
-            .Value?.Errors.FirstOrDefault()?
-            .ErrorMessage ?? ChangeBlogStrings.UnknownError;
-
-        return new BadRequestObjectResult(ErrorResponse.Create(firstError));
     }
 }

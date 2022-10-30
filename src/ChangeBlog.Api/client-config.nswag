@@ -1,8 +1,8 @@
 ﻿{
   "runtime": "Default",
-  "swaggerGenerator":{
-    "fromSwagger":{
-      "json":"$(input)"
+  "swaggerGenerator": {
+    "fromSwagger": {
+      "json": "$(input)"
     }
   },
   "codeGenerators": {
@@ -10,7 +10,7 @@
       "className": "Client",
       "moduleName": "ChangeBlogApi",
       "namespace": "",
-      "typeScriptVersion": 4.6,
+      "typeScriptVersion": 4.8,
       "rxJsVersion": 7.5,
       "template": "Angular",
       "promiseType": "Promise",

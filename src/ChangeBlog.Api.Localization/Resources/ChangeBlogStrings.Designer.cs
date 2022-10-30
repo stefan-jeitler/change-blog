@@ -87,6 +87,15 @@ namespace ChangeBlog.Api.Localization.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Account successfully updated.
+        /// </summary>
+        public static string AccountUpdated {
+            get {
+                return ResourceManager.GetString("AccountUpdated", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Api Key successfully added.
         /// </summary>
         public static string ApiKeyAdded {

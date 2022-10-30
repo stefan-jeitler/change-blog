@@ -172,4 +172,26 @@ values (@accountId, @userId, @roleId, @createdAt)";
 
         return Result.Success<Guid, Conflict>(accountToAdd.Id);
     }
+
+    public async Task<Result<Guid, Conflict>> DeleteAsync(Guid accountId)
+    {
+        const string setDeletedAtSql = "update account set deleted_at = now() where id = @accountId";
+
+        await _dbAccessor.DbConnection.ExecuteAsync(setDeletedAtSql, new {accountId});
+
+        return Result.Success<Guid, Conflict>(accountId);
+    }
+
+    public async Task<Result<Guid, Conflict>> UpdateName(Guid accountId, Name newName)
+    {
+        const string updateNameSql = "update account set name = @newName where id = @accountId";
+
+        await _dbAccessor.DbConnection.ExecuteAsync(updateNameSql, new
+        {
+            newName,
+            accountId
+        });
+
+        return Result.Success<Guid, Conflict>(accountId);
+    }
 }

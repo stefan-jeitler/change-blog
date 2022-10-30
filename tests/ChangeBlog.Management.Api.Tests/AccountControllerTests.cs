@@ -40,8 +40,9 @@ public class AccountControllerTests : IClassFixture<WebApplicationFactory<Startu
 
         // assert
         response.StatusCode.Should().Be(HttpStatusCode.OK);
-        content.Should().HaveCount(1);
+        content.Should().HaveCount(2);
         content.Should().Contain(x => x.Id == Guid.Parse("ec3a44cc-0ba4-4c97-ad7f-911e9f6a73bc"));
+        content.Should().Contain(x => x.Id == Guid.Parse("851c1aee-b051-462c-86b3-0e8623d2ce23"));
     }
 
     [Fact]

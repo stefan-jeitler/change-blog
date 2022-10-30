@@ -80,4 +80,32 @@ public class FakeAccountDao : IAccountDao
 
         return Result.Success<Guid, Conflict>(accountToAdd.Id);
     }
+
+    public async Task<Result<Guid, Conflict>> DeleteAsync(Guid accountId)
+    {
+        await Task.Yield();
+
+        Accounts.RemoveAll(x => x.Id == accountId);
+        AccountUsers.RemoveAll(x => x.Account.Id == accountId);
+
+        return Result.Success<Guid, Conflict>(accountId);
+    }
+
+    public async Task<Result<Guid, Conflict>> UpdateName(Guid accountId, Name newName)
+    {
+        await Task.Yield();
+
+        var account = Accounts.FirstOrDefault(x => x.Id == accountId);
+
+        if (account is null)
+            return Result.Failure<Guid, Conflict>(new ConflictStub());
+
+        var renamedAccount = new Account(account.Id, newName, null, account.CreatedAt, account.CreatedByUser,
+            account.DeletedAt);
+
+        Accounts.RemoveAll(x => x.Id == accountId);
+        Accounts.Add(renamedAccount);
+
+        return Result.Success<Guid, Conflict>(accountId);
+    }
 }

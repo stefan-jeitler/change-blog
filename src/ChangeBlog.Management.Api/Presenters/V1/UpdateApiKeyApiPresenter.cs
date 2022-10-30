@@ -9,7 +9,7 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace ChangeBlog.Management.Api.Presenters.V1;
 
-public class UpdateApiKeyPresenter : BaseApiPresenter, IUpdateApiKeyOutputPort
+public class UpdateApiKeyApiPresenter : BaseApiPresenter, IUpdateApiKeyOutputPort
 {
     public void ApiKeyNotFound(Guid apiKeyId)
     {
@@ -30,12 +30,14 @@ public class UpdateApiKeyPresenter : BaseApiPresenter, IUpdateApiKeyOutputPort
 
     public void ExpirationTooLong(TimeSpan expiresIn, TimeSpan maxExpiration)
     {
-        Response = new BadRequestObjectResult(ErrorResponse.Create(ChangeBlogStrings.ApiKeyExpirationTooLong, "expiresAt"));
+        Response = new BadRequestObjectResult(ErrorResponse.Create(ChangeBlogStrings.ApiKeyExpirationTooLong,
+            "expiresAt"));
     }
-    
+
     public void ExpirationDateInThePast(DateTime expiresAt)
     {
-        Response = new BadRequestObjectResult(ErrorResponse.Create(ChangeBlogStrings.ExpirationDateInThePast, "expiresAt"));
+        Response = new BadRequestObjectResult(ErrorResponse.Create(ChangeBlogStrings.ExpirationDateInThePast,
+            "expiresAt"));
     }
 
     public void Conflict(Conflict conflict)

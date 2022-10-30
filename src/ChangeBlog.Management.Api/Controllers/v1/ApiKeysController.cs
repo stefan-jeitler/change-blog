@@ -8,7 +8,6 @@ using ChangeBlog.Api.Localization.Resources;
 using ChangeBlog.Api.Shared;
 using ChangeBlog.Api.Shared.Authorization;
 using ChangeBlog.Api.Shared.DTOs;
-using ChangeBlog.Api.Shared.DTOs.V1.User;
 using ChangeBlog.Api.Shared.Swagger;
 using ChangeBlog.Application.UseCases.Users.AddApiKey;
 using ChangeBlog.Application.UseCases.Users.DeleteApiKey;
@@ -49,11 +48,10 @@ public class ApiKeysController : ControllerBase
     public async Task<ActionResult<SuccessResponse>> GenerateApiKeyAsync(
         [FromServices] IAddApiKey addApiKey,
         string title,
-        [Required]
-        DateTime expiresAt)
+        [Required] DateTime expiresAt)
     {
         var userId = HttpContext.GetUserId();
-        var presenter = new AddApiKeyPresenter();
+        var presenter = new AddApiKeyApiPresenter();
         var requestModel = new AddApiKeyRequestModel(userId, title, expiresAt);
 
         await addApiKey.ExecuteAsync(presenter, requestModel);
@@ -73,7 +71,7 @@ public class ApiKeysController : ControllerBase
         string title,
         DateTime? expiresAt)
     {
-        var presenter = new UpdateApiKeyPresenter();
+        var presenter = new UpdateApiKeyApiPresenter();
         var requestModel = new UpdateApiKeyRequestModel(apiKeyId, title, expiresAt);
 
         await updateApiKey.ExecuteAsync(presenter, requestModel);
@@ -90,7 +88,7 @@ public class ApiKeysController : ControllerBase
     {
         var userId = HttpContext.GetUserId();
         await deleteApiKey.ExecuteAsync(userId, apiKeyId);
-        
+
         return Ok(SuccessResponse.Create(ChangeBlogStrings.ApiKeyDeleted));
     }
 }

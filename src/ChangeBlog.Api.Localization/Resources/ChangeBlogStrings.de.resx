@@ -357,4 +357,7 @@
     <data name="MaxAccountsCreatedByUserReached" xml:space="preserve">
       <value>Sie können nicht mehr als {0} Accounts erstellen</value>
     </data>
+    <data name="AccountUpdated" xml:space="preserve">
+      <value>Account erfolgreich aktualisiert</value>
+    </data>
 </root>

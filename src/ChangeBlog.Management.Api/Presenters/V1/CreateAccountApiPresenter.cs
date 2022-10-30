@@ -11,11 +11,11 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace ChangeBlog.Management.Api.Presenters.V1;
 
-public class CreateAccountPresenter : BaseApiPresenter, ICreateAccountOutputPort
+public class CreateAccountApiPresenter : BaseApiPresenter, ICreateAccountOutputPort
 {
     private readonly HttpContext _httpContext;
 
-    public CreateAccountPresenter(HttpContext httpContext)
+    public CreateAccountApiPresenter(HttpContext httpContext)
     {
         _httpContext = httpContext;
     }

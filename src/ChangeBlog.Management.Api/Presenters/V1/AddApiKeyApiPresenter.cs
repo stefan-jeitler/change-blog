@@ -9,7 +9,7 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace ChangeBlog.Management.Api.Presenters.V1;
 
-public class AddApiKeyPresenter : BaseApiPresenter, IAddApiKeyOutputPort
+public class AddApiKeyApiPresenter : BaseApiPresenter, IAddApiKeyOutputPort
 {
     public void ExpirationTooShort(TimeSpan expiresIn, TimeSpan minExpiration)
     {
@@ -45,11 +45,13 @@ public class AddApiKeyPresenter : BaseApiPresenter, IAddApiKeyOutputPort
 
     public void MaxApiKeyCountReached(ushort maxApiKeys)
     {
-        Response = new UnprocessableEntityObjectResult(ErrorResponse.Create(string.Format(ChangeBlogStrings.MaxApiKeysCountReached, maxApiKeys)));
+        Response = new UnprocessableEntityObjectResult(
+            ErrorResponse.Create(string.Format(ChangeBlogStrings.MaxApiKeysCountReached, maxApiKeys)));
     }
 
     public void ExpirationDateInThePast(DateTime expiresAt)
     {
-        Response = new BadRequestObjectResult(ErrorResponse.Create(ChangeBlogStrings.ExpirationDateInThePast, "expiresAt"));
+        Response = new BadRequestObjectResult(ErrorResponse.Create(ChangeBlogStrings.ExpirationDateInThePast,
+            "expiresAt"));
     }
 }

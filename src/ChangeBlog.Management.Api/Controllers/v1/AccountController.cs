@@ -10,8 +10,10 @@ using ChangeBlog.Api.Shared.DTOs;
 using ChangeBlog.Api.Shared.DTOs.V1.User;
 using ChangeBlog.Api.Shared.Swagger;
 using ChangeBlog.Application.UseCases.Accounts.CreateAccount;
+using ChangeBlog.Application.UseCases.Accounts.DeleteAccount;
 using ChangeBlog.Application.UseCases.Accounts.GetAccounts;
 using ChangeBlog.Application.UseCases.Accounts.GetRoles;
+using ChangeBlog.Application.UseCases.Accounts.UpdateAccount;
 using ChangeBlog.Application.UseCases.Users.GetUsers;
 using ChangeBlog.Domain.Authorization;
 using ChangeBlog.Management.Api.DTOs;
@@ -58,18 +60,53 @@ public class AccountController : ControllerBase
     [HttpPost(Name = "CreateAccount")]
     [ProducesResponseType(StatusCodes.Status200OK)]
     [ProducesResponseType(typeof(ErrorResponse), StatusCodes.Status400BadRequest)]
+    [ProducesResponseType(typeof(ErrorResponse), StatusCodes.Status422UnprocessableEntity)]
+    [ProducesResponseType(typeof(ErrorResponse), StatusCodes.Status409Conflict)]
     [SkipAuthorization]
-    public async Task<IActionResult> CreateAccountAsync([FromServices] ICreateAccount createAccount,
+    public async Task<ActionResult<SuccessResponse>> CreateAccountAsync([FromServices] ICreateAccount createAccount,
         [Required] string accountName)
     {
         var userId = HttpContext.GetUserId();
         var requestModel = new CreateAccountRequestModel(accountName, userId);
-        var presenter = new CreateAccountPresenter(HttpContext);
+        var presenter = new CreateAccountApiPresenter(HttpContext);
 
         await createAccount.ExecuteAsync(presenter, requestModel);
 
         return presenter.Response;
     }
+
+    [HttpDelete("{accountId:Guid}", Name = "DeleteAccount")]
+    [ProducesResponseType(StatusCodes.Status200OK)]
+    [ProducesResponseType(typeof(ErrorResponse), StatusCodes.Status400BadRequest)]
+    [ProducesResponseType(typeof(ErrorResponse), StatusCodes.Status422UnprocessableEntity)]
+    [ProducesResponseType(typeof(ErrorResponse), StatusCodes.Status409Conflict)]
+    [NeedsPermission(Permission.DeleteAccount)]
+    public async Task<ActionResult<SuccessResponse>> DeleteAccountAsync([FromServices] IDeleteAccount deleteAccount,
+        Guid accountId)
+    {
+        var presenter = new DeleteAccountApiPresenter();
+        await deleteAccount.ExecuteAsync(presenter, accountId);
+
+        return presenter.Response;
+    }
+
+    [HttpPatch("{accountId:Guid}", Name = "UpdateAccount")]
+    [ProducesResponseType(StatusCodes.Status200OK)]
+    [ProducesResponseType(typeof(ErrorResponse), StatusCodes.Status400BadRequest)]
+    [ProducesResponseType(typeof(ErrorResponse), StatusCodes.Status422UnprocessableEntity)]
+    [ProducesResponseType(typeof(ErrorResponse), StatusCodes.Status409Conflict)]
+    [NeedsPermission(Permission.UpdateAccount)]
+    public async Task<ActionResult<SuccessResponse>> UpdateAccountAsync([FromServices] IUpdateAccount updateAccount,
+        Guid accountId, [FromBody] UpdateAccountDto updateAccountDto)
+    {
+        var presenter = new UpdateAccountApiPresenter();
+        var requestModel = new UpdateAccountRequestModel(accountId, updateAccountDto.Name);
+
+        await updateAccount.ExecuteAsync(presenter, requestModel);
+
+        return presenter.Response;
+    }
+
 
     [HttpGet("{accountId:Guid}/users", Name = "GetAccountUsers")]
     [ProducesResponseType(StatusCodes.Status200OK)]

@@ -16,4 +16,6 @@ public interface IAccountDao
     Task<IList<Account>> GetAccountsAsync(Guid userId);
     Task<IList<Account>> GetAccountsAsync(IList<Guid> accountIds);
     Task<Result<Guid, Conflict>> AddAccount(Account accountToAdd, AccountUser accountUserToAdd);
+    Task<Result<Guid, Conflict>> DeleteAsync(Guid accountId);
+    Task<Result<Guid, Conflict>> UpdateName(Guid accountId, Name newName);
 }

@@ -14,7 +14,8 @@ public static class ModelStateExtensions
             .Where(x => x.Value is not null)
             .Select(modelStateEntry =>
                 new PropertyErrorMessages(
-                    modelStateEntry.Value.Errors.Select(x => x.ErrorMessage).ToArray(),
+                    // do not show trailing periods in error messages
+                    modelStateEntry.Value.Errors.Select(x => x.ErrorMessage.Trim('.')).ToArray(),
                     modelStateEntry.Key.FirstCharToLower()))
             .Where(x => x.Messages.Any());
 

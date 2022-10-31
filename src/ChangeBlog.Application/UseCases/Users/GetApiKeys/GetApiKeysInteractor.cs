@@ -9,8 +9,8 @@ namespace ChangeBlog.Application.UseCases.Users.GetApiKeys;
 
 public class GetApiKeysInteractor : IGetApiKeys
 {
-    private readonly IUserDao _userDao;
     private readonly IApiKeysDao _apiKeysDao;
+    private readonly IUserDao _userDao;
 
     public GetApiKeysInteractor(IUserDao userDao, IApiKeysDao apiKeysDao)
     {
@@ -28,7 +28,7 @@ public class GetApiKeysInteractor : IGetApiKeys
 
         return apiKeys
             .Select(x => new ApiKeyResponseModel(x.ApiKeyId,
-                x.Title,
+                x.Name,
                 x.Key,
                 x.ExpiresAt.ToLocal(currentUser.TimeZone)))
             .ToList();

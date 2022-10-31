@@ -82,9 +82,9 @@
                     <th style="width: 3rem">
                         <p-tableHeaderCheckbox></p-tableHeaderCheckbox>
                     </th>
-                    <th pSortableColumn="title">
-                        {{ translationKey.title | transloco }}
-                        <p-sortIcon field="title"></p-sortIcon>
+                    <th pSortableColumn="name">
+                        {{ translationKey.$name | transloco }}
+                        <p-sortIcon field="name"></p-sortIcon>
                     </th>
                     <th>{{ translationKey.key | transloco }} </th>
                     <th
@@ -115,9 +115,9 @@
                         </div>
                     </td>
                     <td>
-                        <span class="p-column-title">{{ translationKey.title | transloco }}</span>
+                        <span class="p-column-title">{{ translationKey.$name | transloco }}</span>
                         <div
-                                class="truncate-text text-right sm:text-left w-10rem sm:w-8rem md:w-8rem lg:w-14rem xl:w-full">{{apiKey.title}}</div>
+                                class="truncate-text text-right sm:text-left w-10rem sm:w-8rem md:w-8rem lg:w-14rem xl:w-full">{{apiKey.name}}</div>
                     </td>
                     <td>
                         <span class="p-column-title">{{ translationKey.key | transloco }}</span>
@@ -191,14 +191,14 @@
                         <div class="flex flex-column align-items-start w-12 md:w-22rem">
                             <div class="flex flex-row w-full">
                                 <label class="font-medium"
-                                       for="title-input">{{ translationKey.title | transloco }}</label>
+                                       for="name-input">{{ translationKey.$name | transloco }}</label>
                             </div>
-                            <input class="w-full mt-2" formControlName="title" id="title-input" pInputText type="text">
+                            <input class="w-full mt-2" formControlName="name" id="name-input" pInputText type="text">
                         </div>
-                        <div *ngIf="apiKeyForm.showErrorMessage('title')">
-                            <small *ngFor="let message of apiKeyForm.getErrorMessages('title')"
+                        <div *ngIf="apiKeyForm.showErrorMessage('name')">
+                            <small *ngFor="let message of apiKeyForm.getErrorMessages('name')"
                                    class="pt-1 p-error block"
-                                   id="title-error">{{ message }}</small>
+                                   id="name-error">{{ message }}</small>
                         </div>
 
                     </div>

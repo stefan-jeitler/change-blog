@@ -63,4 +63,5 @@ let dbUpdates: DbUpdate list =
       { Version = v "14.1.0"; Update = ExternalIdentityTable.addColumnIdentityProvider }
       { Version = v "14.2.0"; Update = ApiKeyTable.addTitleColumn }
       { Version = v "14.3.0"; Update = RolePermissionTable.addAccountPermissions }
-      { Version = v "15.0.0"; Update = AccountTable.addCreatedByUserColumn } ]
+      { Version = v "15.0.0"; Update = AccountTable.addCreatedByUserColumn }
+      { Version = v "16.0.0"; Update = ApiKeyTable.renameTitleToName } ]

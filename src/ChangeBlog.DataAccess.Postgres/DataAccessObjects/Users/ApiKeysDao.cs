@@ -25,7 +25,7 @@ public class ApiKeysDao : IApiKeysDao
     {
         const string sql = @"SELECT user_id    AS userId,
                                        id         as apiKeyId,
-                                       title      as title,
+                                       name      as name,
                                        key        as apiKey,
                                        expires_at as expiresAt
                                 FROM api_key
@@ -41,10 +41,9 @@ public class ApiKeysDao : IApiKeysDao
 
     public async Task<Result<Guid, Conflict>> AddAsync(ApiKey apiKey)
     {
-        
         const string insertNewApiKeySql = @"
-            INSERT INTO api_key (id, user_id, title, key, expires_at, deleted_at, created_at)
-            VALUES (@id, @userId, @title, @apiKey, @expiresAt, null, now())";
+            INSERT INTO api_key (id, user_id, name, key, expires_at, deleted_at, created_at)
+            VALUES (@id, @userId, @name, @apiKey, @expiresAt, null, now())";
 
         try
         {
@@ -53,7 +52,7 @@ public class ApiKeysDao : IApiKeysDao
                 {
                     id = apiKey.ApiKeyId,
                     userId = apiKey.UserId,
-                    title = apiKey.Title,
+                    name = apiKey.Name,
                     apiKey = apiKey.Key,
                     expiresAt = apiKey.ExpiresAt
                 });
@@ -67,26 +66,24 @@ public class ApiKeysDao : IApiKeysDao
         }
     }
 
-    public Task DeleteApiKeyAsync(Guid userId, Guid apiKeyId)
-    {
-        return _dbAccessor.DbConnection.ExecuteAsync(@"DELETE FROM api_key WHERE user_id = @userId AND id = @apiKeyId",
+    public Task DeleteApiKeyAsync(Guid userId, Guid apiKeyId) =>
+        _dbAccessor.DbConnection.ExecuteAsync(@"DELETE FROM api_key WHERE user_id = @userId AND id = @apiKeyId",
             new
             {
                 userId,
                 apiKeyId
             });
-    }
 
     public async Task<Maybe<ApiKey>> GetApiKeyAsync(Guid apiKeyId)
     {
         const string sql = @"SELECT user_id    AS userId,
                                        id         as apiKeyId,
-                                       title      as title,
+                                       name      as name,
                                        key        as apiKey,
                                        expires_at as expiresAt
                                 FROM api_key
                                 WHERE id = @apiKeyId";
-        
+
         var apiKey = await _dbAccessor.DbConnection.QuerySingleOrDefaultAsync<ApiKey>(sql,
             new {apiKeyId});
 
@@ -98,15 +95,14 @@ public class ApiKeysDao : IApiKeysDao
     public Task<int> GetApiKeysCountAsync(Guid userId)
     {
         const string sql = "SELECT COUNT(*) FROM api_key WHERE user_id = @userId";
-        
+
         return _dbAccessor.DbConnection.ExecuteScalarAsync<int>(sql, new {userId});
     }
 
     public async Task<Result<Guid, Conflict>> UpdateApiKeyAsync(ApiKey apiKey)
     {
-        
         const string updateApiKeySql = @"
-            UPDATE api_key SET title = @title, expires_at = @expiresAt 
+            UPDATE api_key SET name = @name, expires_at = @expiresAt 
             WHERE id = @id";
 
         try
@@ -115,7 +111,7 @@ public class ApiKeysDao : IApiKeysDao
                 .ExecuteAsync(updateApiKeySql, new
                 {
                     id = apiKey.ApiKeyId,
-                    title = apiKey.Title,
+                    name = apiKey.Name,
                     expiresAt = apiKey.ExpiresAt
                 });
 

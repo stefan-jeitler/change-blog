@@ -126,9 +126,6 @@
     <data name="UserProfileUpdated" xml:space="preserve">
     <value>User Profile successfully updated</value>
   </data>
-    <data name="UnknownError" xml:space="preserve">
-    <value>Unknown Error</value>
-  </data>
     <data name="ProductWithoutVersions" xml:space="preserve">
     <value>Product does not contain any versions</value>
   </data>
@@ -327,9 +324,6 @@
     <data name="ApiKeyDeleted" xml:space="preserve">
       <value>Api Key deleted</value>
     </data>
-    <data name="InvalidApiKeyTitle" xml:space="preserve">
-    <value>Api Key Title is invalid</value>
-  </data>
     <data name="MaxApiKeysCountReached" xml:space="preserve">
     <value>You can only add up to {0} api keys</value>
   </data>
@@ -360,7 +354,7 @@
     <data name="AccountUpdated" xml:space="preserve">
       <value>Account successfully updated</value>
     </data>
-    <data name="StringOutOfRange" xml:space="preserve">
-      <value>'{0}' must be between {1} and {2} characters</value>
+    <data name="ExpirationDate" xml:space="preserve">
+      <value>Expiration Date</value>
     </data>
 </root>

@@ -1,18 +1,13 @@
-using System.Linq;
 using ChangeBlog.Api.Authentication;
-using ChangeBlog.Api.Localization.Resources;
 using ChangeBlog.Api.Shared;
 using ChangeBlog.Api.Shared.Authentication;
 using ChangeBlog.Api.Shared.Authorization;
-using ChangeBlog.Api.Shared.DTOs;
 using ChangeBlog.Api.Shared.UserInfo;
 using ChangeBlog.Api.Swagger;
 using ChangeBlog.Application.Boundaries.DataAccess.ExternalIdentity;
 using ChangeBlog.DataAccess.Postgres;
-using ChangeBlog.Domain;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
-using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
@@ -74,7 +69,7 @@ public class Startup
 
         var localizationOptions = LocalizationOptions.Get();
         app.UseRequestLocalization(localizationOptions);
-        
+
         app.UseAuthentication();
         app.UseAuthorization();
 
@@ -89,17 +84,7 @@ public class Startup
     {
         services
             .AddControllers(o => { o.Filters.Add(typeof(AuthorizationFilter)); })
-            .ConfigureApiBehaviorOptions(o => o.InvalidModelStateResponseFactory = CustomErrorMessage);
-    }
-
-    private static ActionResult CustomErrorMessage(ActionContext context)
-    {
-        var firstError = context.ModelState
-            .Where(x => x.Value is not null)
-            .FirstOrDefault(x => x.Value.Errors.Count > 0)
-            .Value?.Errors.FirstOrDefault()?
-            .ErrorMessage ?? ChangeBlogStrings.UnknownError;
-
-        return new BadRequestObjectResult(ErrorResponse.Create(firstError));
+            .ConfigureApiBehaviorOptions(o => o.InvalidModelStateResponseFactory =
+                ctx => ctx.ModelState.ToCustomErrorResponse());
     }
 }

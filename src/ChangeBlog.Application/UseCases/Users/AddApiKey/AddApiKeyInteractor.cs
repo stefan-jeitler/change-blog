@@ -6,9 +6,11 @@ using ChangeBlog.Application.Extensions;
 using ChangeBlog.Application.Models;
 using ChangeBlog.Domain.Miscellaneous;
 using CSharpFunctionalExtensions;
+using JetBrains.Annotations;
 
 namespace ChangeBlog.Application.UseCases.Users.AddApiKey;
 
+[UsedImplicitly]
 public class AddApiKeyInteractor : IAddApiKey
 {
     private const int ApiKeyLength = 26;
@@ -30,7 +32,8 @@ public class AddApiKeyInteractor : IAddApiKey
         if (requestModel.UserId == Guid.Empty)
             throw new ArgumentException("userId must not be empty.");
 
-        if (requestModel.ExpiresAt < DateTime.UtcNow) output.ExpirationDateInThePast(requestModel.ExpiresAt);
+        if (requestModel.ExpiresAt < DateTime.UtcNow)
+            output.ExpirationDateInThePast(requestModel.ExpiresAt);
 
         var currentUser = await _userDao.GetUserAsync(requestModel.UserId);
         var expiresAt = requestModel.ExpiresAt.Kind != DateTimeKind.Utc
@@ -50,9 +53,9 @@ public class AddApiKeyInteractor : IAddApiKey
             return;
         }
 
-        var title = OptionalName.Parse(requestModel.Title);
+        var name = OptionalName.Parse(requestModel.Name);
 
-        var apiKey = new ApiKey(currentUser.Id, Guid.NewGuid(), title, GenerateUniqueApiKey(), expiresAt.UtcDateTime);
+        var apiKey = new ApiKey(currentUser.Id, Guid.NewGuid(), name, GenerateApiKey(), expiresAt.UtcDateTime);
         await AddNewApiKeyAsync(output, apiKey);
     }
 
@@ -75,7 +78,7 @@ public class AddApiKeyInteractor : IAddApiKey
         }
     }
 
-    private static string GenerateUniqueApiKey()
+    private static string GenerateApiKey()
     {
         var key = new byte[ApiKeyLength];
         using var generator = RandomNumberGenerator.Create();

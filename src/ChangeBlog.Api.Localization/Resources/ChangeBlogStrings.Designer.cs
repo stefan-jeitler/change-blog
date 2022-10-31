@@ -258,20 +258,20 @@ namespace ChangeBlog.Api.Localization.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Expiration Date.
+        /// </summary>
+        public static string ExpirationDate {
+            get {
+                return ResourceManager.GetString("ExpirationDate", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to The expiration date must not be in the past.
         /// </summary>
         public static string ExpirationDateInThePast {
             get {
                 return ResourceManager.GetString("ExpirationDateInThePast", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to Api Key Title is invalid.
-        /// </summary>
-        public static string InvalidApiKeyTitle {
-            get {
-                return ResourceManager.GetString("InvalidApiKeyTitle", resourceCulture);
             }
         }
         
@@ -555,15 +555,6 @@ namespace ChangeBlog.Api.Localization.Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to &apos;{0}&apos; must be between {1} and {2} characters.
-        /// </summary>
-        public static string StringOutOfRange {
-            get {
-                return ResourceManager.GetString("StringOutOfRange", resourceCulture);
-            }
-        }
-        
-        /// <summary>
         ///   Looks up a localized string similar to The target version belongs to a different product.
         /// </summary>
         public static string TargetVersionBelongsToDifferentProduct {
@@ -632,15 +623,6 @@ namespace ChangeBlog.Api.Localization.Resources {
         public static string TooManyLabelsForChangeLogLine {
             get {
                 return ResourceManager.GetString("TooManyLabelsForChangeLogLine", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to Unknown Error.
-        /// </summary>
-        public static string UnknownError {
-            get {
-                return ResourceManager.GetString("UnknownError", resourceCulture);
             }
         }
         

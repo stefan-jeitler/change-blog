@@ -7,17 +7,15 @@ public class ApiKeyDto
 {
     public Guid ApiKeyId { get; set; }
     public string ApiKey { get; set; }
-    public string Title { get; set; }
+    public string Name { get; set; }
     public DateTimeOffset ExpiresAt { get; set; }
 
-    public static ApiKeyDto FromResponseModel(ApiKeyResponseModel m)
-    {
-        return new ApiKeyDto
+    public static ApiKeyDto FromResponseModel(ApiKeyResponseModel m) =>
+        new()
         {
             ApiKeyId = m.ApiKeyId,
-            Title = m.Title,
+            Name = m.Name,
             ApiKey = m.ApiKey,
             ExpiresAt = m.ExpiresAt
         };
-    }
 }

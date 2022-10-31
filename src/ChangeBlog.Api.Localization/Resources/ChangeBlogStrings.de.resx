@@ -126,9 +126,6 @@
     <data name="UserProfileUpdated" xml:space="preserve">
     <value>Benutzerprofil erfolgreich aktualisiert</value>
   </data>
-    <data name="UnknownError" xml:space="preserve">
-    <value>Unbekannter Fehler</value>
-  </data>
     <data name="ProductWithoutVersions" xml:space="preserve">
     <value>Das Produkt enhält keine Versionen</value>
   </data>
@@ -327,9 +324,6 @@
     <data name="ApiKeyDeleted" xml:space="preserve">
       <value>Api Schlüssel gelöscht</value>
     </data>
-    <data name="InvalidApiKeyTitle" xml:space="preserve">
-    <value>Api Schlüssel Bezeichnung ist nicht gültig</value>
-  </data>
     <data name="MaxApiKeysCountReached" xml:space="preserve">
     <value>Die Anzahl der Api Schlüssel ist auf {0} begrenzt</value>
   </data>
@@ -360,7 +354,7 @@
     <data name="AccountUpdated" xml:space="preserve">
       <value>Account erfolgreich aktualisiert</value>
     </data>
-    <data name="StringOutOfRange" xml:space="preserve">
-      <value>Die Länge von '{0}' muss zwischen {1} und {2} Zeichen liegen</value>
+    <data name="ExpirationDate" xml:space="preserve">
+      <value>Ablaufdatum</value>
     </data>
 </root>

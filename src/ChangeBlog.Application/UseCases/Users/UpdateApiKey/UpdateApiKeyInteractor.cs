@@ -30,8 +30,8 @@ public class UpdateApiKeyInteractor : IUpdateApiKey
             return;
         }
 
-        var updateTitle = requestModel.Title is not null;
-        var title = OptionalName.Parse(requestModel.Title);
+        var updateName = requestModel.Name is not null;
+        var name = OptionalName.Parse(requestModel.Name);
 
         var expiresAt =
             await GetExpirationDateAsync(output, existingApiKey.GetValueOrDefault(), requestModel.ExpiresIn);
@@ -42,7 +42,7 @@ public class UpdateApiKeyInteractor : IUpdateApiKey
 
         var updatedApiKey = new ApiKey(apiKey.UserId,
             apiKey.ApiKeyId,
-            updateTitle ? title : apiKey.Title,
+            updateName ? name : apiKey.Name,
             apiKey.Key,
             expiresAt.GetValueOrDefault());
 

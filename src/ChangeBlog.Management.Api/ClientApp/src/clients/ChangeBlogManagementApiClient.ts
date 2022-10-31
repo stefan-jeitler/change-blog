@@ -1214,7 +1214,7 @@ export class Client {
      * @param body (optional) 
      * @return Success
      */
-    generateApiKey(accept_Language?: AcceptLanguage | undefined, body?: GenerateApiKeyDto | undefined): Observable<SuccessResponse> {
+    generateApiKey(accept_Language?: AcceptLanguage | undefined, body?: CreateOrUpdateApiKeyDto | undefined): Observable<SuccessResponse> {
         let url_ = this.baseUrl + "/api/v1/user/apikeys";
         url_ = url_.replace(/[?&]$/, "");
 
@@ -1293,7 +1293,7 @@ export class Client {
      * @param body (optional) 
      * @return Success
      */
-    updateApiKey(apiKeyId: string, accept_Language?: AcceptLanguage | undefined, body?: UpdateApiKeyDto | undefined): Observable<SuccessResponse> {
+    updateApiKey(apiKeyId: string, accept_Language?: AcceptLanguage | undefined, body?: CreateOrUpdateApiKeyDto | undefined): Observable<SuccessResponse> {
         let url_ = this.baseUrl + "/api/v1/user/apikeys/{apiKeyId}";
         if (apiKeyId === undefined || apiKeyId === null)
             throw new Error("The parameter 'apiKeyId' must be defined.");
@@ -1540,7 +1540,7 @@ export interface IApiInfo {
 export class ApiKeyDto implements IApiKeyDto {
     apiKeyId!: string;
     apiKey!: string | undefined;
-    title!: string | undefined;
+    name!: string | undefined;
     expiresAt!: Date;
 
     constructor(data?: IApiKeyDto) {
@@ -1556,7 +1556,7 @@ export class ApiKeyDto implements IApiKeyDto {
         if (_data) {
             this.apiKeyId = _data["apiKeyId"];
             this.apiKey = _data["apiKey"];
-            this.title = _data["title"];
+            this.name = _data["name"];
             this.expiresAt = _data["expiresAt"] ? new Date(_data["expiresAt"].toString()) : <any>undefined;
         }
     }
@@ -1572,7 +1572,7 @@ export class ApiKeyDto implements IApiKeyDto {
         data = typeof data === 'object' ? data : {};
         data["apiKeyId"] = this.apiKeyId;
         data["apiKey"] = this.apiKey;
-        data["title"] = this.title;
+        data["name"] = this.name;
         data["expiresAt"] = this.expiresAt ? this.expiresAt.toISOString() : <any>undefined;
         return data;
     }
@@ -1581,7 +1581,7 @@ export class ApiKeyDto implements IApiKeyDto {
 export interface IApiKeyDto {
     apiKeyId: string;
     apiKey: string | undefined;
-    title: string | undefined;
+    name: string | undefined;
     expiresAt: Date;
 }
 
@@ -1737,6 +1737,46 @@ export interface ICreateOrUpdateAccountDto {
     name: string | undefined;
 }
 
+export class CreateOrUpdateApiKeyDto implements ICreateOrUpdateApiKeyDto {
+    name!: string | undefined;
+    expiresAt!: Date | undefined;
+
+    constructor(data?: ICreateOrUpdateApiKeyDto) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+        }
+    }
+
+    init(_data?: any) {
+        if (_data) {
+            this.name = _data["name"];
+            this.expiresAt = _data["expiresAt"] ? new Date(_data["expiresAt"].toString()) : <any>undefined;
+        }
+    }
+
+    static fromJS(data: any): CreateOrUpdateApiKeyDto {
+        data = typeof data === 'object' ? data : {};
+        let result = new CreateOrUpdateApiKeyDto();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        data["name"] = this.name;
+        data["expiresAt"] = this.expiresAt ? this.expiresAt.toISOString() : <any>undefined;
+        return data;
+    }
+}
+
+export interface ICreateOrUpdateApiKeyDto {
+    name: string | undefined;
+    expiresAt: Date | undefined;
+}
+
 export class CultureDto implements ICultureDto {
     culture!: string | undefined;
     language!: string | undefined;
@@ -1843,46 +1883,6 @@ export class ErrorResponse implements IErrorResponse {
 export interface IErrorResponse {
     errors: PropertyErrorMessages[] | undefined;
     resourceIds: { [key: string]: string; } | undefined;
-}
-
-export class GenerateApiKeyDto implements IGenerateApiKeyDto {
-    title!: string | undefined;
-    expiresAt!: Date | undefined;
-
-    constructor(data?: IGenerateApiKeyDto) {
-        if (data) {
-            for (var property in data) {
-                if (data.hasOwnProperty(property))
-                    (<any>this)[property] = (<any>data)[property];
-            }
-        }
-    }
-
-    init(_data?: any) {
-        if (_data) {
-            this.title = _data["title"];
-            this.expiresAt = _data["expiresAt"] ? new Date(_data["expiresAt"].toString()) : <any>undefined;
-        }
-    }
-
-    static fromJS(data: any): GenerateApiKeyDto {
-        data = typeof data === 'object' ? data : {};
-        let result = new GenerateApiKeyDto();
-        result.init(data);
-        return result;
-    }
-
-    toJSON(data?: any) {
-        data = typeof data === 'object' ? data : {};
-        data["title"] = this.title;
-        data["expiresAt"] = this.expiresAt ? this.expiresAt.toISOString() : <any>undefined;
-        return data;
-    }
-}
-
-export interface IGenerateApiKeyDto {
-    title: string | undefined;
-    expiresAt: Date | undefined;
 }
 
 export class PropertyErrorMessages implements IPropertyErrorMessages {
@@ -2075,46 +2075,6 @@ export interface ITimezoneDto {
     windowsId: string | undefined;
     olsonId: string | undefined;
     offset: string | undefined;
-}
-
-export class UpdateApiKeyDto implements IUpdateApiKeyDto {
-    title!: string | undefined;
-    expiresAt!: Date | undefined;
-
-    constructor(data?: IUpdateApiKeyDto) {
-        if (data) {
-            for (var property in data) {
-                if (data.hasOwnProperty(property))
-                    (<any>this)[property] = (<any>data)[property];
-            }
-        }
-    }
-
-    init(_data?: any) {
-        if (_data) {
-            this.title = _data["title"];
-            this.expiresAt = _data["expiresAt"] ? new Date(_data["expiresAt"].toString()) : <any>undefined;
-        }
-    }
-
-    static fromJS(data: any): UpdateApiKeyDto {
-        data = typeof data === 'object' ? data : {};
-        let result = new UpdateApiKeyDto();
-        result.init(data);
-        return result;
-    }
-
-    toJSON(data?: any) {
-        data = typeof data === 'object' ? data : {};
-        data["title"] = this.title;
-        data["expiresAt"] = this.expiresAt ? this.expiresAt.toISOString() : <any>undefined;
-        return data;
-    }
-}
-
-export interface IUpdateApiKeyDto {
-    title: string | undefined;
-    expiresAt: Date | undefined;
 }
 
 export class UpdateUserProfileDto implements IUpdateUserProfileDto {

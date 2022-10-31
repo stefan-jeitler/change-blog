@@ -3260,7 +3260,7 @@ export class Client {
 }
 
 export class AddOrUpdateChangeLogLineDto implements IAddOrUpdateChangeLogLineDto {
-    text!: string;
+    text?: string | undefined;
     labels?: string[] | undefined;
     issues?: string[] | undefined;
 
@@ -3314,7 +3314,7 @@ export class AddOrUpdateChangeLogLineDto implements IAddOrUpdateChangeLogLineDto
 }
 
 export interface IAddOrUpdateChangeLogLineDto {
-    text: string;
+    text?: string | undefined;
     labels?: string[] | undefined;
     issues?: string[] | undefined;
 }

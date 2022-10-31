@@ -19,6 +19,21 @@ let tableExists (dbConnection: IDbConnection) (tableName: string) =
 
     dbConnection.ExecuteScalar<bool>(tableExistsSql, parameters)
 
+let columnExists (dbConnection: IDbConnection) table column =
+    let columnExistsSql =
+        """
+        SELECT EXISTS (
+            SELECT column_name 
+            FROM information_schema.columns 
+            WHERE table_name = @tableName and column_name = @columnName
+        )"""
+
+    let parameters =
+        dict [ "tableName" => table
+               "columnName" => column ]
+
+    dbConnection.ExecuteScalar<bool>(columnExistsSql, parameters)
+
 let constraintExists (dbConnection: IDbConnection) (constraintName: string) =
     let constraintExistsSql =
         """

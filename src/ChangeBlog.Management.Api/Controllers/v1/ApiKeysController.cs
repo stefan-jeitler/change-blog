@@ -46,12 +46,12 @@ public class ApiKeysController : ControllerBase
     [SkipAuthorization]
     public async Task<ActionResult<SuccessResponse>> GenerateApiKeyAsync(
         [FromServices] IAddApiKey addApiKey,
-        [FromBody] GenerateApiKeyDto createApiKeyDto)
+        [FromBody] CreateOrUpdateApiKeyDto createApiKeyDto)
     {
         var userId = HttpContext.GetUserId();
         var presenter = new AddApiKeyApiPresenter();
         var expiresAt = createApiKeyDto.ExpiresAt!.Value;
-        var requestModel = new AddApiKeyRequestModel(userId, createApiKeyDto.Title, expiresAt);
+        var requestModel = new AddApiKeyRequestModel(userId, createApiKeyDto.Name, expiresAt);
 
         await addApiKey.ExecuteAsync(presenter, requestModel);
 
@@ -67,11 +67,11 @@ public class ApiKeysController : ControllerBase
     public async Task<ActionResult<SuccessResponse>> UpdateApiKeyAsync(
         [FromServices] IUpdateApiKey updateApiKey,
         Guid apiKeyId,
-        [FromBody] UpdateApiKeyDto updateApiKeyDto)
+        [FromBody] CreateOrUpdateApiKeyDto updateApiKeyDto)
     {
         var presenter = new UpdateApiKeyApiPresenter();
         var requestModel = new UpdateApiKeyRequestModel(apiKeyId,
-            updateApiKeyDto.Title,
+            updateApiKeyDto.Name,
             updateApiKeyDto.ExpiresAt);
 
         await updateApiKey.ExecuteAsync(presenter, requestModel);

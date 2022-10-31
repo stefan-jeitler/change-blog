@@ -11,11 +11,11 @@ import {Clipboard} from '@angular/cdk/clipboard';
 import {translate, TranslocoService} from "@ngneat/transloco";
 import "../../extensions/message-service.extensions";
 import {ChangeBlogApi} from "../../../clients/ChangeBlogApiClient";
-import UpdateApiKeyDto = ChangeBlogManagementApi.UpdateApiKeyDto;
+import ApiKeyDto = ChangeBlogManagementApi.CreateOrUpdateApiKeyDto;
 
 interface ApiKey {
     id: string,
-    title: string,
+    name: string,
     key: string,
     expiresAt: Date
 }
@@ -53,8 +53,8 @@ export class ApikeyComponent implements OnInit {
 
         this.apiKeyForm = this.formBuilder.group({
             id: new FormControl<string>(''),
-            title: new FormControl<string>(''),
-            expiresAt: new FormControl<string>('')
+            name: new FormControl<string>(''),
+            expiresAt: new FormControl<string | undefined>(undefined)
         });
 
         this.contextMenuItems = [
@@ -132,7 +132,7 @@ export class ApikeyComponent implements OnInit {
     updateApiKey(apiKey: ApiKey) {
         this.apiKeyForm.patchValue({
             id: apiKey.id,
-            title: apiKey.title,
+            name: apiKey.name,
             expiresAt: apiKey.expiresAt
         });
 
@@ -144,7 +144,7 @@ export class ApikeyComponent implements OnInit {
         this.apiKeys = apiKeys.map(x => {
             return {
                 id: x.apiKeyId,
-                title: x.title!,
+                name: x.name!,
                 key: x.apiKey!,
                 expiresAt: x.expiresAt
             }
@@ -155,7 +155,7 @@ export class ApikeyComponent implements OnInit {
         const title = await firstValueFrom(this.translationService.selectTranslate(this.translationKey.confirm));
         const confirmationQuestion = await firstValueFrom(this.translationService.selectTranslate(
             this.translationKey.confirmApiKeyDeletion,
-            {apiKeyTitle: apiKey.title}));
+            {apiKeyName: apiKey.name}));
 
         this.confirmationService.confirm({
             message: confirmationQuestion,
@@ -178,15 +178,15 @@ export class ApikeyComponent implements OnInit {
         this.apiKeyForm.disable();
 
         let apiKeyId = this.apiKeyForm.value.id;
-        const title: string = this.apiKeyForm.value.title ?? '';
-        const expires: Date = this.apiKeyForm.value.expiresAt ?? new Date();
+
+        const dto = ApiKeyDto.fromJS({
+            name: this.apiKeyForm.value.name,
+            expiresAt: this.apiKeyForm.value.expiresAt
+        })
 
         const generateOrUpdateRequest = !!apiKeyId
-            ? this.mngmtApiClient.updateApiKey(apiKeyId, undefined, UpdateApiKeyDto.fromJS({
-                title: title,
-                expiresAt: expires
-            }))
-            : this.mngmtApiClient.generateApiKey(undefined, UpdateApiKeyDto.fromJS({title: title, expiresAt: expires}));
+            ? this.mngmtApiClient.updateApiKey(apiKeyId, undefined, dto)
+            : this.mngmtApiClient.generateApiKey(undefined, dto);
 
         generateOrUpdateRequest
             .subscribe({

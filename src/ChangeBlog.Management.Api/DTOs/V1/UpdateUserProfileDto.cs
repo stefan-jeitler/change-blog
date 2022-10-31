@@ -1,4 +1,4 @@
-using ChangeBlog.Management.Api.ValidatorExtensions;
+using ChangeBlog.Api.Shared.ValidatorExtensions;
 using FluentValidation;
 
 namespace ChangeBlog.Management.Api.DTOs.V1;

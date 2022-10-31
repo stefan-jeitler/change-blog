@@ -27,7 +27,7 @@
   "apiKeyCopiedToClipboard": "Api Key has been copied to the clipboard",
   "confirm": "Confirm",
   "confirmSelectedApiKeysDeletion": "Are you sure you want to delete the selected api keys?",
-  "confirmApiKeyDeletion": "Are you sure you want to delete the api key '<b>{{ apiKeyTitle }}</b>'?",
+  "confirmApiKeyDeletion": "Are you sure you want to delete the api key '<b>{{ apiKeyName }}</b>'?",
   "linkToApi": "Go to the Api",
   "actions": "Actions",
   "noEntries": "No Entries",

@@ -1,4 +1,4 @@
-using ChangeBlog.Management.Api.ValidatorExtensions;
+using ChangeBlog.Api.Shared.ValidatorExtensions;
 using FluentValidation;
 using JetBrains.Annotations;
 using D = ChangeBlog.Domain.Miscellaneous;

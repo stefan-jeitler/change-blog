@@ -20,25 +20,28 @@ public class UpdateAccountInteractor : IUpdateAccount
 
     public async Task ExecuteAsync(IUpdateAccountOutputPort output, UpdateAccountRequestModel requestModel)
     {
-        var newName = Name.Parse(requestModel.Name);
-        await UpdateNameInternalAsync(output, requestModel.AccountId, newName);
-    }
-
-    private async Task UpdateNameInternalAsync(IUpdateAccountOutputPort output,
-        Guid accountId,
-        Name newName)
-    {
-        _unitOfWork.Start();
-
-        var account = await _accountDao.FindAccountAsync(newName);
-
-        if (account.HasValue)
+        if (!Name.TryParse(requestModel.Name, out var name))
         {
-            output.NewNameAlreadyTaken(newName.Value);
+            output.Updated(requestModel.AccountId);
             return;
         }
 
-        await _accountDao.UpdateName(accountId, newName)
+        await UpdateInternalAsync(output, requestModel.AccountId, name);
+    }
+
+    private async Task UpdateInternalAsync(IUpdateAccountOutputPort output,
+        Guid accountId,
+        Name name)
+    {
+        _unitOfWork.Start();
+        var account = await _accountDao.FindAccountAsync(name);
+        if (account.HasValue)
+        {
+            output.NewNameAlreadyTaken(name);
+            return;
+        }
+
+        await _accountDao.UpdateName(accountId, name)
             .Match(Finish, output.Conflict);
 
         void Finish(Guid id)

@@ -47,6 +47,8 @@ public class AccountDao : IAccountDao
 
     public async Task<Maybe<Domain.Account>> FindAccountAsync(Name accountName)
     {
+        ArgumentNullException.ThrowIfNull(accountName);
+
         const string findAccountSql = @"
                 SELECT id,
                        name,
@@ -61,7 +63,7 @@ public class AccountDao : IAccountDao
         var dbConnection = _dbAccessor.DbConnection;
         var account = await dbConnection.QuerySingleOrDefaultAsync<Domain.Account>(findAccountSql, new
         {
-            accountName
+            accountName = accountName.Value
         });
 
         return account == default
@@ -184,11 +186,13 @@ values (@accountId, @userId, @roleId, @createdAt)";
 
     public async Task<Result<Guid, Conflict>> UpdateName(Guid accountId, Name newName)
     {
+        ArgumentNullException.ThrowIfNull(newName);
+
         const string updateNameSql = "update account set name = @newName where id = @accountId";
 
         await _dbAccessor.DbConnection.ExecuteAsync(updateNameSql, new
         {
-            newName,
+            newName = newName.Value,
             accountId
         });
 

@@ -5,16 +5,17 @@ using D = ChangeBlog.Domain.Miscellaneous;
 
 namespace ChangeBlog.Management.Api.DTOs.V1.Account;
 
-public class CreateOrUpdateAccountDto
+[UsedImplicitly]
+public class UpdateAccountDto
 {
     public string Name { get; set; }
 }
 
 [UsedImplicitly]
-public class CreateOrUpdateAccountDtoValidator : AbstractValidator<CreateOrUpdateAccountDto>
+public class UpdateAccountDtoValidator : AbstractValidator<UpdateAccountDto>
 {
-    public CreateOrUpdateAccountDtoValidator()
+    public UpdateAccountDtoValidator()
     {
-        RuleFor(x => x.Name).Name();
+        RuleFor(x => x.Name).OptionalName();
     }
 }

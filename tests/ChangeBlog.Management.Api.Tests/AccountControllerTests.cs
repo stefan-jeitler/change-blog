@@ -142,7 +142,7 @@ public class AccountControllerTests : IClassFixture<WebApplicationFactory<Startu
         client.DefaultRequestHeaders.AcceptLanguage.Add(new StringWithQualityHeaderValue("de"));
 
         var jsonBody = JsonSerializer.Serialize(
-            new CreateOrUpdateAccountDto {Name = "ChangeBlog.Management.Api.Tests"});
+            new CreateAccountDto {Name = "ChangeBlog.Management.Api.Tests"});
         var response =
             await client.PostAsync("api/v1/accounts/", new StringContent(jsonBody, Encoding.UTF8,
                 "application/json"));

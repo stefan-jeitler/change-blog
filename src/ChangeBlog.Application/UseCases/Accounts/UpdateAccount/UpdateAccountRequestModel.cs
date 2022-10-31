@@ -10,8 +10,6 @@ public class UpdateAccountRequestModel
             throw new ArgumentException("AccountId must not be empty");
 
         AccountId = accountId;
-
-        ArgumentNullException.ThrowIfNull(name);
         Name = name;
     }
 

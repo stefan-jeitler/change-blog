@@ -64,7 +64,7 @@ public class AccountController : ControllerBase
     [SkipAuthorization]
     public async Task<ActionResult<SuccessResponse>> CreateAccountAsync(
         [FromServices] ICreateAccount createAccount,
-        [FromBody] CreateOrUpdateAccountDto createAccountDto)
+        [FromBody] CreateAccountDto createAccountDto)
     {
         var userId = HttpContext.GetUserId();
         var requestModel = new CreateAccountRequestModel(createAccountDto.Name, userId);
@@ -98,7 +98,7 @@ public class AccountController : ControllerBase
     [NeedsPermission(Permission.UpdateAccount)]
     public async Task<ActionResult<SuccessResponse>> UpdateAccountAsync([FromServices] IUpdateAccount updateAccount,
         Guid accountId,
-        [FromBody] CreateOrUpdateAccountDto updateAccountDto)
+        [FromBody] UpdateAccountDto updateAccountDto)
     {
         var presenter = new UpdateAccountApiPresenter();
         var requestModel = new UpdateAccountRequestModel(accountId, updateAccountDto.Name);

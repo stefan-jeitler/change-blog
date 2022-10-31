@@ -6,6 +6,8 @@ using ChangeBlog.Api.Shared.UserInfo;
 using ChangeBlog.Api.Swagger;
 using ChangeBlog.Application.Boundaries.DataAccess.ExternalIdentity;
 using ChangeBlog.DataAccess.Postgres;
+using FluentValidation;
+using FluentValidation.AspNetCore;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
@@ -26,7 +28,13 @@ public class Startup
 
     public void ConfigureServices(IServiceCollection services)
     {
-        ConfigureControllers(services);
+        services
+            .AddControllers(o => { o.Filters.Add(typeof(AuthorizationFilter)); })
+            .ConfigureApiBehaviorOptions(o => o.InvalidModelStateResponseFactory =
+                ctx => ctx.ModelState.ToCustomErrorResponse());
+
+        services.AddValidatorsFromAssemblyContaining<Startup>();
+        services.AddFluentValidationAutoValidation();
 
         services.AddSwagger();
         services.AddApplicationInsightsTelemetry();
@@ -62,7 +70,8 @@ public class Startup
 
     public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
     {
-        if (env.IsDevelopment()) app.UseDeveloperExceptionPage();
+        if (env.IsDevelopment())
+            app.UseDeveloperExceptionPage();
 
         app.AddSwagger();
         app.UseRouting();
@@ -78,13 +87,5 @@ public class Startup
             endpoints
                 .MapControllers()
                 .RequireAuthorization());
-    }
-
-    private static void ConfigureControllers(IServiceCollection services)
-    {
-        services
-            .AddControllers(o => { o.Filters.Add(typeof(AuthorizationFilter)); })
-            .ConfigureApiBehaviorOptions(o => o.InvalidModelStateResponseFactory =
-                ctx => ctx.ModelState.ToCustomErrorResponse());
     }
 }

@@ -7,6 +7,7 @@ public record Label
 {
     public const ushort MinLength = 2;
     public const ushort MaxLength = 50;
+    public const string OnlyAlphanumericCharsRegex = "^[a-zA-Z0-9]+$";
 
     private Label(string value)
     {
@@ -43,7 +44,7 @@ public record Label
 
         if (c == string.Empty) return new ArgumentException("Label must not be empty.");
 
-        if (!Regex.IsMatch(c, @"^[a-zA-Z0-9]+$"))
+        if (!Regex.IsMatch(c, OnlyAlphanumericCharsRegex))
             return new ArgumentException("Label contains invalid characters. Only letters and numbers allowed.");
 
         switch (c.Length)
@@ -56,8 +57,5 @@ public record Label
         }
     }
 
-    public static implicit operator string(Label label)
-    {
-        return label.Value;
-    }
+    public static implicit operator string(Label label) => label.Value;
 }

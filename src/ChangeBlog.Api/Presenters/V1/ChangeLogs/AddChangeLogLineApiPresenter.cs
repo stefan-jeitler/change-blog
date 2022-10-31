@@ -31,7 +31,7 @@ public class AddChangeLogLineApiPresenter : BaseApiPresenter, IAddChangeLogLineO
         Response = new NotFoundObjectResult(ErrorResponse.Create(ChangeBlogStrings.VersionNotFound));
     }
 
-    public void LineWithSameTextAlreadyExists(Guid changeLogLineId, string duplicate)
+    public void DuplicateEntry(Guid changeLogLineId, string duplicate)
     {
         var resourceIds = new Dictionary<string, string>
         {
@@ -68,7 +68,8 @@ public class AddChangeLogLineApiPresenter : BaseApiPresenter, IAddChangeLogLineO
 
     public void InvalidChangeLogLineText(string text)
     {
-        Response = new BadRequestObjectResult(ErrorResponse.Create(string.Format(ChangeBlogStrings.InvalidChangeLogText, text)));
+        Response = new BadRequestObjectResult(
+            ErrorResponse.Create(string.Format(ChangeBlogStrings.InvalidChangeLogText, text)));
     }
 
     public void InvalidIssue(string changeLogText, string issue)
@@ -80,18 +81,20 @@ public class AddChangeLogLineApiPresenter : BaseApiPresenter, IAddChangeLogLineO
     public void TooManyIssues(string changeLogText, int maxIssues)
     {
         Response = new UnprocessableEntityObjectResult(
-            ErrorResponse.Create(string.Format(ChangeBlogStrings.TooManyIssuesForChangeLogLine, changeLogText, maxIssues)));
+            ErrorResponse.Create(string.Format(ChangeBlogStrings.TooManyIssuesForChangeLogLine, changeLogText,
+                maxIssues)));
     }
 
     public void InvalidLabel(string changeLogText, string label)
     {
         Response = new BadRequestObjectResult(
-            ErrorResponse.Create(String.Format(ChangeBlogStrings.InvalidLabel, label)));
+            ErrorResponse.Create(string.Format(ChangeBlogStrings.InvalidLabel, label)));
     }
 
     public void TooManyLabels(string changeLogText, int maxLabels)
     {
         Response = new UnprocessableEntityObjectResult(
-            ErrorResponse.Create(string.Format(ChangeBlogStrings.TooManyLabelsForChangeLogLine, changeLogText, maxLabels)));
+            ErrorResponse.Create(string.Format(ChangeBlogStrings.TooManyLabelsForChangeLogLine, changeLogText,
+                maxLabels)));
     }
 }

@@ -5,7 +5,6 @@ using D = ChangeBlog.Domain.Miscellaneous;
 
 namespace ChangeBlog.Management.Api.DTOs.V1.Account;
 
-[UsedImplicitly]
 public class CreateAccountDto
 {
     public string Name { get; set; }
@@ -16,6 +15,6 @@ public class CreateAccountDtoValidator : AbstractValidator<CreateAccountDto>
 {
     public CreateAccountDtoValidator()
     {
-        RuleFor(x => x.Name).Name();
+        RuleFor(x => x.Name).MustBeName();
     }
 }

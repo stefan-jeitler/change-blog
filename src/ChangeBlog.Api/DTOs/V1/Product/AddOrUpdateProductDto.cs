@@ -1,13 +1,25 @@
 using System;
-using System.ComponentModel.DataAnnotations;
 using ChangeBlog.Api.Shared.Authorization.RequestBodyIdentifiers;
+using ChangeBlog.Api.Shared.ValidatorExtensions;
+using FluentValidation;
 
 namespace ChangeBlog.Api.DTOs.V1.Product;
 
 public class AddOrUpdateProductDto : IContainsAccountId
 {
-    [Required] public string Name { get; set; }
+    public string Name { get; set; }
     public Guid? VersioningSchemeId { get; set; }
-    [Required] public string LanguageCode { get; set; }
-    [Required] public Guid AccountId { get; set; }
+    public string LanguageCode { get; set; }
+    public Guid AccountId { get; set; }
+}
+
+public class AddOrUpdateProductValidator : AbstractValidator<AddOrUpdateProductDto>
+{
+    public AddOrUpdateProductValidator()
+    {
+        RuleFor(x => x.Name).MustBeName();
+        RuleFor(x => x.VersioningSchemeId).NotEmptyGuid();
+        RuleFor(x => x.LanguageCode).MustBeName();
+        RuleFor(x => x.AccountId).NotEmpty();
+    }
 }

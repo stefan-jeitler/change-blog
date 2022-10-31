@@ -11,5 +11,5 @@ public interface IAddChangeLogLineOutputPort : ILineParserOutput
     void Conflict(Conflict conflict);
     void VersionDoesNotExist();
     void TooManyLines(int maxChangeLogLines);
-    void LineWithSameTextAlreadyExists(Guid changeLogLineId, string duplicate);
+    void DuplicateEntry(Guid changeLogLineId, string duplicate);
 }

@@ -71,9 +71,7 @@ public class AddChangeLogLineInteractor : IAddChangeLogLine
     {
         var line = await CreateChangeLogLineAsync(output, requestModel, clVersion);
         if (line.HasNoValue)
-        {
             return;
-        }
 
         await SaveChangeLogLineAsync(output, line.GetValueOrThrow());
     }
@@ -82,10 +80,7 @@ public class AddChangeLogLineInteractor : IAddChangeLogLine
         IChangeLogLineRequestModel requestModel, ClVersion clVersion)
     {
         var parsedLine = ParseLine(output, requestModel);
-        if (parsedLine.HasNoValue)
-        {
-            return Maybe<ChangeLogLine>.None;
-        }
+        if (parsedLine.HasNoValue) return Maybe<ChangeLogLine>.None;
 
         var changeLogs = await _changeLogQueries.GetChangeLogsAsync(clVersion.ProductId, clVersion.Id);
         if (!changeLogs.IsPositionAvailable)
@@ -98,7 +93,7 @@ public class AddChangeLogLineInteractor : IAddChangeLogLine
             changeLogs.Lines.FirstOrDefault(x => x.Text.Equals(parsedLine.GetValueOrThrow().Text));
         if (existingLineWithSameText is not null)
         {
-            output.LineWithSameTextAlreadyExists(existingLineWithSameText.Id, parsedLine.GetValueOrThrow().Text);
+            output.DuplicateEntry(existingLineWithSameText.Id, parsedLine.GetValueOrThrow().Text);
             return Maybe<ChangeLogLine>.None;
         }
 

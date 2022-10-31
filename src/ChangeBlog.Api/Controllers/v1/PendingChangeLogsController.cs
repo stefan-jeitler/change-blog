@@ -77,8 +77,8 @@ public class PendingChangeLogsController : ControllerBase
         var requestModel = new PendingChangeLogLineRequestModel(userId,
             productId,
             pendingChangeLogLine.Text,
-            pendingChangeLogLine.Labels ?? new List<string>(0),
-            pendingChangeLogLine.Issues ?? new List<string>(0));
+            pendingChangeLogLine.Labels,
+            pendingChangeLogLine.Issues);
 
         var presenter = new AddPendingChangeLogLineApiPresenter(HttpContext);
         await addPendingChangeLogLine.ExecuteAsync(presenter, requestModel);

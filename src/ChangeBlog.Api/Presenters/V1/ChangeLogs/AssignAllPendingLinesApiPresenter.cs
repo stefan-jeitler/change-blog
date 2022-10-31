@@ -29,13 +29,14 @@ public class AssignAllPendingLinesApiPresenter : BaseApiPresenter, IAssignAllPen
 
     public void VersionDoesNotExist()
     {
-        Response = new NotFoundObjectResult(ErrorResponse.Create(ChangeBlogStrings.VersionNotFound));
+        Response = new NotFoundObjectResult(ErrorResponse.Create(ChangeBlogStrings.VersionNotFound, "targetVersionId"));
     }
 
     public void TooManyLinesToAdd(uint remainingLinesToAdd)
     {
         Response = new UnprocessableEntityObjectResult(
-            ErrorResponse.Create(string.Format(ChangeBlogStrings.TooManyChangeLogLines_Remaining, remainingLinesToAdd)));
+            ErrorResponse.Create(string.Format(ChangeBlogStrings.TooManyChangeLogLines_Remaining,
+                remainingLinesToAdd)));
     }
 
     public void Conflict(Conflict conflict)
@@ -56,7 +57,8 @@ public class AssignAllPendingLinesApiPresenter : BaseApiPresenter, IAssignAllPen
     public void LineWithSameTextAlreadyExists(IEnumerable<string> texts)
     {
         Response = new UnprocessableEntityObjectResult(
-            ErrorResponse.Create(string.Format(ChangeBlogStrings.TargetVersionContainsLinesWithSameText, string.Join(", ", texts))));
+            ErrorResponse.Create(string.Format(ChangeBlogStrings.TargetVersionContainsLinesWithSameText,
+                string.Join(", ", texts))));
     }
 
     public void TargetVersionBelongsToDifferentProduct(Guid productId, Guid targetVersionProductId)
@@ -66,7 +68,8 @@ public class AssignAllPendingLinesApiPresenter : BaseApiPresenter, IAssignAllPen
             [KnownIdentifiers.ProductId] = targetVersionProductId.ToString()
         };
 
-        Response = new ConflictObjectResult(ErrorResponse.Create(ChangeBlogStrings.TargetVersionBelongsToDifferentProduct,
+        Response = new ConflictObjectResult(ErrorResponse.Create(
+            ChangeBlogStrings.TargetVersionBelongsToDifferentProduct,
             resourceIds));
     }
 }

@@ -44,24 +44,27 @@ public class AddOrUpdateVersionApiPresenter : BaseApiPresenter, IAddOrUpdateVers
 
     public void InvalidVersionFormat(string version)
     {
-        Response = new UnprocessableEntityObjectResult(ErrorResponse.Create(string.Format(ChangeBlogStrings.InvalidVersionFormat, version)));
+        Response = new UnprocessableEntityObjectResult(
+            ErrorResponse.Create(string.Format(ChangeBlogStrings.InvalidVersionFormat, version)));
     }
 
     public void VersionDoesNotMatchScheme(string version, string versioningSchemeName)
     {
-        Response = new UnprocessableEntityObjectResult(
-            ErrorResponse.Create(string.Format(ChangeBlogStrings.VersioningSchemeMismatch, version, versioningSchemeName)));
+        var message = string.Format(ChangeBlogStrings.VersioningSchemeMismatch, version, versioningSchemeName);
+        Response = new UnprocessableEntityObjectResult(ErrorResponse.Create(message, "version"));
     }
 
     public void LinesWithSameTextsAreNotAllowed(IList<string> duplicates)
     {
         Response = new UnprocessableEntityObjectResult(
-            ErrorResponse.Create(string.Format(ChangeBlogStrings.ChangeLogLineSameText, string.Join(", ", duplicates))));
+            ErrorResponse.Create(string.Format(ChangeBlogStrings.ChangeLogLineSameText,
+                string.Join(", ", duplicates))));
     }
 
     public void InvalidVersionName(string name)
     {
-        Response = new UnprocessableEntityObjectResult(ErrorResponse.Create(string.Format(ChangeBlogStrings.InvalidName, name)));
+        Response = new UnprocessableEntityObjectResult(
+            ErrorResponse.Create(string.Format(ChangeBlogStrings.InvalidName, name)));
     }
 
     public void InsertConflict(Conflict conflict)
@@ -134,7 +137,8 @@ public class AddOrUpdateVersionApiPresenter : BaseApiPresenter, IAddOrUpdateVers
 
     public void InvalidChangeLogLineText(string text)
     {
-        Response = new BadRequestObjectResult(ErrorResponse.Create(string.Format(ChangeBlogStrings.InvalidChangeLogText, text)));
+        Response = new BadRequestObjectResult(
+            ErrorResponse.Create(string.Format(ChangeBlogStrings.InvalidChangeLogText, text)));
     }
 
     public void InvalidIssue(string changeLogText, string issue)
@@ -146,7 +150,8 @@ public class AddOrUpdateVersionApiPresenter : BaseApiPresenter, IAddOrUpdateVers
     public void TooManyIssues(string changeLogText, int maxIssues)
     {
         Response = new UnprocessableEntityObjectResult(
-            ErrorResponse.Create(string.Format(ChangeBlogStrings.TooManyIssuesForChangeLogLine, changeLogText, maxIssues)));
+            ErrorResponse.Create(string.Format(ChangeBlogStrings.TooManyIssuesForChangeLogLine, changeLogText,
+                maxIssues)));
     }
 
     public void InvalidLabel(string changeLogText, string label)
@@ -158,6 +163,7 @@ public class AddOrUpdateVersionApiPresenter : BaseApiPresenter, IAddOrUpdateVers
     public void TooManyLabels(string changeLogText, int maxLabels)
     {
         Response = new UnprocessableEntityObjectResult(
-            ErrorResponse.Create(string.Format(ChangeBlogStrings.TooManyLabelsForChangeLogLine, changeLogText, maxLabels)));
+            ErrorResponse.Create(string.Format(ChangeBlogStrings.TooManyLabelsForChangeLogLine, changeLogText,
+                maxLabels)));
     }
 }

@@ -213,7 +213,7 @@ namespace ChangeBlog.Api.Localization.Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Lines with same text are not allowed. Duplicate: &apos;{0}&apos;.
+        ///   Looks up a localized string similar to Duplicate entries are not allowed. Duplicate: &apos;{0}&apos;.
         /// </summary>
         public static string ChangeLogLineSameText {
             get {
@@ -479,6 +479,15 @@ namespace ChangeBlog.Api.Localization.Resources {
         public static string NotAuthenticated {
             get {
                 return ResourceManager.GetString("NotAuthenticated", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Only alphanumeric characters are allowed.
+        /// </summary>
+        public static string OnlyAlphanumericCharsAllowed {
+            get {
+                return ResourceManager.GetString("OnlyAlphanumericCharsAllowed", resourceCulture);
             }
         }
         
@@ -758,6 +767,15 @@ namespace ChangeBlog.Api.Localization.Resources {
         public static string VersionUpdateForbidden {
             get {
                 return ResourceManager.GetString("VersionUpdateForbidden", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Whitespaces are not allowed.
+        /// </summary>
+        public static string WhitespacesNotAllowed {
+            get {
+                return ResourceManager.GetString("WhitespacesNotAllowed", resourceCulture);
             }
         }
     }

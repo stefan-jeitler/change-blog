@@ -17,7 +17,7 @@ public class UpdateUserProfileDtoValidator : AbstractValidator<UpdateUserProfile
 {
     public UpdateUserProfileDtoValidator()
     {
-        RuleFor(x => x.Culture).OptionalName();
-        RuleFor(x => x.Timezone).OptionalName();
+        RuleFor(x => x.Culture).MustBeOptionalName();
+        RuleFor(x => x.Timezone).MustBeOptionalName();
     }
 }

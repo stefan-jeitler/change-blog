@@ -1,5 +1,4 @@
 using System;
-using System.Collections.Generic;
 using System.Net.Mime;
 using System.Threading.Tasks;
 using ChangeBlog.Api.DTOs.V1.ChangeLog;
@@ -78,8 +77,8 @@ public class ChangeLogsController : ControllerBase
         var requestModel = new VersionIdChangeLogLineRequestModel(userId,
             versionId,
             addChangeLogLineDto.Text,
-            addChangeLogLineDto.Labels ?? new List<string>(0),
-            addChangeLogLineDto.Issues ?? new List<string>(0));
+            addChangeLogLineDto.Labels,
+            addChangeLogLineDto.Issues);
 
         var presenter = new AddChangeLogLineApiPresenter(HttpContext);
         await addChangeLogLine.ExecuteAsync(presenter, requestModel);

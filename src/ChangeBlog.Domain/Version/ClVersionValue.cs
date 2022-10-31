@@ -5,7 +5,7 @@ namespace ChangeBlog.Domain.Version;
 
 public record ClVersionValue
 {
-    private const int MaxLength = 60;
+    public const int MaxLength = 60;
 
     private ClVersionValue(string value)
     {
@@ -18,10 +18,7 @@ public record ClVersionValue
     {
         var exception = ParseInternal(candidate, out var version);
 
-        if (exception is null)
-        {
-            return version;
-        }
+        if (exception is null) return version;
 
         throw exception;
     }
@@ -44,34 +41,19 @@ public record ClVersionValue
     {
         versionValue = null;
 
-        if (candidate is null)
-        {
-            return new ArgumentNullException(nameof(candidate));
-        }
+        if (candidate is null) return new ArgumentNullException(nameof(candidate));
 
         var c = candidate.Trim();
 
-        if (c == string.Empty)
-        {
-            return new ArgumentException("Version cannot be empty.", nameof(candidate));
-        }
+        if (c == string.Empty) return new ArgumentException("Version cannot be empty.", nameof(candidate));
 
-        if (c.Contains(' '))
-        {
-            return new ArgumentException("Whitespaces are not allowed in Versions.");
-        }
+        if (c.Contains(' ')) return new ArgumentException("Whitespaces are not allowed in Versions.");
 
-        if (c.Length > MaxLength)
-        {
-            return new ArgumentException($"Version too long. max length {MaxLength}.");
-        }
+        if (c.Length > MaxLength) return new ArgumentException($"Version too long. max length {MaxLength}.");
 
         versionValue = new ClVersionValue(c);
         return null;
     }
 
-    public static implicit operator string(ClVersionValue versionValue)
-    {
-        return versionValue.Value;
-    }
+    public static implicit operator string(ClVersionValue versionValue) => versionValue.Value;
 }

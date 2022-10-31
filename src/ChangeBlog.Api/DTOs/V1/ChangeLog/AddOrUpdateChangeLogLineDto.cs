@@ -1,6 +1,7 @@
 using System.Collections.Generic;
 using ChangeBlog.Api.Shared.ValidatorExtensions;
 using FluentValidation;
+using JetBrains.Annotations;
 
 namespace ChangeBlog.Api.DTOs.V1.ChangeLog;
 
@@ -13,16 +14,19 @@ public class AddOrUpdateChangeLogLineDto
     public List<string> Issues { get; set; }
 }
 
+[UsedImplicitly]
 public class AddOrUpdateChangeLogLineDtoValidator : AbstractValidator<AddOrUpdateChangeLogLineDto>
 {
     public AddOrUpdateChangeLogLineDtoValidator()
     {
-        Transform(x => x.Text, x => x?.Trim()).Text();
+        RuleFor(x => x.Text).MustBeChangeLogText();
 
-        RuleFor(x => x.Issues).NotEmpty();
-        TransformForEach(x => x.Issues, x => x?.Trim()).Text();
+        RuleFor(x => x.Issues).NotNull();
+        RuleForEach(x => x.Issues)
+            .MustBeIssue();
 
-        RuleFor(x => x.Labels).NotEmpty();
-        TransformForEach(x => x.Labels, x => x?.Trim()).Text();
+        RuleFor(x => x.Labels).NotNull();
+        RuleForEach(x => x.Labels)
+            .MustBeLabel();
     }
 }

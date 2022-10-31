@@ -9,42 +9,43 @@ import {AppUserService} from "./services/app-user.service";
 
 async function setBrowserLanguageOrDefault(oAuthService: OAuthService,
                                            translationService: TranslocoService) {
-  const language = getBrowserLang() ?? translationService.getDefaultLang();
+    const language = getBrowserLang() ?? translationService.getDefaultLang();
 
-  translationService.setActiveLang(language);
-  await firstValueFrom(translationService.load(language))
+    translationService.setActiveLang(language);
+    await firstValueFrom(translationService.load(language))
 }
 
 function subscribeTokenReceived(authService: OAuthService, apiClient: MngmtApiClient.Client) {
-  authService.events
-    .pipe(
-      filter((e) => e.type === 'token_received' && authService.hasValidAccessToken()),
-      mergeMap((x) => apiClient.ensureUserIsImported())
-    )
-    .subscribe((x) => console.debug(x));
+    authService.events
+        .pipe(
+            filter((e) => e.type === 'token_received' && authService.hasValidAccessToken()),
+            mergeMap((x) => apiClient.ensureUserIsImported())
+        )
+        .subscribe((x) => console.debug(x));
 }
 
 export function initializeApp(
-  router: Router,
-  oAuthService: OAuthService,
-  appConfig: AppConfig,
-  apiClient: MngmtApiClient.Client,
-  translationService: TranslocoService,
-  appCulture: AppUserService
+    router: Router,
+    oAuthService: OAuthService,
+    appConfig: AppConfig,
+    apiClient: MngmtApiClient.Client,
+    translationService: TranslocoService,
+    appCulture: AppUserService
 ): () => Promise<void> {
-  return async () => {
-    router.onSameUrlNavigation = 'reload';
-    oAuthService.configure(appConfig.authConfig);
-    oAuthService.setupAutomaticSilentRefresh();
+    return async () => {
+        router.onSameUrlNavigation = 'reload';
+        oAuthService.configure(appConfig.authConfig);
+        oAuthService.setupAutomaticSilentRefresh();
 
-    await setBrowserLanguageOrDefault(oAuthService, translationService);
-    subscribeTokenReceived(oAuthService, apiClient);
-    await oAuthService.loadDiscoveryDocument(appConfig.discoveryDocument);
-    await oAuthService.tryLoginCodeFlow();
+        await setBrowserLanguageOrDefault(oAuthService, translationService);
+        subscribeTokenReceived(oAuthService, apiClient);
+        await oAuthService.loadDiscoveryDocument(appConfig.discoveryDocument);
+        await oAuthService.tryLoginCodeFlow();
 
-    const isLoggedIn = oAuthService.hasValidIdToken() && oAuthService.hasValidAccessToken();
-    if (isLoggedIn) {
-      await appCulture.applyUserSettings();
-    }
-  };
+        const isLoggedIn = oAuthService.hasValidIdToken() && oAuthService.hasValidAccessToken();
+        if (isLoggedIn) {
+            await firstValueFrom(apiClient.ensureUserIsImported());
+            await appCulture.applyUserSettings();
+        }
+    };
 }

@@ -8,10 +8,10 @@
                 <div class="hidden md:inline-flex">
                     <div
                             [pTooltip]="translationKey.apiKeyLimitReached | transloco"
-                            [tooltipDisabled]="maxOwnCreatedAccountsCount < maxAccountsCreatedByMyselfLimit"
+                            [tooltipDisabled]="maxOwnCreatedAccountsCount >= maxAccountsCreatedByMyselfLimit"
                             tooltipPosition="bottom">
                         <button (click)="createNewAccount()"
-                                [disabled]="maxOwnCreatedAccountsCount < maxAccountsCreatedByMyselfLimit"
+                                [disabled]="maxOwnCreatedAccountsCount >= maxAccountsCreatedByMyselfLimit"
                                 [label]="this.translationKey.new | transloco"
                                 class="mr-2"
                                 icon="pi pi-plus"
@@ -22,10 +22,10 @@
                 <div class="inline-flex md:hidden">
                     <div
                             [pTooltip]="translationKey.apiKeyLimitReached | transloco"
-                            [tooltipDisabled]="maxOwnCreatedAccountsCount < maxAccountsCreatedByMyselfLimit"
+                            [tooltipDisabled]="maxOwnCreatedAccountsCount >= maxAccountsCreatedByMyselfLimit"
                             tooltipPosition="bottom">
                         <button (click)="createNewAccount()"
-                                [disabled]="maxOwnCreatedAccountsCount < maxAccountsCreatedByMyselfLimit"
+                                [disabled]="maxOwnCreatedAccountsCount >= maxAccountsCreatedByMyselfLimit"
                                 class="mr-2"
                                 icon="pi pi-plus"
                                 pButton pRipple>
@@ -145,7 +145,7 @@
                             <button (click)="deleteAccount(account)"
                                     [pTooltip]="translationKey.delete | transloco"
                                     [showDelay]="700"
-                                    class="p-button-rounded p-button-warning btn-small"
+                                    class="p-button-rounded p-button-danger btn-small"
                                     icon="pi pi-trash"
                                     pButton
                                     pRipple
@@ -172,7 +172,7 @@
         <p-dialog [(visible)]="showAccountDialog" [header]="translationKey.account | transloco" [modal]="true"
                   [style]="{width: '450px'}" styleClass="p-fluid">
             <ng-template pTemplate="content">
-                <form (ngSubmit)="onAccountSubmit(accountForm)"
+                <form (ngSubmit)="onAccountSubmit()"
                       [formGroup]="accountForm"
                       class="pt-3"
                       id="api-key-form">

@@ -14,7 +14,7 @@ public class UpdateAccountApiPresenter : BaseApiPresenter, IUpdateAccountOutputP
     public void NewNameAlreadyTaken(string newAccountName)
     {
         Response = new UnprocessableEntityObjectResult(ErrorResponse.Create(ChangeBlogStrings.NameAlreadyTaken,
-            "accountName"));
+            "Name"));
     }
 
     public void Conflict(Conflict conflict)

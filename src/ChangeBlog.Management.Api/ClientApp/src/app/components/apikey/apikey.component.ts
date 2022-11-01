@@ -177,7 +177,7 @@ export class ApikeyComponent implements OnInit {
         this.showApiKeyDialog = false;
     }
 
-    async onApiKeySubmit(apiKeyForm: UntypedFormGroup) {
+    async onApiKeySubmit() {
         this.apiKeyForm.disable();
 
         let apiKeyId = this.apiKeyForm.value.id;

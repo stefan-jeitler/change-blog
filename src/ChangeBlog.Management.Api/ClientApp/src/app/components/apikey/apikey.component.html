@@ -179,7 +179,7 @@
         <p-dialog [(visible)]="showApiKeyDialog" [header]="translationKey.apikey | transloco" [modal]="true"
                   [style]="{width: '450px'}" styleClass="p-fluid">
             <ng-template pTemplate="content">
-                <form (ngSubmit)="onApiKeySubmit(apiKeyForm)"
+                <form (ngSubmit)="onApiKeySubmit()"
                       [formGroup]="apiKeyForm"
                       class="pt-3"
                       id="api-key-form">

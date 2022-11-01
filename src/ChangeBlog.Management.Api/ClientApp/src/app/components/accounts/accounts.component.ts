@@ -1,10 +1,15 @@
 import {Component, OnInit} from '@angular/core';
 import {TranslationKey} from "../../generated/TranslationKey";
-import {MenuItem} from "primeng/api";
+import {ConfirmationService, MenuItem, MessageService} from "primeng/api";
 import {FormBuilder, FormControl, FormGroup} from "@angular/forms";
-import {translate} from "@ngneat/transloco";
-import {ChangeBlogManagementApi} from "../../../clients/ChangeBlogManagementApiClient";
+import {translate, TranslocoService} from "@ngneat/transloco";
+import {
+    ChangeBlogManagementApi as MngmtApiClient,
+    ChangeBlogManagementApi
+} from "../../../clients/ChangeBlogManagementApiClient";
 import {firstValueFrom} from "rxjs";
+import UpdateAccountDto = ChangeBlogManagementApi.UpdateAccountDto;
+import CreateAccountDto = ChangeBlogManagementApi.CreateAccountDto;
 
 interface Account {
     id: string;
@@ -34,6 +39,9 @@ export class AccountsComponent implements OnInit {
 
     constructor(public translationKey: TranslationKey,
                 formBuilder: FormBuilder,
+                private translationService: TranslocoService,
+                private confirmationService: ConfirmationService,
+                private messageService: MessageService,
                 private mngmtApiClient: ChangeBlogManagementApi.Client) {
         this.isLoadingFinished = false;
         this.selectedAccounts = [];
@@ -43,6 +51,7 @@ export class AccountsComponent implements OnInit {
         this.showAccountDialog = false;
 
         this.accountForm = formBuilder.group({
+            id: new FormControl<string>(''),
             name: new FormControl<string>('')
         });
 
@@ -76,43 +85,105 @@ export class AccountsComponent implements OnInit {
 
     async ngOnInit() {
         try {
-            const accounts = await firstValueFrom(this.mngmtApiClient.getAccounts());
-            this.accounts = accounts.map(x => {
-                return {
-                    id: x.id,
-                    name: x.name ?? '',
-                    defaultVersioningScheme: x.defaultVersioningScheme ?? '',
-                    createdAt: x.createdAt,
-                    createdBy: x.createdBy ?? '',
-                    wasCreatedByMyself: x.wasCreatedByMyself
-                }
-            });
+            await this.loadAccounts();
         } finally {
             this.isLoadingFinished = true;
         }
     }
 
-    createNewAccount() {
-
+    async loadAccounts() {
+        const accounts = await firstValueFrom(this.mngmtApiClient.getAccounts());
+        this.accounts = accounts.map(x => {
+            return {
+                id: x.id,
+                name: x.name!,
+                defaultVersioningScheme: x.defaultVersioningScheme!,
+                createdAt: x.createdAt,
+                createdBy: x.createdBy!,
+                wasCreatedByMyself: x.wasCreatedByMyself
+            }
+        });
     }
 
-    deleteSelectedAccounts() {
-
+    createNewAccount() {
+        this.accountForm.reset();
+        this.accountForm.resetValidation()
+        this.showAccountDialog = true;
     }
 
     updateAccount(account: Account) {
+        this.accountForm.patchValue({
+            id: account.id,
+            name: account.name,
+        });
 
+        this.showAccountDialog = true;
     }
 
-    onAccountSubmit(accountForm: FormGroup) {
+    onAccountSubmit() {
+        this.accountForm.disable();
 
+        let accountId = this.accountForm.value.id;
+
+        const generateOrUpdateRequest = !!accountId
+            ? this.mngmtApiClient.updateAccount(accountId, undefined, UpdateAccountDto.fromJS({name: this.accountForm.value.name}))
+            : this.mngmtApiClient.createAccount(undefined, CreateAccountDto.fromJS({name: this.accountForm.value.name}));
+
+        generateOrUpdateRequest
+            .subscribe({
+                next: async () => {
+                    this.showDatatableLoadingOverlay = true;
+                    this.accountForm.enable();
+                    this.showAccountDialog = false;
+                    await this.loadAccounts();
+                    this.showDatatableLoadingOverlay = false;
+                },
+                error: async (error: MngmtApiClient.SwaggerException) => {
+                    this.accountForm.enable();
+                    await this.handleError(error);
+                }
+            });
     }
 
     closeAccountDialog() {
-
+        this.showAccountDialog = false;
     }
 
-    deleteAccount(account: Account) {
+    async deleteAccount(account: Account) {
+        const title = await firstValueFrom(this.translationService.selectTranslate(this.translationKey.confirm));
+        const confirmationQuestion = await firstValueFrom(this.translationService.selectTranslate(
+            this.translationKey.confirmAccountDeletion,
+            {accountName: account.name}));
 
+        this.confirmationService.confirm({
+            message: confirmationQuestion,
+            header: title,
+            icon: 'pi pi-exclamation-triangle',
+            accept: async () => {
+                this.showDatatableLoadingOverlay = true;
+                await firstValueFrom(this.mngmtApiClient.deleteAccount(account.id));
+                await this.loadAccounts();
+                this.showDatatableLoadingOverlay = false;
+            }
+        });
+    }
+
+    private async handleError(error: MngmtApiClient.SwaggerException) {
+        this.accountForm.enable();
+
+        if (error.status >= 400 && error.status < 500) {
+            this.accountForm.setErrors(error.result.errors);
+            this.messageService.showGeneralErrors(error.result.errors);
+        } else {
+            await this.showGenericErrorMessage();
+        }
+    }
+
+    private async showGenericErrorMessage() {
+        const errorMessageHeader = await firstValueFrom(this.translationService.selectTranslate(this.translationKey.genericErrorMessageShort));
+        const errorMessage = await firstValueFrom(this.translationService.selectTranslate(this.translationKey.genericErrorMessage));
+
+        const message = {severity: 'error', summary: errorMessageHeader, detail: errorMessage}
+        this.messageService.add(message);
     }
 }

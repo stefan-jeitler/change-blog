@@ -37,6 +37,7 @@
   "created": "Created",
   "creator": "Creator",
   "searchKeyword": "Search keyword",
+  "confirmAccountDeletion": "Are you sure you wanna delete the account '<b>{{ accountName }}</b>'?",
   "primeng": {
     "startsWith": "Starts with",
     "contains": "Contains",

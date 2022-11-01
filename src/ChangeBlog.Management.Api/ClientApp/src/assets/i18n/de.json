@@ -37,6 +37,7 @@
   "created": "Erstellt",
   "creator": "Ersteller",
   "searchKeyword": "Suchbegriff",
+  "confirmAccountDeletion": "Sind Sie sich sicher den Account '<b>{{ accountName }}</b>' zu löschen?",
   "primeng": {
     "startsWith": "Beginnt mit",
     "contains": "Enthält",

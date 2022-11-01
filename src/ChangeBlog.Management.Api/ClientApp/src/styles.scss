@@ -30,6 +30,12 @@ app-header span, p {
   margin: auto 1.5rem 1.5rem 1.5rem;
 }
 
+.truncate-text {
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
 @media (max-width: $md) {
   .app-content-container {
     margin-left: 0.5rem;

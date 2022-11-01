@@ -32,7 +32,7 @@ export class ApikeyComponent implements OnInit {
     isLoadingFinished: boolean;
     showApiKeyDialog: boolean;
     apiKeyForm: UntypedFormGroup;
-    maxApiKeysCount: number = 5;
+    readonly maxApiKeysCountLimit: number = 5;
     minExpires: Date;
     maxExpires: Date;
     contextMenuItems: MenuItem[];
@@ -94,8 +94,11 @@ export class ApikeyComponent implements OnInit {
     }
 
     async ngOnInit() {
-        await this.loadApiKeys();
-        this.isLoadingFinished = true;
+        try {
+            await this.loadApiKeys();
+        } finally {
+            this.isLoadingFinished = true;
+        }
     }
 
     async createNewApiKey() {

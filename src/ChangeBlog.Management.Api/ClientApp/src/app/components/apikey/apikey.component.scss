@@ -1,12 +1,6 @@
 @import 'src/styles/_layout-variables';
 @import 'primeflex/src/_variables.scss';
 
-.truncate-text {
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
-}
-
 .btn-small {
   height: 40px !important;
   width: 40px;

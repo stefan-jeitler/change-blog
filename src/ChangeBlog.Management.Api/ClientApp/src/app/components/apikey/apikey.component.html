@@ -8,10 +8,10 @@
                 <div class="hidden md:inline-flex">
                     <div
                             [pTooltip]="translationKey.apiKeyLimitReached | transloco"
-                            [tooltipDisabled]="apiKeys.length < maxApiKeysCount"
+                            [tooltipDisabled]="apiKeys.length < maxApiKeysCountLimit"
                             tooltipPosition="bottom">
                         <button (click)="createNewApiKey()"
-                                [disabled]="apiKeys.length >= maxApiKeysCount"
+                                [disabled]="apiKeys.length >= maxApiKeysCountLimit"
                                 [label]="this.translationKey.new | transloco"
                                 class="mr-2"
                                 icon="pi pi-plus"
@@ -30,10 +30,10 @@
                 <div class="inline-flex md:hidden">
                     <div
                             [pTooltip]="translationKey.apiKeyLimitReached | transloco"
-                            [tooltipDisabled]="apiKeys.length < maxApiKeysCount"
+                            [tooltipDisabled]="apiKeys.length < maxApiKeysCountLimit"
                             tooltipPosition="bottom">
                         <button (click)="createNewApiKey()"
-                                [disabled]="apiKeys.length >= maxApiKeysCount"
+                                [disabled]="apiKeys.length >= maxApiKeysCountLimit"
                                 class="mr-2"
                                 icon="pi pi-plus"
                                 pButton pRipple>
@@ -87,8 +87,7 @@
                         <p-sortIcon field="name"></p-sortIcon>
                     </th>
                     <th>{{ translationKey.key | transloco }} </th>
-                    <th
-                            pSortableColumn="expiresAt">
+                    <th pSortableColumn="expiresAt">
                         {{ translationKey.expires | transloco }}
                         <p-sortIcon field="expiresAt"></p-sortIcon>
                     </th>
@@ -116,22 +115,19 @@
                     </td>
                     <td>
                         <span class="p-column-title">{{ translationKey.$name | transloco }}</span>
-                        <div
-                                class="truncate-text text-right sm:text-left w-10rem sm:w-8rem md:w-8rem lg:w-14rem xl:w-full">{{apiKey.name}}</div>
+                        <div class="truncate-text text-right sm:text-left w-10rem sm:w-8rem md:w-8rem lg:w-14rem xl:w-full">
+                            {{apiKey.name}}
+                        </div>
                     </td>
                     <td>
                         <span class="p-column-title">{{ translationKey.key | transloco }}</span>
-                        <div
-                                class="truncate-text text-right sm:text-left w-10rem sm:w-8rem md:w-8rem lg:w-16rem xl:w-full">{{apiKey.key}}</div>
+                        <div class="truncate-text text-right sm:text-left w-10rem sm:w-8rem md:w-8rem lg:w-16rem xl:w-full">{{apiKey.key}}</div>
                     </td>
                     <td>
                         <span class="p-column-title">{{ translationKey.expires | transloco }}</span>
-                        <span
-                                [pTooltip]="apiKey.expiresAt.toISOString()"
-                                appendTo="body"
-                                tooltipPosition="bottom">
-              {{ apiKey.expiresAt | translocoDate }}
-            </span>
+                        <span [pTooltip]="apiKey.expiresAt.toISOString()"
+                              appendTo="body"
+                              tooltipPosition="bottom">{{ apiKey.expiresAt | translocoDate }}</span>
                     </td>
                     <td>
                         <div class="hidden xl:flex align-items-center justify-content-center">

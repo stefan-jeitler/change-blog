@@ -1,5 +1,6 @@
 {
   "accounts": "Accounts",
+  "account": "Account",
   "$name": "Name",
   "email": "Email",
   "timezone": "Timezone",
@@ -23,6 +24,7 @@
   "copyToClipboard": "Copy to Clipboard",
   "edit": "Edit",
   "apiKeyLimitReached": "You cannot add more than 5 api keys",
+  "accountLimitReached": "You cannot add more than 5 account by yourself",
   "info": "Info",
   "apiKeyCopiedToClipboard": "Api Key has been copied to the clipboard",
   "confirm": "Confirm",
@@ -31,6 +33,10 @@
   "linkToApi": "Go to the Api",
   "actions": "Actions",
   "noEntries": "No Entries",
+  "versioningScheme": "Versioning Scheme",
+  "created": "Created",
+  "creator": "Creator",
+  "searchKeyword": "Search keyword",
   "primeng": {
     "startsWith": "Starts with",
     "contains": "Contains",

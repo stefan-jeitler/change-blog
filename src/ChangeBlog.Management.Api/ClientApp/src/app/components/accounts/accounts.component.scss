@@ -1,0 +1,19 @@
+@import 'primeflex/src/_variables.scss';
+@import 'src/styles/_layout-variables';
+
+.btn-small {
+  height: 40px !important;
+  width: 40px;
+}
+
+@media (max-width: $sm) {
+  .action-menu {
+    display: none;
+  }
+}
+
+@media (max-width: $xl) {
+  .versioning-scheme-column {
+    display: none;
+  }
+}

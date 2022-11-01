@@ -1,5 +1,221 @@
 <app-content-header [title]="translationKey.accounts | transloco"></app-content-header>
 
 <div class="app-content-container">
-    <p>coming soon ...</p>
+    <app-loading-spinner [show]="!isLoadingFinished"></app-loading-spinner>
+    <div class="card mb-8">
+        <p-toolbar styleClass="mb-4">
+            <ng-template pTemplate="left">
+                <div class="hidden md:inline-flex">
+                    <div
+                            [pTooltip]="translationKey.apiKeyLimitReached | transloco"
+                            [tooltipDisabled]="maxOwnCreatedAccountsCount < maxAccountsCreatedByMyselfLimit"
+                            tooltipPosition="bottom">
+                        <button (click)="createNewAccount()"
+                                [disabled]="maxOwnCreatedAccountsCount < maxAccountsCreatedByMyselfLimit"
+                                [label]="this.translationKey.new | transloco"
+                                class="mr-2"
+                                icon="pi pi-plus"
+                                pButton pRipple>
+                        </button>
+                    </div>
+                </div>
+                <div class="inline-flex md:hidden">
+                    <div
+                            [pTooltip]="translationKey.apiKeyLimitReached | transloco"
+                            [tooltipDisabled]="maxOwnCreatedAccountsCount < maxAccountsCreatedByMyselfLimit"
+                            tooltipPosition="bottom">
+                        <button (click)="createNewAccount()"
+                                [disabled]="maxOwnCreatedAccountsCount < maxAccountsCreatedByMyselfLimit"
+                                class="mr-2"
+                                icon="pi pi-plus"
+                                pButton pRipple>
+                        </button>
+                    </div>
+                </div>
+            </ng-template>
+        </p-toolbar>
+
+        <p-table #dt [(selection)]="selectedAccounts"
+                 [autoLayout]="true"
+                 [globalFilterFields]="['name']"
+                 [loading]="showDatatableLoadingOverlay"
+                 [rowHover]="true"
+                 [value]="accounts"
+                 breakpoint="576px"
+                 dataKey="id"
+                 responsiveLayout="stack"
+                 styleClass="p-datatable-sm">
+            <ng-template pTemplate="emptymessage">
+                <tr>
+                    <td colspan="6">
+                        <div class="flex justify-content-center">
+                            <span>{{ translationKey.noEntries | transloco }}</span>
+                        </div>
+                    </td>
+                </tr>
+            </ng-template>
+            <ng-template pTemplate="caption">
+                <div class="flex">
+                <span class="p-input-icon-left ml-auto">
+                    <i class="pi pi-search"></i>
+                    <input (input)="dt.filterGlobal(getValue($event), 'contains')"
+                           [placeholder]="translationKey.searchKeyword | transloco"
+                           pInputText
+                           type="text"/>
+                </span>
+                </div>
+            </ng-template>
+            <ng-template pTemplate="header">
+                <tr>
+                    <th style="width: 3rem">
+                        <p-tableHeaderCheckbox></p-tableHeaderCheckbox>
+                    </th>
+                    <th pSortableColumn="name">
+                        {{ translationKey.$name | transloco }}
+                        <p-sortIcon field="name"></p-sortIcon>
+                    </th>
+                    <th class="versioning-scheme-column" pSortableColumn="defaultVersioningScheme">
+                        {{ translationKey.versioningScheme | transloco }}
+                        <p-sortIcon field="defaultVersioningScheme"></p-sortIcon>
+                    </th>
+                    <th pSortableColumn="createdBy">
+                        {{ translationKey.creator | transloco }}
+                        <p-sortIcon field="createdBy"></p-sortIcon>
+                    </th>
+                    <th pSortableColumn="createdAt">
+                        {{ translationKey.created | transloco }}
+                        <p-sortIcon field="createdAt"></p-sortIcon>
+                    </th>
+                    <th class="text-center">
+                        {{ translationKey.actions | transloco }}
+                    </th>
+                </tr>
+            </ng-template>
+            <ng-template let-account pTemplate="body">
+                <tr>
+                    <td>
+                        <p-tableCheckbox [value]="account"></p-tableCheckbox>
+                        <div (click)="actionMenuTarget = account; userMenu.toggle($event)"
+                             class="sm:hidden text-center"
+                             style="cursor:pointer;">
+                            <i class="pi pi-ellipsis-v"></i>
+                            <p-menu #userMenu
+                                    [model]="contextMenuItems"
+                                    [popup]="true"
+                                    [style]="{'width': 'auto'}"
+                                    appendTo="body"
+                            ></p-menu>
+                        </div>
+                    </td>
+                    <td>
+                        <span class="p-column-title">{{ translationKey.$name | transloco }}</span>
+                        <div class="truncate-text text-right sm:text-left w-12rem sm:w-10rem md:w-8rem lg:w-8rem xl:12rem">
+                            {{account.name}}
+                        </div>
+                    </td>
+                    <td class="versioning-scheme-column">
+                        <span class="p-column-title">{{ translationKey.versioningScheme | transloco }}</span>
+                        <div class="truncate-text text-right sm:text-left w-8rem sm:w-6rem xl:w-full">
+                            {{account.defaultVersioningScheme}}
+                        </div>
+                    </td>
+                    <td>
+                        <span class="p-column-title">{{ translationKey.creator | transloco }}</span>
+                        <div class="truncate-text text-right sm:text-left w-10rem sm:w-8rem md:w-10rem lg:w-12rem xl:w-full">
+                            {{account.createdBy}}
+                        </div>
+                    </td>
+                    <td>
+                        <span class="p-column-title">{{ translationKey.created | transloco }}</span>
+                        <span [pTooltip]="account.createdAt.toISOString()"
+                              appendTo="body"
+                              tooltipPosition="bottom">{{ account.createdAt | translocoDate }}</span>
+                    </td>
+                    <td>
+                        <div class="hidden xl:flex align-items-center justify-content-center">
+                            <button (click)="updateAccount(account)"
+                                    [pTooltip]="translationKey.edit | transloco"
+                                    [showDelay]="700"
+                                    class="p-button-rounded btn-small mr-2"
+                                    icon="pi pi-pencil"
+                                    pButton
+                                    pRipple
+                                    tooltipPosition="bottom">
+                            </button>
+                            <button (click)="deleteAccount(account)"
+                                    [pTooltip]="translationKey.delete | transloco"
+                                    [showDelay]="700"
+                                    class="p-button-rounded p-button-warning btn-small"
+                                    icon="pi pi-trash"
+                                    pButton
+                                    pRipple
+                                    tooltipPosition="bottom">
+                            </button>
+                        </div>
+                        <div (click)="actionMenuTarget = account; userMenu.toggle($event)"
+                             class="action-menu xl:hidden text-center"
+                             style="cursor:pointer;">
+                            <i class="pi pi-ellipsis-v">
+                            </i>
+                            <p-menu #userMenu
+                                    [model]="contextMenuItems"
+                                    [popup]="true"
+                                    [style]="{'width': 'auto'}"
+                                    appendTo="body"
+                            ></p-menu>
+                        </div>
+                    </td>
+                </tr>
+            </ng-template>
+        </p-table>
+
+        <p-dialog [(visible)]="showAccountDialog" [header]="translationKey.account | transloco" [modal]="true"
+                  [style]="{width: '450px'}" styleClass="p-fluid">
+            <ng-template pTemplate="content">
+                <form (ngSubmit)="onAccountSubmit(accountForm)"
+                      [formGroup]="accountForm"
+                      class="pt-3"
+                      id="api-key-form">
+                    <div class="field">
+                        <div class="flex flex-column align-items-start w-12 md:w-22rem">
+                            <div class="flex flex-row w-full">
+                                <label class="font-medium"
+                                       for="name-input">{{ translationKey.$name | transloco }}</label>
+                            </div>
+                            <input class="w-full mt-2" formControlName="name" id="name-input" pInputText type="text">
+                        </div>
+                        <div *ngIf="accountForm.showErrorMessage('name')">
+                            <small *ngFor="let message of accountForm.getErrorMessages('name')"
+                                   class="pt-1 p-error block"
+                                   id="name-error">{{ message }}</small>
+                        </div>
+
+                    </div>
+                    <input formControlName="id" type="hidden">
+                </form>
+            </ng-template>
+
+            <ng-template pTemplate="footer">
+                <button (click)="closeAccountDialog()" [label]="translationKey.cancel | transloco"
+                        class="p-button-text"
+                        icon="pi pi-times" pButton
+                        pRipple></button>
+                <button [disabled]="!accountForm.valid"
+                        [label]="translationKey.save | transloco"
+                        [loading]="accountForm.disabled"
+                        class="p-button-text"
+                        form="api-key-form"
+                        icon="pi pi-check"
+                        pButton
+                        pRipple
+                        type="submit">
+                </button>
+            </ng-template>
+        </p-dialog>
+
+        <p-confirmDialog [style]="{width: '450px'}"
+                         acceptButtonStyleClass="p-button-outlined p-button-text"
+                         rejectButtonStyleClass="p-button-outlined p-button-text">
+        </p-confirmDialog>
+    </div>
 </div>

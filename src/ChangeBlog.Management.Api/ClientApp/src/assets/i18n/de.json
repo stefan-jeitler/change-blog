@@ -1,5 +1,6 @@
 {
   "accounts": "Accounts",
+  "account": "Account",
   "$name": "Name",
   "email": "Email",
   "timezone": "Zeitzone",
@@ -23,6 +24,7 @@
   "copyToClipboard": "In die Zwischenablage kopieren",
   "edit": "Bearbeiten",
   "apiKeyLimitReached": "Sie können nicht mehr als 5 Api-Schlüssel hinzufügen",
+  "accountLimitReached": "Sie können nicht mehr als 5 Accounts erstellen",
   "info": "Info",
   "apiKeyCopiedToClipboard": "Api Schlüssel wurde in die Zwischenablage kopiert",
   "confirm": "Bestätigen",
@@ -31,6 +33,10 @@
   "linkToApi": "Hier gehts zur Api",
   "actions": "Aktionen",
   "noEntries": "Keine Einträge",
+  "versioningScheme": "Versionierungsschema",
+  "created": "Erstellt",
+  "creator": "Ersteller",
+  "searchKeyword": "Suchbegriff",
   "primeng": {
     "startsWith": "Beginnt mit",
     "contains": "Enthält",

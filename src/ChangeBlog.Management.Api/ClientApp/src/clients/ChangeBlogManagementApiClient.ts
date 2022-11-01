@@ -212,7 +212,7 @@ export class Client {
      * @param body (optional) 
      * @return Success
      */
-    createAccount(accept_Language?: AcceptLanguage | undefined, body?: CreateOrUpdateAccountDto | undefined): Observable<SuccessResponse> {
+    createAccount(accept_Language?: AcceptLanguage | undefined, body?: CreateAccountDto | undefined): Observable<SuccessResponse> {
         let url_ = this.baseUrl + "/api/v1/accounts";
         url_ = url_.replace(/[?&]$/, "");
 
@@ -473,7 +473,7 @@ export class Client {
      * @param body (optional) 
      * @return Success
      */
-    updateAccount(accountId: string, accept_Language?: AcceptLanguage | undefined, body?: CreateOrUpdateAccountDto | undefined): Observable<SuccessResponse> {
+    updateAccount(accountId: string, accept_Language?: AcceptLanguage | undefined, body?: UpdateAccountDto | undefined): Observable<SuccessResponse> {
         let url_ = this.baseUrl + "/api/v1/accounts/{accountId}";
         if (accountId === undefined || accountId === null)
             throw new Error("The parameter 'accountId' must be defined.");
@@ -1447,6 +1447,8 @@ export class AccountDto implements IAccountDto {
     defaultVersioningScheme!: string | undefined;
     defaultVersioningSchemeId!: string;
     createdAt!: Date;
+    createdBy!: string | undefined;
+    wasCreatedByMyself!: boolean;
 
     constructor(data?: IAccountDto) {
         if (data) {
@@ -1464,6 +1466,8 @@ export class AccountDto implements IAccountDto {
             this.defaultVersioningScheme = _data["defaultVersioningScheme"];
             this.defaultVersioningSchemeId = _data["defaultVersioningSchemeId"];
             this.createdAt = _data["createdAt"] ? new Date(_data["createdAt"].toString()) : <any>undefined;
+            this.createdBy = _data["createdBy"];
+            this.wasCreatedByMyself = _data["wasCreatedByMyself"];
         }
     }
 
@@ -1481,6 +1485,8 @@ export class AccountDto implements IAccountDto {
         data["defaultVersioningScheme"] = this.defaultVersioningScheme;
         data["defaultVersioningSchemeId"] = this.defaultVersioningSchemeId;
         data["createdAt"] = this.createdAt ? this.createdAt.toISOString() : <any>undefined;
+        data["createdBy"] = this.createdBy;
+        data["wasCreatedByMyself"] = this.wasCreatedByMyself;
         return data;
     }
 }
@@ -1491,6 +1497,8 @@ export interface IAccountDto {
     defaultVersioningScheme: string | undefined;
     defaultVersioningSchemeId: string;
     createdAt: Date;
+    createdBy: string | undefined;
+    wasCreatedByMyself: boolean;
 }
 
 export class ApiInfo implements IApiInfo {
@@ -1701,10 +1709,10 @@ export interface IClientAppSettings {
     authConfig: AuthConfig;
 }
 
-export class CreateOrUpdateAccountDto implements ICreateOrUpdateAccountDto {
+export class CreateAccountDto implements ICreateAccountDto {
     name!: string | undefined;
 
-    constructor(data?: ICreateOrUpdateAccountDto) {
+    constructor(data?: ICreateAccountDto) {
         if (data) {
             for (var property in data) {
                 if (data.hasOwnProperty(property))
@@ -1719,9 +1727,9 @@ export class CreateOrUpdateAccountDto implements ICreateOrUpdateAccountDto {
         }
     }
 
-    static fromJS(data: any): CreateOrUpdateAccountDto {
+    static fromJS(data: any): CreateAccountDto {
         data = typeof data === 'object' ? data : {};
-        let result = new CreateOrUpdateAccountDto();
+        let result = new CreateAccountDto();
         result.init(data);
         return result;
     }
@@ -1733,7 +1741,7 @@ export class CreateOrUpdateAccountDto implements ICreateOrUpdateAccountDto {
     }
 }
 
-export interface ICreateOrUpdateAccountDto {
+export interface ICreateAccountDto {
     name: string | undefined;
 }
 
@@ -2075,6 +2083,42 @@ export interface ITimezoneDto {
     windowsId: string | undefined;
     olsonId: string | undefined;
     offset: string | undefined;
+}
+
+export class UpdateAccountDto implements IUpdateAccountDto {
+    name!: string | undefined;
+
+    constructor(data?: IUpdateAccountDto) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+        }
+    }
+
+    init(_data?: any) {
+        if (_data) {
+            this.name = _data["name"];
+        }
+    }
+
+    static fromJS(data: any): UpdateAccountDto {
+        data = typeof data === 'object' ? data : {};
+        let result = new UpdateAccountDto();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        data["name"] = this.name;
+        return data;
+    }
+}
+
+export interface IUpdateAccountDto {
+    name: string | undefined;
 }
 
 export class UpdateUserProfileDto implements IUpdateUserProfileDto {

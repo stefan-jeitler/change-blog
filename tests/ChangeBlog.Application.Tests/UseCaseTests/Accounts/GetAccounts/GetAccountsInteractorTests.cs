@@ -21,8 +21,7 @@ public class GetAccountsInteractorTests
         _fakeVersioningSchemeDao = new FakeVersioningSchemeDao();
     }
 
-    private GetAccountsInteractor CreateInteractor() =>
-        new GetAccountsInteractor(_fakeAccountDao, _fakeUserDao, _fakeVersioningSchemeDao);
+    private GetAccountsInteractor CreateInteractor() => new(_fakeAccountDao, _fakeUserDao, _fakeVersioningSchemeDao);
 
     [Fact]
     public async Task GetAccounts_HappyPath_Successful()

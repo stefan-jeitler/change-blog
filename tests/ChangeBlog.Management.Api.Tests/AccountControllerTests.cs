@@ -153,6 +153,6 @@ public class AccountControllerTests : IClassFixture<WebApplicationFactory<Startu
         error!.Errors.Should().HaveCount(1);
         var firstError = error.Errors.First();
         firstError.Messages.First().Should().Be("Der Name ist bereits vergeben");
-        firstError.Property.Should().Be("Name");
+        firstError.Property.Should().Be("name");
     }
 }

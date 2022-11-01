@@ -39,7 +39,7 @@ public class CreateAccountApiPresenter : BaseApiPresenter, ICreateAccountOutputP
     public void AccountAlreadyExists(Guid accountId)
     {
         Response = new UnprocessableEntityObjectResult(ErrorResponse.Create(ChangeBlogStrings.NameAlreadyTaken,
-            "Name"));
+            "name"));
     }
 
     public void TooManyAccountsCreated(ushort limit)

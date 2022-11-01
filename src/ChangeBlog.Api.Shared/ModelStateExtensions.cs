@@ -1,4 +1,3 @@
-using System;
 using System.Linq;
 using ChangeBlog.Api.Shared.DTOs;
 using Microsoft.AspNetCore.Mvc;
@@ -21,9 +20,4 @@ public static class ModelStateExtensions
 
         return new BadRequestObjectResult(new ErrorResponse(errorMessages.ToArray()));
     }
-
-    private static string FirstCharToLower(this string input) =>
-        string.IsNullOrWhiteSpace(input)
-            ? input
-            : string.Concat(input[0].ToString().ToLower(), input.AsSpan(1));
 }

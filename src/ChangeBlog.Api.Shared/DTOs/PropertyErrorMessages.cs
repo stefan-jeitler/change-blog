@@ -10,7 +10,7 @@ public class PropertyErrorMessages
         ArgumentNullException.ThrowIfNull(message);
 
         Messages = new[] {message};
-        Property = property;
+        Property = property.FirstCharToLower();
     }
 
 
@@ -20,7 +20,7 @@ public class PropertyErrorMessages
         ArgumentNullException.ThrowIfNull(messages);
 
         Messages = messages;
-        Property = property;
+        Property = property.FirstCharToLower();
     }
 
     public string[] Messages { get; }

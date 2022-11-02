@@ -5,11 +5,10 @@
     <div class="card mb-8">
         <p-toolbar styleClass="mb-4">
             <ng-template pTemplate="left">
-                <div class="hidden md:inline-flex">
-                    <div
-                            [pTooltip]="translationKey.apiKeyLimitReached | transloco"
-                            [tooltipDisabled]="maxOwnCreatedAccountsCount >= maxAccountsCreatedByMyselfLimit"
-                            tooltipPosition="bottom">
+                <div class="hidden sm:inline-flex">
+                    <div [pTooltip]="translationKey.accountLimitReached | transloco"
+                         [tooltipDisabled]="maxOwnCreatedAccountsCount >= maxAccountsCreatedByMyselfLimit"
+                         tooltipPosition="bottom">
                         <button (click)="createNewAccount()"
                                 [disabled]="maxOwnCreatedAccountsCount >= maxAccountsCreatedByMyselfLimit"
                                 [label]="this.translationKey.new | transloco"
@@ -19,11 +18,10 @@
                         </button>
                     </div>
                 </div>
-                <div class="inline-flex md:hidden">
-                    <div
-                            [pTooltip]="translationKey.apiKeyLimitReached | transloco"
-                            [tooltipDisabled]="maxOwnCreatedAccountsCount >= maxAccountsCreatedByMyselfLimit"
-                            tooltipPosition="bottom">
+                <div class="inline-flex sm:hidden">
+                    <div [pTooltip]="translationKey.accountLimitReached | transloco"
+                         [tooltipDisabled]="maxOwnCreatedAccountsCount >= maxAccountsCreatedByMyselfLimit"
+                         tooltipPosition="bottom">
                         <button (click)="createNewAccount()"
                                 [disabled]="maxOwnCreatedAccountsCount >= maxAccountsCreatedByMyselfLimit"
                                 class="mr-2"
@@ -82,29 +80,21 @@
                         {{ translationKey.creator | transloco }}
                         <p-sortIcon field="createdBy"></p-sortIcon>
                     </th>
-                    <th pSortableColumn="createdAt">
+                    <th class="w-8rem" pSortableColumn="createdAt">
                         {{ translationKey.created | transloco }}
                         <p-sortIcon field="createdAt"></p-sortIcon>
                     </th>
-                    <th class="text-center">
-                        {{ translationKey.actions | transloco }}
-                    </th>
+                    <th class="text-center">&nbsp;</th>
                 </tr>
             </ng-template>
             <ng-template let-account pTemplate="body">
-                <tr>
+                <tr (dblclick)="openAccount(account)">
                     <td>
                         <p-tableCheckbox [value]="account"></p-tableCheckbox>
-                        <div (click)="actionMenuTarget = account; userMenu.toggle($event)"
+                        <div (click)="openAccount(account)"
                              class="sm:hidden text-center"
                              style="cursor:pointer;">
-                            <i class="pi pi-ellipsis-v"></i>
-                            <p-menu #userMenu
-                                    [model]="contextMenuItems"
-                                    [popup]="true"
-                                    [style]="{'width': 'auto'}"
-                                    appendTo="body"
-                            ></p-menu>
+                            <i class="pi pi-arrow-circle-right"></i>
                         </div>
                     </td>
                     <td>
@@ -121,7 +111,7 @@
                     </td>
                     <td>
                         <span class="p-column-title">{{ translationKey.creator | transloco }}</span>
-                        <div class="truncate-text text-right sm:text-left w-10rem sm:w-8rem md:w-10rem lg:w-12rem xl:w-full">
+                        <div class="truncate-text text-right sm:text-left w-11rem sm:w-10rem lg:w-12rem xl:w-full">
                             {{account.createdBy}}
                         </div>
                     </td>
@@ -129,40 +119,19 @@
                         <span class="p-column-title">{{ translationKey.created | transloco }}</span>
                         <span [pTooltip]="account.createdAt.toISOString()"
                               appendTo="body"
+                              class="sm:text-left"
                               tooltipPosition="bottom">{{ account.createdAt | translocoDate }}</span>
                     </td>
                     <td>
-                        <div class="hidden xl:flex align-items-center justify-content-center">
-                            <button (click)="updateAccount(account)"
-                                    [pTooltip]="translationKey.edit | transloco"
-                                    [showDelay]="700"
-                                    class="p-button-rounded btn-small mr-2"
-                                    icon="pi pi-pencil"
-                                    pButton
-                                    pRipple
-                                    tooltipPosition="bottom">
-                            </button>
-                            <button (click)="deleteAccount(account)"
-                                    [pTooltip]="translationKey.delete | transloco"
-                                    [showDelay]="700"
-                                    class="p-button-rounded p-button-danger btn-small"
-                                    icon="pi pi-trash"
-                                    pButton
-                                    pRipple
-                                    tooltipPosition="bottom">
-                            </button>
-                        </div>
-                        <div (click)="actionMenuTarget = account; userMenu.toggle($event)"
-                             class="action-menu xl:hidden text-center"
-                             style="cursor:pointer;">
-                            <i class="pi pi-ellipsis-v">
+                        <div (click)="openAccount(account)"
+                             [pTooltip]="translationKey.open | transloco"
+                             [showDelay]="700"
+                             class="sm:flex action-menu align-items-center justify-content-center"
+                             style="cursor: pointer"
+                             tooltipPosition="bottom">
+                            <i class="pi pi-arrow-circle-right mr-2"
+                               style="font-size: 1.25rem">
                             </i>
-                            <p-menu #userMenu
-                                    [model]="contextMenuItems"
-                                    [popup]="true"
-                                    [style]="{'width': 'auto'}"
-                                    appendTo="body"
-                            ></p-menu>
                         </div>
                     </td>
                 </tr>

@@ -18,6 +18,7 @@
 	public apikey = 'apikey';
 	public logout = 'logout';
 	public save = 'save';
+	public open = 'open';
 	public cancel = 'cancel';
 	public genericErrorMessageShort = 'genericErrorMessageShort';
 	public genericErrorMessage = 'genericErrorMessage';
@@ -37,6 +38,7 @@
 	public confirm = 'confirm';
 	public confirmSelectedApiKeysDeletion = 'confirmSelectedApiKeysDeletion';
 	public confirmApiKeyDeletion = 'confirmApiKeyDeletion';
+	public confirmApiKeyDeletionWithoutApiKeyName = 'confirmApiKeyDeletionWithoutApiKeyName';
 	public linkToApi = 'linkToApi';
 	public actions = 'actions';
 	public noEntries = 'noEntries';

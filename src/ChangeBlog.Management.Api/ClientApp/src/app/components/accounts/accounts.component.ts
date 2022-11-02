@@ -60,7 +60,7 @@ export class AccountsComponent implements OnInit {
                 label: translate(this.translationKey.edit),
                 command: async () => {
                     if (!!this.actionMenuTarget)
-                        await this.updateAccount(this.actionMenuTarget);
+                        await this.openAccount(this.actionMenuTarget);
                 },
                 icon: 'pi pi-fw pi-pencil'
             },
@@ -111,13 +111,12 @@ export class AccountsComponent implements OnInit {
         this.showAccountDialog = true;
     }
 
-    updateAccount(account: Account) {
-        this.accountForm.patchValue({
-            id: account.id,
-            name: account.name,
-        });
-
-        this.showAccountDialog = true;
+    openAccount(account: Account) {
+        this.messageService.add({
+            severity: 'info',
+            detail: 'coming soon ...',
+            summary: `Open Account ${account.name}`
+        })
     }
 
     onAccountSubmit() {

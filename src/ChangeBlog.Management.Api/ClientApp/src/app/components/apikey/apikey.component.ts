@@ -157,7 +157,9 @@ export class ApikeyComponent implements OnInit {
     async deleteApiKey(apiKey: ApiKey) {
         const title = await firstValueFrom(this.translationService.selectTranslate(this.translationKey.confirm));
         const confirmationQuestion = await firstValueFrom(this.translationService.selectTranslate(
-            this.translationKey.confirmApiKeyDeletion,
+            apiKey.name
+                ? this.translationKey.confirmApiKeyDeletion
+                : this.translationKey.confirmApiKeyDeletionWithoutApiKeyName,
             {apiKeyName: apiKey.name}));
 
         this.confirmationService.confirm({

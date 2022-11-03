@@ -3320,10 +3320,10 @@ export interface IAddOrUpdateChangeLogLineDto {
 }
 
 export class AddOrUpdateProductDto implements IAddOrUpdateProductDto {
-    name!: string;
+    name?: string | undefined;
     versioningSchemeId?: string | undefined;
-    languageCode!: string;
-    accountId!: string;
+    languageCode?: string | undefined;
+    accountId?: string;
 
     constructor(data?: IAddOrUpdateProductDto) {
         if (data) {
@@ -3361,15 +3361,15 @@ export class AddOrUpdateProductDto implements IAddOrUpdateProductDto {
 }
 
 export interface IAddOrUpdateProductDto {
-    name: string;
+    name?: string | undefined;
     versioningSchemeId?: string | undefined;
-    languageCode: string;
-    accountId: string;
+    languageCode?: string | undefined;
+    accountId?: string;
 }
 
 export class AddOrUpdateVersionDto implements IAddOrUpdateVersionDto {
     name?: string | undefined;
-    changeLogLines!: AddOrUpdateChangeLogLineDto[];
+    changeLogLines?: AddOrUpdateChangeLogLineDto[] | undefined;
     releaseImmediately?: boolean;
 
     constructor(data?: IAddOrUpdateVersionDto) {
@@ -3378,9 +3378,6 @@ export class AddOrUpdateVersionDto implements IAddOrUpdateVersionDto {
                 if (data.hasOwnProperty(property))
                     (<any>this)[property] = (<any>data)[property];
             }
-        }
-        if (!data) {
-            this.changeLogLines = [];
         }
     }
 
@@ -3418,14 +3415,14 @@ export class AddOrUpdateVersionDto implements IAddOrUpdateVersionDto {
 
 export interface IAddOrUpdateVersionDto {
     name?: string | undefined;
-    changeLogLines: AddOrUpdateChangeLogLineDto[];
+    changeLogLines?: AddOrUpdateChangeLogLineDto[] | undefined;
     releaseImmediately?: boolean;
 }
 
 export class AddVersionDto implements IAddVersionDto {
-    version!: string;
+    version?: string | undefined;
     name?: string | undefined;
-    changeLogLines!: AddOrUpdateChangeLogLineDto[];
+    changeLogLines?: AddOrUpdateChangeLogLineDto[] | undefined;
     releaseImmediately?: boolean;
 
     constructor(data?: IAddVersionDto) {
@@ -3434,9 +3431,6 @@ export class AddVersionDto implements IAddVersionDto {
                 if (data.hasOwnProperty(property))
                     (<any>this)[property] = (<any>data)[property];
             }
-        }
-        if (!data) {
-            this.changeLogLines = [];
         }
     }
 
@@ -3475,9 +3469,9 @@ export class AddVersionDto implements IAddVersionDto {
 }
 
 export interface IAddVersionDto {
-    version: string;
+    version?: string | undefined;
     name?: string | undefined;
-    changeLogLines: AddOrUpdateChangeLogLineDto[];
+    changeLogLines?: AddOrUpdateChangeLogLineDto[] | undefined;
     releaseImmediately?: boolean;
 }
 
@@ -3654,7 +3648,7 @@ export interface IErrorResponse {
 }
 
 export class MoveChangeLogLineDto implements IMoveChangeLogLineDto {
-    targetVersionId!: string;
+    targetVersionId?: string;
 
     constructor(data?: IMoveChangeLogLineDto) {
         if (data) {
@@ -3686,7 +3680,7 @@ export class MoveChangeLogLineDto implements IMoveChangeLogLineDto {
 }
 
 export interface IMoveChangeLogLineDto {
-    targetVersionId: string;
+    targetVersionId?: string;
 }
 
 export class PatchChangeLogLineDto implements IPatchChangeLogLineDto {

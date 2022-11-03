@@ -7,10 +7,10 @@
             <ng-template pTemplate="left">
                 <div class="hidden sm:inline-flex">
                     <div [pTooltip]="translationKey.accountLimitReached | transloco"
-                         [tooltipDisabled]="maxOwnCreatedAccountsCount >= maxAccountsCreatedByMyselfLimit"
+                         [tooltipDisabled]="ownCreatedAccountsCount < maxAccountsCreatedByMyselfLimit"
                          tooltipPosition="bottom">
                         <button (click)="createNewAccount()"
-                                [disabled]="maxOwnCreatedAccountsCount >= maxAccountsCreatedByMyselfLimit"
+                                [disabled]="ownCreatedAccountsCount >= maxAccountsCreatedByMyselfLimit"
                                 [label]="this.translationKey.new | transloco"
                                 class="mr-2"
                                 icon="pi pi-plus"
@@ -20,10 +20,10 @@
                 </div>
                 <div class="inline-flex sm:hidden">
                     <div [pTooltip]="translationKey.accountLimitReached | transloco"
-                         [tooltipDisabled]="maxOwnCreatedAccountsCount >= maxAccountsCreatedByMyselfLimit"
+                         [tooltipDisabled]="ownCreatedAccountsCount < maxAccountsCreatedByMyselfLimit"
                          tooltipPosition="bottom">
                         <button (click)="createNewAccount()"
-                                [disabled]="maxOwnCreatedAccountsCount >= maxAccountsCreatedByMyselfLimit"
+                                [disabled]="ownCreatedAccountsCount >= maxAccountsCreatedByMyselfLimit"
                                 class="mr-2"
                                 icon="pi pi-plus"
                                 pButton pRipple>
@@ -141,7 +141,7 @@
         <p-dialog [(visible)]="showAccountDialog" [header]="translationKey.account | transloco" [modal]="true"
                   [style]="{width: '450px'}" styleClass="p-fluid">
             <ng-template pTemplate="content">
-                <form (ngSubmit)="onAccountSubmit()"
+                <form (ngSubmit)="onAccountFormSubmit()"
                       [formGroup]="accountForm"
                       class="pt-3"
                       id="api-key-form">

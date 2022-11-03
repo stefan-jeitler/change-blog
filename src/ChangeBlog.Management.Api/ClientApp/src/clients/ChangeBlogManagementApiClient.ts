@@ -210,7 +210,7 @@ export class Client {
     /**
      * @param accept_Language (optional) Defines which language should be used for response messages.
      * @param body (optional) 
-     * @return Success
+     * @return Created
      */
     createAccount(accept_Language?: AcceptLanguage | undefined, body?: CreateAccountDto | undefined): Observable<SuccessResponse> {
         let url_ = this.baseUrl + "/api/v1/accounts";
@@ -264,12 +264,12 @@ export class Client {
             result403 = ErrorResponse.fromJS(resultData403);
             return throwException("Forbidden", status, _responseText, _headers, result403);
             }));
-        } else if (status === 200) {
+        } else if (status === 201) {
             return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
-            let result200: any = null;
-            let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
-            result200 = SuccessResponse.fromJS(resultData200);
-            return _observableOf(result200);
+            let result201: any = null;
+            let resultData201 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            result201 = SuccessResponse.fromJS(resultData201);
+            return _observableOf(result201);
             }));
         } else if (status === 400) {
             return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {

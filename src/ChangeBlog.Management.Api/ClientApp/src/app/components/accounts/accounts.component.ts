@@ -1,14 +1,13 @@
 import {Component, OnInit} from '@angular/core';
 import {TranslationKey} from "../../generated/TranslationKey";
-import {ConfirmationService, MenuItem, MessageService} from "primeng/api";
+import {ConfirmationService, MessageService} from "primeng/api";
 import {FormBuilder, FormControl, FormGroup} from "@angular/forms";
-import {translate, TranslocoService} from "@ngneat/transloco";
+import {TranslocoService} from "@ngneat/transloco";
 import {
     ChangeBlogManagementApi as MngmtApiClient,
     ChangeBlogManagementApi
 } from "../../../clients/ChangeBlogManagementApiClient";
 import {firstValueFrom} from "rxjs";
-import UpdateAccountDto = ChangeBlogManagementApi.UpdateAccountDto;
 import CreateAccountDto = ChangeBlogManagementApi.CreateAccountDto;
 
 interface Account {
@@ -30,7 +29,6 @@ export class AccountsComponent implements OnInit {
     selectedAccounts: Account[];
     accounts: Account[];
     actionMenuTarget: Account | undefined;
-    contextMenuItems: MenuItem[];
     readonly maxAccountsCreatedByMyselfLimit: number = 5;
     showDatatableLoadingOverlay: boolean;
     showAccountDialog: boolean;
@@ -46,7 +44,6 @@ export class AccountsComponent implements OnInit {
         this.isLoadingFinished = false;
         this.selectedAccounts = [];
         this.accounts = [];
-        this.contextMenuItems = [];
         this.showDatatableLoadingOverlay = false;
         this.showAccountDialog = false;
 
@@ -55,27 +52,9 @@ export class AccountsComponent implements OnInit {
             name: new FormControl<string>('')
         });
 
-        this.contextMenuItems = [
-            {
-                label: translate(this.translationKey.edit),
-                command: async () => {
-                    if (!!this.actionMenuTarget)
-                        await this.openAccount(this.actionMenuTarget);
-                },
-                icon: 'pi pi-fw pi-pencil'
-            },
-            {
-                label: translate(this.translationKey.delete),
-                command: async () => {
-                    if (!!this.actionMenuTarget)
-                        await this.deleteAccount(this.actionMenuTarget);
-                },
-                icon: 'pi pi-fw pi-trash'
-            }];
-
     }
 
-    get maxOwnCreatedAccountsCount(): number {
+    get ownCreatedAccountsCount(): number {
         return this.accounts.filter(x => x.wasCreatedByMyself).length;
     }
 
@@ -119,18 +98,14 @@ export class AccountsComponent implements OnInit {
         })
     }
 
-    onAccountSubmit() {
+    onAccountFormSubmit() {
         this.accountForm.disable();
+        const accountDto = CreateAccountDto.fromJS({name: this.accountForm.value.name});
+        const createAccount = this.mngmtApiClient.createAccount(undefined, accountDto);
 
-        let accountId = this.accountForm.value.id;
-
-        const generateOrUpdateRequest = !!accountId
-            ? this.mngmtApiClient.updateAccount(accountId, undefined, UpdateAccountDto.fromJS({name: this.accountForm.value.name}))
-            : this.mngmtApiClient.createAccount(undefined, CreateAccountDto.fromJS({name: this.accountForm.value.name}));
-
-        generateOrUpdateRequest
+        createAccount
             .subscribe({
-                next: async () => {
+                next: async r => {
                     this.showDatatableLoadingOverlay = true;
                     this.accountForm.enable();
                     this.showAccountDialog = false;
@@ -146,25 +121,6 @@ export class AccountsComponent implements OnInit {
 
     closeAccountDialog() {
         this.showAccountDialog = false;
-    }
-
-    async deleteAccount(account: Account) {
-        const title = await firstValueFrom(this.translationService.selectTranslate(this.translationKey.confirm));
-        const confirmationQuestion = await firstValueFrom(this.translationService.selectTranslate(
-            this.translationKey.confirmAccountDeletion,
-            {accountName: account.name}));
-
-        this.confirmationService.confirm({
-            message: confirmationQuestion,
-            header: title,
-            icon: 'pi pi-exclamation-triangle',
-            accept: async () => {
-                this.showDatatableLoadingOverlay = true;
-                await firstValueFrom(this.mngmtApiClient.deleteAccount(account.id));
-                await this.loadAccounts();
-                this.showDatatableLoadingOverlay = false;
-            }
-        });
     }
 
     private async handleError(error: MngmtApiClient.SwaggerException) {

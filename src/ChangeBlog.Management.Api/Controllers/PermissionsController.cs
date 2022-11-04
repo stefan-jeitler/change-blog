@@ -48,19 +48,19 @@ public class PermissionsController : ControllerBase
         return Ok(permissions);
     }
 
-    private async Task<ResourcePermissionsDto> GetAccountPermissions(Guid accountId, Guid userId)
+    private async Task<ResourcePermissionsDto> GetAccountPermissions(Guid userId, Guid accountId)
     {
         return new ResourcePermissionsDto
         {
             ResourceType = ResourceType.Account,
             ResourceId = accountId,
-            CanCreate = true,
             CanRead = await IsPermittedAsync(Permission.ViewAccount),
             CanUpdate = await IsPermittedAsync(Permission.UpdateAccount),
             CanDelete = await IsPermittedAsync(Permission.DeleteAccount),
             SpecificPermissions = new Dictionary<string, bool>
             {
-                ["CanViewUsers"] = await IsPermittedAsync(Permission.ViewAccountUsers)
+                ["canViewUsers"] = await IsPermittedAsync(Permission.ViewAccountUsers),
+                ["canCreateProduct"] = await IsPermittedAsync(Permission.AddOrUpdateProduct)
             }
         };
 
@@ -75,19 +75,17 @@ public class PermissionsController : ControllerBase
 
     private async Task<ResourcePermissionsDto> GetProductPermissions(Guid userId, Guid productId)
     {
-        var addOrUpdate = await IsPermittedAsync(Permission.AddOrUpdateProduct);
-
         return new ResourcePermissionsDto
         {
             ResourceType = ResourceType.Product,
             ResourceId = productId,
-            CanCreate = addOrUpdate,
             CanRead = await IsPermittedAsync(Permission.ViewProduct),
-            CanUpdate = addOrUpdate,
-            CanDelete = await IsPermittedAsync(Permission.ViewProduct),
+            CanUpdate = await IsPermittedAsync(Permission.AddOrUpdateProduct),
+            CanDelete = await IsPermittedAsync(Permission.FreezeProduct),
             SpecificPermissions = new Dictionary<string, bool>
             {
-                ["CanFreeze"] = await IsPermittedAsync(Permission.FreezeProduct)
+                ["canFreeze"] = await IsPermittedAsync(Permission.FreezeProduct),
+                ["canSeePendingChangeLogs"] = await IsPermittedAsync(Permission.ViewPendingChangeLogLines)
             }
         };
 
@@ -102,18 +100,16 @@ public class PermissionsController : ControllerBase
 
     private async Task<ResourcePermissionsDto> GetVersionPermissions(Guid userId, Guid versionId)
     {
-        var addOrUpdate = await IsPermittedAsync(Permission.AddOrUpdateVersion);
         return new ResourcePermissionsDto
         {
             ResourceType = ResourceType.Version,
             ResourceId = versionId,
-            CanCreate = addOrUpdate,
             CanRead = await IsPermittedAsync(Permission.ViewVersions),
-            CanUpdate = addOrUpdate,
+            CanUpdate = await IsPermittedAsync(Permission.AddOrUpdateVersion),
             CanDelete = await IsPermittedAsync(Permission.DeleteVersion),
             SpecificPermissions = new Dictionary<string, bool>
             {
-                ["CanRelease"] = await IsPermittedAsync(Permission.ReleaseVersion)
+                ["canRelease"] = await IsPermittedAsync(Permission.ReleaseVersion)
             }
         };
 
@@ -128,19 +124,17 @@ public class PermissionsController : ControllerBase
 
     private async Task<ResourcePermissionsDto> GetChangeLogPermissions(Guid userId, Guid changeLogLineId)
     {
-        var addOrUpdate = await IsPermittedAsync(Permission.AddOrUpdateChangeLogLine);
         return new ResourcePermissionsDto
         {
             ResourceType = ResourceType.ChangeLogLine,
             ResourceId = changeLogLineId,
-            CanCreate = addOrUpdate,
             CanRead = await IsPermittedAsync(Permission.ViewChangeLogLines),
-            CanUpdate = addOrUpdate,
+            CanUpdate = await IsPermittedAsync(Permission.AddOrUpdateChangeLogLine),
             CanDelete = await IsPermittedAsync(Permission.DeleteChangeLogLine),
             SpecificPermissions = new Dictionary<string, bool>
             {
-                ["CanMove"] = await IsPermittedAsync(Permission.MoveChangeLogLines),
-                ["CanViewPending"] = await IsPermittedAsync(Permission.ViewPendingChangeLogLines)
+                ["canMove"] = await IsPermittedAsync(Permission.MoveChangeLogLines),
+                ["canViewPending"] = await IsPermittedAsync(Permission.ViewPendingChangeLogLines)
             }
         };
 

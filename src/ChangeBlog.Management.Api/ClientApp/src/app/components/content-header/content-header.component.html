@@ -1,5 +1,15 @@
 <div class="surface-ground">
-  <div class="mt-5 mr-2 mb-5 ml-2 md:mr-4 md:ml-4">
-    <span class="text-3xl">{{ title }}</span>
-  </div>
+    <div class="flex flex-row mt-5 mr-2 mb-5 ml-2 md:mr-4 md:ml-4">
+        <div class="flex align-items-center mr-2">
+            <button (click)="goBack()"
+                    *ngIf="showBackButton"
+                    class="p-button-rounded p-button-secondary p-button-text"
+                    icon="pi pi-arrow-left"
+                    pButton
+                    pRipple
+                    style="width: 34px; height: 34px;"
+                    type="button"></button>
+        </div>
+        <div class="flex align-items-center text-3xl">{{ title }}</div>
+    </div>
 </div>

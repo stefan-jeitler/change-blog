@@ -8,6 +8,7 @@ import {
     ChangeBlogManagementApi
 } from "../../../clients/ChangeBlogManagementApiClient";
 import {firstValueFrom} from "rxjs";
+import {Router} from "@angular/router";
 import CreateAccountDto = ChangeBlogManagementApi.CreateAccountDto;
 
 interface Account {
@@ -40,7 +41,8 @@ export class AccountsComponent implements OnInit {
                 private translationService: TranslocoService,
                 private confirmationService: ConfirmationService,
                 private messageService: MessageService,
-                private mngmtApiClient: ChangeBlogManagementApi.Client) {
+                private mngmtApiClient: ChangeBlogManagementApi.Client,
+                private router: Router) {
         this.isLoadingFinished = false;
         this.selectedAccounts = [];
         this.accounts = [];
@@ -90,12 +92,8 @@ export class AccountsComponent implements OnInit {
         this.showAccountDialog = true;
     }
 
-    openAccount(account: Account) {
-        this.messageService.add({
-            severity: 'info',
-            detail: 'coming soon ...',
-            summary: `Open Account ${account.name}`
-        })
+    async openAccount(account: Account) {
+        await this.router.navigate(['/app/accounts', account.id]);
     }
 
     onAccountFormSubmit() {

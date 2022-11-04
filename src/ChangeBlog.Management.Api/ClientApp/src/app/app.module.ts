@@ -55,6 +55,7 @@ import {ConfirmDialogModule} from "primeng/confirmdialog";
 import {ToolbarModule} from "primeng/toolbar";
 import {CalendarModule} from "primeng/calendar";
 import { AccountsComponent } from './components/accounts/accounts.component';
+import { AccountComponent } from './components/account/account.component';
 
 @NgModule({
   declarations: [
@@ -71,6 +72,7 @@ import { AccountsComponent } from './components/accounts/accounts.component';
     ContentHeaderComponent,
     LoadingSpinnerComponent,
     AccountsComponent,
+    AccountComponent,
   ],
   imports: [
     BrowserModule,

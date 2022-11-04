@@ -1,0 +1,8 @@
+<app-content-header [title]="translationKey.account | transloco"></app-content-header>
+
+<div class="app-content-container">
+    <app-loading-spinner [show]="!isLoadingFinished"></app-loading-spinner>
+
+
+    <span>AccountId: {{accountId}}</span>
+</div>

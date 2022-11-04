@@ -8,53 +8,59 @@ import {ApikeyComponent} from "./components/apikey/apikey.component";
 import {AuthGuard} from "./guards/auth.guard";
 import {RedirectComponent} from "./components/redirect/redirect.component";
 import {AccountsComponent} from "./components/accounts/accounts.component";
+import {AccountComponent} from "./components/account/account.component";
 
 export const routes: Routes = [
-  {
-    path: 'app',
-    component: LayoutComponent,
-    canActivate: [AuthGuard],
-    children: [
-      {
+    {
+        path: 'app',
+        component: LayoutComponent,
+        canActivate: [AuthGuard],
+        children: [
+            {
+                path: 'home',
+                component: HomeComponent,
+                canActivate: [AuthGuard]
+            },
+            {
+                path: 'accounts',
+                component: AccountsComponent,
+                canActivate: [AuthGuard]
+            },
+            {
+                path: 'accounts/:id',
+                component: AccountComponent,
+                canActivate: [AuthGuard]
+            },
+            {
+                path: 'profile',
+                component: ProfileComponent,
+                canActivate: [AuthGuard]
+            },
+            {
+                path: 'apikey',
+                component: ApikeyComponent,
+                canActivate: [AuthGuard]
+            },
+            {
+                path: '**',
+                redirectTo: 'home',
+                pathMatch: 'full'
+            }
+        ]
+    },
+    {
         path: 'home',
-        component: HomeComponent,
-        canActivate: [AuthGuard]
-      },
-      {
-        path: 'accounts',
-        component: AccountsComponent,
-        canActivate: [AuthGuard]
-      },
-      {
-        path: 'profile',
-        component: ProfileComponent,
-        canActivate: [AuthGuard]
-      },
-      {
-        path: 'apikey',
-        component: ApikeyComponent,
-        canActivate: [AuthGuard]
-      },
-      {
+        component: LandingComponent
+    },
+    {
         path: '**',
-        redirectTo: 'home',
-        pathMatch: 'full'
-      }
-    ]
-  },
-  {
-    path: 'home',
-    component: LandingComponent
-  },
-  {
-    path: '**',
-    component: RedirectComponent
-  }
+        component: RedirectComponent
+    }
 ];
 
 @NgModule({
-  imports: [RouterModule.forRoot(routes)],
-  exports: [RouterModule],
+    imports: [RouterModule.forRoot(routes)],
+    exports: [RouterModule],
 })
 export class AppRoutingModule {
 }

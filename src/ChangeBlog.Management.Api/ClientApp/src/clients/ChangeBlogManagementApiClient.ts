@@ -2014,7 +2014,6 @@ export interface IPropertyErrorMessages {
 export class ResourcePermissionsDto implements IResourcePermissionsDto {
     resourceId!: string;
     resourceType!: ResourceType;
-    canCreate!: boolean;
     canRead!: boolean;
     canUpdate!: boolean;
     canDelete!: boolean;
@@ -2033,7 +2032,6 @@ export class ResourcePermissionsDto implements IResourcePermissionsDto {
         if (_data) {
             this.resourceId = _data["resourceId"];
             this.resourceType = _data["resourceType"];
-            this.canCreate = _data["canCreate"];
             this.canRead = _data["canRead"];
             this.canUpdate = _data["canUpdate"];
             this.canDelete = _data["canDelete"];
@@ -2058,7 +2056,6 @@ export class ResourcePermissionsDto implements IResourcePermissionsDto {
         data = typeof data === 'object' ? data : {};
         data["resourceId"] = this.resourceId;
         data["resourceType"] = this.resourceType;
-        data["canCreate"] = this.canCreate;
         data["canRead"] = this.canRead;
         data["canUpdate"] = this.canUpdate;
         data["canDelete"] = this.canDelete;
@@ -2076,7 +2073,6 @@ export class ResourcePermissionsDto implements IResourcePermissionsDto {
 export interface IResourcePermissionsDto {
     resourceId: string;
     resourceType: ResourceType;
-    canCreate: boolean;
     canRead: boolean;
     canUpdate: boolean;
     canDelete: boolean;

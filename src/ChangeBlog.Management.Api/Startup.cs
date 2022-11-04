@@ -1,3 +1,4 @@
+using System.Text.Json.Serialization;
 using ChangeBlog.Api.Shared;
 using ChangeBlog.Api.Shared.Authentication;
 using ChangeBlog.Api.Shared.Authorization;
@@ -43,7 +44,12 @@ public class Startup
         services
             .AddControllers(o => { o.Filters.Add(typeof(AuthorizationFilter)); })
             .ConfigureApiBehaviorOptions(o => o.InvalidModelStateResponseFactory =
-                ctx => ctx.ModelState.ToCustomErrorResponse());
+                ctx => ctx.ModelState.ToCustomErrorResponse())
+            .AddJsonOptions(options =>
+            {
+                var enumConverter = new JsonStringEnumConverter();
+                options.JsonSerializerOptions.Converters.Add(enumConverter);
+            });
 
         services.AddValidatorsFromAssemblyContaining<Startup>();
         services.AddFluentValidationAutoValidation();
@@ -56,6 +62,7 @@ public class Startup
 
         var connectionString = _configuration.GetConnectionString("ChangeBlogDb");
         services.AddPostgresDataAccess(connectionString);
+        services.AddMemoryCache();
         services.AddHttpContextAccessor();
         services.AddScoped<IExternalUserInfoDao, TokenClaimsUserInfoDao>();
     }

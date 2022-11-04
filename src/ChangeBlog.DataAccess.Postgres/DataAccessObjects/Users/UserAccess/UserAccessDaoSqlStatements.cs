@@ -1,4 +1,4 @@
-namespace ChangeBlog.DataAccess.Postgres.DataAccessObjects.Users;
+namespace ChangeBlog.DataAccess.Postgres.DataAccessObjects.Users.UserAccess;
 
 public static class UserAccessDaoSqlStatements
 {
@@ -35,20 +35,19 @@ public static class UserAccessDaoSqlStatements
             and au.user_id = @userId
             and a.deleted_at is null";
 
-    public static string GetPermissionsByProductIdSql =>
+    public static string PermissionsByProductIdSql =>
         BaseQuery("@productId", "select p.account_id from product p where p.id = @productId");
 
-    public static string GetPermissionsByVersionIdSql =>
+    public static string PermissionsByVersionIdSql =>
         BaseQuery("select v.product_id from version v where v.id = @versionId",
             "select p.account_id from version v join product p on v.product_id = p.id where v.id = @versionId");
 
-    public static string GetPermissionsByChangeLogLineIdSql => BaseQuery(
+    public static string PermissionsByChangeLogLineIdSql => BaseQuery(
         "select chl.product_id from changelog_line chl where chl.id = @changeLogLineId and chl.deleted_at is null",
         "select p.account_id from changelog_line chl join product p on chl.product_id = p.id where chl.id = @changeLogLineId and chl.deleted_at is null");
 
-    private static string BaseQuery(string selectProductId, string selectAccountId)
-    {
-        return $@"select distinct 'Product' as type,
+    private static string BaseQuery(string selectProductId, string selectAccountId) =>
+        $@"select distinct 'Product' as type,
                                 r.id,
                                 r.name,
                                 r.description,
@@ -75,5 +74,4 @@ public static class UserAccessDaoSqlStatements
                 where a.id = ({selectAccountId})
                   and au.user_id = @userId
                   and a.deleted_at is null";
-    }
 }

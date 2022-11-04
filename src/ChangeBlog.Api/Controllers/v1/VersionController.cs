@@ -118,7 +118,7 @@ public class VersionController : ControllerBase
     [ProducesResponseType(typeof(ErrorResponse), StatusCodes.Status404NotFound)]
     [ProducesResponseType(typeof(ErrorResponse), StatusCodes.Status409Conflict)]
     [ProducesResponseType(typeof(ErrorResponse), StatusCodes.Status422UnprocessableEntity)]
-    [NeedsPermission(Permission.AddVersion)]
+    [NeedsPermission(Permission.AddOrUpdateVersion)]
     public async Task<ActionResult<SuccessResponse>> AddVersionAsync([FromServices] IAddVersion addVersion,
         Guid productId,
         [FromBody] AddVersionDto versionDto)

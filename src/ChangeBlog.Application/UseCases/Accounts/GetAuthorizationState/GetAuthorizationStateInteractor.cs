@@ -17,7 +17,7 @@ public class GetAuthorizationStateInteractor : IGetAuthorizationState
     public async Task<AuthorizationState> GetAuthStateByAccountIdAsync(Guid userId, Guid accountId,
         Permission permission)
     {
-        var accountPermissions = await _userAccessDao.GetAccountRolesAsync(accountId, userId);
+        var accountPermissions = await _userAccessDao.GetAccountRolesAsync(userId, accountId);
 
         var authService = new AuthorizationService(accountPermissions);
 

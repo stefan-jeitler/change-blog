@@ -11,6 +11,7 @@ using ChangeBlog.DataAccess.Postgres.DataAccessObjects.Account;
 using ChangeBlog.DataAccess.Postgres.DataAccessObjects.ChangeLog;
 using ChangeBlog.DataAccess.Postgres.DataAccessObjects.Products;
 using ChangeBlog.DataAccess.Postgres.DataAccessObjects.Users;
+using ChangeBlog.DataAccess.Postgres.DataAccessObjects.Users.UserAccess;
 using ChangeBlog.DataAccess.Postgres.DataAccessObjects.Versions;
 using Microsoft.Extensions.DependencyInjection;
 using Npgsql;
@@ -27,7 +28,8 @@ public static class ServiceCollectionExtensions
         return services
             .AddDbSession(connectionString)
             .AddScoped<UserAccessDao>()
-            .AddScoped<IUserAccessDao>(sp => sp.GetRequiredService<UserAccessDao>())
+            .AddScoped<UserAccessDaoCacheProxy>()
+            .AddScoped<IUserAccessDao>(sp => sp.GetRequiredService<UserAccessDaoCacheProxy>())
             .AddScoped<SchemaVersion>()
             .AddDataAccessObjects();
     }

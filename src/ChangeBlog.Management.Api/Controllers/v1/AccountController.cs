@@ -28,7 +28,7 @@ namespace ChangeBlog.Management.Api.Controllers.v1;
 [Produces(MediaTypeNames.Application.Json)]
 [ProducesResponseType(typeof(ErrorResponse), StatusCodes.Status401Unauthorized)]
 [ProducesResponseType(typeof(ErrorResponse), StatusCodes.Status403Forbidden)]
-[SwaggerControllerOrder(1)]
+[SwaggerControllerOrder(2)]
 public class AccountController : ControllerBase
 {
     [HttpGet(Name = "GetAccounts")]

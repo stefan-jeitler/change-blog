@@ -22,7 +22,7 @@ public class UserAccessTests : IClassFixture<WebApplicationFactory<Startup>>
         var client = _factory.CreateClient();
         client.DefaultRequestHeaders.Add("X-API-KEY", new[] {"acc01usr01"});
 
-        var response = await client.PostAsync("/api/v1/products/139a2e54-e9be-4168-98b4-2839d9b3db04/close",
+        var response = await client.PostAsync("/api/v1/products/139a2e54-e9be-4168-98b4-2839d9b3db04/freeze",
             new StringContent(""));
 
         response.StatusCode.Should().Be(HttpStatusCode.Forbidden);

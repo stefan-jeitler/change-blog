@@ -1,6 +1,6 @@
 using System;
 using System.Threading.Tasks;
-using ChangeBlog.DataAccess.Postgres.DataAccessObjects.Users;
+using ChangeBlog.DataAccess.Postgres.DataAccessObjects.Users.UserAccess;
 using ChangeBlog.Domain;
 using Dapper;
 using FluentAssertions;
@@ -49,7 +49,7 @@ public class UserAccessDaoTest
         var t_ua_account_01_user_01 = Guid.Parse("f575503e-4eee-4d6d-b2c1-f11d8fc3da76");
         var t_ua_account_01 = Guid.Parse("ec3a44cc-0ba4-4c97-ad7f-911e9f6a73bc");
 
-        var accountRoles = (await userAccessDao.GetAccountRolesAsync(t_ua_account_01, t_ua_account_01_user_01))
+        var accountRoles = (await userAccessDao.GetAccountRolesAsync(t_ua_account_01_user_01, t_ua_account_01))
             .AsList();
 
         accountRoles.Should().HaveCount(1);
@@ -63,7 +63,7 @@ public class UserAccessDaoTest
         var t_ua_account_01_user_02 = Guid.Parse("7aa9004b-ed6f-4862-8307-579030c860be");
         var t_ua_account_01 = Guid.Parse("ec3a44cc-0ba4-4c97-ad7f-911e9f6a73bc");
 
-        var accountRoles = (await userAccessDao.GetAccountRolesAsync(t_ua_account_01, t_ua_account_01_user_02))
+        var accountRoles = (await userAccessDao.GetAccountRolesAsync(t_ua_account_01_user_02, t_ua_account_01))
             .AsList();
 
         accountRoles.Should().HaveCount(2);

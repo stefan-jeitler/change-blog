@@ -1,3 +1,4 @@
+using System.Text.Json.Serialization;
 using ChangeBlog.Api.Authentication;
 using ChangeBlog.Api.Shared;
 using ChangeBlog.Api.Shared.Authentication;
@@ -31,7 +32,13 @@ public class Startup
         services
             .AddControllers(o => { o.Filters.Add(typeof(AuthorizationFilter)); })
             .ConfigureApiBehaviorOptions(o => o.InvalidModelStateResponseFactory =
-                ctx => ctx.ModelState.ToCustomErrorResponse());
+                ctx => ctx.ModelState.ToCustomErrorResponse())
+            .AddJsonOptions(options =>
+            {
+                var enumConverter = new JsonStringEnumConverter();
+                options.JsonSerializerOptions.Converters.Add(enumConverter);
+            });
+        ;
 
         services.AddValidatorsFromAssemblyContaining<Startup>();
         services.AddFluentValidationAutoValidation();

@@ -22,13 +22,10 @@ public class RoleTests
         _testName = Name.Parse("Tester");
         _testDescription = Text.Parse("Tester role.");
         _testCreationDate = DateTime.Parse("2021-05-14");
-        _testPermissions = new List<Permission>(2) { Permission.AddVersion, Permission.CloseProduct };
+        _testPermissions = new List<Permission>(2) {Permission.AddOrUpdateVersion, Permission.FreezeProduct};
     }
 
-    private Role CreateRole()
-    {
-        return new Role(_testId, _testName, _testDescription, _testCreationDate, _testPermissions);
-    }
+    private Role CreateRole() => new Role(_testId, _testName, _testDescription, _testCreationDate, _testPermissions);
 
     [Fact]
     public void Create_HappyPath_Successful()

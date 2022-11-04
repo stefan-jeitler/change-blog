@@ -15,7 +15,7 @@ public class AuthorizationServiceTests
             Name.Parse(Role.DefaultUser),
             Text.Parse("Basic User"),
             DateTime.Parse("2021-05-21"),
-            new[] { Permission.ViewAccount });
+            new[] {Permission.ViewAccount});
 
     private static readonly Role TestDeveloperUserRole =
         new(Guid.Parse("ad7b83ed-8fce-4341-978b-8d1eae66f346"),
@@ -63,7 +63,7 @@ public class AuthorizationServiceTests
     {
         var authService = new AuthorizationService(Enumerable.Empty<Role>());
 
-        var authorizationState = authService.GetAuthorizationState(Permission.AddVersion);
+        var authorizationState = authService.GetAuthorizationState(Permission.AddOrUpdateVersion);
 
         authorizationState.Should().Be(AuthorizationState.Inaccessible);
     }
@@ -71,10 +71,10 @@ public class AuthorizationServiceTests
     [Fact]
     public void GetAuthorizationState_NoAccountDefaultUserRole_Inaccessible()
     {
-        var accountRoles = new List<Role> { TestDeveloperUserRole };
+        var accountRoles = new List<Role> {TestDeveloperUserRole};
         var authService = new AuthorizationService(accountRoles);
 
-        var authorizationState = authService.GetAuthorizationState(Permission.AddVersion);
+        var authorizationState = authService.GetAuthorizationState(Permission.AddOrUpdateVersion);
 
         authorizationState.Should().Be(AuthorizationState.Inaccessible);
     }
@@ -82,7 +82,7 @@ public class AuthorizationServiceTests
     [Fact]
     public void GetAuthorizationState_MatchingAccountPermission_Authorized()
     {
-        var accountRoles = new List<Role> { TestDefaultUserRole, TestDeveloperUserRole };
+        var accountRoles = new List<Role> {TestDefaultUserRole, TestDeveloperUserRole};
         var authService = new AuthorizationService(accountRoles);
 
         var authorizationState = authService.GetAuthorizationState(Permission.ViewChangeLogLines);
@@ -103,8 +103,8 @@ public class AuthorizationServiceTests
     [Fact]
     public void GetAuthorizationState_MatchingAccountPermissionAndNoMatchingProductPermission_Unauthorized()
     {
-        var accountRoles = new List<Role> { TestDefaultUserRole, TestProductOwnerUserRole };
-        var productRoles = new List<Role> { TestDeveloperUserRole };
+        var accountRoles = new List<Role> {TestDefaultUserRole, TestProductOwnerUserRole};
+        var productRoles = new List<Role> {TestDeveloperUserRole};
         var authService = new AuthorizationService(accountRoles, productRoles);
 
         var authorizationState = authService.GetAuthorizationState(Permission.AddOrUpdateVersion);
@@ -115,8 +115,8 @@ public class AuthorizationServiceTests
     [Fact]
     public void GetAuthorizationState_ExistingMatchingAccountPermissionAndMatchingProductPermission_Authorized()
     {
-        var accountRoles = new List<Role> { TestDefaultUserRole, TestDeveloperUserRole };
-        var productRoles = new List<Role> { TestDeveloperUserRole };
+        var accountRoles = new List<Role> {TestDefaultUserRole, TestDeveloperUserRole};
+        var productRoles = new List<Role> {TestDeveloperUserRole};
         var authService = new AuthorizationService(accountRoles, productRoles);
 
         var authorizationState = authService.GetAuthorizationState(Permission.AddOrUpdateProduct);

@@ -11,18 +11,15 @@ namespace ChangeBlog.Application.Tests.UseCaseTests.Products.CloseProduct;
 public class CloseProductInteractorTests
 {
     private readonly FakeProductDao _fakeProductDao;
-    private readonly Mock<ICloseProductOutputPort> _outputPortMock;
+    private readonly Mock<IFreezeProductOutputPort> _outputPortMock;
 
     public CloseProductInteractorTests()
     {
         _fakeProductDao = new FakeProductDao();
-        _outputPortMock = new Mock<ICloseProductOutputPort>(MockBehavior.Strict);
+        _outputPortMock = new Mock<IFreezeProductOutputPort>(MockBehavior.Strict);
     }
 
-    private CloseProductInteractor CreateInteractor()
-    {
-        return new CloseProductInteractor(_fakeProductDao);
-    }
+    private FreezeProductInteractor CreateInteractor() => new FreezeProductInteractor(_fakeProductDao);
 
     [Fact]
     public async Task CloseProduct_ProductDoesNotExist_ProductDoesNotExistOutput()
@@ -48,14 +45,14 @@ public class CloseProductInteractorTests
             TestAccount.Product.CreatedAt,
             DateTime.Parse("2021-05-13"));
         _fakeProductDao.Products.Add(product);
-        _outputPortMock.Setup(m => m.ProductAlreadyClosed(It.IsAny<Guid>()));
+        _outputPortMock.Setup(m => m.ProductAlreadyFreezed(It.IsAny<Guid>()));
         var interactor = CreateInteractor();
 
         // act
         await interactor.ExecuteAsync(_outputPortMock.Object, product.Id);
 
         // assert
-        _outputPortMock.Verify(m => m.ProductAlreadyClosed(It.Is<Guid>(x => x == product.Id)), Times.Once);
+        _outputPortMock.Verify(m => m.ProductAlreadyFreezed(It.Is<Guid>(x => x == product.Id)), Times.Once);
     }
 
     [Fact]
@@ -67,13 +64,13 @@ public class CloseProductInteractorTests
             TestAccount.Product.CreatedAt, null);
         _fakeProductDao.Products.Add(product);
 
-        _outputPortMock.Setup(m => m.ProductClosed(It.IsAny<Guid>()));
+        _outputPortMock.Setup(m => m.ProductFreezed(It.IsAny<Guid>()));
         var interactor = CreateInteractor();
 
         // act
         await interactor.ExecuteAsync(_outputPortMock.Object, product.Id);
 
         // assert
-        _outputPortMock.Verify(m => m.ProductClosed(It.IsAny<Guid>()), Times.Once);
+        _outputPortMock.Verify(m => m.ProductFreezed(It.IsAny<Guid>()), Times.Once);
     }
 }

@@ -8,9 +8,9 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace ChangeBlog.Api.Presenters.V1.Product;
 
-public class CloseProductApiPresenter : BaseApiPresenter, ICloseProductOutputPort
+public class FreezeProductApiPresenter : BaseApiPresenter, IFreezeProductOutputPort
 {
-    public void ProductAlreadyClosed(Guid productId)
+    public void ProductAlreadyFreezed(Guid productId)
     {
         var resourceIds = new Dictionary<string, string>
         {
@@ -30,7 +30,7 @@ public class CloseProductApiPresenter : BaseApiPresenter, ICloseProductOutputPor
         Response = new NotFoundObjectResult(ErrorResponse.Create(ChangeBlogStrings.ProductNotFound, resourceIds));
     }
 
-    public void ProductClosed(Guid productId)
+    public void ProductFreezed(Guid productId)
     {
         var resourceIds = new Dictionary<string, string>
         {

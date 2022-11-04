@@ -23,7 +23,7 @@ public class ProductControllerTests : IClassFixture<WebApplicationFactory<Startu
     {
         // arrange
         var client = _factory.CreateClient();
-        client.DefaultRequestHeaders.Add("X-API-KEY", new[] { "acc01usr02" });
+        client.DefaultRequestHeaders.Add("X-API-KEY", new[] {"acc01usr02"});
 
         // act
         var response = await client.GetAsync("/api/v1/products/139a2e54-e9be-4168-98b4-2839d9b3db04");
@@ -39,10 +39,10 @@ public class ProductControllerTests : IClassFixture<WebApplicationFactory<Startu
     {
         // arrange
         var client = _factory.CreateClient();
-        client.DefaultRequestHeaders.Add("X-API-KEY", new[] { "acc01usr02" });
+        client.DefaultRequestHeaders.Add("X-API-KEY", new[] {"acc01usr02"});
 
         // act
-        var response = await client.PostAsync("api/v1/products/139a2e54-e9be-4168-98b4-2839d9b3db04/close", null!);
+        var response = await client.PostAsync("api/v1/products/139a2e54-e9be-4168-98b4-2839d9b3db04/freeze", null!);
 
         // arrange
         response.StatusCode.Should().Be(HttpStatusCode.OK);

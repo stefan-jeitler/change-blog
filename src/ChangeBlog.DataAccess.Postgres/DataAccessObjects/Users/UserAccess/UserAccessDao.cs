@@ -8,9 +8,9 @@ using ChangeBlog.Domain;
 using ChangeBlog.Domain.Miscellaneous;
 using Dapper;
 using Microsoft.Extensions.Logging;
-using static ChangeBlog.DataAccess.Postgres.DataAccessObjects.Users.UserAccessDaoSqlStatements;
+using static ChangeBlog.DataAccess.Postgres.DataAccessObjects.Users.UserAccess.UserAccessDaoSqlStatements;
 
-namespace ChangeBlog.DataAccess.Postgres.DataAccessObjects.Users;
+namespace ChangeBlog.DataAccess.Postgres.DataAccessObjects.Users.UserAccess;
 
 public class UserAccessDao : IUserAccessDao
 {
@@ -23,7 +23,7 @@ public class UserAccessDao : IUserAccessDao
         _logger = logger;
     }
 
-    public async Task<IEnumerable<Role>> GetAccountRolesAsync(Guid accountId, Guid userId)
+    public async Task<IEnumerable<Role>> GetAccountRolesAsync(Guid userId, Guid accountId)
     {
         using var dbConnection = _acquireDbConnection();
 
@@ -40,7 +40,7 @@ public class UserAccessDao : IUserAccessDao
     {
         using var dbConnection = _acquireDbConnection();
 
-        var rolePermissions = await dbConnection.QueryAsync<RolePermissionDto>(GetPermissionsByProductIdSql, new
+        var rolePermissions = await dbConnection.QueryAsync<RolePermissionDto>(PermissionsByProductIdSql, new
         {
             userId,
             productId
@@ -53,7 +53,7 @@ public class UserAccessDao : IUserAccessDao
     {
         using var dbConnection = _acquireDbConnection();
 
-        var rolePermissions = await dbConnection.QueryAsync<RolePermissionDto>(GetPermissionsByVersionIdSql, new
+        var rolePermissions = await dbConnection.QueryAsync<RolePermissionDto>(PermissionsByVersionIdSql, new
         {
             userId,
             versionId
@@ -66,7 +66,7 @@ public class UserAccessDao : IUserAccessDao
     {
         using var dbConnection = _acquireDbConnection();
 
-        var rolePermissions = await dbConnection.QueryAsync<RolePermissionDto>(GetPermissionsByChangeLogLineIdSql,
+        var rolePermissions = await dbConnection.QueryAsync<RolePermissionDto>(PermissionsByChangeLogLineIdSql,
             new
             {
                 userId,
@@ -78,28 +78,22 @@ public class UserAccessDao : IUserAccessDao
 
     public async Task<Guid?> FindActiveUserIdByApiKeyAsync(string apiKey)
     {
-        if (string.IsNullOrEmpty(apiKey))
-        {
-            return null;
-        }
+        if (string.IsNullOrEmpty(apiKey)) return null;
 
         using var dbConnection = _acquireDbConnection();
         return await dbConnection
             .QueryFirstOrDefaultAsync<Guid?>(FindActiveUserIdByApiKeySql,
-                new { apiKey });
+                new {apiKey});
     }
 
     public async Task<Guid?> FindActiveUserByExternalUserId(string externalUserId)
     {
-        if (string.IsNullOrEmpty(externalUserId))
-        {
-            return null;
-        }
+        if (string.IsNullOrEmpty(externalUserId)) return null;
 
         using var dbConnection = _acquireDbConnection();
         return await dbConnection
             .QueryFirstOrDefaultAsync<Guid?>(FindActiveUserIdByExternalUserIdSql,
-                new { externalUserId });
+                new {externalUserId});
     }
 
     private AccountProductRolesDto ParseAccountAndProductRoles(
@@ -122,9 +116,7 @@ public class UserAccessDao : IUserAccessDao
             .Any(x => !x.Permission.HasValue);
 
         if (notSupportedPermissionsExists)
-        {
             _logger.LogWarning("There are permissions that are not supported by the app");
-        }
 
         return rolePermissions
             .Where(x => x.Permission is not null)

@@ -3,7 +3,7 @@ using System.Threading.Tasks;
 
 namespace ChangeBlog.Application.UseCases.Products.CloseProduct;
 
-public interface ICloseProduct
+public interface IFreezeProduct
 {
-    Task ExecuteAsync(ICloseProductOutputPort output, Guid productId);
+    Task ExecuteAsync(IFreezeProductOutputPort output, Guid productId);
 }

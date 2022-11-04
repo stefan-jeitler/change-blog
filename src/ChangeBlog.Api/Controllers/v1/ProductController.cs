@@ -29,7 +29,7 @@ public class ProductController : ControllerBase
     [HttpGet("{productId:Guid}", Name = "GetProduct")]
     [ProducesResponseType(StatusCodes.Status200OK)]
     [ProducesResponseType(typeof(ErrorResponse), StatusCodes.Status404NotFound)]
-    [NeedsPermission(Permission.ViewAccountProducts)]
+    [NeedsPermission(Permission.ViewProduct)]
     public async Task<ActionResult<ProductDto>> GetProductAsync([FromServices] IGetProduct getProduct,
         Guid productId)
     {
@@ -68,15 +68,15 @@ public class ProductController : ControllerBase
         return presenter.Response;
     }
 
-    [HttpPost("{productId:Guid}/close", Name = "CloseProduct")]
+    [HttpPost("{productId:Guid}/freeze", Name = "FreezeProduct")]
     [ProducesResponseType(StatusCodes.Status200OK)]
     [ProducesResponseType(typeof(ErrorResponse), StatusCodes.Status404NotFound)]
-    [NeedsPermission(Permission.CloseProduct)]
-    public async Task<ActionResult<SuccessResponse>> CloseProductAsync([FromServices] ICloseProduct closeProduct,
+    [NeedsPermission(Permission.FreezeProduct)]
+    public async Task<ActionResult<SuccessResponse>> FreezeProductAsync([FromServices] IFreezeProduct freezeProduct,
         Guid productId)
     {
-        var presenter = new CloseProductApiPresenter();
-        await closeProduct.ExecuteAsync(presenter, productId);
+        var presenter = new FreezeProductApiPresenter();
+        await freezeProduct.ExecuteAsync(presenter, productId);
 
         return presenter.Response;
     }

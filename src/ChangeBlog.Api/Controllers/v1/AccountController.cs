@@ -27,7 +27,7 @@ public class AccountController : ControllerBase
     [HttpGet("{accountId:Guid}/products", Name = "GetAccountProducts")]
     [ProducesResponseType(StatusCodes.Status200OK)]
     [ProducesResponseType(typeof(ErrorResponse), StatusCodes.Status400BadRequest)]
-    [NeedsPermission(Permission.ViewAccountProducts)]
+    [NeedsPermission(Permission.ViewAccount)]
     public async Task<ActionResult<List<ProductDto>>> GetAccountProductsAsync(
         [FromServices] IGetAccountProducts getAccountProducts,
         Guid accountId,

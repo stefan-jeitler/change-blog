@@ -134,6 +134,25 @@ let private addAccountPermissionsSql =
     ON CONFLICT (role_id, permission) DO NOTHING
     """ ]
 
+let private addNewViewAndFreezeProductPermissionsSql =
+    [ """
+    INSERT INTO role_permission
+    SELECT id, 'FreezeProduct', now() from role where name in ('ProductOwner', 'PlatformManager')
+    ON CONFLICT (role_id, permission) DO NOTHING
+	"""
+      """
+	INSERT INTO role_permission
+	SELECT id, 'ViewProduct', now() from role where name in ('Support', 'ScrumMaster', 'ProductOwner', 'ProductManager', 'PlatformManager', 'Developer')
+	ON CONFLICT (role_id, permission) DO NOTHING
+    """ ]
+
+let private deleteViewAccountProductsAndCloseProductAndAddVersionPermissionsSql =
+    """
+        delete
+        from role_permission
+        where permission in ('CloseProduct', 'ViewAccountProducts', 'AddVersion')
+	"""
+
 let create (dbConnection: IDbConnection) =
     dbConnection.Execute(createRolePermissionSql)
     |> ignore
@@ -173,4 +192,12 @@ let deleteObsoletePermissions (dbConnection: IDbConnection) =
 let addAccountPermissions (dbConnection: IDbConnection) =
     addAccountPermissionsSql
     |> List.map dbConnection.Execute
+    |> ignore
+
+let alignWithAppPermissions (dbConnection: IDbConnection) =
+    addNewViewAndFreezeProductPermissionsSql
+    |> List.map dbConnection.Execute
+    |> ignore
+
+    dbConnection.Execute(deleteViewAccountProductsAndCloseProductAndAddVersionPermissionsSql)
     |> ignore

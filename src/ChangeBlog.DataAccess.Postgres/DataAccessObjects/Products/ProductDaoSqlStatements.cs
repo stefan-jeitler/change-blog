@@ -76,9 +76,8 @@ public static class ProductDaoSqlStatements
     }
 
     private static string GetProductsQuerySql(string accountFilter, string pagingFilter,
-        string includeClosedProductsFilter)
-    {
-        return @$"SELECT p.id,
+        string includeFreezedProductsFilter) =>
+        @$"SELECT p.id,
                    p.account_id       AS accountId,
                    p.name,
                    vs.id              AS vsId,
@@ -101,10 +100,22 @@ public static class ProductDaoSqlStatements
                                   join role r on au.role_id = r.id and r.name = 'DefaultUser'
                          where au.account_id = p.account_id
                            and au.user_id = @userId)
+              and (exists(select null
+                          from account a
+                                   join account_user au on a.id = au.account_id and a.deleted_at is null
+                                   join role r on au.role_id = r.id
+                                   join role_permission rp on r.id = rp.role_id and rp.permission = 'ViewProduct'
+                          where au.account_id = p.account_id
+                            and au.user_id = @userId
+                            and not exists(select null from product_user pu where pu.product_id = p.id and pu.user_id = @userId))
+                or exists(select null from product_user pu2
+                                        join role r2 on pu2.role_id = r2.id
+                                        join role_permission rp2 on r2.id = rp2.role_id and rp2.permission = 'ViewProduct'
+                                      where pu2.product_id = p.id and pu2.user_id = @userId)
+                  )
             {accountFilter}
             {pagingFilter}
-            {includeClosedProductsFilter}
+            {includeFreezedProductsFilter}
             ORDER BY p.name, p.id
             FETCH FIRST (@limit) ROWS ONLY";
-    }
 }

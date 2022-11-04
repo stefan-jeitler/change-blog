@@ -4,16 +4,16 @@ using ChangeBlog.Application.Boundaries.DataAccess.Products;
 
 namespace ChangeBlog.Application.UseCases.Products.CloseProduct;
 
-public class CloseProductInteractor : ICloseProduct
+public class FreezeProductInteractor : IFreezeProduct
 {
     private readonly IProductDao _productDao;
 
-    public CloseProductInteractor(IProductDao productDao)
+    public FreezeProductInteractor(IProductDao productDao)
     {
         _productDao = productDao ?? throw new ArgumentNullException(nameof(productDao));
     }
 
-    public async Task ExecuteAsync(ICloseProductOutputPort output, Guid productId)
+    public async Task ExecuteAsync(IFreezeProductOutputPort output, Guid productId)
     {
         var product = await _productDao.FindProductAsync(productId);
         if (product.HasNoValue)
@@ -24,12 +24,12 @@ public class CloseProductInteractor : ICloseProduct
 
         if (product.GetValueOrThrow().IsClosed)
         {
-            output.ProductAlreadyClosed(productId);
+            output.ProductAlreadyFreezed(productId);
             return;
         }
 
         var closedProduct = product.GetValueOrThrow().Close();
         await _productDao.CloseProductAsync(closedProduct);
-        output.ProductClosed(closedProduct.Id);
+        output.ProductFreezed(closedProduct.Id);
     }
 }

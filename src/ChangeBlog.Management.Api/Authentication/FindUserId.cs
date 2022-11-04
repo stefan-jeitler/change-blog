@@ -1,6 +1,6 @@
 ﻿using System;
 using System.Threading.Tasks;
-using ChangeBlog.DataAccess.Postgres.DataAccessObjects.Users;
+using ChangeBlog.DataAccess.Postgres.DataAccessObjects.Users.UserAccess;
 
 namespace ChangeBlog.Management.Api.Authentication;
 

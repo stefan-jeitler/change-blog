@@ -40,7 +40,7 @@ export class SideNavigationComponent implements OnInit {
         this.menuItems = [
             {
                 label: translate(this.translationKey.accounts),
-                icon: 'pi pi-fw pi-stop',
+                icon: 'pi pi-fw pi-box',
                 routerLink: '/app/accounts'
             },
             {

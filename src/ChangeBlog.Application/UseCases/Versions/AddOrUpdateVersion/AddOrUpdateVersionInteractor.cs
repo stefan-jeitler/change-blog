@@ -57,7 +57,7 @@ public class AddOrUpdateVersionInteractor : IAddVersion, IAddOrUpdateVersion
         }
         else
         {
-            await ExecuteAsync((IAddVersionOutputPort)output, requestModel);
+            await ExecuteAsync((IAddVersionOutputPort) output, requestModel);
             _unitOfWork.Commit();
         }
     }
@@ -66,16 +66,10 @@ public class AddOrUpdateVersionInteractor : IAddVersion, IAddOrUpdateVersion
         VersionRequestModel versionRequestModel)
     {
         var product = await GetProductAsync(output, versionRequestModel.ProductId);
-        if (product.HasNoValue)
-        {
-            return;
-        }
+        if (product.HasNoValue) return;
 
         var newVersion = CreateNewVersion(output, product.GetValueOrThrow(), versionRequestModel);
-        if (newVersion.HasNoValue)
-        {
-            return;
-        }
+        if (newVersion.HasNoValue) return;
 
         var existingVersion =
             await _versionDao.FindVersionAsync(product.GetValueOrThrow().Id, newVersion.GetValueOrThrow().Value);
@@ -86,10 +80,7 @@ public class AddOrUpdateVersionInteractor : IAddVersion, IAddOrUpdateVersion
         }
 
         var lines = newVersion.Bind(v => CreateLines(output, versionRequestModel.Lines, v));
-        if (lines.HasNoValue)
-        {
-            return;
-        }
+        if (lines.HasNoValue) return;
 
         _unitOfWork.Start();
         await SaveVersionAsync(output, newVersion.GetValueOrThrow(), lines.GetValueOrThrow(),
@@ -105,9 +96,9 @@ public class AddOrUpdateVersionInteractor : IAddVersion, IAddOrUpdateVersion
             return Maybe<Product>.None;
         }
 
-        if (product.GetValueOrThrow().IsClosed)
+        if (product.GetValueOrThrow().IsFreezed)
         {
-            output.RelatedProductClosed(productId);
+            output.RelatedProductFreezed(productId);
             return Maybe<Product>.None;
         }
 
@@ -180,12 +171,9 @@ public class AddOrUpdateVersionInteractor : IAddVersion, IAddOrUpdateVersion
         var lines = new List<ChangeLogLine>();
         foreach (var (lineRequestModel, i) in lineCandidates.Select((x, i) => (x, i)))
         {
-            var line = CreateLine(output, lineRequestModel, newVersion, (uint)i);
+            var line = CreateLine(output, lineRequestModel, newVersion, (uint) i);
 
-            if (line.HasNoValue)
-            {
-                return Maybe<IEnumerable<ChangeLogLine>>.None;
-            }
+            if (line.HasNoValue) return Maybe<IEnumerable<ChangeLogLine>>.None;
 
             lines.Add(line.GetValueOrThrow());
         }
@@ -200,10 +188,7 @@ public class AddOrUpdateVersionInteractor : IAddVersion, IAddOrUpdateVersion
             new LineParserRequestModel(requestModel.Text, requestModel.Labels, requestModel.Issues);
 
         var parsedLine = LineParser.Parse(output, lineParsingRequestModel);
-        if (parsedLine.HasNoValue)
-        {
-            return Maybe<ChangeLogLine>.None;
-        }
+        if (parsedLine.HasNoValue) return Maybe<ChangeLogLine>.None;
 
         var changeLogLine = new ChangeLogLine(Guid.NewGuid(),
             clVersion.Id,
@@ -251,9 +236,9 @@ public class AddOrUpdateVersionInteractor : IAddVersion, IAddOrUpdateVersion
         }
 
         var product = await _productDao.GetProductAsync(clVersion.ProductId);
-        if (product.IsClosed)
+        if (product.IsFreezed)
         {
-            output.RelatedProductClosed(product.Id);
+            output.RelatedProductFreezed(product.Id);
             return;
         }
 
@@ -272,10 +257,7 @@ public class AddOrUpdateVersionInteractor : IAddVersion, IAddOrUpdateVersion
     {
         var parsedChangeLogs = CreateLines(output, requestModel.Lines, clVersion)
             .Map(x => new Domain.ChangeLog.ChangeLogs(x.ToList()));
-        if (parsedChangeLogs.HasNoValue)
-        {
-            return;
-        }
+        if (parsedChangeLogs.HasNoValue) return;
 
         if (!OptionalName.TryParse(requestModel.Name, out var clVersionName))
         {
@@ -285,7 +267,7 @@ public class AddOrUpdateVersionInteractor : IAddVersion, IAddOrUpdateVersion
 
         var releasedAt = requestModel.ReleaseImmediately
             ? DateTime.UtcNow
-            : (DateTime?)null;
+            : (DateTime?) null;
 
         var v = clVersion;
         var updatedVersion = new ClVersion(v.Id, v.ProductId, newVersionValue, clVersionName, releasedAt,
@@ -309,9 +291,6 @@ public class AddOrUpdateVersionInteractor : IAddVersion, IAddOrUpdateVersion
 
     private async Task DeleteExistingLines(IEnumerable<ChangeLogLine> changeLogLines)
     {
-        foreach (var line in changeLogLines)
-        {
-            await _changeLogCommands.DeleteLineAsync(line);
-        }
+        foreach (var line in changeLogLines) await _changeLogCommands.DeleteLineAsync(line);
     }
 }

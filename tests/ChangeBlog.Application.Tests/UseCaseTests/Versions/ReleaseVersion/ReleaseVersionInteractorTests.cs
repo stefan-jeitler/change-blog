@@ -24,10 +24,7 @@ public class ReleaseVersionInteractorTests
         _outputPortMock = new Mock<IReleaseVersionOutputPort>(MockBehavior.Strict);
     }
 
-    private ReleaseVersionInteractor CreateInteractor()
-    {
-        return new ReleaseVersionInteractor(_fakeVersionDao, _fakeProductDao);
-    }
+    private ReleaseVersionInteractor CreateInteractor() => new(_fakeVersionDao, _fakeProductDao);
 
     [Fact]
     public async Task ReleaseVersion_NotExistingVersion_VersionDoesNotExistOutput()
@@ -81,7 +78,7 @@ public class ReleaseVersionInteractorTests
     }
 
     [Fact]
-    public async Task ReleaseVersion_RelatedProductClosed_RelatedProductClosedOutput()
+    public async Task ReleaseVersion_RelatedProductIsFreezed_RelatedProductFreezedOutput()
     {
         // arrange
         var version = new ClVersion(TestAccount.Product.Id, ClVersionValue.Parse("1.23"), OptionalName.Empty,
@@ -91,7 +88,7 @@ public class ReleaseVersionInteractorTests
             TestAccount.Product.CreatedAt,
             DateTime.Parse("2021-05-13"));
         var interactor = CreateInteractor();
-        _outputPortMock.Setup(m => m.RelatedProductClosed(It.IsAny<Guid>()));
+        _outputPortMock.Setup(m => m.RelatedProductFreezed(It.IsAny<Guid>()));
         _fakeVersionDao.Versions.Add(version);
         _fakeProductDao.Products.Add(product);
 
@@ -99,7 +96,7 @@ public class ReleaseVersionInteractorTests
         await interactor.ExecuteAsync(_outputPortMock.Object, version.Id);
 
         // assert
-        _outputPortMock.Verify(m => m.RelatedProductClosed(It.Is<Guid>(x => x == product.Id)), Times.Once);
+        _outputPortMock.Verify(m => m.RelatedProductFreezed(It.Is<Guid>(x => x == product.Id)), Times.Once);
     }
 
     [Fact]

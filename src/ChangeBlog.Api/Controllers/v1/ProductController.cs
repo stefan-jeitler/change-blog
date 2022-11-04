@@ -9,7 +9,7 @@ using ChangeBlog.Api.Shared.Authorization;
 using ChangeBlog.Api.Shared.DTOs;
 using ChangeBlog.Api.Shared.Swagger;
 using ChangeBlog.Application.UseCases.Products.AddProduct;
-using ChangeBlog.Application.UseCases.Products.CloseProduct;
+using ChangeBlog.Application.UseCases.Products.FreezeProduct;
 using ChangeBlog.Application.UseCases.Products.GetProducts;
 using ChangeBlog.Domain.Authorization;
 using Microsoft.AspNetCore.Http;

@@ -8,7 +8,7 @@ namespace ChangeBlog.Application.UseCases.Versions.AddOrUpdateVersion.OutputPort
 public interface IAddVersionOutputPort : ILineParserOutput
 {
     void ProductDoesNotExist(Guid productId);
-    void RelatedProductClosed(Guid productId);
+    void RelatedProductFreezed(Guid productId);
     void InvalidVersionFormat(string version);
     void VersionDoesNotMatchScheme(string version, string versioningSchemeName);
     void Created(Guid versionId);

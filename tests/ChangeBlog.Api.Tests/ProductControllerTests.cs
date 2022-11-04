@@ -35,7 +35,7 @@ public class ProductControllerTests : IClassFixture<WebApplicationFactory<Startu
     }
 
     [Fact]
-    public async Task CloseProduct_HappyPath_NoContent()
+    public async Task FreezeProduct_HappyPath_NoContent()
     {
         // arrange
         var client = _factory.CreateClient();

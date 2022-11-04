@@ -16,10 +16,10 @@ public class Product
         Guid vsId, Name vsName, Text vsRegexPattern, Text vsDescription,
         Guid? vsAccountId, Guid vsCreatedByUser, DateTime? vsDeletedAt, DateTime vsCreatedAt,
         Name languageCode, Guid createdByUser,
-        DateTime createdAt, DateTime? closedAt)
+        DateTime createdAt, DateTime? freezedAt)
         : this(id, accountId, name,
             new VersioningScheme(vsId, vsName, vsRegexPattern, vsDescription, vsAccountId, vsCreatedByUser,
-                vsDeletedAt, vsCreatedAt), languageCode, createdByUser, createdAt, closedAt)
+                vsDeletedAt, vsCreatedAt), languageCode, createdByUser, createdAt, freezedAt)
     {
     }
 
@@ -30,19 +30,13 @@ public class Product
         Name languageCode,
         Guid createdByUser,
         DateTime createdAt,
-        DateTime? closedAt)
+        DateTime? freezedAt)
     {
-        if (id == Guid.Empty)
-        {
-            throw new ArgumentException("Id cannot be empty.");
-        }
+        if (id == Guid.Empty) throw new ArgumentException("Id cannot be empty.");
 
         Id = id;
 
-        if (accountId == Guid.Empty)
-        {
-            throw new ArgumentException("AccountId cannot be empty.");
-        }
+        if (accountId == Guid.Empty) throw new ArgumentException("AccountId cannot be empty.");
 
         AccountId = accountId;
         Name = name ?? throw new ArgumentNullException(nameof(name));
@@ -50,27 +44,20 @@ public class Product
 
         LanguageCode = languageCode ?? throw new ArgumentNullException(nameof(languageCode));
 
-        if (createdByUser == Guid.Empty)
-        {
-            throw new ArgumentException("UserId cannot be empty.");
-        }
+        if (createdByUser == Guid.Empty) throw new ArgumentException("UserId cannot be empty.");
 
         CreatedByUser = createdByUser;
 
         if (createdAt == DateTime.MinValue || createdAt == DateTime.MaxValue)
-        {
             throw new ArgumentException("Invalid creation date.");
-        }
 
         CreatedAt = createdAt;
 
-        if (closedAt.HasValue &&
-            (closedAt == DateTime.MinValue || closedAt == DateTime.MaxValue))
-        {
+        if (freezedAt.HasValue &&
+            (freezedAt == DateTime.MinValue || freezedAt == DateTime.MaxValue))
             throw new ArgumentException("Invalid creation date.");
-        }
 
-        ClosedAt = closedAt;
+        FreezedAt = freezedAt;
     }
 
     public Guid Id { get; }
@@ -80,13 +67,11 @@ public class Product
     public Name LanguageCode { get; }
     public Guid CreatedByUser { get; }
     public DateTime CreatedAt { get; }
-    public DateTime? ClosedAt { get; }
+    public DateTime? FreezedAt { get; }
 
-    public bool IsClosed => ClosedAt.HasValue;
+    public bool IsFreezed => FreezedAt.HasValue;
 
-    public Product Close()
-    {
-        return new Product(Id, AccountId, Name, VersioningScheme, LanguageCode, CreatedByUser, CreatedAt,
+    public Product Freeze() =>
+        new(Id, AccountId, Name, VersioningScheme, LanguageCode, CreatedByUser, CreatedAt,
             DateTime.UtcNow);
-    }
 }

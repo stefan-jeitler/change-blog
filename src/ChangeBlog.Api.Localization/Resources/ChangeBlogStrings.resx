@@ -141,9 +141,9 @@
     <data name="VersionDeleted" xml:space="preserve">
     <value>The related version has been deleted</value>
   </data>
-    <data name="ProductHasBeenClosed" xml:space="preserve">
-    <value>The related product has been closed</value>
-  </data>
+    <data name="ProductHasBeenFreezed" xml:space="preserve">
+      <value>The related product has been freezed</value>
+    </data>
     <data name="ChangeLogLineDeleted" xml:space="preserve">
     <value>The requested Changelog line has been deleted</value>
   </data>
@@ -279,9 +279,9 @@
     <data name="VersionAlreadyExists" xml:space="preserve">
     <value>The version already exists</value>
   </data>
-    <data name="ProductAlreadyClosed" xml:space="preserve">
-    <value>The product is already closed</value>
-  </data>
+    <data name="ProductAlreadyFreezed" xml:space="preserve">
+      <value>The product is already freezed</value>
+    </data>
     <data name="VersionUpdateForbidden" xml:space="preserve">
     <value>You cannot add or update versions that have been released or deleted</value>
   </data>

@@ -17,7 +17,7 @@ public class UserAccessTests : IClassFixture<WebApplicationFactory<Startup>>
     }
 
     [Fact]
-    public async Task UserAccess_ProductManagerClosesProduct_Unauthorized()
+    public async Task UserAccess_ProductManagerFreezesProduct_Unauthorized()
     {
         var client = _factory.CreateClient();
         client.DefaultRequestHeaders.Add("X-API-KEY", new[] {"acc01usr01"});

@@ -75,8 +75,8 @@ Currently, the following user information is stored
 ### Product
 
 A product is the software on which developers work.  
-It has no end date, but it can be closed.  
-By closing a product, you stop working on that software.  
+It has no end date, but it can be freezed.  
+By freezing a product, you stop working on that software.  
 The product will still exist, but it becomes read-only with all its versions and change logs.
 
 ### Version

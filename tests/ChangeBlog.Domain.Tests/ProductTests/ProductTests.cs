@@ -9,8 +9,8 @@ namespace ChangeBlog.Domain.Tests.ProductTests;
 public class ProductTests
 {
     private Guid _testAccountId;
-    private DateTime? _testClosedDate;
     private DateTime _testCreationDate;
+    private DateTime? _testFreezedDate;
     private Guid _testId;
     private Name _testLangCode;
     private Name _testName;
@@ -26,14 +26,12 @@ public class ProductTests
         _testAccountId = TestAccount.Id;
         _testVersioningScheme = TestAccount.CustomVersioningScheme;
         _testLangCode = Name.Parse("en");
-        _testClosedDate = null;
+        _testFreezedDate = null;
     }
 
-    private Product CreateProduct()
-    {
-        return new Product(_testId, _testAccountId, _testName, _testVersioningScheme, _testLangCode, _testUserId,
-            _testCreationDate, _testClosedDate);
-    }
+    private Product CreateProduct() =>
+        new(_testId, _testAccountId, _testName, _testVersioningScheme, _testLangCode, _testUserId,
+            _testCreationDate, _testFreezedDate);
 
     [Fact]
     public void Create_WithValidArguments_Successful()
@@ -47,30 +45,30 @@ public class ProductTests
         product.CreatedByUser.Should().Be(_testUserId);
         product.CreatedAt.Should().Be(_testCreationDate);
         product.LanguageCode.Should().Be(_testLangCode);
-        product.ClosedAt.HasValue.Should().BeFalse();
+        product.FreezedAt.HasValue.Should().BeFalse();
     }
 
     [Fact]
-    public void Create_WithClosedAtDate_DateProperlySet()
+    public void Create_WithFreezedAtDate_DateProperlySet()
     {
-        _testClosedDate = DateTime.Parse("2021-04-16");
+        _testFreezedDate = DateTime.Parse("2021-04-16");
 
         var product = CreateProduct();
 
-        product.ClosedAt.Should().HaveValue();
-        product.ClosedAt!.Value.Should().Be(_testClosedDate!.Value);
+        product.FreezedAt.Should().HaveValue();
+        product.FreezedAt!.Value.Should().Be(_testFreezedDate!.Value);
     }
 
     [Fact]
-    public void CloseProduct_HappyPath_DateProperlySet()
+    public void FreezeProduct_HappyPath_DateProperlySet()
     {
-        _testClosedDate = null;
+        _testFreezedDate = null;
         var product = CreateProduct();
 
-        var closedProduct = product.Close();
+        var freezedProduct = product.Freeze();
 
-        closedProduct.ClosedAt.Should().HaveValue();
-        closedProduct.IsClosed.Should().BeTrue();
+        freezedProduct.FreezedAt.Should().HaveValue();
+        freezedProduct.IsFreezed.Should().BeTrue();
     }
 
     [Fact]
@@ -148,9 +146,9 @@ public class ProductTests
     [Theory]
     [InlineData("0001-01-01T00:00:00.0000000")]
     [InlineData("9999-12-31T23:59:59.9999999")]
-    public void Create_WithInvalidClosedAtDate_ArgumentException(string invalidDate)
+    public void Create_WithInvalidFreezedAtDate_ArgumentException(string invalidDate)
     {
-        _testClosedDate = DateTime.Parse(invalidDate);
+        _testFreezedDate = DateTime.Parse(invalidDate);
 
         var act = CreateProduct;
 

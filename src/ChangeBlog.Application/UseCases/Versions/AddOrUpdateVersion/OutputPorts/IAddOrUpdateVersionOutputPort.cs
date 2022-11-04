@@ -10,6 +10,6 @@ public interface IAddOrUpdateVersionOutputPort : IAddVersionOutputPort
     new void InvalidVersionFormat(string version);
     new void InvalidVersionName(string name);
     void VersionUpdated(Guid versionId);
-    new void RelatedProductClosed(Guid versionId);
+    new void RelatedProductFreezed(Guid versionId);
     void UpdateConflict(Conflict conflict);
 }

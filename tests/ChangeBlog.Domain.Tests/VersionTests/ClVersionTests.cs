@@ -29,11 +29,9 @@ public class ClVersionTests
         _testDeletedDate = null;
     }
 
-    private ClVersion CreateVersion()
-    {
-        return new ClVersion(_testId, _testProductId, _testVersionValue, _testName,
+    private ClVersion CreateVersion() =>
+        new ClVersion(_testId, _testProductId, _testVersionValue, _testName,
             _testReleaseDate, _testUserId, _testCreationDate, _testDeletedDate);
-    }
 
     [Fact]
     public void Create_WithValidArguments_Successful()
@@ -99,7 +97,7 @@ public class ClVersionTests
     }
 
     [Fact]
-    public void IsClosed_DeletedAtIsNull_ReturnsFalse()
+    public void IsFreezed_DeletedAtIsNull_ReturnsFalse()
     {
         _testDeletedDate = null;
 
@@ -109,7 +107,7 @@ public class ClVersionTests
     }
 
     [Fact]
-    public void IsClosed_DeletedAtIsNotNull_ReturnsTrue()
+    public void IsFreezed_DeletedAtIsNotNull_ReturnsTrue()
     {
         _testDeletedDate = DateTime.Parse("2021-04-16");
 
@@ -126,7 +124,8 @@ public class ClVersionTests
 
         var act = CreateVersion;
 
-        act.Should().ThrowExactly<InvalidOperationException>("Closed versions cannot be released.");
+        act.Should()
+            .ThrowExactly<InvalidOperationException>("versions belonging to freezed products cannot be released.");
     }
 
     [Theory]
@@ -228,7 +227,7 @@ public class ClVersionTests
         var version1 = CreateVersion();
         var version2 = CreateVersion();
 
-        var isEqual = version1.Equals((object)version2);
+        var isEqual = version1.Equals((object) version2);
 
         isEqual.Should().BeTrue();
     }
@@ -244,7 +243,7 @@ public class ClVersionTests
         var version2 = CreateVersion();
 
         // act
-        var isEqual = version1.Equals((object)version2);
+        var isEqual = version1.Equals((object) version2);
 
         // assert
         isEqual.Should().BeFalse();

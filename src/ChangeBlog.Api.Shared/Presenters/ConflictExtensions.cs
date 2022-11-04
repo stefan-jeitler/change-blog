@@ -17,7 +17,7 @@ public static class ConflictExtensions
             AddOrUpdateChangeLogLineConcurrencyConflict concurrencyConflict => CreateConcurrencyIssueResponse(
                 concurrencyConflict),
             ChangeLogLineDeletedConflict lineDeleteConflict => CreateLineDeletedResponse(lineDeleteConflict),
-            ProductClosedConflict closedConflict => CreateProductClosedResponse(closedConflict),
+            ProductFreezedConflict freezedConflict => CreateProductFreezedResponse(freezedConflict),
             VersionDeletedConflict versionDeletedConflict => CreateVersionDeletedResponse(versionDeletedConflict),
             VersionReleasedConflict versionReleasedConflict => CreateVersionReleasedResponse(versionReleasedConflict),
             _ => throw new ArgumentOutOfRangeException(nameof(conflict))
@@ -52,16 +52,16 @@ public static class ConflictExtensions
         return new ConflictObjectResult(responseMessage);
     }
 
-    private static ConflictObjectResult CreateProductClosedResponse(ProductClosedConflict closedConflict)
+    private static ConflictObjectResult CreateProductFreezedResponse(ProductFreezedConflict freezedConflict)
     {
-        var productId = closedConflict.ProductId;
+        var productId = freezedConflict.ProductId;
         var resourceIds = new Dictionary<string, string>
         {
             [KnownIdentifiers.ProductId] = productId.ToString()
         };
 
         var responseMessage =
-            ErrorResponse.Create(ChangeBlogStrings.ProductHasBeenClosed, resourceIds);
+            ErrorResponse.Create(ChangeBlogStrings.ProductHasBeenFreezed, resourceIds);
 
         return new ConflictObjectResult(responseMessage);
     }
@@ -92,10 +92,7 @@ public static class ConflictExtensions
             [KnownIdentifiers.ChangeLogLineId] = changeLogLineId.ToString()
         };
 
-        if (versionId.HasValue)
-        {
-            resourceIds.Add(KnownIdentifiers.VersionId, versionId.Value.ToString());
-        }
+        if (versionId.HasValue) resourceIds.Add(KnownIdentifiers.VersionId, versionId.Value.ToString());
 
         var responseMessage =
             ErrorResponse.Create(ChangeBlogStrings.ChangeLogLineErrorOnInsertOrUpdate,

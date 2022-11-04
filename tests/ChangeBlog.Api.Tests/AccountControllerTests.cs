@@ -29,7 +29,7 @@ public class AccountControllerTests : IClassFixture<WebApplicationFactory<Startu
         // act
         var response =
             await client.GetAsync(
-                "/api/v1/accounts/ec3a44cc-0ba4-4c97-ad7f-911e9f6a73bc/products?includeClosed=true");
+                "/api/v1/accounts/ec3a44cc-0ba4-4c97-ad7f-911e9f6a73bc/products?includeFreezed=true");
         var content = await response.Content.ReadFromJsonAsync<List<ProductDto>>();
 
         // assert

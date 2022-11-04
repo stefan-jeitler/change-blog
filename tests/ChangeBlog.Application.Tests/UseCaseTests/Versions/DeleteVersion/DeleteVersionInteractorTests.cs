@@ -24,10 +24,7 @@ public class DeleteVersionInteractorTests
         _outputPortMock = new Mock<IDeleteVersionOutputPort>(MockBehavior.Strict);
     }
 
-    private DeleteVersionInteractor CreateInteractor()
-    {
-        return new DeleteVersionInteractor(_fakeVersionDao, _fakeProductDao);
-    }
+    private DeleteVersionInteractor CreateInteractor() => new(_fakeVersionDao, _fakeProductDao);
 
     [Fact]
     public async Task DeleteVersion_VersionDoesNotExist_VersionDoesNotExistOutput()
@@ -81,13 +78,13 @@ public class DeleteVersionInteractorTests
     }
 
     [Fact]
-    public async Task DeleteVersion_ProductClosedExist_ProductClosedOutput()
+    public async Task DeleteVersion_ProductIsFreezed_ProductFreezedOutput()
     {
         // arrange
         var version = new ClVersion(TestAccount.Product.Id, ClVersionValue.Parse("1.23"), OptionalName.Empty,
             TestAccount.UserId);
         var interactor = CreateInteractor();
-        _outputPortMock.Setup(m => m.RelatedProductClosed(It.IsAny<Guid>()));
+        _outputPortMock.Setup(m => m.RelatedProductFreezed(It.IsAny<Guid>()));
 
         _fakeProductDao.Products.Add(new Product(TestAccount.Product.Id, TestAccount.Id, Name.Parse("test product"),
             TestAccount.CustomVersioningScheme, TestAccount.Product.LanguageCode, TestAccount.UserId,
@@ -99,7 +96,7 @@ public class DeleteVersionInteractorTests
         await interactor.ExecuteAsync(_outputPortMock.Object, version.Id);
 
         // assert
-        _outputPortMock.Verify(m => m.RelatedProductClosed(It.IsAny<Guid>()), Times.Once);
+        _outputPortMock.Verify(m => m.RelatedProductFreezed(It.IsAny<Guid>()), Times.Once);
     }
 
     [Fact]

@@ -22,10 +22,8 @@ public class GetProductsInteractorTests
         _fakeAccountDao.Accounts.Add(TestAccount.Account);
     }
 
-    private GetProductsInteractor CreateInteractor()
-    {
-        return new GetProductsInteractor(_fakeProductDao, _fakeUserDao, _fakeAccountDao);
-    }
+    private GetProductsInteractor CreateInteractor() =>
+        new GetProductsInteractor(_fakeProductDao, _fakeUserDao, _fakeAccountDao);
 
     [Fact]
     public async Task GetAccountProducts_HappyPath_Successful()
@@ -112,7 +110,7 @@ public class GetProductsInteractorTests
         products.Should().ContainSingle(x => x.AccountId == TestAccount.Id);
         products.Should().ContainSingle(x => x.VersioningSchemeId == TestAccount.Product.VersioningScheme.Id);
         products.Should().ContainSingle(x => x.Name == TestAccount.Product.Name.Value);
-        products.Should().ContainSingle(x => x.ClosedAt == TestAccount.Product.ClosedAt);
+        products.Should().ContainSingle(x => x.FreezedAt == TestAccount.Product.FreezedAt);
         products.Should().ContainSingle(x => x.CreatedByUser == TestAccount.User.Email.Value);
     }
 

@@ -17,7 +17,7 @@ public static class ProductDaoSqlStatements
                    p.language_code    AS languageCode,
                    p.created_by_user  AS createdByUser,
                    p.created_at       AS createdAt,
-                   p.closed_at        AS closedAt
+                   p.freezed_at        AS freezedAt
             FROM product p
                      JOIN account a on p.account_id = a.id
                      JOIN versioning_scheme vs on p.versioning_scheme_id = vs.id
@@ -40,39 +40,39 @@ public static class ProductDaoSqlStatements
                    p.language_code    AS languageCode,
                    p.created_by_user  AS createdByUser,
                    p.created_at       AS createdAt,
-                   p.closed_at        AS closedAt
+                   p.freezed_at        AS freezedAt
             FROM product p
                      JOIN versioning_scheme vs on p.versioning_scheme_id = vs.id
             WHERE p.id = @productId";
 
-    public static string GetProductsForAccountSql(bool usePaging, bool includeClosedProducts)
+    public static string GetProductsForAccountSql(bool usePaging, bool includeFreezedProducts)
     {
         var pagingFilter = usePaging
             ? "AND (p.name, p.id) > ((select ps.name from product ps where ps.id = @lastProductId), @lastProductId)"
             : string.Empty;
 
-        var includeClosedProductsFilter = includeClosedProducts
+        var includeFreezedProductsFilter = includeFreezedProducts
             ? string.Empty
-            : "AND p.closed_at IS NULL";
+            : "AND p.freezed_at IS NULL";
 
         const string accountFilter = "AND p.account_id = @accountId";
 
-        return GetProductsQuerySql(accountFilter, pagingFilter, includeClosedProductsFilter);
+        return GetProductsQuerySql(accountFilter, pagingFilter, includeFreezedProductsFilter);
     }
 
-    public static string GetProductsForUserSql(bool usePaging, bool includeClosedProducts)
+    public static string GetProductsForUserSql(bool usePaging, bool includeFreezedProducts)
     {
         var pagingFilter = usePaging
             ? "AND (p.name, p.id) > ((select ps.name from product ps where ps.id = @lastProductId), @lastProductId)"
             : string.Empty;
 
-        var includeClosedProductsFilter = includeClosedProducts
+        var includeFreezedProductsFilter = includeFreezedProducts
             ? string.Empty
-            : "AND p.closed_at IS NULL";
+            : "AND p.freezed_at IS NULL";
 
         const string accountFilter = "";
 
-        return GetProductsQuerySql(accountFilter, pagingFilter, includeClosedProductsFilter);
+        return GetProductsQuerySql(accountFilter, pagingFilter, includeFreezedProductsFilter);
     }
 
     private static string GetProductsQuerySql(string accountFilter, string pagingFilter,
@@ -91,7 +91,7 @@ public static class ProductDaoSqlStatements
                    p.language_code    AS languageCode,
                    p.created_by_user  AS createdByUser,
                    p.created_at       AS createdAt,
-                   p.closed_at        AS closedAt
+                   p.freezed_at        AS freezedAt
             FROM product p
                      JOIN versioning_scheme vs on p.versioning_scheme_id = vs.id
             WHERE exists(select null

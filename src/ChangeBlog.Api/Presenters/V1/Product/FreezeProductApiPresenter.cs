@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using ChangeBlog.Api.Localization.Resources;
 using ChangeBlog.Api.Shared.DTOs;
 using ChangeBlog.Api.Shared.Presenters;
-using ChangeBlog.Application.UseCases.Products.CloseProduct;
+using ChangeBlog.Application.UseCases.Products.FreezeProduct;
 using Microsoft.AspNetCore.Mvc;
 
 namespace ChangeBlog.Api.Presenters.V1.Product;
@@ -17,7 +17,7 @@ public class FreezeProductApiPresenter : BaseApiPresenter, IFreezeProductOutputP
             [KnownIdentifiers.ProductId] = productId.ToString()
         };
 
-        Response = new OkObjectResult(SuccessResponse.Create(ChangeBlogStrings.ProductHasBeenClosed, resourceIds));
+        Response = new OkObjectResult(SuccessResponse.Create(ChangeBlogStrings.ProductHasBeenFreezed, resourceIds));
     }
 
     public void ProductDoesNotExist(Guid productId)
@@ -37,6 +37,6 @@ public class FreezeProductApiPresenter : BaseApiPresenter, IFreezeProductOutputP
             [KnownIdentifiers.ProductId] = productId.ToString()
         };
 
-        Response = new OkObjectResult(SuccessResponse.Create(ChangeBlogStrings.ProductHasBeenClosed, resourceIds));
+        Response = new OkObjectResult(SuccessResponse.Create(ChangeBlogStrings.ProductHasBeenFreezed, resourceIds));
     }
 }

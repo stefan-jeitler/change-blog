@@ -134,6 +134,76 @@ export class Client {
     }
 
     /**
+     * @param resourceType (optional) 
+     * @param resourceId (optional) 
+     * @param accept_Language (optional) Defines which language should be used for response messages.
+     * @return Success
+     */
+    getPermissions(resourceType?: ResourceType | undefined, resourceId?: string | undefined, accept_Language?: AcceptLanguage | undefined): Observable<ResourcePermissionsDto> {
+        let url_ = this.baseUrl + "/api/permission/permissions?";
+        if (resourceType === null)
+            throw new Error("The parameter 'resourceType' cannot be null.");
+        else if (resourceType !== undefined)
+            url_ += "ResourceType=" + encodeURIComponent("" + resourceType) + "&";
+        if (resourceId === null)
+            throw new Error("The parameter 'resourceId' cannot be null.");
+        else if (resourceId !== undefined)
+            url_ += "ResourceId=" + encodeURIComponent("" + resourceId) + "&";
+        url_ = url_.replace(/[?&]$/, "");
+
+        let options_ : any = {
+            observe: "response",
+            responseType: "blob",
+            headers: new HttpHeaders({
+                "Accept-Language": accept_Language !== undefined && accept_Language !== null ? "" + accept_Language : "",
+                "Accept": "application/json"
+            })
+        };
+
+        return this.http.request("get", url_, options_).pipe(_observableMergeMap((response_ : any) => {
+            return this.processGetPermissions(response_);
+        })).pipe(_observableCatch((response_: any) => {
+            if (response_ instanceof HttpResponseBase) {
+                try {
+                    return this.processGetPermissions(response_ as any);
+                } catch (e) {
+                    return _observableThrow(e) as any as Observable<ResourcePermissionsDto>;
+                }
+            } else
+                return _observableThrow(response_) as any as Observable<ResourcePermissionsDto>;
+        }));
+    }
+
+    protected processGetPermissions(response: HttpResponseBase): Observable<ResourcePermissionsDto> {
+        const status = response.status;
+        const responseBlob =
+            response instanceof HttpResponse ? response.body :
+            (response as any).error instanceof Blob ? (response as any).error : undefined;
+
+        let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
+        if (status === 401) {
+            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
+            let result401: any = null;
+            let resultData401 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            result401 = ErrorResponse.fromJS(resultData401);
+            return throwException("Unauthorized", status, _responseText, _headers, result401);
+            }));
+        } else if (status === 200) {
+            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
+            let result200: any = null;
+            let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            result200 = ResourcePermissionsDto.fromJS(resultData200);
+            return _observableOf(result200);
+            }));
+        } else if (status !== 200 && status !== 204) {
+            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            }));
+        }
+        return _observableOf(null as any);
+    }
+
+    /**
      * @param accept_Language (optional) Defines which language should be used for response messages.
      * @return Success
      */
@@ -1939,6 +2009,85 @@ export class PropertyErrorMessages implements IPropertyErrorMessages {
 export interface IPropertyErrorMessages {
     messages: string[] | undefined;
     property: string | undefined;
+}
+
+export class ResourcePermissionsDto implements IResourcePermissionsDto {
+    resourceId!: string;
+    resourceType!: ResourceType;
+    canCreate!: boolean;
+    canRead!: boolean;
+    canUpdate!: boolean;
+    canDelete!: boolean;
+    specificPermissions!: { [key: string]: boolean; } | undefined;
+
+    constructor(data?: IResourcePermissionsDto) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+        }
+    }
+
+    init(_data?: any) {
+        if (_data) {
+            this.resourceId = _data["resourceId"];
+            this.resourceType = _data["resourceType"];
+            this.canCreate = _data["canCreate"];
+            this.canRead = _data["canRead"];
+            this.canUpdate = _data["canUpdate"];
+            this.canDelete = _data["canDelete"];
+            if (_data["specificPermissions"]) {
+                this.specificPermissions = {} as any;
+                for (let key in _data["specificPermissions"]) {
+                    if (_data["specificPermissions"].hasOwnProperty(key))
+                        (<any>this.specificPermissions)![key] = _data["specificPermissions"][key];
+                }
+            }
+        }
+    }
+
+    static fromJS(data: any): ResourcePermissionsDto {
+        data = typeof data === 'object' ? data : {};
+        let result = new ResourcePermissionsDto();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        data["resourceId"] = this.resourceId;
+        data["resourceType"] = this.resourceType;
+        data["canCreate"] = this.canCreate;
+        data["canRead"] = this.canRead;
+        data["canUpdate"] = this.canUpdate;
+        data["canDelete"] = this.canDelete;
+        if (this.specificPermissions) {
+            data["specificPermissions"] = {};
+            for (let key in this.specificPermissions) {
+                if (this.specificPermissions.hasOwnProperty(key))
+                    (<any>data["specificPermissions"])[key] = (<any>this.specificPermissions)[key];
+            }
+        }
+        return data;
+    }
+}
+
+export interface IResourcePermissionsDto {
+    resourceId: string;
+    resourceType: ResourceType;
+    canCreate: boolean;
+    canRead: boolean;
+    canUpdate: boolean;
+    canDelete: boolean;
+    specificPermissions: { [key: string]: boolean; } | undefined;
+}
+
+export enum ResourceType {
+    Account = "Account",
+    Product = "Product",
+    Version = "Version",
+    ChangeLogLine = "ChangeLogLine",
 }
 
 export class RoleDto implements IRoleDto {

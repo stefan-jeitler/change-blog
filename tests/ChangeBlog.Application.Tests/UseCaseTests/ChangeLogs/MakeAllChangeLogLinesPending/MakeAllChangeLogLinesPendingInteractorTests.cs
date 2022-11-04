@@ -30,11 +30,9 @@ public class MakeAllChangeLogLinesPendingInteractorTests
         _fakeChangeLogDao = new FakeChangeLogDao();
     }
 
-    private MakeAllChangeLogLinesPendingInteractor CreateInteractor()
-    {
-        return new MakeAllChangeLogLinesPendingInteractor(_fakeVersionDao, _fakeChangeLogDao,
+    private MakeAllChangeLogLinesPendingInteractor CreateInteractor() =>
+        new MakeAllChangeLogLinesPendingInteractor(_fakeVersionDao, _fakeChangeLogDao,
             _fakeChangeLogDao, _unitOfWorkMock.Object);
-    }
 
     [Fact]
     public async Task MakeAllLinesPending_EmptyVersionId_ArgumentException()
@@ -133,7 +131,7 @@ public class MakeAllChangeLogLinesPendingInteractorTests
     }
 
     [Fact]
-    public async Task MakeAllLinesPending_DeletedClosed_VersionDeletedOutput()
+    public async Task MakeAllLinesPending_VersionIsDeleted_VersionDeletedOutput()
     {
         // arrange
         var makeAllLinesPendingInteractor = CreateInteractor();
@@ -167,7 +165,7 @@ public class MakeAllChangeLogLinesPendingInteractorTests
                 TestAccount.UserId);
         _fakeChangeLogDao.ChangeLogs.Add(versionLine);
         var pendingLines = Enumerable.Range(0, 100)
-            .Select(x => new ChangeLogLine(null, TestAccount.Product.Id, ChangeLogText.Parse($"{x:D5}"), (uint)x,
+            .Select(x => new ChangeLogLine(null, TestAccount.Product.Id, ChangeLogText.Parse($"{x:D5}"), (uint) x,
                 TestAccount.UserId));
         _fakeChangeLogDao.ChangeLogs.AddRange(pendingLines);
 
@@ -200,7 +198,7 @@ public class MakeAllChangeLogLinesPendingInteractorTests
         _fakeChangeLogDao.ChangeLogs.Add(versionLine1);
         _fakeChangeLogDao.ChangeLogs.Add(versionLine2);
         var pendingLines = Enumerable.Range(0, 98)
-            .Select(x => new ChangeLogLine(null, TestAccount.Product.Id, ChangeLogText.Parse($"{x:D5}"), (uint)x,
+            .Select(x => new ChangeLogLine(null, TestAccount.Product.Id, ChangeLogText.Parse($"{x:D5}"), (uint) x,
                 TestAccount.UserId));
         _fakeChangeLogDao.ChangeLogs.AddRange(pendingLines);
 

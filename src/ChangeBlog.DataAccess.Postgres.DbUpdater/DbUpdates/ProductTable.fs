@@ -59,6 +59,9 @@ let private addLanguageCodeForeignKeySql =
 let private addLanguageCodeNotNullConstraintSql =
     "ALTER TABLE product ALTER COLUMN language_code SET NOT NULL"
 
+let private renameColumnCloseAtToFreezedAtSql =
+    "ALTER TABLE product RENAME COLUMN closed_at TO freezed_at"
+
 let create (dbConnection: IDbConnection) =
     dbConnection.Execute(createProductSql) |> ignore
 
@@ -94,3 +97,7 @@ let addLanguageCodes (dbConnection: IDbConnection) =
     |> ignore
 
     ()
+
+let renameColumnCloseAtToFreezedAt (dbConnection: IDbConnection) =
+    dbConnection.Execute(renameColumnCloseAtToFreezedAtSql)
+    |> ignore

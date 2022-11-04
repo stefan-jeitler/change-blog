@@ -1,28 +1,28 @@
 using System;
 using System.Threading.Tasks;
 using ChangeBlog.Application.Tests.TestDoubles;
-using ChangeBlog.Application.UseCases.Products.CloseProduct;
+using ChangeBlog.Application.UseCases.Products.FreezeProduct;
 using ChangeBlog.Domain;
 using Moq;
 using Xunit;
 
-namespace ChangeBlog.Application.Tests.UseCaseTests.Products.CloseProduct;
+namespace ChangeBlog.Application.Tests.UseCaseTests.Products.FreezeProduct;
 
-public class CloseProductInteractorTests
+public class FreezeProductInteractorTests
 {
     private readonly FakeProductDao _fakeProductDao;
     private readonly Mock<IFreezeProductOutputPort> _outputPortMock;
 
-    public CloseProductInteractorTests()
+    public FreezeProductInteractorTests()
     {
         _fakeProductDao = new FakeProductDao();
         _outputPortMock = new Mock<IFreezeProductOutputPort>(MockBehavior.Strict);
     }
 
-    private FreezeProductInteractor CreateInteractor() => new FreezeProductInteractor(_fakeProductDao);
+    private FreezeProductInteractor CreateInteractor() => new(_fakeProductDao);
 
     [Fact]
-    public async Task CloseProduct_ProductDoesNotExist_ProductDoesNotExistOutput()
+    public async Task FreezeProduct_ProductDoesNotExist_ProductDoesNotExistOutput()
     {
         // arrange
         var notExistingProductId = Guid.Parse("658ab2ec-ac88-47aa-af14-2093a0d07f4f");
@@ -37,7 +37,7 @@ public class CloseProductInteractorTests
     }
 
     [Fact]
-    public async Task CloseProduct_ProductAlreadyClosed_ProductAlreadyClosedOutput()
+    public async Task FreezeProduct_ProductAlreadyFreezed_ProductAlreadyFreezedOutput()
     {
         // arrange
         var product = new Product(TestAccount.Product.Id, TestAccount.Id, TestAccount.Product.Name,
@@ -56,7 +56,7 @@ public class CloseProductInteractorTests
     }
 
     [Fact]
-    public async Task CloseProduct_HappyPath_ProductClosedOutput()
+    public async Task FreezeProduct_HappyPath_ProductFreezedOutput()
     {
         // arrange
         var product = new Product(TestAccount.Product.Id, TestAccount.Id, TestAccount.Product.Name,

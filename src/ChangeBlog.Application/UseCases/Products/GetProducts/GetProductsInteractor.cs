@@ -32,7 +32,7 @@ public class GetProductsInteractor : IGetAccountProducts, IGetUserProducts, IGet
             requestModel.UserId,
             requestModel.LastProductId,
             requestModel.Limit,
-            requestModel.IncludeClosedProducts);
+            requestModel.IncludeFreezedProducts);
 
         var products = await _productDao.GetAccountProductsAsync(productQuerySettings);
         var currentUser = await _userDao.GetUserAsync(requestModel.UserId);
@@ -64,7 +64,7 @@ public class GetProductsInteractor : IGetAccountProducts, IGetUserProducts, IGet
         var querySettings = new UserProductsQuerySettings(requestModel.UserId,
             requestModel.LastProductId,
             requestModel.Limit,
-            requestModel.IncludeClosedProducts);
+            requestModel.IncludeFreezedProducts);
 
         var products = await _productDao.GetUserProductsAsync(querySettings);
         var currentUser = await _userDao.GetUserAsync(requestModel.UserId);
@@ -115,7 +115,7 @@ public class GetProductsInteractor : IGetAccountProducts, IGetUserProducts, IGet
     {
         var userName = creator.Email;
         var createdAtLocal = product.CreatedAt.ToLocal(timeZone);
-        var closedAtLocal = product.ClosedAt?.ToLocal(timeZone);
+        var freezedAtLocal = product.FreezedAt?.ToLocal(timeZone);
 
         return new ProductResponseModel(product.Id,
             product.AccountId,
@@ -126,6 +126,6 @@ public class GetProductsInteractor : IGetAccountProducts, IGetUserProducts, IGet
             product.LanguageCode.Value,
             userName,
             createdAtLocal,
-            closedAtLocal);
+            freezedAtLocal);
     }
 }

@@ -28,11 +28,9 @@ public class MakeChangeLogLinePendingInteractorTests
         _outputPortMock = new Mock<IMakeChangeLogLinePendingOutputPort>(MockBehavior.Strict);
     }
 
-    private MakeChangeLogLinePendingInteractor CreateInteractor()
-    {
-        return new MakeChangeLogLinePendingInteractor(_fakeVersionDao, _fakeChangeLogDao,
+    private MakeChangeLogLinePendingInteractor CreateInteractor() =>
+        new(_fakeVersionDao, _fakeChangeLogDao,
             _fakeChangeLogDao, _unitOfWorkMock.Object);
-    }
 
     [Fact]
     public async Task MakeLinePending_HappyPath_SuccessfullyAndUowStartedAndCommitted()
@@ -130,7 +128,7 @@ public class MakeChangeLogLinePendingInteractorTests
     }
 
     [Fact]
-    public async Task MakeLinePending_VersionIsClosed_VersionClosedOutput()
+    public async Task MakeLinePending_VersionIsFreezed_VersionFreezedOutput()
     {
         // arrange
         var clVersion = new ClVersion(Guid.NewGuid(), TestAccount.Product.Id,

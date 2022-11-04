@@ -10,5 +10,5 @@ public interface IReleaseVersionOutputPort
     void VersionReleased(Guid versionId);
     void Conflict(Conflict conflict);
     void VersionDoesNotExist(Guid versionId);
-    void RelatedProductClosed(Guid productId);
+    void RelatedProductFreezed(Guid productId);
 }

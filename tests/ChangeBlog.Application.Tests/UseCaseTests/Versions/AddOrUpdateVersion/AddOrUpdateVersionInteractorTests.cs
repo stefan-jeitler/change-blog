@@ -32,11 +32,9 @@ public class AddOrUpdateVersionInteractorTests
         _outputPortMock = new Mock<IAddOrUpdateVersionOutputPort>(MockBehavior.Strict);
     }
 
-    private AddOrUpdateVersionInteractor CreateInteractor()
-    {
-        return new AddOrUpdateVersionInteractor(_fakeProductDao, _fakeVersionDao,
+    private AddOrUpdateVersionInteractor CreateInteractor() =>
+        new(_fakeProductDao, _fakeVersionDao,
             _unitOfWorkMock.Object, _fakeChangeLogDao, _fakeChangeLogDao);
-    }
 
     [Fact]
     public async Task UpdateVersion_HappyPath_SuccessfullyUpdated()
@@ -114,12 +112,12 @@ public class AddOrUpdateVersionInteractorTests
     }
 
     [Fact]
-    public async Task UpdateVersion_ProductClosed_RelatedProductClosedOutput()
+    public async Task UpdateVersion_ProductFreezed_RelatedProductFreezedOutput()
     {
         // arrange
         var product = new Product(TestAccount.Account.Id, TestAccount.Product.Name,
             TestAccount.DefaultScheme, TestAccount.UserId, TestAccount.Product.LanguageCode,
-            TestAccount.Product.CreatedAt).Close();
+            TestAccount.Product.CreatedAt).Freeze();
 
         var requestModel =
             new VersionRequestModel(TestAccount.UserId, product.Id, "1.2.3", "catchy name",
@@ -134,13 +132,13 @@ public class AddOrUpdateVersionInteractorTests
         _fakeProductDao.Products.Add(product);
         var interactor = CreateInteractor();
 
-        _outputPortMock.Setup(m => m.RelatedProductClosed(It.IsAny<Guid>()));
+        _outputPortMock.Setup(m => m.RelatedProductFreezed(It.IsAny<Guid>()));
 
         // act
         await interactor.ExecuteAsync(_outputPortMock.Object, requestModel);
 
         // assert
-        _outputPortMock.Verify(m => m.RelatedProductClosed(It.Is<Guid>(x => x == product.Id)),
+        _outputPortMock.Verify(m => m.RelatedProductFreezed(It.Is<Guid>(x => x == product.Id)),
             Times.Once);
     }
 

@@ -6,7 +6,7 @@ namespace ChangeBlog.Api.DTOs.V1.Product;
 public class ProductDto
 {
     public ProductDto(Guid id, Guid accountId, string accountName, string name, Guid versioningSchemeId,
-        string versioningScheme, string languageCode, string createdByUser, DateTimeOffset createdAt, bool isClosed)
+        string versioningScheme, string languageCode, string createdByUser, DateTimeOffset createdAt, bool isFreezed)
     {
         Id = id;
         AccountId = accountId;
@@ -17,7 +17,7 @@ public class ProductDto
         LanguageCode = languageCode;
         CreatedByUser = createdByUser;
         CreatedAt = createdAt;
-        IsClosed = isClosed;
+        IsFreezed = isFreezed;
     }
 
     public Guid Id { get; }
@@ -29,11 +29,10 @@ public class ProductDto
     public string LanguageCode { get; }
     public string CreatedByUser { get; }
     public DateTimeOffset CreatedAt { get; }
-    public bool IsClosed { get; }
+    public bool IsFreezed { get; }
 
-    public static ProductDto FromResponseModel(ProductResponseModel m)
-    {
-        return new ProductDto(
+    public static ProductDto FromResponseModel(ProductResponseModel m) =>
+        new ProductDto(
             m.Id,
             m.AccountId,
             m.AccountName,
@@ -43,6 +42,5 @@ public class ProductDto
             m.LanguageCode,
             m.CreatedByUser,
             m.CreatedAt,
-            m.ClosedAt.HasValue);
-    }
+            m.FreezedAt.HasValue);
 }

@@ -34,14 +34,14 @@ public class AccountController : ControllerBase
         Guid? lastProductId = null,
         [Range(1, AccountProductQueryRequestModel.MaxLimit)]
         ushort limit = AccountProductQueryRequestModel.MaxLimit,
-        bool includeClosed = false)
+        bool includeFreezed = false)
     {
         var userId = HttpContext.GetUserId();
         var requestModel = new AccountProductQueryRequestModel(userId,
             accountId,
             lastProductId,
             limit,
-            includeClosed
+            includeFreezed
         );
 
         var products = await getAccountProducts.ExecuteAsync(requestModel);

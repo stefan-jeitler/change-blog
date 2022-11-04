@@ -8,15 +8,10 @@ public enum Permission
     DeleteAccount,
 
     AddOrUpdateProduct,
-
-    //ViewAccountProducts,
-    //CloseProduct,
     ViewProduct,
     FreezeProduct,
 
     AddOrUpdateVersion,
-    //AddVersion,
-
     ViewVersions,
     ReleaseVersion,
     DeleteVersion,

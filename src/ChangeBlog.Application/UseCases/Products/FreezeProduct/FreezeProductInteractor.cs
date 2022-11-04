@@ -2,7 +2,7 @@ using System;
 using System.Threading.Tasks;
 using ChangeBlog.Application.Boundaries.DataAccess.Products;
 
-namespace ChangeBlog.Application.UseCases.Products.CloseProduct;
+namespace ChangeBlog.Application.UseCases.Products.FreezeProduct;
 
 public class FreezeProductInteractor : IFreezeProduct
 {
@@ -22,14 +22,14 @@ public class FreezeProductInteractor : IFreezeProduct
             return;
         }
 
-        if (product.GetValueOrThrow().IsClosed)
+        if (product.GetValueOrThrow().IsFreezed)
         {
             output.ProductAlreadyFreezed(productId);
             return;
         }
 
-        var closedProduct = product.GetValueOrThrow().Close();
-        await _productDao.CloseProductAsync(closedProduct);
-        output.ProductFreezed(closedProduct.Id);
+        var freezedProduct = product.GetValueOrThrow().Freeze();
+        await _productDao.FreezeProductAsync(freezedProduct);
+        output.ProductFreezed(freezedProduct.Id);
     }
 }

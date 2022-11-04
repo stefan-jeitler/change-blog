@@ -510,15 +510,6 @@ namespace ChangeBlog.Api.Localization.Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to The product is already closed.
-        /// </summary>
-        public static string ProductAlreadyClosed {
-            get {
-                return ResourceManager.GetString("ProductAlreadyClosed", resourceCulture);
-            }
-        }
-        
-        /// <summary>
         ///   Looks up a localized string similar to The Product already exists.
         /// </summary>
         public static string ProductAlreadyExists {
@@ -528,11 +519,20 @@ namespace ChangeBlog.Api.Localization.Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to The related product has been closed.
+        ///   Looks up a localized string similar to The product is already freezed.
         /// </summary>
-        public static string ProductHasBeenClosed {
+        public static string ProductAlreadyFreezed {
             get {
-                return ResourceManager.GetString("ProductHasBeenClosed", resourceCulture);
+                return ResourceManager.GetString("ProductAlreadyFreezed", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to The related product has been freezed.
+        /// </summary>
+        public static string ProductHasBeenFreezed {
+            get {
+                return ResourceManager.GetString("ProductHasBeenFreezed", resourceCulture);
             }
         }
         

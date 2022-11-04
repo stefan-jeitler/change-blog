@@ -5,18 +5,18 @@ namespace ChangeBlog.Application.Boundaries.DataAccess.Products;
 public class AccountProductsQuerySettings
 {
     public AccountProductsQuerySettings(Guid accountId, Guid userId, Guid? lastProductId = null, ushort limit = 100,
-        bool includeClosedProducts = false)
+        bool includeFreezedProducts = false)
     {
         AccountId = accountId;
         UserId = userId;
         LastProductId = lastProductId;
         Limit = limit;
-        IncludeClosedProducts = includeClosedProducts;
+        IncludeFreezedProducts = includeFreezedProducts;
     }
 
     public Guid UserId { get; }
     public Guid AccountId { get; }
     public Guid? LastProductId { get; }
     public ushort Limit { get; }
-    public bool IncludeClosedProducts { get; }
+    public bool IncludeFreezedProducts { get; }
 }

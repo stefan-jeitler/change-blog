@@ -8,16 +8,16 @@ public class UserProductQueryRequestModel
     public const ushort MaxLimit = 100;
 
     public UserProductQueryRequestModel(Guid userId, Guid? lastProductId,
-        ushort limit, bool includeClosedProducts)
+        ushort limit, bool includeFreezedProducts)
     {
         UserId = Guard.Against.NullOrEmpty(userId, nameof(userId));
         LastProductId = lastProductId;
         Limit = Math.Min(limit, MaxLimit);
-        IncludeClosedProducts = includeClosedProducts;
+        IncludeFreezedProducts = includeFreezedProducts;
     }
 
     public Guid UserId { get; }
     public Guid? LastProductId { get; }
     public ushort Limit { get; }
-    public bool IncludeClosedProducts { get; }
+    public bool IncludeFreezedProducts { get; }
 }

@@ -108,7 +108,7 @@ public class AddOrUpdateVersionApiPresenter : BaseApiPresenter, IAddOrUpdateVers
             ErrorResponse.Create(string.Format(ChangeBlogStrings.TooManyChangeLogLines, maxChangeLogLines)));
     }
 
-    public void RelatedProductClosed(Guid productId)
+    public void RelatedProductFreezed(Guid productId)
     {
         var resourceIds = new Dictionary<string, string>
         {
@@ -116,7 +116,7 @@ public class AddOrUpdateVersionApiPresenter : BaseApiPresenter, IAddOrUpdateVers
         };
 
         Response = new ConflictObjectResult(
-            ErrorResponse.Create(ChangeBlogStrings.ProductAlreadyClosed, resourceIds));
+            ErrorResponse.Create(ChangeBlogStrings.ProductAlreadyFreezed, resourceIds));
     }
 
     public void UpdateConflict(Conflict conflict)

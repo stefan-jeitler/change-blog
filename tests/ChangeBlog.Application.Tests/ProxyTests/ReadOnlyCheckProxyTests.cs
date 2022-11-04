@@ -30,10 +30,8 @@ public class ReadOnlyCheckProxyTests
         _memoryCache = new MemoryCache(new MemoryCacheOptions());
     }
 
-    private ChangeLogLineReadonlyCheckProxy CreateProxy()
-    {
-        return new ChangeLogLineReadonlyCheckProxy(_fakeChangeLogDao, _fakeVersionDao, _memoryCache, _fakeProductDao);
-    }
+    private ChangeLogLineReadonlyCheckProxy CreateProxy() =>
+        new ChangeLogLineReadonlyCheckProxy(_fakeChangeLogDao, _fakeVersionDao, _memoryCache, _fakeProductDao);
 
     [Fact]
     public async Task AddLine_RelatedVersionAlreadyReleased_Conflict()
@@ -111,7 +109,7 @@ public class ReadOnlyCheckProxyTests
     }
 
     [Fact]
-    public async Task AddLine_RelatedProductIsClosed_Conflict()
+    public async Task AddLine_RelatedProductIsFreezed_Conflict()
     {
         // arrange
         var versionId = Guid.Parse("1d7831d5-32fb-437f-a9d5-bf5a7dd34b10");
@@ -136,12 +134,12 @@ public class ReadOnlyCheckProxyTests
 
         // assert
         result.IsFailure.Should().BeTrue();
-        result.Error.Should().BeOfType<ProductClosedConflict>();
+        result.Error.Should().BeOfType<ProductFreezedConflict>();
         _fakeChangeLogDao.ChangeLogs.Should().BeEmpty();
     }
 
     [Fact]
-    public async Task AddPendingLine_RelatedProductIsClosed_Conflict()
+    public async Task AddPendingLine_RelatedProductIsFreezed_Conflict()
     {
         // arrange
         _fakeProductDao.Products.Add(new Product(TestAccount.Product.Id, TestAccount.Id, Name.Parse("Test product"),
@@ -160,7 +158,7 @@ public class ReadOnlyCheckProxyTests
 
         // assert
         result.IsFailure.Should().BeTrue();
-        result.Error.Should().BeOfType<ProductClosedConflict>();
+        result.Error.Should().BeOfType<ProductFreezedConflict>();
         _fakeChangeLogDao.ChangeLogs.Should().BeEmpty();
     }
 
@@ -295,7 +293,7 @@ public class ReadOnlyCheckProxyTests
         var proxy = CreateProxy();
 
         // act
-        var result = await proxy.AddOrUpdateLinesAsync(new List<ChangeLogLine>(2) { firstLine, secondLine });
+        var result = await proxy.AddOrUpdateLinesAsync(new List<ChangeLogLine>(2) {firstLine, secondLine});
 
         // assert
         result.IsSuccess.Should().BeTrue();
@@ -329,7 +327,7 @@ public class ReadOnlyCheckProxyTests
         var proxy = CreateProxy();
 
         // act
-        var result = await proxy.AddOrUpdateLinesAsync(new List<ChangeLogLine>(2) { firstLine, secondLine });
+        var result = await proxy.AddOrUpdateLinesAsync(new List<ChangeLogLine>(2) {firstLine, secondLine});
 
         // assert
         result.IsSuccess.Should().BeFalse();
@@ -398,7 +396,7 @@ public class ReadOnlyCheckProxyTests
 
         // act
         var result = await proxy.MoveLinesAsync(new List<ChangeLogLine>(2)
-            { firstLineAssigned, secondLineAssigned });
+            {firstLineAssigned, secondLineAssigned});
 
         // assert
         result.IsSuccess.Should().BeTrue();
@@ -434,7 +432,7 @@ public class ReadOnlyCheckProxyTests
 
         // act
         var result = await proxy.MoveLinesAsync(new List<ChangeLogLine>(2)
-            { firstLineAssigned, secondLineAssigned });
+            {firstLineAssigned, secondLineAssigned});
 
         // assert
         result.IsSuccess.Should().BeFalse();

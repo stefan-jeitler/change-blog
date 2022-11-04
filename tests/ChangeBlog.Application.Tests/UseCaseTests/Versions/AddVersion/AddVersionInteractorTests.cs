@@ -33,11 +33,9 @@ public class AddVersionInteractorTests
         _outputPortMock = new Mock<IAddVersionOutputPort>(MockBehavior.Strict);
     }
 
-    private AddOrUpdateVersionInteractor CreateInteractor()
-    {
-        return new AddOrUpdateVersionInteractor(_fakeProductDao, _fakeVersionDao,
+    private AddOrUpdateVersionInteractor CreateInteractor() =>
+        new(_fakeProductDao, _fakeVersionDao,
             _unitOfWorkMock.Object, _fakeChangeLogDao, _fakeChangeLogDao);
-    }
 
     [Fact]
     public async Task AddVersion_ValidVersion_Successful()
@@ -45,9 +43,9 @@ public class AddVersionInteractorTests
         // arrange
         var changeLogLines = new List<ChangeLogLineRequestModel>
         {
-            new("Proxy bug resolved", new List<string> { "ProxyStrikesBack" }, new List<string> { "#123" }),
-            new("New feature added", new List<string> { "Feature" }, new List<string>()),
-            new("Allow https only", new List<string> { "Security" }, new List<string>())
+            new("Proxy bug resolved", new List<string> {"ProxyStrikesBack"}, new List<string> {"#123"}),
+            new("New feature added", new List<string> {"Feature"}, new List<string>()),
+            new("Allow https only", new List<string> {"Security"}, new List<string>())
         };
         var versionRequestModel = new VersionRequestModel(TestAccount.UserId, TestAccount.Product.Id,
             "1.23", "", changeLogLines);
@@ -73,9 +71,9 @@ public class AddVersionInteractorTests
         // arrange
         var changeLogLines = new List<ChangeLogLineRequestModel>
         {
-            new("Proxy bug resolved", new List<string> { "ProxyStrikesBack" }, new List<string> { "#123" }),
-            new("New feature added", new List<string> { "Feature" }, new List<string>()),
-            new("Allow https only", new List<string> { "Security" }, new List<string>())
+            new("Proxy bug resolved", new List<string> {"ProxyStrikesBack"}, new List<string> {"#123"}),
+            new("New feature added", new List<string> {"Feature"}, new List<string>()),
+            new("Allow https only", new List<string> {"Security"}, new List<string>())
         };
         var versionRequestModel = new VersionRequestModel(TestAccount.UserId, TestAccount.Product.Id,
             "1.23", OptionalName.Empty, changeLogLines);
@@ -93,12 +91,12 @@ public class AddVersionInteractorTests
     }
 
     [Fact]
-    public async Task AddVersion_ProductIsClosed_ProductClosedOutput()
+    public async Task AddVersion_ProductIsFreezed_ProductFreezedOutput()
     {
         // arrange
         var changeLogLines = new List<ChangeLogLineRequestModel>
         {
-            new("Proxy bug resolved", new List<string> { "ProxyStrikesBack" }, new List<string> { "#123" })
+            new("Proxy bug resolved", new List<string> {"ProxyStrikesBack"}, new List<string> {"#123"})
         };
         var versionRequestModel = new VersionRequestModel(TestAccount.UserId, TestAccount.Product.Id,
             "1.23", OptionalName.Empty, changeLogLines);
@@ -112,14 +110,14 @@ public class AddVersionInteractorTests
             DateTime.Parse("2021-05-13"),
             DateTime.Parse("2021-05-13")));
 
-        _outputPortMock.Setup(m => m.RelatedProductClosed(It.IsAny<Guid>()));
+        _outputPortMock.Setup(m => m.RelatedProductFreezed(It.IsAny<Guid>()));
         var addVersionInteractor = CreateInteractor();
 
         // act
         await addVersionInteractor.ExecuteAsync(_outputPortMock.Object, versionRequestModel);
 
         // assert
-        _outputPortMock.Verify(m => m.RelatedProductClosed(It.Is<Guid>(x => x == TestAccount.Product.Id)),
+        _outputPortMock.Verify(m => m.RelatedProductFreezed(It.Is<Guid>(x => x == TestAccount.Product.Id)),
             Times.Once);
     }
 
@@ -129,7 +127,7 @@ public class AddVersionInteractorTests
         // arrange
         var changeLogLines = new List<ChangeLogLineRequestModel>
         {
-            new("Proxy bug resolved", new List<string> { "ProxyStrikesBack" }, new List<string> { "#123" })
+            new("Proxy bug resolved", new List<string> {"ProxyStrikesBack"}, new List<string> {"#123"})
         };
         var versionRequestModel = new VersionRequestModel(TestAccount.UserId, TestAccount.Product.Id,
             "1.23", OptionalName.Empty, changeLogLines);
@@ -155,9 +153,9 @@ public class AddVersionInteractorTests
         // arrange
         var changeLogLines = new List<ChangeLogLineRequestModel>
         {
-            new("Proxy bug resolved", new List<string> { "ProxyStrikesBack" }, new List<string> { "#123" }),
-            new("New feature added", new List<string> { "Feature" }, new List<string>()),
-            new("Allow https only", new List<string> { "Security" }, new List<string>())
+            new("Proxy bug resolved", new List<string> {"ProxyStrikesBack"}, new List<string> {"#123"}),
+            new("New feature added", new List<string> {"Feature"}, new List<string>()),
+            new("Allow https only", new List<string> {"Security"}, new List<string>())
         };
         var versionRequestModel = new VersionRequestModel(TestAccount.UserId, TestAccount.Product.Id,
             "1. .2", OptionalName.Empty, changeLogLines);
@@ -180,9 +178,9 @@ public class AddVersionInteractorTests
         // arrange
         var changeLogLines = new List<ChangeLogLineRequestModel>
         {
-            new("Proxy bug resolved", new List<string> { "ProxyStrikesBack" }, new List<string> { "#123" }),
-            new("New feature added", new List<string> { "Feature" }, new List<string>()),
-            new("Allow https only", new List<string> { "Security" }, new List<string>())
+            new("Proxy bug resolved", new List<string> {"ProxyStrikesBack"}, new List<string> {"#123"}),
+            new("New feature added", new List<string> {"Feature"}, new List<string>()),
+            new("Allow https only", new List<string> {"Security"}, new List<string>())
         };
         var versionRequestModel = new VersionRequestModel(TestAccount.UserId, TestAccount.Product.Id,
             "*.23", OptionalName.Empty, changeLogLines);
@@ -205,7 +203,7 @@ public class AddVersionInteractorTests
         // arrange
         var changeLogLines = Enumerable.Range(0, 101)
             .Select(x =>
-                new ChangeLogLineRequestModel($"{x:D5}", new List<string> { "Security" }, new List<string>()))
+                new ChangeLogLineRequestModel($"{x:D5}", new List<string> {"Security"}, new List<string>()))
             .ToList();
 
         var versionRequestModel = new VersionRequestModel(TestAccount.UserId, TestAccount.Product.Id,
@@ -229,9 +227,9 @@ public class AddVersionInteractorTests
         // arrange
         var changeLogLines = new List<ChangeLogLineRequestModel>
         {
-            new("Proxy bug resolved", new List<string> { "ProxyStrikesBack" }, new List<string> { "#123" }),
-            new("New feature added", new List<string> { "Feature" }, new List<string>()),
-            new("Allow https only", new List<string> { "Security" }, new List<string>())
+            new("Proxy bug resolved", new List<string> {"ProxyStrikesBack"}, new List<string> {"#123"}),
+            new("New feature added", new List<string> {"Feature"}, new List<string>()),
+            new("Allow https only", new List<string> {"Security"}, new List<string>())
         };
         var versionRequestModel =
             new VersionRequestModel(TestAccount.UserId, TestAccount.Product.Id, "1.23", OptionalName.Empty,
@@ -254,10 +252,10 @@ public class AddVersionInteractorTests
         // arrange
         var changeLogLines = new List<ChangeLogLineRequestModel>
         {
-            new("Proxy bug resolved", new List<string> { "ProxyStrikesBack" }, new List<string> { "#123" }),
-            new("New feature added", new List<string> { "Feature" }, new List<string>()),
-            new("Allow https only", new List<string> { "Security" }, new List<string>()),
-            new("Allow https only", new List<string> { "Security" }, new List<string> { "#1234" })
+            new("Proxy bug resolved", new List<string> {"ProxyStrikesBack"}, new List<string> {"#123"}),
+            new("New feature added", new List<string> {"Feature"}, new List<string>()),
+            new("Allow https only", new List<string> {"Security"}, new List<string>()),
+            new("Allow https only", new List<string> {"Security"}, new List<string> {"#1234"})
         };
         var versionRequestModel = new VersionRequestModel(TestAccount.UserId, TestAccount.Product.Id,
             "1.23", OptionalName.Empty, changeLogLines);
@@ -281,8 +279,8 @@ public class AddVersionInteractorTests
         // arrange
         var changeLogLines = new List<ChangeLogLineRequestModel>
         {
-            new("Proxy bug resolved", new List<string> { "ProxyStrikesBack" }, new List<string> { "#123" }),
-            new("New feature added", new List<string> { "Feature" }, new List<string>())
+            new("Proxy bug resolved", new List<string> {"ProxyStrikesBack"}, new List<string> {"#123"}),
+            new("New feature added", new List<string> {"Feature"}, new List<string>())
         };
         var versionRequestModel = new VersionRequestModel(TestAccount.UserId, TestAccount.Product.Id,
             "1.23", OptionalName.Empty, changeLogLines);
@@ -304,7 +302,7 @@ public class AddVersionInteractorTests
         // arrange
         var changeLogLines = Enumerable.Range(0, 50)
             .Select(x =>
-                new ChangeLogLineRequestModel($"{x:D5}", new List<string> { "Security" }, new List<string>()))
+                new ChangeLogLineRequestModel($"{x:D5}", new List<string> {"Security"}, new List<string>()))
             .ToList();
 
         var versionRequestModel = new VersionRequestModel(TestAccount.UserId, TestAccount.Product.Id,
@@ -319,9 +317,7 @@ public class AddVersionInteractorTests
 
         // assert
         foreach (var (lineRequestModel, i) in changeLogLines.Select((x, i) => (x, i)))
-        {
             _fakeChangeLogDao.ChangeLogs[i].Position.Should().Be(uint.Parse(lineRequestModel.Text));
-        }
     }
 
     [Fact]
@@ -330,9 +326,9 @@ public class AddVersionInteractorTests
         // arrange
         var changeLogLines = new List<ChangeLogLineRequestModel>
         {
-            new("Proxy bug resolved", new List<string> { "ProxyStrikesBack" }, new List<string> { "#123" }),
-            new("New feature added", new List<string> { "Feature" }, new List<string>()),
-            new("Allow https only", new List<string> { "Security" }, new List<string>())
+            new("Proxy bug resolved", new List<string> {"ProxyStrikesBack"}, new List<string> {"#123"}),
+            new("New feature added", new List<string> {"Feature"}, new List<string>()),
+            new("Allow https only", new List<string> {"Security"}, new List<string>())
         };
         var versionRequestModel = new VersionRequestModel(TestAccount.UserId, TestAccount.Product.Id,
             "1.23", OptionalName.Empty, changeLogLines);
@@ -355,9 +351,9 @@ public class AddVersionInteractorTests
         // arrange
         var changeLogLines = new List<ChangeLogLineRequestModel>
         {
-            new("Proxy bug resolved", new List<string> { "ProxyStrikesBack" }, new List<string> { "#123" }),
-            new("New feature added", new List<string> { "Feature" }, new List<string>()),
-            new("Allow https only", new List<string> { "Security" }, new List<string>())
+            new("Proxy bug resolved", new List<string> {"ProxyStrikesBack"}, new List<string> {"#123"}),
+            new("New feature added", new List<string> {"Feature"}, new List<string>()),
+            new("Allow https only", new List<string> {"Security"}, new List<string>())
         };
         var versionRequestModel = new VersionRequestModel(TestAccount.UserId, TestAccount.Product.Id,
             "1.23", OptionalName.Empty, changeLogLines);

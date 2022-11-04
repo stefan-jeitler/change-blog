@@ -22,10 +22,8 @@ public class ProductsQueryRequestModelTests
         _testCount = 100;
     }
 
-    private AccountProductQueryRequestModel CreateRequestModel()
-    {
-        return new AccountProductQueryRequestModel(_testUserId, _testAccountId, _testLastProductId, _testCount, true);
-    }
+    private AccountProductQueryRequestModel CreateRequestModel() =>
+        new AccountProductQueryRequestModel(_testUserId, _testAccountId, _testLastProductId, _testCount, true);
 
     [Fact]
     public void Create_HappyPath_Successful()
@@ -36,7 +34,7 @@ public class ProductsQueryRequestModelTests
         requestModel.AccountId.Should().Be(_testAccountId);
         requestModel.LastProductId.Should().Be(_testLastProductId);
         requestModel.Limit.Should().Be(_testCount);
-        requestModel.IncludeClosedProducts.Should().Be(true);
+        requestModel.IncludeFreezedProducts.Should().Be(true);
     }
 
     [Fact]

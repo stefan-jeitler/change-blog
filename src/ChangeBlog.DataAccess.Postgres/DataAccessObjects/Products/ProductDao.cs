@@ -55,10 +55,8 @@ public class ProductDao : IProductDao
         var product = await FindProductAsync(productId);
 
         if (product.HasNoValue)
-        {
             throw new Exception(
                 "The requested product does not exist. If you are not sure whether the product exists use 'FindProduct' otherwise file an issue.");
-        }
 
         return product.GetValueOrThrow();
     }
@@ -66,7 +64,7 @@ public class ProductDao : IProductDao
     public async Task<IList<Product>> GetAccountProductsAsync(AccountProductsQuerySettings querySettings)
     {
         var sql = GetProductsForAccountSql(querySettings.LastProductId.HasValue,
-            querySettings.IncludeClosedProducts);
+            querySettings.IncludeFreezedProducts);
 
         var products = await _dbAccessor.DbConnection
             .QueryAsync<Product>(sql, new
@@ -74,7 +72,7 @@ public class ProductDao : IProductDao
                 accountId = querySettings.AccountId,
                 userId = querySettings.UserId,
                 lastProductId = querySettings.LastProductId,
-                limit = (int)querySettings.Limit
+                limit = (int) querySettings.Limit
             });
 
         return products.AsList();
@@ -83,14 +81,14 @@ public class ProductDao : IProductDao
     public async Task<IList<Product>> GetUserProductsAsync(UserProductsQuerySettings querySettings)
     {
         var sql = GetProductsForUserSql(querySettings.LastProductId.HasValue,
-            querySettings.IncludeClosedProducts);
+            querySettings.IncludeFreezeProducts);
 
         var products = await _dbAccessor.DbConnection
             .QueryAsync<Product>(sql, new
             {
                 userId = querySettings.UserId,
                 lastProductId = querySettings.LastProductId,
-                limit = (int)querySettings.Limit
+                limit = (int) querySettings.Limit
             });
 
         return products.AsList();
@@ -99,8 +97,8 @@ public class ProductDao : IProductDao
     public async Task<Result<Product, Conflict>> AddProductAsync(Product product)
     {
         const string insertProductSql = @"
-                INSERT INTO product (id, account_id, versioning_scheme_id, name, created_by_user, closed_at, created_at, language_code)
-                VALUES (@id, @accountId, @versioningSchemeId, @name, @user, @closedAt, @createdAt, @languageCode)";
+                INSERT INTO product (id, account_id, versioning_scheme_id, name, created_by_user, freezed_at, created_at, language_code)
+                VALUES (@id, @accountId, @versioningSchemeId, @name, @user, @freezedAt, @createdAt, @languageCode)";
 
         try
         {
@@ -112,7 +110,7 @@ public class ProductDao : IProductDao
                     versioningSchemeId = product.VersioningScheme.Id,
                     name = product.Name,
                     user = product.CreatedByUser,
-                    closedAt = product.ClosedAt,
+                    freezedAt = product.FreezedAt,
                     createdAt = product.CreatedAt,
                     languageCode = product.LanguageCode.Value
                 });
@@ -126,18 +124,16 @@ public class ProductDao : IProductDao
         }
     }
 
-    public async Task CloseProductAsync(Product product)
+    public async Task FreezeProductAsync(Product product)
     {
-        if (!product.ClosedAt.HasValue)
-        {
-            throw new Exception("The given product has no closed date.");
-        }
+        if (!product.FreezedAt.HasValue)
+            throw new Exception("The given product has no freezed date.");
 
-        const string closeProductSql = "UPDATE product SET closed_at = @closedAt WHERE id = @productId";
+        const string freezeProductSql = "UPDATE product SET freezed_at = @freezedAt WHERE id = @productId";
 
-        await _dbAccessor.DbConnection.ExecuteScalarAsync(closeProductSql, new
+        await _dbAccessor.DbConnection.ExecuteScalarAsync(freezeProductSql, new
         {
-            closedAt = product.ClosedAt,
+            freezedAt = product.FreezedAt,
             productId = product.Id
         });
     }

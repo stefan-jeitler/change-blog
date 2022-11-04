@@ -21,7 +21,7 @@ public class DeleteVersionApiPresenter : BaseApiPresenter, IDeleteVersionOutputP
         Response = new NotFoundObjectResult(ErrorResponse.Create(ChangeBlogStrings.VersionNotFound, resourceIds));
     }
 
-    public void RelatedProductClosed(Guid productId)
+    public void RelatedProductFreezed(Guid productId)
     {
         var resourceIds = new Dictionary<string, string>
         {
@@ -29,7 +29,7 @@ public class DeleteVersionApiPresenter : BaseApiPresenter, IDeleteVersionOutputP
         };
 
         Response = new ConflictObjectResult(
-            ErrorResponse.Create(ChangeBlogStrings.ProductAlreadyClosed, resourceIds));
+            ErrorResponse.Create(ChangeBlogStrings.ProductAlreadyFreezed, resourceIds));
     }
 
     public void VersionAlreadyDeleted(Guid versionId)

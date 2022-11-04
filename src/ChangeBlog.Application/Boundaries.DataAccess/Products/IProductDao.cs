@@ -17,7 +17,7 @@ public interface IProductDao
     Task<IList<Product>> GetUserProductsAsync(UserProductsQuerySettings querySettings);
 
     Task<Result<Product, Conflict>> AddProductAsync(Product product);
-    Task CloseProductAsync(Product product);
+    Task FreezeProductAsync(Product product);
 
     Task<IList<Name>> GetSupportedLanguageCodesAsync();
 }

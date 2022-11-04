@@ -158,11 +158,11 @@ export class Client {
     /**
      * @param lastProductId (optional) 
      * @param limit (optional) 
-     * @param includeClosed (optional) 
+     * @param includeFreezed (optional) 
      * @param accept_Language (optional) Defines which language should be used for response messages.
      * @return Success
      */
-    getAccountProducts(accountId: string, lastProductId?: string | undefined, limit?: number | undefined, includeClosed?: boolean | undefined, accept_Language?: AcceptLanguage | undefined): Observable<ProductDto[]> {
+    getAccountProducts(accountId: string, lastProductId?: string | undefined, limit?: number | undefined, includeFreezed?: boolean | undefined, accept_Language?: AcceptLanguage | undefined): Observable<ProductDto[]> {
         let url_ = this.baseUrl + "/api/v1/accounts/{accountId}/products?";
         if (accountId === undefined || accountId === null)
             throw new Error("The parameter 'accountId' must be defined.");
@@ -175,10 +175,10 @@ export class Client {
             throw new Error("The parameter 'limit' cannot be null.");
         else if (limit !== undefined)
             url_ += "limit=" + encodeURIComponent("" + limit) + "&";
-        if (includeClosed === null)
-            throw new Error("The parameter 'includeClosed' cannot be null.");
-        else if (includeClosed !== undefined)
-            url_ += "includeClosed=" + encodeURIComponent("" + includeClosed) + "&";
+        if (includeFreezed === null)
+            throw new Error("The parameter 'includeFreezed' cannot be null.");
+        else if (includeFreezed !== undefined)
+            url_ += "includeFreezed=" + encodeURIComponent("" + includeFreezed) + "&";
         url_ = url_.replace(/[?&]$/, "");
 
         let options_ : any = {
@@ -257,11 +257,11 @@ export class Client {
     /**
      * @param lastProductId (optional) 
      * @param limit (optional) 
-     * @param includeClosed (optional) 
+     * @param includeFreezed (optional) 
      * @param accept_Language (optional) Defines which language should be used for response messages.
      * @return Success
      */
-    getUserProducts(lastProductId?: string | undefined, limit?: number | undefined, includeClosed?: boolean | undefined, accept_Language?: AcceptLanguage | undefined): Observable<ProductDto[]> {
+    getUserProducts(lastProductId?: string | undefined, limit?: number | undefined, includeFreezed?: boolean | undefined, accept_Language?: AcceptLanguage | undefined): Observable<ProductDto[]> {
         let url_ = this.baseUrl + "/api/v1/user/products?";
         if (lastProductId === null)
             throw new Error("The parameter 'lastProductId' cannot be null.");
@@ -271,10 +271,10 @@ export class Client {
             throw new Error("The parameter 'limit' cannot be null.");
         else if (limit !== undefined)
             url_ += "limit=" + encodeURIComponent("" + limit) + "&";
-        if (includeClosed === null)
-            throw new Error("The parameter 'includeClosed' cannot be null.");
-        else if (includeClosed !== undefined)
-            url_ += "includeClosed=" + encodeURIComponent("" + includeClosed) + "&";
+        if (includeFreezed === null)
+            throw new Error("The parameter 'includeFreezed' cannot be null.");
+        else if (includeFreezed !== undefined)
+            url_ += "includeFreezed=" + encodeURIComponent("" + includeFreezed) + "&";
         url_ = url_.replace(/[?&]$/, "");
 
         let options_ : any = {
@@ -538,8 +538,8 @@ export class Client {
      * @param accept_Language (optional) Defines which language should be used for response messages.
      * @return Success
      */
-    closeProduct(productId: string, accept_Language?: AcceptLanguage | undefined): Observable<SuccessResponse> {
-        let url_ = this.baseUrl + "/api/v1/products/{productId}/close";
+    freezeProduct(productId: string, accept_Language?: AcceptLanguage | undefined): Observable<SuccessResponse> {
+        let url_ = this.baseUrl + "/api/v1/products/{productId}/freeze";
         if (productId === undefined || productId === null)
             throw new Error("The parameter 'productId' must be defined.");
         url_ = url_.replace("{productId}", encodeURIComponent("" + productId));
@@ -555,11 +555,11 @@ export class Client {
         };
 
         return this.http.request("post", url_, options_).pipe(_observableMergeMap((response_ : any) => {
-            return this.processCloseProduct(response_);
+            return this.processFreezeProduct(response_);
         })).pipe(_observableCatch((response_: any) => {
             if (response_ instanceof HttpResponseBase) {
                 try {
-                    return this.processCloseProduct(response_ as any);
+                    return this.processFreezeProduct(response_ as any);
                 } catch (e) {
                     return _observableThrow(e) as any as Observable<SuccessResponse>;
                 }
@@ -568,7 +568,7 @@ export class Client {
         }));
     }
 
-    protected processCloseProduct(response: HttpResponseBase): Observable<SuccessResponse> {
+    protected processFreezeProduct(response: HttpResponseBase): Observable<SuccessResponse> {
         const status = response.status;
         const responseBlob =
             response instanceof HttpResponse ? response.body :
@@ -3801,7 +3801,7 @@ export class ProductDto implements IProductDto {
     languageCode?: string | undefined;
     createdByUser?: string | undefined;
     createdAt?: Date;
-    isClosed?: boolean;
+    isFreezed?: boolean;
 
     constructor(data?: IProductDto) {
         if (data) {
@@ -3823,7 +3823,7 @@ export class ProductDto implements IProductDto {
             this.languageCode = _data["languageCode"];
             this.createdByUser = _data["createdByUser"];
             this.createdAt = _data["createdAt"] ? new Date(_data["createdAt"].toString()) : <any>undefined;
-            this.isClosed = _data["isClosed"];
+            this.isFreezed = _data["isFreezed"];
         }
     }
 
@@ -3845,7 +3845,7 @@ export class ProductDto implements IProductDto {
         data["languageCode"] = this.languageCode;
         data["createdByUser"] = this.createdByUser;
         data["createdAt"] = this.createdAt ? this.createdAt.toISOString() : <any>undefined;
-        data["isClosed"] = this.isClosed;
+        data["isFreezed"] = this.isFreezed;
         return data;
     }
 }
@@ -3860,7 +3860,7 @@ export interface IProductDto {
     languageCode?: string | undefined;
     createdByUser?: string | undefined;
     createdAt?: Date;
-    isClosed?: boolean;
+    isFreezed?: boolean;
 }
 
 export class PropertyErrorMessages implements IPropertyErrorMessages {

@@ -6,7 +6,7 @@ public class ProductResponseModel
 {
     public ProductResponseModel(Guid id, Guid accountId, string accountName, string name,
         Guid versioningSchemeId, string versioningScheme, string languageCode, string createdByUser,
-        DateTimeOffset createdAt, DateTimeOffset? closedAt)
+        DateTimeOffset createdAt, DateTimeOffset? freezedAt)
     {
         Id = id;
         AccountId = accountId;
@@ -17,7 +17,7 @@ public class ProductResponseModel
         LanguageCode = languageCode ?? throw new ArgumentNullException(nameof(languageCode));
         CreatedByUser = createdByUser ?? throw new ArgumentNullException(nameof(createdByUser));
         CreatedAt = createdAt;
-        ClosedAt = closedAt;
+        FreezedAt = freezedAt;
     }
 
     public Guid Id { get; }
@@ -29,5 +29,5 @@ public class ProductResponseModel
     public string LanguageCode { get; }
     public string CreatedByUser { get; }
     public DateTimeOffset CreatedAt { get; }
-    public DateTimeOffset? ClosedAt { get; }
+    public DateTimeOffset? FreezedAt { get; }
 }

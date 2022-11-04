@@ -23,15 +23,12 @@ public class DeleteVersionInteractor : IDeleteVersion
     public async Task ExecuteAsync(IDeleteVersionOutputPort output, Guid versionId)
     {
         var clVersion = await GetVersionAsync(output, versionId);
-        if (clVersion.HasNoValue)
-        {
-            return;
-        }
+        if (clVersion.HasNoValue) return;
 
         var product = await _productDao.GetProductAsync(clVersion.GetValueOrThrow().ProductId);
-        if (product.IsClosed)
+        if (product.IsFreezed)
         {
-            output.RelatedProductClosed(product.Id);
+            output.RelatedProductFreezed(product.Id);
             return;
         }
 

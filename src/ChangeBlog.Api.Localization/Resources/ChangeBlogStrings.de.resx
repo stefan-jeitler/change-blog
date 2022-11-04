@@ -141,8 +141,8 @@
     <data name="VersionDeleted" xml:space="preserve">
     <value>Die Version wurde gelöscht</value>
   </data>
-    <data name="ProductHasBeenClosed" xml:space="preserve">
-      <value>Das Produkt wurde eingestampft</value>
+    <data name="ProductHasBeenFreezed" xml:space="preserve">
+      <value>Das Produkt wurde freezed</value>
     </data>
     <data name="ChangeLogLineDeleted" xml:space="preserve">
     <value>Der Changelog Eintrag wurde gelöscht</value>
@@ -279,9 +279,9 @@
     <data name="VersionAlreadyExists" xml:space="preserve">
     <value>Die Version existiert bereits</value>
   </data>
-    <data name="ProductAlreadyClosed" xml:space="preserve">
-    <value>Das Produkt wurde bereits eingestampft</value>
-  </data>
+    <data name="ProductAlreadyFreezed" xml:space="preserve">
+      <value>Das Produkt wurde bereits freezed</value>
+    </data>
     <data name="VersionUpdateForbidden" xml:space="preserve">
     <value>Sie können keine Versionen aktualisieren, die bereits released oder gelöscht wurden</value>
   </data>

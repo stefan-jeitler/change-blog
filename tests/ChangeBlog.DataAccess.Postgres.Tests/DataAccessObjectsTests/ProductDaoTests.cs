@@ -34,7 +34,7 @@ public class ProductDaoTests : IAsyncLifetime
         return Task.CompletedTask;
     }
 
-    private ProductDao CreateDao() => new ProductDao(new DbSession(_lazyDbConnection), NullLogger<ProductDao>.Instance);
+    private ProductDao CreateDao() => new(new DbSession(_lazyDbConnection), NullLogger<ProductDao>.Instance);
 
     [Fact]
     public async Task FindProduct_ByAccountIdAndName_ReturnsProduct()
@@ -149,22 +149,22 @@ public class ProductDaoTests : IAsyncLifetime
     }
 
     [Fact]
-    public async Task CloseProduct_HappyPath_SuccessfullyClosed()
+    public async Task FreezedProduct_HappyPath_SuccessfullyFreezed()
     {
         // arrange
         var productDao = CreateDao();
-        await _lazyDbConnection.Value.ExecuteAsync("update product set closed_at = null where id = @productId", new
+        await _lazyDbConnection.Value.ExecuteAsync("update product set freezed_at = null where id = @productId", new
         {
             productId = TestData.Product.Id
         });
 
         // act
-        var closedProduct = TestData.Product.Close();
-        await productDao.CloseProductAsync(closedProduct);
+        var freezedProduct = TestData.Product.Freeze();
+        await productDao.FreezeProductAsync(freezedProduct);
 
         // assert
         var exists = await _lazyDbConnection.Value.ExecuteScalarAsync<bool>(
-            "select exists(select null from product where id = @productId and closed_at is not null)",
+            "select exists(select null from product where id = @productId and freezed_at is not null)",
             new {productId = TestData.Product.Id});
         exists.Should().BeTrue();
     }

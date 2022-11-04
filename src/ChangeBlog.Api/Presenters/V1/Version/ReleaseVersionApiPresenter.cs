@@ -18,7 +18,8 @@ public class ReleaseVersionApiPresenter : BaseApiPresenter, IReleaseVersionOutpu
             [KnownIdentifiers.VersionId] = versionId.ToString()
         };
 
-        Response = new ConflictObjectResult(SuccessResponse.Create(ChangeBlogStrings.VersionCannotBeReleasedBecauseDeleted, resourceIds));
+        Response = new ConflictObjectResult(
+            SuccessResponse.Create(ChangeBlogStrings.VersionCannotBeReleasedBecauseDeleted, resourceIds));
     }
 
     public void VersionAlreadyReleased(Guid versionId)
@@ -57,7 +58,7 @@ public class ReleaseVersionApiPresenter : BaseApiPresenter, IReleaseVersionOutpu
         Response = new NotFoundObjectResult(ErrorResponse.Create(ChangeBlogStrings.VersionNotFound, resourceIds));
     }
 
-    public void RelatedProductClosed(Guid productId)
+    public void RelatedProductFreezed(Guid productId)
     {
         var resourceIds = new Dictionary<string, string>
         {
@@ -65,6 +66,6 @@ public class ReleaseVersionApiPresenter : BaseApiPresenter, IReleaseVersionOutpu
         };
 
         Response = new ConflictObjectResult(
-            ErrorResponse.Create(ChangeBlogStrings.ProductAlreadyClosed, resourceIds));
+            ErrorResponse.Create(ChangeBlogStrings.ProductAlreadyFreezed, resourceIds));
     }
 }

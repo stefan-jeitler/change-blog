@@ -1,5 +1,5 @@
 import {ChangeBlogManagementApi} from "../../clients/ChangeBlogManagementApiClient";
-import IErrorMessages = ChangeBlogManagementApi.IErrorMessages;
+import ErrorMessages = ChangeBlogManagementApi.ErrorMessages;
 
 export type Loading = {
     state: 'loading'
@@ -16,7 +16,7 @@ export type NotFound = {
 
 export type UnknownError = {
     state: 'unknown-error';
-    details: IErrorMessages[];
+    errorDetails: ErrorMessages[];
 };
 
 export type Resource<T> =

@@ -39,7 +39,7 @@ export class AccountComponent implements OnInit {
                     } else {
                         this.resource = {
                             state: 'unknown-error',
-                            details: e.result?.errors ?? []
+                            errorDetails: e.result?.errors ?? []
                         };
                     }
 

@@ -15,7 +15,7 @@ using Microsoft.AspNetCore.Mvc;
 namespace ChangeBlog.Management.Api.Controllers;
 
 [ApiController]
-[Route("api/permission")]
+[Route("api/permissions")]
 [Produces(MediaTypeNames.Application.Json)]
 [ProducesResponseType(typeof(ErrorResponse), StatusCodes.Status401Unauthorized)]
 [SwaggerControllerOrder(1)]
@@ -28,10 +28,10 @@ public class PermissionsController : ControllerBase
         _getAuthorizationState = getAuthorizationState;
     }
 
-    [HttpGet("permissions", Name = "GetPermissions")]
+    [HttpGet(Name = "GetPermissions")]
     [SkipAuthorization]
-    [ProducesResponseType(typeof(ResourcePermissionsDto), StatusCodes.Status200OK)]
-    public async Task<ActionResult> GetPermissions(
+    [ProducesResponseType(StatusCodes.Status200OK)]
+    public async Task<ActionResult<ResourcePermissionsDto>> GetPermissions(
         [FromQuery] RequestPermissionsDto requestDto)
     {
         var userId = HttpContext.GetUserId();

@@ -97,7 +97,7 @@
                 </tr>
             </ng-template>
             <ng-template let-apiKey pTemplate="body">
-                <tr>
+                <tr (dblclick)="updateApiKey(apiKey)">
                     <td>
                         <p-tableCheckbox [value]="apiKey"></p-tableCheckbox>
                         <div (click)="actionMenuTarget = apiKey; userMenu.toggle($event)"

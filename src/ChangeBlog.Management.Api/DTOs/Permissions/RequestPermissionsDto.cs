@@ -5,7 +5,7 @@ namespace ChangeBlog.Management.Api.DTOs.Permissions;
 
 public class RequestPermissionsDto
 {
-    public ResourceType ResourceType { get; set; }
+    public ResourceType? ResourceType { get; set; }
     public Guid ResourceId { get; set; }
 }
 
@@ -13,7 +13,10 @@ public class RequestResourcePermissionsDtoValidator : AbstractValidator<RequestP
 {
     public RequestResourcePermissionsDtoValidator()
     {
-        RuleFor(x => x.ResourceType).IsInEnum();
+        RuleFor(x => x.ResourceType)
+            .Cascade(CascadeMode.Stop)
+            .IsInEnum();
+
         RuleFor(x => x.ResourceId).NotEmpty();
     }
 }

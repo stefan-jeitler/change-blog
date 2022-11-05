@@ -21,6 +21,6 @@ public class CreateOrUpdateApiKeyDtoValidator : AbstractValidator<CreateOrUpdate
         RuleFor(x => x.Name).MustBeOptionalName();
         RuleFor(x => x.ExpiresAt)
             .NotEmpty()
-            .WithName(ChangeBlogStrings.ExpirationDate);
+            .WithName(ChangeBlogStrings.Expires);
     }
 }

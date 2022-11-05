@@ -258,20 +258,20 @@ namespace ChangeBlog.Api.Localization.Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Expiration Date.
-        /// </summary>
-        public static string ExpirationDate {
-            get {
-                return ResourceManager.GetString("ExpirationDate", resourceCulture);
-            }
-        }
-        
-        /// <summary>
         ///   Looks up a localized string similar to The expiration date must not be in the past.
         /// </summary>
         public static string ExpirationDateInThePast {
             get {
                 return ResourceManager.GetString("ExpirationDateInThePast", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Expires.
+        /// </summary>
+        public static string Expires {
+            get {
+                return ResourceManager.GetString("Expires", resourceCulture);
             }
         }
         

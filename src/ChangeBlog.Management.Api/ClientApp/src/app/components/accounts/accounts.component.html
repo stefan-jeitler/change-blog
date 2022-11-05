@@ -7,10 +7,10 @@
             <ng-template pTemplate="left">
                 <div class="hidden sm:inline-flex">
                     <div [pTooltip]="translationKey.accountLimitReached | transloco"
-                         [tooltipDisabled]="ownCreatedAccountsCount < maxAccountsCreatedByMyselfLimit"
+                         [tooltipDisabled]="ownCreatedAccountsCount < maxAccountsCreatedByMyself"
                          tooltipPosition="bottom">
                         <button (click)="createNewAccount()"
-                                [disabled]="ownCreatedAccountsCount >= maxAccountsCreatedByMyselfLimit"
+                                [disabled]="ownCreatedAccountsCount >= maxAccountsCreatedByMyself"
                                 [label]="this.translationKey.new | transloco"
                                 class="mr-2"
                                 icon="pi pi-plus"
@@ -20,10 +20,10 @@
                 </div>
                 <div class="inline-flex sm:hidden">
                     <div [pTooltip]="translationKey.accountLimitReached | transloco"
-                         [tooltipDisabled]="ownCreatedAccountsCount < maxAccountsCreatedByMyselfLimit"
+                         [tooltipDisabled]="ownCreatedAccountsCount < maxAccountsCreatedByMyself"
                          tooltipPosition="bottom">
                         <button (click)="createNewAccount()"
-                                [disabled]="ownCreatedAccountsCount >= maxAccountsCreatedByMyselfLimit"
+                                [disabled]="ownCreatedAccountsCount >= maxAccountsCreatedByMyself"
                                 class="mr-2"
                                 icon="pi pi-plus"
                                 pButton pRipple>

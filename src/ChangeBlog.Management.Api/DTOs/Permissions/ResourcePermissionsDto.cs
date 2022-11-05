@@ -5,11 +5,11 @@ namespace ChangeBlog.Management.Api.DTOs.Permissions;
 
 public record ResourcePermissionsDto
 {
-    public Guid ResourceId { get; init; }
-    public ResourceType ResourceType { get; init; }
+    public Guid ResourceId { get; set; }
+    public ResourceType ResourceType { get; set; }
 
-    public bool CanRead { get; init; }
-    public bool CanUpdate { get; init; }
-    public bool CanDelete { get; init; }
-    public IReadOnlyDictionary<string, bool> SpecificPermissions { get; init; }
+    public bool CanRead { get; set; }
+    public bool CanUpdate { get; set; }
+    public bool CanDelete { get; set; }
+    public IReadOnlyDictionary<string, bool> SpecificPermissions { get; set; }
 }

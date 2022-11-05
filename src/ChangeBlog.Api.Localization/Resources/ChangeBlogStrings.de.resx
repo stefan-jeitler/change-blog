@@ -354,13 +354,13 @@
     <data name="AccountUpdated" xml:space="preserve">
       <value>Account erfolgreich aktualisiert</value>
     </data>
-    <data name="ExpirationDate" xml:space="preserve">
-      <value>Ablaufdatum</value>
-    </data>
     <data name="WhitespacesNotAllowed" xml:space="preserve">
       <value>Leerzeichen sind nicht erlaubt</value>
     </data>
     <data name="OnlyAlphanumericCharsAllowed" xml:space="preserve">
       <value>Es sind nur Alphanummerische Zeichen erlaubt</value>
+    </data>
+    <data name="Expires" xml:space="preserve">
+      <value>Gültig Bis</value>
     </data>
 </root>

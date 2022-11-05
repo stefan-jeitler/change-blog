@@ -1,15 +1,12 @@
 import {Component, OnInit} from '@angular/core';
 import {TranslationKey} from "../../generated/TranslationKey";
-import {ConfirmationService, MessageService} from "primeng/api";
+import {MessageService} from "primeng/api";
 import {FormBuilder, FormControl, FormGroup} from "@angular/forms";
 import {TranslocoService} from "@ngneat/transloco";
-import {
-    ChangeBlogManagementApi as MngmtApiClient,
-    ChangeBlogManagementApi
-} from "../../../clients/ChangeBlogManagementApiClient";
+import {ChangeBlogManagementApi as MngmtApiClient} from "../../../clients/ChangeBlogManagementApiClient";
 import {firstValueFrom} from "rxjs";
 import {Router} from "@angular/router";
-import CreateAccountDto = ChangeBlogManagementApi.CreateAccountDto;
+import CreateAccountDto = MngmtApiClient.CreateAccountDto;
 
 interface Account {
     id: string;
@@ -30,7 +27,7 @@ export class AccountsComponent implements OnInit {
     selectedAccounts: Account[];
     accounts: Account[];
     actionMenuTarget: Account | undefined;
-    readonly maxAccountsCreatedByMyselfLimit: number = 5;
+    readonly maxAccountsCreatedByMyself: number = 5;
     showDatatableLoadingOverlay: boolean;
     showAccountDialog: boolean;
     accountForm: FormGroup;
@@ -39,9 +36,8 @@ export class AccountsComponent implements OnInit {
     constructor(public translationKey: TranslationKey,
                 formBuilder: FormBuilder,
                 private translationService: TranslocoService,
-                private confirmationService: ConfirmationService,
                 private messageService: MessageService,
-                private mngmtApiClient: ChangeBlogManagementApi.Client,
+                private mngmtApiClient: MngmtApiClient.Client,
                 private router: Router) {
         this.isLoadingFinished = false;
         this.selectedAccounts = [];
@@ -103,7 +99,7 @@ export class AccountsComponent implements OnInit {
 
         createAccount
             .subscribe({
-                next: async r => {
+                next: async () => {
                     this.showDatatableLoadingOverlay = true;
                     this.accountForm.enable();
                     this.showAccountDialog = false;

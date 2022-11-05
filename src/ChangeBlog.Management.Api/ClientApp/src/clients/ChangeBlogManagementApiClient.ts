@@ -1910,8 +1910,56 @@ export interface ICultureDto {
     firstDayOfWeek: number;
 }
 
+export class ErrorMessages implements IErrorMessages {
+    messages!: string[] | undefined;
+    property!: string | undefined;
+
+    constructor(data?: IErrorMessages) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+        }
+    }
+
+    init(_data?: any) {
+        if (_data) {
+            if (Array.isArray(_data["messages"])) {
+                this.messages = [] as any;
+                for (let item of _data["messages"])
+                    this.messages!.push(item);
+            }
+            this.property = _data["property"];
+        }
+    }
+
+    static fromJS(data: any): ErrorMessages {
+        data = typeof data === 'object' ? data : {};
+        let result = new ErrorMessages();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        if (Array.isArray(this.messages)) {
+            data["messages"] = [];
+            for (let item of this.messages)
+                data["messages"].push(item);
+        }
+        data["property"] = this.property;
+        return data;
+    }
+}
+
+export interface IErrorMessages {
+    messages: string[] | undefined;
+    property: string | undefined;
+}
+
 export class ErrorResponse implements IErrorResponse {
-    errors!: PropertyErrorMessages[] | undefined;
+    errors!: ErrorMessages[] | undefined;
     resourceIds!: { [key: string]: string; } | undefined;
 
     constructor(data?: IErrorResponse) {
@@ -1928,7 +1976,7 @@ export class ErrorResponse implements IErrorResponse {
             if (Array.isArray(_data["errors"])) {
                 this.errors = [] as any;
                 for (let item of _data["errors"])
-                    this.errors!.push(PropertyErrorMessages.fromJS(item));
+                    this.errors!.push(ErrorMessages.fromJS(item));
             }
             if (_data["resourceIds"]) {
                 this.resourceIds = {} as any;
@@ -1966,56 +2014,8 @@ export class ErrorResponse implements IErrorResponse {
 }
 
 export interface IErrorResponse {
-    errors: PropertyErrorMessages[] | undefined;
+    errors: ErrorMessages[] | undefined;
     resourceIds: { [key: string]: string; } | undefined;
-}
-
-export class PropertyErrorMessages implements IPropertyErrorMessages {
-    messages!: string[] | undefined;
-    property!: string | undefined;
-
-    constructor(data?: IPropertyErrorMessages) {
-        if (data) {
-            for (var property in data) {
-                if (data.hasOwnProperty(property))
-                    (<any>this)[property] = (<any>data)[property];
-            }
-        }
-    }
-
-    init(_data?: any) {
-        if (_data) {
-            if (Array.isArray(_data["messages"])) {
-                this.messages = [] as any;
-                for (let item of _data["messages"])
-                    this.messages!.push(item);
-            }
-            this.property = _data["property"];
-        }
-    }
-
-    static fromJS(data: any): PropertyErrorMessages {
-        data = typeof data === 'object' ? data : {};
-        let result = new PropertyErrorMessages();
-        result.init(data);
-        return result;
-    }
-
-    toJSON(data?: any) {
-        data = typeof data === 'object' ? data : {};
-        if (Array.isArray(this.messages)) {
-            data["messages"] = [];
-            for (let item of this.messages)
-                data["messages"].push(item);
-        }
-        data["property"] = this.property;
-        return data;
-    }
-}
-
-export interface IPropertyErrorMessages {
-    messages: string[] | undefined;
-    property: string | undefined;
 }
 
 export class ResourcePermissionsDto implements IResourcePermissionsDto {

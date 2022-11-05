@@ -3,9 +3,9 @@ using System.Text.Json.Serialization;
 
 namespace ChangeBlog.Api.Shared.DTOs;
 
-public class PropertyErrorMessages
+public class ErrorMessages
 {
-    public PropertyErrorMessages(string message, string property)
+    public ErrorMessages(string message, string property)
     {
         ArgumentNullException.ThrowIfNull(message);
 
@@ -15,7 +15,7 @@ public class PropertyErrorMessages
 
 
     [JsonConstructor]
-    public PropertyErrorMessages(string[] messages, string property)
+    public ErrorMessages(string[] messages, string property)
     {
         ArgumentNullException.ThrowIfNull(messages);
 

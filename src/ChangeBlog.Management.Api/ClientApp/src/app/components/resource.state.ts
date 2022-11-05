@@ -1,6 +1,5 @@
 import {ChangeBlogManagementApi} from "../../clients/ChangeBlogManagementApiClient";
-import IErrorMessages = ChangeBlogManagementApi.IPropertyErrorMessages;
-
+import IErrorMessages = ChangeBlogManagementApi.IErrorMessages;
 
 export type Loading = {
     state: 'loading'

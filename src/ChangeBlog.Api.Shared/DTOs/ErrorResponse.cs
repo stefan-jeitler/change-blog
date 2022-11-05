@@ -12,12 +12,12 @@ public class ErrorResponse
     }
 
     public ErrorResponse(string message, string property, IReadOnlyDictionary<string, string> resourceIds = null)
-        : this(new[] {new PropertyErrorMessages(message, property)}, resourceIds)
+        : this(new[] {new ErrorMessages(message, property)}, resourceIds)
     {
     }
 
     [JsonConstructor]
-    public ErrorResponse(PropertyErrorMessages[] errors,
+    public ErrorResponse(ErrorMessages[] errors,
         IReadOnlyDictionary<string, string> resourceIds = null)
     {
         ArgumentNullException.ThrowIfNull(errors);
@@ -26,7 +26,7 @@ public class ErrorResponse
         ResourceIds = resourceIds;
     }
 
-    public PropertyErrorMessages[] Errors { get; }
+    public ErrorMessages[] Errors { get; }
 
     [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
     public IReadOnlyDictionary<string, string> ResourceIds { get; }

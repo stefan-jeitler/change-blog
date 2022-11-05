@@ -1,15 +1,19 @@
-import { Component, OnInit } from '@angular/core';
+import {Component, Input, OnInit} from '@angular/core';
 
 @Component({
-  selector: 'app-content-notfound',
-  templateUrl: './content-notfound.component.html',
-  styleUrls: ['./content-notfound.component.scss']
+    selector: 'app-content-notfound',
+    templateUrl: './content-notfound.component.html',
+    styleUrls: ['./content-notfound.component.scss']
 })
 export class ContentNotfoundComponent implements OnInit {
 
-  constructor() { }
+    @Input() resourceId: string;
 
-  ngOnInit(): void {
-  }
+    constructor() {
+        this.resourceId = '';
+    }
+
+    ngOnInit(): void {
+    }
 
 }

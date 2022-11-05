@@ -1,6 +1,6 @@
 import {ChangeBlogManagementApi} from "../../clients/ChangeBlogManagementApiClient";
 import {MessageService} from "primeng/api";
-import ErrorMessage = ChangeBlogManagementApi.PropertyErrorMessages;
+import ErrorMessage = ChangeBlogManagementApi.ErrorMessages;
 
 
 declare module "primeng/api/messageservice" {

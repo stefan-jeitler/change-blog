@@ -12,7 +12,7 @@ public static class ModelStateExtensions
         var errorMessages = modelStateDictionary
             .Where(x => x.Value is not null)
             .Select(modelStateEntry =>
-                new PropertyErrorMessages(
+                new ErrorMessages(
                     // do not show trailing periods in error messages
                     modelStateEntry.Value.Errors.Select(x => x.ErrorMessage.Trim('.')).ToArray(),
                     modelStateEntry.Key.FirstCharToLower()))

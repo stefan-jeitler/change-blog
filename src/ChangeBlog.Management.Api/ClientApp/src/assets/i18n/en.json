@@ -40,6 +40,10 @@
   "creator": "Creator",
   "searchKeyword": "Search keyword",
   "confirmAccountDeletion": "Delete account '<b>{{ accountName }}</b>'?",
+  "weAreSorry": "We're sorry",
+  "resourceNotFound": "The requested resource couldn't be found",
+  "oopsSomethingWentWrong": "Oops! Something went wrong",
+  "unexpectedError": "The application has encountered an unknown error",
   "primeng": {
     "startsWith": "Starts with",
     "contains": "Contains",

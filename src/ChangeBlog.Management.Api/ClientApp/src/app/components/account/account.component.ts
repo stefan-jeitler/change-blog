@@ -33,7 +33,6 @@ export class AccountComponent implements OnInit {
                     };
                 },
                 error: (e: ChangeBlogManagementApi.SwaggerException) => {
-                    debugger;
                     if (e.status === 404) {
                         this.resource = {state: 'not-found'};
                     } else {

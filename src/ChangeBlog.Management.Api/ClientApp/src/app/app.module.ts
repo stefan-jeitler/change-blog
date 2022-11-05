@@ -57,7 +57,8 @@ import {CalendarModule} from "primeng/calendar";
 import {AccountsComponent} from './components/accounts/accounts.component';
 import {AccountComponent} from './components/account/account.component';
 import {ContentErrorComponent} from './components/content-error/content-error.component';
-import { ContentNotfoundComponent } from './components/content-notfound/content-notfound.component';
+import {ContentNotfoundComponent} from './components/content-notfound/content-notfound.component';
+import {ImageModule} from "primeng/image";
 
 @NgModule({
     declarations: [
@@ -120,7 +121,8 @@ import { ContentNotfoundComponent } from './components/content-notfound/content-
         TableModule,
         ConfirmDialogModule,
         ToolbarModule,
-        CalendarModule
+        CalendarModule,
+        ImageModule
     ],
     providers: [
         {

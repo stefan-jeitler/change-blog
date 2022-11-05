@@ -1,4 +1,5 @@
-import {Component, Input, OnInit} from '@angular/core';
+import {Component, OnInit} from '@angular/core';
+import {TranslationKey} from "../../generated/TranslationKey";
 
 @Component({
     selector: 'app-content-notfound',
@@ -7,10 +8,7 @@ import {Component, Input, OnInit} from '@angular/core';
 })
 export class ContentNotfoundComponent implements OnInit {
 
-    @Input() resourceId: string;
-
-    constructor() {
-        this.resourceId = '';
+    constructor(public translationKey: TranslationKey) {
     }
 
     ngOnInit(): void {

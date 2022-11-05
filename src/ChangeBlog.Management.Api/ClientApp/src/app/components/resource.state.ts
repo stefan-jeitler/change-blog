@@ -14,8 +14,8 @@ export type NotFound = {
     state: 'not-found';
 };
 
-export type UnknownError = {
-    state: 'unknown-error';
+export type Error = {
+    state: 'error';
     errorDetails: ErrorMessages[];
 };
 
@@ -23,4 +23,4 @@ export type Resource<T> =
     | Loading
     | Success<T>
     | NotFound
-    | UnknownError;
+    | Error;

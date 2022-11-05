@@ -2,9 +2,10 @@
                     goBackUrl="/app/accounts"></app-content-header>
 
 <div class="app-content-container">
-    <app-loading-spinner [show]="!isLoadingFinished"></app-loading-spinner>
-
-
-    <div>AccountId: {{accountId}}</div>
-    <div>coming soon ...</div>
+    <app-loading-spinner [show]="resource.state == 'loading'"></app-loading-spinner>
+    <app-content-notfound *ngIf="resource.state === 'not-found'"></app-content-notfound>
+    <app-content-error *ngIf="resource.state == 'unknown-error'"></app-content-error>
+    <div *ngIf="resource.state == 'success'">
+        Name: {{ resource.account.name }}
+    </div>
 </div>

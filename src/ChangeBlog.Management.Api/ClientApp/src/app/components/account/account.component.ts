@@ -1,6 +1,10 @@
 import {Component, OnInit} from '@angular/core';
 import {ActivatedRoute} from "@angular/router";
 import {TranslationKey} from "../../generated/TranslationKey";
+import {ChangeBlogManagementApi} from "../../../clients/ChangeBlogManagementApiClient";
+import {mergeMap} from "rxjs/operators";
+import {Resource} from "../resource.state";
+import Account = ChangeBlogManagementApi.AccountDto;
 
 @Component({
     selector: 'app-account',
@@ -8,22 +12,39 @@ import {TranslationKey} from "../../generated/TranslationKey";
     styleUrls: ['./account.component.scss']
 })
 export class AccountComponent implements OnInit {
-    isLoadingFinished: boolean;
-    accountId: string | undefined;
+    resource: Resource<Account>;
 
     constructor(private route: ActivatedRoute,
-                public translationKey: TranslationKey) {
-        this.isLoadingFinished = false;
+                public translationKey: TranslationKey,
+                private apiClient: ChangeBlogManagementApi.Client) {
+        this.resource = {state: 'loading'};
     }
 
     ngOnInit(): void {
-        this.route.params.subscribe({
-            next: v => {
-                this.accountId = v.id;
-            }
-        });
+        this.route.params
+            .pipe(
+                mergeMap(v => this.apiClient.getAccount(v.id)),
+            )
+            .subscribe({
+                next: a => {
+                    this.resource = {
+                        state: 'success',
+                        account: a
+                    };
+                },
+                error: (e: ChangeBlogManagementApi.SwaggerException) => {
+                    if (e.status === 404) {
+                        this.resource = {state: 'not-found'};
+                    } else {
+                        this.resource = {
+                            state: 'unknown-error',
+                            details: []
+                        };
+                    }
 
-        this.isLoadingFinished = true;
+                    console.error(e);
+                }
+            });
     }
 
 }

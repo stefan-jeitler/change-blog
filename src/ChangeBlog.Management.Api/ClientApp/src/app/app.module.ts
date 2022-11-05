@@ -54,93 +54,97 @@ import {TableModule} from "primeng/table";
 import {ConfirmDialogModule} from "primeng/confirmdialog";
 import {ToolbarModule} from "primeng/toolbar";
 import {CalendarModule} from "primeng/calendar";
-import { AccountsComponent } from './components/accounts/accounts.component';
-import { AccountComponent } from './components/account/account.component';
+import {AccountsComponent} from './components/accounts/accounts.component';
+import {AccountComponent} from './components/account/account.component';
+import {ContentErrorComponent} from './components/content-error/content-error.component';
+import { ContentNotfoundComponent } from './components/content-notfound/content-notfound.component';
 
 @NgModule({
-  declarations: [
-    AppComponent,
-    HeaderComponent,
-    HomeComponent,
-    ProfileComponent,
-    ApikeyComponent,
-    SideNavigationComponent,
-    LoginComponent,
-    LandingComponent,
-    LayoutComponent,
-    RedirectComponent,
-    ContentHeaderComponent,
-    LoadingSpinnerComponent,
-    AccountsComponent,
-    AccountComponent,
-  ],
-  imports: [
-    BrowserModule,
-    BrowserAnimationsModule,
-    HttpClientModule,
-    AppRoutingModule,
-    ReactiveFormsModule,
-    OAuthModule.forRoot({
-      resourceServer: {
-        sendAccessToken: true,
-        // TODO: get urls from app config
-        allowedUrls: [
-          'https://app-change-blog-staging.azurewebsites.net',
-          'https://app-change-blog.azurewebsites.net',
-          'http://localhost:6430',
-          '/',
-        ],
-      },
-    }),
-    TranslocoRootModule,
-    TranslocoLocaleModule,
-    FormsModule,
-    InputTextModule,
-    RippleModule,
-    TooltipModule,
-    SidebarModule,
-    ButtonModule,
-    PanelMenuModule,
-    MenuModule,
-    MenubarModule,
-    OverlayPanelModule,
-    DialogModule,
-    CheckboxModule,
-    RadioButtonModule,
-    MessageModule,
-    MessagesModule,
-    ToastModule,
-    DropdownModule,
-    ProgressSpinnerModule,
-    HammerModule,
-    TableModule,
-    ConfirmDialogModule,
-    ToolbarModule,
-    CalendarModule
-  ],
-  providers: [
-    {
-      provide: APP_INITIALIZER,
-      useFactory: initializeApp,
-      deps: [Router, OAuthService, APP_CONFIG, ChangeBlogManagementApi.Client, TranslocoService, AppUserService],
-      multi: true,
-    },
-    {
-      provide: ChangeBlogApi.API_BASE_URL,
-      useFactory: (appConfig: AppConfig) => appConfig.changeBlogApiBaseUrl,
-      deps: [APP_CONFIG],
-      multi: true
-    },
-    {provide: OAuthStorage, useValue: localStorage},
-    {provide: HAMMER_GESTURE_CONFIG, useClass: SwipeConfig},
-    {provide: HTTP_INTERCEPTORS, useClass: DefaultRequestHeadersInterceptor, multi: true},
-    ChangeBlogApi.Client,
-    ChangeBlogManagementApi.Client,
-    MessageService,
-    ConfirmationService,
-    TranslationKey
-  ],
-  bootstrap: [AppComponent],
+    declarations: [
+        AppComponent,
+        HeaderComponent,
+        HomeComponent,
+        ProfileComponent,
+        ApikeyComponent,
+        SideNavigationComponent,
+        LoginComponent,
+        LandingComponent,
+        LayoutComponent,
+        RedirectComponent,
+        ContentHeaderComponent,
+        LoadingSpinnerComponent,
+        AccountsComponent,
+        AccountComponent,
+        ContentErrorComponent,
+        ContentNotfoundComponent,
+    ],
+    imports: [
+        BrowserModule,
+        BrowserAnimationsModule,
+        HttpClientModule,
+        AppRoutingModule,
+        ReactiveFormsModule,
+        OAuthModule.forRoot({
+            resourceServer: {
+                sendAccessToken: true,
+                // TODO: get urls from app config
+                allowedUrls: [
+                    'https://app-change-blog-staging.azurewebsites.net',
+                    'https://app-change-blog.azurewebsites.net',
+                    'http://localhost:6430',
+                    '/',
+                ],
+            },
+        }),
+        TranslocoRootModule,
+        TranslocoLocaleModule,
+        FormsModule,
+        InputTextModule,
+        RippleModule,
+        TooltipModule,
+        SidebarModule,
+        ButtonModule,
+        PanelMenuModule,
+        MenuModule,
+        MenubarModule,
+        OverlayPanelModule,
+        DialogModule,
+        CheckboxModule,
+        RadioButtonModule,
+        MessageModule,
+        MessagesModule,
+        ToastModule,
+        DropdownModule,
+        ProgressSpinnerModule,
+        HammerModule,
+        TableModule,
+        ConfirmDialogModule,
+        ToolbarModule,
+        CalendarModule
+    ],
+    providers: [
+        {
+            provide: APP_INITIALIZER,
+            useFactory: initializeApp,
+            deps: [Router, OAuthService, APP_CONFIG, ChangeBlogManagementApi.Client, TranslocoService, AppUserService],
+            multi: true,
+        },
+        {
+            provide: ChangeBlogApi.API_BASE_URL,
+            useFactory: (appConfig: AppConfig) => appConfig.changeBlogApiBaseUrl,
+            deps: [APP_CONFIG],
+            multi: true
+        },
+        {provide: OAuthStorage, useValue: localStorage},
+        {provide: HAMMER_GESTURE_CONFIG, useClass: SwipeConfig},
+        {provide: HTTP_INTERCEPTORS, useClass: DefaultRequestHeadersInterceptor, multi: true},
+        ChangeBlogApi.Client,
+        ChangeBlogManagementApi.Client,
+        MessageService,
+        ConfirmationService,
+        TranslationKey
+    ],
+    bootstrap: [AppComponent],
 })
 export class AppModule {
 }

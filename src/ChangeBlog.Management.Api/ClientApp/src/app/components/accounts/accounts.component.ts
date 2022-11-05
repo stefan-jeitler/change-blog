@@ -34,7 +34,7 @@ export class AccountsComponent implements OnInit {
 
 
     constructor(public translationKey: TranslationKey,
-                formBuilder: FormBuilder,
+                private formBuilder: FormBuilder,
                 private translationService: TranslocoService,
                 private messageService: MessageService,
                 private mngmtApiClient: MngmtApiClient.Client,

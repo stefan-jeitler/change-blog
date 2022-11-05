@@ -46,6 +46,7 @@ public class AccountController : ControllerBase
     [HttpGet("{accountId:Guid}", Name = "GetAccount")]
     [ProducesResponseType(StatusCodes.Status200OK)]
     [ProducesResponseType(typeof(ErrorResponse), StatusCodes.Status400BadRequest)]
+    [ProducesResponseType(typeof(ErrorResponse), StatusCodes.Status404NotFound)]
     [NeedsPermission(Permission.ViewAccount)]
     public async Task<ActionResult<AccountDto>> GetAccountAsync([FromServices] IGetAccount getAccount,
         Guid accountId)

@@ -3,9 +3,13 @@ import {TranslationKey} from "../../generated/TranslationKey";
 import {MessageService} from "primeng/api";
 import {FormBuilder, FormControl, FormGroup} from "@angular/forms";
 import {TranslocoService} from "@ngneat/transloco";
-import {ChangeBlogManagementApi as MngmtApiClient} from "../../../clients/ChangeBlogManagementApiClient";
+import {
+    ChangeBlogManagementApi,
+    ChangeBlogManagementApi as MngmtApiClient
+} from "../../../clients/ChangeBlogManagementApiClient";
 import {firstValueFrom} from "rxjs";
 import {Router} from "@angular/router";
+import {Resource} from "../resource.state";
 import CreateAccountDto = MngmtApiClient.CreateAccountDto;
 
 interface Account {
@@ -23,9 +27,8 @@ interface Account {
     styleUrls: ['./accounts.component.scss']
 })
 export class AccountsComponent implements OnInit {
-    isLoadingFinished: boolean;
+    resource: Resource<Account[]>;
     selectedAccounts: Account[];
-    accounts: Account[];
     actionMenuTarget: Account | undefined;
     readonly maxAccountsCreatedByMyself: number = 5;
     showDatatableLoadingOverlay: boolean;
@@ -39,11 +42,12 @@ export class AccountsComponent implements OnInit {
                 private messageService: MessageService,
                 private mngmtApiClient: MngmtApiClient.Client,
                 private router: Router) {
-        this.isLoadingFinished = false;
         this.selectedAccounts = [];
-        this.accounts = [];
         this.showDatatableLoadingOverlay = false;
         this.showAccountDialog = false;
+        this.resource = {
+            state: 'loading'
+        }
 
         this.accountForm = formBuilder.group({
             id: new FormControl<string>(''),
@@ -53,33 +57,41 @@ export class AccountsComponent implements OnInit {
     }
 
     get ownCreatedAccountsCount(): number {
-        return this.accounts.filter(x => x.wasCreatedByMyself).length;
+        if (this.resource.state !== 'success')
+            return 0;
+
+        return this.resource.value.filter(x => x.wasCreatedByMyself).length;
     }
 
     getValue(event: Event): string {
         return (event.target as HTMLInputElement).value;
     }
 
-    async ngOnInit() {
-        try {
-            await this.loadAccounts();
-        } finally {
-            this.isLoadingFinished = true;
-        }
+    ngOnInit() {
+        this.loadAccounts()
+            .catch((e: ChangeBlogManagementApi.SwaggerException) => {
+                this.resource = {
+                    state: 'error',
+                    errorDetails: e.result?.errors ?? []
+                }
+            });
     }
 
     async loadAccounts() {
         const accounts = await firstValueFrom(this.mngmtApiClient.getAccounts());
-        this.accounts = accounts.map(x => {
-            return {
-                id: x.id,
-                name: x.name!,
-                defaultVersioningScheme: x.defaultVersioningScheme!,
-                createdAt: x.createdAt,
-                createdBy: x.createdBy!,
-                wasCreatedByMyself: x.wasCreatedByMyself
-            }
-        });
+        this.resource = {
+            state: 'success',
+            value: accounts.map(x => {
+                return {
+                    id: x.id,
+                    name: x.name!,
+                    defaultVersioningScheme: x.defaultVersioningScheme!,
+                    createdAt: x.createdAt,
+                    createdBy: x.createdBy!,
+                    wasCreatedByMyself: x.wasCreatedByMyself
+                }
+            })
+        };
     }
 
     createNewAccount() {

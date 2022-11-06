@@ -1,6 +1,5 @@
 import {Component, OnInit} from '@angular/core';
 import {TranslationKey} from "../../generated/TranslationKey";
-import {tap} from "rxjs/operators";
 import {ChangeBlogManagementApi as MngmtApiClient} from "../../../clients/ChangeBlogManagementApiClient";
 import {firstValueFrom} from "rxjs";
 import {FormControl, UntypedFormBuilder, UntypedFormControl, UntypedFormGroup} from "@angular/forms";
@@ -8,7 +7,9 @@ import {MessageService} from "primeng/api";
 import {TranslocoService} from "@ngneat/transloco";
 import {AppUserService} from "../../services/app-user.service";
 import "../../extensions/message-service.extensions";
+import {Resource} from "../resource.state";
 import ITimezoneDto = MngmtApiClient.ITimezoneDto;
+import UserDto = MngmtApiClient.UserDto;
 
 @Component({
     selector: 'app-profile',
@@ -18,8 +19,8 @@ import ITimezoneDto = MngmtApiClient.ITimezoneDto;
 export class ProfileComponent implements OnInit {
     availableTimezones: ITimezoneDto[];
     availableCultures: string[];
-    isLoadingFinished: boolean;
     userProfileForm: UntypedFormGroup;
+    resource: Resource<UserDto>;
 
     constructor(public translationKey: TranslationKey,
                 private translationService: TranslocoService,
@@ -31,7 +32,7 @@ export class ProfileComponent implements OnInit {
         this.availableTimezones = [];
         this.availableCultures = [];
 
-        this.isLoadingFinished = false;
+        this.resource = {state: 'loading'};
 
         this.userProfileForm = this.formBuilder.group({
             fullName: new UntypedFormControl({value: null, disabled: true}),
@@ -43,15 +44,35 @@ export class ProfileComponent implements OnInit {
 
     async ngOnInit(): Promise<void> {
 
-        await this.loadAvailableDropdownOptions();
-        const userProfile = await this.loadUserProfile();
+        try {
+            await this.loadAvailableDropdownOptions();
+            this.loadUserProfile()
+                .then(up => {
+                    this.resource = {
+                        state: 'success',
+                        value: up
+                    };
 
-        this.userProfileForm.patchValue({
-            fullName: `${userProfile.firstName} ${userProfile.lastName}`,
-            email: userProfile.email,
-            timezone: this.availableTimezones.find(x => x.olsonId === userProfile.timeZone),
-            culture: userProfile.culture
-        });
+                    this.userProfileForm.patchValue({
+                        fullName: `${up.firstName} ${up.lastName}`,
+                        email: up.email,
+                        timezone: this.availableTimezones.find(x => x.olsonId === up.timeZone),
+                        culture: up.culture
+                    });
+                })
+                .catch((e: MngmtApiClient.SwaggerException) => {
+                    this.resource = {
+                        state: 'error',
+                        errorDetails: e.result?.errors ?? []
+                    };
+                });
+        } catch (error: any) {
+            this.resource = {
+                state: 'error',
+                errorDetails: error?.result?.errors ?? []
+            }
+
+        }
     }
 
     enableForm() {
@@ -105,8 +126,7 @@ export class ProfileComponent implements OnInit {
 
     private async loadUserProfile() {
         const loadUserProfile = this.mngmtApiClient
-            .getUserProfile()
-            .pipe(tap(_ => this.isLoadingFinished = true))
+            .getUserProfile();
 
         return await firstValueFrom(loadUserProfile);
     }

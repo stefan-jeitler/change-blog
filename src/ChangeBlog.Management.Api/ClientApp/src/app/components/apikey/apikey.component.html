@@ -1,17 +1,18 @@
 <app-content-header [title]="translationKey.apikey | transloco"></app-content-header>
 
 <div class="app-content-container">
-    <app-loading-spinner [show]="!isLoadingFinished"></app-loading-spinner>
-    <div class="card mb-8">
+    <app-loading-spinner [show]="resource.state === 'loading'"></app-loading-spinner>
+    <app-content-error *ngIf="resource.state == 'error'" [details]="resource.errorDetails"></app-content-error>
+    <div *ngIf="resource.state === 'success'" class="card mb-8">
         <p-toolbar styleClass="mb-4">
             <ng-template pTemplate="left">
                 <div class="hidden md:inline-flex">
                     <div
                             [pTooltip]="translationKey.apiKeyLimitReached | transloco"
-                            [tooltipDisabled]="apiKeys.length < maxApiKeysCountLimit"
+                            [tooltipDisabled]="resource.value.length < maxApiKeysCountLimit"
                             tooltipPosition="bottom">
                         <button (click)="createNewApiKey()"
-                                [disabled]="apiKeys.length >= maxApiKeysCountLimit"
+                                [disabled]="resource.value.length >= maxApiKeysCountLimit"
                                 [label]="this.translationKey.new | transloco"
                                 class="mr-2"
                                 icon="pi pi-plus"
@@ -30,10 +31,10 @@
                 <div class="inline-flex md:hidden">
                     <div
                             [pTooltip]="translationKey.apiKeyLimitReached | transloco"
-                            [tooltipDisabled]="apiKeys.length < maxApiKeysCountLimit"
+                            [tooltipDisabled]="resource.value.length < maxApiKeysCountLimit"
                             tooltipPosition="bottom">
                         <button (click)="createNewApiKey()"
-                                [disabled]="apiKeys.length >= maxApiKeysCountLimit"
+                                [disabled]="resource.value.length >= maxApiKeysCountLimit"
                                 class="mr-2"
                                 icon="pi pi-plus"
                                 pButton pRipple>
@@ -63,7 +64,7 @@
                  [autoLayout]="true"
                  [loading]="showDatatableLoadingOverlay"
                  [rowHover]="true"
-                 [value]="apiKeys"
+                 [value]="resource.value"
                  breakpoint="576px"
                  dataKey="id"
                  responsiveLayout="stack"

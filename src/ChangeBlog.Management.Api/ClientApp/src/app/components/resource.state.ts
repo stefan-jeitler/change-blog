@@ -7,7 +7,7 @@ export type Loading = {
 
 export type Success<T> = {
     state: 'success';
-    account: T;
+    value: T;
 };
 
 export type NotFound = {

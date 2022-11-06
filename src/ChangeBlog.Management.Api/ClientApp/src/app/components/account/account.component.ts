@@ -29,7 +29,7 @@ export class AccountComponent implements OnInit {
                 next: a => {
                     this.resource = {
                         state: 'success',
-                        account: a
+                        value: a
                     };
                 },
                 error: (e: ChangeBlogManagementApi.SwaggerException) => {

@@ -1,8 +1,9 @@
 <app-content-header [title]="translationKey.accounts | transloco"></app-content-header>
 
 <div class="app-content-container">
-    <app-loading-spinner [show]="!isLoadingFinished"></app-loading-spinner>
-    <div class="card mb-8">
+    <app-loading-spinner [show]="resource.state === 'loading'"></app-loading-spinner>
+    <app-content-error *ngIf="resource.state == 'error'" [details]="resource.errorDetails"></app-content-error>
+    <div *ngIf="resource.state === 'success'" class="card mb-8">
         <p-toolbar styleClass="mb-4">
             <ng-template pTemplate="left">
                 <div class="hidden sm:inline-flex">
@@ -38,7 +39,7 @@
                  [globalFilterFields]="['name']"
                  [loading]="showDatatableLoadingOverlay"
                  [rowHover]="true"
-                 [value]="accounts"
+                 [value]="resource.value"
                  breakpoint="576px"
                  dataKey="id"
                  responsiveLayout="stack"

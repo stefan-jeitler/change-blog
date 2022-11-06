@@ -1,9 +1,9 @@
 <app-content-header [title]="translationKey.userProfile | transloco"></app-content-header>
 
 <div class="app-content-container">
-    <app-loading-spinner [show]="!isLoadingFinished"></app-loading-spinner>
-
-    <div>
+    <app-loading-spinner [show]="resource.state === 'loading'"></app-loading-spinner>
+    <app-content-error *ngIf="resource.state == 'error'" [details]="resource.errorDetails"></app-content-error>
+    <div *ngIf="resource.state === 'success'">
         <form (ngSubmit)="updateProfile(userProfileForm)" [formGroup]="userProfileForm">
 
             <div class="flex flex-column align-items-start w-12 sm:w-30rem">

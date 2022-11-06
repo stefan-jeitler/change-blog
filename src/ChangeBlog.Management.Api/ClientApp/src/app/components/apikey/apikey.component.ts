@@ -11,6 +11,7 @@ import {Clipboard} from '@angular/cdk/clipboard';
 import {translate, TranslocoService} from "@ngneat/transloco";
 import "../../extensions/message-service.extensions";
 import {ChangeBlogApi} from "../../../clients/ChangeBlogApiClient";
+import {Resource} from "../resource.state";
 import ApiKeyDto = ChangeBlogManagementApi.CreateOrUpdateApiKeyDto;
 
 interface ApiKey {
@@ -27,9 +28,7 @@ interface ApiKey {
 })
 export class ApikeyComponent implements OnInit {
     selectedApiKeys: ApiKey[];
-    apiKeys: ApiKey[];
     actionMenuTarget: ApiKey | undefined;
-    isLoadingFinished: boolean;
     showApiKeyDialog: boolean;
     apiKeyForm: UntypedFormGroup;
     readonly maxApiKeysCountLimit: number = 5;
@@ -37,6 +36,7 @@ export class ApikeyComponent implements OnInit {
     maxExpires: Date;
     contextMenuItems: MenuItem[];
     showDatatableLoadingOverlay: boolean;
+    resource: Resource<ApiKey[]>;
 
     constructor(public translationKey: TranslationKey,
                 private messageService: MessageService,
@@ -47,7 +47,8 @@ export class ApikeyComponent implements OnInit {
                 private translationService: TranslocoService,
                 @Inject(ChangeBlogApi.API_BASE_URL) public apiBaseUrl: string) {
 
-        this.isLoadingFinished = false;
+        this.resource = {state: 'loading'};
+
         this.showApiKeyDialog = false;
         this.showDatatableLoadingOverlay = false;
 
@@ -85,7 +86,6 @@ export class ApikeyComponent implements OnInit {
         ];
 
         this.selectedApiKeys = [];
-        this.apiKeys = [];
 
         this.minExpires = new Date(new Date().getTime() + (5 * 24 * 60 * 60 * 1000));
         const twoYearsAhead = new Date();
@@ -94,11 +94,7 @@ export class ApikeyComponent implements OnInit {
     }
 
     async ngOnInit() {
-        try {
-            await this.loadApiKeys();
-        } finally {
-            this.isLoadingFinished = true;
-        }
+        await this.loadApiKeys()
     }
 
     async createNewApiKey() {
@@ -142,16 +138,27 @@ export class ApikeyComponent implements OnInit {
         this.showApiKeyDialog = true;
     }
 
-    async loadApiKeys() {
-        const apiKeys = await firstValueFrom(this.mngmtApiClient.getApiKeys());
-        this.apiKeys = apiKeys.map(x => {
-            return {
-                id: x.apiKeyId,
-                name: x.name!,
-                key: x.apiKey!,
-                expiresAt: x.expiresAt
-            }
-        });
+    loadApiKeys(): Promise<void> {
+        return firstValueFrom(this.mngmtApiClient.getApiKeys())
+            .then(r => {
+                this.resource = {
+                    state: 'success',
+                    value: r.map(x => {
+                        return {
+                            id: x.apiKeyId,
+                            name: x.name!,
+                            key: x.apiKey!,
+                            expiresAt: x.expiresAt
+                        }
+                    })
+                };
+            })
+            .catch((e: ChangeBlogManagementApi.SwaggerException) => {
+                this.resource = {
+                    state: 'error',
+                    errorDetails: e.result?.errors ?? []
+                }
+            });
     }
 
     async deleteApiKey(apiKey: ApiKey) {

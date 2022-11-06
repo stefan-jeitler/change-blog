@@ -6,6 +6,6 @@
     <app-content-notfound *ngIf="resource.state === 'not-found'"></app-content-notfound>
     <app-content-error *ngIf="resource.state == 'error'" [details]="resource.errorDetails"></app-content-error>
     <div *ngIf="resource.state == 'success'">
-        Name: {{ resource.account.name }}
+        Name: {{ resource.value.name }}
     </div>
 </div>

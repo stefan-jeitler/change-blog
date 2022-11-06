@@ -59,6 +59,8 @@ import {AccountComponent} from './components/account/account.component';
 import {ContentErrorComponent} from './components/content-error/content-error.component';
 import {ContentNotfoundComponent} from './components/content-notfound/content-notfound.component';
 import {ImageModule} from "primeng/image";
+import {TabViewModule} from "primeng/tabview";
+import {CardModule} from "primeng/card";
 
 @NgModule({
     declarations: [
@@ -122,7 +124,9 @@ import {ImageModule} from "primeng/image";
         ConfirmDialogModule,
         ToolbarModule,
         CalendarModule,
-        ImageModule
+        ImageModule,
+        TabViewModule,
+        CardModule
     ],
     providers: [
         {

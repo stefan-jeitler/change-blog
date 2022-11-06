@@ -27,7 +27,7 @@
   "copyToClipboard": "Copy to Clipboard",
   "edit": "Edit",
   "apiKeyLimitReached": "You cannot add more than 5 api keys",
-  "accountLimitReached": "You cannot add more than 5 account by yourself",
+  "accountLimitReached": "You cannot create more than 5 accounts",
   "info": "Info",
   "apiKeyCopiedToClipboard": "Api Key has been copied to the clipboard",
   "confirm": "Confirm",

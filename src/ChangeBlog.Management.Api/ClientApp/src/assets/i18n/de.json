@@ -40,7 +40,6 @@
   "creator": "Ersteller",
   "searchKeyword": "Suchbegriff",
   "confirmAccountDeletion": "Account '<b>{{ accountName }}</b>' löschen?",
-  "weAreSorry": "Es tut uns Leid",
   "resourceNotFound": "Wir konnten die angeforderte Ressource nicht finden",
   "oopsSomethingWentWrong": "Oops! Etwas ist schief gelaufen",
   "unexpectedError": "Ein unerwateter Fehler ist aufgetreten",

@@ -71,7 +71,6 @@ export class ProfileComponent implements OnInit {
                 state: 'error',
                 errorDetails: error?.result?.errors ?? []
             }
-
         }
     }
 

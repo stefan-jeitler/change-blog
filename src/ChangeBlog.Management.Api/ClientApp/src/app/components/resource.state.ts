@@ -1,13 +1,13 @@
 import {ChangeBlogManagementApi} from "../../clients/ChangeBlogManagementApiClient";
 import ErrorMessages = ChangeBlogManagementApi.ErrorMessages;
 
-export type Loading = {
-    state: 'loading'
-};
-
 export type Success<T> = {
     state: 'success';
     value: T;
+};
+
+export type Loading = {
+    state: 'loading'
 };
 
 export type NotFound = {
@@ -20,7 +20,7 @@ export type Error = {
 };
 
 export type Resource<T> =
-    | Loading
     | Success<T>
+    | Loading
     | NotFound
     | Error;

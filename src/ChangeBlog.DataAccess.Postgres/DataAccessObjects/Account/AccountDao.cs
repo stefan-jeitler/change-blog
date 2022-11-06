@@ -127,6 +127,41 @@ public class AccountDao : IAccountDao
         return accounts.AsList();
     }
 
+    public async Task<IList<AccountStats>> GetAccountsStatsAsync(IList<Guid> accountIds)
+    {
+        var productsCountSql = @"
+            select a.id as accountId, count(*) as productsCount from product p 
+            join account a on p.account_id = a.id
+            where a.id = any(@accountIds)
+            group by a.id";
+
+        var usersCountSql = @"
+            select au.account_id as accountId, count(*) as usersCount
+            from ""user"" u
+                     join account_user au on u.id = au.user_id
+                     join role r on au.role_id = r.id
+            where u.deleted_at is null
+              and r.name = 'DefaultUser'
+              and au.account_id = any (@accountIds)
+            group by au.account_id";
+
+        var productsCount = (await _dbAccessor.DbConnection
+                .QueryAsync<(Guid accountId, int count)>(productsCountSql, new {accountIds}))
+            .ToList();
+
+        var usersCount = await _dbAccessor.DbConnection
+            .QueryAsync<(Guid accountId, int count)>(usersCountSql, new {accountIds});
+
+        var usersCountById = usersCount.ToDictionary(k => k.accountId, v => v.count);
+        var productsCountById = productsCount.ToDictionary(k => k.accountId, v => v.count);
+
+        return accountIds.Select(x =>
+                new AccountStats(x,
+                    usersCountById.GetValueOrDefault(x),
+                    productsCountById.GetValueOrDefault(x)))
+            .AsList();
+    }
+
     public async Task<IList<Domain.Account>> GetAccountsAsync(IList<Guid> accountIds)
     {
         const string getAccountsSql = @"
@@ -197,5 +232,34 @@ values (@accountId, @userId, @roleId, @createdAt)";
         });
 
         return Result.Success<Guid, Conflict>(accountId);
+    }
+
+    public async Task<AccountStats> GetAccountStatsAsync(Guid accountId)
+    {
+        const string usersCountSql = @"
+            select count(*) as usersCount
+            from ""user"" u
+                     join account_user au on u.id = au.user_id
+                     join role r on au.role_id = r.id
+            where u.deleted_at is null
+              and r.name = 'DefaultUser'
+              and au.account_id = @accountId";
+
+        var usersCount = await _dbAccessor.DbConnection.ExecuteScalarAsync<int>(usersCountSql,
+            new {accountId});
+
+        var productsCountSql = @"
+            select count(*) as productsCount from product p 
+            join account a on p.account_id = a.id
+            where a.id = @accountId
+            group by a.id";
+
+        var productsCount = await _dbAccessor.DbConnection
+            .ExecuteScalarAsync<int>(productsCountSql, new
+            {
+                accountId
+            });
+
+        return new AccountStats(accountId, usersCount, productsCount);
     }
 }

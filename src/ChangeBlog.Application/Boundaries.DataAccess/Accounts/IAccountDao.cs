@@ -14,6 +14,8 @@ public interface IAccountDao
     Task<IList<Account>> FindByCreator(Guid creatorId);
     Task<Account> GetAccountAsync(Guid accountId);
     Task<IList<Account>> GetAccountsAsync(Guid userId);
+    Task<IList<AccountStats>> GetAccountsStatsAsync(IList<Guid> accountIds);
+    Task<AccountStats> GetAccountStatsAsync(Guid accountId);
     Task<IList<Account>> GetAccountsAsync(IList<Guid> accountIds);
     Task<Result<Guid, Conflict>> AddAccount(Account accountToAdd, AccountUser accountUserToAdd);
     Task<Result<Guid, Conflict>> DeleteAsync(Guid accountId);

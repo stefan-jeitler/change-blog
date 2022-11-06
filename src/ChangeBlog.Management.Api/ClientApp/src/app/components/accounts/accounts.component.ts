@@ -19,6 +19,8 @@ interface Account {
     createdAt: Date;
     createdBy: string;
     wasCreatedByMyself: boolean;
+    usersCount: number;
+    productsCount: number;
 }
 
 @Component({
@@ -88,7 +90,9 @@ export class AccountsComponent implements OnInit {
                     defaultVersioningScheme: x.defaultVersioningScheme!,
                     createdAt: x.createdAt,
                     createdBy: x.createdBy!,
-                    wasCreatedByMyself: x.wasCreatedByMyself
+                    wasCreatedByMyself: x.wasCreatedByMyself,
+                    usersCount: x.usersCount,
+                    productsCount: x.productsCount
                 }
             })
         };

@@ -6,7 +6,8 @@ namespace ChangeBlog.Application.UseCases.Accounts.GetAccounts;
 public class AccountResponseModel
 {
     public AccountResponseModel(Guid id, string name, string defaultVersioningScheme,
-        Guid defaultVersioningSchemeId, string createdBy, DateTimeOffset createdAt, bool wasCreatedByMyself)
+        Guid defaultVersioningSchemeId, string createdBy, DateTimeOffset createdAt, bool wasCreatedByMyself,
+        AccountStatsResponseModel accountStats)
     {
         Id = Guard.Against.NullOrEmpty(id, nameof(id));
         Name = Guard.Against.Null(name, nameof(name));
@@ -20,6 +21,9 @@ public class AccountResponseModel
         CreatedBy = Guard.Against.NullOrWhiteSpace(createdBy, nameof(createdBy));
         CreatedAt = createdAt;
         WasCreatedByMyself = wasCreatedByMyself;
+
+        ArgumentNullException.ThrowIfNull(accountStats);
+        AccountStats = accountStats;
     }
 
     public Guid Id { get; }
@@ -29,4 +33,6 @@ public class AccountResponseModel
     public string CreatedBy { get; }
     public DateTimeOffset CreatedAt { get; }
     public bool WasCreatedByMyself { get; }
+
+    public AccountStatsResponseModel AccountStats { get; }
 }

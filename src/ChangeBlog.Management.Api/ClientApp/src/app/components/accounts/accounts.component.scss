@@ -8,7 +8,13 @@
 }
 
 @media (max-width: $xl) {
-  .versioning-scheme-column {
+  .created-at-column {
+    display: none;
+  }
+}
+
+@media (max-width: $lg) {
+  .created-by-column {
     display: none;
   }
 }

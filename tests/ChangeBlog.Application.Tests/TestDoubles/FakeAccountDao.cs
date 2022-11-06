@@ -59,6 +59,12 @@ public class FakeAccountDao : IAccountDao
         return Accounts;
     }
 
+    public Task<IList<AccountStats>> GetAccountsStatsAsync(IList<Guid> accountIds) =>
+        Task.FromResult((IList<AccountStats>) new List<AccountStats>());
+
+    public Task<AccountStats> GetAccountStatsAsync(Guid accountId) =>
+        Task.FromResult(new AccountStats(accountId, 0, 0));
+
     public async Task<IList<Account>> GetAccountsAsync(IList<Guid> accountIds)
     {
         await Task.Yield();

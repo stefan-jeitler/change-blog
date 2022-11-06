@@ -13,6 +13,8 @@
 	public timezone = 'timezone';
 	public culture = 'culture';
 	public userProfile = 'userProfile';
+	public users = 'users';
+	public products = 'products';
 	public userProfileUsernameInfo = 'userProfileUsernameInfo';
 	public userProfileEmailInfo = 'userProfileEmailInfo';
 	public apikey = 'apikey';
@@ -47,7 +49,6 @@
 	public creator = 'creator';
 	public searchKeyword = 'searchKeyword';
 	public confirmAccountDeletion = 'confirmAccountDeletion';
-	public weAreSorry = 'weAreSorry';
 	public resourceNotFound = 'resourceNotFound';
 	public oopsSomethingWentWrong = 'oopsSomethingWentWrong';
 	public unexpectedError = 'unexpectedError';

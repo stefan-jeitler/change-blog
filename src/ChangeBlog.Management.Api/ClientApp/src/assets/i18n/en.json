@@ -6,6 +6,8 @@
   "timezone": "Timezone",
   "culture": "Culture",
   "userProfile": "User Profile",
+  "users": "Users",
+  "products": "Products",
   "userProfileUsernameInfo": "The username is from the identity provider and can't be modified in this application",
   "userProfileEmailInfo": "The email address is from the identity provider and can't be modified in this application",
   "apikey": "Api Key",

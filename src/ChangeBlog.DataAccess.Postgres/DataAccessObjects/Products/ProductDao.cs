@@ -81,7 +81,7 @@ public class ProductDao : IProductDao
     public async Task<IList<Product>> GetUserProductsAsync(UserProductsQuerySettings querySettings)
     {
         var sql = GetProductsForUserSql(querySettings.LastProductId.HasValue,
-            querySettings.IncludeFreezeProducts);
+            querySettings.IncludeFreezedProducts);
 
         var products = await _dbAccessor.DbConnection
             .QueryAsync<Product>(sql, new

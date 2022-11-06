@@ -1526,6 +1526,8 @@ export class AccountDto implements IAccountDto {
     createdAt!: Date;
     createdBy!: string | undefined;
     wasCreatedByMyself!: boolean;
+    usersCount!: number;
+    productsCount!: number;
 
     constructor(data?: IAccountDto) {
         if (data) {
@@ -1545,6 +1547,8 @@ export class AccountDto implements IAccountDto {
             this.createdAt = _data["createdAt"] ? new Date(_data["createdAt"].toString()) : <any>undefined;
             this.createdBy = _data["createdBy"];
             this.wasCreatedByMyself = _data["wasCreatedByMyself"];
+            this.usersCount = _data["usersCount"];
+            this.productsCount = _data["productsCount"];
         }
     }
 
@@ -1564,6 +1568,8 @@ export class AccountDto implements IAccountDto {
         data["createdAt"] = this.createdAt ? this.createdAt.toISOString() : <any>undefined;
         data["createdBy"] = this.createdBy;
         data["wasCreatedByMyself"] = this.wasCreatedByMyself;
+        data["usersCount"] = this.usersCount;
+        data["productsCount"] = this.productsCount;
         return data;
     }
 }
@@ -1576,6 +1582,8 @@ export interface IAccountDto {
     createdAt: Date;
     createdBy: string | undefined;
     wasCreatedByMyself: boolean;
+    usersCount: number;
+    productsCount: number;
 }
 
 export class ApiInfo implements IApiInfo {

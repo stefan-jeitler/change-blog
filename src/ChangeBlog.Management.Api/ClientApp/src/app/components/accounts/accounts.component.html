@@ -73,15 +73,19 @@
                         {{ translationKey.$name | transloco }}
                         <p-sortIcon field="name"></p-sortIcon>
                     </th>
-                    <th class="versioning-scheme-column" pSortableColumn="defaultVersioningScheme">
-                        {{ translationKey.versioningScheme | transloco }}
-                        <p-sortIcon field="defaultVersioningScheme"></p-sortIcon>
+                    <th pSortableColumn="usersCount">
+                        {{ translationKey.users | transloco }}
+                        <p-sortIcon field="usersCount"></p-sortIcon>
                     </th>
-                    <th pSortableColumn="createdBy">
+                    <th pSortableColumn="productsCount">
+                        {{ translationKey.products | transloco }}
+                        <p-sortIcon field="productsCount"></p-sortIcon>
+                    </th>
+                    <th class="created-by-column" pSortableColumn="createdBy">
                         {{ translationKey.creator | transloco }}
                         <p-sortIcon field="createdBy"></p-sortIcon>
                     </th>
-                    <th class="w-8rem" pSortableColumn="createdAt">
+                    <th class="created-at-column w-8rem" pSortableColumn="createdAt">
                         {{ translationKey.created | transloco }}
                         <p-sortIcon field="createdAt"></p-sortIcon>
                     </th>
@@ -100,23 +104,29 @@
                     </td>
                     <td>
                         <span class="p-column-title">{{ translationKey.$name | transloco }}</span>
-                        <div class="truncate-text text-right sm:text-left w-12rem sm:w-10rem md:w-8rem lg:w-8rem xl:12rem">
+                        <div class="truncate-text text-right sm:text-left w-12rem sm:w-9rem md:w-8rem lg:w-8rem xl:12rem">
                             {{account.name}}
                         </div>
                     </td>
-                    <td class="versioning-scheme-column">
-                        <span class="p-column-title">{{ translationKey.versioningScheme | transloco }}</span>
-                        <div class="truncate-text text-right sm:text-left w-8rem sm:w-6rem xl:w-full">
-                            {{account.defaultVersioningScheme}}
+                    <td>
+                        <span class="p-column-title">{{ translationKey.users | transloco }}</span>
+                        <div class="text-right sm:text-left">
+                            {{account.usersCount}}
                         </div>
                     </td>
                     <td>
+                        <span class="p-column-title">{{ translationKey.products | transloco }}</span>
+                        <div class="text-right sm:text-left">
+                            {{account.productsCount}}
+                        </div>
+                    </td>
+                    <td class="created-by-column">
                         <span class="p-column-title">{{ translationKey.creator | transloco }}</span>
-                        <div class="truncate-text text-right sm:text-left w-11rem sm:w-10rem lg:w-12rem xl:w-full">
+                        <div class="truncate-text text-right sm:text-left">
                             {{account.createdBy}}
                         </div>
                     </td>
-                    <td>
+                    <td class="created-at-column">
                         <span class="p-column-title">{{ translationKey.created | transloco }}</span>
                         <span [pTooltip]="account.createdAt.toISOString()"
                               appendTo="body"

@@ -12,6 +12,8 @@ public class AccountDto
     public DateTimeOffset CreatedAt { get; set; }
     public string CreatedBy { get; set; }
     public bool WasCreatedByMyself { get; set; }
+    public uint UsersCount { get; set; }
+    public uint ProductsCount { get; set; }
 
     public static AccountDto FromResponseModel(AccountResponseModel m) =>
         new()
@@ -22,6 +24,8 @@ public class AccountDto
             DefaultVersioningSchemeId = m.DefaultVersioningSchemeId,
             CreatedAt = m.CreatedAt,
             CreatedBy = m.CreatedBy,
-            WasCreatedByMyself = m.WasCreatedByMyself
+            WasCreatedByMyself = m.WasCreatedByMyself,
+            UsersCount = m.AccountStats.UsersCount,
+            ProductsCount = m.AccountStats.ProductsCount
         };
 }

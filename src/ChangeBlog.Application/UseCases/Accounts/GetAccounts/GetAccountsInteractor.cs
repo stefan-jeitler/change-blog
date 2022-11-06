@@ -28,6 +28,7 @@ public class GetAccountsInteractor : IGetAccounts, IGetAccount
     {
         var currentUser = await _userDao.GetUserAsync(userId);
         var account = await _accountDao.GetAccountAsync(accountId);
+        var accountStats = await _accountDao.GetAccountStatsAsync(account.Id);
 
         var schemeId = account.DefaultVersioningSchemeId;
         var scheme = schemeId.HasValue
@@ -36,13 +37,16 @@ public class GetAccountsInteractor : IGetAccounts, IGetAccount
 
         var createdBy = await _userDao.GetUserAsync(account.CreatedByUser);
 
-        return CreateResponseModel(account, scheme, createdBy, currentUser);
+        return CreateResponseModel(account, scheme, createdBy, currentUser, accountStats);
     }
 
     public async Task<IList<AccountResponseModel>> ExecuteAsync(Guid userId)
     {
         var currentUser = await _userDao.GetUserAsync(userId);
         var accounts = await _accountDao.GetAccountsAsync(userId);
+        var accountIds = accounts.Select(x => x.Id).ToList();
+        var accountStats = await _accountDao.GetAccountsStatsAsync(accountIds);
+        var accountStatsById = accountStats.ToDictionary(k => k.AccountId, v => v);
 
         var schemeById = await GetRelevantVersioningSchemesAsync(accounts);
         var defaultScheme = await _versioningSchemeDao.GetSchemeAsync(Default.VersioningSchemeId);
@@ -53,20 +57,21 @@ public class GetAccountsInteractor : IGetAccounts, IGetAccount
             {
                 var scheme = schemeById.GetValueOrDefault(x.DefaultVersioningSchemeId ?? Guid.Empty, defaultScheme);
                 var createdBy = creatorById.GetValueOrDefault(x.CreatedByUser);
-                return CreateResponseModel(x, scheme, createdBy, currentUser);
+                var stats = accountStatsById.GetValueOrDefault(x.Id, new AccountStats(x.Id, 0, 0));
+                return CreateResponseModel(x, scheme, createdBy, currentUser, stats);
             })
             .ToList();
     }
 
-    private async Task<IReadOnlyDictionary<Guid, User>> GetRelevantUsersAsync(IList<Account> accounts)
+    private async Task<IReadOnlyDictionary<Guid, User>> GetRelevantUsersAsync(IEnumerable<Account> accounts)
     {
         var creatorUserIds = accounts
             .Select(x => x.CreatedByUser)
             .Distinct()
             .ToList();
+
         var creators = await _userDao.GetUsersAsync(creatorUserIds);
-        var creatorById = creators.ToDictionary(k => k.Id, v => v);
-        return creatorById;
+        return creators.ToDictionary(k => k.Id, v => v);
     }
 
     private async Task<IReadOnlyDictionary<Guid, VersioningScheme>> GetRelevantVersioningSchemesAsync(
@@ -83,12 +88,17 @@ public class GetAccountsInteractor : IGetAccounts, IGetAccount
     }
 
     private static AccountResponseModel CreateResponseModel(Account account, VersioningScheme scheme, User createdBy,
-        User currentUser) =>
-        new(account.Id,
+        User currentUser, AccountStats accountStats)
+    {
+        var accountStatsResponseModel =
+            new AccountStatsResponseModel((uint) accountStats.UsersCount, (uint) accountStats.ProductsCount);
+        return new AccountResponseModel(account.Id,
             account.Name,
             scheme.Name,
             scheme.Id,
             createdBy.Email,
             account.CreatedAt.ToLocal(currentUser.TimeZone),
-            currentUser.Id == createdBy.Id);
+            currentUser.Id == createdBy.Id,
+            accountStatsResponseModel);
+    }
 }

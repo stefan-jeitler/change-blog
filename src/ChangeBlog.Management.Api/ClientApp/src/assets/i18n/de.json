@@ -6,6 +6,8 @@
   "timezone": "Zeitzone",
   "culture": "Region",
   "userProfile": "Benutzerprofil",
+  "users": "Benutzer",
+  "products": "Produkte",
   "userProfileUsernameInfo": "Der Name wird vom Identity Provider bereitgestellt und kann in dieser Anwendung nicht geändert werden",
   "userProfileEmailInfo": "Die Emailadresse wird vom Identity Provider bereitgestellt und kann in dieser Anwendung nicht geändert werden",
   "apikey": "Api Schlüssel",

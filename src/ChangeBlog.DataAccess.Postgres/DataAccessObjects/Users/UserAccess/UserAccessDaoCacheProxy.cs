@@ -9,7 +9,7 @@ namespace ChangeBlog.DataAccess.Postgres.DataAccessObjects.Users.UserAccess;
 
 public class UserAccessDaoCacheProxy : IUserAccessDao
 {
-    private static readonly TimeSpan SlidingCacheExpiration = TimeSpan.FromMinutes(5);
+    private static readonly TimeSpan CacheExpiration = TimeSpan.FromMinutes(5);
     private readonly IMemoryCache _memoryCache;
     private readonly UserAccessDao _realUserAccessDao;
 
@@ -24,7 +24,7 @@ public class UserAccessDaoCacheProxy : IUserAccessDao
         var cacheKey = $"AccountRoles:{userId}:{accountId}";
         return _memoryCache.GetOrCreateAsync(cacheKey, entry =>
         {
-            entry.SlidingExpiration = SlidingCacheExpiration;
+            entry.AbsoluteExpirationRelativeToNow = CacheExpiration;
             return _realUserAccessDao.GetAccountRolesAsync(userId, accountId);
         });
     }
@@ -34,7 +34,7 @@ public class UserAccessDaoCacheProxy : IUserAccessDao
         var cacheKey = $"RolesByProductId:{userId}:{productId}";
         return _memoryCache.GetOrCreateAsync(cacheKey, entry =>
         {
-            entry.SlidingExpiration = SlidingCacheExpiration;
+            entry.AbsoluteExpirationRelativeToNow = CacheExpiration;
             return _realUserAccessDao.GetRolesByProductIdAsync(userId, productId);
         });
     }
@@ -44,7 +44,7 @@ public class UserAccessDaoCacheProxy : IUserAccessDao
         var cacheKey = $"RolesByVersionId:{userId}:{versionId}";
         return _memoryCache.GetOrCreateAsync(cacheKey, entry =>
         {
-            entry.SlidingExpiration = SlidingCacheExpiration;
+            entry.AbsoluteExpirationRelativeToNow = CacheExpiration;
             return _realUserAccessDao.GetRolesByVersionIdAsync(userId, versionId);
         });
     }
@@ -54,7 +54,7 @@ public class UserAccessDaoCacheProxy : IUserAccessDao
         var cacheKey = $"RolesByChangeLogLineId:{userId}:{changeLogLineId}";
         return _memoryCache.GetOrCreateAsync(cacheKey, entry =>
         {
-            entry.SlidingExpiration = SlidingCacheExpiration;
+            entry.AbsoluteExpirationRelativeToNow = CacheExpiration;
             return _realUserAccessDao.GetRolesByChangeLogLineIdAsync(userId, changeLogLineId);
         });
     }

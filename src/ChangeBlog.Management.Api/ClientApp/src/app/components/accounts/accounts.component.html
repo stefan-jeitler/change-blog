@@ -86,7 +86,7 @@
                         <p-sortIcon field="createdBy"></p-sortIcon>
                     </th>
                     <th class="created-at-column w-8rem" pSortableColumn="createdAt">
-                        {{ translationKey.created | transloco }}
+                        {{ translationKey.createdAt | transloco }}
                         <p-sortIcon field="createdAt"></p-sortIcon>
                     </th>
                     <th class="text-center">&nbsp;</th>
@@ -127,7 +127,7 @@
                         </div>
                     </td>
                     <td class="created-at-column">
-                        <span class="p-column-title">{{ translationKey.created | transloco }}</span>
+                        <span class="p-column-title">{{ translationKey.createdAt | transloco }}</span>
                         <span [pTooltip]="account.createdAt.toISOString()"
                               appendTo="body"
                               class="sm:text-left"

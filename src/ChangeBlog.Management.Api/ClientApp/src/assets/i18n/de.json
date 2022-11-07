@@ -39,7 +39,7 @@
   "actions": "Aktionen",
   "noEntries": "Keine Einträge",
   "versioningScheme": "Versionierungsschema",
-  "created": "Erstellt",
+  "createdAt": "Erstellt am",
   "creator": "Ersteller",
   "searchKeyword": "Suchbegriff",
   "confirmAccountDeletion": "Account '<b>{{ accountName }}</b>' löschen?",

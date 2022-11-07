@@ -8,7 +8,10 @@
     <div *ngIf="resource.state == 'success'">
         <p-tabView class="responsive-tab-view">
             <p-tabPanel [disabled]="!tabs['basic-data'].isActive" [header]="translationKey.masterData | transloco">
-                Basic data coming soon ...
+                <app-account-master-data
+                        [accountId]="resource.value.resourceId"
+                        [readonly]="!resource.value.canUpdate">
+                </app-account-master-data>
             </p-tabPanel>
             <p-tabPanel [disabled]="!tabs['products'].isActive" [header]="translationKey.products | transloco">
                 Products coming soon ...

@@ -46,7 +46,7 @@
 	public actions = 'actions';
 	public noEntries = 'noEntries';
 	public versioningScheme = 'versioningScheme';
-	public created = 'created';
+	public createdAt = 'createdAt';
 	public creator = 'creator';
 	public searchKeyword = 'searchKeyword';
 	public confirmAccountDeletion = 'confirmAccountDeletion';

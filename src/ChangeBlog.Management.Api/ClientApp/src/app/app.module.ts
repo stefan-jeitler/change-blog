@@ -61,6 +61,7 @@ import {ContentNotfoundComponent} from './components/content-notfound/content-no
 import {ImageModule} from "primeng/image";
 import {TabViewModule} from "primeng/tabview";
 import {CardModule} from "primeng/card";
+import { AccountMasterDataComponent } from './components/account-master-data/account-master-data.component';
 
 @NgModule({
     declarations: [
@@ -80,6 +81,7 @@ import {CardModule} from "primeng/card";
         AccountComponent,
         ContentErrorComponent,
         ContentNotfoundComponent,
+        AccountMasterDataComponent
     ],
     imports: [
         BrowserModule,

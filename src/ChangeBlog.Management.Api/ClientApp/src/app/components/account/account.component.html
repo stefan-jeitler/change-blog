@@ -6,23 +6,16 @@
     <app-content-notfound *ngIf="resource.state === 'not-found'"></app-content-notfound>
     <app-content-error *ngIf="resource.state == 'error'" [details]="resource.errorDetails"></app-content-error>
     <div *ngIf="resource.state == 'success'">
-        <p-card>
-            <ng-template pTemplate="header">
-                <div class="pt-4 ml-2 md:ml-4 w-16rem sm:w-30rem lg:w-full">
-                    <div class="text-2xl truncate-text">{{ resource.value.name }}</div>
-                </div>
-            </ng-template>
-            <p-tabView class="responsive-tab-view">
-                <p-tabPanel header="Übersicht">
-                    coming soon ...
-                </p-tabPanel>
-                <p-tabPanel header="Benutzer">
-                    coming soon ...
-                </p-tabPanel>
-                <p-tabPanel header="Produkte">
-                    coming soon ...
-                </p-tabPanel>
-            </p-tabView>
-        </p-card>
+        <p-tabView class="responsive-tab-view">
+            <p-tabPanel [disabled]="!tabMapping['basic-data'].isActive" header="Übersicht">
+                Basic data coming soon ...
+            </p-tabPanel>
+            <p-tabPanel [disabled]="!tabMapping['users'].isActive" header="Benutzer">
+                Users coming soon ...
+            </p-tabPanel>
+            <p-tabPanel [disabled]="!tabMapping['products'].isActive" header="Produkte">
+                Products coming soon ...
+            </p-tabPanel>
+        </p-tabView>
     </div>
 </div>

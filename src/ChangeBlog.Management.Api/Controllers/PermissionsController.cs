@@ -6,9 +6,14 @@ using ChangeBlog.Api.Shared;
 using ChangeBlog.Api.Shared.Authorization;
 using ChangeBlog.Api.Shared.DTOs;
 using ChangeBlog.Api.Shared.Swagger;
+using ChangeBlog.Application.UseCases.Accounts.AccountExists;
 using ChangeBlog.Application.UseCases.Accounts.GetAuthorizationState;
+using ChangeBlog.Application.UseCases.ChangeLogs.ChangeLogLineExists;
+using ChangeBlog.Application.UseCases.Products.ProductExists;
+using ChangeBlog.Application.UseCases.Versions.VersionExists;
 using ChangeBlog.Domain.Authorization;
 using ChangeBlog.Management.Api.DTOs.Permissions;
+using CSharpFunctionalExtensions;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
@@ -21,16 +26,26 @@ namespace ChangeBlog.Management.Api.Controllers;
 [SwaggerControllerOrder(1)]
 public class PermissionsController : ControllerBase
 {
+    private readonly IAccountExists _accountExists;
+    private readonly IChangeLogLineExists _changeLogLineExists;
     private readonly IGetAuthorizationState _getAuthorizationState;
+    private readonly IProductExists _productExists;
+    private readonly IVersionExists _versionExists;
 
-    public PermissionsController(IGetAuthorizationState getAuthorizationState)
+    public PermissionsController(IGetAuthorizationState getAuthorizationState, IAccountExists accountExists,
+        IProductExists productExists, IVersionExists versionExists, IChangeLogLineExists changeLogLineExists)
     {
         _getAuthorizationState = getAuthorizationState;
+        _accountExists = accountExists;
+        _productExists = productExists;
+        _versionExists = versionExists;
+        _changeLogLineExists = changeLogLineExists;
     }
 
     [HttpGet(Name = "GetPermissions")]
     [SkipAuthorization]
     [ProducesResponseType(StatusCodes.Status200OK)]
+    [ProducesResponseType(typeof(ErrorResponse), StatusCodes.Status404NotFound)]
     public async Task<ActionResult<ResourcePermissionsDto>> GetPermissions(
         [FromQuery] RequestPermissionsDto requestDto)
     {
@@ -45,11 +60,17 @@ public class PermissionsController : ControllerBase
             _ => throw new ArgumentOutOfRangeException(nameof(ResourceType))
         };
 
-        return Ok(permissions);
+        return permissions.HasValue
+            ? Ok(permissions.Value)
+            : NotFound();
     }
 
-    private async Task<ResourcePermissionsDto> GetAccountPermissions(Guid userId, Guid accountId)
+    private async Task<Maybe<ResourcePermissionsDto>> GetAccountPermissions(Guid userId, Guid accountId)
     {
+        var accountExists = await _accountExists.ExecuteAsync(accountId);
+        if (!accountExists)
+            return Maybe<ResourcePermissionsDto>.None;
+
         return new ResourcePermissionsDto
         {
             ResourceType = ResourceType.Account,
@@ -60,6 +81,7 @@ public class PermissionsController : ControllerBase
             SpecificPermissions = new Dictionary<string, bool>
             {
                 ["canViewUsers"] = await IsPermittedAsync(Permission.ViewAccountUsers),
+                ["canViewProducts"] = await IsPermittedAsync(Permission.ViewProduct),
                 ["canCreateProduct"] = await IsPermittedAsync(Permission.AddOrUpdateProduct)
             }
         };
@@ -73,8 +95,12 @@ public class PermissionsController : ControllerBase
         }
     }
 
-    private async Task<ResourcePermissionsDto> GetProductPermissions(Guid userId, Guid productId)
+    private async Task<Maybe<ResourcePermissionsDto>> GetProductPermissions(Guid userId, Guid productId)
     {
+        var productExists = await _productExists.ExecuteAsync(productId);
+        if (!productExists)
+            return Maybe<ResourcePermissionsDto>.None;
+
         return new ResourcePermissionsDto
         {
             ResourceType = ResourceType.Product,
@@ -98,8 +124,12 @@ public class PermissionsController : ControllerBase
         }
     }
 
-    private async Task<ResourcePermissionsDto> GetVersionPermissions(Guid userId, Guid versionId)
+    private async Task<Maybe<ResourcePermissionsDto>> GetVersionPermissions(Guid userId, Guid versionId)
     {
+        var versionExists = await _versionExists.ExecuteAsync(versionId);
+        if (!versionExists)
+            return Maybe<ResourcePermissionsDto>.None;
+
         return new ResourcePermissionsDto
         {
             ResourceType = ResourceType.Version,
@@ -122,8 +152,12 @@ public class PermissionsController : ControllerBase
         }
     }
 
-    private async Task<ResourcePermissionsDto> GetChangeLogPermissions(Guid userId, Guid changeLogLineId)
+    private async Task<Maybe<ResourcePermissionsDto>> GetChangeLogPermissions(Guid userId, Guid changeLogLineId)
     {
+        var changeLogLineExists = await _changeLogLineExists.ExecuteAsync(changeLogLineId);
+        if (!changeLogLineExists)
+            return Maybe<ResourcePermissionsDto>.None;
+
         return new ResourcePermissionsDto
         {
             ResourceType = ResourceType.ChangeLogLine,

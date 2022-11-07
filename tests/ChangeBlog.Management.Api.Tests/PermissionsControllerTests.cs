@@ -45,7 +45,7 @@ public class PermissionsControllerTests : IClassFixture<WebApplicationFactory<St
         content.SpecificPermissions.Should().ContainKey("canViewUsers").WhoseValue.Should().BeTrue();
         content.SpecificPermissions.Should().ContainKey("canCreateProduct").WhoseValue.Should().BeTrue();
     }
-    
+
     [Fact]
     public async Task Permissions_NotExistingAccountId_ReturnsNoPermission()
     {
@@ -59,17 +59,9 @@ public class PermissionsControllerTests : IClassFixture<WebApplicationFactory<St
         var response =
             await client.GetAsync(
                 $"/api/permissions?ResourceType=Account&ResourceId={notExistingAccountId}");
-        var content = await response.Content.Deserialize<ResourcePermissionsDto>();
 
         // assert
-        content.Should().NotBeNull();
-        content.ResourceId.Should().Be(notExistingAccountId);
-        content.ResourceType.Should().Be(ResourceType.Account);
-        content!.CanDelete.Should().BeFalse();
-        content.CanRead.Should().BeFalse();
-        content.CanUpdate.Should().BeFalse();
-        content.SpecificPermissions.Should().ContainKey("canViewUsers").WhoseValue.Should().BeFalse();
-        content.SpecificPermissions.Should().ContainKey("canCreateProduct").WhoseValue.Should().BeFalse();
+        response.StatusCode.Should().Be(HttpStatusCode.NotFound);
     }
 
     [Fact]

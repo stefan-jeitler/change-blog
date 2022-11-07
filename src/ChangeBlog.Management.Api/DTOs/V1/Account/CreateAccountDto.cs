@@ -1,7 +1,6 @@
 using ChangeBlog.Api.Shared.ValidatorExtensions;
 using FluentValidation;
 using JetBrains.Annotations;
-using D = ChangeBlog.Domain.Miscellaneous;
 
 namespace ChangeBlog.Management.Api.DTOs.V1.Account;
 

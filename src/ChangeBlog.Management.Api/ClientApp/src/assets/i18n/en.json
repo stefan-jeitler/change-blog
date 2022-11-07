@@ -15,6 +15,7 @@
   "save": "Save",
   "open": "Open",
   "cancel": "Cancel",
+  "masterData": "Master Data",
   "genericErrorMessageShort": "Error",
   "genericErrorMessage": "An Error occured while performing this action.",
   "success": "Success",

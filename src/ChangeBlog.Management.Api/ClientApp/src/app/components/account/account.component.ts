@@ -21,13 +21,13 @@ interface Tab {
 })
 export class AccountComponent implements OnInit {
     resource: Resource<Permission>;
-    tabMapping: { [tabName in AccountTab]: Tab };
+    tabs: { [tabName in AccountTab]: Tab };
 
     constructor(private route: ActivatedRoute,
                 public translationKey: TranslationKey,
                 private apiClient: ChangeBlogManagementApi.Client) {
         this.resource = {state: 'loading'};
-        this.tabMapping = {
+        this.tabs = {
             'basic-data': {index: 0, isActive: false},
             'users': {index: 1, isActive: false},
             'products': {index: 2, isActive: false}
@@ -39,7 +39,7 @@ export class AccountComponent implements OnInit {
         const canViewUsers = accountPermissions['canViewUsers'] ?? false;
         const canViewProducts = accountPermissions['canViewProducts'] ?? false;
 
-        this.tabMapping = {
+        this.tabs = {
             'basic-data': {index: 0, isActive: true},
             'users': {index: 1, isActive: canViewUsers},
             'products': {index: 2, isActive: canViewProducts}
@@ -76,5 +76,4 @@ export class AccountComponent implements OnInit {
             console.error(e);
         }
     }
-
 }

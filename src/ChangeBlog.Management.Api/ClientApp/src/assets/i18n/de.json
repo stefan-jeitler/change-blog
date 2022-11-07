@@ -15,6 +15,7 @@
   "save": "Speichern",
   "open": "Öffnen",
   "cancel": "Abbrechen",
+  "masterData": "Stammdaten",
   "genericErrorMessageShort": "Fehler",
   "genericErrorMessage": "Fehler beim Ausführen der Aktion.",
   "success": "Erfolgreich",

@@ -7,14 +7,14 @@
     <app-content-error *ngIf="resource.state == 'error'" [details]="resource.errorDetails"></app-content-error>
     <div *ngIf="resource.state == 'success'">
         <p-tabView class="responsive-tab-view">
-            <p-tabPanel [disabled]="!tabMapping['basic-data'].isActive" header="Übersicht">
+            <p-tabPanel [disabled]="!tabs['basic-data'].isActive" [header]="translationKey.masterData | transloco">
                 Basic data coming soon ...
             </p-tabPanel>
-            <p-tabPanel [disabled]="!tabMapping['users'].isActive" header="Benutzer">
-                Users coming soon ...
-            </p-tabPanel>
-            <p-tabPanel [disabled]="!tabMapping['products'].isActive" header="Produkte">
+            <p-tabPanel [disabled]="!tabs['products'].isActive" [header]="translationKey.products | transloco">
                 Products coming soon ...
+            </p-tabPanel>
+            <p-tabPanel [disabled]="!tabs['users'].isActive" [header]="translationKey.users | transloco">
+                Users coming soon ...
             </p-tabPanel>
         </p-tabView>
     </div>

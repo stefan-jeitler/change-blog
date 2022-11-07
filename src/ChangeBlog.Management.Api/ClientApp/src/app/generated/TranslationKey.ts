@@ -22,6 +22,7 @@
 	public save = 'save';
 	public open = 'open';
 	public cancel = 'cancel';
+	public masterData = 'masterData';
 	public genericErrorMessageShort = 'genericErrorMessageShort';
 	public genericErrorMessage = 'genericErrorMessage';
 	public success = 'success';

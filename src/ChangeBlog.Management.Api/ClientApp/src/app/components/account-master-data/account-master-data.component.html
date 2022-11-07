@@ -1,6 +1,6 @@
 <div class="app-content-container">
     <app-loading-spinner [show]="resource.state === 'loading'"></app-loading-spinner>
-    <app-content-notfound *ngIf="resource.state == 'error'"></app-content-notfound>
+    <app-content-notfound *ngIf="resource.state == 'not-found'"></app-content-notfound>
     <app-content-error *ngIf="resource.state == 'error'" [details]="resource.errorDetails"></app-content-error>
     <div *ngIf="resource.state === 'success'">
         <div style="max-width: 26rem; min-height: 24rem">

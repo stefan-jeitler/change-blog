@@ -57,6 +57,9 @@ export class AccountMasterDataComponent implements OnInit {
                         severity: 'success',
                         detail: r.message
                     });
+
+                    this.accountForm.markAsPristine();
+                    this.accountForm.markAsUntouched();
                 },
                 error: async (error: ChangeBlogManagementApi.SwaggerException) => {
                     await this.handleError(error);

@@ -77,7 +77,8 @@
 
                 <div class="flex flex flex-column mt-6 mb-3">
                     <div class="align-self-end">
-                        <button [label]="translationKey.save | transloco"
+                        <button [disabled]="!userProfileForm.dirty"
+                                [label]="translationKey.save | transloco"
                                 [loading]="userProfileForm.disabled"
                                 class="p-button"
                                 icon="pi pi-check"

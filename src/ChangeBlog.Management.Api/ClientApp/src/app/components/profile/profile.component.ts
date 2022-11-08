@@ -141,6 +141,8 @@ export class ProfileComponent implements OnInit {
 
     private async profileUpdated(response: MngmtApiClient.SuccessResponse) {
         await this.appCultureService.applyUserSettings();
+        this.userProfileForm.markAsPristine();
+        this.userProfileForm.markAsUntouched();
 
         const userProfileUpdateMessage = await firstValueFrom(this.translationService.selectTranslate(this.translationKey.userProfileUpdated));
 

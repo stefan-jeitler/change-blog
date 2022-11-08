@@ -44,11 +44,11 @@ export class AccountMasterDataComponent implements OnInit {
 
     updateAccount() {
         this.accountForm.resetValidation();
-        this.accountForm.disable()
+        this.accountForm.disable();
 
         const dto = UpdateAccountDto.fromJS({
             name: this.accountForm.value.name
-        })
+        });
 
         this.apiClient.updateAccount(this.accountId, undefined, dto)
             .subscribe({
@@ -76,7 +76,6 @@ export class AccountMasterDataComponent implements OnInit {
                 this.accountForm.patchValue({
                     name: a.name
                 });
-
             })
             .catch((e: ChangeBlogManagementApi.SwaggerException) => {
                 if (e.status === 404)

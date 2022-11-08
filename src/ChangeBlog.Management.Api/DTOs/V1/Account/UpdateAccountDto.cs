@@ -14,6 +14,8 @@ public class UpdateAccountDtoValidator : AbstractValidator<UpdateAccountDto>
 {
     public UpdateAccountDtoValidator()
     {
-        RuleFor(x => x.Name).MustBeName();
+        RuleFor(x => x.Name)
+            .Cascade(CascadeMode.Stop)
+            .MustBeName();
     }
 }

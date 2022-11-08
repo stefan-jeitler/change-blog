@@ -14,6 +14,8 @@ public class CreateAccountDtoValidator : AbstractValidator<CreateAccountDto>
 {
     public CreateAccountDtoValidator()
     {
-        RuleFor(x => x.Name).MustBeName();
+        RuleFor(x => x.Name)
+            .Cascade(CascadeMode.Stop)
+            .MustBeName();
     }
 }

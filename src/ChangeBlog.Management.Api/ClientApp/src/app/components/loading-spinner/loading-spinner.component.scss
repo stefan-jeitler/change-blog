@@ -1,16 +1,7 @@
-@import 'primeflex/src/_variables.scss';
-
 .loading-overlay {
-  position: absolute;
-  width: calc(100% - 26px);
-  min-height: 83%;
+  width: 100%;
   margin: 0;
   z-index: 2;
-  background-color: var(--surface-ground);
+  background-color: transparent;
 }
 
-@media (max-width: $md) {
-  .loading-overlay {
-    width: calc(100% - 10px);
-  }
-}

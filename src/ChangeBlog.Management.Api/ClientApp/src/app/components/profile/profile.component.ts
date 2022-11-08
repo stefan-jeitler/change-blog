@@ -43,7 +43,6 @@ export class ProfileComponent implements OnInit {
     }
 
     async ngOnInit(): Promise<void> {
-
         try {
             await this.loadAvailableDropdownOptions();
             this.loadUserProfile()

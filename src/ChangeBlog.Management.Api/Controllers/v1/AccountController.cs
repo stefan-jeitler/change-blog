@@ -91,7 +91,7 @@ public class AccountController : ControllerBase
         return presenter.Response;
     }
 
-    [HttpPatch("{accountId:Guid}", Name = "UpdateAccount")]
+    [HttpPut("{accountId:Guid}", Name = "UpdateAccount")]
     [ProducesResponseType(StatusCodes.Status200OK)]
     [ProducesResponseType(typeof(ErrorResponse), StatusCodes.Status400BadRequest)]
     [ProducesResponseType(typeof(ErrorResponse), StatusCodes.Status422UnprocessableEntity)]

@@ -1,4 +1,4 @@
-import {Component, Input, OnInit} from '@angular/core';
+import {Component, EventEmitter, Input, OnInit, Output} from '@angular/core';
 import {TranslationKey} from "../../generated/TranslationKey";
 import {Resource} from "../resource.state";
 import {ChangeBlogManagementApi} from "../../../clients/ChangeBlogManagementApiClient";
@@ -18,6 +18,7 @@ export class AccountMasterDataComponent implements OnInit {
 
     @Input() accountId: string;
     @Input() readonly: boolean;
+    @Output() accountNameChanged: EventEmitter<string>;
     resource: Resource<Account>;
     accountForm: FormGroup;
 
@@ -29,6 +30,7 @@ export class AccountMasterDataComponent implements OnInit {
         this.accountId = '';
         this.readonly = true;
         this.resource = {state: 'loading'};
+        this.accountNameChanged = new EventEmitter();
 
         this.accountForm = formBuilder.group({
             name: new FormControl<string>('')
@@ -60,6 +62,8 @@ export class AccountMasterDataComponent implements OnInit {
 
                     this.accountForm.markAsPristine();
                     this.accountForm.markAsUntouched();
+
+                    this.accountNameChanged.emit(this.accountForm.value.name);
                 },
                 error: async (error: ChangeBlogManagementApi.SwaggerException) => {
                     await this.handleError(error);
@@ -79,6 +83,8 @@ export class AccountMasterDataComponent implements OnInit {
                 this.accountForm.patchValue({
                     name: a.name
                 });
+                
+                this.accountNameChanged.emit(a.name);
             })
             .catch((e: ChangeBlogManagementApi.SwaggerException) => {
                 if (e.status === 404)

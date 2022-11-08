@@ -22,6 +22,7 @@ interface Tab {
 export class AccountComponent implements OnInit {
     resource: Resource<Permission>;
     tabs: { [tabName in AccountTab]: Tab };
+    title: string;
 
     constructor(private route: ActivatedRoute,
                 public translationKey: TranslationKey,
@@ -32,6 +33,7 @@ export class AccountComponent implements OnInit {
             'users': {index: 1, isActive: false},
             'products': {index: 2, isActive: false}
         };
+        this.title = '';
     }
 
     initializeTabs(permission: Permission) {
@@ -75,5 +77,10 @@ export class AccountComponent implements OnInit {
 
             console.error(e);
         }
+    }
+
+    accountNameChangedHandler(accountName: string) {
+        if (!!accountName)
+            this.title = accountName;
     }
 }

@@ -6,9 +6,16 @@
     <app-content-notfound *ngIf="resource.state === 'not-found'"></app-content-notfound>
     <app-content-error *ngIf="resource.state == 'error'" [details]="resource.errorDetails"></app-content-error>
     <div *ngIf="resource.state == 'success'">
+        <div class="bg-white">
+            <div class="ml-3 pt-4 pb-3">
+                <span *ngIf="!title">&nbsp;</span>
+                <span class="text-xl">{{ title }}</span>
+            </div>
+        </div>
         <p-tabView class="responsive-tab-view">
             <p-tabPanel [disabled]="!tabs['basic-data'].isActive" [header]="translationKey.masterData | transloco">
                 <app-account-master-data
+                        (accountNameChanged)="accountNameChangedHandler($event)"
                         [accountId]="resource.value.resourceId"
                         [readonly]="!resource.value.canUpdate">
                 </app-account-master-data>

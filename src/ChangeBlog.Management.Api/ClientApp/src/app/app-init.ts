@@ -3,25 +3,14 @@ import {OAuthService} from "angular-oauth2-oidc";
 import {AppConfig} from "../../app.config";
 import {ChangeBlogManagementApi as MngmtApiClient} from "../clients/ChangeBlogManagementApiClient";
 import {getBrowserLang, TranslocoService} from "@ngneat/transloco";
-import {filter, mergeMap} from "rxjs/operators";
 import {firstValueFrom} from "rxjs";
 import {AppUserService} from "./services/app-user.service";
 
-async function setBrowserLanguageOrDefault(oAuthService: OAuthService,
-                                           translationService: TranslocoService) {
+async function setBrowserLanguageOrDefault(translationService: TranslocoService) {
     const language = getBrowserLang() ?? translationService.getDefaultLang();
 
     translationService.setActiveLang(language);
-    await firstValueFrom(translationService.load(language))
-}
-
-function subscribeTokenReceived(authService: OAuthService, apiClient: MngmtApiClient.Client) {
-    authService.events
-        .pipe(
-            filter((e) => e.type === 'token_received' && authService.hasValidAccessToken()),
-            mergeMap((x) => apiClient.ensureUserIsImported())
-        )
-        .subscribe((x) => console.debug(x));
+    await firstValueFrom(translationService.load(language));
 }
 
 export function initializeApp(
@@ -37,8 +26,7 @@ export function initializeApp(
         oAuthService.configure(appConfig.authConfig);
         oAuthService.setupAutomaticSilentRefresh();
 
-        await setBrowserLanguageOrDefault(oAuthService, translationService);
-        subscribeTokenReceived(oAuthService, apiClient);
+        await setBrowserLanguageOrDefault(translationService);
         await oAuthService.loadDiscoveryDocument(appConfig.discoveryDocument);
         await oAuthService.tryLoginCodeFlow();
 

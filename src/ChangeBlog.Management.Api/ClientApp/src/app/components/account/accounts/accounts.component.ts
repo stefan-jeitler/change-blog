@@ -1,15 +1,15 @@
 import {Component, OnInit} from '@angular/core';
-import {TranslationKey} from "../../generated/TranslationKey";
+import {TranslationKey} from "../../../generated/TranslationKey";
 import {MessageService} from "primeng/api";
 import {FormBuilder, FormControl, FormGroup} from "@angular/forms";
 import {TranslocoService} from "@ngneat/transloco";
 import {
     ChangeBlogManagementApi,
     ChangeBlogManagementApi as MngmtApiClient
-} from "../../../clients/ChangeBlogManagementApiClient";
+} from "../../../../clients/ChangeBlogManagementApiClient";
 import {firstValueFrom} from "rxjs";
 import {Router} from "@angular/router";
-import {Resource} from "../resource.state";
+import {Resource} from "../../resource.state";
 import CreateAccountDto = MngmtApiClient.CreateAccountDto;
 
 interface Account {

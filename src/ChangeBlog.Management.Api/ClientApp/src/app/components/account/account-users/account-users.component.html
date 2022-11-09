@@ -1,0 +1,64 @@
+<div>
+    <app-loading-spinner [show]="resource.state === 'loading'"></app-loading-spinner>
+    <app-content-notfound *ngIf="resource.state == 'not-found'"></app-content-notfound>
+    <app-content-error *ngIf="resource.state == 'error'" [details]="resource.errorDetails"></app-content-error>
+    <div *ngIf="resource.state === 'success'">
+        <p-table #dt
+                 [autoLayout]="true"
+                 [globalFilterFields]="['email', 'firstName', 'lastName']"
+                 [rowHover]="true"
+                 [value]="resource.value"
+                 breakpoint="576px"
+                 dataKey="id"
+                 responsiveLayout="stack"
+                 styleClass="p-datatable-sm">
+            <ng-template pTemplate="emptymessage">
+                <tr>
+                    <td colspan="6">
+                        <div class="flex justify-content-center">
+                            <span>{{ translationKey.noEntries | transloco }}</span>
+                        </div>
+                    </td>
+                </tr>
+            </ng-template>
+            <ng-template pTemplate="caption">
+                <div class="flex">
+                    <span class="p-input-icon-left ml-auto">
+                        <i class="pi pi-search"></i>
+                        <input (input)="dt.filterGlobal(getValue($event), 'contains')"
+                               [placeholder]="translationKey.searchKeyword | transloco"
+                               pInputText type="text"/>
+                    </span>
+                </div>
+            </ng-template>
+            <ng-template pTemplate="header">
+                <tr>
+                    <th pSortableColumn="name">
+                        {{ translationKey.$name | transloco }}
+                        <p-sortIcon field="name"></p-sortIcon>
+                    </th>
+                    <th pSortableColumn="email">
+                        {{ translationKey.email | transloco }}
+                        <p-sortIcon field="email"></p-sortIcon>
+                    </th>
+                </tr>
+            </ng-template>
+            <ng-template let-user pTemplate="body">
+                <tr>
+                    <td>
+                        <span class="p-column-title">{{ translationKey.email | transloco }}</span>
+                        <div class="text-right sm:text-left">
+                            {{user.firstName}} {{user.lastName}}
+                        </div>
+                    </td>
+                    <td>
+                        <span class="p-column-title">{{ translationKey.$name | transloco }}</span>
+                        <div class="text-right sm:text-left">
+                            {{user.email}}
+                        </div>
+                    </td>
+                </tr>
+            </ng-template>
+        </p-table>
+    </div>
+</div>

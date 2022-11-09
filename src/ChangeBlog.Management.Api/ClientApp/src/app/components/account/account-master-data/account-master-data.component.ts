@@ -1,7 +1,7 @@
 import {Component, EventEmitter, Input, OnInit, Output} from '@angular/core';
-import {TranslationKey} from "../../generated/TranslationKey";
-import {Resource} from "../resource.state";
-import {ChangeBlogManagementApi} from "../../../clients/ChangeBlogManagementApiClient";
+import {TranslationKey} from "../../../generated/TranslationKey";
+import {Resource} from "../../resource.state";
+import {ChangeBlogManagementApi} from "../../../../clients/ChangeBlogManagementApiClient";
 import {FormBuilder, FormControl, FormGroup} from "@angular/forms";
 import {firstValueFrom} from "rxjs";
 import {MessageService} from "primeng/api";
@@ -83,7 +83,7 @@ export class AccountMasterDataComponent implements OnInit {
                 this.accountForm.patchValue({
                     name: a.name
                 });
-                
+
                 this.accountNameChanged.emit(a.name);
             })
             .catch((e: ChangeBlogManagementApi.SwaggerException) => {

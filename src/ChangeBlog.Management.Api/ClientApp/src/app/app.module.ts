@@ -54,14 +54,15 @@ import {TableModule} from "primeng/table";
 import {ConfirmDialogModule} from "primeng/confirmdialog";
 import {ToolbarModule} from "primeng/toolbar";
 import {CalendarModule} from "primeng/calendar";
-import {AccountsComponent} from './components/accounts/accounts.component';
-import {AccountComponent} from './components/account/account.component';
+import {AccountsComponent} from './components/account/accounts/accounts.component';
+import {AccountComponent} from './components/account/account/account.component';
 import {ContentErrorComponent} from './components/content-error/content-error.component';
 import {ContentNotfoundComponent} from './components/content-notfound/content-notfound.component';
 import {ImageModule} from "primeng/image";
 import {TabViewModule} from "primeng/tabview";
 import {CardModule} from "primeng/card";
-import { AccountMasterDataComponent } from './components/account-master-data/account-master-data.component';
+import {AccountMasterDataComponent} from './components/account/account-master-data/account-master-data.component';
+import { AccountUsersComponent } from './components/account/account-users/account-users.component';
 
 @NgModule({
     declarations: [
@@ -81,7 +82,8 @@ import { AccountMasterDataComponent } from './components/account-master-data/acc
         AccountComponent,
         ContentErrorComponent,
         ContentNotfoundComponent,
-        AccountMasterDataComponent
+        AccountMasterDataComponent,
+        AccountUsersComponent
     ],
     imports: [
         BrowserModule,

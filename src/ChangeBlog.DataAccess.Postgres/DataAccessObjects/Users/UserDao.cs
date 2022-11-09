@@ -82,7 +82,8 @@ public class UserDao : IUserDao
                                 u.deleted_at AS deletedAt,
                                 u.created_at AS createdAt
                 FROM ""user"" u
-                         JOIN account_user au on u.id = au.user_id
+                         JOIN account_user au on u.id = au.user_id and u.deleted_at is null
+                         JOIN role r on au.role_id = r.id and r.name = 'DefaultUser'
                 WHERE au.account_id = @accountId
                   {pagingFilter}
                 ORDER BY u.email
@@ -93,7 +94,7 @@ public class UserDao : IUserDao
             {
                 accountId,
                 lastUserId,
-                limit = (int)limit
+                limit = (int) limit
             });
 
         return users.AsList();
@@ -101,10 +102,7 @@ public class UserDao : IUserDao
 
     public async Task<Maybe<User>> FindByExternalUserIdAsync(string externalUserId)
     {
-        if (string.IsNullOrEmpty(externalUserId))
-        {
-            return Maybe<User>.None;
-        }
+        if (string.IsNullOrEmpty(externalUserId)) return Maybe<User>.None;
 
         const string getUserSql = @"
                 SELECT u.id,
@@ -132,10 +130,7 @@ public class UserDao : IUserDao
 
     public async Task<Maybe<User>> FindByEmailAsync(string email)
     {
-        if (string.IsNullOrEmpty(email))
-        {
-            return Maybe<User>.None;
-        }
+        if (string.IsNullOrEmpty(email)) return Maybe<User>.None;
 
         const string getUserSql = @"
                 SELECT u.id,
@@ -198,7 +193,7 @@ public class UserDao : IUserDao
                 timezone = user.TimeZone,
                 culture = user.Culture
             });
-        
+
         return Result.Success<User, Conflict>(await GetUserAsync(user.Id));
     }
 

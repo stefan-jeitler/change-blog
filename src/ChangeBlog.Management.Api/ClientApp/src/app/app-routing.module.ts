@@ -7,8 +7,8 @@ import {ProfileComponent} from "./components/profile/profile.component";
 import {ApikeyComponent} from "./components/apikey/apikey.component";
 import {AuthGuard} from "./guards/auth.guard";
 import {RedirectComponent} from "./components/redirect/redirect.component";
-import {AccountsComponent} from "./components/accounts/accounts.component";
-import {AccountComponent} from "./components/account/account.component";
+import {AccountsComponent} from "./components/account/accounts/accounts.component";
+import {AccountComponent} from "./components/account/account/account.component";
 
 export const routes: Routes = [
     {

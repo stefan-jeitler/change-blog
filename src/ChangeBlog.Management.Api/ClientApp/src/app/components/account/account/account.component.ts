@@ -1,8 +1,8 @@
 import {Component, OnInit} from '@angular/core';
 import {ActivatedRoute} from "@angular/router";
-import {TranslationKey} from "../../generated/TranslationKey";
-import {ChangeBlogManagementApi} from "../../../clients/ChangeBlogManagementApiClient";
-import {Resource} from "../resource.state";
+import {TranslationKey} from "../../../generated/TranslationKey";
+import {ChangeBlogManagementApi} from "../../../../clients/ChangeBlogManagementApiClient";
+import {Resource} from "../../resource.state";
 import {firstValueFrom} from "rxjs";
 import ResourceType = ChangeBlogManagementApi.ResourceType;
 import Permission = ChangeBlogManagementApi.ResourcePermissionsDto;

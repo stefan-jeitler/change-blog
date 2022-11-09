@@ -24,7 +24,9 @@
                 Products coming soon ...
             </p-tabPanel>
             <p-tabPanel [disabled]="!tabs['users'].isActive" [header]="translationKey.users | transloco">
-                Users coming soon ...
+                <ng-template pTemplate="content">
+                    <app-account-users [accountId]="resource.value.resourceId"></app-account-users>
+                </ng-template>
             </p-tabPanel>
         </p-tabView>
     </div>

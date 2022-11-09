@@ -8,6 +8,7 @@ namespace ChangeBlog.Application.Tests.UseCaseTests.Users.GetUsers;
 public class UsersQueryRequestModelTests
 {
     private readonly Guid? _testLastUserId;
+    private readonly string _testSearchTerm;
     private Guid _testAccountId;
     private ushort _testCount;
     private Guid _testUserId;
@@ -16,14 +17,13 @@ public class UsersQueryRequestModelTests
     {
         _testUserId = TestAccount.UserId;
         _testAccountId = TestAccount.Id;
+        _testSearchTerm = "";
         _testLastUserId = Guid.Parse("33f9a7a4-5a0b-4ac8-b074-d97e13e8596c");
         _testCount = 100;
     }
 
-    private UsersQueryRequestModel CreateRequestModel()
-    {
-        return new UsersQueryRequestModel(_testUserId, _testAccountId, _testLastUserId, _testCount);
-    }
+    private UsersQueryRequestModel CreateRequestModel() => new(_testUserId, _testAccountId,
+        _testSearchTerm, _testLastUserId, _testCount);
 
     [Fact]
     public void Create_HappyPath_Successful()

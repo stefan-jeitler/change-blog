@@ -116,11 +116,13 @@ public class AccountController : ControllerBase
         [FromServices] IGetUsers getUsers,
         Guid accountId,
         Guid? lastUserId = null,
+        string searchTerm = "",
         ushort limit = UsersQueryRequestModel.MaxLimit)
     {
         var userId = HttpContext.GetUserId();
         var requestModel = new UsersQueryRequestModel(userId,
             accountId,
+            searchTerm,
             lastUserId,
             limit
         );

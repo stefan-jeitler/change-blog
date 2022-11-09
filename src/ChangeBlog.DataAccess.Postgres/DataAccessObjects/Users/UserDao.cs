@@ -66,8 +66,12 @@ public class UserDao : IUserDao
         return users.AsList();
     }
 
-    public async Task<IList<User>> GetUsersAsync(Guid accountId, ushort limit, Guid? lastUserId)
+    public async Task<IList<User>> GetUsersAsync(Guid accountId, ushort limit, Guid? lastUserId, string searchTerm)
     {
+        var filter = !string.IsNullOrWhiteSpace(searchTerm)
+            ? "AND (u.email like CONCAT('%', @searchTerm, '%') OR u.first_name like CONCAT('%', @searchTerm, '%') OR u.last_name like CONCAT('%', @searchTerm, '%') )"
+            : "";
+
         var pagingFilter = lastUserId.HasValue
             ? "AND u.email > (SELECT us.email FROM \"user\" us where us.id = @lastUserId)"
             : string.Empty;
@@ -85,6 +89,7 @@ public class UserDao : IUserDao
                          JOIN account_user au on u.id = au.user_id and u.deleted_at is null
                          JOIN role r on au.role_id = r.id and r.name = 'DefaultUser'
                 WHERE au.account_id = @accountId
+                  {filter}
                   {pagingFilter}
                 ORDER BY u.email
                 FETCH FIRST (@limit) ROWS ONLY";
@@ -94,7 +99,8 @@ public class UserDao : IUserDao
             {
                 accountId,
                 lastUserId,
-                limit = (int) limit
+                limit = (int) limit,
+                searchTerm
             });
 
         return users.AsList();

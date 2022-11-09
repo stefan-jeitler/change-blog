@@ -22,7 +22,8 @@ public class GetUsersInteractor : IGetUsers
 
         var users = await _userDao.GetUsersAsync(queryRequestModel.AccountId,
             queryRequestModel.Limit,
-            queryRequestModel.LastUserId);
+            queryRequestModel.LastUserId,
+            queryRequestModel.SearchTerm);
 
         return users.Select(x => new UserResponseModel(x.Id,
                 x.Email,

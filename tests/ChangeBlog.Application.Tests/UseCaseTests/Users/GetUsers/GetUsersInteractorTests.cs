@@ -16,10 +16,7 @@ public class GetUsersInteractorTests
         _fakeUserDao = new FakeUserDao();
     }
 
-    private GetUsersInteractor CreateInteractor()
-    {
-        return new GetUsersInteractor(_fakeUserDao);
-    }
+    private GetUsersInteractor CreateInteractor() => new GetUsersInteractor(_fakeUserDao);
 
     [Fact]
     public async Task GetUsers_HappyPath_Successful()
@@ -27,7 +24,7 @@ public class GetUsersInteractorTests
         // arrange
         var interactor = CreateInteractor();
         _fakeUserDao.Users.Add(TestAccount.User);
-        var requestModel = new UsersQueryRequestModel(TestAccount.UserId, TestAccount.Id);
+        var requestModel = new UsersQueryRequestModel(TestAccount.UserId, TestAccount.Id, "");
 
         // act
         var users = await interactor.ExecuteAsync(requestModel);

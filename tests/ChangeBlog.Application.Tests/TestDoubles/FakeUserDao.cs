@@ -39,14 +39,15 @@ public class FakeUserDao : IUserDao
     /// <param name="accountId"></param>
     /// <param name="limit"></param>
     /// <param name="lastUserId"></param>
+    /// <param name="searchTerm"></param>
     /// <returns></returns>
-    public async Task<IList<User>> GetUsersAsync(Guid accountId, ushort limit, Guid? lastUserId)
+    public async Task<IList<User>> GetUsersAsync(Guid accountId, ushort limit, Guid? lastUserId, string searchTerm)
     {
         await Task.Yield();
 
         return Users;
     }
-    
+
     public async Task<Maybe<User>> FindByExternalUserIdAsync(string externalUserId)
     {
         await Task.Yield();
@@ -60,10 +61,7 @@ public class FakeUserDao : IUserDao
     {
         await Task.Yield();
 
-        if (ProduceFailure)
-        {
-            return Result.Failure("Something went wrong.");
-        }
+        if (ProduceFailure) return Result.Failure("Something went wrong.");
 
         ExternalIdentities.Add(externalIdentity);
 
@@ -76,13 +74,10 @@ public class FakeUserDao : IUserDao
 
         if (ProduceFailure)
             return Result.Failure<User, Conflict>(new ConflictStub());
-        
+
         var existingUserIndex = Users.FindIndex(x => x.Id == user.Id);
 
-        if (existingUserIndex != -1)
-        {
-            Users[existingUserIndex] = user;
-        }
+        if (existingUserIndex != -1) Users[existingUserIndex] = user;
 
         return Result.Success<User, Conflict>(user);
     }

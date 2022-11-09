@@ -1,7 +1,6 @@
 using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
-using ChangeBlog.Application.Models;
 using ChangeBlog.Domain;
 using CSharpFunctionalExtensions;
 
@@ -11,7 +10,7 @@ public interface IUserDao
 {
     Task<User> GetUserAsync(Guid userId);
     Task<IList<User>> GetUsersAsync(IList<Guid> userIds);
-    Task<IList<User>> GetUsersAsync(Guid accountId, ushort limit, Guid? lastUserId);
+    Task<IList<User>> GetUsersAsync(Guid accountId, ushort limit, Guid? lastUserId, string searchTerm);
 
     Task<Maybe<User>> FindByExternalUserIdAsync(string externalUserId);
 

@@ -7,9 +7,9 @@
     <app-content-error *ngIf="resource.state == 'error'" [details]="resource.errorDetails"></app-content-error>
     <div *ngIf="resource.state == 'success'">
         <div class="bg-white">
-            <div class="pt-5 pb-3" style="margin-left: 20px;">
+            <div class="account-title">
                 <span *ngIf="!title">&nbsp;</span>
-                <span class="text-2xl">{{ title }}</span>
+                <span class="text-lg">{{ title }}</span>
             </div>
         </div>
         <p-tabView class="responsive-tab-view">

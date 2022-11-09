@@ -3,9 +3,9 @@
     <app-content-notfound *ngIf="resource.state == 'not-found'"></app-content-notfound>
     <app-content-error *ngIf="resource.state == 'error'" [details]="resource.errorDetails"></app-content-error>
     <div *ngIf="resource.state === 'success'">
-        <div style="max-width: 26rem; min-height: 24rem">
+        <div class="max-w-26rem">
             <form (ngSubmit)="updateAccount()" [formGroup]="accountForm">
-                <div class="flex flex-column align-items-start mt-3">
+                <div class="flex flex-column align-items-start pt-1">
                     <div class="flex flex-row w-full">
                         <label class="font-medium"
                                for="name-input">{{ translationKey.$name | transloco }}</label>

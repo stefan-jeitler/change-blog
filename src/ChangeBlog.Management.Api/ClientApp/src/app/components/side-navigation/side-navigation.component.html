@@ -5,12 +5,20 @@
         </a>
     </div>
     <p-menu [model]="menuItems" class="side-menu"></p-menu>
-    <div class="app-info">
-        <span>Version {{appVersion}}</span>
+
+    <div class="mt-6">
         <a href="https://dev.azure.com/stefanjeitler/Change-Blog" target="_blank">
-            <p-image alt="Image"
+            <div class="flex flex-row justify-content-center align-items-center">
+                <img alt="Image"
                      src="/assets/images/Git-Icon-1788C.svg"
-                     width="25px"></p-image>
+                     width="25px"/>
+                <div class="ml-2">
+                    <span>Source</span>
+                </div>
+            </div>
         </a>
+    </div>
+    <div class="mt-3">
+        <span>{{appVersion}}</span>
     </div>
 </div>

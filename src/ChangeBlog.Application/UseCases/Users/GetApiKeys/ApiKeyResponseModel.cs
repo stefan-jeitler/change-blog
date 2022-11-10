@@ -26,7 +26,7 @@ public class ApiKeyResponseModel
     }
 
     public Guid ApiKeyId { get; }
-    public string Name { get; set; }
+    public string Name { get; }
     public string ApiKey { get; }
     public DateTimeOffset ExpiresAt { get; }
 }

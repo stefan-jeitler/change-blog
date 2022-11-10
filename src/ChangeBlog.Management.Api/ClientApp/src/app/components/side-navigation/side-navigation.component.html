@@ -1,11 +1,16 @@
 <div class="side-nav">
-  <div *ngIf="showTitle" class="align-items-start pl-4 mb-3 w-full">
-    <a [routerLink]="['/app/home']" class="disable-link-styling">
-      <span class="text-xl">ChangeBlog</span>
-    </a>
-  </div>
-  <p-menu [model]="menuItems" class="side-menu"></p-menu>
-  <div class="app-info">
-    <span>Version {{appVersion}}</span>
-  </div>
+    <div *ngIf="showTitle" class="align-items-start pl-4 mb-3 w-full">
+        <a [routerLink]="['/app/home']" class="disable-link-styling">
+            <span class="text-xl">ChangeBlog</span>
+        </a>
+    </div>
+    <p-menu [model]="menuItems" class="side-menu"></p-menu>
+    <div class="app-info">
+        <span>Version {{appVersion}}</span>
+        <a href="https://dev.azure.com/stefanjeitler/Change-Blog" target="_blank">
+            <p-image alt="Image"
+                     src="/assets/images/Git-Icon-1788C.svg"
+                     width="25px"></p-image>
+        </a>
+    </div>
 </div>

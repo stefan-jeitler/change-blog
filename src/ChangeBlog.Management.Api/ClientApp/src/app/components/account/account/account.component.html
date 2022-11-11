@@ -21,7 +21,10 @@
                 </app-account-master-data>
             </p-tabPanel>
             <p-tabPanel [disabled]="!tabs['products'].isActive" [header]="translationKey.products | transloco">
-                Products coming soon ...
+                <ng-template pTemplate="content">
+                    <app-account-products [accountId]="resource.value.resourceId">
+                    </app-account-products>
+                </ng-template>
             </p-tabPanel>
             <p-tabPanel [disabled]="!tabs['users'].isActive"
                         [header]="translationKey.users | transloco">

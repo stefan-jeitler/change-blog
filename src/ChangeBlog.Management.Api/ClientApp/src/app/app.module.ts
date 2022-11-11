@@ -64,6 +64,7 @@ import {CardModule} from "primeng/card";
 import {AccountMasterDataComponent} from './components/account/account-master-data/account-master-data.component';
 import { AccountUsersComponent } from './components/account/account-users/account-users.component';
 import { AccountDeleteComponent } from './components/account/account-delete/account-delete.component';
+import { AccountProductsComponent } from './components/account/account-products/account-products.component';
 
 @NgModule({
     declarations: [
@@ -85,7 +86,8 @@ import { AccountDeleteComponent } from './components/account/account-delete/acco
         ContentNotfoundComponent,
         AccountMasterDataComponent,
         AccountUsersComponent,
-        AccountDeleteComponent
+        AccountDeleteComponent,
+        AccountProductsComponent
     ],
     imports: [
         BrowserModule,

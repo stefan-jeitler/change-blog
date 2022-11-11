@@ -63,6 +63,7 @@ import {TabViewModule} from "primeng/tabview";
 import {CardModule} from "primeng/card";
 import {AccountMasterDataComponent} from './components/account/account-master-data/account-master-data.component';
 import { AccountUsersComponent } from './components/account/account-users/account-users.component';
+import { AccountDeleteComponent } from './components/account/account-delete/account-delete.component';
 
 @NgModule({
     declarations: [
@@ -83,7 +84,8 @@ import { AccountUsersComponent } from './components/account/account-users/accoun
         ContentErrorComponent,
         ContentNotfoundComponent,
         AccountMasterDataComponent,
-        AccountUsersComponent
+        AccountUsersComponent,
+        AccountDeleteComponent
     ],
     imports: [
         BrowserModule,

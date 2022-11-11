@@ -7,7 +7,7 @@ import {firstValueFrom} from "rxjs";
 import ResourceType = ChangeBlogManagementApi.ResourceType;
 import Permission = ChangeBlogManagementApi.ResourcePermissionsDto;
 
-export type AccountTab = 'basic-data' | 'users' | 'products';
+export type AccountTab = 'masterdata' | 'users' | 'products' | 'delete';
 
 interface Tab {
     index: number;
@@ -22,29 +22,32 @@ interface Tab {
 export class AccountComponent implements OnInit {
     resource: Resource<Permission>;
     tabs: { [tabName in AccountTab]: Tab };
-    title: string;
+    accountName: string;
 
     constructor(private route: ActivatedRoute,
                 public translationKey: TranslationKey,
                 private apiClient: ChangeBlogManagementApi.Client) {
         this.resource = {state: 'loading'};
         this.tabs = {
-            'basic-data': {index: 0, isActive: false},
+            'masterdata': {index: 0, isActive: false},
             'users': {index: 1, isActive: false},
-            'products': {index: 2, isActive: false}
+            'products': {index: 2, isActive: false},
+            'delete': {index: 3, isActive: false}
         };
-        this.title = '';
+        this.accountName = '';
     }
 
     initializeTabs(permission: Permission) {
+        const canDelete = permission.canDelete;
         const accountPermissions = permission.specificPermissions ?? {};
         const canViewUsers = accountPermissions['canViewUsers'] ?? false;
         const canViewProducts = accountPermissions['canViewProducts'] ?? false;
 
         this.tabs = {
-            'basic-data': {index: 0, isActive: true},
+            'masterdata': {index: 0, isActive: true},
             'users': {index: 1, isActive: canViewUsers},
-            'products': {index: 2, isActive: canViewProducts}
+            'products': {index: 2, isActive: canViewProducts},
+            'delete': {index: 2, isActive: canDelete}
         };
     }
 
@@ -66,7 +69,7 @@ export class AccountComponent implements OnInit {
                     if (e.status === 404)
                         this.resource = {state: 'not-found'};
                     else
-                        this.resource = {state: 'error', errorDetails: e.result?.error ?? []};
+                        this.resource = {state: 'error', errorDetails: e.result?.errors ?? []};
                 });
 
         } catch (e: any) {
@@ -81,6 +84,6 @@ export class AccountComponent implements OnInit {
 
     accountNameChangedHandler(accountName: string) {
         if (!!accountName)
-            this.title = accountName;
+            this.accountName = accountName;
     }
 }

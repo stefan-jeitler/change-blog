@@ -8,12 +8,12 @@
     <div *ngIf="resource.state == 'success'">
         <div class="bg-white">
             <div class="account-title">
-                <span *ngIf="!title">&nbsp;</span>
-                <span class="text-lg">{{ title }}</span>
+                <span *ngIf="!accountName">&nbsp;</span>
+                <span class="text-lg">{{ accountName }}</span>
             </div>
         </div>
         <p-tabView class="responsive-tab-view">
-            <p-tabPanel [disabled]="!tabs['basic-data'].isActive" [header]="translationKey.masterData | transloco">
+            <p-tabPanel [disabled]="!tabs['masterdata'].isActive" [header]="translationKey.masterData | transloco">
                 <app-account-master-data
                         (accountNameChanged)="accountNameChangedHandler($event)"
                         [accountId]="resource.value.resourceId"
@@ -23,9 +23,18 @@
             <p-tabPanel [disabled]="!tabs['products'].isActive" [header]="translationKey.products | transloco">
                 Products coming soon ...
             </p-tabPanel>
-            <p-tabPanel [disabled]="!tabs['users'].isActive" [header]="translationKey.users | transloco">
+            <p-tabPanel [disabled]="!tabs['users'].isActive"
+                        [header]="translationKey.users | transloco">
                 <ng-template pTemplate="content">
                     <app-account-users [accountId]="resource.value.resourceId"></app-account-users>
+                </ng-template>
+            </p-tabPanel>
+            <p-tabPanel [disabled]="!tabs['delete'].isActive"
+                        [header]="translationKey.delete | transloco">
+                <ng-template pTemplate="content">
+                    <app-account-delete [accountId]="resource.value.resourceId"
+                                        [accountName]="accountName">
+                    </app-account-delete>
                 </ng-template>
             </p-tabPanel>
         </p-tabView>

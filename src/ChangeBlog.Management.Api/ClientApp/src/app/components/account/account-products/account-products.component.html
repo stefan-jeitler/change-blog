@@ -43,7 +43,7 @@
                 <tr>
                     <td>
                         <span class="p-column-title">{{ translationKey.$name | transloco }}</span>
-                        <div class="text-right sm:text-left">
+                        <div [ngClass]="{'text-400': product.isFreezed}" class="text-right sm:text-left">
                             {{ product.name }}
                         </div>
                     </td>

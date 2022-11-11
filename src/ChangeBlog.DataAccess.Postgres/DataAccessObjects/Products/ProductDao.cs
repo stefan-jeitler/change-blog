@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 using ChangeBlog.Application.Boundaries.DataAccess;
 using ChangeBlog.Application.Boundaries.DataAccess.Products;
@@ -63,11 +64,9 @@ public class ProductDao : IProductDao
 
     public async Task<IList<Product>> GetAccountProductsAsync(AccountProductsQuerySettings querySettings)
     {
-        var sql = GetProductsForAccountSql(querySettings.LastProductId.HasValue,
-            querySettings.IncludeFreezedProducts);
-
-        var products = await _dbAccessor.DbConnection
-            .QueryAsync<Product>(sql, new
+        var activeProductsSql = GetProductsForAccountSql(querySettings.LastProductId.HasValue, false);
+        var activeProducts = await _dbAccessor.DbConnection
+            .QueryAsync<Product>(activeProductsSql, new
             {
                 accountId = querySettings.AccountId,
                 userId = querySettings.UserId,
@@ -75,7 +74,26 @@ public class ProductDao : IProductDao
                 limit = (int) querySettings.Limit
             });
 
-        return products.AsList();
+
+        var activeProductsMaterialized = activeProducts.AsList();
+        if (!querySettings.IncludeFreezedProducts)
+            return activeProductsMaterialized.AsList();
+
+        var updatedLimit = querySettings.Limit - activeProductsMaterialized.Count;
+        if (updatedLimit == 0)
+            return activeProductsMaterialized;
+
+        var freezedProductsSql = GetFreezedProductsForAccountSql(querySettings.LastProductId.HasValue);
+        var freezedProducts = await _dbAccessor.DbConnection
+            .QueryAsync<Product>(freezedProductsSql, new
+            {
+                accountId = querySettings.AccountId,
+                userId = querySettings.UserId,
+                lastProductId = querySettings.LastProductId,
+                limit = updatedLimit
+            });
+
+        return activeProductsMaterialized.Concat(freezedProducts).AsList();
     }
 
     public async Task<IList<Product>> GetUserProductsAsync(UserProductsQuerySettings querySettings)

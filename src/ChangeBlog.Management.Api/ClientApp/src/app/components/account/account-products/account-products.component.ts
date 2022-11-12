@@ -27,7 +27,7 @@ export class AccountProductsComponent implements OnInit {
     }
 
     loadUsers() {
-        firstValueFrom(this.apiClient.getAccountProducts(this.accountId, undefined, undefined, true))
+        firstValueFrom(this.apiClient.getAccountProducts(this.accountId, undefined, undefined, undefined, true))
             .then(p => {
                 this.resource = {
                     state: 'success',

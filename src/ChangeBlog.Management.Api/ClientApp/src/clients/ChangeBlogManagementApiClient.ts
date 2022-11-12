@@ -918,12 +918,13 @@ export class Client {
 
     /**
      * @param lastProductId (optional) 
+     * @param name (optional) 
      * @param limit (optional) 
      * @param includeFreezed (optional) 
      * @param accept_Language (optional) Defines which language should be used for response messages.
      * @return Success
      */
-    getAccountProducts(accountId: string, lastProductId?: string | undefined, limit?: number | undefined, includeFreezed?: boolean | undefined, accept_Language?: AcceptLanguage | undefined): Observable<ProductDto[]> {
+    getAccountProducts(accountId: string, lastProductId?: string | undefined, name?: string | undefined, limit?: number | undefined, includeFreezed?: boolean | undefined, accept_Language?: AcceptLanguage | undefined): Observable<ProductDto[]> {
         let url_ = this.baseUrl + "/api/v1/accounts/{accountId}/products?";
         if (accountId === undefined || accountId === null)
             throw new Error("The parameter 'accountId' must be defined.");
@@ -932,6 +933,10 @@ export class Client {
             throw new Error("The parameter 'lastProductId' cannot be null.");
         else if (lastProductId !== undefined)
             url_ += "lastProductId=" + encodeURIComponent("" + lastProductId) + "&";
+        if (name === null)
+            throw new Error("The parameter 'name' cannot be null.");
+        else if (name !== undefined)
+            url_ += "name=" + encodeURIComponent("" + name) + "&";
         if (limit === null)
             throw new Error("The parameter 'limit' cannot be null.");
         else if (limit !== undefined)
@@ -1207,17 +1212,22 @@ export class Client {
 
     /**
      * @param lastProductId (optional) 
+     * @param name (optional) 
      * @param limit (optional) 
      * @param includeFreezed (optional) 
      * @param accept_Language (optional) Defines which language should be used for response messages.
      * @return Success
      */
-    getUserProducts(lastProductId?: string | undefined, limit?: number | undefined, includeFreezed?: boolean | undefined, accept_Language?: AcceptLanguage | undefined): Observable<ProductDto[]> {
+    getUserProducts(lastProductId?: string | undefined, name?: string | undefined, limit?: number | undefined, includeFreezed?: boolean | undefined, accept_Language?: AcceptLanguage | undefined): Observable<ProductDto[]> {
         let url_ = this.baseUrl + "/api/v1/user/products?";
         if (lastProductId === null)
             throw new Error("The parameter 'lastProductId' cannot be null.");
         else if (lastProductId !== undefined)
             url_ += "lastProductId=" + encodeURIComponent("" + lastProductId) + "&";
+        if (name === null)
+            throw new Error("The parameter 'name' cannot be null.");
+        else if (name !== undefined)
+            url_ += "name=" + encodeURIComponent("" + name) + "&";
         if (limit === null)
             throw new Error("The parameter 'limit' cannot be null.");
         else if (limit !== undefined)

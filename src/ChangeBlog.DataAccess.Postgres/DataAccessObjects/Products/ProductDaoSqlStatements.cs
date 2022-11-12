@@ -45,53 +45,30 @@ public static class ProductDaoSqlStatements
                      JOIN versioning_scheme vs on p.versioning_scheme_id = vs.id
             WHERE p.id = @productId";
 
-    public static string GetProductsForAccountSql(bool usePaging, bool includeFreezedProducts)
+    public static string GetProductsSql(bool usePaging, string additionalFilterPredicate)
     {
         var pagingFilter = usePaging
-            ? @"AND (not exists(select null from product ps where ps.id = @lastProductId and ps.freezed_at is null)
-                    or (p.name, p.id) > ((select ps.name from product ps where ps.id = @lastProductId), @lastProductId))"
+            ? @"AND ((p.name, p.id) > ((select ps.name from product ps where ps.id = @lastProductId and ps.freezed_at is null), @lastProductId))"
             : string.Empty;
 
-        var includeFreezedProductsFilter = includeFreezedProducts
-            ? string.Empty
-            : "AND p.freezed_at IS NULL";
+        var filter = $"AND p.freezed_at IS NULL {additionalFilterPredicate}";
 
-        const string accountFilter = "AND p.account_id = @accountId";
-
-        return GetProductsQuerySql(accountFilter, pagingFilter, includeFreezedProductsFilter);
+        return GetProductsQuerySql(filter, pagingFilter);
     }
 
-    public static string GetFreezedProductsForAccountSql(bool usePaging)
+    public static string GetFreezedProductsSql(bool usePaging, string additionalFilterPredicate)
     {
         var pagingFilter = usePaging
             ? @"AND (not exists(select null from product ps where ps.id = @lastProductId and ps.freezed_at is not null)
                     or (p.name, p.id) > ((select ps.name from product ps where ps.id = @lastProductId), @lastProductId))"
             : string.Empty;
 
-        const string exclusivelyFreezedProductsFilter = "AND p.freezed_at IS NOT NULL";
-        const string accountFilter = "AND p.account_id = @accountId";
+        var filter = $"AND p.freezed_at IS NOT NULL {additionalFilterPredicate}";
 
-        return GetProductsQuerySql(accountFilter, pagingFilter, exclusivelyFreezedProductsFilter);
+        return GetProductsQuerySql(filter, pagingFilter);
     }
 
-
-    public static string GetProductsForUserSql(bool usePaging, bool includeFreezedProducts)
-    {
-        var pagingFilter = usePaging
-            ? "AND (p.name, p.id) > ((select ps.name from product ps where ps.id = @lastProductId), @lastProductId)"
-            : string.Empty;
-
-        var includeFreezedProductsFilter = includeFreezedProducts
-            ? string.Empty
-            : "AND p.freezed_at IS NULL";
-
-        const string accountFilter = "";
-
-        return GetProductsQuerySql(accountFilter, pagingFilter, includeFreezedProductsFilter);
-    }
-
-    private static string GetProductsQuerySql(string accountFilter, string pagingFilter,
-        string includeFreezedProductsFilter) =>
+    private static string GetProductsQuerySql(string filter, string pagingFilter) =>
         @$"SELECT p.id,
                    p.account_id       AS accountId,
                    p.name,
@@ -128,9 +105,8 @@ public static class ProductDaoSqlStatements
                                         join role_permission rp2 on r2.id = rp2.role_id and rp2.permission = 'ViewProduct'
                                       where pu2.product_id = p.id and pu2.user_id = @userId)
                   )
-            {accountFilter}
+            {filter}
             {pagingFilter}
-            {includeFreezedProductsFilter}
             ORDER BY p.name, p.id
             FETCH FIRST (@limit) ROWS ONLY";
 }

@@ -1,6 +1,6 @@
 import {Component, Input, OnInit} from '@angular/core';
-import {ChangeBlogManagementApi} from "../../../clients/ChangeBlogManagementApiClient";
-import {TranslationKey} from "../../generated/TranslationKey";
+import {ChangeBlogManagementApi} from "../../../../clients/ChangeBlogManagementApiClient";
+import {TranslationKey} from "../../../generated/TranslationKey";
 import {translate} from "@ngneat/transloco";
 import ErrorMessages = ChangeBlogManagementApi.ErrorMessages;
 

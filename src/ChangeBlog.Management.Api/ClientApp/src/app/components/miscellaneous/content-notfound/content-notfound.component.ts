@@ -1,5 +1,5 @@
 import {Component, OnInit} from '@angular/core';
-import {TranslationKey} from "../../generated/TranslationKey";
+import {TranslationKey} from "../../../generated/TranslationKey";
 
 @Component({
     selector: 'app-content-notfound',

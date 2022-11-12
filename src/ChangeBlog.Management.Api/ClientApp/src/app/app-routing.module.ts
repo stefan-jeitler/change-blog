@@ -6,7 +6,7 @@ import {LayoutComponent} from "./components/layout/layout.component";
 import {ProfileComponent} from "./components/profile/profile.component";
 import {ApikeyComponent} from "./components/apikey/apikey.component";
 import {AuthGuard} from "./guards/auth.guard";
-import {RedirectComponent} from "./components/redirect/redirect.component";
+import {RedirectComponent} from "./components/miscellaneous/redirect/redirect.component";
 import {AccountsComponent} from "./components/account/accounts/accounts.component";
 import {AccountComponent} from "./components/account/account/account.component";
 

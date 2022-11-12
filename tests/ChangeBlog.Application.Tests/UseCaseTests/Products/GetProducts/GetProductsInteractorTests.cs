@@ -22,8 +22,7 @@ public class GetProductsInteractorTests
         _fakeAccountDao.Accounts.Add(TestAccount.Account);
     }
 
-    private GetProductsInteractor CreateInteractor() =>
-        new GetProductsInteractor(_fakeProductDao, _fakeUserDao, _fakeAccountDao);
+    private GetProductsInteractor CreateInteractor() => new(_fakeProductDao, _fakeUserDao, _fakeAccountDao);
 
     [Fact]
     public async Task GetAccountProducts_HappyPath_Successful()
@@ -32,7 +31,7 @@ public class GetProductsInteractorTests
         _fakeUserDao.Users.Add(TestAccount.User);
         _fakeProductDao.Products.Add(TestAccount.Product);
         var interactor = CreateInteractor();
-        var requestModel = new AccountProductQueryRequestModel(TestAccount.UserId, TestAccount.Id, null, 1, true);
+        var requestModel = new AccountProductQueryRequestModel(TestAccount.UserId, TestAccount.Id, null, null, 1, true);
 
         // act
         var products = await interactor.ExecuteAsync(requestModel);
@@ -51,7 +50,7 @@ public class GetProductsInteractorTests
         var interactor = CreateInteractor();
         var notExistingAccountId = Guid.Parse("3639c610-bd58-4924-a5fa-ec19b3a324b0");
         var requestModel =
-            new AccountProductQueryRequestModel(TestAccount.UserId, notExistingAccountId, null, 1, true);
+            new AccountProductQueryRequestModel(TestAccount.UserId, notExistingAccountId, null, null, 1, true);
 
         // act
         var products = await interactor.ExecuteAsync(requestModel);
@@ -99,7 +98,7 @@ public class GetProductsInteractorTests
         _fakeUserDao.Users.Add(TestAccount.User);
         _fakeProductDao.Products.Add(TestAccount.Product);
         var interactor = CreateInteractor();
-        var requestModel = new UserProductQueryRequestModel(TestAccount.UserId, null, 1, true);
+        var requestModel = new UserProductQueryRequestModel(TestAccount.UserId, null, null, 1, true);
 
         // act
         var products = await interactor.ExecuteAsync(requestModel);
@@ -120,7 +119,7 @@ public class GetProductsInteractorTests
         // arrange
         _fakeUserDao.Users.Add(TestAccount.User);
         var interactor = CreateInteractor();
-        var requestModel = new UserProductQueryRequestModel(TestAccount.User.Id, null, 1, true);
+        var requestModel = new UserProductQueryRequestModel(TestAccount.User.Id, null, null, 1, true);
 
         // act
         var products = await interactor.ExecuteAsync(requestModel);

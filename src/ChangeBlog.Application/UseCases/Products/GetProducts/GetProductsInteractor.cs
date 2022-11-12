@@ -31,6 +31,7 @@ public class GetProductsInteractor : IGetAccountProducts, IGetUserProducts, IGet
         var productQuerySettings = new AccountProductsQuerySettings(requestModel.AccountId,
             requestModel.UserId,
             requestModel.LastProductId,
+            requestModel.NameFilter,
             requestModel.Limit,
             requestModel.IncludeFreezedProducts);
 
@@ -63,6 +64,7 @@ public class GetProductsInteractor : IGetAccountProducts, IGetUserProducts, IGet
     {
         var querySettings = new UserProductsQuerySettings(requestModel.UserId,
             requestModel.LastProductId,
+            requestModel.NameFilter,
             requestModel.Limit,
             requestModel.IncludeFreezedProducts);
 

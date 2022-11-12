@@ -64,7 +64,8 @@ public class ProductDao : IProductDao
 
     public async Task<IList<Product>> GetAccountProductsAsync(AccountProductsQuerySettings querySettings)
     {
-        var activeProductsSql = GetProductsSql(querySettings.LastProductId.HasValue, "AND p.account_id = @accountId");
+        var activeProductsSql = GetProductsSql(querySettings.LastProductId.HasValue, "AND p.account_id = @accountId",
+            querySettings.NameFilter);
         var activeProducts = await _dbAccessor.DbConnection
             .QueryAsync<Product>(activeProductsSql, new
             {
@@ -84,7 +85,8 @@ public class ProductDao : IProductDao
             return activeProductsMaterialized;
 
         var freezedProductsSql =
-            GetFreezedProductsSql(querySettings.LastProductId.HasValue, "AND p.account_id = @accountId");
+            GetFreezedProductsSql(querySettings.LastProductId.HasValue, "AND p.account_id = @accountId",
+                querySettings.NameFilter);
         var freezedProducts = await _dbAccessor.DbConnection
             .QueryAsync<Product>(freezedProductsSql, new
             {
@@ -99,13 +101,14 @@ public class ProductDao : IProductDao
 
     public async Task<IList<Product>> GetUserProductsAsync(UserProductsQuerySettings querySettings)
     {
-        var activeProductsSql = GetProductsSql(querySettings.LastProductId.HasValue, "");
+        var activeProductsSql = GetProductsSql(querySettings.LastProductId.HasValue, "", querySettings.NameFilter);
         var activeProducts = await _dbAccessor.DbConnection
             .QueryAsync<Product>(activeProductsSql, new
             {
                 userId = querySettings.UserId,
                 lastProductId = querySettings.LastProductId,
-                limit = (int) querySettings.Limit
+                limit = (int) querySettings.Limit,
+                productName = querySettings.NameFilter
             });
 
         var activeProductsMaterialized = activeProducts.AsList();
@@ -116,13 +119,15 @@ public class ProductDao : IProductDao
         if (updatedLimit == 0)
             return activeProductsMaterialized;
 
-        var freezedProductsSql = GetFreezedProductsSql(querySettings.LastProductId.HasValue, "");
+        var freezedProductsSql =
+            GetFreezedProductsSql(querySettings.LastProductId.HasValue, "", querySettings.NameFilter);
         var freezedProducts = await _dbAccessor.DbConnection
             .QueryAsync<Product>(freezedProductsSql, new
             {
                 userId = querySettings.UserId,
                 lastProductId = querySettings.LastProductId,
-                limit = updatedLimit
+                limit = updatedLimit,
+                productName = querySettings.NameFilter
             });
 
         return activeProductsMaterialized.Concat(freezedProducts).AsList();

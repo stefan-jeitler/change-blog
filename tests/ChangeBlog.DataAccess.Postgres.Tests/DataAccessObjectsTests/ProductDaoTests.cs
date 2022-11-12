@@ -92,7 +92,7 @@ public class ProductDaoTests : IAsyncLifetime
         var t_ua_account_01 = Guid.Parse("ec3a44cc-0ba4-4c97-ad7f-911e9f6a73bc");
         var t_ua_account_01_user_02 = Guid.Parse("7aa9004b-ed6f-4862-8307-579030c860be");
         var querySettings =
-            new AccountProductsQuerySettings(t_ua_account_01, t_ua_account_01_user_02, null, 100, true);
+            new AccountProductsQuerySettings(t_ua_account_01, t_ua_account_01_user_02, null, null, 100, true);
 
         var products = await productDao.GetAccountProductsAsync(querySettings);
 
@@ -105,7 +105,7 @@ public class ProductDaoTests : IAsyncLifetime
         var productDao = CreateDao();
         var t_ua_account_01 = Guid.Parse("ec3a44cc-0ba4-4c97-ad7f-911e9f6a73bc");
         var t_ua_account_01_user_02 = Guid.Parse("7aa9004b-ed6f-4862-8307-579030c860be");
-        var querySettings = new AccountProductsQuerySettings(t_ua_account_01, t_ua_account_01_user_02, null, 1);
+        var querySettings = new AccountProductsQuerySettings(t_ua_account_01, t_ua_account_01_user_02, null, null, 1);
 
         var products = await productDao.GetAccountProductsAsync(querySettings);
 
@@ -118,14 +118,14 @@ public class ProductDaoTests : IAsyncLifetime
         var productDao = CreateDao();
         var t_ua_account_01 = Guid.Parse("ec3a44cc-0ba4-4c97-ad7f-911e9f6a73bc");
         var t_ua_account_01_user_02 = Guid.Parse("7aa9004b-ed6f-4862-8307-579030c860be");
-        var lastProductId = Guid.Parse("139a2e54-e9be-4168-98b4-2839d9b3db04");
+        var lastProductId = Guid.Parse("0614f8d6-8895-4c74-bcbe-8a3c26076e1b");
         var querySettings =
-            new AccountProductsQuerySettings(t_ua_account_01, t_ua_account_01_user_02, lastProductId);
+            new AccountProductsQuerySettings(t_ua_account_01, t_ua_account_01_user_02, lastProductId, null, 100, true);
 
         var products = await productDao.GetAccountProductsAsync(querySettings);
 
         products.Should().HaveCount(1);
-        products.Should().Contain(x => x.Id == Guid.Parse("0614f8d6-8895-4c74-bcbe-8a3c26076e1b"));
+        products.Should().Contain(x => x.Id == Guid.Parse("139a2e54-e9be-4168-98b4-2839d9b3db04"));
     }
 
     [Fact]

@@ -23,7 +23,7 @@ public class ProductsQueryRequestModelTests
     }
 
     private AccountProductQueryRequestModel CreateRequestModel() =>
-        new AccountProductQueryRequestModel(_testUserId, _testAccountId, _testLastProductId, _testCount, true);
+        new(_testUserId, _testAccountId, _testLastProductId, null, _testCount, true);
 
     [Fact]
     public void Create_HappyPath_Successful()

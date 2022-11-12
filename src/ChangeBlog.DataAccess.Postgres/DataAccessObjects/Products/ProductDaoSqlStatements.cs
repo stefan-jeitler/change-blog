@@ -45,25 +45,34 @@ public static class ProductDaoSqlStatements
                      JOIN versioning_scheme vs on p.versioning_scheme_id = vs.id
             WHERE p.id = @productId";
 
-    public static string GetProductsSql(bool usePaging, string additionalFilterPredicate)
+    public static string GetProductsSql(bool usePaging, string additionalFilterPredicate, string nameFilter = null)
     {
         var pagingFilter = usePaging
             ? @"AND ((p.name, p.id) > ((select ps.name from product ps where ps.id = @lastProductId and ps.freezed_at is null), @lastProductId))"
             : string.Empty;
 
-        var filter = $"AND p.freezed_at IS NULL {additionalFilterPredicate}";
+        var nameFilterPredicate = !string.IsNullOrWhiteSpace(nameFilter)
+            ? "AND p.name ilike CONCAT('%', @productName, '%')"
+            : "";
+
+        var filter = $"AND p.freezed_at IS NULL {additionalFilterPredicate} {nameFilterPredicate}";
 
         return GetProductsQuerySql(filter, pagingFilter);
     }
 
-    public static string GetFreezedProductsSql(bool usePaging, string additionalFilterPredicate)
+    public static string GetFreezedProductsSql(bool usePaging, string additionalFilterPredicate,
+        string nameFilter = null)
     {
         var pagingFilter = usePaging
             ? @"AND (not exists(select null from product ps where ps.id = @lastProductId and ps.freezed_at is not null)
                     or (p.name, p.id) > ((select ps.name from product ps where ps.id = @lastProductId), @lastProductId))"
             : string.Empty;
 
-        var filter = $"AND p.freezed_at IS NOT NULL {additionalFilterPredicate}";
+        var nameFilterPredicate = !string.IsNullOrWhiteSpace(nameFilter)
+            ? "AND p.name ilike CONCAT('%', @productName, '%')"
+            : "";
+
+        var filter = $"AND p.freezed_at IS NOT NULL {additionalFilterPredicate} {nameFilterPredicate}";
 
         return GetProductsQuerySql(filter, pagingFilter);
     }

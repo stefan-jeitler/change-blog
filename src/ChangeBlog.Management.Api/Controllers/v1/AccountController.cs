@@ -119,6 +119,7 @@ public class AccountController : ControllerBase
         [FromServices] IGetAccountProducts getAccountProducts,
         Guid accountId,
         Guid? lastProductId = null,
+        string name = null,
         [Range(1, AccountProductQueryRequestModel.MaxLimit)]
         ushort limit = AccountProductQueryRequestModel.MaxLimit,
         bool includeFreezed = false)
@@ -127,6 +128,7 @@ public class AccountController : ControllerBase
         var requestModel = new AccountProductQueryRequestModel(userId,
             accountId,
             lastProductId,
+            name,
             limit,
             includeFreezed
         );

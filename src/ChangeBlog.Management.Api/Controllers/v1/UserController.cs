@@ -46,6 +46,7 @@ public class UserController : ControllerBase
     public async Task<ActionResult<List<ProductDto>>> GetUserProductsAsync(
         [FromServices] IGetUserProducts getUserProducts,
         Guid? lastProductId = null,
+        string name = null,
         [Range(1, UserProductQueryRequestModel.MaxLimit)]
         ushort limit = UserProductQueryRequestModel.MaxLimit,
         bool includeFreezed = false)
@@ -53,6 +54,7 @@ public class UserController : ControllerBase
         var userId = HttpContext.GetUserId();
         var requestModel = new UserProductQueryRequestModel(userId,
             lastProductId,
+            name,
             limit,
             includeFreezed);
 

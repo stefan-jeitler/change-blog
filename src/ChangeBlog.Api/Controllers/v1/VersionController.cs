@@ -29,7 +29,7 @@ namespace ChangeBlog.Api.Controllers.v1;
 [ProducesResponseType(typeof(ErrorResponse), StatusCodes.Status400BadRequest)]
 [ProducesResponseType(typeof(ErrorResponse), StatusCodes.Status401Unauthorized)]
 [ProducesResponseType(typeof(ErrorResponse), StatusCodes.Status403Forbidden)]
-[SwaggerControllerOrder(4)]
+[SwaggerControllerOrder(2)]
 public class VersionController : ControllerBase
 {
     private readonly IGetVersions _getVersions;

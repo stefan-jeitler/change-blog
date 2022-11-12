@@ -22,7 +22,7 @@ namespace ChangeBlog.Api.Controllers.v1;
 [ProducesResponseType(typeof(ErrorResponse), StatusCodes.Status400BadRequest)]
 [ProducesResponseType(typeof(ErrorResponse), StatusCodes.Status401Unauthorized)]
 [ProducesResponseType(typeof(ErrorResponse), StatusCodes.Status403Forbidden)]
-[SwaggerControllerOrder(8)]
+[SwaggerControllerOrder(6)]
 public class IssuesController : ControllerBase
 {
     [HttpGet(Name = "GetIssues")]

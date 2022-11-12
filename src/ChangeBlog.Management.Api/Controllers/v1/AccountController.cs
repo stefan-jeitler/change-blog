@@ -1,11 +1,13 @@
 using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Net.Mime;
 using System.Threading.Tasks;
 using ChangeBlog.Api.Shared;
 using ChangeBlog.Api.Shared.Authorization;
 using ChangeBlog.Api.Shared.DTOs;
+using ChangeBlog.Api.Shared.DTOs.V1.Product;
 using ChangeBlog.Api.Shared.DTOs.V1.User;
 using ChangeBlog.Api.Shared.Swagger;
 using ChangeBlog.Application.UseCases.Accounts.CreateAccount;
@@ -13,6 +15,7 @@ using ChangeBlog.Application.UseCases.Accounts.DeleteAccount;
 using ChangeBlog.Application.UseCases.Accounts.GetAccounts;
 using ChangeBlog.Application.UseCases.Accounts.GetRoles;
 using ChangeBlog.Application.UseCases.Accounts.UpdateAccount;
+using ChangeBlog.Application.UseCases.Products.GetProducts;
 using ChangeBlog.Application.UseCases.Users.GetUsers;
 using ChangeBlog.Domain.Authorization;
 using ChangeBlog.Management.Api.DTOs;
@@ -106,6 +109,31 @@ public class AccountController : ControllerBase
         await updateAccount.ExecuteAsync(presenter, requestModel);
 
         return presenter.Response;
+    }
+
+    [HttpGet("{accountId:Guid}/products", Name = "GetAccountProducts")]
+    [ProducesResponseType(StatusCodes.Status200OK)]
+    [ProducesResponseType(typeof(ErrorResponse), StatusCodes.Status400BadRequest)]
+    [NeedsPermission(Permission.ViewAccount)]
+    public async Task<ActionResult<List<ProductDto>>> GetAccountProductsAsync(
+        [FromServices] IGetAccountProducts getAccountProducts,
+        Guid accountId,
+        Guid? lastProductId = null,
+        [Range(1, AccountProductQueryRequestModel.MaxLimit)]
+        ushort limit = AccountProductQueryRequestModel.MaxLimit,
+        bool includeFreezed = false)
+    {
+        var userId = HttpContext.GetUserId();
+        var requestModel = new AccountProductQueryRequestModel(userId,
+            accountId,
+            lastProductId,
+            limit,
+            includeFreezed
+        );
+
+        var products = await getAccountProducts.ExecuteAsync(requestModel);
+
+        return Ok(products.Select(ProductDto.FromResponseModel));
     }
 
     [HttpGet("{accountId:Guid}/users", Name = "GetAccountUsers")]

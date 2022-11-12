@@ -1,7 +1,7 @@
 using System;
 using ChangeBlog.Application.UseCases.Products.GetProducts;
 
-namespace ChangeBlog.Api.DTOs.V1.Product;
+namespace ChangeBlog.Api.Shared.DTOs.V1.Product;
 
 public class ProductDto
 {
@@ -32,7 +32,7 @@ public class ProductDto
     public bool IsFreezed { get; }
 
     public static ProductDto FromResponseModel(ProductResponseModel m) =>
-        new ProductDto(
+        new(
             m.Id,
             m.AccountId,
             m.AccountName,

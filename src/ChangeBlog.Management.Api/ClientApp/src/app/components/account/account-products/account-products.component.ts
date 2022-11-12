@@ -1,10 +1,9 @@
 import {Component, Input, OnInit} from '@angular/core';
 import {Resource} from "../../resource.state";
 import {TranslationKey} from "../../../generated/TranslationKey";
-import {ChangeBlogApi} from "../../../../clients/ChangeBlogApiClient";
 import {firstValueFrom} from "rxjs";
 import {ChangeBlogManagementApi} from "../../../../clients/ChangeBlogManagementApiClient";
-import Product = ChangeBlogApi.ProductDto;
+import Product = ChangeBlogManagementApi.ProductDto;
 
 @Component({
     selector: 'app-account-products',
@@ -17,7 +16,7 @@ export class AccountProductsComponent implements OnInit {
     resource: Resource<Product[]>
 
     constructor(public translationKey: TranslationKey,
-                private apiClient: ChangeBlogApi.Client) {
+                private apiClient: ChangeBlogManagementApi.Client) {
         this.accountId = '';
         this.resource = {state: 'loading'};
         this.accountId = '';

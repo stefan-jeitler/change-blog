@@ -1,5 +1,4 @@
 using System.Net;
-using System.Net.Http;
 using System.Threading.Tasks;
 using FluentAssertions;
 using Microsoft.AspNetCore.Mvc.Testing;
@@ -14,18 +13,6 @@ public class UserAccessTests : IClassFixture<WebApplicationFactory<Startup>>
     public UserAccessTests(WebApplicationFactory<Startup> factory)
     {
         _factory = factory;
-    }
-
-    [Fact]
-    public async Task UserAccess_ProductManagerFreezesProduct_Unauthorized()
-    {
-        var client = _factory.CreateClient();
-        client.DefaultRequestHeaders.Add("X-API-KEY", new[] {"acc01usr01"});
-
-        var response = await client.PostAsync("/api/v1/products/139a2e54-e9be-4168-98b4-2839d9b3db04/freeze",
-            new StringContent(""));
-
-        response.StatusCode.Should().Be(HttpStatusCode.Forbidden);
     }
 
     [Fact]

@@ -3,7 +3,7 @@ using ChangeBlog.Api.Shared.Authorization.RequestBodyIdentifiers;
 using ChangeBlog.Api.Shared.ValidatorExtensions;
 using FluentValidation;
 
-namespace ChangeBlog.Api.DTOs.V1.Product;
+namespace ChangeBlog.Api.Shared.DTOs.V1.Product;
 
 public class AddOrUpdateProductDto : IContainsAccountId
 {

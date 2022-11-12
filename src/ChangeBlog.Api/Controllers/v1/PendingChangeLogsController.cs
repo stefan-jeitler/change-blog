@@ -30,7 +30,7 @@ namespace ChangeBlog.Api.Controllers.v1;
 [ProducesResponseType(typeof(ErrorResponse), StatusCodes.Status400BadRequest)]
 [ProducesResponseType(typeof(ErrorResponse), StatusCodes.Status401Unauthorized)]
 [ProducesResponseType(typeof(ErrorResponse), StatusCodes.Status403Forbidden)]
-[SwaggerControllerOrder(5)]
+[SwaggerControllerOrder(3)]
 public class PendingChangeLogsController : ControllerBase
 {
     [HttpGet("products/{productId:Guid}/pending-changelogs", Name = "GetPendingChangeLogs")]

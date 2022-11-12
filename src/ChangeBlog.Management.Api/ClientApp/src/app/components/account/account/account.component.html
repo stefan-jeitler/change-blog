@@ -7,7 +7,7 @@
     <app-content-error *ngIf="resource.state == 'error'" [details]="resource.errorDetails"></app-content-error>
     <div *ngIf="resource.state == 'success'">
         <div class="bg-white">
-            <div class="account-title">
+            <div class="account-title break-word">
                 <span *ngIf="!accountName">&nbsp;</span>
                 <span class="text-lg">{{ accountName }}</span>
             </div>

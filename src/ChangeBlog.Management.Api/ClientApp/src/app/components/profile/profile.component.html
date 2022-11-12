@@ -41,9 +41,7 @@
                                 scrollHeight="300px"
                                 styleClass="w-full">
                         <ng-template let-item pTemplate="selectedItem">
-                            <div class="timezone-item timezone-item-value">
-                                <span>({{item.offset}}) {{item.windowsId}}</span>
-                            </div>
+                            <span style="white-space: normal">({{item.offset}}) {{item.windowsId}}</span>
                         </ng-template>
                         <ng-template let-timezone pTemplate="item">
                             <span>({{timezone.offset}}) {{timezone.windowsId}}</span>

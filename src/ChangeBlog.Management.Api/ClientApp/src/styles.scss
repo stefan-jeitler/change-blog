@@ -37,6 +37,10 @@ app-header span, p {
   text-overflow: ellipsis;
 }
 
+.break-word {
+  word-break: break-word;
+}
+
 @media (max-width: $md) {
   .app-content-container {
     margin-left: 0.5rem;

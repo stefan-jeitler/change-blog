@@ -12,9 +12,7 @@ public class SearchVersionQueryBuilder
     public SearchVersionQueryBuilder(Guid productId)
     {
         if (productId == Guid.Empty)
-        {
             throw new ArgumentException("ProductId cannot be empty.");
-        }
 
         _parameters.Add("productId", productId);
     }
@@ -22,9 +20,7 @@ public class SearchVersionQueryBuilder
     public SearchVersionQueryBuilder AddLastVersionId(Guid? lastVersionId)
     {
         if (!lastVersionId.HasValue || lastVersionId.Value == Guid.Empty)
-        {
             return this;
-        }
 
         _predicates.Add(
             "(v.created_at, v.id) < ((select vs.created_at from version vs where vs.id = @lastVersionId), @lastVersionId)");
@@ -42,9 +38,7 @@ public class SearchVersionQueryBuilder
     public SearchVersionQueryBuilder AddTextSearch(string searchTerm)
     {
         if (string.IsNullOrWhiteSpace(searchTerm))
-        {
             return this;
-        }
 
         var trimmedSearchTerm = searchTerm.Trim();
         var finalSearchTerm = trimmedSearchTerm.Contains(' ')
@@ -77,7 +71,7 @@ public class SearchVersionQueryBuilder
                 order by v.created_at desc, v.id
                 fetch first (@limit) rows only";
 
-        _parameters.Add("limit", (int)limit);
+        _parameters.Add("limit", (int) limit);
 
         return (query, _parameters);
     }

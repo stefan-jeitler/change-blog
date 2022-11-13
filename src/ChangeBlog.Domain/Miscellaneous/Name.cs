@@ -19,9 +19,7 @@ public record Name
         var exception = ParseInternal(candidate, out var name);
 
         if (exception is null)
-        {
             return name;
-        }
 
         throw exception;
     }
@@ -38,33 +36,22 @@ public record Name
         name = null;
 
         if (candidate is null)
-        {
             return new ArgumentNullException(nameof(candidate));
-        }
 
         var c = candidate.Trim();
 
         if (c == string.Empty)
-        {
             return new ArgumentException("Name cannot be empty.");
-        }
 
         if (c.Length < MinLength)
-        {
             return new ArgumentException($"Name too short: min length {MinLength}");
-        }
 
         if (c.Length > MaxLength)
-        {
             return new ArgumentException($"Name too long: max length {MaxLength}");
-        }
 
         name = new Name(c);
         return null;
     }
 
-    public static implicit operator string(Name name)
-    {
-        return name.Value;
-    }
+    public static implicit operator string(Name name) => name.Value;
 }

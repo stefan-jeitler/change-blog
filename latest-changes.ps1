@@ -53,8 +53,7 @@ function Publish-LatestChanges
     }
     catch
     {
-        Write-Host "StatusCode:" $_.Exception.Response.StatusCode.value__
-
+        Write-Error $_.Exception
         EXIT -1
     }
 }

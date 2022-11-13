@@ -6,13 +6,7 @@ namespace ChangeBlog.DataAccess.Postgres.TypeHandler;
 
 public class EmailTypeHandler : SqlMapper.TypeHandler<Email>
 {
-    public override void SetValue(IDbDataParameter parameter, Email value)
-    {
-        parameter.Value = value.Value;
-    }
+    public override void SetValue(IDbDataParameter parameter, Email value) => parameter.Value = value.Value;
 
-    public override Email Parse(object value)
-    {
-        return Email.Parse(value.ToString());
-    }
+    public override Email Parse(object value) => Email.Parse(value.ToString());
 }

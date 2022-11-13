@@ -18,9 +18,7 @@ public record Email
         var exception = ParseInternal(candidate, out var email);
 
         if (exception is null)
-        {
             return email;
-        }
 
         throw exception;
     }
@@ -37,33 +35,22 @@ public record Email
         email = null;
 
         if (candidate is null)
-        {
             return new ArgumentNullException(nameof(candidate));
-        }
 
         var c = candidate.Trim();
 
         if (c == string.Empty)
-        {
             return new ArgumentException("Email cannot be empty.");
-        }
 
         if (c.Length > MaxLength)
-        {
             return new ArgumentException($"Email is too long. max length: {MaxLength}");
-        }
 
         if (!c.Contains('@'))
-        {
             return new ArgumentException("An email address must contain an @ sign.");
-        }
 
         email = new Email(c);
         return null;
     }
 
-    public static implicit operator string(Email email)
-    {
-        return email.Value;
-    }
+    public static implicit operator string(Email email) => email.Value;
 }

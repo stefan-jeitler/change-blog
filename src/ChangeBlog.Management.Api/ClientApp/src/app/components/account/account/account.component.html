@@ -12,7 +12,7 @@
                 <span class="text-lg">{{ accountName }}</span>
             </div>
         </div>
-        <p-tabView class="responsive-tab-view">
+        <p-tabView>
             <p-tabPanel [disabled]="!tabs['masterdata'].isActive" [header]="translationKey.masterData | transloco">
                 <app-account-master-data
                         (accountNameChanged)="accountNameChangedHandler($event)"

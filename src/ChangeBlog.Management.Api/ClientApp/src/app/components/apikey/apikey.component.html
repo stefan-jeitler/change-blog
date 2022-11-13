@@ -3,7 +3,7 @@
 <div class="app-content-container">
     <app-loading-spinner [show]="resource.state === 'loading'"></app-loading-spinner>
     <app-content-error *ngIf="resource.state == 'error'" [details]="resource.errorDetails"></app-content-error>
-    <div *ngIf="resource.state === 'success'" class="card mb-8">
+    <div *ngIf="resource.state === 'loaded'" class="card mb-8">
         <p-toolbar styleClass="mb-4">
             <ng-template pTemplate="left">
                 <div class="hidden md:inline-flex">

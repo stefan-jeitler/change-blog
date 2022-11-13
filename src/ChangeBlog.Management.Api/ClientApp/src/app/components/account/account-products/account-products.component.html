@@ -2,7 +2,7 @@
     <app-loading-spinner [show]="resource.state === 'loading'"></app-loading-spinner>
     <app-content-notfound *ngIf="resource.state == 'not-found'"></app-content-notfound>
     <app-content-error *ngIf="resource.state == 'error'" [details]="resource.errorDetails"></app-content-error>
-    <div *ngIf="resource.state === 'success'">
+    <div *ngIf="resource.state === 'loaded'">
         <p-table #dt
                  [autoLayout]="true"
                  [globalFilterFields]="['name']"

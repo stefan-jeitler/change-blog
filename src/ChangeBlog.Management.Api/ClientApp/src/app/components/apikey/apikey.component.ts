@@ -142,7 +142,7 @@ export class ApikeyComponent implements OnInit {
         return firstValueFrom(this.mngmtApiClient.getApiKeys())
             .then(r => {
                 this.resource = {
-                    state: 'success',
+                    state: 'loaded',
                     value: r.map(x => {
                         return {
                             id: x.apiKeyId,

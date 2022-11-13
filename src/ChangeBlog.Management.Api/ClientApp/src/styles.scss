@@ -31,12 +31,6 @@ app-header span, p {
   max-width: 2000px;
 }
 
-.truncate-text {
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
-}
-
 .break-word {
   word-break: break-word;
 }

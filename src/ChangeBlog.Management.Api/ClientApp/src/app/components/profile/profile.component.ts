@@ -48,7 +48,7 @@ export class ProfileComponent implements OnInit {
             this.loadUserProfile()
                 .then(up => {
                     this.resource = {
-                        state: 'success',
+                        state: 'loaded',
                         value: up
                     };
 

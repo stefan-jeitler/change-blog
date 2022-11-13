@@ -59,7 +59,7 @@ export class AccountsComponent implements OnInit {
     }
 
     get ownCreatedAccountsCount(): number {
-        if (this.resource.state !== 'success')
+        if (this.resource.state !== 'loaded')
             return 0;
 
         return this.resource.value.filter(x => x.wasCreatedByMyself).length;
@@ -82,7 +82,7 @@ export class AccountsComponent implements OnInit {
     async loadAccounts() {
         const accounts = await firstValueFrom(this.mngmtApiClient.getAccounts());
         this.resource = {
-            state: 'success',
+            state: 'loaded',
             value: accounts.map(x => {
                 return {
                     id: x.id,

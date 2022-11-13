@@ -28,7 +28,7 @@ export class AccountUsersComponent implements OnInit {
         firstValueFrom(this.apiClient.getAccountUsers(this.accountId))
             .then(u => {
                 this.resource = {
-                    state: 'success',
+                    state: 'loaded',
                     value: u
                 };
             })

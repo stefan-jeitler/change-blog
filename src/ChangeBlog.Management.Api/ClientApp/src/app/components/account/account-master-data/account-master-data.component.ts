@@ -76,7 +76,7 @@ export class AccountMasterDataComponent implements OnInit {
         firstValueFrom(this.apiClient.getAccount(this.accountId))
             .then(a => {
                 this.resource = {
-                    state: 'success',
+                    state: 'loaded',
                     value: a
                 };
 

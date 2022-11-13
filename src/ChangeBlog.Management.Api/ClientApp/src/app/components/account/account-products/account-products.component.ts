@@ -30,7 +30,7 @@ export class AccountProductsComponent implements OnInit {
         firstValueFrom(this.apiClient.getAccountProducts(this.accountId, undefined, undefined, undefined, true))
             .then(p => {
                 this.resource = {
-                    state: 'success',
+                    state: 'loaded',
                     value: p
                 };
             })

@@ -3,7 +3,7 @@
 <div class="app-content-container">
     <app-loading-spinner [show]="resource.state === 'loading'"></app-loading-spinner>
     <app-content-error *ngIf="resource.state == 'error'" [details]="resource.errorDetails"></app-content-error>
-    <div *ngIf="resource.state === 'success'">
+    <div *ngIf="resource.state === 'loaded'">
         <p-card [style]="{'max-width': '32rem'}">
             <form (ngSubmit)="updateProfile(userProfileForm)" [formGroup]="userProfileForm">
                 <div class="flex flex-column align-items-start">

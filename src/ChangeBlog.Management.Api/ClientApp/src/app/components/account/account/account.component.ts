@@ -59,7 +59,7 @@ export class AccountComponent implements OnInit {
             firstValueFrom(this.apiClient.getPermissions(ResourceType.Account, params.id))
                 .then(p => {
                     this.resource = {
-                        state: 'success',
+                        state: 'loaded',
                         value: p
                     };
 

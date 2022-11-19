@@ -8,7 +8,7 @@ using JetBrains.Annotations;
 namespace ChangeBlog.Management.Api.Tests.Infrastructure;
 
 [UsedImplicitly]
-public record RopcFlowResponse
+public record TokenResponse
 {
     [JsonPropertyName("access_token")] public string AccessToken { get; init; }
 
@@ -34,7 +34,7 @@ public class RopcFlowClient
     }
 
 
-    public async Task<RopcFlowResponse> AcquireTokenAsync(RopcFlowConfiguration config)
+    public async Task<TokenResponse> AcquireTokenAsync(RopcFlowConfiguration config)
     {
         var tokenRequestMessage = new HttpRequestMessage(HttpMethod.Post, config.TokenEndpoint)
         {
@@ -51,6 +51,6 @@ public class RopcFlowClient
         var response = await _httpClient.SendAsync(tokenRequestMessage);
         response.EnsureSuccessStatusCode();
 
-        return await response.Content.ReadFromJsonAsync<RopcFlowResponse>();
+        return await response.Content.ReadFromJsonAsync<TokenResponse>();
     }
 }

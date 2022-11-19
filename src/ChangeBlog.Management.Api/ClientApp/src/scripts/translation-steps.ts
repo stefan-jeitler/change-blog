@@ -52,7 +52,7 @@ function generateEntry(transl: TranslationObject, key: string): string {
   return `${nestedClassDeclaration} public ${normalizeKey(key)} = new this._${normalizeKey(key)}();`;
 }
 
-export function generateTranslationKeys(): void {
+export async function generateTranslationKeys(): Promise<void> {
   const targetFile = 'src/app/generated/TranslationKey.ts';
 
   console.log('Use source file: ../assets/i18n/en.json');
@@ -74,5 +74,5 @@ export function generateTranslationKeys(): void {
     export class TranslationKey {\n\t${fields}\n}`;
 
   console.log('Write translation keys to file');
-  fs.writeFileSync(targetFile, translationKeys);
+  fs.writeFile(targetFile, translationKeys, () => console.log('TranslationKey.ts successfully created'));
 }

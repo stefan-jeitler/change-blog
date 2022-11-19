@@ -1,6 +1,6 @@
 // @ts-ignore
 import defaultTranslations from "../assets/i18n/en.json";
-import * as fs from 'fs';
+import {promises as fs} from 'fs';
 
 type TranslationObject = { [key: string]: any };
 const translations = defaultTranslations as TranslationObject;
@@ -74,5 +74,6 @@ export async function generateTranslationKeys(): Promise<void> {
     export class TranslationKey {\n\t${fields}\n}`;
 
   console.log('Write translation keys to file');
-  fs.writeFile(targetFile, translationKeys, () => console.log('TranslationKey.ts successfully created'));
+  await fs.writeFile(targetFile, translationKeys);
+  console.log('TranslationKey.ts successfully created');
 }

@@ -1,6 +1,6 @@
-import { ComponentFixture, TestBed } from '@angular/core/testing';
+import {ComponentFixture, TestBed} from '@angular/core/testing';
 
-import { ContentErrorComponent } from './content-error.component';
+import {ContentErrorComponent} from './content-error.component';
 
 describe('ContentErrorComponent', () => {
   let component: ContentErrorComponent;
@@ -8,9 +8,9 @@ describe('ContentErrorComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      declarations: [ ContentErrorComponent ]
+      declarations: [ContentErrorComponent]
     })
-    .compileComponents();
+      .compileComponents();
 
     fixture = TestBed.createComponent(ContentErrorComponent);
     component = fixture.componentInstance;

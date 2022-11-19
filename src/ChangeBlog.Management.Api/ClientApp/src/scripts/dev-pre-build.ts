@@ -4,13 +4,13 @@ const preBuildSteps: (() => Promise<void>)[] = [
   generateTranslationKeys
 ];
 
-console.log("Run Dev-Pre-Build Steps ...");
-const asyncLoop = async () => {
+const runPreBuildStepsAsync = async () => {
   for (const step of preBuildSteps) {
-    console.log('Run step: ' + step.name)
+    console.log('Run step: ' + step.name);
     await step();
   }
 };
 
-asyncLoop()
-  .then(r => console.log('Pre-Build Steps finished'));
+console.log("Run Dev-Pre-Build Steps ...");
+runPreBuildStepsAsync()
+  .then(_ => console.log('Pre-Build Steps finished'));

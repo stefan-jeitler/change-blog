@@ -2,44 +2,44 @@
                     goBackUrl="/app/accounts"></app-content-header>
 
 <div class="app-content-container">
-    <app-loading-spinner [show]="resource.state == 'loading'"></app-loading-spinner>
-    <app-content-notfound *ngIf="resource.state === 'not-found'"></app-content-notfound>
-    <app-content-error *ngIf="resource.state == 'error'" [details]="resource.errorDetails"></app-content-error>
-    <div *ngIf="resource.state == 'loaded'">
-        <div class="bg-white">
-            <div class="account-title break-word">
-                <span *ngIf="!accountName">&nbsp;</span>
-                <span class="text-lg">{{ accountName }}</span>
-            </div>
-        </div>
-        <p-tabView>
-            <p-tabPanel [disabled]="!tabs['masterdata'].isActive" [header]="translationKey.masterData | transloco">
-                <app-account-master-data
-                        (accountNameChanged)="accountNameChangedHandler($event)"
-                        [accountId]="resource.value.resourceId"
-                        [readonly]="!resource.value.canUpdate">
-                </app-account-master-data>
-            </p-tabPanel>
-            <p-tabPanel [disabled]="!tabs['products'].isActive" [header]="translationKey.products | transloco">
-                <ng-template pTemplate="content">
-                    <app-account-products [accountId]="resource.value.resourceId">
-                    </app-account-products>
-                </ng-template>
-            </p-tabPanel>
-            <p-tabPanel [disabled]="!tabs['users'].isActive"
-                        [header]="translationKey.users | transloco">
-                <ng-template pTemplate="content">
-                    <app-account-users [accountId]="resource.value.resourceId"></app-account-users>
-                </ng-template>
-            </p-tabPanel>
-            <p-tabPanel [disabled]="!tabs['delete'].isActive"
-                        [header]="translationKey.delete | transloco">
-                <ng-template pTemplate="content">
-                    <app-account-delete [accountId]="resource.value.resourceId"
-                                        [accountName]="accountName">
-                    </app-account-delete>
-                </ng-template>
-            </p-tabPanel>
-        </p-tabView>
+  <app-loading-spinner [show]="resource.state == 'loading'"></app-loading-spinner>
+  <app-content-notfound *ngIf="resource.state === 'not-found'"></app-content-notfound>
+  <app-content-error *ngIf="resource.state == 'error'" [details]="resource.errorDetails"></app-content-error>
+  <div *ngIf="resource.state == 'loaded'">
+    <div class="bg-white">
+      <div class="account-title break-word">
+        <span *ngIf="!accountName">&nbsp;</span>
+        <span class="text-lg">{{ accountName }}</span>
+      </div>
     </div>
+    <p-tabView>
+      <p-tabPanel [disabled]="!tabs['masterdata'].isActive" [header]="translationKey.masterData | transloco">
+        <app-account-master-data
+          (accountNameChanged)="accountNameChangedHandler($event)"
+          [accountId]="resource.value.resourceId"
+          [readonly]="!resource.value.canUpdate">
+        </app-account-master-data>
+      </p-tabPanel>
+      <p-tabPanel [disabled]="!tabs['products'].isActive" [header]="translationKey.products | transloco">
+        <ng-template pTemplate="content">
+          <app-account-products [accountId]="resource.value.resourceId">
+          </app-account-products>
+        </ng-template>
+      </p-tabPanel>
+      <p-tabPanel [disabled]="!tabs['users'].isActive"
+                  [header]="translationKey.users | transloco">
+        <ng-template pTemplate="content">
+          <app-account-users [accountId]="resource.value.resourceId"></app-account-users>
+        </ng-template>
+      </p-tabPanel>
+      <p-tabPanel [disabled]="!tabs['delete'].isActive"
+                  [header]="translationKey.delete | transloco">
+        <ng-template pTemplate="content">
+          <app-account-delete [accountId]="resource.value.resourceId"
+                              [accountName]="accountName">
+          </app-account-delete>
+        </ng-template>
+      </p-tabPanel>
+    </p-tabView>
+  </div>
 </div>

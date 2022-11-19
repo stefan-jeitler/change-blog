@@ -1,251 +1,252 @@
 <app-content-header [title]="translationKey.apikey | transloco"></app-content-header>
 
 <div class="app-content-container">
-    <app-loading-spinner [show]="resource.state === 'loading'"></app-loading-spinner>
-    <app-content-error *ngIf="resource.state == 'error'" [details]="resource.errorDetails"></app-content-error>
-    <div *ngIf="resource.state === 'loaded'" class="card mb-8">
-        <p-toolbar styleClass="mb-4">
-            <ng-template pTemplate="left">
-                <div class="hidden md:inline-flex">
-                    <div
-                            [pTooltip]="translationKey.apiKeyLimitReached | transloco"
-                            [tooltipDisabled]="resource.value.length < maxApiKeysCountLimit"
-                            tooltipPosition="bottom">
-                        <button (click)="createNewApiKey()"
-                                [disabled]="resource.value.length >= maxApiKeysCountLimit"
-                                [label]="this.translationKey.new | transloco"
-                                class="mr-2"
-                                icon="pi pi-plus"
-                                pButton pRipple>
-                        </button>
-                    </div>
-                    <button (click)="deleteSelectedApiKeys()"
-                            [disabled]="!selectedApiKeys || !selectedApiKeys.length"
-                            [label]="this.translationKey.delete | transloco"
-                            class="p-button-warning"
-                            icon="pi pi-trash"
-                            pButton
-                            pRipple>
-                    </button>
-                </div>
-                <div class="inline-flex md:hidden">
-                    <div
-                            [pTooltip]="translationKey.apiKeyLimitReached | transloco"
-                            [tooltipDisabled]="resource.value.length < maxApiKeysCountLimit"
-                            tooltipPosition="bottom">
-                        <button (click)="createNewApiKey()"
-                                [disabled]="resource.value.length >= maxApiKeysCountLimit"
-                                class="mr-2"
-                                icon="pi pi-plus"
-                                pButton pRipple>
-                        </button>
-                    </div>
-                    <button (click)="deleteSelectedApiKeys()"
-                            [disabled]="!selectedApiKeys || !selectedApiKeys.length"
-                            class="p-button-warning"
-                            icon="pi pi-trash"
-                            pButton
-                            pRipple>
-                    </button>
-                </div>
-            </ng-template>
-            <ng-template pTemplate="right">
-                <a [href]="apiBaseUrl" class="disable-link-styling" target="_blank">
-                    <button [label]="translationKey.linkToApi | transloco"
-                            class="p-button-text"
-                            pButton
-                            pRipple
-                            type="button"></button>
-                </a>
-            </ng-template>
-        </p-toolbar>
+  <app-loading-spinner [show]="resource.state === 'loading'"></app-loading-spinner>
+  <app-content-error *ngIf="resource.state == 'error'" [details]="resource.errorDetails"></app-content-error>
+  <div *ngIf="resource.state === 'loaded'" class="card mb-8">
+    <p-toolbar styleClass="mb-4">
+      <ng-template pTemplate="left">
+        <div class="hidden md:inline-flex">
+          <div
+            [pTooltip]="translationKey.apiKeyLimitReached | transloco"
+            [tooltipDisabled]="resource.value.length < maxApiKeysCountLimit"
+            tooltipPosition="bottom">
+            <button (click)="createNewApiKey()"
+                    [disabled]="resource.value.length >= maxApiKeysCountLimit"
+                    [label]="this.translationKey.new | transloco"
+                    class="mr-2"
+                    icon="pi pi-plus"
+                    pButton pRipple>
+            </button>
+          </div>
+          <button (click)="deleteSelectedApiKeys()"
+                  [disabled]="!selectedApiKeys || !selectedApiKeys.length"
+                  [label]="this.translationKey.delete | transloco"
+                  class="p-button-warning"
+                  icon="pi pi-trash"
+                  pButton
+                  pRipple>
+          </button>
+        </div>
+        <div class="inline-flex md:hidden">
+          <div
+            [pTooltip]="translationKey.apiKeyLimitReached | transloco"
+            [tooltipDisabled]="resource.value.length < maxApiKeysCountLimit"
+            tooltipPosition="bottom">
+            <button (click)="createNewApiKey()"
+                    [disabled]="resource.value.length >= maxApiKeysCountLimit"
+                    class="mr-2"
+                    icon="pi pi-plus"
+                    pButton pRipple>
+            </button>
+          </div>
+          <button (click)="deleteSelectedApiKeys()"
+                  [disabled]="!selectedApiKeys || !selectedApiKeys.length"
+                  class="p-button-warning"
+                  icon="pi pi-trash"
+                  pButton
+                  pRipple>
+          </button>
+        </div>
+      </ng-template>
+      <ng-template pTemplate="right">
+        <a [href]="apiBaseUrl" class="disable-link-styling" target="_blank">
+          <button [label]="translationKey.linkToApi | transloco"
+                  class="p-button-text"
+                  pButton
+                  pRipple
+                  type="button"></button>
+        </a>
+      </ng-template>
+    </p-toolbar>
 
-        <p-table [(selection)]="selectedApiKeys"
-                 [autoLayout]="true"
-                 [loading]="showDatatableLoadingOverlay"
-                 [rowHover]="true"
-                 [value]="resource.value"
-                 breakpoint="576px"
-                 dataKey="id"
-                 responsiveLayout="stack"
-                 styleClass="p-datatable-sm">
-            <ng-template pTemplate="emptymessage">
-                <tr>
-                    <td colspan="5">
-                        <div class="flex justify-content-center">
-                            <span>{{ translationKey.noEntries | transloco }}</span>
-                        </div>
-                    </td>
-                </tr>
-            </ng-template>
-            <ng-template pTemplate="header">
-                <tr>
-                    <th style="width: 3rem">
-                        <p-tableHeaderCheckbox></p-tableHeaderCheckbox>
-                    </th>
-                    <th pSortableColumn="name">
-                        {{ translationKey.$name | transloco }}
-                        <p-sortIcon field="name"></p-sortIcon>
-                    </th>
-                    <th>{{ translationKey.key | transloco }} </th>
-                    <th pSortableColumn="expiresAt">
-                        {{ translationKey.expires | transloco }}
-                        <p-sortIcon field="expiresAt"></p-sortIcon>
-                    </th>
-                    <th class="text-center">
-                        {{ translationKey.actions | transloco }}
-                    </th>
-                </tr>
-            </ng-template>
-            <ng-template let-apiKey pTemplate="body">
-                <tr (dblclick)="updateApiKey(apiKey)">
-                    <td>
-                        <p-tableCheckbox [value]="apiKey"></p-tableCheckbox>
-                        <div (click)="actionMenuTarget = apiKey; userMenu.toggle($event)"
-                             class="sm:hidden text-center"
-                             style="cursor:pointer;">
-                            <i class="pi pi-ellipsis-v">
-                            </i>
-                            <p-menu #userMenu
-                                    [model]="contextMenuItems"
-                                    [popup]="true"
-                                    [style]="{'width': 'auto'}"
-                                    appendTo="body"
-                            ></p-menu>
-                        </div>
-                    </td>
-                    <td>
-                        <span class="p-column-title">{{ translationKey.$name | transloco }}</span>
-                        <div class="break-word text-right sm:text-left w-10rem sm:w-8rem md:w-8rem lg:w-14rem xl:w-full">
-                            {{apiKey.name}}
-                        </div>
-                    </td>
-                    <td>
-                        <span class="p-column-title">{{ translationKey.key | transloco }}</span>
-                        <div class="break-word text-right sm:text-left w-10rem sm:w-8rem md:w-8rem lg:w-16rem xl:w-full">{{apiKey.key}}</div>
-                    </td>
-                    <td>
-                        <span class="p-column-title">{{ translationKey.expires | transloco }}</span>
-                        <span [pTooltip]="apiKey.expiresAt.toISOString()"
-                              appendTo="body"
-                              tooltipPosition="bottom">{{ apiKey.expiresAt | translocoDate }}</span>
-                    </td>
-                    <td>
-                        <div class="hidden xl:flex align-items-center justify-content-center">
-                            <button (click)="copyToClipBoard(apiKey)"
-                                    [pTooltip]="translationKey.copyToClipboard | transloco"
-                                    [showDelay]="700"
-                                    class="p-button-rounded p-button-secondary btn-small mr-2"
-                                    icon="pi pi-copy"
-                                    pButton
-                                    pRipple
-                                    tooltipPosition="left">
-                            </button>
-                            <button (click)="updateApiKey(apiKey)"
-                                    [pTooltip]="translationKey.edit | transloco"
-                                    [showDelay]="700"
-                                    class="p-button-rounded btn-small mr-2"
-                                    icon="pi pi-pencil"
-                                    pButton
-                                    pRipple
-                                    tooltipPosition="bottom">
-                            </button>
-                            <button (click)="deleteApiKey(apiKey)"
-                                    [pTooltip]="translationKey.delete | transloco"
-                                    [showDelay]="700"
-                                    class="p-button-rounded p-button-warning btn-small"
-                                    icon="pi pi-trash"
-                                    pButton
-                                    pRipple
-                                    tooltipPosition="bottom">
-                            </button>
-                        </div>
-                        <div (click)="actionMenuTarget = apiKey; userMenu.toggle($event)"
-                             class="action-menu xl:hidden text-center"
-                             style="cursor:pointer;">
-                            <i class="pi pi-ellipsis-v">
-                            </i>
-                            <p-menu #userMenu
-                                    [model]="contextMenuItems"
-                                    [popup]="true"
-                                    [style]="{'width': 'auto'}"
-                                    appendTo="body"
-                            ></p-menu>
-                        </div>
-                    </td>
-                </tr>
-            </ng-template>
-        </p-table>
+    <p-table [(selection)]="selectedApiKeys"
+             [autoLayout]="true"
+             [loading]="showDatatableLoadingOverlay"
+             [rowHover]="true"
+             [value]="resource.value"
+             breakpoint="576px"
+             dataKey="id"
+             responsiveLayout="stack"
+             styleClass="p-datatable-sm">
+      <ng-template pTemplate="emptymessage">
+        <tr>
+          <td colspan="5">
+            <div class="flex justify-content-center">
+              <span>{{ translationKey.noEntries | transloco }}</span>
+            </div>
+          </td>
+        </tr>
+      </ng-template>
+      <ng-template pTemplate="header">
+        <tr>
+          <th style="width: 3rem">
+            <p-tableHeaderCheckbox></p-tableHeaderCheckbox>
+          </th>
+          <th pSortableColumn="name">
+            {{ translationKey.$name | transloco }}
+            <p-sortIcon field="name"></p-sortIcon>
+          </th>
+          <th>{{ translationKey.key | transloco }} </th>
+          <th pSortableColumn="expiresAt">
+            {{ translationKey.expires | transloco }}
+            <p-sortIcon field="expiresAt"></p-sortIcon>
+          </th>
+          <th class="text-center">
+            {{ translationKey.actions | transloco }}
+          </th>
+        </tr>
+      </ng-template>
+      <ng-template let-apiKey pTemplate="body">
+        <tr (dblclick)="updateApiKey(apiKey)">
+          <td>
+            <p-tableCheckbox [value]="apiKey"></p-tableCheckbox>
+            <div (click)="actionMenuTarget = apiKey; userMenu.toggle($event)"
+                 class="sm:hidden text-center"
+                 style="cursor:pointer;">
+              <i class="pi pi-ellipsis-v">
+              </i>
+              <p-menu #userMenu
+                      [model]="contextMenuItems"
+                      [popup]="true"
+                      [style]="{'width': 'auto'}"
+                      appendTo="body"
+              ></p-menu>
+            </div>
+          </td>
+          <td>
+            <span class="p-column-title">{{ translationKey.$name | transloco }}</span>
+            <div class="break-word text-right sm:text-left w-10rem sm:w-8rem md:w-8rem lg:w-14rem xl:w-full">
+              {{apiKey.name}}
+            </div>
+          </td>
+          <td>
+            <span class="p-column-title">{{ translationKey.key | transloco }}</span>
+            <div
+              class="break-word text-right sm:text-left w-10rem sm:w-8rem md:w-8rem lg:w-16rem xl:w-full">{{apiKey.key}}</div>
+          </td>
+          <td>
+            <span class="p-column-title">{{ translationKey.expires | transloco }}</span>
+            <span [pTooltip]="apiKey.expiresAt.toISOString()"
+                  appendTo="body"
+                  tooltipPosition="bottom">{{ apiKey.expiresAt | translocoDate }}</span>
+          </td>
+          <td>
+            <div class="hidden xl:flex align-items-center justify-content-center">
+              <button (click)="copyToClipBoard(apiKey)"
+                      [pTooltip]="translationKey.copyToClipboard | transloco"
+                      [showDelay]="700"
+                      class="p-button-rounded p-button-secondary btn-small mr-2"
+                      icon="pi pi-copy"
+                      pButton
+                      pRipple
+                      tooltipPosition="left">
+              </button>
+              <button (click)="updateApiKey(apiKey)"
+                      [pTooltip]="translationKey.edit | transloco"
+                      [showDelay]="700"
+                      class="p-button-rounded btn-small mr-2"
+                      icon="pi pi-pencil"
+                      pButton
+                      pRipple
+                      tooltipPosition="bottom">
+              </button>
+              <button (click)="deleteApiKey(apiKey)"
+                      [pTooltip]="translationKey.delete | transloco"
+                      [showDelay]="700"
+                      class="p-button-rounded p-button-warning btn-small"
+                      icon="pi pi-trash"
+                      pButton
+                      pRipple
+                      tooltipPosition="bottom">
+              </button>
+            </div>
+            <div (click)="actionMenuTarget = apiKey; userMenu.toggle($event)"
+                 class="action-menu xl:hidden text-center"
+                 style="cursor:pointer;">
+              <i class="pi pi-ellipsis-v">
+              </i>
+              <p-menu #userMenu
+                      [model]="contextMenuItems"
+                      [popup]="true"
+                      [style]="{'width': 'auto'}"
+                      appendTo="body"
+              ></p-menu>
+            </div>
+          </td>
+        </tr>
+      </ng-template>
+    </p-table>
 
-        <p-dialog [(visible)]="showApiKeyDialog" [header]="translationKey.apikey | transloco" [modal]="true"
-                  [style]="{width: '450px'}" styleClass="p-fluid">
-            <ng-template pTemplate="content">
-                <form (ngSubmit)="onApiKeySubmit()"
-                      [formGroup]="apiKeyForm"
-                      class="pt-3"
-                      id="api-key-form">
-                    <div class="field">
-                        <div class="flex flex-column align-items-start w-12 md:w-22rem">
-                            <div class="flex flex-row w-full">
-                                <label class="font-medium"
-                                       for="name-input">{{ translationKey.$name | transloco }}</label>
-                            </div>
-                            <input class="w-full mt-2" formControlName="name" id="name-input" pInputText type="text">
-                        </div>
-                        <div *ngIf="apiKeyForm.showErrorMessage('name')">
-                            <small *ngFor="let message of apiKeyForm.getErrorMessages('name')"
-                                   class="pt-1 p-error block"
-                                   id="name-error">{{ message }}</small>
-                        </div>
+    <p-dialog [(visible)]="showApiKeyDialog" [header]="translationKey.apikey | transloco" [modal]="true"
+              [style]="{width: '450px'}" styleClass="p-fluid">
+      <ng-template pTemplate="content">
+        <form (ngSubmit)="onApiKeySubmit()"
+              [formGroup]="apiKeyForm"
+              class="pt-3"
+              id="api-key-form">
+          <div class="field">
+            <div class="flex flex-column align-items-start w-12 md:w-22rem">
+              <div class="flex flex-row w-full">
+                <label class="font-medium"
+                       for="name-input">{{ translationKey.$name | transloco }}</label>
+              </div>
+              <input class="w-full mt-2" formControlName="name" id="name-input" pInputText type="text">
+            </div>
+            <div *ngIf="apiKeyForm.showErrorMessage('name')">
+              <small *ngFor="let message of apiKeyForm.getErrorMessages('name')"
+                     class="pt-1 p-error block"
+                     id="name-error">{{ message }}</small>
+            </div>
 
-                    </div>
-                    <div class="field">
-                        <div class="flex flex-column align-items-start w-12 md:w-22rem">
-                            <div class="flex flex-row w-full">
-                                <label class="font-medium"
-                                       for="expires-input">{{ translationKey.expires | transloco }}</label>
-                            </div>
-                            <p-calendar [maxDate]="maxExpires"
-                                        [minDate]="minExpires"
-                                        appendTo="body"
-                                        class="w-full mt-2"
-                                        formControlName="expiresAt"
-                                        id="expires-input">
-                            </p-calendar>
-                        </div>
-                        <div *ngIf="apiKeyForm.showErrorMessage('expiresAt')">
-                            <div *ngIf="apiKeyForm.showErrorMessage('expiresAt')">
-                                <small *ngFor="let message of apiKeyForm.getErrorMessages('expiresAt')"
-                                       class="pt-1 p-error block"
-                                       id="expiresAt-error">{{ message }}</small>
-                            </div>
-                        </div>
-                    </div>
-                    <input formControlName="id" type="hidden">
-                </form>
-            </ng-template>
+          </div>
+          <div class="field">
+            <div class="flex flex-column align-items-start w-12 md:w-22rem">
+              <div class="flex flex-row w-full">
+                <label class="font-medium"
+                       for="expires-input">{{ translationKey.expires | transloco }}</label>
+              </div>
+              <p-calendar [maxDate]="maxExpires"
+                          [minDate]="minExpires"
+                          appendTo="body"
+                          class="w-full mt-2"
+                          formControlName="expiresAt"
+                          id="expires-input">
+              </p-calendar>
+            </div>
+            <div *ngIf="apiKeyForm.showErrorMessage('expiresAt')">
+              <div *ngIf="apiKeyForm.showErrorMessage('expiresAt')">
+                <small *ngFor="let message of apiKeyForm.getErrorMessages('expiresAt')"
+                       class="pt-1 p-error block"
+                       id="expiresAt-error">{{ message }}</small>
+              </div>
+            </div>
+          </div>
+          <input formControlName="id" type="hidden">
+        </form>
+      </ng-template>
 
-            <ng-template pTemplate="footer">
-                <button (click)="closeApiKeyDialog()" [label]="translationKey.cancel | transloco"
-                        class="p-button-text"
-                        icon="pi pi-times" pButton
-                        pRipple></button>
-                <button [disabled]="!apiKeyForm.valid"
-                        [label]="translationKey.save | transloco"
-                        [loading]="apiKeyForm.disabled"
-                        class="p-button-text"
-                        form="api-key-form"
-                        icon="pi pi-check"
-                        pButton
-                        pRipple
-                        type="submit">
-                </button>
-            </ng-template>
-        </p-dialog>
+      <ng-template pTemplate="footer">
+        <button (click)="closeApiKeyDialog()" [label]="translationKey.cancel | transloco"
+                class="p-button-text"
+                icon="pi pi-times" pButton
+                pRipple></button>
+        <button [disabled]="!apiKeyForm.valid"
+                [label]="translationKey.save | transloco"
+                [loading]="apiKeyForm.disabled"
+                class="p-button-text"
+                form="api-key-form"
+                icon="pi pi-check"
+                pButton
+                pRipple
+                type="submit">
+        </button>
+      </ng-template>
+    </p-dialog>
 
-        <p-confirmDialog [style]="{width: '450px'}"
-                         acceptButtonStyleClass="p-button-outlined p-button-text"
-                         rejectButtonStyleClass="p-button-outlined p-button-text">
-        </p-confirmDialog>
-    </div>
+    <p-confirmDialog [style]="{width: '450px'}"
+                     acceptButtonStyleClass="p-button-outlined p-button-text"
+                     rejectButtonStyleClass="p-button-outlined p-button-text">
+    </p-confirmDialog>
+  </div>
 </div>

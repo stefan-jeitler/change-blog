@@ -1,60 +1,60 @@
 <div>
-    <app-loading-spinner [show]="resource.state === 'loading'"></app-loading-spinner>
-    <app-content-notfound *ngIf="resource.state == 'not-found'"></app-content-notfound>
-    <app-content-error *ngIf="resource.state == 'error'" [details]="resource.errorDetails"></app-content-error>
-    <div *ngIf="resource.state === 'loaded'">
-        <div class="max-w-26rem">
-            <form (ngSubmit)="updateAccount()" [formGroup]="accountForm">
-                <div class="flex flex-column align-items-start pt-1">
-                    <div class="flex flex-row w-full">
-                        <label class="font-medium"
-                               for="name-input">{{ translationKey.$name | transloco }}</label>
-                    </div>
-                    <input class="w-full mt-2" formControlName="name" id="name-input"
-                           pInputText type="text">
-                </div>
-                <div *ngIf="accountForm.showErrorMessage('name')">
-                    <small *ngFor="let message of accountForm.getErrorMessages('name')"
-                           class="pt-1 p-error block"
-                           id="name-error">{{ message }}</small>
-                </div>
-
-                <div class="flex flex-column align-items-start mt-3">
-                    <div class="flex flex-row w-full">
-                        <label class="font-medium"
-                               for="creator-input">{{ translationKey.creator | transloco }}</label>
-                    </div>
-                    <input [disabled]="true" [value]="resource.value.createdBy" class="w-full mt-2" id="creator-input"
-                           pInputText
-                           type="text">
-                </div>
-
-                <div class="flex flex-column align-items-start mt-3">
-                    <div class="flex flex-row w-full">
-                        <label class="font-medium"
-                               for="created-at-input">{{ translationKey.createdAt | transloco }}</label>
-                    </div>
-                    <input [disabled]="true" [value]="resource.value.createdAt | translocoDate" class="w-full mt-2"
-                           id="created-at-input"
-                           pInputText
-                           type="text">
-                </div>
-
-                <div *ngIf="!readonly" class="flex flex flex-column mt-6 mb-2">
-                    <div class="align-self-end">
-                        <button [disabled]="!accountForm.dirty"
-                                [label]="translationKey.save | transloco"
-                                [loading]="accountForm.disabled "
-                                class="p-button"
-                                icon="pi pi-check"
-                                iconPos="left"
-                                pButton
-                                pRipple
-                                type="submit">
-                        </button>
-                    </div>
-                </div>
-            </form>
+  <app-loading-spinner [show]="resource.state === 'loading'"></app-loading-spinner>
+  <app-content-notfound *ngIf="resource.state == 'not-found'"></app-content-notfound>
+  <app-content-error *ngIf="resource.state == 'error'" [details]="resource.errorDetails"></app-content-error>
+  <div *ngIf="resource.state === 'loaded'">
+    <div class="max-w-26rem">
+      <form (ngSubmit)="updateAccount()" [formGroup]="accountForm">
+        <div class="flex flex-column align-items-start pt-1">
+          <div class="flex flex-row w-full">
+            <label class="font-medium"
+                   for="name-input">{{ translationKey.$name | transloco }}</label>
+          </div>
+          <input class="w-full mt-2" formControlName="name" id="name-input"
+                 pInputText type="text">
         </div>
+        <div *ngIf="accountForm.showErrorMessage('name')">
+          <small *ngFor="let message of accountForm.getErrorMessages('name')"
+                 class="pt-1 p-error block"
+                 id="name-error">{{ message }}</small>
+        </div>
+
+        <div class="flex flex-column align-items-start mt-3">
+          <div class="flex flex-row w-full">
+            <label class="font-medium"
+                   for="creator-input">{{ translationKey.creator | transloco }}</label>
+          </div>
+          <input [disabled]="true" [value]="resource.value.createdBy" class="w-full mt-2" id="creator-input"
+                 pInputText
+                 type="text">
+        </div>
+
+        <div class="flex flex-column align-items-start mt-3">
+          <div class="flex flex-row w-full">
+            <label class="font-medium"
+                   for="created-at-input">{{ translationKey.createdAt | transloco }}</label>
+          </div>
+          <input [disabled]="true" [value]="resource.value.createdAt | translocoDate" class="w-full mt-2"
+                 id="created-at-input"
+                 pInputText
+                 type="text">
+        </div>
+
+        <div *ngIf="!readonly" class="flex flex flex-column mt-6 mb-2">
+          <div class="align-self-end">
+            <button [disabled]="!accountForm.dirty"
+                    [label]="translationKey.save | transloco"
+                    [loading]="accountForm.disabled "
+                    class="p-button"
+                    icon="pi pi-check"
+                    iconPos="left"
+                    pButton
+                    pRipple
+                    type="submit">
+            </button>
+          </div>
+        </div>
+      </form>
     </div>
+  </div>
 </div>

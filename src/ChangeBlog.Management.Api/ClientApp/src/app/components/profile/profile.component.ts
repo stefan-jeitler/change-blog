@@ -12,143 +12,143 @@ import ITimezoneDto = MngmtApiClient.ITimezoneDto;
 import UserDto = MngmtApiClient.UserDto;
 
 @Component({
-    selector: 'app-profile',
-    templateUrl: './profile.component.html',
-    styleUrls: ['./profile.component.scss']
+  selector: 'app-profile',
+  templateUrl: './profile.component.html',
+  styleUrls: ['./profile.component.scss']
 })
 export class ProfileComponent implements OnInit {
-    availableTimezones: ITimezoneDto[];
-    availableCultures: string[];
-    userProfileForm: UntypedFormGroup;
-    resource: Resource<UserDto>;
+  availableTimezones: ITimezoneDto[];
+  availableCultures: string[];
+  userProfileForm: UntypedFormGroup;
+  resource: Resource<UserDto>;
 
-    constructor(public translationKey: TranslationKey,
-                private translationService: TranslocoService,
-                private appCultureService: AppUserService,
-                private messageService: MessageService,
-                private mngmtApiClient: MngmtApiClient.Client,
-                private formBuilder: UntypedFormBuilder) {
+  constructor(public translationKey: TranslationKey,
+              private translationService: TranslocoService,
+              private appCultureService: AppUserService,
+              private messageService: MessageService,
+              private mngmtApiClient: MngmtApiClient.Client,
+              private formBuilder: UntypedFormBuilder) {
 
-        this.availableTimezones = [];
-        this.availableCultures = [];
+    this.availableTimezones = [];
+    this.availableCultures = [];
 
-        this.resource = {state: 'loading'};
+    this.resource = {state: 'loading'};
 
-        this.userProfileForm = this.formBuilder.group({
-            fullName: new UntypedFormControl({value: null, disabled: true}),
-            email: new UntypedFormControl({value: null, disabled: true}),
-            timezone: new FormControl<string>(''),
-            culture: new FormControl<string>('')
+    this.userProfileForm = this.formBuilder.group({
+      fullName: new UntypedFormControl({value: null, disabled: true}),
+      email: new UntypedFormControl({value: null, disabled: true}),
+      timezone: new FormControl<string>(''),
+      culture: new FormControl<string>('')
+    });
+  }
+
+  async ngOnInit(): Promise<void> {
+    try {
+      await this.loadAvailableDropdownOptions();
+      this.loadUserProfile()
+        .then(up => {
+          this.resource = {
+            state: 'loaded',
+            value: up
+          };
+
+          this.userProfileForm.patchValue({
+            fullName: `${up.firstName} ${up.lastName}`,
+            email: up.email,
+            timezone: this.availableTimezones.find(x => x.olsonId === up.timeZone),
+            culture: up.culture
+          });
+        })
+        .catch((e: MngmtApiClient.SwaggerException) => {
+          this.resource = {
+            state: 'error',
+            errorDetails: e.result?.errors ?? []
+          };
         });
+    } catch (error: any) {
+      this.resource = {
+        state: 'error',
+        errorDetails: error?.result?.errors ?? []
+      }
     }
+  }
 
-    async ngOnInit(): Promise<void> {
-        try {
-            await this.loadAvailableDropdownOptions();
-            this.loadUserProfile()
-                .then(up => {
-                    this.resource = {
-                        state: 'loaded',
-                        value: up
-                    };
-
-                    this.userProfileForm.patchValue({
-                        fullName: `${up.firstName} ${up.lastName}`,
-                        email: up.email,
-                        timezone: this.availableTimezones.find(x => x.olsonId === up.timeZone),
-                        culture: up.culture
-                    });
-                })
-                .catch((e: MngmtApiClient.SwaggerException) => {
-                    this.resource = {
-                        state: 'error',
-                        errorDetails: e.result?.errors ?? []
-                    };
-                });
-        } catch (error: any) {
-            this.resource = {
-                state: 'error',
-                errorDetails: error?.result?.errors ?? []
-            }
-        }
+  enableForm() {
+    for (const controlKey of ['timezone', 'culture']) {
+      this.userProfileForm.controls[controlKey].enable();
     }
+  }
 
-    enableForm() {
-        for (const controlKey of ['timezone', 'culture']) {
-            this.userProfileForm.controls[controlKey].enable();
-        }
+  disableForm() {
+    for (const controlKey of ['timezone', 'culture']) {
+      this.userProfileForm.controls[controlKey].disable();
     }
+  }
 
-    disableForm() {
-        for (const controlKey of ['timezone', 'culture']) {
-            this.userProfileForm.controls[controlKey].disable();
-        }
+  updateProfile(userProfileForm: UntypedFormGroup) {
+    userProfileForm.resetValidation();
+    this.disableForm();
+
+    const dto = new MngmtApiClient.UpdateUserProfileDto()
+    dto.culture = userProfileForm.value.culture;
+    dto.timezone = userProfileForm.value.timezone.olsonId;
+
+    this.mngmtApiClient.updateUserProfile(undefined, dto)
+      .subscribe({
+        next: r => this.profileUpdated(r),
+        error: async (error: MngmtApiClient.SwaggerException) => {
+          await this.handleError(error);
+        },
+        complete: () => this.enableForm()
+      });
+  }
+
+  private async handleError(error: MngmtApiClient.SwaggerException) {
+    this.enableForm();
+
+    if (error.status >= 400 && error.status < 500) {
+      this.userProfileForm.setErrors(error.result.errors);
+      this.messageService.showGeneralErrors(error.result.errors);
+    } else {
+      await this.showGenericErrorMessage();
     }
+  }
 
-    updateProfile(userProfileForm: UntypedFormGroup) {
-        userProfileForm.resetValidation();
-        this.disableForm();
+  private async showGenericErrorMessage() {
+    const errorMessageHeader = await firstValueFrom(this.translationService.selectTranslate(this.translationKey.genericErrorMessageShort));
+    const errorMessage = await firstValueFrom(this.translationService.selectTranslate(this.translationKey.genericErrorMessage));
 
-        const dto = new MngmtApiClient.UpdateUserProfileDto()
-        dto.culture = userProfileForm.value.culture;
-        dto.timezone = userProfileForm.value.timezone.olsonId;
+    const message = {severity: 'error', summary: errorMessageHeader, detail: errorMessage}
+    this.messageService.add(message);
+  }
 
-        this.mngmtApiClient.updateUserProfile(undefined, dto)
-            .subscribe({
-                next: r => this.profileUpdated(r),
-                error: async (error: MngmtApiClient.SwaggerException) => {
-                    await this.handleError(error);
-                },
-                complete: () => this.enableForm()
-            });
-    }
+  private async loadUserProfile() {
+    const loadUserProfile = this.mngmtApiClient
+      .getUserProfile();
 
-    private async handleError(error: MngmtApiClient.SwaggerException) {
-        this.enableForm();
+    return await firstValueFrom(loadUserProfile);
+  }
 
-        if (error.status >= 400 && error.status < 500) {
-            this.userProfileForm.setErrors(error.result.errors);
-            this.messageService.showGeneralErrors(error.result.errors);
-        } else {
-            await this.showGenericErrorMessage();
-        }
-    }
+  private async loadAvailableDropdownOptions() {
+    const loadTimezones = this.mngmtApiClient
+      .getSupportedTimezones();
+    this.availableTimezones = await firstValueFrom(loadTimezones);
 
-    private async showGenericErrorMessage() {
-        const errorMessageHeader = await firstValueFrom(this.translationService.selectTranslate(this.translationKey.genericErrorMessageShort));
-        const errorMessage = await firstValueFrom(this.translationService.selectTranslate(this.translationKey.genericErrorMessage));
+    const loadCulture = this.mngmtApiClient
+      .getSupportedCultures()
+    this.availableCultures = await firstValueFrom(loadCulture);
+  }
 
-        const message = {severity: 'error', summary: errorMessageHeader, detail: errorMessage}
-        this.messageService.add(message);
-    }
+  private async profileUpdated(response: MngmtApiClient.SuccessResponse) {
+    await this.appCultureService.applyUserSettings();
+    this.userProfileForm.markAsPristine();
+    this.userProfileForm.markAsUntouched();
 
-    private async loadUserProfile() {
-        const loadUserProfile = this.mngmtApiClient
-            .getUserProfile();
+    const userProfileUpdateMessage = await firstValueFrom(this.translationService.selectTranslate(this.translationKey.userProfileUpdated));
 
-        return await firstValueFrom(loadUserProfile);
-    }
-
-    private async loadAvailableDropdownOptions() {
-        const loadTimezones = this.mngmtApiClient
-            .getSupportedTimezones();
-        this.availableTimezones = await firstValueFrom(loadTimezones);
-
-        const loadCulture = this.mngmtApiClient
-            .getSupportedCultures()
-        this.availableCultures = await firstValueFrom(loadCulture);
-    }
-
-    private async profileUpdated(response: MngmtApiClient.SuccessResponse) {
-        await this.appCultureService.applyUserSettings();
-        this.userProfileForm.markAsPristine();
-        this.userProfileForm.markAsUntouched();
-
-        const userProfileUpdateMessage = await firstValueFrom(this.translationService.selectTranslate(this.translationKey.userProfileUpdated));
-
-        this.messageService.add({
-            severity: 'success',
-            detail: userProfileUpdateMessage
-        });
-    }
+    this.messageService.add({
+      severity: 'success',
+      detail: userProfileUpdateMessage
+    });
+  }
 }

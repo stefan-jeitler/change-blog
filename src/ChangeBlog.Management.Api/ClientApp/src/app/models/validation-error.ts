@@ -1,4 +1,4 @@
 export class ValidationError {
-    constructor(public messages: string[]) {
-    }
+  constructor(public messages: string[]) {
+  }
 }

@@ -2,25 +2,25 @@ import {ChangeBlogManagementApi} from "../../clients/ChangeBlogManagementApiClie
 import ErrorMessages = ChangeBlogManagementApi.ErrorMessages;
 
 export type Loaded<T> = {
-    state: 'loaded';
-    value: T;
+  state: 'loaded';
+  value: T;
 };
 
 export type Loading = {
-    state: 'loading'
+  state: 'loading'
 };
 
 export type NotFound = {
-    state: 'not-found';
+  state: 'not-found';
 };
 
 export type Error = {
-    state: 'error';
-    errorDetails: ErrorMessages[];
+  state: 'error';
+  errorDetails: ErrorMessages[];
 };
 
 export type Resource<T> =
-    | Loaded<T>
-    | Loading
-    | NotFound
-    | Error;
+  | Loaded<T>
+  | Loading
+  | NotFound
+  | Error;

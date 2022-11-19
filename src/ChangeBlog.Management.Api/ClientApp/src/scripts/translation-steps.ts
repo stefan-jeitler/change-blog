@@ -56,7 +56,7 @@ export async function generateTranslationKeys(): Promise<void> {
   const targetFile = 'src/app/generated/TranslationKey.ts';
 
   console.log('Use source file: ../assets/i18n/en.json');
-  console.log('Use target file: ' + targetFile)
+  console.log('Use target file: ' + targetFile);
 
   console.log('Generating translation keys ...');
   const fields = Object.keys(translations)

@@ -1,14 +1,14 @@
 <app-content-error *ngIf="fatalError"></app-content-error>
 <div *ngIf="!fatalError">
-    <button (click)="askForDeletion()"
-            [label]="translationKey.delete | transloco"
-            class="p-button-danger"
-            pButton type="button"></button>
-    <small *ngIf="errorMessage" class="pt-1 p-error block"
-           id="expiresAt-error">{{ errorMessage }}</small>
+  <button (click)="askForDeletion()"
+          [label]="translationKey.delete | transloco"
+          class="p-button-danger"
+          pButton type="button"></button>
+  <small *ngIf="errorMessage" class="pt-1 p-error block"
+         id="expiresAt-error">{{ errorMessage }}</small>
 
-    <p-confirmDialog [style]="{width: '450px'}"
-                     acceptButtonStyleClass="p-button-outlined p-button-text"
-                     rejectButtonStyleClass="p-button-outlined p-button-text">
-    </p-confirmDialog>
+  <p-confirmDialog [style]="{width: '450px'}"
+                   acceptButtonStyleClass="p-button-outlined p-button-text"
+                   rejectButtonStyleClass="p-button-outlined p-button-text">
+  </p-confirmDialog>
 </div>

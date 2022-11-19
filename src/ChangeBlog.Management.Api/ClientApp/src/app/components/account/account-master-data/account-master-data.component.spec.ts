@@ -1,6 +1,6 @@
-import { ComponentFixture, TestBed } from '@angular/core/testing';
+import {ComponentFixture, TestBed} from '@angular/core/testing';
 
-import { AccountMasterDataComponent } from './account-master-data.component';
+import {AccountMasterDataComponent} from './account-master-data.component';
 
 describe('AccountMasterDataComponent', () => {
   let component: AccountMasterDataComponent;
@@ -8,9 +8,9 @@ describe('AccountMasterDataComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      declarations: [ AccountMasterDataComponent ]
+      declarations: [AccountMasterDataComponent]
     })
-    .compileComponents();
+      .compileComponents();
 
     fixture = TestBed.createComponent(AccountMasterDataComponent);
     component = fixture.componentInstance;

@@ -1,60 +1,60 @@
 <app-content-header [title]="translationKey.accounts | transloco"></app-content-header>
 
 <div class="app-content-container">
-    <app-loading-spinner [show]="resource.state === 'loading'"></app-loading-spinner>
-    <app-content-error *ngIf="resource.state == 'error'" [details]="resource.errorDetails"></app-content-error>
-    <div *ngIf="resource.state === 'loaded'" class="card mb-8">
-        <p-toolbar styleClass="mb-4">
-            <ng-template pTemplate="left">
-                <div class="hidden sm:inline-flex">
-                    <div [pTooltip]="translationKey.accountLimitReached | transloco"
-                         [tooltipDisabled]="ownCreatedAccountsCount < maxAccountsCreatedByMyself"
-                         tooltipPosition="bottom">
-                        <button (click)="createNewAccount()"
-                                [disabled]="ownCreatedAccountsCount >= maxAccountsCreatedByMyself"
-                                [label]="this.translationKey.new | transloco"
-                                class="mr-2"
-                                icon="pi pi-plus"
-                                pButton pRipple>
-                        </button>
-                    </div>
-                </div>
-                <div class="inline-flex sm:hidden">
-                    <div [pTooltip]="translationKey.accountLimitReached | transloco"
-                         [tooltipDisabled]="ownCreatedAccountsCount < maxAccountsCreatedByMyself"
-                         tooltipPosition="bottom">
-                        <button (click)="createNewAccount()"
-                                [disabled]="ownCreatedAccountsCount >= maxAccountsCreatedByMyself"
-                                class="mr-2"
-                                icon="pi pi-plus"
-                                pButton pRipple>
-                        </button>
-                    </div>
-                </div>
-            </ng-template>
-        </p-toolbar>
+  <app-loading-spinner [show]="resource.state === 'loading'"></app-loading-spinner>
+  <app-content-error *ngIf="resource.state == 'error'" [details]="resource.errorDetails"></app-content-error>
+  <div *ngIf="resource.state === 'loaded'" class="card mb-8">
+    <p-toolbar styleClass="mb-4">
+      <ng-template pTemplate="left">
+        <div class="hidden sm:inline-flex">
+          <div [pTooltip]="translationKey.accountLimitReached | transloco"
+               [tooltipDisabled]="ownCreatedAccountsCount < maxAccountsCreatedByMyself"
+               tooltipPosition="bottom">
+            <button (click)="createNewAccount()"
+                    [disabled]="ownCreatedAccountsCount >= maxAccountsCreatedByMyself"
+                    [label]="this.translationKey.new | transloco"
+                    class="mr-2"
+                    icon="pi pi-plus"
+                    pButton pRipple>
+            </button>
+          </div>
+        </div>
+        <div class="inline-flex sm:hidden">
+          <div [pTooltip]="translationKey.accountLimitReached | transloco"
+               [tooltipDisabled]="ownCreatedAccountsCount < maxAccountsCreatedByMyself"
+               tooltipPosition="bottom">
+            <button (click)="createNewAccount()"
+                    [disabled]="ownCreatedAccountsCount >= maxAccountsCreatedByMyself"
+                    class="mr-2"
+                    icon="pi pi-plus"
+                    pButton pRipple>
+            </button>
+          </div>
+        </div>
+      </ng-template>
+    </p-toolbar>
 
-        <p-table #dt [(selection)]="selectedAccounts"
-                 [autoLayout]="true"
-                 [globalFilterFields]="['name']"
-                 [loading]="showDatatableLoadingOverlay"
-                 [rowHover]="true"
-                 [value]="resource.value"
-                 breakpoint="576px"
-                 dataKey="id"
-                 responsiveLayout="stack"
-                 styleClass="p-datatable-sm">
-            <ng-template pTemplate="emptymessage">
-                <tr>
-                    <td colspan="6">
-                        <div class="flex justify-content-center">
-                            <span>{{ translationKey.noEntries | transloco }}</span>
-                        </div>
-                    </td>
-                </tr>
-            </ng-template>
-            <ng-template pTemplate="caption">
-                <div class="flex">
+    <p-table #dt [(selection)]="selectedAccounts"
+             [autoLayout]="true"
+             [globalFilterFields]="['name']"
+             [loading]="showDatatableLoadingOverlay"
+             [rowHover]="true"
+             [value]="resource.value"
+             breakpoint="576px"
+             dataKey="id"
+             responsiveLayout="stack"
+             styleClass="p-datatable-sm">
+      <ng-template pTemplate="emptymessage">
+        <tr>
+          <td colspan="6">
+            <div class="flex justify-content-center">
+              <span>{{ translationKey.noEntries | transloco }}</span>
+            </div>
+          </td>
+        </tr>
+      </ng-template>
+      <ng-template pTemplate="caption">
+        <div class="flex">
                 <span class="p-input-icon-left ml-auto">
                     <i class="pi pi-search"></i>
                     <input (input)="dt.filterGlobal(getValue($event), 'contains')"
@@ -62,137 +62,137 @@
                            pInputText
                            type="text"/>
                 </span>
-                </div>
-            </ng-template>
-            <ng-template pTemplate="header">
-                <tr>
-                    <th style="width: 3rem">
-                        <p-tableHeaderCheckbox></p-tableHeaderCheckbox>
-                    </th>
-                    <th pSortableColumn="name">
-                        {{ translationKey.$name | transloco }}
-                        <p-sortIcon field="name"></p-sortIcon>
-                    </th>
-                    <th pSortableColumn="usersCount">
-                        {{ translationKey.users | transloco }}
-                        <p-sortIcon field="usersCount"></p-sortIcon>
-                    </th>
-                    <th pSortableColumn="productsCount">
-                        {{ translationKey.products | transloco }}
-                        <p-sortIcon field="productsCount"></p-sortIcon>
-                    </th>
-                    <th class="created-by-column" pSortableColumn="createdBy">
-                        {{ translationKey.creator | transloco }}
-                        <p-sortIcon field="createdBy"></p-sortIcon>
-                    </th>
-                    <th class="created-at-column w-8rem" pSortableColumn="createdAt">
-                        {{ translationKey.createdAt | transloco }}
-                        <p-sortIcon field="createdAt"></p-sortIcon>
-                    </th>
-                    <th class="text-center">&nbsp;</th>
-                </tr>
-            </ng-template>
-            <ng-template let-account pTemplate="body">
-                <tr (dblclick)="openAccount(account)">
-                    <td>
-                        <p-tableCheckbox [value]="account"></p-tableCheckbox>
-                        <div (click)="openAccount(account)"
-                             class="sm:hidden text-center"
-                             style="cursor:pointer;">
-                            <i class="pi pi-arrow-circle-right"></i>
-                        </div>
-                    </td>
-                    <td>
-                        <span class="p-column-title">{{ translationKey.$name | transloco }}</span>
-                        <div class="break-word text-right sm:text-left w-12rem sm:w-9rem md:w-8rem lg:w-8rem xl:12rem">
-                            {{account.name}}
-                        </div>
-                    </td>
-                    <td>
-                        <span class="p-column-title">{{ translationKey.users | transloco }}</span>
-                        <div class="text-right sm:text-left">
-                            {{account.usersCount}}
-                        </div>
-                    </td>
-                    <td>
-                        <span class="p-column-title">{{ translationKey.products | transloco }}</span>
-                        <div class="text-right sm:text-left">
-                            {{account.productsCount}}
-                        </div>
-                    </td>
-                    <td class="created-by-column">
-                        <span class="p-column-title">{{ translationKey.creator | transloco }}</span>
-                        <div class="break-word text-right sm:text-left">
-                            {{account.createdBy}}
-                        </div>
-                    </td>
-                    <td class="created-at-column">
-                        <span class="p-column-title">{{ translationKey.createdAt | transloco }}</span>
-                        <span [pTooltip]="account.createdAt.toISOString()"
-                              appendTo="body"
-                              class="sm:text-left"
-                              tooltipPosition="bottom">{{ account.createdAt | translocoDate }}</span>
-                    </td>
-                    <td>
-                        <div (click)="openAccount(account)"
-                             class="sm:flex action-menu align-items-center justify-content-center"
-                             style="cursor: pointer">
-                            <i class="pi pi-arrow-circle-right mr-2"
-                               style="font-size: 1.25rem">
-                            </i>
-                        </div>
-                    </td>
-                </tr>
-            </ng-template>
-        </p-table>
+        </div>
+      </ng-template>
+      <ng-template pTemplate="header">
+        <tr>
+          <th style="width: 3rem">
+            <p-tableHeaderCheckbox></p-tableHeaderCheckbox>
+          </th>
+          <th pSortableColumn="name">
+            {{ translationKey.$name | transloco }}
+            <p-sortIcon field="name"></p-sortIcon>
+          </th>
+          <th pSortableColumn="usersCount">
+            {{ translationKey.users | transloco }}
+            <p-sortIcon field="usersCount"></p-sortIcon>
+          </th>
+          <th pSortableColumn="productsCount">
+            {{ translationKey.products | transloco }}
+            <p-sortIcon field="productsCount"></p-sortIcon>
+          </th>
+          <th class="created-by-column" pSortableColumn="createdBy">
+            {{ translationKey.creator | transloco }}
+            <p-sortIcon field="createdBy"></p-sortIcon>
+          </th>
+          <th class="created-at-column w-8rem" pSortableColumn="createdAt">
+            {{ translationKey.createdAt | transloco }}
+            <p-sortIcon field="createdAt"></p-sortIcon>
+          </th>
+          <th class="text-center">&nbsp;</th>
+        </tr>
+      </ng-template>
+      <ng-template let-account pTemplate="body">
+        <tr (dblclick)="openAccount(account)">
+          <td>
+            <p-tableCheckbox [value]="account"></p-tableCheckbox>
+            <div (click)="openAccount(account)"
+                 class="sm:hidden text-center"
+                 style="cursor:pointer;">
+              <i class="pi pi-arrow-circle-right"></i>
+            </div>
+          </td>
+          <td>
+            <span class="p-column-title">{{ translationKey.$name | transloco }}</span>
+            <div class="break-word text-right sm:text-left w-12rem sm:w-9rem md:w-8rem lg:w-8rem xl:12rem">
+              {{account.name}}
+            </div>
+          </td>
+          <td>
+            <span class="p-column-title">{{ translationKey.users | transloco }}</span>
+            <div class="text-right sm:text-left">
+              {{account.usersCount}}
+            </div>
+          </td>
+          <td>
+            <span class="p-column-title">{{ translationKey.products | transloco }}</span>
+            <div class="text-right sm:text-left">
+              {{account.productsCount}}
+            </div>
+          </td>
+          <td class="created-by-column">
+            <span class="p-column-title">{{ translationKey.creator | transloco }}</span>
+            <div class="break-word text-right sm:text-left">
+              {{account.createdBy}}
+            </div>
+          </td>
+          <td class="created-at-column">
+            <span class="p-column-title">{{ translationKey.createdAt | transloco }}</span>
+            <span [pTooltip]="account.createdAt.toISOString()"
+                  appendTo="body"
+                  class="sm:text-left"
+                  tooltipPosition="bottom">{{ account.createdAt | translocoDate }}</span>
+          </td>
+          <td>
+            <div (click)="openAccount(account)"
+                 class="sm:flex action-menu align-items-center justify-content-center"
+                 style="cursor: pointer">
+              <i class="pi pi-arrow-circle-right mr-2"
+                 style="font-size: 1.25rem">
+              </i>
+            </div>
+          </td>
+        </tr>
+      </ng-template>
+    </p-table>
 
-        <p-dialog [(visible)]="showAccountDialog" [header]="translationKey.account | transloco" [modal]="true"
-                  [style]="{width: '450px'}" styleClass="p-fluid">
-            <ng-template pTemplate="content">
-                <form (ngSubmit)="onAccountFormSubmit()"
-                      [formGroup]="accountForm"
-                      class="pt-3"
-                      id="api-key-form">
-                    <div class="field">
-                        <div class="flex flex-column align-items-start w-12 md:w-22rem">
-                            <div class="flex flex-row w-full">
-                                <label class="font-medium"
-                                       for="name-input">{{ translationKey.$name | transloco }}</label>
-                            </div>
-                            <input class="w-full mt-2" formControlName="name" id="name-input" pInputText type="text">
-                        </div>
-                        <div *ngIf="accountForm.showErrorMessage('name')">
-                            <small *ngFor="let message of accountForm.getErrorMessages('name')"
-                                   class="pt-1 p-error block"
-                                   id="name-error">{{ message }}</small>
-                        </div>
+    <p-dialog [(visible)]="showAccountDialog" [header]="translationKey.account | transloco" [modal]="true"
+              [style]="{width: '450px'}" styleClass="p-fluid">
+      <ng-template pTemplate="content">
+        <form (ngSubmit)="onAccountFormSubmit()"
+              [formGroup]="accountForm"
+              class="pt-3"
+              id="api-key-form">
+          <div class="field">
+            <div class="flex flex-column align-items-start w-12 md:w-22rem">
+              <div class="flex flex-row w-full">
+                <label class="font-medium"
+                       for="name-input">{{ translationKey.$name | transloco }}</label>
+              </div>
+              <input class="w-full mt-2" formControlName="name" id="name-input" pInputText type="text">
+            </div>
+            <div *ngIf="accountForm.showErrorMessage('name')">
+              <small *ngFor="let message of accountForm.getErrorMessages('name')"
+                     class="pt-1 p-error block"
+                     id="name-error">{{ message }}</small>
+            </div>
 
-                    </div>
-                    <input formControlName="id" type="hidden">
-                </form>
-            </ng-template>
+          </div>
+          <input formControlName="id" type="hidden">
+        </form>
+      </ng-template>
 
-            <ng-template pTemplate="footer">
-                <button (click)="closeAccountDialog()" [label]="translationKey.cancel | transloco"
-                        class="p-button-text"
-                        icon="pi pi-times" pButton
-                        pRipple></button>
-                <button [disabled]="!accountForm.valid"
-                        [label]="translationKey.save | transloco"
-                        [loading]="accountForm.disabled"
-                        class="p-button-text"
-                        form="api-key-form"
-                        icon="pi pi-check"
-                        pButton
-                        pRipple
-                        type="submit">
-                </button>
-            </ng-template>
-        </p-dialog>
+      <ng-template pTemplate="footer">
+        <button (click)="closeAccountDialog()" [label]="translationKey.cancel | transloco"
+                class="p-button-text"
+                icon="pi pi-times" pButton
+                pRipple></button>
+        <button [disabled]="!accountForm.valid"
+                [label]="translationKey.save | transloco"
+                [loading]="accountForm.disabled"
+                class="p-button-text"
+                form="api-key-form"
+                icon="pi pi-check"
+                pButton
+                pRipple
+                type="submit">
+        </button>
+      </ng-template>
+    </p-dialog>
 
-        <p-confirmDialog [style]="{width: '450px'}"
-                         acceptButtonStyleClass="p-button-outlined p-button-text"
-                         rejectButtonStyleClass="p-button-outlined p-button-text">
-        </p-confirmDialog>
-    </div>
+    <p-confirmDialog [style]="{width: '450px'}"
+                     acceptButtonStyleClass="p-button-outlined p-button-text"
+                     rejectButtonStyleClass="p-button-outlined p-button-text">
+    </p-confirmDialog>
+  </div>
 </div>

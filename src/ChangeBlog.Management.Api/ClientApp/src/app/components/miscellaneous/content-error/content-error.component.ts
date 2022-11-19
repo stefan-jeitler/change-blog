@@ -5,30 +5,29 @@ import {translate} from "@ngneat/transloco";
 import ErrorMessages = ChangeBlogManagementApi.ErrorMessages;
 
 @Component({
-    selector: 'app-content-error',
-    templateUrl: './content-error.component.html',
-    styleUrls: ['./content-error.component.scss']
+  selector: 'app-content-error',
+  templateUrl: './content-error.component.html',
+  styleUrls: ['./content-error.component.scss']
 })
 export class ContentErrorComponent implements OnInit {
 
-    @Input() details: ErrorMessages[];
+  @Input() details: ErrorMessages[];
 
-    constructor(public translationKey: TranslationKey) {
-        this.details = []
-    }
+  constructor(public translationKey: TranslationKey) {
+    this.details = []
+  }
 
-    get errors(): string[] {
-        const errors = this.details
-            .flatMap(x => x.messages ?? '')
-            .filter(x => !!x);
+  get errors(): string[] {
+    const errors = this.details
+      .flatMap(x => x.messages ?? '')
+      .filter(x => !!x);
 
+    return errors.length !== 0
+      ? errors
+      : [translate(this.translationKey.unexpectedError)]
+  }
 
-        return errors.length !== 0
-            ? errors
-            : [translate(this.translationKey.unexpectedError)]
-    }
-
-    ngOnInit(): void {
-    }
+  ngOnInit(): void {
+  }
 
 }

@@ -1,16 +1,16 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk.Web">
 
     <PropertyGroup>
-        <TargetFramework>net6.0</TargetFramework>
+        <TargetFramework>net7.0</TargetFramework>
         <UserSecretsId>ChangeBlog.Api</UserSecretsId>
     </PropertyGroup>
 
     <ItemGroup>
         <PackageReference Include="Microsoft.ApplicationInsights.AspNetCore" Version="2.21.0" />
-        <PackageReference Include="Microsoft.Extensions.Caching.Memory" Version="6.0.1" />
+        <PackageReference Include="Microsoft.Extensions.Caching.Memory" Version="7.0.0" />
         <PackageReference Include="Scrutor" Version="4.2.0" />
         <PackageReference Include="Swashbuckle.AspNetCore" Version="6.4.0" />
-        <PackageReference Include="Microsoft.Identity.Web" Version="1.25.7" />
+        <PackageReference Include="Microsoft.Identity.Web" Version="1.25.8" />
         <PackageReference Include="NSwag.MSBuild" Version="13.18.0">
             <PrivateAssets>all</PrivateAssets>
             <IncludeAssets>runtime; build; native; contentfiles; analyzers</IncludeAssets>

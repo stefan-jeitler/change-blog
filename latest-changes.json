@@ -1,11 +1,5 @@
 {
-  "name": ".NET 7",
-  "changeLogLines": [
-    {
-      "text": "update dotnet to version 7.0",
-      "labels": ["DepnedencyUpdate"],
-      "issues": []
-    }
-  ],
+  "name": "",
+  "changeLogLines": [],
   "releaseImmediately": true
 }

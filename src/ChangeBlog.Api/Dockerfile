@@ -1,4 +1,4 @@
-﻿FROM mcr.microsoft.com/dotnet/sdk:6.0 AS build-env
+﻿FROM mcr.microsoft.com/dotnet/sdk:7.0 AS build-env
 ARG Version
 WORKDIR /app
 
@@ -15,7 +15,7 @@ RUN dotnet publish ChangeBlog.Api/ChangeBlog.Api.csproj \
 
 RUN echo "Version ${Version}"
 
-FROM mcr.microsoft.com/dotnet/aspnet:6.0
+FROM mcr.microsoft.com/dotnet/aspnet:7.0
 WORKDIR /app
 COPY --from=build-env /app/publish .
 ENTRYPOINT ["dotnet", "ChangeBlog.Api.dll", "--urls http://+:80"]

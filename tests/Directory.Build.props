@@ -1,6 +1,9 @@
 <Project>
     <PropertyGroup>
         <CollectCoverage>true</CollectCoverage>
+        <CoverletOutput>$(Agent.TempDirectory)/TestResults/</CoverletOutput>
+        <CoverletOutputFormat>json%2cCobertura</CoverletOutputFormat>
+        <MergeWith>$(Agent.TempDirectory)/TestResults/coverage.json</MergeWith>
     </PropertyGroup>
     <ItemGroup>
     </ItemGroup>

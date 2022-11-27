@@ -29,6 +29,9 @@ EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ChangeBlog.Application", "src\ChangeBlog.Application\ChangeBlog.Application.csproj", "{1199AF71-C574-4C62-AE37-4C53AADB1998}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "tests", "tests", "{6277CDA3-825B-4CFF-9012-5B2934F75BE6}"
+	ProjectSection(SolutionItems) = preProject
+		tests\Directory.Build.props = tests\Directory.Build.props
+	EndProjectSection
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ChangeBlog.Api.Tests", "tests\ChangeBlog.Api.Tests\ChangeBlog.Api.Tests.csproj", "{A3DC1BD0-8ABC-40F6-8D59-D35A983E2E80}"
 EndProject

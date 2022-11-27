@@ -1,0 +1,7 @@
+<Project>
+    <PropertyGroup>
+        <CollectCoverage>true</CollectCoverage>
+    </PropertyGroup>
+    <ItemGroup>
+    </ItemGroup>
+</Project>

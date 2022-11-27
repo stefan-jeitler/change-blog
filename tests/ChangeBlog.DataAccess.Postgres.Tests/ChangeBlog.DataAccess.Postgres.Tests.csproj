@@ -3,7 +3,6 @@
     <PropertyGroup>
         <TargetFramework>net7.0</TargetFramework>
         <UserSecretsId>ChangeBlog.DataAccess.Postgres.Tests</UserSecretsId>
-        <IsPackable>false</IsPackable>
     </PropertyGroup>
 
     <ItemGroup>

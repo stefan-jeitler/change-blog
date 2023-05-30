@@ -59,7 +59,7 @@ public class NameTests
     {
         var name = Name.Parse(n);
 
-        name.Value.Should().Be(n.Trim());
+        name.Value.Should().Be("stefan");
     }
 
     [Fact]

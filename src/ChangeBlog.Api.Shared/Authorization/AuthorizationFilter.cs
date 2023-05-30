@@ -66,15 +66,15 @@ public class AuthorizationFilter : IAsyncActionFilter
             return;
         }
 
-        await HandleAuthorizationAsync(context, next, permission);
+        await HandleAuthorizationAsync(context, next, permission.GetValueOrThrow());
     }
 
     private async Task HandleAuthorizationAsync(ActionExecutingContext context, ActionExecutionDelegate next,
-        Maybe<NeedsPermissionAttribute> permission)
+        NeedsPermissionAttribute permission)
     {
         var userId = context.HttpContext.GetUserId();
         var authState =
-            await _authorizationHandler.GetAuthorizationStateAsync(context, userId, permission.GetValueOrThrow().Permission);
+            await _authorizationHandler.GetAuthorizationStateAsync(context, userId, permission.Permission);
 
         switch (authState)
         {

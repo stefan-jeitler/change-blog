@@ -32,12 +32,10 @@ public class VersioningSchemeIdFinderTests
         // arrange
         var testAccount = new Account(TestAccount.Id, TestAccount.Name, TestAccount.CustomVersioningScheme.Id,
             TestAccount.CreationDate, TestAccount.CreatedByUser, null);
-        var customSchemeId = (Guid?) null;
-
         var service = new VersioningSchemeIdFinder(testAccount);
 
         // act
-        var schemeId = service.FindSchemeIdForProduct(customSchemeId);
+        var schemeId = service.FindSchemeIdForProduct(null);
 
         // assert
         schemeId.Should().Be(TestAccount.CustomVersioningScheme.Id);

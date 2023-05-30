@@ -10,12 +10,12 @@ namespace ChangeBlog.Application.UseCases.Accounts.UpdateAccount;
 public class UpdateAccountInteractor : IUpdateAccount
 {
     private readonly IAccountDao _accountDao;
-    private readonly IUnitOfWork _unitOfWork;
+    private readonly IBusinessTransaction _businessTransaction;
 
-    public UpdateAccountInteractor(IAccountDao accountDao, IUnitOfWork unitOfWork)
+    public UpdateAccountInteractor(IAccountDao accountDao, IBusinessTransaction businessTransaction)
     {
         _accountDao = accountDao;
-        _unitOfWork = unitOfWork;
+        _businessTransaction = businessTransaction;
     }
 
     public async Task ExecuteAsync(IUpdateAccountOutputPort output, UpdateAccountRequestModel requestModel)
@@ -33,7 +33,7 @@ public class UpdateAccountInteractor : IUpdateAccount
         Guid accountId,
         Name name)
     {
-        _unitOfWork.Start();
+        _businessTransaction.Start();
         var account = await _accountDao.FindAccountAsync(name);
         if (account.HasValue)
         {
@@ -46,7 +46,7 @@ public class UpdateAccountInteractor : IUpdateAccount
 
         void Finish(Guid id)
         {
-            _unitOfWork.Commit();
+            _businessTransaction.Commit();
             output.Updated(accountId);
         }
     }

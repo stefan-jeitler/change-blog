@@ -19,20 +19,20 @@ public class UpdateChangeLogLineInteractor : IUpdateChangeLogLine
 {
     private readonly IChangeLogCommandsDao _changeLogCommands;
     private readonly IChangeLogQueriesDao _changeLogQueries;
-    private readonly IUnitOfWork _unitOfWork;
+    private readonly IBusinessTransaction _businessTransaction;
 
     public UpdateChangeLogLineInteractor(IChangeLogQueriesDao changeLogQueries,
-        IChangeLogCommandsDao changeLogCommands, IUnitOfWork unitOfWork)
+        IChangeLogCommandsDao changeLogCommands, IBusinessTransaction businessTransaction)
     {
         _changeLogQueries = changeLogQueries ?? throw new ArgumentNullException(nameof(changeLogQueries));
-        _unitOfWork = unitOfWork ?? throw new ArgumentNullException(nameof(unitOfWork));
+        _businessTransaction = businessTransaction ?? throw new ArgumentNullException(nameof(businessTransaction));
         _changeLogCommands = changeLogCommands ?? throw new ArgumentNullException(nameof(changeLogCommands));
     }
 
     public async Task ExecuteAsync(IUpdateChangeLogLineOutputPort output,
         UpdateChangeLogLineRequestModel requestModel)
     {
-        _unitOfWork.Start();
+        _businessTransaction.Start();
 
         var existingLine = await _changeLogQueries.FindLineAsync(requestModel.ChangeLogLineId);
         if (existingLine.HasNoValue)
@@ -124,7 +124,7 @@ public class UpdateChangeLogLineInteractor : IUpdateChangeLogLine
 
         void Finish(ChangeLogLine l)
         {
-            _unitOfWork.Commit();
+            _businessTransaction.Commit();
             output.Updated(l.Id);
         }
     }

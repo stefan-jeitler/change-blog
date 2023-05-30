@@ -17,15 +17,15 @@ public class MakeChangeLogLinePendingInteractor : IMakeChangeLogLinePending
 {
     private readonly IChangeLogCommandsDao _changeLogCommands;
     private readonly IChangeLogQueriesDao _changeLogQueries;
-    private readonly IUnitOfWork _unitOfWork;
+    private readonly IBusinessTransaction _businessTransaction;
     private readonly IVersionDao _versionDao;
 
     public MakeChangeLogLinePendingInteractor(IVersionDao versionDao, IChangeLogQueriesDao changeLogQueries,
-        IChangeLogCommandsDao changeLogCommands, IUnitOfWork unitOfWork)
+        IChangeLogCommandsDao changeLogCommands, IBusinessTransaction businessTransaction)
     {
         _versionDao = versionDao ?? throw new ArgumentNullException(nameof(versionDao));
         _changeLogQueries = changeLogQueries ?? throw new ArgumentNullException(nameof(changeLogQueries));
-        _unitOfWork = unitOfWork ?? throw new ArgumentNullException(nameof(unitOfWork));
+        _businessTransaction = businessTransaction ?? throw new ArgumentNullException(nameof(businessTransaction));
         _changeLogCommands = changeLogCommands ?? throw new ArgumentNullException(nameof(changeLogCommands));
     }
 
@@ -33,7 +33,7 @@ public class MakeChangeLogLinePendingInteractor : IMakeChangeLogLinePending
     {
         Guard.Against.NullOrEmpty(changeLogLineId, nameof(changeLogLineId));
 
-        _unitOfWork.Start();
+        _businessTransaction.Start();
 
         var line = await GetLineAsync(output, changeLogLineId);
         if (line.HasNoValue)
@@ -139,7 +139,7 @@ public class MakeChangeLogLinePendingInteractor : IMakeChangeLogLinePending
 
         void Finish(ChangeLogLine m)
         {
-            _unitOfWork.Commit();
+            _businessTransaction.Commit();
             output.WasMadePending(m.Id);
         }
     }

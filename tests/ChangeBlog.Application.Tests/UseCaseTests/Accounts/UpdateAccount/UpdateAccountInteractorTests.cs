@@ -16,13 +16,13 @@ public class UpdateAccountInteractorTests
 {
     private readonly FakeAccountDao _fakeAccountDao;
     private readonly Mock<IUpdateAccountOutputPort> _outputPortMock;
-    private readonly Mock<IUnitOfWork> _unitOfWorkMock;
+    private readonly Mock<IBusinessTransaction> _unitOfWorkMock;
 
     public UpdateAccountInteractorTests()
     {
         _fakeAccountDao = new FakeAccountDao();
         _outputPortMock = new Mock<IUpdateAccountOutputPort>(MockBehavior.Strict);
-        _unitOfWorkMock = new Mock<IUnitOfWork>();
+        _unitOfWorkMock = new Mock<IBusinessTransaction>();
     }
 
     private UpdateAccountInteractor CreateInteractor() => new(_fakeAccountDao, _unitOfWorkMock.Object);

@@ -16,14 +16,14 @@ public class AddProductInteractorTests
     private readonly FakeProductDao _fakeProductDao;
     private readonly FakeVersioningSchemeDao _fakeVersioningSchemeDao;
     private readonly Mock<IAddProductOutputPort> _outputPortMock;
-    private readonly Mock<IUnitOfWork> _unitOfWorkMock;
+    private readonly Mock<IBusinessTransaction> _unitOfWorkMock;
 
     public AddProductInteractorTests()
     {
         _fakeAccountDao = new FakeAccountDao();
         _fakeVersioningSchemeDao = new FakeVersioningSchemeDao();
         _fakeProductDao = new FakeProductDao();
-        _unitOfWorkMock = new Mock<IUnitOfWork>();
+        _unitOfWorkMock = new Mock<IBusinessTransaction>();
         _outputPortMock = new Mock<IAddProductOutputPort>(MockBehavior.Strict);
     }
 

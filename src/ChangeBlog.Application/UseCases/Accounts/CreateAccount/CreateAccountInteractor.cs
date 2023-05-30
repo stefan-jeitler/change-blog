@@ -15,21 +15,21 @@ public class CreateAccountInteractor : ICreateAccount
     private const ushort MaxAccountsCreatedByUser = 5;
     private readonly IAccountDao _accountDao;
     private readonly IRolesDao _rolesDao;
-    private readonly IUnitOfWork _unitOfWork;
+    private readonly IBusinessTransaction _businessTransaction;
     private readonly IUserDao _userDao;
 
-    public CreateAccountInteractor(IAccountDao accountDao, IUserDao userDao, IRolesDao rolesDao, IUnitOfWork unitOfWork)
+    public CreateAccountInteractor(IAccountDao accountDao, IUserDao userDao, IRolesDao rolesDao, IBusinessTransaction businessTransaction)
     {
         _accountDao = accountDao;
         _rolesDao = rolesDao;
         _userDao = userDao;
-        _unitOfWork = unitOfWork;
+        _businessTransaction = businessTransaction;
     }
 
     public async Task ExecuteAsync(ICreateAccountOutputPort output, CreateAccountRequestModel requestModel)
     {
         var accountName = Name.Parse(requestModel.Name);
-        _unitOfWork.Start();
+        _businessTransaction.Start();
 
         var existingAccount = await _accountDao.FindAccountAsync(accountName);
         if (existingAccount.HasValue)
@@ -64,7 +64,7 @@ public class CreateAccountInteractor : ICreateAccount
 
         void Finish(Guid accountId)
         {
-            _unitOfWork.Commit();
+            _businessTransaction.Commit();
             output.Created(accountId);
         }
     }

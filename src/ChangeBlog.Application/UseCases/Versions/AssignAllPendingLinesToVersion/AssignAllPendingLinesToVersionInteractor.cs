@@ -16,14 +16,14 @@ public class AssignAllPendingLinesToVersionInteractor : IAssignAllPendingLinesTo
 {
     private readonly IChangeLogCommandsDao _changeLogCommands;
     private readonly IChangeLogQueriesDao _changeLogQueries;
-    private readonly IUnitOfWork _unitOfWork;
+    private readonly IBusinessTransaction _businessTransaction;
     private readonly IVersionDao _versionDao;
 
-    public AssignAllPendingLinesToVersionInteractor(IVersionDao versionDao, IUnitOfWork unitOfWork,
+    public AssignAllPendingLinesToVersionInteractor(IVersionDao versionDao, IBusinessTransaction businessTransaction,
         IChangeLogCommandsDao changeLogCommands, IChangeLogQueriesDao changeLogQueries)
     {
         _versionDao = versionDao ?? throw new ArgumentNullException(nameof(versionDao));
-        _unitOfWork = unitOfWork ?? throw new ArgumentNullException(nameof(unitOfWork));
+        _businessTransaction = businessTransaction ?? throw new ArgumentNullException(nameof(businessTransaction));
         _changeLogCommands = changeLogCommands ?? throw new ArgumentNullException(nameof(changeLogCommands));
         _changeLogQueries = changeLogQueries ?? throw new ArgumentNullException(nameof(changeLogQueries));
     }
@@ -73,7 +73,7 @@ public class AssignAllPendingLinesToVersionInteractor : IAssignAllPendingLinesTo
     private async Task AssignAllPendingLinesToVersionAsync(IAssignAllPendingLinesToVersionOutputPort output,
         ClVersion clVersion)
     {
-        _unitOfWork.Start();
+        _businessTransaction.Start();
 
         var assignedLines = await AssignLinesAsync(output, clVersion);
         if (assignedLines.HasNoValue)
@@ -128,7 +128,7 @@ public class AssignAllPendingLinesToVersionInteractor : IAssignAllPendingLinesTo
 
         void Finish(int count)
         {
-            _unitOfWork.Commit();
+            _businessTransaction.Commit();
             output.Assigned(clVersion.Id);
         }
     }

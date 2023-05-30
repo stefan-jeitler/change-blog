@@ -16,12 +16,12 @@ public class UpdateUserProfileInteractorTests
 {
     private readonly FakeUserDao _fakeUserDao;
     private readonly Mock<IUpdateUserProfileOutputPort> _outputPortMock;
-    private readonly Mock<IUnitOfWork> _unitOfWorkMock;
+    private readonly Mock<IBusinessTransaction> _unitOfWorkMock;
 
     public UpdateUserProfileInteractorTests()
     {
         _fakeUserDao = new FakeUserDao();
-        _unitOfWorkMock = new Mock<IUnitOfWork>();
+        _unitOfWorkMock = new Mock<IBusinessTransaction>();
         _outputPortMock = new Mock<IUpdateUserProfileOutputPort>(MockBehavior.Strict);
     }
 

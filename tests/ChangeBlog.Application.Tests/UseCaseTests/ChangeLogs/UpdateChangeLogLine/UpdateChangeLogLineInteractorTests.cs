@@ -14,13 +14,13 @@ public class UpdateChangeLogLineInteractorTests
 {
     private readonly FakeChangeLogDao _fakeChangeLogDao;
     private readonly Mock<IUpdateChangeLogLineOutputPort> _outputPortMock;
-    private readonly Mock<IUnitOfWork> _unitOfWorkMock;
+    private readonly Mock<IBusinessTransaction> _unitOfWorkMock;
 
     public UpdateChangeLogLineInteractorTests()
     {
         _outputPortMock = new Mock<IUpdateChangeLogLineOutputPort>(MockBehavior.Strict);
         _fakeChangeLogDao = new FakeChangeLogDao();
-        _unitOfWorkMock = new Mock<IUnitOfWork>();
+        _unitOfWorkMock = new Mock<IBusinessTransaction>();
     }
 
     private UpdateChangeLogLineInteractor CreateInteractor()

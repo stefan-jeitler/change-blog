@@ -27,15 +27,15 @@ public class AddOrUpdateVersionInteractor : IAddVersion, IAddOrUpdateVersion
     private readonly IChangeLogCommandsDao _changeLogCommands;
     private readonly IChangeLogQueriesDao _changeLogQueriesDao;
     private readonly IProductDao _productDao;
-    private readonly IUnitOfWork _unitOfWork;
+    private readonly IBusinessTransaction _businessTransaction;
     private readonly IVersionDao _versionDao;
 
     public AddOrUpdateVersionInteractor(IProductDao productDao, IVersionDao versionDao,
-        IUnitOfWork unitOfWork, IChangeLogCommandsDao changeLogCommands, IChangeLogQueriesDao changeLogQueriesDao)
+        IBusinessTransaction businessTransaction, IChangeLogCommandsDao changeLogCommands, IChangeLogQueriesDao changeLogQueriesDao)
     {
         _productDao = productDao ?? throw new ArgumentNullException(nameof(productDao));
         _versionDao = versionDao ?? throw new ArgumentNullException(nameof(versionDao));
-        _unitOfWork = unitOfWork ?? throw new ArgumentNullException(nameof(unitOfWork));
+        _businessTransaction = businessTransaction ?? throw new ArgumentNullException(nameof(businessTransaction));
         _changeLogCommands = changeLogCommands ?? throw new ArgumentNullException(nameof(changeLogCommands));
         _changeLogQueriesDao = changeLogQueriesDao ?? throw new ArgumentNullException(nameof(changeLogQueriesDao));
     }
@@ -48,7 +48,7 @@ public class AddOrUpdateVersionInteractor : IAddVersion, IAddOrUpdateVersion
             return;
         }
 
-        _unitOfWork.Start();
+        _businessTransaction.Start();
         var clVersion = await _versionDao.FindVersionAsync(requestModel.ProductId, clVersionValue);
 
         if (clVersion.HasValue)
@@ -58,7 +58,7 @@ public class AddOrUpdateVersionInteractor : IAddVersion, IAddOrUpdateVersion
         else
         {
             await ExecuteAsync((IAddVersionOutputPort) output, requestModel);
-            _unitOfWork.Commit();
+            _businessTransaction.Commit();
         }
     }
 
@@ -82,7 +82,7 @@ public class AddOrUpdateVersionInteractor : IAddVersion, IAddOrUpdateVersion
         var lines = newVersion.Bind(v => CreateLines(output, versionRequestModel.Lines, v));
         if (lines.HasNoValue) return;
 
-        _unitOfWork.Start();
+        _businessTransaction.Start();
         await SaveVersionAsync(output, newVersion.GetValueOrThrow(), lines.GetValueOrThrow(),
             versionRequestModel.ReleaseImmediately);
     }
@@ -215,7 +215,7 @@ public class AddOrUpdateVersionInteractor : IAddVersion, IAddOrUpdateVersion
 
         void Finish(ClVersion version)
         {
-            _unitOfWork.Commit();
+            _businessTransaction.Commit();
             output.Created(version.Id);
         }
     }
@@ -284,7 +284,7 @@ public class AddOrUpdateVersionInteractor : IAddVersion, IAddOrUpdateVersion
 
         void Finish(ClVersion version)
         {
-            _unitOfWork.Commit();
+            _businessTransaction.Commit();
             output.VersionUpdated(v.Id);
         }
     }

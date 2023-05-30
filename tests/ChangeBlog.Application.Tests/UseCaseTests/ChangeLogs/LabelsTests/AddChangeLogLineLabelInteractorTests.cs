@@ -17,12 +17,12 @@ public class AddChangeLogLineLabelInteractorTests
 {
     private readonly FakeChangeLogDao _fakeChangeLogDao;
     private readonly Mock<IAddChangeLogLineLabelOutputPort> _outputPortMock;
-    private readonly Mock<IUnitOfWork> _unitOfWorkMock;
+    private readonly Mock<IBusinessTransaction> _unitOfWorkMock;
 
     public AddChangeLogLineLabelInteractorTests()
     {
         _outputPortMock = new Mock<IAddChangeLogLineLabelOutputPort>(MockBehavior.Strict);
-        _unitOfWorkMock = new Mock<IUnitOfWork>();
+        _unitOfWorkMock = new Mock<IBusinessTransaction>();
         _fakeChangeLogDao = new FakeChangeLogDao();
     }
 

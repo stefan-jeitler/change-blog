@@ -21,13 +21,13 @@ public class AssignAllPendingLinesToVersionInteractorTests
     private readonly FakeChangeLogDao _fakeChangeLogDao;
     private readonly FakeVersionDao _fakeVersionDao;
     private readonly Mock<IAssignAllPendingLinesToVersionOutputPort> _outputPortMock;
-    private readonly Mock<IUnitOfWork> _unitOfWork;
+    private readonly Mock<IBusinessTransaction> _unitOfWork;
 
     public AssignAllPendingLinesToVersionInteractorTests()
     {
         _outputPortMock = new Mock<IAssignAllPendingLinesToVersionOutputPort>(MockBehavior.Strict);
         _fakeVersionDao = new FakeVersionDao();
-        _unitOfWork = new Mock<IUnitOfWork>();
+        _unitOfWork = new Mock<IBusinessTransaction>();
         _fakeChangeLogDao = new FakeChangeLogDao();
     }
 

@@ -16,7 +16,7 @@ public class CreateAccountInteractorTests
     private readonly FakeAccountDao _accountDao;
     private readonly Mock<ICreateAccountOutputPort> _outputPortMock;
     private readonly FakeRolesDao _rolesDao;
-    private readonly Mock<IUnitOfWork> _unitOfWorkMock;
+    private readonly Mock<IBusinessTransaction> _unitOfWorkMock;
     private readonly FakeUserDao _userDao;
 
     public CreateAccountInteractorTests()
@@ -24,7 +24,7 @@ public class CreateAccountInteractorTests
         _accountDao = new FakeAccountDao();
         _rolesDao = new FakeRolesDao();
         _userDao = new FakeUserDao();
-        _unitOfWorkMock = new Mock<IUnitOfWork>();
+        _unitOfWorkMock = new Mock<IBusinessTransaction>();
         _outputPortMock = new Mock<ICreateAccountOutputPort>(MockBehavior.Strict);
     }
 

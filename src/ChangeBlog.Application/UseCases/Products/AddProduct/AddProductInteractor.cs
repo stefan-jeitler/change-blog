@@ -17,21 +17,21 @@ public class AddProductInteractor : IAddProduct
 {
     private readonly IAccountDao _accountDao;
     private readonly IProductDao _productDao;
-    private readonly IUnitOfWork _unitOfWork;
+    private readonly IBusinessTransaction _businessTransaction;
     private readonly IVersioningSchemeDao _versioningSchemeDao;
 
     public AddProductInteractor(IAccountDao accountDao, IVersioningSchemeDao versioningSchemeDao,
-        IProductDao productDao, IUnitOfWork unitOfWork)
+        IProductDao productDao, IBusinessTransaction businessTransaction)
     {
         _accountDao = accountDao ?? throw new ArgumentNullException(nameof(accountDao));
         _versioningSchemeDao = versioningSchemeDao ?? throw new ArgumentNullException(nameof(versioningSchemeDao));
         _productDao = productDao ?? throw new ArgumentNullException(nameof(productDao));
-        _unitOfWork = unitOfWork ?? throw new ArgumentNullException(nameof(unitOfWork));
+        _businessTransaction = businessTransaction ?? throw new ArgumentNullException(nameof(businessTransaction));
     }
 
     public async Task ExecuteAsync(IAddProductOutputPort output, ProductRequestModel productRequestModel)
     {
-        _unitOfWork.Start();
+        _businessTransaction.Start();
 
         var account = await GetAccountAsync(output, productRequestModel.AccountId);
         if (account.HasNoValue)
@@ -152,7 +152,7 @@ public class AddProductInteractor : IAddProduct
 
         void Finish(Product x)
         {
-            _unitOfWork.Commit();
+            _businessTransaction.Commit();
             output.Created(x.AccountId, x.Id);
         }
     }

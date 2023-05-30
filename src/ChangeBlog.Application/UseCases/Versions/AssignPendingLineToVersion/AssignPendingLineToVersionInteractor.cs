@@ -16,22 +16,22 @@ public class AssignPendingLineToVersionInteractor : IAssignPendingLineToVersion
 {
     private readonly IChangeLogCommandsDao _changeLogCommands;
     private readonly IChangeLogQueriesDao _changeLogQueries;
-    private readonly IUnitOfWork _unitOfWork;
+    private readonly IBusinessTransaction _businessTransaction;
     private readonly IVersionDao _versionDao;
 
     public AssignPendingLineToVersionInteractor(IVersionDao versionDao, IChangeLogQueriesDao changeLogQueriesDao,
-        IChangeLogCommandsDao changeLogCommands, IUnitOfWork unitOfWork)
+        IChangeLogCommandsDao changeLogCommands, IBusinessTransaction businessTransaction)
     {
         _versionDao = versionDao ?? throw new ArgumentNullException(nameof(versionDao));
         _changeLogQueries = changeLogQueriesDao ?? throw new ArgumentNullException(nameof(changeLogQueriesDao));
-        _unitOfWork = unitOfWork ?? throw new ArgumentNullException(nameof(unitOfWork));
+        _businessTransaction = businessTransaction ?? throw new ArgumentNullException(nameof(businessTransaction));
         _changeLogCommands = changeLogCommands ?? throw new ArgumentNullException(nameof(changeLogCommands));
     }
 
     public async Task ExecuteAsync(IAssignPendingLineToVersionOutputPort output,
         VersionIdAssignmentRequestModel requestModel)
     {
-        _unitOfWork.Start();
+        _businessTransaction.Start();
 
         var version = await _versionDao.FindVersionAsync(requestModel.VersionId);
         if (version.HasNoValue)
@@ -52,7 +52,7 @@ public class AssignPendingLineToVersionInteractor : IAssignPendingLineToVersion
             return;
         }
 
-        _unitOfWork.Start();
+        _businessTransaction.Start();
 
         var version = await _versionDao.FindVersionAsync(requestModel.ProductId, versionValue);
         if (version.HasNoValue)
@@ -110,7 +110,7 @@ public class AssignPendingLineToVersionInteractor : IAssignPendingLineToVersion
 
         void Finish(ChangeLogLine l)
         {
-            _unitOfWork.Commit();
+            _businessTransaction.Commit();
             output.Assigned(l.VersionId!.Value, l.Id);
         }
     }

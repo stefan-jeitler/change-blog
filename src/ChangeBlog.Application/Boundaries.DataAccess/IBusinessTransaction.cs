@@ -1,6 +1,6 @@
 namespace ChangeBlog.Application.Boundaries.DataAccess;
 
-public interface IUnitOfWork
+public interface IBusinessTransaction
 {
     public void Start();
     public void Commit();

@@ -21,14 +21,14 @@ public class AddOrUpdateVersionInteractorTests
     private readonly FakeProductDao _fakeProductDao;
     private readonly FakeVersionDao _fakeVersionDao;
     private readonly Mock<IAddOrUpdateVersionOutputPort> _outputPortMock;
-    private readonly Mock<IUnitOfWork> _unitOfWorkMock;
+    private readonly Mock<IBusinessTransaction> _unitOfWorkMock;
 
     public AddOrUpdateVersionInteractorTests()
     {
         _fakeProductDao = new FakeProductDao();
         _fakeVersionDao = new FakeVersionDao();
         _fakeChangeLogDao = new FakeChangeLogDao();
-        _unitOfWorkMock = new Mock<IUnitOfWork>();
+        _unitOfWorkMock = new Mock<IBusinessTransaction>();
         _outputPortMock = new Mock<IAddOrUpdateVersionOutputPort>(MockBehavior.Strict);
     }
 

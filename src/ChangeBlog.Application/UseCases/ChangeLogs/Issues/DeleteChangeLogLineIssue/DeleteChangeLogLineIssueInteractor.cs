@@ -12,14 +12,14 @@ public class DeleteChangeLogLineIssueInteractor : IDeleteChangeLogLineIssue
 {
     private readonly IChangeLogCommandsDao _changeLogCommands;
     private readonly IChangeLogQueriesDao _changeLogQueries;
-    private readonly IUnitOfWork _unitOfWork;
+    private readonly IBusinessTransaction _businessTransaction;
 
     public DeleteChangeLogLineIssueInteractor(IChangeLogQueriesDao changeLogQueries,
-        IChangeLogCommandsDao changeLogCommands, IUnitOfWork unitOfWork)
+        IChangeLogCommandsDao changeLogCommands, IBusinessTransaction businessTransaction)
     {
         _changeLogQueries = changeLogQueries ?? throw new ArgumentNullException(nameof(changeLogQueries));
         _changeLogCommands = changeLogCommands ?? throw new ArgumentNullException(nameof(changeLogCommands));
-        _unitOfWork = unitOfWork ?? throw new ArgumentNullException(nameof(unitOfWork));
+        _businessTransaction = businessTransaction ?? throw new ArgumentNullException(nameof(businessTransaction));
     }
 
     public async Task ExecuteAsync(IDeleteChangeLogLineIssueOutputPort output,
@@ -31,7 +31,7 @@ public class DeleteChangeLogLineIssueInteractor : IDeleteChangeLogLineIssue
             return;
         }
 
-        _unitOfWork.Start();
+        _businessTransaction.Start();
 
         var line = await _changeLogQueries.FindLineAsync(requestModel.ChangeLogLineId);
         if (line.HasNoValue)
@@ -52,7 +52,7 @@ public class DeleteChangeLogLineIssueInteractor : IDeleteChangeLogLineIssue
 
         void Finish(ChangeLogLine l)
         {
-            _unitOfWork.Commit();
+            _businessTransaction.Commit();
             output.Removed(l.Id);
         }
     }

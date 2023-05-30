@@ -18,14 +18,14 @@ public class AddChangeLogLineInteractor : IAddChangeLogLine
 {
     private readonly IChangeLogCommandsDao _changeLogCommands;
     private readonly IChangeLogQueriesDao _changeLogQueries;
-    private readonly IUnitOfWork _unitOfWork;
+    private readonly IBusinessTransaction _businessTransaction;
     private readonly IVersionDao _versionDao;
 
     public AddChangeLogLineInteractor(IChangeLogCommandsDao changeLogCommands,
-        IChangeLogQueriesDao changeLogQueriesDao, IUnitOfWork unitOfWork, IVersionDao versionDao)
+        IChangeLogQueriesDao changeLogQueriesDao, IBusinessTransaction businessTransaction, IVersionDao versionDao)
     {
         _changeLogQueries = changeLogQueriesDao ?? throw new ArgumentNullException(nameof(changeLogQueriesDao));
-        _unitOfWork = unitOfWork ?? throw new ArgumentNullException(nameof(unitOfWork));
+        _businessTransaction = businessTransaction ?? throw new ArgumentNullException(nameof(businessTransaction));
         _versionDao = versionDao ?? throw new ArgumentNullException(nameof(versionDao));
         _changeLogCommands = changeLogCommands ?? throw new ArgumentNullException(nameof(changeLogCommands));
     }
@@ -39,7 +39,7 @@ public class AddChangeLogLineInteractor : IAddChangeLogLine
             return;
         }
 
-        _unitOfWork.Start();
+        _businessTransaction.Start();
 
         var version = await _versionDao.FindVersionAsync(requestModel.ProductId, versionValue);
         if (version.HasNoValue)
@@ -61,7 +61,7 @@ public class AddChangeLogLineInteractor : IAddChangeLogLine
             return;
         }
 
-        _unitOfWork.Start();
+        _businessTransaction.Start();
 
         await AddLineAsync(output, requestModel, version.GetValueOrThrow());
     }
@@ -122,7 +122,7 @@ public class AddChangeLogLineInteractor : IAddChangeLogLine
 
         void Finish(ChangeLogLine l)
         {
-            _unitOfWork.Commit();
+            _businessTransaction.Commit();
             output.Created(l.Id);
         }
     }

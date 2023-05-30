@@ -23,7 +23,7 @@ public class AddChangeLogLineInteractorTests
     private readonly FakeProductDao _fakeProductDao;
     private readonly FakeVersionDao _fakeVersionDao;
     private readonly Mock<IAddChangeLogLineOutputPort> _outputPortMock;
-    private readonly Mock<IUnitOfWork> _unitOfWorkMock;
+    private readonly Mock<IBusinessTransaction> _unitOfWorkMock;
 
     public AddChangeLogLineInteractorTests()
     {
@@ -31,7 +31,7 @@ public class AddChangeLogLineInteractorTests
         _fakeVersionDao = new FakeVersionDao();
         _fakeChangeLogDao = new FakeChangeLogDao();
         _outputPortMock = new Mock<IAddChangeLogLineOutputPort>(MockBehavior.Strict);
-        _unitOfWorkMock = new Mock<IUnitOfWork>();
+        _unitOfWorkMock = new Mock<IBusinessTransaction>();
     }
 
     private AddChangeLogLineInteractor CreateInteractor() =>

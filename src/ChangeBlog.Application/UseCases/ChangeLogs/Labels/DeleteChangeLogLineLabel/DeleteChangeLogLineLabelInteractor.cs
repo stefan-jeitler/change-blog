@@ -12,12 +12,12 @@ public class DeleteChangeLogLineLabelInteractor : IDeleteChangeLogLineLabel
 {
     private readonly IChangeLogCommandsDao _changeLogCommands;
     private readonly IChangeLogQueriesDao _changeLogQueries;
-    private readonly IUnitOfWork _unitOfWork;
+    private readonly IBusinessTransaction _businessTransaction;
 
-    public DeleteChangeLogLineLabelInteractor(IUnitOfWork unitOfWork, IChangeLogQueriesDao changeLogQueries,
+    public DeleteChangeLogLineLabelInteractor(IBusinessTransaction businessTransaction, IChangeLogQueriesDao changeLogQueries,
         IChangeLogCommandsDao changeLogCommands)
     {
-        _unitOfWork = unitOfWork ?? throw new ArgumentNullException(nameof(unitOfWork));
+        _businessTransaction = businessTransaction ?? throw new ArgumentNullException(nameof(businessTransaction));
         _changeLogQueries = changeLogQueries ?? throw new ArgumentNullException(nameof(changeLogQueries));
         _changeLogCommands = changeLogCommands ?? throw new ArgumentNullException(nameof(changeLogCommands));
     }
@@ -31,7 +31,7 @@ public class DeleteChangeLogLineLabelInteractor : IDeleteChangeLogLineLabel
             return;
         }
 
-        _unitOfWork.Start();
+        _businessTransaction.Start();
 
         var line = await _changeLogQueries.FindLineAsync(requestModel.ChangeLogLineId);
         if (line.HasNoValue)
@@ -52,7 +52,7 @@ public class DeleteChangeLogLineLabelInteractor : IDeleteChangeLogLineLabel
 
         void Finish(ChangeLogLine l)
         {
-            _unitOfWork.Commit();
+            _businessTransaction.Commit();
             output.Deleted(l.Id);
         }
     }

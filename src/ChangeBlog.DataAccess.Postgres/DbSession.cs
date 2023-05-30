@@ -3,7 +3,7 @@ using ChangeBlog.Application.Boundaries.DataAccess;
 
 namespace ChangeBlog.DataAccess.Postgres;
 
-public sealed class DbSession : IDbAccessor, IUnitOfWork
+public sealed class DbSession : IDbAccessor, IBusinessTransaction
 {
     private readonly LazyDbConnection _dbConnection;
     private uint _startedUows;

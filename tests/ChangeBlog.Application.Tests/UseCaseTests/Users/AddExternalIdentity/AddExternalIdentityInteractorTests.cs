@@ -18,13 +18,13 @@ public class AddExternalIdentityInteractorTests
 {
     private readonly FakeExternalUserInfoDao _fakeExternalUserInfoDao;
     private readonly FakeUserDao _fakeUserDao;
-    private readonly Mock<IUnitOfWork> _unitOfWorkMock;
+    private readonly Mock<IBusinessTransaction> _unitOfWorkMock;
 
     public AddExternalIdentityInteractorTests()
     {
         _fakeExternalUserInfoDao = new FakeExternalUserInfoDao();
         _fakeUserDao = new FakeUserDao();
-        _unitOfWorkMock = new Mock<IUnitOfWork>();
+        _unitOfWorkMock = new Mock<IBusinessTransaction>();
     }
 
 

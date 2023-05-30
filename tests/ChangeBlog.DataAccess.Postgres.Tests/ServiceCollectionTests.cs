@@ -18,7 +18,7 @@ public class ServiceCollectionTests
 
         // act
         var dbAccessor = scope.ServiceProvider.GetRequiredService<IDbAccessor>();
-        var unitOfWork = scope.ServiceProvider.GetRequiredService<IUnitOfWork>();
+        var unitOfWork = scope.ServiceProvider.GetRequiredService<IBusinessTransaction>();
 
         // assert
         Assert.True(ReferenceEquals(dbAccessor, unitOfWork));

@@ -16,21 +16,21 @@ public class AddPendingChangeLogLineInteractor : IAddPendingChangeLogLine
     private readonly IChangeLogCommandsDao _changeLogCommands;
     private readonly IChangeLogQueriesDao _changeLogQueries;
     private readonly IProductDao _productDao;
-    private readonly IUnitOfWork _unitOfWork;
+    private readonly IBusinessTransaction _businessTransaction;
 
     public AddPendingChangeLogLineInteractor(IProductDao productDao, IChangeLogQueriesDao changeLogQueriesDao,
-        IChangeLogCommandsDao changeLogCommands, IUnitOfWork unitOfWork)
+        IChangeLogCommandsDao changeLogCommands, IBusinessTransaction businessTransaction)
     {
         _productDao = productDao ?? throw new ArgumentNullException(nameof(productDao));
         _changeLogQueries = changeLogQueriesDao ?? throw new ArgumentNullException(nameof(changeLogQueriesDao));
-        _unitOfWork = unitOfWork ?? throw new ArgumentNullException(nameof(unitOfWork));
+        _businessTransaction = businessTransaction ?? throw new ArgumentNullException(nameof(businessTransaction));
         _changeLogCommands = changeLogCommands ?? throw new ArgumentNullException(nameof(changeLogCommands));
     }
 
     public async Task ExecuteAsync(IAddPendingChangeLogLineOutputPort output,
         PendingChangeLogLineRequestModel lineRequestModel)
     {
-        _unitOfWork.Start();
+        _businessTransaction.Start();
 
         var product = await _productDao.FindProductAsync(lineRequestModel.ProductId);
         if (product.HasNoValue)
@@ -104,7 +104,7 @@ public class AddPendingChangeLogLineInteractor : IAddPendingChangeLogLine
 
         void Finish(ChangeLogLine l)
         {
-            _unitOfWork.Commit();
+            _businessTransaction.Commit();
             outputPort.Created(l.Id);
         }
     }

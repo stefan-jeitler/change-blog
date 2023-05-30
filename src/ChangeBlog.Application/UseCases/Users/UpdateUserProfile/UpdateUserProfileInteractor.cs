@@ -14,13 +14,13 @@ namespace ChangeBlog.Application.UseCases.Users.UpdateUserProfile;
 
 public class UpdateUserProfileInteractor : IUpdateUserProfile
 {
-    private readonly IUnitOfWork _unitOfWork;
+    private readonly IBusinessTransaction _businessTransaction;
     private readonly IUserDao _userDao;
 
-    public UpdateUserProfileInteractor(IUserDao userDao, IUnitOfWork unitOfWork)
+    public UpdateUserProfileInteractor(IUserDao userDao, IBusinessTransaction businessTransaction)
     {
         _userDao = userDao;
-        _unitOfWork = unitOfWork;
+        _businessTransaction = businessTransaction;
     }
 
     public async Task ExecuteAsync(IUpdateUserProfileOutputPort output,
@@ -42,7 +42,7 @@ public class UpdateUserProfileInteractor : IUpdateUserProfile
 
         void Finish(User updateUser)
         {
-            _unitOfWork.Commit();
+            _businessTransaction.Commit();
             output.Updated(user.Id);
         }
     }

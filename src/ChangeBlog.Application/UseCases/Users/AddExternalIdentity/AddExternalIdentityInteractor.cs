@@ -13,15 +13,15 @@ namespace ChangeBlog.Application.UseCases.Users.AddExternalIdentity;
 public class AddExternalIdentityInteractor : IAddExternalIdentity
 {
     private readonly IExternalUserInfoDao _externalUserInfoDao;
-    private readonly IUnitOfWork _unitOfWork;
+    private readonly IBusinessTransaction _businessTransaction;
     private readonly IUserDao _userDao;
 
     public AddExternalIdentityInteractor(IExternalUserInfoDao externalUserInfoDao, IUserDao userDao,
-        IUnitOfWork unitOfWork)
+        IBusinessTransaction businessTransaction)
     {
         _externalUserInfoDao = externalUserInfoDao ?? throw new ArgumentNullException(nameof(externalUserInfoDao));
         _userDao = userDao ?? throw new ArgumentNullException(nameof(userDao));
-        _unitOfWork = unitOfWork ?? throw new ArgumentNullException(nameof(unitOfWork));
+        _businessTransaction = businessTransaction ?? throw new ArgumentNullException(nameof(businessTransaction));
     }
 
     public async Task<Result<Guid>> ExecuteAsync(string externalUserId)
@@ -48,7 +48,7 @@ public class AddExternalIdentityInteractor : IAddExternalIdentity
 
     private async Task<Result<Guid>> ImportUserAsync(string externalUserId, ExternalUserInfo externalExternalUserInfo)
     {
-        _unitOfWork.Start();
+        _businessTransaction.Start();
 
         var userByEmail = await _userDao.FindByEmailAsync(externalExternalUserInfo.Email);
         var userFoundByEmail = userByEmail.HasValue;
@@ -79,7 +79,7 @@ public class AddExternalIdentityInteractor : IAddExternalIdentity
             return Result.Failure<Guid>($"Error while importing the user into the database. {error}");
         }
 
-        _unitOfWork.Commit();
+        _businessTransaction.Commit();
         return Result.Success(user.Id);
     }
 }

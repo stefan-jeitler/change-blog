@@ -42,7 +42,7 @@ public static class ServiceCollectionExtensions
         services.AddScoped<DbSession>();
 
         services.AddScoped<IDbAccessor>(sp => sp.GetRequiredService<DbSession>());
-        services.AddScoped<IUnitOfWork>(sp => sp.GetRequiredService<DbSession>());
+        services.AddScoped<IBusinessTransaction>(sp => sp.GetRequiredService<DbSession>());
 
         return services;
     }

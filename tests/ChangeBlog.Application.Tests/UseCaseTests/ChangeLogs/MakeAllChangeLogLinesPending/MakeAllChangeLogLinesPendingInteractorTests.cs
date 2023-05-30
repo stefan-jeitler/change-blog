@@ -20,12 +20,12 @@ public class MakeAllChangeLogLinesPendingInteractorTests
     private readonly FakeChangeLogDao _fakeChangeLogDao;
     private readonly FakeVersionDao _fakeVersionDao;
     private readonly Mock<IMakeAllChangeLogLinesPendingOutputPort> _outputPortMock;
-    private readonly Mock<IUnitOfWork> _unitOfWorkMock;
+    private readonly Mock<IBusinessTransaction> _unitOfWorkMock;
 
     public MakeAllChangeLogLinesPendingInteractorTests()
     {
         _outputPortMock = new Mock<IMakeAllChangeLogLinesPendingOutputPort>(MockBehavior.Strict);
-        _unitOfWorkMock = new Mock<IUnitOfWork>();
+        _unitOfWorkMock = new Mock<IBusinessTransaction>();
         _fakeVersionDao = new FakeVersionDao();
         _fakeChangeLogDao = new FakeChangeLogDao();
     }

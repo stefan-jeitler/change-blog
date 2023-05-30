@@ -18,16 +18,16 @@ public class MakeAllChangeLogLinesPendingInteractor : IMakeAllChangeLogLinesPend
 {
     private readonly IChangeLogCommandsDao _changeLogCommands;
     private readonly IChangeLogQueriesDao _changeLogQueries;
-    private readonly IUnitOfWork _unitOfWork;
+    private readonly IBusinessTransaction _businessTransaction;
     private readonly IVersionDao _versionDao;
 
     public MakeAllChangeLogLinesPendingInteractor(IVersionDao versionDao, IChangeLogQueriesDao changeLogQueries,
-        IChangeLogCommandsDao changeLogCommands, IUnitOfWork unitOfWork)
+        IChangeLogCommandsDao changeLogCommands, IBusinessTransaction businessTransaction)
     {
         _versionDao = versionDao ?? throw new ArgumentNullException(nameof(versionDao));
         _changeLogQueries = changeLogQueries ?? throw new ArgumentNullException(nameof(changeLogQueries));
         _changeLogCommands = changeLogCommands ?? throw new ArgumentNullException(nameof(changeLogCommands));
-        _unitOfWork = unitOfWork ?? throw new ArgumentNullException(nameof(unitOfWork));
+        _businessTransaction = businessTransaction ?? throw new ArgumentNullException(nameof(businessTransaction));
     }
 
     public async Task ExecuteAsync(IMakeAllChangeLogLinesPendingOutputPort output, Guid productId, string version)
@@ -70,7 +70,7 @@ public class MakeAllChangeLogLinesPendingInteractor : IMakeAllChangeLogLinesPend
         if (IsVersionReadOnly(output, clVersion)) 
             return;
 
-        _unitOfWork.Start();
+        _businessTransaction.Start();
 
         var productId = clVersion.ProductId;
         var versionId = clVersion.Id;
@@ -127,7 +127,7 @@ public class MakeAllChangeLogLinesPendingInteractor : IMakeAllChangeLogLinesPend
 
         void Finish(int count)
         {
-            _unitOfWork.Commit();
+            _businessTransaction.Commit();
             output.MadePending(productId, count);
         }
     }

@@ -10,10 +10,10 @@ let private executeUpdate (logger: Logger) dbConnection dbUpdate =
     Db.updateSchemaVersion dbConnection version
 
 let private findDuplicates (updates: DbUpdate list) =
+
     updates
     |> List.groupBy (fun x -> x.Version)
-    |> List.choose
-        (function
+    |> List.choose (function
         | v, u when u.Length > 1 -> Some v
         | _ -> None)
 
@@ -24,10 +24,12 @@ let private runUniqueUpdates (logger: Logger) dbConnection dbUpdates =
     logger.Information("Selected database: {dbName}", dbName)
     logger.Verbose("Latest schema version: {version}", latestSchemaVersion)
 
+    let runUpdate = executeUpdate logger dbConnection
+
     let executedUpdates =
         dbUpdates
         |> Seq.skipWhile (fun x -> x.Version <= latestSchemaVersion)
-        |> Seq.map (executeUpdate logger dbConnection)
+        |> Seq.map runUpdate
         |> Seq.toList
 
     match executedUpdates with
@@ -39,8 +41,7 @@ let private runUniqueUpdates (logger: Logger) dbConnection dbUpdates =
     ()
 
 let runDbUpdates (logger: Logger) dbConnection =
-    let duplicates =
-        findDuplicates dbUpdates |> List.map string
+    let duplicates = findDuplicates dbUpdates |> List.map string
 
     match duplicates with
     | [] ->

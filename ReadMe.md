@@ -1,5 +1,8 @@
 # ChangeBlog - enhance your change logs
 
+> [!NOTE]  
+> This Product is no longer under active development
+
 ChangeBlog is a web service that enables you to keep track of your releases and changes.
 
 Due to the continuous movement towards microservices, releases are harder to track.  
@@ -254,10 +257,10 @@ But what about nuget packages?
 I will only discuss two of them to illustrate the basic problem that comes with such dependencies.
 
 **NodaTime** is well
-encapsulated [here](https://dev.azure.com/stefanjeitler/_git/ChangeBlog?path=%2Fsrc%2FChangeBlog.Application%2FExtensions%2FDateTimeExtensions.cs&version=GBmain&line=8&lineEnd=9&lineStartColumn=1&lineEndColumn=1&lineStyle=plain&_a=contents)
+encapsulated [here](https://github.com/stefan-jeitler/change-blog/blob/main/src/ChangeBlog.Application/Extensions/DateTimeExtensions.cs)
 . This is the only place where it is used.  
 Replacing NodaTime with a different time zone library is quite easy,  
-only the implementation in the extension method has to be swapped out.  
+only the implementation in the extension methods has to be swapped out.  
 I think such libraries do not harm applications.  
 They can be used without concerns if they are abstracted.
 

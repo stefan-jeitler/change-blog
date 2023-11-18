@@ -34,8 +34,6 @@ needs.
 * [CI/CD](#ci-cd)
 * [Environments](#environments)
 * [Database](#database)
-* [Next Steps](#next-steps)
-* [Future Extensions](#future-extensions)
 * [Credits](#credits)
 
 ## Basic Concept
@@ -117,7 +115,7 @@ The max number of change logs is 100.
 
 * Role-based access control
 * Multitenancy (single database, single schema)
-* Single sign-on (Microsoft Identity for the time being)
+* Single sign-on (Microsoft, Google, GitHub)
 * Full-text Search for versions and change logs
 * Zero Downtime Deployment
 
@@ -312,7 +310,7 @@ will no longer compile.
 However, there is one test approach I like the most.
 
 **Test First**  
-By Test First I mean Jon Skeet's ~~definition~~ description https://stackoverflow.com/a/334815/13842370
+By Test First I mean Jon Skeet's ~~definition~~ description <https://stackoverflow.com/a/334815/13842370>
 
 ## CI CD
 
@@ -442,32 +440,6 @@ The optimizer does not pick an execution plan that uses an index.
 I expect this will change when there is more data in the database.  
 It's hard to force the optimizer to use an index execution plan  
 when there are only 20 rows in the table even if the statistics are up to date.
-
-## Next Steps
-
-* ~~Add mis~~sing tests
-* Refactor Deployment: use continuous deployment instead of continuous delivery
-
-## Future Extensions
-
-### Management Api
-
-Build a management api for users and accounts.  
-Do not use api key authentication for this api.  
-It should be secured by using OAuth 2.0 and Microsoft as identity provider.
-
-### Frontend
-
-Create an angular app that is responsible for
-
-* user registration with Microsoft accounts
-* managing accounts and users
-* working with releases and changes
-
-### Existing Api
-
-Extend authentication to deal with JWT access tokens.  
-So it can be used with both access tokens and api keys.
 
 ## Credits
 

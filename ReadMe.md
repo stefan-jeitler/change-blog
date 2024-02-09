@@ -1,8 +1,5 @@
 # ChangeBlog - enhance your change logs
 
-> [!NOTE]  
-> This Product is no longer under active development
-
 ChangeBlog is a web service that enables you to keep track of your releases and changes.
 
 Due to the continuous movement towards microservices, releases are harder to track.  
@@ -20,7 +17,7 @@ A possible solution is inverting the dependencies.
 The management team should not depend on developers,
 both should depend on a web service.
 
-![Dependencies](https://changeblog.blob.core.windows.net/images/ChangeBlog.png)
+![Dependencies](docs/assets/ChangeBlog.png)
 
 The development team automatically pushes their changes during deployment with all the information the management team
 needs.
@@ -109,7 +106,7 @@ The max number of change logs is 100.
 
 ### Overview
 
-![Concept](https://changeblog.blob.core.windows.net/images/ChangeBlogConcept.png)
+![Concept](docs/assets/ChangeBlogConcept.png)
 
 ## Key Features
 
@@ -211,7 +208,7 @@ It lacks of `PackageReference`s and `ProjectReference`s.
 
 This makes the domain stable and it can be referenced by components which are less stable.  
 What I call domain is the innermost circle that is supposed to be referenced by other components, otherwise it would be
-useless.   
+useless.  
 But be aware there is a dependency you won't see at first glance.  
 It's the .NET Base Class Library(BCL).
 
@@ -255,7 +252,7 @@ But what about nuget packages?
 I will only discuss two of them to illustrate the basic problem that comes with such dependencies.
 
 **NodaTime** is well
-encapsulated [here](https://github.com/stefan-jeitler/change-blog/blob/main/src/ChangeBlog.Application/Extensions/DateTimeExtensions.cs)
+encapsulated [here](https://gitlab.com/stefan-jeitler/change-blog/-/blob/c7b58b1d2405e457e48093c3ac52a2e5633721de/src/ChangeBlog.Application/Extensions/DateTimeExtensions.cs)
 . This is the only place where it is used.  
 Replacing NodaTime with a different time zone library is quite easy,  
 only the implementation in the extension methods has to be swapped out.  
@@ -310,7 +307,7 @@ will no longer compile.
 However, there is one test approach I like the most.
 
 **Test First**  
-By Test First I mean Jon Skeet's ~~definition~~ description <https://stackoverflow.com/a/334815/13842370>
+By Test First I mean Jon Skeet's description <https://stackoverflow.com/a/334815/13842370>
 
 ## CI CD
 
@@ -333,7 +330,7 @@ This is done automatically in the release pipeline.
 
 ### CI/CD Overview
 
-![CICD](https://changeblog.blob.core.windows.net/images/CI_CD.png)
+![CICD](docs/assets/CI_CD.png)
 
 ## Environments
 
@@ -366,7 +363,7 @@ Demo User
 I have chosen a SQL database rather than a NoSQL db,  
 because relational databases are a mature technology that meet most of my requirements.
 
-[Database Schema](https://changeblog.blob.core.windows.net/images/ChangeBlogDbSchema.png)
+[Database Schema](docs/assets/ChangeBlogDbSchema.png)
 
 ### DbConnection
 
@@ -443,6 +440,4 @@ when there are only 20 rows in the table even if the statistics are up to date.
 
 ## Credits
 
-<img src="https://changeblog.blob.core.windows.net/images/JetBrains-Logo.png" alt="drawing" width="125"/>  
-
-Thanks go to JetBrains for providing an Open Source development license.
+Special thanks go to JetBrains for providing an Open Source development license.

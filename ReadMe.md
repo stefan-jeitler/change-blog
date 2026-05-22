@@ -1,3 +1,6 @@
+> **❌ DEPRECATED**  
+> ⚠️ **This project is no longer actively maintained.**
+
 # ChangeBlog - enhance your change logs
 
 ChangeBlog is a web service that enables you to keep track of your releases and changes.

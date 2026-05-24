@@ -1,5 +1,5 @@
-> **❌ DEPRECATED**  
-> ⚠️ **This project is no longer actively maintained.**
+> [!NOTE]  
+> This project is no longer actively maintained.
 
 # ChangeBlog - enhance your change logs
 
